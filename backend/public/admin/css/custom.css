@@ -1,0 +1,183 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 34px;
+}
+
+.toggle-switch input {display:none;}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ff4747;
+  -webkit-transition: .4s;
+  transition: .4s;
+   border-radius: 34px;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .switch-slider {
+  background-color: #57b657;
+}
+
+input:focus + .switch-slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .switch-slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(55px);
+}
+
+/*------ ADDED CSS ---------*/
+.switch-slider:after
+{
+ content:'Inactive';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ left: 60%;
+ font-size: 10px;
+ font-family: Verdana, sans-serif;
+}
+
+input:checked + .switch-slider:after
+{  
+  content:'Active';
+  left: 40%;
+}
+
+.switch-slider-block:after
+{
+ content:'Blocked';
+}
+
+input:checked + .switch-slider-block:after
+{  
+  content:'Unblock';
+}
+
+/*--------- END --------*/
+
+.ti-reload{
+  animation: ti-reload 2s infinite linear;
+}
+
+.loader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  background: #2125298f;
+}
+
+.loader:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 25px;
+  height: 25px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  border-color: #ffffff transparent #ffffff transparent;
+  animation: loader 1.2s linear infinite;
+}
+
+@keyframes loader {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.loading-wrapper {
+  font-size: 12px;
+  color: #fff;
+}
+
+.dropify-infos-inner{
+  display: none;
+}
+.input-group-addon {
+  position: absolute;
+  right: 15px;
+  top: 13px;
+  z-index: 9;
+  cursor: pointer;
+}
+.show_hide_password input {
+  padding-right: 40px;
+  padding-left: 15px
+}
+.input-group-addon i {
+  font-size: 14px;
+  color: gray;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+}
+
+.rating:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+}
+
+.rating:not(:checked) > label {
+  cursor: pointer;
+  font-size: 50px;
+  color: #666;
+}
+
+.rating:not(:checked) > label:before {
+  content: "★";
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+  color: #e58e09;
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #ff9e0b;
+}
+
+.rating > input:checked ~ label {
+  color: #ffa723;
+}

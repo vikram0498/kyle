@@ -1,0 +1,5 @@
+[08-Jun-2023 12:46:49 UTC] PHP Warning:  require(/home/hiplstaging3/mlm.hipl-staging3.com/vendor/autoload.php): Failed to open stream: No such file or directory in /home/hiplstaging3/mlm.hipl-staging3.com/artisan on line 18
+[08-Jun-2023 12:46:49 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/hiplstaging3/mlm.hipl-staging3.com/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/hiplstaging3/mlm.hipl-staging3.com/artisan:18
+Stack trace:
+#0 {main}
+  thrown in /home/hiplstaging3/mlm.hipl-staging3.com/artisan on line 18
