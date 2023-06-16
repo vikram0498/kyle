@@ -1,98 +1,99 @@
 <div class="content-wrapper">
-<div class="row">
-    <div class="col-lg-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
+    <div class="row">
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
 
-                @if($formMode)
-    
-                    @include('livewire.admin.buyer.form')
+                    @if($formMode)
+        
+                        @include('livewire.admin.buyer.form')
 
-                @elseif($viewMode)
+                    @elseif($viewMode)
 
-                    @livewire('admin.buyer.show', ['buyer_id' => $buyer_id])
+                        @livewire('admin.buyer.show', ['buyer_id' => $buyer_id])
 
-                @else
-                    <div wire:loading wire:target="create" class="loader"></div>
-                    <div class="card-title">
-                        <h4 class="float-left">{{__('cruds.buyer.title')}} {{ __('global.list') }}</h4>
-                        <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text float-right">
-                            <i class="ti-plus btn-icon-prepend"></i>                                                    
-                                {{__('global.add')}}
-                        </button>
-                    </div>                
-                    <div class="table-responsive">
-                        <div class="table-additional-plugin">
-                            <input type="text" class="form-control col-2" wire:model="search" placeholder="{{ __('global.search')}}">
-                        </div>
-                       
-                        <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>{{ trans('global.sno') }}</th>
-                                <th>{{ trans('cruds.buyer.fields.name') }}</th>
-                                <th>{{ trans('cruds.buyer.fields.email') }}</th>
-                                <th>{{ trans('cruds.buyer.fields.phone') }}</th>
-                                <th>{{ trans('global.status') }}</th>
-                                <th>{{ trans('global.created_at') }}</th>
-                                <th>{{ trans('global.action') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if($allBuyers->count() > 0)
-                                @foreach($allBuyers as $serialNo => $buyer)
-                                    <tr>
-                                        <td>{{ $serialNo+1 }}</td>
-                                        <td>{{ ucfirst($buyer->first_name).' '. ucfirst($buyer->last_name) }}</td>
-                                        <td>{{ $buyer->email }}</td>
-                                        <td> {{ $buyer->phone }}</td>
-                                        <td>
-                                            <label class="toggle-switch">
-                                                <input type="checkbox" class="toggleSwitch"  wire:click="toggle({{$buyer->id}})" {{ $buyer->status == 1 ? 'checked' : '' }}>
-                                                <span class="switch-slider"></span>
-                                            </label>
-                                        </td>
-                                        <!-- <td>
-                                            <label class="toggle-switch">
-                                                <input type="checkbox" class="toggleSwitch"  wire:click="toggle({{$buyer->id}})" {{ $buyer->status == 1 ? 'checked' : '' }}>
-                                                <span class="switch-slider"></span>
-                                            </label>
-                                        </td> -->
-                                        <td>{{ convertDateTimeFormat($buyer->created_at,'datetime') }}</td>
-                                        <td>
-                                            <button type="button" wire:click="show({{$buyer->id}})" class="btn btn-primary btn-rounded btn-icon">
-                                                <i class="ti-eye"></i>
-                                            </button>
-                                            
-                                            <button type="button" wire:click="edit({{$buyer->id}})" class="btn btn-info btn-rounded btn-icon">
-                                                <i class="ti-pencil-alt"></i>
-                                            </button>
-
-                                            <button type="button" wire:click="delete({{$buyer->id}})" class="btn btn-danger btn-rounded btn-icon">
-                                                <i class="ti-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                            <tr>
-                                <td colspan="5">{{ __('messages.no_record_found')}}</td>
-                            </tr>
-                            @endif
+                    @else
+                        <div wire:loading wire:target="{{ $updateMode ? 'edit' : 'create' }}" class="loader"></div>
+                        <div class="card-title">
+                            <h4 class="float-left">{{__('cruds.buyer.title')}} {{ __('global.list') }}</h4>
+                            <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text float-right">
+                                <i class="ti-plus btn-icon-prepend"></i>                                                    
+                                    {{__('global.add')}}
+                            </button>
+                        </div>                
+                        <div class="table-responsive">
+                            <div class="table-additional-plugin">
+                                <input type="text" class="form-control col-2" wire:model="search" placeholder="{{ __('global.search')}}">
+                            </div>
                         
-                        </tbody>
-                        </table>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{{ trans('global.sno') }}</th>
+                                        <th>{{ trans('cruds.buyer.fields.name') }}</th>
+                                        <!-- <th>{{ trans('cruds.buyer.fields.email') }}</th>
+                                        <th>{{ trans('cruds.buyer.fields.phone') }}</th> -->
+                                        <th>{{ trans('cruds.buyer.fields.is_ban') }}</th>
+                                        <th>{{ trans('global.status') }}</th>
+                                        <th>{{ trans('global.created_at') }}</th>
+                                        <th>{{ trans('global.action') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if($allBuyers->count() > 0)
+                                        @foreach($allBuyers as $serialNo => $buyer)
+                                            <tr>
+                                                <td>{{ $serialNo+1 }}</td>
+                                                <td>{{ ucfirst($buyer->first_name).' '. ucfirst($buyer->last_name) }}</td>
+                                                <!-- <td>{{ $buyer->email }}</td>
+                                                <td> {{ $buyer->phone }}</td> -->
+                                                <td>
+                                                    <label class="toggle-switch">
+                                                        <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-on="Active" data-off="Deactive" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->status == 1 ? 'checked' : '' }}>
+                                                        <span class="switch-slider"></span>
+                                                    </label>
+                                                </td>
+                                                <td>                        
+                                                    <label class="toggle-switch">
+                                                        <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-on="Active" data-off="Deactive" data-type="is_ban" data-id="{{$buyer->id}}" {{ $buyer->is_ban == 1 ? 'checked' : '' }}>
+                                                        <div class="switch-slider switch-slider-buyerBan round"></div>
+                                                    </label>
+                                                </td>
+                                                <td>{{ convertDateTimeFormat($buyer->created_at,'datetime') }}</td>
+                                                <td>
+                                                    <button type="button" wire:click="show({{$buyer->id}})" class="btn btn-primary btn-rounded btn-icon">
+                                                        <i class="ti-eye"></i>
+                                                    </button>
+                                                    
+                                                    <button type="button" wire:click="edit({{$buyer->id}})" class="btn btn-info btn-rounded btn-icon">
+                                                        <i class="ti-pencil-alt"></i>
+                                                    </button>
 
-                        {{ $allBuyers->links('vendor.pagination.bootstrap-5') }}
-                       
-                    </div>
+                                                    <button type="button" wire:click="delete({{$buyer->id}})" class="btn btn-danger btn-rounded btn-icon">
+                                                        <i class="ti-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                    <tr>
+                                        <td colspan="5">{{ __('messages.no_record_found')}}</td>
+                                    </tr>
+                                    @endif
+                                
+                                </tbody>
+                            </table>
 
-                @endif
+                            {{ $allBuyers->links('vendor.pagination.bootstrap-5') }}
+                        
+                        </div>
 
+                    @endif
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 
@@ -105,13 +106,10 @@
 @push('scripts')
 
 <script type="text/javascript">
-
     document.addEventListener('loadPlugins', function (event) {
         $('.select2').select2({
             theme: "classic"
         });
-
-        
     });
 
     $(document).on('change','.select2', function(e){
@@ -122,6 +120,34 @@
             @this.emit('changeBuyerType', $('.buyer_type').select2('val'));
         } 
     });
+
+    $(document).on('click', '.toggleSwitchMain', function(e){
+        var _this = $(this);
+        var id = _this.data('id');
+        var type = _this.data('type');
+
+        var data = {
+            id: id,
+            type: type
+        }
+        var flag = true;
+        if(_this.prop("checked")){
+            flag = false;
+        }
+        Swal.fire({
+            title: 'Are you sure you want to change the status?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes, change it',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('confirmedToggleAction', data);
+            } else if (result.isDenied) {
+                _this.prop("checked", flag);
+            }
+        })
+    })
    
 
 </script>

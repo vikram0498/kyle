@@ -83,7 +83,7 @@ class Buyer extends Model
     protected static function boot () 
     {
         parent::boot();
-        static::creating(function(Plan $model) {
+        static::creating(function(Buyer $model) {
             $model->created_by = auth()->user()->id;
         });               
     }
@@ -91,18 +91,5 @@ class Buyer extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function packageImage()
-    {
-        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','plan');
-    }
-
-    public function getImageUrlAttribute()
-    {
-        if($this->packageImage){
-            return $this->packageImage->file_url;
-        }
-        return "";
     }
 }

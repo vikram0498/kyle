@@ -8,6 +8,43 @@
         </li>
 
         @if(auth()->user()->is_super_admin)
+            
+
+            @can('user_access')
+            <li class="nav-item {{ request()->is('admin/seller') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.seller') }}">
+                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
+                    <span class="menu-title"> {{ __('cruds.user.title') }} </span>
+                </a>
+            </li>
+            @endcan
+            @can('buyer_access')            
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
+                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
+                    <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="buyer-menu">
+                    <ul class="nav flex-column sub-menu">
+                        @can('buyer_access')
+                        <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.buyer') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('buyer_flag_access')
+                        <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.buyer') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
+                            </a>
+                        </li>
+                        @endcan
+                    </ul>
+                </div>
+            </li> 
+            @endcan
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#master-menu"  aria-expanded="false" aria-controls="master-menu">
                     <i class="icon-layout menu-icon"></i>
@@ -33,23 +70,6 @@
                     </ul>
                 </div>
             </li> 
-
-            @can('user_access')
-            <li class="nav-item {{ request()->is('admin/seller') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.seller') }}">
-                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
-                    <span class="menu-title"> {{ __('cruds.user.title') }} </span>
-                </a>
-            </li>
-            @endcan
-            @can('buyer_access')
-            <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.buyer') }}">
-                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
-                    <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
-                </a>
-            </li>
-            @endcan
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setting-menu" aria-expanded="false" aria-controls="setting-menu">
                     <i class="icon-layout menu-icon"></i>

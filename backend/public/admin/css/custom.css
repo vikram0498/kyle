@@ -69,14 +69,22 @@ input:checked + .switch-slider:after
 
 .switch-slider-block:after
 {
- content:'Blocked';
+ content:'Unblocked';
 }
 
 input:checked + .switch-slider-block:after
 {  
-  content:'Unblock';
+  content:'Blocked';
+}
+.switch-slider-buyerBan:after
+{
+ content:'Unban';
 }
 
+input:checked + .switch-slider-buyerBan:after
+{  
+  content:'Ban';
+}
 /*--------- END --------*/
 
 .ti-reload{

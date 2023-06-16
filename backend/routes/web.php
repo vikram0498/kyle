@@ -29,8 +29,7 @@ Auth::routes(['verify' => true]);
 
 Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])->name('verification.verify');
 
-Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], function () {
-    
+Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], function () {    
     Route::view('signup', 'auth.admin.register')->name('register');
     Route::view('login', 'auth.admin.login')->name('login');
     Route::view('forget-password', 'auth.admin.forget-password')->name('forget-password');
@@ -38,25 +37,15 @@ Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], f
  
 });    
 
-
 Route::group(['middleware' => ['auth','preventBackHistory']], function () {
-
     Route::view('admin/profile', 'auth.profile.index')->name('auth.admin-profile');
-
-    Route::group(['as' => 'admin.','prefix'=>'admin'], function () {
-        
+    Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
         Route::view('dashboard', 'admin.index')->name('dashboard');
-
         Route::view('plan', 'admin.plan.index')->name('plan');
-
         Route::view('video', 'admin.video.index')->name('video');
-
         Route::view('addon', 'admin.addon.index')->name('addon');
-
         Route::view('setting', 'admin.setting.index')->name('setting');
         Route::view('seller', 'admin.seller.index')->name('seller');
         Route::view('buyer', 'admin.buyer.index')->name('buyer');
-
     });
-
 });

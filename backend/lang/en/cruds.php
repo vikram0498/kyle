@@ -137,7 +137,7 @@ return [
             'balloon_payment'               => 'Balloon Payment',
             'unit_min'                      => 'Minimum Units',
             'unit_max'                      => 'Maximum Units',
-            'building_class'                => 'Maximum Units',
+            'building_class'                => 'Building Class',
             'value_add'                     => 'Value Add',
             'purchase_method'               => 'Purchase Method',
             'is_ban'                        => 'Ban Status',
