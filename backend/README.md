@@ -1,2 +1,0 @@
-# MLM
-MLM project
