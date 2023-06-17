@@ -53,7 +53,7 @@ class Login extends BaseComponent
 
                     $this->flash('success', trans('panel.message.login_success'));
 
-                    if(Auth::user()->is_user){
+                    if(Auth::user()->is_seller){
                         return redirect()->route('user.dashboard');
                     }else{
                         return redirect()->route('admin.dashboard');
