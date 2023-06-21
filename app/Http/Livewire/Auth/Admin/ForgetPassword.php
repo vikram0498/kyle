@@ -28,7 +28,7 @@ class ForgetPassword extends Component
     public function submit(){
         $this->validate(['email' => 'required|email|exists:users'], getCommonValidationRuleMsgs());
 
-        $user = User::where('email',$this->email)->first();
+        $user = User::where('email',$this->email)->whereHas('roles', function($q){ $q->where('id', 1);})->first();
         if($user){
             $token = Str::random(64);
             $email_id = $this->email;
