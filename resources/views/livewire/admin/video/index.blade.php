@@ -22,18 +22,41 @@
                         </button>
                     </div>                
                     <div class="table-responsive">
-                        <div class="table-additional-plugin">
-                            <input type="text" class="form-control col-2" wire:model="search" placeholder="{{ __('global.search')}}">
-                        </div>
+                        <div class="align-items-center border-top mt-4 pt-2 row justify-content-between">
+                            <div class="col-md-2">
+                                <select wire:change="changeNumberOfList($event.target.value)" class="form-control">
+                                    @foreach($numberOfrowsList as $key => $val)
+                                        <option value="{{ $key }}">{{ $val }}</option>
+                                    @endforeach 
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="table-additional-plugin ">
+                                    <input type="text" class="form-control" wire:model="search" placeholder="{{ __('global.search')}}">
+                                </div>
+                            </div>
+                        </div> 
                        
                         <table class="table table-hover">
                         <thead>
                             <tr>
-                            <th>{{ trans('global.sno') }}</th>
-                            <th>{{ trans('cruds.video.fields.title') }}</th>
+                            <th>#</th>
+                            <th>
+                                {{ trans('cruds.video.fields.title') }}
+                                <span wire:click="sortBy('title')" class="float-right text-sm" style="cursor: pointer;">
+                                    <i class="fa fa-arrow-up {{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                                    <i class="fa fa-arrow-down {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                                </span>
+                            </th>
                             <!-- <th>{{ trans('cruds.video.fields.description') }}</th> -->
                             <th>{{ trans('global.status') }}</th>
-                            <th>{{ trans('global.created_at') }}</th>
+                            <th>
+                                {{ trans('global.created_at') }}
+                                <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
+                                    <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                                    <i class="fa fa-arrow-down {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                                </span>
+                            </th>
                             <th>{{ trans('global.action') }}</th>
                             </tr>
                         </thead>
@@ -46,8 +69,8 @@
                                         <td>
                         
                                             <label class="toggle-switch">
-                                                <input type="checkbox" class="toggleSwitch"  wire:click="toggle({{$video->id}})" {{ $video->status == 1 ? 'checked' : '' }}>
-                                                <span class="switch-slider"></span>
+                                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$video->id}}" {{ $video->status == 1 ? 'checked' : '' }}>
+                                                <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                                             </label>
 
                                         </td>
@@ -61,7 +84,7 @@
                                                 <i class="ti-pencil-alt"></i>
                                             </button>
 
-                                            <button type="button" wire:click="delete({{$video->id}})" class="btn btn-danger btn-rounded btn-icon">
+                                            <button type="button" data-id="{{$video->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
                                                 <i class="ti-trash"></i>
                                             </button>
                                         </td>
@@ -127,7 +150,48 @@
         });
       
     });
+    
+    $(document).on('click', '.toggleSwitchMain', function(e){
+        var _this = $(this);
+        var id = _this.data('id');
+        var type = _this.data('type');
 
+        var data = { id: id, type: type }
+        
+        var flag = true;
+        if(_this.prop("checked")){
+            flag = false;
+        }
+        Swal.fire({
+            title: 'Are you sure you want to change the status?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes, change it',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('confirmedToggleAction', data);
+            } else if (result.isDenied) {
+                _this.prop("checked", flag);
+            }
+        })
+    })
+    $(document).on('click', '.deleteBtn', function(e){
+        var _this = $(this);
+        var id = _this.data('id');
+       
+        Swal.fire({
+            title: 're you sure you want to delete it?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes, change it',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('deleteConfirm', id);
+            }
+        })
+    })
    
 
 </script>

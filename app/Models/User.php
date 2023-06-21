@@ -2,18 +2,15 @@
 
 namespace App\Models;
 
-use Hash;
-use Carbon\Carbon;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Lab404\Impersonate\Models\Impersonate;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use SoftDeletes, Notifiable, Impersonate;
+    use SoftDeletes, Notifiable, HasApiTokens;
 
     protected $guard = 'web';
 
@@ -73,7 +70,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Buyer::class, 'user_id', 'id');
     }
 
-    public function getIsSuperAdminAttribute()
+    public function getIsAdminAttribute()
     {
         return $this->roles()->where('id', 1)->exists();
     }

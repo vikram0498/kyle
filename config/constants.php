@@ -21,6 +21,8 @@ return [
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user-man.png',
     ],
+
+    'frontend_url' => 'http://localhost:3000/add/buyer',
     
     'date_format' => 'd-m-Y',
     'datetime_format' => 'd-m-Y h:i:s A',
@@ -36,6 +38,14 @@ return [
 
     'copy_right_content'=>'All Rights Reserved.',
 
+    'number_of_rows' => [
+        10 => '10',
+        25 => '25',
+        50 => '50',
+        75 => '75',
+        100 => '100',
+    ],
+
     'parking_values' => [
         1 => 'Assigned',
         2 => 'Carport',
@@ -47,7 +57,6 @@ return [
         8 => 'On-Street',
         9 => 'Unassigned',
     ],
-
 
     'property_types' => [
         1 => 'Attached',

@@ -22,6 +22,8 @@ class Index extends Component
 
     protected $addons = null;
 
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
+
     public  $title, $price, $credit, $status = 1, $viewMode = false;
 
     public $addon_id =null;
@@ -32,6 +34,22 @@ class Index extends Component
 
     public function mount(){
         abort_if(Gate::denies('addon_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $this->numberOfrowsList = config('constants.number_of_rows');
+    }
+
+    public function changeNumberOfList($val)  {
+        $this->row_list = $val;
+    }
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
     }
 
     public function render()
@@ -41,8 +59,8 @@ class Index extends Component
             ->where('title', 'like', '%'.$this->search.'%')
             ->OrWhere('price', 'like', '%'.$this->search.'%')
             ->OrWhere('credit', 'like', '%'.$this->search.'%')
-            ->orderBy('id','desc')
-            ->paginate(10);
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate($this->row_list);
 
         $allAddons = $this->addons;
         return view('livewire.admin.addon.index',compact('allAddons'));
@@ -136,9 +154,8 @@ class Index extends Component
         ]);
     }
 
-    public function deleteConfirm($event){
-        $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model = Addon::find($deleteId);
+    public function deleteConfirm($id){
+        $model = Addon::find($id);
         $model->delete();
         $this->alert('success', trans('messages.delete_success_message'));
     }
@@ -163,25 +180,13 @@ class Index extends Component
 
     }
 
-    public function toggle($id){
-        $this->confirm('Are you sure you want to change the status?', [
-            'toast' => false,
-            'position' => 'center',
-            'confirmButtonText' => 'Yes Confirm!',
-            'cancelButtonText' => 'No Cancel!',
-            'onConfirmed' => 'confirmedToggleAction',
-            'onCancelled' => function () {
-                // Do nothing or perform any desired action
-            },
-            'inputAttributes' => ['packageId' => $id],
-        ]);
-    }
-
-    public function confirmedToggleAction($event)
+    public function confirmedToggleAction($data)
     {
-        $packageId = $event['data']['inputAttributes']['packageId'];
-        $model = Addon::find($packageId);
-        $model->update(['status' => !$model->status]);
+        $id = $data['id'];
+        $type = $data['type'];
+
+        $model = Addon::find($id);
+        $model->update([$type => !$model->$type]);
         $this->alert('success', trans('messages.change_status_success_message'));
     }
 

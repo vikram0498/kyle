@@ -29,16 +29,7 @@
 
         <div class="container-fluid page-body-wrapper">
 
-        @if(auth()->user()->is_super_admin || auth()->user()->is_admin)
-
-            @include('partials.admin.admin_sidebar')
-
-        @elseif(auth()->user()->is_user)
-
-            @include('partials.admin.user_sidebar')
-
-        @endif
-        
+        @include('partials.admin.admin_sidebar')      
 
         <div class="main-panel">
             <!-- content-wrapper start -->

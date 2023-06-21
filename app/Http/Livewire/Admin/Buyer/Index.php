@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
-use App\Rules\ValidateMultiSelectValues;
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
 
@@ -25,6 +24,10 @@ class Index extends Component
     public $search = '', $formMode = false , $updateMode = false;
 
     public $creativeBuyer = false, $multiFamilyBuyer = false;
+
+    public $buyerFormLink = null;
+
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
 
     public $state = [
         'status' => 1,
@@ -53,6 +56,12 @@ class Index extends Component
         $this->buildingClassValue =config('constants.building_class_values');
         $this->purchaseMethods = config('constants.purchase_methods');
         $this->radioButtonFields = config('constants.radio_buttons_fields');
+
+        $this->numberOfrowsList = config('constants.number_of_rows');
+
+        $url = config('constants.frontend_url');
+        $encryptedId = encrypt(auth()->user()->id);
+        $this->buyerFormLink = $url.'?token='.$encryptedId;
     }
 
     private function rules (){
@@ -64,24 +73,22 @@ class Index extends Component
             'address' => ['required'], 
             'city' => ['required'], 
             'state' => ['required'], 
-            'zip_code' => ['required'], 
-            'company_name' => ['required'], 
-            'occupation' => ['required'], 
+            'zip_code' => ['required'],
 
             'bedroom_min' => ['required', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
-            'bedroom_max' => ['required', !empty($this->state['bedroom_max']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
+            'bedroom_max' => ['required', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
 
-            'bath_min' => ['required', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
-            'bath_max' => ['required', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
+            'bath_min' => ['nullable', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
+            'bath_max' => ['nullable', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
 
             'size_min' => ['required', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'size_max') : ''], 
             'size_max' => ['required', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'size_min') : ''], 
 
-            'lot_size_min' => ['required', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
-            'lot_size_max' => ['required', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
+            'lot_size_min' => ['nullable', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
+            'lot_size_max' => ['nullable', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
 
-            'build_year_min' => ['required', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''], 
-            'build_year_max' => ['required', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''], 
+            'build_year_min' => ['nullable', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''], 
+            'build_year_max' => ['nullable', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''], 
 
             
             'arv_min' => ['nullable', !empty($this->state['arv_max']) ? new CheckMinValue($this->state['arv_max'], 'arv_max') : ''], 
@@ -109,14 +116,29 @@ class Index extends Component
         return $rules;
     }
 
+    public function changeNumberOfList($val)  {
+        $this->row_list = $val;
+    }
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+    }
+
     public function render() {
         $this->search = str_replace(',', '', $this->search);
         $allBuyers = Buyer::query()
             ->where('first_name', 'like', '%'.$this->search.'%')
             ->OrWhere('last_name', 'like', '%'.$this->search.'%')
             ->OrWhere('email', 'like', '%'.$this->search.'%')
-            ->orderBy('id','desc')
-            ->paginate(10);
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate($this->row_list);
         return view('livewire.admin.buyer.index',compact('allBuyers'));
     }
 
@@ -127,7 +149,7 @@ class Index extends Component
         $this->initializePlugins();
     }
 
-    public function store() {         
+    public function store() {  
         Validator::make($this->state, $this->rules())->validate();
         
         $this->state['user_id'] = auth()->user()->id;
@@ -178,22 +200,8 @@ class Index extends Component
         $this->viewMode = true;
     }
 
-    public function delete($id) {
-        $this->confirm('Are you sure you want to delete it?', [
-            'toast' => false,
-            'position' => 'center',
-            'confirmButtonText' => 'Yes, change it!',
-            'cancelButtonText' => 'No, cancel!',
-            'onConfirmed' => 'deleteConfirm',
-            'onCancelled' => function () {
-                // Do nothing or perform any desired action
-            },
-            'inputAttributes' => ['deleteId' => $id],
-        ]);
-    }
-    public function deleteConfirm($event) {
-        $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model = Buyer::find($deleteId);
+    public function deleteConfirm($id) {
+        $model = Buyer::find($id);
         $model->delete();
         $this->alert('success', trans('messages.delete_success_message'));
     }

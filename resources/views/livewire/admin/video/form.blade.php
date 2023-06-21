@@ -45,7 +45,7 @@
                 <div class="form-group">
                     <label class="toggle-switch">
                         <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$status}})" value="{{ $status }}" {{ $status ==1 ? 'checked' : '' }}>
-                        <span class="switch-slider"></span>
+                        <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                     </label>
                 </div>
                 @error('status') <span class="error text-danger">{{ $message }}</span>@enderror

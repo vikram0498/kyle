@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Buyer extends Model
+class SearchLog extends Model
 {
     use SoftDeletes;
 
-    protected $casts = ['parking' => 'array', 'property_type' => 'array', 'property_flaw' => 'array', 'buyer_type' => 'array', 'building_class' => 'array', 'purchase_method' => 'array'];
+    protected $casts = ['property_flaw' => 'array', 'purchase_method' => 'array'];
 
-    public $table = 'buyers';
+    public $table = 'search_logs';
 
     protected $dates = [
         'created_at',
@@ -22,13 +22,6 @@ class Buyer extends Model
 
     protected $fillable = [
         'user_id',
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'occupation',
-        'replacing_occupation',
-        'company_name',
         'address',
         'city',
         'state',
@@ -62,17 +55,7 @@ class Buyer extends Model
         'mold',
         'fire_damaged',
         'rebuild',
-        'buyer_type',
-        'max_down_payment_percentage',
-        'max_down_payment_money',
-        'max_interest_rate',
-        'balloon_payment',
-        'unit_min',
-        'unit_max',
-        'building_class',
-        'value_add',
         'purchase_method',
-        'is_ban',
         'status',
         'created_by',
         'created_at',
@@ -83,7 +66,7 @@ class Buyer extends Model
     protected static function boot () 
     {
         parent::boot();
-        static::creating(function(Buyer $model) {
+        static::creating(function(SearchLog $model) {
             $model->created_by = auth()->user()->id;
         });               
     }

@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title','Seller')
+@section('title','Import Buyer')
 
 @section('styles')
 @stop
 
 @section('content')
 
-    @livewire('admin.seller.index')
+    @livewire('admin.buyer.search-buyer')
 
 @stop
 

@@ -43,29 +43,29 @@ class Login extends BaseComponent
         ]; 
 
         try {
-            $checkVerified = User::where('email',$this->email)->whereNull('email_verified_at')->first();
-            if(!$checkVerified){
-                if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) {
+            // $checkVerified = User::where('email',$this->email)->whereNull('email_verified_at')->first();
+            $user = User::where('email', $this->email)->first();
+            $checkVerified = $user->email_verified_at;
             
-                    $this->resetInputFields();
-                    $this->resetErrorBag();
-                    $this->resetValidation();
+            if($user->is_admin){
+                if(!is_null($checkVerified)){                
+                    if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) {
+                        $this->resetInputFields();
+                        $this->resetErrorBag();
+                        $this->resetValidation();
+    
+                        $this->flash('success', trans('panel.message.login_success'));
 
-                    $this->flash('success', trans('panel.message.login_success'));
-
-                    if(Auth::user()->is_seller){
-                        return redirect()->route('user.dashboard');
-                    }else{
                         return redirect()->route('admin.dashboard');
                     }
-                  
+                    $this->addError('email', trans('auth.failed'));
+                }else{
+                    // $this->addError('email', trans('panel.message.email_verify_first'));
+                    $user->sendEmailVerificationNotification();
+                    $this->verifyMailComponent = true;
                 }
-        
+            } else {
                 $this->addError('email', trans('auth.failed'));
-            }else{
-                // $this->addError('email', trans('panel.message.email_verify_first'));
-                $checkVerified->sendEmailVerificationNotification();
-                $this->verifyMailComponent = true;
             }
             
             $this->resetInputFields();

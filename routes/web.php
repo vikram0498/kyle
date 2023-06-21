@@ -51,6 +51,11 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('addon', 'admin.addon.index')->name('addon');
         Route::view('setting', 'admin.setting.index')->name('setting');
         Route::view('seller', 'admin.seller.index')->name('seller');
-        Route::view('buyer', 'admin.buyer.index')->name('buyer');
+        Route::view('buyer', 'admin.buyer.index')->name('buyer');        
+        Route::view('buyer/import', 'admin.buyer.import-buyers')->name('import-buyers');
+
+        Route::view('search-log', 'admin.search-log.index')->name('search-log');
+
+        Route::view('search-buyer', 'admin.buyer.search-buyer')->name('search-buyer-form');
     });
 });

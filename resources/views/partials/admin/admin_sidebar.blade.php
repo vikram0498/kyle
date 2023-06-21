@@ -7,8 +7,7 @@
             </a>
         </li>
 
-        @if(auth()->user()->is_super_admin)
-            
+        @if(auth()->user()->is_admin)            
 
             @can('user_access')
             <li class="nav-item {{ request()->is('admin/seller') ? 'active' : '' }}">
@@ -18,6 +17,14 @@
                 </a>
             </li>
             @endcan
+            
+            <li class="nav-item {{ request()->is('admin/search-log') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.search-log') }}">
+                    <i class="icon-grid menu-icon fa-solid fa-search"></i>
+                    <span class="menu-title"> {{ __('cruds.search_log.title') }} </span>
+                </a>
+            </li>
+            
             @can('buyer_access')            
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
@@ -28,16 +35,16 @@
                 <div class="collapse" id="buyer-menu">
                     <ul class="nav flex-column sub-menu">
                         @can('buyer_access')
-                        <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
+                        <li class="nav-item {{ (request()->is('admin/buyer') || request()->is('admin/buyer/import')) ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.buyer') }}">
-                                <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
+                                <span class="menu-title"> {{ __('cruds.buyer.sub_menu_list_title') }} </span>
                             </a>
                         </li>
                         @endcan
                         @can('buyer_flag_access')
                         <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.buyer') }}">
-                                <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
+                                <span class="menu-title"> {{ __('cruds.buyer.sub_menu_flaged_title') }} </span>
                             </a>
                         </li>
                         @endcan

@@ -32,15 +32,18 @@
             <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
             <td> {{ $details->zip_code }}</td>
         </tr>
+        @if(!is_null($details->company_name) && !empty($details->company_name))
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.company_name')}}</th>
             <td> {{ $details->company_name }}</td>
         </tr>
+        @endif
+        @if(!is_null($details->occupation) && !empty($details->occupation))
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.occupation')}}</th>
             <td> {{ $details->occupation }}</td>
         </tr>
-
+        @endif
         @if(!is_null($details->replacing_occupation) && !empty($details->replacing_occupation))
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.replacing_occupation')}}</th>
@@ -55,38 +58,50 @@
             <th width="25%">{{ __('cruds.buyer.fields.bedroom_max')}}</th>
             <td> {{ $details->bedroom_max }}</td>
         </tr>
+        @if(!is_null($details->bath_min) && !empty($details->bath_min))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.bath_min')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.bath_min')}}</th>
             <td> {{ $details->bath_min }}</td>
         </tr>
+        @endif
+        @if(!is_null($details->bath_max) && !empty($details->bath_max))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.bath_max')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.bath_max')}}</th>
             <td> {{ $details->bath_max }}</td>
         </tr>
+        @endif
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.size_min')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.size_min')}}</th>
             <td> {{ $details->size_min }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.size_max')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.size_max')}}</th>
             <td> {{ $details->size_max }}</td>
         </tr>
+        @if(!is_null($details->lot_size_min) && !empty($details->lot_size_min))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.lot_size_min')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.lot_size_min')}}</th>
             <td> {{ $details->lot_size_min }}</td>
         </tr>
+        @endif
+        @if(!is_null($details->lot_size_max) && !empty($details->lot_size_max))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.lot_size_max')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.lot_size_max')}}</th>
             <td> {{ $details->lot_size_max }}</td>
         </tr>
+        @endif
+        @if(!is_null($details->build_year_min) && !empty($details->build_year_min))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.build_year_min')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.build_year_min')}}</th>
             <td> {{ $details->build_year_min }}</td>
         </tr>
+        @endif
+        @if(!is_null($details->build_year_max) && !empty($details->build_year_max))
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.build_year_max')}}</th>
+            <th width="25%">{{ __('cruds.search_log.fields.build_year_max')}}</th>
             <td> {{ $details->build_year_max }}</td>
         </tr>
+        @endif
         @if(!is_null($details->arv_min) && !empty($details->arv_min))
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.arv_min')}}</th>
@@ -234,7 +249,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.max_down_payment_percentage')}}</th>
                 <td> {{ ($details->max_down_payment_percentage ) }}</td>
             </tr>
-            @if(!is_null($details->buyer_type) && !empty($details->buyer_type))
+            @if(!is_null($details->max_down_payment_money) && !empty($details->max_down_payment_money))
                 <tr>
                     <th width="25%">{{ __('cruds.buyer.fields.max_down_payment_money')}}</th>
                     <td> {{ ($details->max_down_payment_money ) }}</td>

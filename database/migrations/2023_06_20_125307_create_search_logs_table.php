@@ -13,17 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('buyers', function (Blueprint $table) {
+        Schema::create('search_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
 
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('occupation')->nullable();
-            $table->string('replacing_occupation')->nullable();
-            $table->string('company_name')->nullable();
             $table->string('address');
             $table->string('city');
             $table->string('state');
@@ -41,8 +34,9 @@ return new class extends Migration
             $table->integer('build_year_max')->nullable();            
             $table->integer('arv_min')->nullable();
             $table->integer('arv_max')->nullable();
-            $table->json('parking')->nullable();
-            $table->json('property_type');
+
+            $table->integer('parking')->nullable();
+            $table->integer('property_type');
             $table->json('property_flaw')->nullable();
 
             $table->tinyInteger('solar')->nullable();
@@ -60,25 +54,8 @@ return new class extends Migration
             $table->tinyInteger('fire_damaged')->nullable();
             $table->tinyInteger('rebuild')->nullable();
 
-            $table->json('buyer_type');
-
-            // creative buyer type
-            $table->double('max_down_payment_percentage', 15, 2)->nullable();
-            $table->double('max_down_payment_money', 15, 2)->nullable();
-            $table->double('max_interest_rate', 15, 2)->nullable();
-            $table->tinyInteger('balloon_payment')->nullable();
-
-            // Multi Family Buyer type
-            $table->integer('unit_min')->nullable();
-            $table->integer('unit_max')->nullable();
-            $table->json('building_class')->nullable();
-            $table->tinyInteger('value_add')->nullable();
-
             $table->json('purchase_method');    
 
-
-
-            $table->boolean('is_ban')->default(0)->comment('0=> Not ban, 1=> ban');
             $table->boolean('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
@@ -93,6 +70,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buyers');
+        Schema::dropIfExists('search_logs');
     }
 };

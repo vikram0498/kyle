@@ -48,9 +48,8 @@ input:checked + .switch-slider:before {
 }
 
 /*------ ADDED CSS ---------*/
-.switch-slider:after
-{
- content:'Inactive';
+.switch-slider:after {
+ content: attr( data-off );
  color: white;
  display: block;
  position: absolute;
@@ -61,29 +60,9 @@ input:checked + .switch-slider:before {
  font-family: Verdana, sans-serif;
 }
 
-input:checked + .switch-slider:after
-{  
-  content:'Active';
+input:checked + .switch-slider:after {  
+  content: attr( data-on );
   left: 40%;
-}
-
-.switch-slider-block:after
-{
- content:'Unblocked';
-}
-
-input:checked + .switch-slider-block:after
-{  
-  content:'Blocked';
-}
-.switch-slider-buyerBan:after
-{
- content:'Unban';
-}
-
-input:checked + .switch-slider-buyerBan:after
-{  
-  content:'Ban';
 }
 /*--------- END --------*/
 
@@ -188,4 +167,59 @@ input:checked + .switch-slider-buyerBan:after
 
 .rating > input:checked ~ label {
   color: #ffa723;
+}
+
+/*  
+  vikram: for buyer link copy
+  date: 19-06-2023
+*/
+
+.copy_link {  
+  &:before {
+    content: '';
+    display: none;
+    position: absolute;
+    z-index: 9998;
+    top: 35px;
+    left: 45%;
+    width: 0;
+    height: 0;
+    
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid rgba(0,0,0,.72);
+  }
+
+  &:after {
+    content: 'Copy to Clipboard';
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    top: 40px;
+    left: 15%;
+    width: 114px;
+    height: 36px;
+
+    color: #fff;
+    font-size: 10px;
+    line-height: 36px;
+    text-align: center;
+
+    background: rgba(0,0,0,.72);
+    border-radius: 3px;
+  }
+  
+  &:hover {    
+    &:before, &:after {
+      display: block;
+    }
+  }
+  
+  &:active, &:focus {
+    outline: none;
+    
+    &:after {
+      content: 'Copied!';
+    }
+  }
 }

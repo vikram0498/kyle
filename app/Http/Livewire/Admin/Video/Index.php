@@ -30,9 +30,28 @@ class Index extends Component
         'confirmedToggleAction','deleteConfirm'
     ];
 
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
+
     public function mount(){
         abort_if(Gate::denies('video_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $this->numberOfrowsList = config('constants.number_of_rows');
     }
+
+    public function changeNumberOfList($val)  {
+        $this->row_list = $val;
+    }
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+    }
+
 
     public function render()
     {
@@ -40,8 +59,8 @@ class Index extends Component
          $this->videos = Video::query()
             ->where('title', 'like', '%'.$this->search.'%')
             ->orWhere('description', 'like', '%'.$this->search.'%')
-            ->orderBy('id','desc')
-            ->paginate(10);
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate($this->row_list);
 
         $allVideos = $this->videos;
         return view('livewire.admin.video.index',compact('allVideos'));
@@ -146,9 +165,9 @@ class Index extends Component
         ]);
     }
 
-    public function deleteConfirm($event){
-        $deleteId = $event['data']['inputAttributes']['deleteId'];
-        $model = Video::find($deleteId);
+    public function deleteConfirm($id){
+        $model = Video::find($id);
+        
         $upload_id = $model->uploads()->first()->id;
         if($upload_id &&  deleteFile($upload_id)){
             $model->uploads()->delete();
@@ -178,25 +197,13 @@ class Index extends Component
 
     }
 
-    public function toggle($id){
-        $this->confirm('Are you sure you want to change the status?', [
-            'toast' => false,
-            'position' => 'center',
-            'confirmButtonText' => 'Yes Confirm!',
-            'cancelButtonText' => 'No Cancel!',
-            'onConfirmed' => 'confirmedToggleAction',
-            'onCancelled' => function () {
-                // Do nothing or perform any desired action
-            },
-            'inputAttributes' => ['packageId' => $id],
-        ]);
-    }
-
-    public function confirmedToggleAction($event)
+    public function confirmedToggleAction($data)
     {
-        $packageId = $event['data']['inputAttributes']['packageId'];
-        $model = Video::find($packageId);
-        $model->update(['status' => !$model->status]);
+        $id = $data['id'];
+        $type = $data['type'];
+        
+        $model = Video::find($id);
+        $model->update([$type => !$model->$type]);
         $this->alert('success', trans('messages.change_status_success_message'));
     }
 

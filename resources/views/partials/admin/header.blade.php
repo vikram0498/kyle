@@ -73,15 +73,7 @@
                 <img src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                @php
-                $profileRoute = '';
-                if(auth()->user()->is_super_admin || auth()->user()->is_admin){
-                    $profileRoute = 'auth.admin-profile';
-                }else if(auth()->user()->is_user){
-                    $profileRoute = 'auth.user-profile';
-                }
-                @endphp
-                <a href="{{route($profileRoute)}}" class="dropdown-item">
+                <a href="{{route('auth.admin-profile')}}" class="dropdown-item">
                     <i class="ti-user text-primary"></i>
                     {{__('global.profile')}}
                 </a>

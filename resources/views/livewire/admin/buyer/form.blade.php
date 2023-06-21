@@ -65,7 +65,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.company_name')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.company_name')}} </label>
                     <input type="text" class="form-control" wire:model.defer="state.company_name" placeholder="{{ __('cruds.buyer.fields.company_name')}}" autocomplete="off" >
                     @error('company_name') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -73,7 +73,7 @@
             
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.occupation')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.occupation')}} </label>
                     <input type="text" class="form-control" wire:model.defer="state.occupation" placeholder="{{ __('cruds.buyer.fields.occupation')}}" >
                     @error('occupation') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -102,14 +102,14 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_min')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_min')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.bath_min" placeholder="{{ __('cruds.buyer.fields.bath_min')}}" autocomplete="off"  min="0">
                     @error('bath_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_max')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_max')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.bath_max" placeholder="{{ __('cruds.buyer.fields.bath_max')}}" autocomplete="off"  min="0">
                     @error('bath_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -131,7 +131,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off"  min="0">
                     @error('lot_size_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -139,21 +139,21 @@
             
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0">
                     @error('lot_size_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_min')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_min')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.build_year_min" placeholder="{{ __('cruds.buyer.fields.build_year_min')}}" autocomplete="off"  min="0">
                     @error('build_year_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_max')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_max')}} </label>
                     <input type="number" class="form-control" wire:model.defer="state.build_year_max" placeholder="{{ __('cruds.buyer.fields.build_year_max')}}" autocomplete="off"  min="0">
                     @error('build_year_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -360,7 +360,7 @@
                     <div class="form-group">
                         <label class="toggle-switch">
                             <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$status}})" value="{{ $status }}" {{ $status ==1 ? 'checked' : '' }}>
-                            <span class="switch-slider"></span>
+                            <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                         </label>
                     </div>
                     @error('status') <span class="error text-danger">{{ $message }}</span>@enderror
