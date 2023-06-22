@@ -2,9 +2,8 @@
 
 namespace App\Http\Livewire\Auth\Admin;
 
-use DB; 
-use Mail; 
-use Hash;
+use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon; 
 use App\Models\User;
 use Livewire\Component;

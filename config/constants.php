@@ -21,8 +21,6 @@ return [
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user-man.png',
     ],
-
-    'frontend_url' => 'http://localhost:3000/add/buyer',
     
     'date_format' => 'd-m-Y',
     'datetime_format' => 'd-m-Y h:i:s A',

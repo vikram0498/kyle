@@ -20,6 +20,11 @@
     </tr>
     <tr>
         <td>
+            If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser: {{ $reset_password_url }}
+        </td>
+    </tr>
+    <tr>
+        <td>
             <p style="font-size:14px;">If you did not request a password reset, no further action is required.</p>
         </td>
     </tr>

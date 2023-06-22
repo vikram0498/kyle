@@ -59,9 +59,9 @@ class Index extends Component
 
         $this->numberOfrowsList = config('constants.number_of_rows');
 
-        $url = config('constants.frontend_url');
+        $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
-        $this->buyerFormLink = $url.'?token='.$encryptedId;
+        $this->buyerFormLink = $url.'add/buyer?token='.$encryptedId;
     }
 
     private function rules (){

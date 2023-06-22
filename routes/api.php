@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\API\Auth\LoginRegisterController;;
+use App\Http\Controllers\Api\Auth\LoginRegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +21,10 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::post('register', 'register');
 
     Route::post('login', 'login');
+
+    Route::post('forgot-password', 'forgotPassword');
+
+    Route::post('reset-password', 'resetPassword');
 
 });
 
