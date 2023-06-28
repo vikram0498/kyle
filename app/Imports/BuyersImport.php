@@ -26,7 +26,7 @@ class BuyersImport implements ToModel, WithStartRow
                 $buyerArr['name'] = $fName.' '.$lName;
                 $email = $this->test_input($row[2]);
                 if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
-                    $buyerExists = Buyer::withTrashed()->where('email', $email)->exists();
+                    $buyerExists = Buyer::where('email', $email)->exists();
                     if(!$buyerExists){
                         $buyerArr['email'] = $email;
                         $phone = $this->test_input($row[3]);
