@@ -100,7 +100,7 @@ class Index extends Component
         $validatedDate = $this->validate([
             'first_name'  => 'required',
             'last_name'   => 'required',
-            'phone'         => 'required|digits:10'
+            'phone'         => 'nullable|digits:10'
         ]);
 
         $userDetails = [];
