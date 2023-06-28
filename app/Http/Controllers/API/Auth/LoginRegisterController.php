@@ -19,8 +19,8 @@ class LoginRegisterController extends BaseController
         $validator = Validator::make($request->all(), [
             'first_name'                => 'required',
             'last_name'                 => 'required',
-            'email'                     => 'required|email|unique:users,email',
-            'phone'                     => 'required|numeric|digits:10|unique:users,phone',
+            'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NUL',
+            'phone'                     => 'required|numeric|digits:10|unique:users,phone,NULL,id,deleted_at,NULL',
             'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8|confirmed',

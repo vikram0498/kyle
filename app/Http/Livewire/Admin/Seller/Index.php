@@ -80,7 +80,7 @@ class Index extends Component
         $validatedDate = $this->validate([
             'first_name'  => 'required|regex:/^[A-Za-z]+( [A-Za-z]+)?$/u',
             'last_name'   => 'required|regex:/^[A-Za-z]+( [A-Za-z]+)?$/u',
-            'email'       => 'required|unique:users,email',
+            'email'       => 'required|unique:users,email,NULL,id,deleted_at,NUL',
             'phone'         => 'required|digits:10'
         ]);
 

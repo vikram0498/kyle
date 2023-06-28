@@ -68,7 +68,7 @@ class Index extends Component
         $rules = [
             'first_name' => ['required'], 
             'last_name' => ['required'], 
-            'email' => ['required', 'email', 'unique:buyers,email'],
+            'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone' => ['required', 'numeric', 'digits:10'], 
             'address' => ['required'], 
             'city' => ['required'], 
@@ -180,7 +180,7 @@ class Index extends Component
 
     public function update() {
         $rules = $this->rules();
-        $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id];
+        $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NUL'];
         Validator::make($this->state, $rules)->validate();
 
         $buyer = Buyer::find($this->buyer_id);
