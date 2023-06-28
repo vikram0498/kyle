@@ -15,14 +15,14 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.plan.fields.month_amount')}}</label>
-                <input type="number" class="form-control" wire:model.defer="month_amount" placeholder="{{ __('cruds.plan.fields.amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
+                <input type="number" class="form-control" wire:model.defer="month_amount" placeholder="{{ __('cruds.plan.fields.month_amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
                 @error('month_amount') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.plan.fields.year_amount')}}</label>
-                <input type="number" class="form-control" wire:model.defer="year_amount" placeholder="{{ __('cruds.plan.fields.amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
+                <input type="number" class="form-control" wire:model.defer="year_amount" placeholder="{{ __('cruds.plan.fields.year_amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
                 @error('year_amount') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>

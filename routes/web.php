@@ -21,10 +21,10 @@ Route::get('/', function () {
     return redirect('login');
 });
 // list storage
-Route::get('/storage-link', function () {
+/* Route::get('/storage-link', function () {
     Artisan::call('storage:link');
     return '<h1>Storage linked</h1>';
-});
+}); */
 
 //Clear Cache facade value:
 Route::get('/cache-clear', function() {
