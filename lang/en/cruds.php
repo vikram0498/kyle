@@ -155,8 +155,8 @@ return [
     ],
 
     'search_log' => [
-        'title'                 => 'Search Logs',
-        'title_singular'        => 'Search Log',
+        'title'                 => 'Seller Search Logs',
+        'title_singular'        => 'Seller Search Log',
         'fields' => [
             'user_id'                       => 'Seller',
             'address'                       => 'Address',
@@ -197,4 +197,9 @@ return [
             'created_at'                    => 'Created At',
         ],
     ],
+
+    'dashboard'  => [
+        'total_buyer'  => 'Total Buyer',
+        'total_seller'  => 'Total Seller',
+    ]
 ];
