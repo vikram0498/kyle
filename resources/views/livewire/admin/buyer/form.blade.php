@@ -221,7 +221,7 @@
         </div>
         <div class="row">
             @foreach($radioButtonFields as $fieldName => $fieldData)
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="font-weight-bold">{{ __("cruds.buyer.fields.".$fieldName) }}</label>
                         <div class="form-group">

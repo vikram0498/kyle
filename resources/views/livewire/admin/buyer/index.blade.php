@@ -29,10 +29,10 @@
                                 <i class="fa fa-upload"></i>                                                
                                     {{__('cruds.buyer.fields.buyer_csv_template')}}
                             </a>
-                            <a href="{{ $buyerFormLink }}" class="btn btn-sm btn-dark mr-2 btn-icon-text float-right copy_link position-relative">
+                            <!-- <a href="{{ $buyerFormLink }}" class="btn btn-sm btn-dark mr-2 btn-icon-text float-right copy_link position-relative">
                                 <i class="fa fa-copy"></i>                                                
                                     {{__('cruds.buyer.fields.copy_add_buyer_link')}}
-                            </a>
+                            </a> -->
                         </div>                
                         <div class="table-responsive">
                             <div class="align-items-center border-top mt-4 pt-2 row justify-content-between">
