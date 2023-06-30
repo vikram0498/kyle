@@ -17,7 +17,7 @@ return [
         'favicon' => 'images/favicon.png',
         'admin_favicon' => 'images/favicon.png',
         'short_logo' => 'images/favicon.png',
-        'admin_logo' => 'images/logo.png',
+        'admin_logo' => 'images/logo.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user-man.png',
     ],

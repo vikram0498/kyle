@@ -1,96 +1,71 @@
-
 <div>
-<section class="login d-flex flex-wrap">
-    <div class="login-left bg-white">
-    <div class="login-left-inner">
-        <div class="login-quote">
-            <h4>Grow Your Skill With {{config('constants.app_name')  }}</h4>
-            <p>it is an e-learning platform where you can learn different type of skills that will be helpful to create a better future for you.it is an e-learning platform where you can learn.</p>
-        </div>
-        <div class="login-img-left">
-            <img src="{{ asset('images/login-left.png') }}" alt="login img">
-        </div>
-    </div>
-    </div>
-
-    @if(!$verifyMailComponent)
-    <div class="login-right bg-light-orange">
-        <div class="login-form">
-            <div class="form-head">
-            <h3>Nice to see you again!</h3>
-            </div>
-            <form wire:submit.prevent="submitLogin" class="form">            
-            <div class="form-outer">
-                <div class="form-group">
-                    <div class="input-form">
-                        <div class="login-icon"><img src="{{ asset('images/icons/user.svg') }}" alt="User"></div>
-                        <label for="email" class="form-label">Email</label>
-                        <input type="text" class="form-control"  wire:model="email" wire:keyup="checkEmail" placeholder="Enter Your Email" />
+    <!-- LOGIN START -->
+    <section class="account-block">
+        <div class="container-fluid p-0">
+            <div class="account-session">
+                <div class="session-img">
+                    <img src="{{  asset('images/bg.jpg') }}" class="img-fluid" alt="" />
+                </div>
+                <div class="row align-items-center g-0 h-100vh">
+                    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center">
+                        <div class="account-in">
+                            <div class="center-content">
+                                <img src="{{ asset(config('constants.default.admin_logo')) }}" class="img-fluid" alt="" />
+                                <h2> {{ __('auth.login.welcome_back') }}</h2>
+                            </div>
+                            <form wire:submit.prevent="submitLogin" class="form">
+                                <div class="row">
+                                    <div class="col-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>{{ __('auth.login.email') }}</label>
+                                            <div class="form-group-inner">
+                                                <span class="form-icon"><img src="{{ asset('images/icons/email.svg') }}" class="img-fluid" alt="" /></span>
+                                                <input type="email" class="form-control"  wire:model.defer="email" wire:keyup="checkEmail" placeholder="{{ __('auth.login.email_placeholder') }}" />
+                                            </div>
+                                            @error('email') <span class="error text-danger ">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>{{ __('auth.login.password') }}</label>
+                                            <div class="form-group-inner">
+                                                <span class="form-icon"><img src="{{ asset('images/icons/password.svg') }}" class="img-fluid" alt="" /></span>
+                                                <input id="pass_log_id" type="password" class="form-control" placeholder="{{ __('auth.login.password_placeholder') }}" wire:model.defer="password" autocomplete="off"/>
+                                                <span toggle="#password-field" class="form-icon-password toggle-password"><img src="{{ asset('images/icons/eye.svg') }}" class="img-fluid" alt="" /></span>
+                                            </div>
+                                            @error('password') <span class="error text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group-switch">
+                                            <label class="switch">
+                                                <input type="checkbox" id="checkbox" wire:model.defer="remember_me" />
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <span class="toggle-heading">{{ __('auth.login.remember_me') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <a href="{{ route('auth.forget-password') }}" class="link-pass"> {{ __('auth.login.forgot_password') }} </a>
+                                    </div>
+                                    <div class="col-12 col-lg-12">
+                                        <div class="form-group-btn">
+                                            <button type="submit"  wire:loading.attr="disabled" class="btn btn-fill">
+                                                {{ __('auth.login.login_btn') }}
+                                                <span wire:loading wire:target="submitLogin">
+                                                    <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    @error('email') <span class="error text-danger ">{{ $message }}</span>@enderror
+                    <div class="col-12 col-lg-6"></div>
                 </div>
-                
-                <div class="form-group">
-                    <div class="input-form">
-                        <div class="login-icon"><img src="{{ asset('images/icons/password.svg') }}" ></div>
-                        <label for="password" class="form-label">Password</label>
-                        <input id="password-field" type="password" class="form-control" placeholder="Enter Your Password" wire:model.defer="password" autocomplete="off"/>
-                        <span toggle="#password-field" class="fa-eye field-icon toggle-password">
-                            <img src="{{ asset('images/icons/view-password.svg') }}" alt="view-password" class="view-password">
-                            <img src="{{ asset('images/icons/hide-password.svg') }}" alt="hide-password" class="hide-password">
-                        </span>
-                    </div>
-                    @error('password') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-                <div class="form-group">
-                    <div class="login-forgot">
-                    <label class="toggle-switch" for="checkbox">
-                        <input type="checkbox" id="checkbox" wire:model.defer="remember_me" />
-                        <div class="toggle-slider round"></div>
-                        <div class="can-toggle__label-text">Remember me</div>
-                    </label>
-                    <a href="{{ route('auth.forget-password') }}">Forgot Password?</a>
-                    </div>
-                </div>
-                </div>
-                <div class="submit-btn">
-                    <button type="submit"  wire:loading.attr="disabled" class="btn">
-                        Login Now!
-                        <span wire:loading wire:target="submitLogin">
-                            <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-                        </span>
-                    </button>
-                </div>
-                {{-- <div class="have-account">
-                <p>Don’t Have an account? <a href="{{ route('auth.register') }}">Sign up Now!</a></p>
-                </div> --}}
-            </form>
-        </div>
-    </div>
-    @else
-    <div class="login-right bg-light-orange">
-        <div class="login-form">
-            <div class="form-head">
-            <div class="icon-head">
-                <img src="{{ asset('images/icons/send-icon.svg') }}">
-            </div>
-            <h3>Please Verify the Mail</h3>
-            <p>We have send the verification mail on you mail id</p>
-            </div>
-            <div class="go-back">
-            <a href="javascript:void(0)" wire:click.prevent="backToLogin">
-                <svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14.9993 6.5H0.999268" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path d="M5.89927 11.5L0.999268 6.5L5.89927 1.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-                Back To Login
-            </a>
             </div>
         </div>
-    </div>
-    
-    @endif
-
-
-</section>
+    </section>
+    <!-- LOGIN END -->
 </div>

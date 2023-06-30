@@ -60,9 +60,10 @@ class Login extends BaseComponent
                     }
                     $this->addError('email', trans('auth.failed'));
                 }else{
-                    // $this->addError('email', trans('panel.message.email_verify_first'));
-                    $user->sendEmailVerificationNotification();
-                    $this->verifyMailComponent = true;
+                    // $user->sendEmailVerificationNotification();
+                    $this->alert('error', trans('panel.message.email_verify_first'));
+                    // $this->verifyMailComponent = true;
+
                 }
             } else {
                 $this->addError('email', trans('auth.failed'));

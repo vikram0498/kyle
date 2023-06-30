@@ -10,16 +10,25 @@
     <meta name="author" content="HIPL" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}} | @yield('title')</title>
+
     <link rel="icon" type="image/png" href="{{asset(config('constants.default.favicon'))}}">
+
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('css/style.css') }}" rel="stylesheet"> -->
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
 
     @livewireStyles
   </head>
   <body>
 
-    @include('partials.auth-header')
+    <!-- @include('partials.auth-header') -->
 
     @yield('content')
     
@@ -35,15 +44,18 @@
     <x-livewire-alert::flash />
 
    <script type="text/javascript">
-    $(".toggle-password").click(function() {
+		$(document).on('click', '.toggle-password', function() {
 
-      $(this).toggleClass("fa-eye fa-eye-slash");
-      var input = $($(this).attr("toggle"));
-      if (input.attr("type") == "password") {
-        input.attr("type", "text");
-      } else {
-        input.attr("type", "password");
-      }
+		    $(this).toggleClass("eye-close");
+		    
+		    var input = $("#pass_log_id");
+		    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+		});
+    $(document).on('click', '.toggle-password-1', function() {
+      $(this).toggleClass("eye-close");
+
+      var input = $("#conpass_log_id");
+      input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
     });
    </script>
 
