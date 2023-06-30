@@ -34,7 +34,7 @@
               @include('livewire.auth.profile.profile-image')
 
             <div class="col-lg-8">
-              <div class="card mb-4">
+              <div class="card mb-4 table-data">
                 <div class="card-body">
                   <div class="row">
                     <div class="col-sm-3">
@@ -73,7 +73,7 @@
                       <p class="text-muted mb-0">{{ $authUser->phone ?? ''}}</p>
                     </div>
                   </div>
-                  <hr>
+            
                 </div>
               </div>
             </div>

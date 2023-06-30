@@ -3,7 +3,7 @@
     {{__('global.show')}}
     {{ strtolower(__('cruds.plan.title_singular'))}}</h4>
 
-    <table class="table table-borderless">
+    <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.image')}}</th>
             <td><img class="rounded img-thumbnail" src="{{ $details->image_url }}" style="width:100px; height: auto;"/></td>
@@ -29,11 +29,13 @@
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
     </table>
-    <button wire:click.prevent="cancel" class="btn btn-secondary">
-        {{ __('global.back')}}
-        <span wire:loading wire:target="cancel">
-            <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-        </span>
-    </button>
+    <div class="text-right">
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">
+            {{ __('global.back')}}
+            <span wire:loading wire:target="cancel">
+                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            </span>
+        </button>
+    </div>
 
                

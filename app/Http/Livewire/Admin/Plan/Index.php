@@ -182,7 +182,8 @@ class Index extends Component
         $this->year_amount = '';
         $this->description = '';
         $this->status = 1;
-        $this->plan_image =null;
+        $this->image =null;
+        $this->originalImage = '';
     }
 
     public function cancel(){

@@ -27,7 +27,11 @@
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
                 <label class="font-weight-bold">{{ __('cruds.video.fields.video')}}</label>
-                <input type="file"  wire:model.defer="video" class="form-control" >
+                <div class='file-input'>
+                  <input type="file"  wire:model.defer="video" class="form-control" >
+                  <span class='button'>Choose</span>
+                  <span class='label' data-js-label>No file selected</label>
+                </div>
             </div>
             @if($errors->has('video'))
             <span class="error text-danger">
@@ -53,16 +57,38 @@
         </div>
     </div>
 
-    <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
+    <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue  mr-2">
         {{ $updateMode ? __('global.update') : __('global.submit') }}
         <span wire:loading wire:target="store">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
         </span>
     </button>
-    <button wire:click.prevent="cancel" class="btn btn-secondary">
+    <button wire:click.prevent="cancel" class="btn btn-fill btn-light ">
         {{ __('global.back')}}
         <span wire:loading wire:target="cancel">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
         </span>
     </button>
 </form>
+
+<script type="text/javascript">
+    var inputs = document.querySelectorAll('.file-input')
+
+    for (var i = 0, len = inputs.length; i < len; i++) {
+      customInput(inputs[i])
+    }
+
+    function customInput (el) {
+      const fileInput = el.querySelector('[type="file"]')
+      const label = el.querySelector('[data-js-label]')
+      
+      fileInput.onchange =
+      fileInput.onmouseout = function () {
+        if (!fileInput.value) return
+        
+        var value = fileInput.value.replace(/^.*[\\\/]/, '')
+        el.className += ' -chosen'
+        label.innerText = value
+      }
+    }
+</script>

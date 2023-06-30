@@ -223,14 +223,16 @@
             @foreach($radioButtonFields as $fieldName => $fieldData)
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __("cruds.buyer.fields.".$fieldName) }}</label>
-                        <div class="form-group">
+                        <div class="radio-block-group">
+                            <label class="font-weight-bold">{{ __("cruds.buyer.fields.".$fieldName) }}</label>
                             @foreach($fieldData as $data)
+                            <div class="label-container">
                                 <input type="radio" class="" name="{{ $fieldName }}" wire:model.defer="state.{{ $fieldName }}" id="{{ $data['id'] }}" value="{{ $data['value'] }}"> 
                                 <label for="{{ $data['id'] }}"> {{ __("global.".$data['label']) }}</label>
+                            </div>
                             @endforeach
+                            @error($fieldName) <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
-                        @error($fieldName) <span class="error text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             @endforeach
@@ -368,13 +370,13 @@
             </div>
         </div>
 
-        <button type="submit" wire:loading.attr="disabled" class="btn btn-primary mr-2">
+        <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue mr-2">
             {{ $updateMode ? __('global.update') : __('global.submit') }}
             <span wire:loading wire:target="{{ $updateMode ? 'update' : 'store' }}">
                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
             </span>
         </button>
-        <button wire:click.prevent="cancel" class="btn btn-secondary">
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-light">
             {{ __('global.back')}}
             <span wire:loading wire:target="cancel">
                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>

@@ -4,7 +4,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title fs-5" id="changePasswordLabel">{{ trans('global.change_password') }}</h5>
+                <h3 class="modal-title fs-5 font-weight-bold" id="changePasswordLabel">{{ trans('global.change_password') }}</h3>
                     <button type="button" class="close close-modal" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                     </button>
@@ -43,7 +43,7 @@
                             </div>                            
                             @error('password_confirmation') <span class="error text-danger">{{ $message }}</span> @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary uppassword">{{__('global.update_password')}}</button>
+                        <button type="submit" class="btn btn btn-fill btn-blue uppassword">{{__('global.update_password')}}</button>
                     </form>
                 </div>
             </div>

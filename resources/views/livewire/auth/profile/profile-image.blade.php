@@ -25,7 +25,7 @@
             <button class="btn btn-outline-danger ms-1" wire:key="action-{{generateRandomString(5)}}"  wire:click.prevent="$emitSelf('cancelUpdateProfileImage')"><i class="fa fa-close"></i></button>
         @else
             <input id="profile-image-upload" wire:model.defer="profile_image" class="d-none" type="file" wire:change="validateProfileImage" accept="image/*">
-            <button type="button" class="btn btn-outline-primary ms-1" onclick="document.getElementById('profile-image-upload').click();" >Change</button>
+            <button type="button" class="btn btn-fill btn-blue ms-1" onclick="document.getElementById('profile-image-upload').click();" >Change</button>
         @endif
                 
         </div>

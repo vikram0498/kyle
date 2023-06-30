@@ -3,7 +3,7 @@
     {{__('global.show')}}
     {{ strtolower(__('cruds.buyer.title_singular'))}}</h4>
 
-    <table class="table table-borderless">
+    <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.name')}}</th>
             <td>{{ $details->first_name.' '. $details->last_name  }}</td>
@@ -119,7 +119,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
                 <td> 
                     @foreach($details->parking as $parking)
-                        <span class="badge bg-secondary"> {{ $parkingValues[$parking] }} </span>
+                        <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
                     @endforeach
                 </td>
             </tr>
@@ -128,7 +128,7 @@
             <th width="25%">{{ __('cruds.buyer.fields.property_type')}}</th>
             <td> 
                 @foreach($details->property_type as $propertyType)
-                    <span class="badge bg-secondary"> {{ $propertyTypes[$propertyType] }} </span>
+                    <span class="badge bg-primary text-white"> {{ $propertyTypes[$propertyType] }} </span>
                 @endforeach
             </td>
         </tr>
@@ -137,7 +137,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.property_flaw')}}</th>
                 <td> 
                     @foreach($details->property_flaw as $propertyFlaw)
-                        <span class="badge bg-secondary"> {{ $propertyFlaws[$propertyFlaw] }} </span>
+                        <span class="badge bg-primary text-white"> {{ $propertyFlaws[$propertyFlaw] }} </span>
                     @endforeach
                 </td>
             </tr>
@@ -234,7 +234,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.buyer_type')}}</th>
                 <td> 
                     @foreach($details->buyer_type as $buyerType)
-                        <span class="badge bg-secondary"> {{ $buyerTypes[$buyerType] }} </span>
+                        <span class="badge bg-primary text-white"> {{ $buyerTypes[$buyerType] }} </span>
                     @endforeach
                 </td>
             </tr>
@@ -283,7 +283,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.building_class')}}</th>
                 <td> 
                     @foreach($details->building_class as $buildingClass)
-                        <span class="badge bg-secondary"> {{ $buildingClassValue[$buildingClass] }} </span>
+                        <span class="badge bg-primary text-white"> {{ $buildingClassValue[$buildingClass] }} </span>
                     @endforeach
                 </td>
             </tr>
@@ -299,7 +299,7 @@
                 <th width="25%">{{ __('cruds.buyer.fields.purchase_method')}}</th>
                 <td> 
                     @foreach($details->purchase_method as $purchaseMethod)
-                        <span class="badge bg-secondary"> {{ $purchaseMethods[$purchaseMethod] }} </span>
+                        <span class="badge bg-primary text-white"> {{ $purchaseMethods[$purchaseMethod] }} </span>
                     @endforeach
                 </td>
             </tr>
@@ -312,7 +312,8 @@
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
     </table>
-    <button wire:click.prevent="cancel" class="btn btn-secondary">
+    <div class="text-right">
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">
         {{ __('global.back')}}
         <span wire:loading wire:target="cancel">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
