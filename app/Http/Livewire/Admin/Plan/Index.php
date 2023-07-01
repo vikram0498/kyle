@@ -24,47 +24,19 @@ class Index extends Component
 
     public  $title, $month_amount, $year_amount, $status = 1, $description='',$image=null,$viewMode = false,$originalImage;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
-
     public $plan_id =null;
 
     protected $listeners = [
-        'confirmedToggleAction','deleteConfirm'
+        'show', 'edit', 'confirmedToggleAction','deleteConfirm'
     ];
 
     public function mount(){
         abort_if(Gate::denies('plan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $this->numberOfrowsList = config('constants.number_of_rows');
-    }
-
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
     }
 
     public function render()
     {
-        $this->search = str_replace(',', '', $this->search);
-         $this->plans = Plan::query()
-            ->where('title', 'like', '%'.$this->search.'%')
-            ->orWhere('month_amount', 'like', '%'.$this->search.'%')
-            ->orWhere('year_amount', 'like', '%'.$this->search.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->row_list);
-
-        $allPlans = $this->plans;
-        return view('livewire.admin.plan.index',compact('allPlans'));
+        return view('livewire.admin.plan.index');
     }
 
     public function create()

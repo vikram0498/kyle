@@ -18,9 +18,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
-
-    protected $listeners = [];
+    protected $listeners = ['show'];
 
     public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $purchaseMethods = null;
 
@@ -36,33 +34,10 @@ class Index extends Component
         $this->propertyFlaws = config('constants.property_flaws');
         $this->purchaseMethods = config('constants.purchase_methods');
         
-        $this->numberOfrowsList = config('constants.number_of_rows');
-    }
-
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
     }
 
     public function render() {
-        $keyword = str_replace(',', '', $this->search);
-        $allSearchLogs = SearchLog::query()
-            ->whereHas('seller', function($query) use($keyword){
-                $query->where('name', 'like', '%'.$keyword.'%');
-            })
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->row_list);
-        return view('livewire.admin.search-log.index',compact('allSearchLogs'));
+        return view('livewire.admin.search-log.index');
     }
 
     public function show($id) {

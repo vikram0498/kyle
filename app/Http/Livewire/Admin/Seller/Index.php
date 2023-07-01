@@ -22,44 +22,17 @@ class Index extends Component
 
     protected $users = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
-
     protected $listeners = [
-        'confirmedToggleAction','deleteConfirm', 'blockConfirmedToggleAction'
+        'show', 'confirmedToggleAction','deleteConfirm', 'blockConfirmedToggleAction'
     ];
 
     public function mount(){
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $this->numberOfrowsList = config('constants.number_of_rows');
-    }
-
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
     }
 
     public function render()
     {
-        $this->users = User::query()->withCount('buyers')
-        ->whereHas('roles',function($query){
-            $query->whereIn('id',[2]);
-        })
-        ->where('name', 'like', '%'.$this->search.'%')
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->paginate($this->row_list);
-
-        $allUser = $this->users;
-        return view('livewire.admin.seller.index',compact('allUser'));
+        return view('livewire.admin.seller.index');
     }
 
     public function create()

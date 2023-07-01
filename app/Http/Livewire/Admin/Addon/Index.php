@@ -22,48 +22,21 @@ class Index extends Component
 
     protected $addons = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
-
     public  $title, $price, $credit, $status = 1, $viewMode = false;
 
     public $addon_id =null;
 
     protected $listeners = [
-        'confirmedToggleAction','deleteConfirm'
+       'show', 'edit', 'confirmedToggleAction','deleteConfirm'
     ];
 
     public function mount(){
         abort_if(Gate::denies('addon_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $this->numberOfrowsList = config('constants.number_of_rows');
-    }
-
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
     }
 
     public function render()
-    {
-        $this->search = str_replace(',', '', $this->search);
-         $this->addons = Addon::query()
-            ->where('title', 'like', '%'.$this->search.'%')
-            ->OrWhere('price', 'like', '%'.$this->search.'%')
-            ->OrWhere('credit', 'like', '%'.$this->search.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->row_list);
-
-        $allAddons = $this->addons;
-        return view('livewire.admin.addon.index',compact('allAddons'));
+    {        
+        return view('livewire.admin.addon.index');
     }
 
     public function create()

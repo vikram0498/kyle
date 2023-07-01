@@ -27,15 +27,14 @@ class Index extends Component
 
     public $buyerFormLink = null;
 
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
-
     public $state = [
         'status' => 1,
         'buyer_type' => []
     ];
 
     protected $listeners = [
-        'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction'
+
+       'show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction'
     ];
 
     protected $buyer = null;
@@ -56,8 +55,6 @@ class Index extends Component
         $this->buildingClassValue =config('constants.building_class_values');
         $this->purchaseMethods = config('constants.purchase_methods');
         $this->radioButtonFields = config('constants.radio_buttons_fields');
-
-        $this->numberOfrowsList = config('constants.number_of_rows');
 
         $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
@@ -116,32 +113,9 @@ class Index extends Component
         return $rules;
     }
 
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
-    }
-
     public function render() {
-        $this->search = str_replace(',', '', $this->search);
-        $allBuyers = Buyer::query()
-            ->where('first_name', 'like', '%'.$this->search.'%')
-            ->OrWhere('last_name', 'like', '%'.$this->search.'%')
-            ->OrWhere('email', 'like', '%'.$this->search.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->row_list);
-        return view('livewire.admin.buyer.index',compact('allBuyers'));
+        return view('livewire.admin.buyer.index');
     }
-
 
     public function create(){
         $this->resetInputFields();

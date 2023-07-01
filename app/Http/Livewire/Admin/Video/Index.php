@@ -27,43 +27,16 @@ class Index extends Component
     public $video_id =null;
 
     protected $listeners = [
-        'confirmedToggleAction','deleteConfirm'
+        'show', 'edit', 'confirmedToggleAction','deleteConfirm'
     ];
-
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $row_list = 10, $numberOfrowsList;
 
     public function mount(){
         abort_if(Gate::denies('video_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $this->numberOfrowsList = config('constants.number_of_rows');
     }
-
-    public function changeNumberOfList($val)  {
-        $this->row_list = $val;
-    }
-
-    public function sortBy($columnName)
-    {
-        if ($this->sortColumnName === $columnName) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortDirection = 'asc';
-        }
-
-        $this->sortColumnName = $columnName;
-    }
-
 
     public function render()
     {
-        $this->search = str_replace(',', '', $this->search);
-         $this->videos = Video::query()
-            ->where('title', 'like', '%'.$this->search.'%')
-            ->orWhere('description', 'like', '%'.$this->search.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate($this->row_list);
-
-        $allVideos = $this->videos;
-        return view('livewire.admin.video.index',compact('allVideos'));
+        return view('livewire.admin.video.index');
     }
 
     public function create()
