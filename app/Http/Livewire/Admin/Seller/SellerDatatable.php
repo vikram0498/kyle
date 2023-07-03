@@ -39,6 +39,10 @@ class SellerDatatable extends LivewireDatatable
                 return User::find($id)->buyers()->count();
             })->label(trans('cruds.user.fields.buyer_count'))->sortable(),
 
+            Column::callback(['id', 'updated_at'], function ($id) {
+                return 0;
+            })->label(trans('cruds.user.fields.purchased_buyer'))->sortable(),
+
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
             Column::callback(['id', 'phone'], function ($id, $phone) {
                 $array = ['show', 'delete'];

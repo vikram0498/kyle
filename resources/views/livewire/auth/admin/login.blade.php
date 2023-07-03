@@ -31,7 +31,7 @@
                                             <div class="form-group-inner">
                                                 <span class="form-icon"><img src="{{ asset('images/icons/password.svg') }}" class="img-fluid" alt="" /></span>
                                                 <input id="pass_log_id" type="password" class="form-control" placeholder="{{ __('auth.login.password_placeholder') }}" wire:model.defer="password" autocomplete="off"/>
-                                                <span toggle="#password-field" class="form-icon-password toggle-password"><img src="{{ asset('images/icons/eye.svg') }}" class="img-fluid" alt="" /></span>
+                                                <span toggle="#password-field" class="form-icon-password toggle-password eye-close"><img src="{{ asset('images/icons/eye.svg') }}" class="img-fluid" alt="" /></span>
                                             </div>
                                             @error('password') <span class="error text-danger">{{ $message }}</span>@enderror
                                         </div>

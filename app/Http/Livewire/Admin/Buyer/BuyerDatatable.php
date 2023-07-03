@@ -26,6 +26,19 @@ class BuyerDatatable extends LivewireDatatable
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Ban']);
             })->label(trans('cruds.buyer.fields.status'))->sortable(),
 
+            Column::callback(['id', 'size_min'], function ($id) {
+                return 0;
+            })->label(trans('cruds.buyer.fields.like'))->sortable(),
+
+            Column::callback(['id', 'size_max'], function () {
+                return 0;
+            })->label(trans('cruds.buyer.fields.dislike'))->sortable(),
+
+            Column::callback(['id', 'solar'], function ($id, $solar) {
+                $flgHtml = '<a href="javascript:void(0);" class="seller_flg_mark" data-id="'.$id.'"><img src="'.asset('images/icons/red-flag.svg').'" /></a>';
+                return $flgHtml;
+            })->label(trans('cruds.buyer.fields.flag_mark'))->sortable(),
+
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
             Column::callback(['id', 'user_id'], function ($id, $user_id) {
                 $array = ['show', 'edit', 'delete'];

@@ -19,7 +19,7 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td style="line-break: anywhere;">
             If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser: {{ $reset_password_url }}
         </td>
     </tr>
