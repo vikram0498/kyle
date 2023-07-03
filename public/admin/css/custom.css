@@ -454,6 +454,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     display: block !important;
 }
 .search-table-data > div > .relative > .flex > .flex {
+    position: relative;
     display: block;
     max-width: 350px;
 }
@@ -492,7 +493,15 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
     width: 100% !important;
 }
 .profile-img-block img {
+    object-fit: cover;
     margin: 0 auto;
+    height: 150px;
+}
+.search-table-data > div > .relative > .flex > .flex [wire\:loading] {
+    margin-left: auto;
+    position: absolute;
+    right: -30px;
+    top: -27px;
 }
 .search-table-data .overflow-x-scroll {
     overflow-x: auto !important;
