@@ -34,7 +34,7 @@
           <div class="card card-tale">
             <div class="card-body">
               <p class="mb-4">{{ __('cruds.dashboard.total_seller') }}</p>
-              <p class="fs-30 mb-2">30</p>
+              <p class="fs-30 mb-2">{{ $sellerCount }}</p>
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@
           <div class="card card-dark-blue">
             <div class="card-body">
               <p class="mb-4"> {{ __('cruds.dashboard.total_buyer') }} </p>
-              <p class="fs-30 mb-2">50</p>
+              <p class="fs-30 mb-2">{{ $buyerCount }}</p>
             </div>
           </div>
         </div>
