@@ -14,27 +14,29 @@
 
                     @else
                         <div wire:loading wire:target="{{ $updateMode ? 'edit' : 'create' }}" class="loader"></div>
-                        <div class="card-title">
-                            <h4 class="float-left">{{__('cruds.buyer.title')}} {{ __('global.list') }}</h4>
+                        <div class="card-title top-box-set">
+                            <h4 class="card-title-heading">{{__('cruds.buyer.title')}} {{ __('global.list') }}</h4>
                             
-                            <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text float-right">
-                                <i class="ti-plus btn-icon-prepend"></i>                                                    
-                                    {{__('global.add')}}
-                            </button>
-                            <a href="{{ route('admin.import-buyers') }}" class="btn btn-sm btn-primary mr-2 btn-icon-text float-right">
-                                <i class="fa fa-download"></i>                                                
-                                    {{__('cruds.buyer.fields.buyer_csv_import')}}
-                            </a>
-                            <a href="{{ asset('default/sample_template_import_buyer.csv') }}" download="{{ asset('default/sample_template_import_buyer.csv') }}" class="btn btn-sm btn-info mr-2 btn-icon-text float-right">
-                                <i class="fa fa-upload"></i>                                                
+                            <div class="card-top-box-item">
+                                <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
+                                    <i class="ti-plus btn-icon-prepend"></i>                                                    
+                                        {{__('global.add')}}
+                                </button>
+                                <a href="{{ route('admin.import-buyers') }}" class="btn btn-sm btn-primary mr-2 btn-icon-text btn-header">
+                                    <i class="fa fa-download"></i>                                                
+                                        {{__('cruds.buyer.fields.buyer_csv_import')}}
+                                </a>
+                                <a href="{{ asset('default/sample_template_import_buyer.csv') }}" download="{{ asset('default/sample_template_import_buyer.csv') }}" class="btn btn-sm btn-info mr-2 btn-icon-text btn-header">
+                                    <i class="fa fa-upload"></i>                                                
                                     {{__('cruds.buyer.fields.buyer_csv_template')}}
-                            </a>
-                            <!-- <a href="{{ $buyerFormLink }}" class="btn btn-sm btn-dark mr-2 btn-icon-text float-right copy_link position-relative">
+                                </a>
+                            </div>
+                            <!-- <a href="{{ $buyerFormLink }}" class="btn btn-sm btn-dark mr-2 btn-icon-text copy_link position-relative">
                                 <i class="fa fa-copy"></i>                                                
                                     {{__('cruds.buyer.fields.copy_add_buyer_link')}}
                             </a> -->
                         </div>                
-                        <div class="table-responsive">
+                        <div class="table-responsive search-table-data">
 
                             @livewire('admin.buyer.buyer-datatable') 
                         

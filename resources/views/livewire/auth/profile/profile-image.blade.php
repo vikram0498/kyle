@@ -1,6 +1,6 @@
 <div class="col-lg-4">
     <div class="card mb-4">
-        <div class="card-body text-center">
+        <div class="card-body text-center profile-img-block">
         
             <!-- <div wire:loading wire:target="profile_image" class="loader" role="status" aria-hidden="true"></div>
             <div wire:loading wire:target="cancelUpdateProfileImage" class="loader" role="status" aria-hidden="true"></div> -->

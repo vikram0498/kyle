@@ -14,14 +14,14 @@
                   
                 @else
                     <div wire:loading wire:target="create" class="loader"></div>
-                    <div class="card-title">
-                        <h4 class="float-left">{{__('cruds.user.title')}} {{ __('global.list') }}</h4>
-                        {{-- <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text float-right">
+                    <div class="card-title top-box-set">
+                        <h4 class="card-title-heading">{{__('cruds.user.title')}} {{ __('global.list') }}</h4>
+                        {{-- <div class="card-top-box-item"> <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
                             <i class="ti-plus btn-icon-prepend"></i>                                                    
                                 {{__('global.add')}}
-                        </button> --}}
+                        </button></div> --}}
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive search-table-data">
                         @livewire('admin.seller.seller-datatable') 
                     </div>
 

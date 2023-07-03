@@ -10,10 +10,10 @@
 
                     @else
                         <div wire:loading wire:target="{{ $updateMode ? 'edit' : 'create' }}" class="loader"></div>
-                        <div class="card-title">
-                            <h4 class="float-left">{{__('cruds.search_log.title')}} {{ __('global.list') }}</h4>                            
+                        <div class="card-title top-box-set">
+                            <h4 class="card-title-heading">{{__('cruds.search_log.title')}} {{ __('global.list') }}</h4>                            
                         </div>                
-                        <div class="table-responsive">
+                        <div class="table-responsive search-table-data">
                         @livewire('admin.search-log.search-log-datatable') 
                         
                         </div>
