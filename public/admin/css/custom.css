@@ -494,7 +494,9 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .profile-img-block img {
     margin: 0 auto;
 }
-
+.search-table-data .overflow-x-scroll {
+    overflow-x: auto !important;
+}
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{
