@@ -14,7 +14,8 @@ class SearchLogDatatable extends LivewireDatatable
     
     public function builder()
     {
-        return SearchLog::query()->with('seller'); // Include the related table data
+        // return SearchLog::query(); // Include the related table data
+        return SearchLog::query()->leftJoin('users', 'users.id', 'search_logs.user_id');
     }
   
     /**
@@ -26,11 +27,8 @@ class SearchLogDatatable extends LivewireDatatable
     {
         return [
             Column::index($this)->unsortable(),
-            Column::callback(['user_id'], function ($user_id) {
-                return User::find($user_id)->name;
-            })->label(trans('cruds.search_log.fields.user_id'))->sortable(),
-
-            // Column::name('seller.name')->label(trans('cruds.search_log.fields.user_id'))->sortable()->searchable(),
+            
+            Column::name('users.name')->label(trans('cruds.search_log.fields.user_id'))->sortable()->searchable(),
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
             Column::callback(['id'], function ($id) {
