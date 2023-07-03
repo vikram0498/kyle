@@ -6,7 +6,7 @@
                 <div class="modal-header">
                 <h3 class="modal-title fs-5 font-weight-bold" id="changePasswordLabel">{{ trans('global.change_password') }}</h3>
                     <button type="button" class="close close-modal" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                        <span aria-hidden="true" style="font-size: 30px;color: black;font-weight: bolder;" wire:click="closeModal">×</span>
                     </button>
                 </div>
                 <div class="modal-body">

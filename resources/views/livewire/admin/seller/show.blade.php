@@ -18,7 +18,19 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.phone')}}</th>
-            <td> {{ $seller->phone ?? '' }}</td>
+            <td> {{ $seller->phone ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.user.fields.buyer_count')}}</th>
+            <td> {{ $selfBuyerCount ?? '' }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.user.fields.purchased_buyer')}}</th>
+            <td> {{ $purchasedBuyerCount ?? '' }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.user.fields.package')}}</th>
+            <td> Free</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.status')}}</th>
@@ -28,6 +40,11 @@
             <th width="25%">{{ __('cruds.user.fields.block_status')}}</th>
             <td> {{ ($seller->is_block ? 'Blocked' : 'Unblocked') }}</td>
         </tr>
+        <tr>
+            <th width="25%">{{ __('global.created_at')}}</th>
+            <td> {{ ($seller->is_block ? 'Blocked' : 'Unblocked') }}</td>
+        </tr>
+
     </table>
 
    <div class="text-right">

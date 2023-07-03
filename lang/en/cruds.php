@@ -24,8 +24,9 @@ return [
             'status'                   => 'Status',
             'block_status'             => 'Block Status',
             'password'                 => 'Password',
-            'buyer_count'              => 'Buyer Count',
+            'buyer_count'              => 'Self Buyers',
             'purchased_buyer'          => 'Purchased Buyers',
+            'package'                  => 'Package',
             'confirm_password'         => 'Password Confirm',
             'role'                     => 'User Level',
             'created_at'               => 'Created at',
@@ -61,11 +62,11 @@ return [
     ],
 
     'addon' => [
-        'title' => 'Addons',
-        'title_singular' => 'Addon',
+        'title' => 'Additional Credits',
+        'title_singular' => 'Additional Credit',
         'fields' => [
-            'title'         => 'Addon Name',
-            'price'         => 'Addon price',       
+            'title'         => 'Name',
+            'price'         => 'price',       
             'credit'        => 'Credit',       
             'status'        => 'Status', 
             'created_at'    => 'Created At',

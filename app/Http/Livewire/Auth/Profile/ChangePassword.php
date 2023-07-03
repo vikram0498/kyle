@@ -69,5 +69,10 @@ class ChangePassword extends Component
         $this->password = '';
         $this->password_confirmation = '';
     }
+
+    public function closeModal(){
+        $this->resetInputFields();
+        $this->resetValidation();
+    }
     
 }

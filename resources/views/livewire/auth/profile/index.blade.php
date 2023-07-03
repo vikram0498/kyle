@@ -17,7 +17,7 @@
                       <div class="d-flex float-right">
                         @if(!$editMode)
                         <button class="btn btn-sm btn-primary mr-1" wire:click="openEditSection">
-                            <i class="fa fa-edit pr-1"></i>{{__('global.edit')}}
+                            <i class="fa fa-edit pr-1"></i>{{__('global.update')}}
                         </button>
                         @endif
                         <button class="btn btn-sm btn-primary" id="changepassword"  data-bs-toggle="modal" data-bs-target="#changePasswordModal"><i class="fa fa-key pr-1"></i>{{__('global.change_password')}}</button>

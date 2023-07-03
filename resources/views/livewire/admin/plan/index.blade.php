@@ -22,7 +22,7 @@
                                     {{__('global.add')}}
                             </button>
                         </div>
-                    </div>                
+                    </div>
                     <div class="table-responsive search-table-data">
                             @livewire('admin.plan.plan-datatable') 
                        

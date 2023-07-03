@@ -23,7 +23,7 @@ class BuyerDatatable extends LivewireDatatable
             Column::index($this)->unsortable(),
             Column::name('first_name')->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
             Column::callback(['id', 'status'], function ($id, $status) {
-                return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Ban']);
+                return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Block']);
             })->label(trans('cruds.buyer.fields.status'))->sortable(),
 
             Column::callback(['id', 'size_min'], function ($id) {
@@ -34,8 +34,12 @@ class BuyerDatatable extends LivewireDatatable
                 return 0;
             })->label(trans('cruds.buyer.fields.dislike'))->sortable(),
 
-            Column::callback(['id', 'solar'], function ($id, $solar) {
-                $flgHtml = '<a href="javascript:void(0);" class="seller_flg_mark" data-id="'.$id.'"><img src="'.asset('images/icons/red-flag.svg').'" /></a>';
+            Column::callback(['id', 'is_ban'], function ($id, $isBan) {
+                $flgHtml = '';
+                if($isBan == 1){
+                    $flgHtml = '<a href="javascript:void(0);" class="seller_flg_mark" data-id="'.$id.'"><img src="'.asset('images/icons/red-flag.svg').'" /></a>';
+                }
+                
                 return $flgHtml;
             })->label(trans('cruds.buyer.fields.flag_mark'))->sortable(),
 

@@ -20,7 +20,7 @@
                                             <label>{{ __('auth.login.email') }}</label>
                                             <div class="form-group-inner">
                                                 <span class="form-icon"><img src="{{ asset('images/icons/email.svg') }}" class="img-fluid" alt="" /></span>
-                                                <input type="email" class="form-control"  wire:model.defer="email" wire:keyup="checkEmail" placeholder="{{ __('auth.login.email_placeholder') }}" />
+                                                <input type="email" class="form-control"  wire:model.defer="email" placeholder="{{ __('auth.login.email_placeholder') }}" />
                                             </div>
                                             @error('email') <span class="error text-danger ">{{ $message }}</span>@enderror
                                         </div>

@@ -31,13 +31,17 @@ class SellerDatatable extends LivewireDatatable
             Column::name('name')->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
 
             Column::callback(['id', 'is_active'], function ($id, $is_active) {
-                return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $is_active, 'onLable' => 'Active', 'offLable' => 'Inactive']);
+                return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $is_active, 'type' => 'is_active', 'onLable' => 'Active', 'offLable' => 'Inactive']);
             })->label(trans('cruds.user.fields.status'))->sortable(),
 
             // Column::name('buyer_count')->label(trans('cruds.user.fields.buyer_count'))->sortable()->searchable(),
             Column::callback(['id'], function ($id) {
                 return User::find($id)->buyers()->count();
             })->label(trans('cruds.user.fields.buyer_count'))->sortable(),
+
+            Column::callback(['id', 'address'], function ($id) {
+                return 'Free';
+            })->label(trans('cruds.user.fields.package'))->sortable(),
 
             Column::callback(['id', 'updated_at'], function ($id) {
                 return 0;
