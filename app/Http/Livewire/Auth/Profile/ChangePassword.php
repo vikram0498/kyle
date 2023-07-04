@@ -51,7 +51,7 @@ class ChangePassword extends Component
     }
 
     public function updatePassword(){
-        $validated = $this->validate($this->rules(),$this->messages());
+        $validated = $this->validate($this->rules(),$this->messages(), ['password' => 'new password']);
         
         User::find($this->userId)->update(['password'=> Hash::make($this->password)]);
 
