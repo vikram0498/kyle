@@ -1,66 +1,53 @@
  
  <form wire:submit.prevent="updateProfile">
- <!--Start row-1  -->
- <div class="row">
-    
-    @include('livewire.auth.profile.profile-image')
-
-    <div class="col-lg-8">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row">            
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.user.fields.first_name') }}</label>
-                            <input type="text" class="form-control" wire:model.defer="first_name" placeholder="{{ __('cruds.user.fields.first_name') }}" />
-                            @error('first_name') <span class="error text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.user.fields.last_name') }}</label>
-                            <input type="text" class="form-control" wire:model.defer="last_name" placeholder="{{ __('cruds.user.fields.last_name') }}"/>
-                            @error('last_name') <span class="error text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.user.fields.email') }}</label>
-                            <input type="email" class="form-control" wire:model.defer="email" placeholder="{{ __('cruds.user.fields.email') }}" disabled/>
-                            @error('email') <span class="error text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.user.fields.phone') }}</label>
-                            <input type="text" class="form-control" wire:model.defer="phone" placeholder="{{ __('cruds.user.fields.phone') }}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length < 10 " step="1"  autocomplete="off"/>
-                            @error('phone') <span class="error text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
+ <div class="row mt-5">
+    <div class="col-12 col-lg-6">
+        <div class="form-group">
+            <label for="first_name">{{ __('cruds.user.fields.first_name') }}</label>
+            <div class="input-set">
+                <span class="icon-left"><img src="images/user-login.svg" alt="Img"></span>
+                <input type="text" class="form-control" id="first_name"  wire:model.defer="first_name" placeholder="Enter {{ __('cruds.user.fields.first_name') }}"/>
             </div>
+            @error('first_name') <span class="error text-danger">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="form-group">
+            <label for="last_name">{{ __('cruds.user.fields.last_name') }}</label>
+            <div class="input-set">
+                <span class="icon-left"><img src="images/user-login.svg" alt="Img"></span>
+                <input type="text" class="form-control" id="last_name"  wire:model.defer="last_name" placeholder="Enter {{ __('cruds.user.fields.last_name') }}"/>
+            </div>
+            @error('last_name') <span class="error text-danger">{{ $message }}</span>@enderror
         </div>
     </div>
 </div>
-
-<div class="text-center mt-3">
-    <button class="btn btn-fill btn-blue" type="submit" wire:loading.attr="disabled">
-        {{ __('global.update')}}
-        <span wire:loading wire:target="updateProfile">
-            <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-        </span>
-    </button>
-    <button class="btn btn-fill btn-light" wire:loading.attr="disabled" wire:click.prevent="closedEditSection">
-        {{ __('global.back')}}
-        <span wire:loading wire:target="closedEditSection">
-            <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-        </span>
-    </button>
+<div class="row">
+    <div class="col-12 col-lg-12">
+        <div class="form-group">
+            <label for="email">{{ __('cruds.user.fields.email') }}</label>
+            <div class="input-set">
+                <span class="icon-left"><img src="images/mail.svg" alt="Img"></span>
+                <input type="email" class="form-control" wire:model.defer="email" placeholder="Enter {{ __('cruds.user.fields.email') }}" disabled="" />
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-12">
+        <div class="form-group">
+            <label for="Mobile">{{ __('cruds.user.fields.phone') }}</label>
+            <div class="input-set">
+                <span class="icon-left"><img src="images/phone.svg" alt="Img"></span>
+                <input type="text" class="form-control only_integer" id="mobile" wire:model.defer="phone" placeholder="Enter {{ __('cruds.user.fields.phone') }}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length < 10 " step="1"  autocomplete="off"/>
+            </div>
+            @error('phone') <span class="error text-danger">{{ $message }}</span>@enderror
+        </div>
+    </div>
 </div>
-
-</form>
+</div>
+<button type="submit" class="btn btn-fill btn-blue" wire:loading.attr="disabled">
+                    {{ __('global.update')}}
+                    <span wire:loading wire:target="updateProfile">
+                        <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </form>

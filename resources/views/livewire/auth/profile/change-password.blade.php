@@ -1,54 +1,45 @@
-<div>
-    <!-- Modal -->
-    <div wire:ignore.self class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h3 class="modal-title fs-5 font-weight-bold" id="changePasswordLabel">{{ trans('global.change_password') }}</h3>
-                    <button type="button" class="close close-modal" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="font-size: 30px;color: black;font-weight: bolder;" wire:click="closeModal">×</span>
-                    </button>
+<form wire:submit.prevent="updatePassword">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-12 col-lg-12">
+                <div class="form-group">
+                    <label>{{__('global.current_password') }}</label>
+                    <div class="input-set">
+                        <span class="icon-left"><img src="images/password.svg" alt="Img"></span>
+                        <input type="password" class="form-control" wire:model.defer="current_password" id="currentpass_log_id" autocomplete="off" placeholder="{{__('global.current_password') }}">
+                        <span toggle="#password-field" class="form-icon-password toggle-password"><img src="images/eye.svg" class="img-fluid" alt=""></span>
+                    </div>
+                    @error('current_password') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
-                <div class="modal-body">
-                    <div wire:loading wire:target="updatePassword" class="loader"></div>
-                    <form wire:submit.prevent="updatePassword">
-                        <div class="mb-3">
-                            <label for="current_password" class="form-label">{{__('global.current_password') }}</label>
-                            <div class="input-group show_hide_password" id="show_hide_password">
-                                <input type="password" class="form-control" wire:model.defer="current_password" id="current-password" autocomplete="off">
-                                <div class="input-group-addon">
-                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                            @error('current_password') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="new_password" class="form-label">{{__('global.new_password')}}</label>
-                            <div class="input-group show_hide_password" id="show_hide_password">
-                                <input type="password" class="form-control" wire:model.defer="password" id="new-password" autocomplete="off">
-                                <div class="input-group-addon">
-                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                                </div>
-                            </div>
-                            @error('password') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">{{__('global.confirm_new_password')}}</label>
-                            <div class="input-group show_hide_password" id="show_hide_password">
-                                <input  type="password" wire:model.defer="password_confirmation" class="form-control" id="password_confirmation" autocomplete="off">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                                </div>
-                            </div>                            
-                            @error('password_confirmation') <span class="error text-danger">{{ $message }}</span> @enderror
-                        </div>
-                        <button type="submit" class="btn btn btn-fill btn-blue uppassword">{{__('global.update_password')}}</button>
-                    </form>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="form-group">
+                    <label>{{__('global.new_password')}}</label>
+                    <div class="input-set">
+                        <span class="icon-left"><img src="images/password.svg" alt="Img"></span>
+                        <input  type="password" wire:model.defer="password" class="form-control" id="newpass_log_id" autocomplete="off" placeholder="{{__('global.new_password')}}">
+                        <span toggle="#password-field" class="form-icon-password toggle-password1"><img src="images/eye.svg" class="img-fluid" alt=""></span>
+                    </div>
+                    @error('password') <span class="error text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <div class="col-12 col-lg-12">
+                <div class="form-group">
+                    <label>{{__('global.confirm_new_password')}}</label>
+                    <div class="input-set">
+                        <span class="icon-left"><img src="images/password.svg" alt="Img"></span>
+                        <input  type="password" wire:model.defer="password_confirmation" class="form-control" id="connewpass_log_id" autocomplete="off" placeholder="{{__('global.confirm_new_password')}}">
+                        <span toggle="#password-field" class="form-icon-password toggle-password2"><img src="images/eye.svg" class="img-fluid" alt=""></span>
+                    </div>
+                    @error('password_confirmation') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
     </div>
-    <!-- end model  -->
-
-</div>
+    <button type="submit" class="btn btn btn-fill btn-blue uppassword">{{__('global.update_password')}}
+    <span wire:loading wire:target="updatePassword">
+                        <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                    </span>
+    </button>
+    
+</form>

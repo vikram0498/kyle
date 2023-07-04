@@ -1,7 +1,7 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
     <a class="navbar-brand brand-logo" href="javascript:void(0)"><img src="{{ asset(config('constants.default.admin_logo')) }}" class="mr-2" alt="logo"/></a>
-    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="{{asset('images/logo-mini.svg')}}" alt="logo"/></a>
+    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="{{asset('admin/images/logo-mini.svg')}}" alt="logo"/></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -72,10 +72,10 @@
             <div class="dropdown user-dropdown">
                 <button class="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="dropdown-data">
-                        <div class="img-user"><img src="images/avtar.png" class="img-fluid" alt=""></div>
+                        <div class="img-user"><img src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}"  class="img-fluid" alt=""></div>
                         <div class="welcome-user">
                             <span class="welcome">welcome</span>
-                            <span class="user-name-title">John Thomsan</span>
+                            <span class="user-name-title">{{ auth()->user()->name }}</span>
                         </div>
                     </div>
                     <span class="arrow-icon">

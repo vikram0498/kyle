@@ -5,6 +5,10 @@ namespace App\Http\Livewire\Auth\Profile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\User;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use App\Rules\MatchOldPassword;
 
 
 class Index extends Component
@@ -19,12 +23,18 @@ class Index extends Component
 
     public $first_name, $last_name, $email,$phone; 
 
+    public $current_password, $password, $password_confirmation;
+
     protected $listeners = [
         'confirmUpdateProfileImage','cancelUpdateProfileImage','openEditSection','closedEditSection'
     ];
 
     public function mount(){
         $this->authUser = auth()->user();
+        $this->first_name = $this->authUser->first_name;
+        $this->last_name  = $this->authUser->last_name;
+        $this->email      = $this->authUser->email;
+        $this->phone      = $this->authUser->phone;
     }
 
     public function render()
@@ -68,7 +78,6 @@ class Index extends Component
             // Set Flash Message
             $this->alert('success', 'Profile image has been updated.');
         } else {
-
             $this->alert(trans('panel.alert-type.error'), trans('panel.message.error'));
         }
     }
@@ -111,7 +120,10 @@ class Index extends Component
 
         $this->authUser->update($userDetails);
 
-        $this->closedEditSection();
+        
+        $this->resetInputFields();
+
+        // $this->closedEditSection();
         $this->alert('success', 'Profile has been updated.');
     }
 
@@ -122,4 +134,32 @@ class Index extends Component
         $this->phone      = '';
     }
 
+    
+    public function updatePassword(){
+        $validated = $this->validate([
+            'current_password'  => ['required', 'string','min:8',new MatchOldPassword],
+            'password'   => ['required', 'string', 'min:8', /*'confirmed',*/ 'different:current_password'],
+            'password_confirmation' => ['required','min:8','same:password'],
+        ],
+        [
+            'password_confirmation.same' => 'The password confirmation and new password must match.'
+        ], ['password' => 'new password']);
+        
+        User::find($this->authUser->id)->update(['password'=> Hash::make($this->password)]);
+
+        $this->resetInputFields();
+        $this->resetInputFields();
+
+        $this->dispatchBrowserEvent('close-modal',['element'=>'#changePasswordModal']);
+
+        // Set Flash Message
+        $this->alert('success', trans('passwords.updated'));
+
+    }
+
+    private function resetInputFields(){
+        $this->current_password = '';
+        $this->password = '';
+        $this->password_confirmation = '';
+    }
 }
