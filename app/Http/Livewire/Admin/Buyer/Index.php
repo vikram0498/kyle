@@ -33,8 +33,7 @@ class Index extends Component
     ];
 
     protected $listeners = [
-
-       'show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction'
+       'show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty'
     ];
 
     protected $buyer = null;
@@ -113,6 +112,24 @@ class Index extends Component
         return $rules;
     }
 
+    public function updateProperty($data) {
+        // dd($data);
+        
+        $this->state[$data['property']] = $data['pr_vals'];
+
+        $this->validatiionForm();
+    }
+
+    private function validatiionForm(){
+        if(!$this->updateMode){
+            Validator::make($this->state, $this->rules())->validate();
+        } else {
+            $rules = $this->rules();
+            $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
+            Validator::make($this->state, $rules)->validate();
+        }
+    }
+
     public function render() {
         return view('livewire.admin.buyer.index');
     }
@@ -125,7 +142,7 @@ class Index extends Component
     }
 
     public function store() {  
-        Validator::make($this->state, $this->rules())->validate();
+        $this->validatiionForm();
         
         $this->state['user_id'] = auth()->user()->id;
         
@@ -156,9 +173,7 @@ class Index extends Component
     }
 
     public function update() {
-        $rules = $this->rules();
-        $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NUL'];
-        Validator::make($this->state, $rules)->validate();
+        $this->validatiionForm();
 
         $buyer = Buyer::find($this->buyer_id);
         $buyer->update($this->state);

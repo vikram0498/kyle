@@ -94,7 +94,9 @@
     $(document).on('change','.select2', function(e){
         var pr = $(this).data('property');
         var pr_vals = $(this).val();
-        @this.set('state.'+pr, pr_vals);
+        // @this.set('state.'+pr, pr_vals);
+        
+        @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
         if(pr == 'buyer_type'){
             @this.emit('changeBuyerType', $('.buyer_type').select2('val'));
         } 
