@@ -15,7 +15,7 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.video.fields.title')}}</th>
-            <td>{{ $details->title }}</td>
+            <td>{{ $details->title ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.video.fields.description')}}</th>
@@ -24,6 +24,10 @@
         <tr>
             <th width="25%">{{ __('cruds.video.fields.status')}}</th>
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('global.created_at')}}</th>
+            <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
         </tr>
     </table>
    <div class="text-right">

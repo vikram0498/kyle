@@ -40,6 +40,14 @@ class Index extends Component
         return view('livewire.admin.search-log.index');
     }
 
+    public function cancel(){
+        $this->formMode = false;
+        $this->updateMode = false;
+        $this->viewMode = false;
+        $this->resetInputFields();
+        $this->resetValidation();
+    }
+
     public function show($id) {
         $this->search_log_id = $id;
         $this->formMode = false;

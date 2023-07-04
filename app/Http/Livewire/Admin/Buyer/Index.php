@@ -119,6 +119,7 @@ class Index extends Component
 
     public function create(){
         $this->resetInputFields();
+        $this->resetValidation();
         $this->formMode = true;
         $this->initializePlugins();
     }
@@ -149,6 +150,8 @@ class Index extends Component
 
         $this->formMode = true;
         $this->updateMode = true;
+        
+        $this->resetValidation();
         $this->initializePlugins();
     }
 
@@ -184,6 +187,8 @@ class Index extends Component
         $this->formMode = false;
         $this->updateMode = false;
         $this->viewMode = false;
+        $this->resetInputFields();
+        $this->resetValidation();
     }
     public function confirmedToggleAction($data){
         $id = $data['id'];

@@ -39,6 +39,7 @@ class Index extends Component
     {
         $this->resetInputFields();
         $this->resetValidation();
+        $this->resetValidation();
         $this->formMode = true;
     }
 
@@ -105,6 +106,8 @@ class Index extends Component
         $this->formMode = false;
         $this->updateMode = false;
         $this->viewMode = false;
+        $this->resetInputFields();
+        $this->resetValidation();
     }
     public function confirmedToggleAction($data)
     {

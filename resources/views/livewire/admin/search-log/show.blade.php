@@ -201,7 +201,17 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <th width="25%">{{ __('global.created_at')}}</th>
+            <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
+        </tr>
     </table>
-    <a href="{{route('admin.search-log')}}" class="btn btn-secondary">{{ __('global.back')}} </a>
-
+    <div class="text-right">
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">
+            {{ __('global.back')}}
+            <span wire:loading wire:target="cancel">
+                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            </span>
+        </button>
+    </div>
                

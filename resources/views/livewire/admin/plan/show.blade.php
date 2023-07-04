@@ -10,15 +10,15 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.title')}}</th>
-            <td>{{ $details->title }}</td>
+            <td>{{ $details->title ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.month_amount')}}</th>
-            <td> <i class="fa-solid {{ config('constants.currency_icon') }}"></i> {{ number_format($details->month_amount,2) }}</td>
+            <td> {{ $details->month_amount ? '$'.number_format($details->month_amount,2) : 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.year_amount')}}</th>
-            <td> <i class="fa-solid {{ config('constants.currency_icon') }}"></i> {{ number_format($details->year_amount,2) }}</td>
+            <td> {{ $details->month_amount ? '$'.number_format($details->year_amount,2) : 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.description')}}</th>
@@ -27,6 +27,10 @@
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.status')}}</th>
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('global.created_at')}}</th>
+            <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
         </tr>
     </table>
     <div class="text-right">

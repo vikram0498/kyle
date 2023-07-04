@@ -361,8 +361,8 @@
                     <label class="font-weight-bold">{{__('global.status')}}</label>
                     <div class="form-group">
                         <label class="toggle-switch">
-                            <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$status}})" value="{{ $status }}" {{ $status ==1 ? 'checked' : '' }}>
-                            <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
+                            <input type="checkbox" class="toggleSwitch" wire:change.prevent="changeStatus({{$this->state['status']}})" value="{{ $this->state['status'] }}" {{ $this->state['status'] ==1 ? 'checked' : '' }}>
+                            <span class="switch-slider" data-on="Active" data-off="Block"></span>
                         </label>
                     </div>
                     @error('status') <span class="error text-danger">{{ $message }}</span>@enderror

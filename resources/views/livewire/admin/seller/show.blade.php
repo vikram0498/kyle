@@ -6,11 +6,11 @@
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.user.fields.first_name')}}</th>
-            <td> {{ $seller->first_name }} </td>
+            <td> {{ $seller->first_name ?? 'N/A' }} </td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.last_name')}}</th>
-            <td>{{ $seller->last_name }}</td>
+            <td>{{ $seller->last_name ?? 'N/A'  }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.email')}}</th>
@@ -22,11 +22,11 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.buyer_count')}}</th>
-            <td> {{ $selfBuyerCount ?? '' }}</td>
+            <td> {{ $selfBuyerCount ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.purchased_buyer')}}</th>
-            <td> {{ $purchasedBuyerCount ?? '' }}</td>
+            <td> {{ $purchasedBuyerCount ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.package')}}</th>

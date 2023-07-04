@@ -33,24 +33,23 @@
 
         <div class="container-fluid page-body-wrapper">
 
-        @include('partials.admin.admin_sidebar')      
+            @include('partials.admin.admin_sidebar')      
 
-        <div class="main-panel">
-            <!-- content-wrapper start -->
-                @yield('content')
-            <!-- content-wrapper ends -->
+            <div class="main-panel">
+                <!-- content-wrapper start -->
+                    @yield('content')
+                <!-- content-wrapper ends -->
 
-            <!-- partial:partials/_footer -->
-            <footer class="footer">
-            
-                <span class="copyright-text d-block text-center">© {{ date('Y') }} All Copyrights Reserved By {{ config('constants.app_name') }}</span>
-                 <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Developed by <i class="ti-heart text-danger ml-1"></i> HIPL</span> -->
-            
-            </footer>
-            <!-- partial -->
+                <!-- partial:partials/_footer -->
+                
+                <!-- partial -->
+            </div>            
+            <!-- main-panel ends -->            
         </div>
-        <!-- main-panel ends -->
-        </div>
+        <footer class="footer">            
+            <span class="copyright-text d-block text-center">© {{ date('Y') }} All Copyrights Reserved By {{ config('constants.app_name') }}</span>
+            <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Developed by <i class="ti-heart text-danger ml-1"></i> HIPL</span> -->
+        </footer>
         <!-- page-body-wrapper ends -->
         
     </div>

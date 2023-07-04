@@ -42,20 +42,23 @@ class Index extends Component
     public function create()
     {
         $this->resetInputFields();
+        $this->resetValidation();
         $this->formMode = true;
         $this->initializePlugins();
     }
 
     public function store()
     {
-        $validatedData = $this->validate([
-            'title'  => 'required',
-            'month_amount' => 'required|numeric|min:0|max:99999999.99',
-            'year_amount' => 'required|numeric|min:0|max:99999999.99',
-            'description' => 'required',
-            'status' => 'required',
-            'image' => 'required|image|max:'.config('constants.img_max_size'),
-        ]);
+        $validatedData = $this->validate(
+            [
+                'title'  => 'required',
+                'month_amount' => 'required|numeric|min:0|max:99999999.99',
+                'year_amount' => 'required|numeric|min:0|max:99999999.99',
+                'description' => 'required',
+                'status' => 'required',
+                'image' => 'required|image|max:'.config('constants.img_max_size'),
+            ],[],['title'  => 'plan name']
+        );
         
         $validatedData['status'] = $this->status;
 
@@ -90,6 +93,8 @@ class Index extends Component
 
         $this->formMode = true;
         $this->updateMode = true;
+
+        $this->resetValidation();
         $this->initializePlugins();
     }
 
@@ -100,7 +105,7 @@ class Index extends Component
             'year_amount' => 'required|numeric|min:0|max:99999999.99',
             'description' => 'required',
             'status' => 'required',
-        ]);
+        ],[],['title'  => 'plan name']);
 
         if($this->image){
             $validatedData['image'] = 'required|image|max:'.config('constants.img_max_size');
@@ -162,7 +167,8 @@ class Index extends Component
         $this->formMode = false;
         $this->updateMode = false;
         $this->viewMode = false;
-
+        $this->resetInputFields();
+        $this->resetValidation();
     }
 
     public function confirmedToggleAction($data){

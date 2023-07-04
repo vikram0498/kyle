@@ -311,6 +311,10 @@
             <th width="25%">{{ __('cruds.buyer.fields.status')}}</th>
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
+        <tr>
+            <th width="25%">{{ __('global.created_at')}}</th>
+            <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
+        </tr>
     </table>
     <div class="text-right">
         <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">

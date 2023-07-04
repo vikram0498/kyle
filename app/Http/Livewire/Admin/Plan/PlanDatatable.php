@@ -22,13 +22,22 @@ class PlanDatatable extends LivewireDatatable
         return [
             Column::index($this)->unsortable(),
             Column::name('title')->label(trans('cruds.plan.fields.title'))->sortable()->searchable(),
-            Column::name('month_amount')->label(trans('cruds.plan.fields.month_amount'))->sortable()->searchable(),
-            Column::name('year_amount')->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
+
+            // Column::name('month_amount')->label(trans('cruds.plan.fields.month_amount'))->sortable()->searchable(),
+            Column::callback(['month_amount'], function ($monthAmount) {
+                return '$'.number_format($monthAmount,2);
+            })->label(trans('cruds.plan.fields.month_amount'))->sortable()->searchable(),
+
+            // Column::name('year_amount')->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
+            Column::callback(['year_amount'], function ($yearAmount) {
+                return '$'.number_format($yearAmount,2);
+            })->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
+
             Column::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Inactive']);
             })->label(trans('cruds.plan.fields.status'))->sortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             Column::callback(['id'], function ($id) {
                 
                 return view('livewire.datatables.actions', ['id' => $id]);

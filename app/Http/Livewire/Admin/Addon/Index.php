@@ -42,6 +42,7 @@ class Index extends Component
     public function create()
     {
         $this->resetInputFields();
+        $this->resetValidation();
         $this->formMode = true;
         $this->initializePlugins();
     }
@@ -53,7 +54,7 @@ class Index extends Component
             'price' => 'required|numeric|min:0|max:99999999.99',
             'credit' => 'required|numeric',
             'status' => 'required',
-        ]);
+        ],[],['title' => 'name']);
         
         $validatedData['status'] = $this->status;
 
@@ -84,6 +85,8 @@ class Index extends Component
 
         $this->formMode = true;
         $this->updateMode = true;
+
+        $this->resetValidation();
         $this->initializePlugins();
     }
 
@@ -93,7 +96,7 @@ class Index extends Component
             'price' => 'required|numeric|min:0|max:99999999.99',
             'credit' => 'required|numeric',
             'status' => 'required',
-        ]);
+        ],[],['title' => 'name']);
   
         $validatedData['status'] = $this->status;
 
@@ -150,7 +153,8 @@ class Index extends Component
         $this->formMode = false;
         $this->updateMode = false;
         $this->viewMode = false;
-
+        $this->resetInputFields();
+        $this->resetValidation();
     }
 
     public function confirmedToggleAction($data)

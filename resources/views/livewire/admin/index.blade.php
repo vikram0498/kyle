@@ -123,8 +123,6 @@
       
    </div>
 </div>
-</div>
-</div>
 @push('scripts')
 <!-- Custom js for this page-->
 <!-- <script src="{{ asset('admin/assets/chart.js/Chart.min.js') }}"></script> -->

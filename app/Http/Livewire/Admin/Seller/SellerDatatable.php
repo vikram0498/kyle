@@ -47,7 +47,7 @@ class SellerDatatable extends LivewireDatatable
                 return 0;
             })->label(trans('cruds.user.fields.purchased_buyer'))->sortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             Column::callback(['id', 'phone'], function ($id, $phone) {
                 $array = ['show', 'delete'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);

@@ -107,7 +107,7 @@
         var id = _this.data('id');
        
         Swal.fire({
-            title: 're you sure you want to delete it?',
+            title: 'Are you sure you want to delete it?',
             showDenyButton: true,
             icon: 'warning',
             confirmButtonText: 'Yes, change it',

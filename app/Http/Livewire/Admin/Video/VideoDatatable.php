@@ -32,7 +32,7 @@ class VideoDatatable extends LivewireDatatable
             })->label(trans('cruds.video.fields.status'))->sortable(),
 
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             Column::callback(['id'], function ($id) {
                 return view('livewire.datatables.actions', ['id' => $id]);
             })->label(trans('global.action'))->unsortable(),
