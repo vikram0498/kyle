@@ -1,7 +1,7 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
     <a class="navbar-brand brand-logo" href="javascript:void(0)"><img src="{{ asset(config('constants.default.admin_logo')) }}" class="mr-2" alt="logo"/></a>
-    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="{{asset('images/logo-mini.svg'}}" alt="logo"/></a>
+    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="{{asset('images/logo-mini.svg')}}" alt="logo"/></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -86,9 +86,9 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <ul class="list-unstyled mb-0">
-                        <li><a class="dropdown-item" href="{{route('auth.admin-profile')}}"><img src="{{ asset('images/user-login.svg')}}" class="img-fluid">My Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><img src="{{ asset('images/booksaved.svg') }}" class="img-fluid">My Buyers Data</a></li>
-                        <li><a class="dropdown-item" href="#"><img src="{{ asset('images/messages.svg') }}" class="img-fluid">Support</a></li>
+                        <li><a class="dropdown-item" href="{{route('auth.admin-profile')}}"><img src="{{ asset('admin/images/user-login.svg')}}" class="img-fluid">My Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/booksaved.svg') }}" class="img-fluid">My Buyers Data</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/messages.svg') }}" class="img-fluid">Support</a></li>
                         @livewire('auth.admin.logout')
                     </ul>
                 </div>
