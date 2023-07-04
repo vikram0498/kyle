@@ -213,10 +213,9 @@ input:checked + .switch-slider:after {
  
 
 /*------------- 30-06-2023 ----------------- */
-button.btn,
-a.btn {
+button.btn, a.btn {
     padding: 8px 15px;
-    border-radius: 30px !important;
+    border-radius: 5px !important;
     font-weight: 600;
     font-family: 'Barlow', sans-serif;
     font-size: 16px !important;
@@ -497,7 +496,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .profile-img-block img {
     object-fit: cover;
     margin: 0 auto;
-    height: 150px;
+    height: 100px;
 }
 .search-table-data > div > .relative > .flex > .flex [wire\:loading] {
     margin-left: auto;
@@ -755,6 +754,83 @@ footer.footer {
     top: 0;
     bottom: 0;
     margin: auto;
+}
+/*--------- profile -----------*/
+.inner-page-title{
+    color: #212529;
+    font-family: 'Barlow', sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+}
+.profile-page .form-control {
+    padding-left: 57px !important;
+}
+.input-set{
+    position: relative;
+}
+.icon-left {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    padding-right: 8px;
+    border-right: 1px solid rgba(70, 75, 112, 0.3);
+    height: 17px;
+    line-height: 11px;
+    margin: auto 0;
+}
+.profile-image-change {
+    display: flex;
+    align-items: center;
+}
+.right-content-profile {
+    padding-left: 20px;
+    max-width: calc(100% - 100px);
+    flex: calc(100% - 100px);
+}
+.right-content-profile h5 {
+    font-size: 18px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+}
+.change {
+    border: 1px solid #3f53fe;
+    color: #3f53fe;
+    background: #fff;
+}
+.left-imag-col{
+    max-width: 100px;
+    flex: 100px;
+}
+.left-imag-col img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+.form-icon-password {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    bottom: 0;
+    height: 18px;
+    margin: auto 0;
+    line-height: 0;
+}
+.form-icon-password:before {
+    position: absolute;
+    content: '';
+    width: 1px;
+    height: 24px;
+    background: #464B70;
+    transform: rotate(-41deg);
+    right: 0;
+    left: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+}
+.eye-open:before{
+    display: none;
 }
 /*--------- Media Query ----------*/
 @media (max-width:991px){
