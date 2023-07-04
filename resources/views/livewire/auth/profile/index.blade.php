@@ -123,55 +123,45 @@
                         </div>
                       </div>
                       <div class="row mt-5">
-                          <div class="col-12 col-lg-6">
+                          <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                               <div class="form-group">
                                   <label for="first_name">First Name</label>
                                   <div class="input-set">
                                       <span class="icon-left"><img src="images/user-login.svg" alt="Img"></span>
-                                      <input type="text" class="form-control" id="first_name" value="Smith" name="first_name" placeholder="Enter Name"/>
+                                      <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name"/>
                                   </div>
                                   <span class="error_first_name error text-danger"></span>
                               </div>
                           </div>
-                          <div class="col-12 col-lg-6">
+                          <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                               <div class="form-group">
                                   <label for="last_name">Last Name</label>
                                   <div class="input-set">
                                       <span class="icon-left"><img src="images/user-login.svg" alt="Img"></span>
-                                      <input type="text" class="form-control" id="last_name" value="Paul" name="last_name" placeholder="Enter Last Name"/>
+                                      <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter Last Name"/>
                                   </div>
                                   <span class="error_last_name text-danger"></span>
                               </div>
                           </div>
                       </div>
                       <div class="row">
-                          <div class="col-12 col-lg-6">
+                          <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                               <div class="form-group">
                                   <label for="email">Email</label>
                                   <div class="input-set">
                                       <span class="icon-left"><img src="images/mail.svg" alt="Img"></span>
-                                      <input type="email" class="form-control"value="admin@admin.com" placeholder="Enter Email" disabled="" />
+                                      <input type="email" class="form-control" placeholder=" Enter Email" />
                                   </div>
                               </div>
                           </div>
-                          <div class="col-12 col-lg-6">
+                          <div class="col-12 col-md-6 col-lg-12 col-xl-6">
                               <div class="form-group">
                                   <label for="Mobile">Phone Number</label>
                                   <div class="input-set">
                                       <span class="icon-left"><img src="images/phone.svg" alt="Img"></span>
-                                      <input type="text" class="form-control only_integer" id="mobile" value="9166024" placeholder="Enter Number" name="mobile_no"/>
+                                      <input type="text" class="form-control only_integer" id="mobile" placeholder="Enter Number" name="mobile_no"/>
                                   </div>
                                   <span class="error_mobile_no error text-danger"></span>
-                              </div>
-                          </div>
-                          <div class="col-12">
-                              <div class="form-group">
-                                  <label for="role">Role</label>
-                                  <div class="input-set">
-                                      <span class="icon-left"><img src="images/role.svg" alt="Img"></span>
-                                      <input type="text" disabled="" class="form-control" id="role_id" value="admin" name="role_id" placeholder="Enter Role"/>
-                                  </div>
-                                  <span class="error text-danger"></span>
                               </div>
                           </div>
                       </div>
@@ -182,7 +172,7 @@
         </div>
       </div>
        <div class="col-12 col-lg-6">
-        <div class="card">
+        <div class="card changepassword-block">
           <div class="card-body">
             <div class="card-title top-box-set">
               <h4>Change Password</h4>

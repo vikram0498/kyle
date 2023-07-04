@@ -285,8 +285,9 @@ button.btn, a.btn {
 .switch-slider:after{
   font-size: 12px;
 }
-.form-group label{
-      font-family: 'Barlow', sans-serif;
+.form-group label {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
 }
 .file-input {
     display: block;
@@ -832,13 +833,17 @@ footer.footer {
 .eye-open:before{
     display: none;
 }
+.changepassword-block .form-control {
+    padding-right: 50px !important;
+}
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{
         float: unset !important;
      }
      .img-box,
-     .stretch-card > .card{
+     .stretch-card > .card,
+     .changepassword-block{
         margin-top: 30px;
      }
 }
@@ -849,8 +854,14 @@ footer.footer {
     }
 }
 @media (max-width:575px){
+    .card .card-body{
+        padding: 15px;
+    }
     .card-body form button.btn {
         margin-bottom: 9px;
+    }
+    .content-wrapper{
+        padding: 20px;
     }
 }
 @media (max-width:450px){
@@ -864,5 +875,12 @@ footer.footer {
         flex: 100%;
         text-align: center;
         justify-content: center;
+    }
+    .welcome-user,
+    .user-dropdown .arrow-icon{
+        display: none;
+    }
+    .img-user{
+        margin-right: 0;
     }
 }
