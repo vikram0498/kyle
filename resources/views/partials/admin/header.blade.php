@@ -1,7 +1,7 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
     <a class="navbar-brand brand-logo" href="javascript:void(0)"><img src="{{ asset(config('constants.default.admin_logo')) }}" class="mr-2" alt="logo"/></a>
-    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="{{ asset(config('constants.default.short_logo')) }}" alt="logo"/></a>
+    <a class="navbar-brand brand-logo-mini" href="javascript:void(0)"><img src="images/logo-mini.svg" alt="logo"/></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -69,15 +69,29 @@
         </div>
         </li> -->
         <li class="nav-item nav-profile dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                <img src="{{ isset(auth()->user()->profile_image_url) && !empty(auth()->user()->profile_image_url) ? auth()->user()->profile_image_url : asset(config('constants.default.profile_image')) }}" alt="profile"/>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                <a href="{{route('auth.admin-profile')}}" class="dropdown-item">
-                    <i class="ti-user text-primary"></i>
-                    {{__('global.profile')}}
-                </a>
-                @livewire('auth.admin.logout')
+            <div class="dropdown user-dropdown">
+                <button class="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="dropdown-data">
+                        <div class="img-user"><img src="images/avtar.png" class="img-fluid" alt=""></div>
+                        <div class="welcome-user">
+                            <span class="welcome">welcome</span>
+                            <span class="user-name-title">John Thomsan</span>
+                        </div>
+                    </div>
+                    <span class="arrow-icon">
+                        <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.002 7L7.00195 0.999999L1.00195 7" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <ul class="list-unstyled mb-0">
+                        <li><a class="dropdown-item" href="my-profile.html"><img src="images/user-login.svg" class="img-fluid">My Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="images/booksaved.svg" class="img-fluid">My Buyers Data</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="images/messages.svg" class="img-fluid">Support</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="images/logoutcurve.svg" class="img-fluid">Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </li>
         <!-- <li class="nav-item nav-settings d-none d-lg-flex">

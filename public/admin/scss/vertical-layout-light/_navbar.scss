@@ -6,9 +6,6 @@
   -webkit-transition:background $action-transition-duration $action-transition-timing-function;
   -moz-transition:background $action-transition-duration $action-transition-timing-function;
   -ms-transition:background $action-transition-duration $action-transition-timing-function;
-  -webkit-box-shadow:0px 5px 21px -5px #CDD1E1;
-  -moz-box-shadow: 0px 5px 21px -5px #CDD1E1;
-  box-shadow:0px 5px 21px -5px #CDD1E1;
   .sidebar-dark & {
     box-shadow: none;
   }
@@ -163,8 +160,8 @@
           @extend .align-items-center;
           margin-left: .2rem;
           img {
-            width: 40px;
-            height: 40px;
+            width: 20px;
+            height: 26px;
             border-radius: 100%;
           }
           &.dropdown {

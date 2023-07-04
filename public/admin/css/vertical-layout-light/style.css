@@ -28417,14 +28417,14 @@ div.tagsinput span.tag a {
 }
 
 .page-body-wrapper {
-  min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 131px);
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: row;
   flex-direction: row;
   padding-left: 0;
   padding-right: 0;
-  padding-top: 60px;
+  padding-top: 80px;
 }
 
 .page-body-wrapper.full-page-wrapper {
@@ -28435,8 +28435,8 @@ div.tagsinput span.tag a {
 
 .main-panel {
   transition: width 0.25s ease, margin 0.25s ease;
-  width: calc(100% - 235px);
-  min-height: calc(100vh - 60px);
+  width: calc(100% - 270px);
+  min-height: calc(100vh - 131px);
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
@@ -28451,8 +28451,8 @@ div.tagsinput span.tag a {
 }
 
 .content-wrapper {
-  background: #F5F7FF;
-  padding: 2.375rem 2.375rem;
+  background: #FBFBFB;
+  padding: 30px;
   width: 100%;
   -webkit-flex-grow: 1;
   flex-grow: 1;
@@ -28466,13 +28466,14 @@ div.tagsinput span.tag a {
 
 /* Sidebar */
 .sidebar {
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 131px);
   background: #fff;
   font-family: "Nunito", sans-serif;
   font-weight: 500;
   padding: 0;
-  width: 235px;
+  width: 270px;
   z-index: 11;
+  border-right: 1px solid  #EAECEB;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
@@ -28761,11 +28762,12 @@ div.tagsinput span.tag a {
 @media screen and (max-width: 991px) {
   .sidebar-offcanvas {
     position: fixed;
-    max-height: calc(100vh - 60px);
-    top: 60px;
+    max-height: calc(100vh - 131px);
+    top: 80px;
     bottom: 0;
+        border-left: 1px solid #EAECEB;
     overflow: auto;
-    right: -235px;
+    right: -270px;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
@@ -28782,9 +28784,9 @@ div.tagsinput span.tag a {
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
   -ms-transition: background 0.25s ease;
-  -webkit-box-shadow: 0px 5px 21px -5px #CDD1E1;
+/*  -webkit-box-shadow: 0px 5px 21px -5px #CDD1E1;
   -moz-box-shadow: 0px 5px 21px -5px #CDD1E1;
-  box-shadow: 0px 5px 21px -5px #CDD1E1;
+  box-shadow: 0px 5px 21px -5px #CDD1E1;*/
   /* Navbar color variations */
 }
 
@@ -28798,8 +28800,8 @@ div.tagsinput span.tag a {
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
   -ms-transition: width 0.25s ease, background 0.25s ease;
-  width: 235px;
-  height: 60px;
+  width: 270px;
+  height: 80px;
 }
 
 .sidebar-dark .navbar .navbar-brand-wrapper {
@@ -28848,8 +28850,8 @@ div.tagsinput span.tag a {
   color: #6C7383;
   padding-right: 2.375rem;
   padding-left: 2.375rem;
-  width: calc(100% - 235px);
-  height: 60px;
+  width: calc(100% - 270px);
+  height: 80px;
 }
 
 @media (max-width: 991px) {
@@ -29011,8 +29013,8 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile img {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 26px;
   border-radius: 100%;
 }
 

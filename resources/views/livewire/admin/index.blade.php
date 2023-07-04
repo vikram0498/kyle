@@ -1,691 +1,130 @@
 <div class="content-wrapper">
-  <div class="row">
-    <div class="col-md-12 grid-margin">
-      <div class="row">
-        <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-          <h3 class="font-weight-bold">Welcome {{ ucfirst(auth()->user()->name) }}</h3>
-          <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card tale-bg">
-        <div class="card-people mt-auto">
-          <img src="{{ asset('admin/images/dashboard/people.svg') }}" alt="people">
-          <div class="weather-info">
-            <div class="d-flex">
-              <div>
-                <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-              </div>
-              <div class="ml-2">
-                <h4 class="location font-weight-normal">Bangalore</h4>
-                <h6 class="font-weight-normal">India</h6>
-              </div>
-            </div>
+   <!-- <div class="row">
+      <div class="col-md-12 grid-margin">
+        <div class="row">
+          <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+            <h3 class="font-weight-bold">Welcome {{ ucfirst(auth()->user()->name) }}</h3>
+            <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6 grid-margin transparent">
-      <div class="row">
-        <div class="col-md-6 mb-4 stretch-card transparent">
-          <div class="card card-tale">
-            <div class="card-body">
-              <p class="mb-4">{{ __('cruds.dashboard.total_seller') }}</p>
-              <p class="fs-30 mb-2">{{ $sellerCount }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 mb-4 stretch-card transparent">
-          <div class="card card-dark-blue">
-            <div class="card-body">
-              <p class="mb-4"> {{ __('cruds.dashboard.total_buyer') }} </p>
-              <p class="fs-30 mb-2">{{ $buyerCount }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="row">
-        <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-          <div class="card card-light-blue">
-            <div class="card-body">
-              <p class="mb-4">Number of Meetings</p>
-              <p class="fs-30 mb-2">34040</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 stretch-card transparent">
-          <div class="card card-light-danger">
-            <div class="card-body">
-              <p class="mb-4">Number of Clients</p>
-              <p class="fs-30 mb-2">47033</p>
-            </div>
-          </div>
-        </div>
       </div> -->
-      <!-- <div class="content-wrapper">
-        <div class="row">
-          <div class="col-md-12 grid-margin">
-            <div class="row">
-              <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                <h3 class="font-weight-bold">Welcome {{ ucfirst(auth()->user()->first_name) }}</h3>
-                <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
-              </div>
-              <div class="col-12 col-xl-4">
-                <div class="justify-content-end d-flex">
-                <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                  <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <i class="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                    <a class="dropdown-item" href="#">January - March</a>
-                    <a class="dropdown-item" href="#">March - June</a>
-                    <a class="dropdown-item" href="#">June - August</a>
-                    <a class="dropdown-item" href="#">August - November</a>
+   <div class="row">
+      <div class="col-12 col-lg-8 col-md-8 transparent">
+         <div class="row">
+            <div class="col-12 col-md-6 col-lg-6 stretch-card transparent">
+               <div class="card card-light-purple">
+                  <div class="card-body border-0 d-flex align-items-center justify-content-between">
+                     <div class="card-body-content">
+                        <p class="heading-card">{{ __('cruds.dashboard.total_seller') }}</p>
+                        <p class="box-count">{{ $sellerCount }}</p>
+                     </div>
+                     <div class="card-body-icon">
+                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M23.2477 5.66663C25.996 5.66663 28.206 7.8908 28.206 10.625C28.206 13.3025 26.081 15.4841 23.4319 15.5833C23.3095 15.5691 23.1859 15.5691 23.0635 15.5833M25.9818 28.3333C27.0018 28.1208 27.9652 27.71 28.7585 27.1008C30.9685 25.4433 30.9685 22.7091 28.7585 21.0516C27.9793 20.4566 27.0302 20.06 26.0244 19.8333M12.9768 15.3991C12.8352 15.385 12.6652 15.385 12.5093 15.3991C10.8833 15.3439 9.34259 14.658 8.21349 13.4866C7.08439 12.3152 6.45556 10.7503 6.46018 9.1233C6.46018 5.65247 9.26518 2.8333 12.7502 2.8333C14.4165 2.80324 16.0265 3.43636 17.2261 4.59338C18.4256 5.7504 19.1164 7.33655 19.1464 9.00288C19.1765 10.6692 18.5434 12.2792 17.3863 13.4788C16.2293 14.6783 14.6432 15.3691 12.9768 15.3991ZM5.89352 20.6266C2.46518 22.9216 2.46518 26.6616 5.89352 28.9425C9.78935 31.5491 16.1785 31.5491 20.0743 28.9425C23.5027 26.6475 23.5027 22.9075 20.0743 20.6266C16.1927 18.0341 9.80352 18.0341 5.89352 20.6266Z" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                     </div>
                   </div>
-                </div>
-                </div>
-              </div>
+               </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 grid-margin stretch-card">
-            <div class="card tale-bg">
-              <div class="card-people mt-auto">
-                <img src="{{ asset('admin/images/dashboard/people.svg') }}" alt="people">
-                <div class="weather-info">
-                  <div class="d-flex">
-                    <div>
-                      <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                    </div>
-                    <div class="ml-2">
-                      <h4 class="location font-weight-normal">Bangalore</h4>
-                      <h6 class="font-weight-normal">India</h6>
-                    </div>
+            <div class="col-12 col-md-6 col-lg-6 stretch-card transparent">
+               <div class="card card-light-green">
+                  <div class="card-body border-0 d-flex align-items-center justify-content-between">
+                     <div class="card-body-content">
+                        <p class="heading-card"> {{ __('cruds.dashboard.total_buyer') }} </p>
+                        <p class="box-count">{{ $buyerCount }}</p>
+                     </div>
+                     <div class="card-body-icon">
+                        <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M4.97266 32.0833C4.97266 26.4395 10.5872 21.875 17.4997 21.875C18.8997 21.875 20.256 22.0645 21.5247 22.4145M17.4997 17.5C19.4336 17.5 21.2883 16.7317 22.6557 15.3643C24.0232 13.9968 24.7914 12.1422 24.7914 10.2083C24.7914 8.27442 24.0232 6.41976 22.6557 5.05231C21.2883 3.68485 19.4336 2.91663 17.4997 2.91663C15.5659 2.91663 13.7112 3.68485 12.3438 5.05231C10.9763 6.41976 10.2081 8.27442 10.2081 10.2083C10.2081 12.1422 10.9763 13.9968 12.3438 15.3643C13.7112 16.7317 15.5659 17.5 17.4997 17.5Z" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                           <path d="M32.0827 26.25C32.0827 26.7166 32.0244 27.1687 31.9077 27.6062C31.7764 28.1895 31.5431 28.7583 31.2369 29.2541C30.7228 30.1182 29.9925 30.8335 29.118 31.3295C28.2434 31.8256 27.2548 32.0854 26.2494 32.0833C24.8136 32.0875 23.4287 31.5513 22.3702 30.5812C21.9327 30.202 21.5535 29.75 21.2619 29.2541C20.7067 28.3506 20.4139 27.3104 20.416 26.25C20.4151 25.4837 20.5653 24.7247 20.8581 24.0165C21.1509 23.3083 21.5806 22.6649 22.1224 22.123C22.6643 21.5812 23.3077 21.1515 24.0159 20.8587C24.7241 20.5659 25.483 20.4157 26.2494 20.4166C27.9702 20.4166 29.5306 21.1604 30.5806 22.3562C31.5139 23.3916 32.0827 24.7625 32.0827 26.25Z" stroke="#0A2540" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                           <path d="M24.5 27.5591C24.5 28.3116 25.0775 28.9183 25.795 28.9183H27.2592C27.8833 28.9183 28.3908 28.3875 28.3908 27.7341C28.3908 27.0225 28.0817 26.7716 27.6208 26.6083L25.27 25.7916C24.8092 25.6283 24.5 25.3775 24.5 24.6658C24.5 24.0125 25.0075 23.4816 25.6317 23.4816H27.0958C27.8133 23.4816 28.3908 24.0883 28.3908 24.8408M26.4413 22.7V29.7" stroke="#0A2540" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                     </div>
                   </div>
-                </div>
-              </div>
+               </div>
             </div>
-          </div>
-          <div class="col-md-6 grid-margin transparent">
-            <div class="row">
-              <div class="col-md-6 mb-4 stretch-card transparent">
-                <div class="card card-tale">
-                  <div class="card-body">
-                    <p class="mb-4">Today’s Bookings</p>
-                    <p class="fs-30 mb-2">4006</p>
-                    <p>10.00% (30 days)</p>
+            <div class="col-12 col-lg-12">
+               <div class="card table-card-box mt-30">
+                  <h5 class="card-header">Recent Purchased Buyer</h5>
+                  <div class="card-body border-0">
+                     <table class="table table-responsive-sm table-bordered card-box-table">
+                        <thead>
+                           <tr>
+                              <th scope="col">Seller Name</th>
+                              <th scope="col">Buyer Name</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>Cameron Williamson</td>
+                              <td>
+                                 <div class="side-by-side-data">
+                                    <span>Haword Johnson</span>
+                                    <span class="purchased">20 seller purchased</span>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>Cameron Williamson</td>
+                              <td>
+                                 <div class="side-by-side-data">
+                                    <span>Haword Johnson</span>
+                                    <span class="purchased">20 seller purchased</span>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>Cameron Williamson</td>
+                              <td>
+                                 <div class="side-by-side-data">
+                                    <span>Haword Johnson</span>
+                                    <span class="purchased">20 seller purchased</span>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>Cameron Williamson</td>
+                              <td>
+                                 <span>Haword Johnson</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>Cameron Williamson</td>
+                              <td>
+                                 <span>Haword Johnson</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
                   </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-4 stretch-card transparent">
-                <div class="card card-dark-blue">
-                  <div class="card-body">
-                    <p class="mb-4">Total Bookings</p>
-                    <p class="fs-30 mb-2">61344</p>
-                    <p>22.00% (30 days)</p>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-12 col-lg-4 col-md-4 stretch-card">
+         <div class="card tale-bg justify-content-end img-box">
+            <div class="weather-info">
+               <div class="d-flex">
+                  <div>
+                     <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                <div class="card card-light-blue">
-                  <div class="card-body">
-                    <p class="mb-4">Number of Meetings</p>
-                    <p class="fs-30 mb-2">34040</p>
-                    <p>2.00% (30 days)</p>
+                  <div class="ml-2">
+                     <h4 class="location font-weight-normal">Bangalore</h4>
+                     <h6 class="font-weight-normal">India</h6>
                   </div>
-                </div>
-              </div>
-              <div class="col-md-6 stretch-card transparent">
-                <div class="card card-light-danger">
-                  <div class="card-body">
-                    <p class="mb-4">Number of Clients</p>
-                    <p class="fs-30 mb-2">47033</p>
-                    <p>0.22% (30 days)</p>
-                  </div>
-                </div>
-              </div>
+               </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <p class="card-title">Order Details</p>
-                <p class="font-weight-500">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
-                <div class="d-flex flex-wrap mb-5">
-                  <div class="mr-5 mt-3">
-                    <p class="text-muted">Order value</p>
-                    <h3 class="text-primary fs-30 font-weight-medium">12.3k</h3>
-                  </div>
-                  <div class="mr-5 mt-3">
-                    <p class="text-muted">Orders</p>
-                    <h3 class="text-primary fs-30 font-weight-medium">14k</h3>
-                  </div>
-                  <div class="mr-5 mt-3">
-                    <p class="text-muted">Users</p>
-                    <h3 class="text-primary fs-30 font-weight-medium">71.56%</h3>
-                  </div>
-                  <div class="mt-3">
-                    <p class="text-muted">Downloads</p>
-                    <h3 class="text-primary fs-30 font-weight-medium">34040</h3>
-                  </div> 
-                </div>
-                <canvas id="order-chart"></canvas>
-              </div>
+            <div class="card-people ">
+               <img src="{{ asset('admin/images/dashboard/people.svg') }}" alt="people">
             </div>
-          </div>
-          <div class="col-md-6 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between">
-                <p class="card-title">Sales Report</p>
-                <a href="#" class="text-info">View all</a>
-                </div>
-                <p class="font-weight-500">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
-                <div id="sales-legend" class="chartjs-legend mt-4 mb-2"></div>
-                <canvas id="sales-chart"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 grid-margin stretch-card">
-            <div class="card position-relative">
-              <div class="card-body">
-                <div id="detailedReports" class="carousel slide detailed-report-carousel position-static pt-2" data-ride="carousel">
-                  <div class="carousel-inner">
-                    <div class="carousel-item active">
-                      <div class="row">
-                        <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                          <div class="ml-xl-4 mt-3">
-                          <p class="card-title">Detailed Reports</p>
-                            <h1 class="text-primary">$34040</h1>
-                            <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
-                            <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
-                          </div>  
-                          </div>
-                        <div class="col-md-12 col-xl-9">
-                          <div class="row">
-                            <div class="col-md-6 border-right">
-                              <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                <table class="table table-borderless report-table">
-                                  <tr>
-                                    <td class="text-muted">Illinois</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">713</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Washington</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">583</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Mississippi</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">924</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">California</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">664</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Maryland</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">560</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Alaska</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">793</h5></td>
-                                  </tr>
-                                </table>
-                              </div>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                              <canvas id="north-america-chart"></canvas>
-                              <div id="north-america-legend"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="carousel-item">
-                      <div class="row">
-                        <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                          <div class="ml-xl-4 mt-3">
-                          <p class="card-title">Detailed Reports</p>
-                            <h1 class="text-primary">$34040</h1>
-                            <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
-                            <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
-                          </div>  
-                          </div>
-                        <div class="col-md-12 col-xl-9">
-                          <div class="row">
-                            <div class="col-md-6 border-right">
-                              <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                <table class="table table-borderless report-table">
-                                  <tr>
-                                    <td class="text-muted">Illinois</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">713</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Washington</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">583</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Mississippi</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">924</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">California</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">664</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Maryland</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">560</h5></td>
-                                  </tr>
-                                  <tr>
-                                    <td class="text-muted">Alaska</td>
-                                    <td class="w-100 px-0">
-                                      <div class="progress progress-md mx-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                      </div>
-                                    </td>
-                                    <td><h5 class="font-weight-bold mb-0">793</h5></td>
-                                  </tr>
-                                </table>
-                              </div>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                              <canvas id="south-america-chart"></canvas>
-                              <div id="south-america-legend"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <a class="carousel-control-prev" href="#detailedReports" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#detailedReports" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-7 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <p class="card-title mb-0">Top Products</p>
-                <div class="table-responsive">
-                  <table class="table table-striped table-borderless">
-                    <thead>
-                      <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                      </tr>  
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Search Engine Marketing</td>
-                        <td class="font-weight-bold">$362</td>
-                        <td>21 Sep 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                      </tr>
-                      <tr>
-                        <td>Search Engine Optimization</td>
-                        <td class="font-weight-bold">$116</td>
-                        <td>13 Jun 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                      </tr>
-                      <tr>
-                        <td>Display Advertising</td>
-                        <td class="font-weight-bold">$551</td>
-                        <td>28 Sep 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                      </tr>
-                      <tr>
-                        <td>Pay Per Click Advertising</td>
-                        <td class="font-weight-bold">$523</td>
-                        <td>30 Jun 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                      </tr>
-                      <tr>
-                        <td>E-Mail Marketing</td>
-                        <td class="font-weight-bold">$781</td>
-                        <td>01 Nov 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-danger">Cancelled</div></td>
-                      </tr>
-                      <tr>
-                        <td>Referral Marketing</td>
-                        <td class="font-weight-bold">$283</td>
-                        <td>20 Mar 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-warning">Pending</div></td>
-                      </tr>
-                      <tr>
-                        <td>Social media marketing</td>
-                        <td class="font-weight-bold">$897</td>
-                        <td>26 Oct 2018</td>
-                        <td class="font-weight-medium"><div class="badge badge-success">Completed</div></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-5 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">To Do Lists</h4>
-                <div class="list-wrapper pt-2">
-                  <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                    <li>
-                      <div class="form-check form-check-flat">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox">
-                          Meeting with Urban Team
-                        </label>
-                      </div>
-                      <i class="remove ti-close"></i>
-                    </li>
-                    <li class="completed">
-                      <div class="form-check form-check-flat">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox" checked>
-                          Duplicate a project for new customer
-                        </label>
-                      </div>
-                      <i class="remove ti-close"></i>
-                    </li>
-                    <li>
-                      <div class="form-check form-check-flat">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox">
-                          Project meeting with CEO
-                        </label>
-                      </div>
-                      <i class="remove ti-close"></i>
-                    </li>
-                    <li class="completed">
-                      <div class="form-check form-check-flat">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox" checked>
-                          Follow up of team zilla
-                        </label>
-                      </div>
-                      <i class="remove ti-close"></i>
-                    </li>
-                    <li>
-                      <div class="form-check form-check-flat">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox">
-                          Level up for Antony
-                        </label>
-                      </div>
-                      <i class="remove ti-close"></i>
-                    </li>
-                  </ul>
-                </div>
-                <div class="add-items d-flex mb-0 mt-2">
-                  <input type="text" class="form-control todo-list-input"  placeholder="Add new task">
-                  <button class="add btn btn-icon text-primary todo-list-add-btn bg-transparent"><i class="icon-circle-plus"></i></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 stretch-card grid-margin">
-            <div class="card">
-              <div class="card-body">
-                <p class="card-title mb-0">Projects</p>
-                <div class="table-responsive">
-                  <table class="table table-borderless">
-                    <thead>
-                      <tr>
-                        <th class="pl-0  pb-2 border-bottom">Places</th>
-                        <th class="border-bottom pb-2">Orders</th>
-                        <th class="border-bottom pb-2">Users</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="pl-0">Kentucky</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">65</span>(2.15%)</p></td>
-                        <td class="text-muted">65</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0">Ohio</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">54</span>(3.25%)</p></td>
-                        <td class="text-muted">51</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0">Nevada</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">22</span>(2.22%)</p></td>
-                        <td class="text-muted">32</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0">North Carolina</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">46</span>(3.27%)</p></td>
-                        <td class="text-muted">15</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0">Montana</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">17</span>(1.25%)</p></td>
-                        <td class="text-muted">25</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0">Nevada</td>
-                        <td><p class="mb-0"><span class="font-weight-bold mr-2">52</span>(3.11%)</p></td>
-                        <td class="text-muted">71</td>
-                      </tr>
-                      <tr>
-                        <td class="pl-0 pb-0">Louisiana</td>
-                        <td class="pb-0"><p class="mb-0"><span class="font-weight-bold mr-2">25</span>(1.32%)</p></td>
-                        <td class="pb-0">14</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 stretch-card grid-margin">
-            <div class="row">
-              <div class="col-md-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="card-title">Charts</p>
-                    <div class="charts-data">
-                      <div class="mt-3">
-                        <p class="mb-0">Data 1</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="progress progress-md flex-grow-1 mr-4">
-                            <div class="progress-bar bg-inf0" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <p class="mb-0">5k</p>
-                        </div>
-                      </div>
-                      <div class="mt-3">
-                        <p class="mb-0">Data 2</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="progress progress-md flex-grow-1 mr-4">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <p class="mb-0">1k</p>
-                        </div>
-                      </div>
-                      <div class="mt-3">
-                        <p class="mb-0">Data 3</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="progress progress-md flex-grow-1 mr-4">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 48%" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <p class="mb-0">992</p>
-                        </div>
-                      </div>
-                      <div class="mt-3">
-                        <p class="mb-0">Data 4</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="progress progress-md flex-grow-1 mr-4">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          <p class="mb-0">687</p>
-                        </div>
-                      </div>
-                    </div>  
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
-                <div class="card data-icon-card-primary">
-                  <div class="card-body">
-                    <p class="card-title text-white">Number of Meetings</p>                      
-                    <div class="row">
-                      <div class="col-8 text-white">
-                        <h3>34040</h3>
-                        <p class="text-white font-weight-500 mb-0">The total number of sessions within the date range.It is calculated as the sum . </p>
-                      </div>
-                      <div class="col-4 background-icon">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 stretch-card grid-margin">
-            <div class="card">
-              <div class="card-body">
-                <p class="card-title">Notifications</p>
-                <ul class="icon-data-list">
-                  <li>
-                    <div class="d-flex">
-                      <img src="{{ asset('admin/images/faces/face1.jpg') }}" alt="user">
-                      <div>
-                        <p class="text-info mb-1">Isabella Becker</p>
-                        <p class="mb-0">Sales dashboard have been created</p>
-                        <small>9:30 am</small>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex">
-                      <img src="{{ asset('admin/images/faces/face2.jpg') }}" alt="user">
-                      <div>
-                        <p class="text-info mb-1">Adam Warren</p>
-                        <p class="mb-0">You have done a great job #TW111</p>
-                        <small>10:30 am</small>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex">
-                    <img src="{{ asset('admin/images/faces/face3.jpg') }}" alt="user">
-                    <div>
-                    <p class="text-info mb-1">Leonard Thornton</p>
-                    <p class="mb-0">Sales dashboard have been created</p>
-                    <small>11:30 am</small>
-                    </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex">
-                      <img src="{{ asset('admin/images/faces/face4.jpg') }}" alt="user">
-                      <div>
-                        <p class="text-info mb-1">George Morrison</p>
-                        <p class="mb-0">Sales dashboard have been created</p>
-                        <small>8:50 am</small>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="d-flex">
-                      <img src="{{ asset('admin/images/faces/face5.jpg') }}" alt="user">
-                      <div>
-                      <p class="text-info mb-1">Ryan Cortez</p>
-                      <p class="mb-0">Herbs are fun and easy to grow.</p>
-                      <small>9:00 am</small>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div> -->
-    </div>
-  </div>
+         </div>
+      </div>
+      
+   </div>
 </div>
-
+</div>
+</div>
 @push('scripts')
 <!-- Custom js for this page-->
 <!-- <script src="{{ asset('admin/assets/chart.js/Chart.min.js') }}"></script> -->

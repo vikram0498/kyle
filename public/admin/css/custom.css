@@ -221,8 +221,10 @@ a.btn {
     font-family: 'Barlow', sans-serif;
     font-size: 16px !important;
 }
-.card .card-body{
-    padding: 35px;
+.card .card-body {
+    padding: 20px;
+    border: 1px solid #EAECEB;
+    border-radius: 5px;
 }
 .card .card-title, .card .card-title h4 {
     color: #212529;
@@ -506,10 +508,262 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .search-table-data .overflow-x-scroll {
     overflow-x: auto !important;
 }
+
+/*------ 04-07-2023 ----------*/
+/*dropdown user*/
+.img-user {
+    background: #F5F7F9;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    overflow: hidden;
+    margin-right: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.welcome-user{
+    margin-right: 12px;
+}
+.welcome-user span {
+    display: block;
+    text-align: left;
+}
+.user-dropdown .dropdown-toggle::after{
+    display: none;
+}
+.user-dropdown button {
+    padding: 0;
+    border: 0;
+    display: flex;
+    align-items: flex-end;
+}
+.welcome {
+    font-family: 'Nunito Sans', sans-serif;
+    color: #414136;
+    font-size: 12px;
+    text-transform: capitalize;
+    line-height: 9px;
+    margin-bottom: 6px;
+}
+.dropdown-toggle{
+    box-shadow: none !important;
+}
+.user-name-title {
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 15px;
+    font-family: 'Barlow', sans-serif;
+}
+.user-dropdown .dropdown-menu {
+    border-radius: 10px;
+    border: 0 !important;
+    min-width: 264px;
+    width: 100%;
+    padding: 5px 0 5px !important;
+    box-shadow: 15px -2px 40px rgba(4, 12, 30, 0.08) !important;
+    margin-top: 0 !important;
+    right: -28px !important;
+    left: unset !important;
+    transform: none !important;
+    top: 43px !important;
+    position: absolute;
+}
+.dropdown-data {
+    display: flex;
+    align-items: center;
+}
+.user-dropdown .dropdown-menu:before {
+    position: absolute;
+    content: '';
+    clip-path: path('M12.9902 0L25.9806 8.2716H-0.000146866L12.9902 0Z');
+    right: 19px;
+    width: 26px;
+    height: 9px;
+    top: -8px;
+    background: #fff;
+}
+.user-dropdown .arrow-icon {
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+.user-dropdown .arrow-icon svg {
+    width: 10px;
+    height: 6px;
+}
+.dropdown-toggle.show .arrow-icon {
+    transform: rotate(0deg);
+}
+.user-dropdown .dropdown-menu li .dropdown-item {
+    padding: 13.5px 0;
+    border-bottom: 1px solid #DDDDE9;
+    color: #121639;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Barlow', sans-serif;
+    transition: all 0.4s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+.user-dropdown .dropdown-menu li .dropdown-item img {
+    margin-right: 12px;
+}
+.user-dropdown .dropdown-menu li:last-child a{
+    border-bottom: 0;
+}
+.user-dropdown .dropdown-menu li .dropdown-item:hover{
+    background: transparent;
+    color: #0A2540;
+    font-weight: 600;
+}
+.user-dropdown .dropdown-menu li {
+    padding: 0 15px;
+    position: relative;
+}
+.user-dropdown .dropdown-menu li:hover:before,
+.user-dropdown .dropdown-menu li.active:before{
+    position: absolute;
+    content: '';
+    height: 25px;
+    width: 4px;
+    background: #3F53FE;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    border-radius: 0px 20px 20px 0;
+}
+.user-dropdown .dropdown-menu li.active .dropdown-item {
+    background: transparent;
+}
+.navbar{
+    border-bottom: 1px solid #EAECEB;
+}
+
+/*--- dashboard redesign ---------*/
+.card{
+    border-radius: 5px;
+}
+.card-light-purple{
+    background: #F4EBFF;
+}
+.card-light-green{
+    background: #D8FFE8;
+}
+.heading-card {
+    margin-bottom: 17px;
+    line-height: 12px;
+}
+.box-count {
+    font-size: 25px;
+    color: #121639;
+    font-weight: 700;
+    font-family: 'Barlow', sans-serif;
+    margin-bottom: 0;
+}
+footer.footer {
+    background: transparent;
+    border-top: 1px solid #EAECEB;  
+    padding: 15px 0;
+    text-align: center;
+}
+.copyright-text {
+    color: #464B70;
+    font-size: 14px;
+    font-family: 'Nunito Sans', sans-serif;
+}
+.card-body-icon {
+    width: 74px;
+    height: 74px;
+    background: #fff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.table-card-box {
+    border-radius: 5px;
+    border: 1px solid #EAECEB;
+}
+.table-card-box .card-header {
+    font-size: 18px;
+    background: transparent;
+    border-bottom: 1px solid #EAECEB;
+    border-radius: 0;
+    font-family: 'Barlow', sans-serif !important;
+    color: #121639;
+    font-weight: 600;
+    padding: 20px;
+}
+.table.table-bordered, .table-bordered th, .table thead th {
+    border-color: #EAECEB;
+}
+.card-box-table thead tr th {
+    border-bottom: 1px solid #EAECEB !important;
+    padding: 16px 15px;
+    border: 0;
+    position: relative;
+    font-size: 14px;
+    font-family: 'Barlow', sans-serif !important;
+    color: #121639;
+    font-weight: 600;
+}
+.card-box-table td {
+    border: 0;
+    font-size: 14px;
+    color: #464B70;
+    padding: 14px 15px;
+    width: 50%;
+    font-weight: 400;
+    position: relative;
+}
+.card-box-table tbody tr:nth-child(even) {
+    background: #F5F7F9;
+}
+.purchased {
+    padding: 4px 9px;
+    background: #CDFCE0;
+    color: #00AC47;
+    font-size: 12px;
+    font-family: 'Barlow', sans-serif !important;
+    font-weight: 500;
+    border-radius: 24px;
+    text-transform: capitalize;
+    display: inline-block;
+    margin-left: 15px;
+}
+.side-by-side-data {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.card-box-table thead tr th:not(:last-child):before,
+.card-box-table tbody tr td:not(:last-child):before {
+    position: absolute;
+    content: '';
+    right: 0;
+    background: #EAECEB;
+    height: 22px;
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{
         float: unset !important;
+     }
+     .img-box,
+     .stretch-card > .card{
+        margin-top: 30px;
      }
 }
 
