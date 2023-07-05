@@ -199,7 +199,7 @@ class Index extends Component
 Validator::extend('without_spaces', function ($attribute, $value, $parameters, $validator) {
     $cleanValue = trim(strip_tags($value));
 
-    if (empty($cleanValue)) {
+    if (empty($cleanValue) || strpos($value, '&nbsp;') !== false || strpos($value, '&ensp;') !== false || strpos($value, '&emsp;') !== false) {
         return false;
     }
 
