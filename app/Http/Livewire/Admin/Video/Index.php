@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Validator;
 
 class Index extends Component
 {
@@ -51,10 +51,10 @@ class Index extends Component
     {
         $validatedData = $this->validate([
             'title'  => 'required',
-            'description' => 'required',
+            'description' => 'required|without_spaces',
             'status' => 'required',
             'video' => 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv|max:'.config('constants.video_max_size'),
-        ]);
+        ], ['without_spaces' => 'The :attribute field is required']);
         
         $validatedData['status'] = $this->status;
 
@@ -94,9 +94,9 @@ class Index extends Component
     public function update(){
         $validatedData = $this->validate([
             'title' => 'required',
-            'description' => 'required',
+            'description' => 'required|without_spaces',
             'status' => 'required',
-        ]);
+        ], ['without_spaces' => 'The :attribute field is required']);
 
         if($this->video){
             $validatedData['video'] = 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv|max:'.config('constants.video_max_size');
@@ -194,3 +194,14 @@ class Index extends Component
 
 
 }
+
+// Custom validation rule
+Validator::extend('without_spaces', function ($attribute, $value, $parameters, $validator) {
+    $cleanValue = trim(strip_tags($value));
+
+    if (empty($cleanValue)) {
+        return false;
+    }
+
+    return true;
+});

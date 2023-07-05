@@ -34,15 +34,11 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.user.fields.status')}}</th>
-            <td> {{ ($seller->is_active ? 'Active' : 'Inactive') }}</td>
-        </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.user.fields.block_status')}}</th>
-            <td> {{ ($seller->is_block ? 'Blocked' : 'Unblocked') }}</td>
+            <td> {{ ($seller->is_active ? 'Active' : 'Block') }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
-            <td> {{ ($seller->is_block ? 'Blocked' : 'Unblocked') }}</td>
+            <td> {{ $seller->created_at->format(config('constants.datetime_format')) }}</td>
         </tr>
 
     </table>

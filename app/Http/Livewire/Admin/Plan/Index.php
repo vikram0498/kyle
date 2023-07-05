@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Validator;
 
 class Index extends Component
 {
@@ -49,15 +49,16 @@ class Index extends Component
 
     public function store()
     {
+        
         $validatedData = $this->validate(
             [
-                'title'  => 'required',
-                'month_amount' => 'required|numeric|min:0|max:99999999.99',
-                'year_amount' => 'required|numeric|min:0|max:99999999.99',
-                'description' => 'required',
+                'title'  => ['required'],
+                'month_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+                'year_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+                'description' => ['required', 'without_spaces'],
                 'status' => 'required',
-                'image' => 'required|image|max:'.config('constants.img_max_size'),
-            ],[],['title'  => 'plan name']
+                'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
+            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']
         );
         
         $validatedData['status'] = $this->status;
@@ -103,9 +104,9 @@ class Index extends Component
             'title' => 'required',
             'month_amount' => 'required|numeric|min:0|max:99999999.99',
             'year_amount' => 'required|numeric|min:0|max:99999999.99',
-            'description' => 'required',
+            'description' => 'required|without_spaces',
             'status' => 'required',
-        ],[],['title'  => 'plan name']);
+        ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']);
 
         if($this->image){
             $validatedData['image'] = 'required|image|max:'.config('constants.img_max_size');
@@ -190,3 +191,14 @@ class Index extends Component
 
 
 }
+
+// Custom validation rule
+Validator::extend('without_spaces', function ($attribute, $value, $parameters, $validator) {
+    $cleanValue = trim(strip_tags($value));
+
+    if (empty($cleanValue)) {
+        return false;
+    }
+
+    return true;
+});

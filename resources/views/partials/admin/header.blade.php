@@ -87,8 +87,8 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                     <ul class="list-unstyled mb-0">
                         <li><a class="dropdown-item" href="{{route('auth.admin-profile')}}"><img src="{{ asset('admin/images/user-login.svg')}}" class="img-fluid">My Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/booksaved.svg') }}" class="img-fluid">My Buyers Data</a></li>
-                        <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/messages.svg') }}" class="img-fluid">Support</a></li>
+                        <!-- <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/booksaved.svg') }}" class="img-fluid">My Buyers Data</a></li>
+                        <li><a class="dropdown-item" href="#"><img src="{{ asset('admin/images/messages.svg') }}" class="img-fluid">Support</a></li> -->
                         @livewire('auth.admin.logout')
                     </ul>
                 </div>

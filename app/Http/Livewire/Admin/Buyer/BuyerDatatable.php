@@ -47,7 +47,7 @@ class BuyerDatatable extends LivewireDatatable
             Column::callback(['id', 'user_id'], function ($id, $user_id) {
                 $array = ['show', 'edit', 'delete'];
                 if(auth()->user()->id != $user_id){
-                    $array = array_diff( $array, ['show', 'edit'] );
+                    $array = array_diff( $array, ['delete', 'edit'] );
                 }
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
             })->label(trans('global.action'))->unsortable(),

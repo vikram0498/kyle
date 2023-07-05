@@ -70,7 +70,7 @@
     <div class="d-flex justify-content-between"> 
         <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue  mr-2">
             {{ $updateMode ? __('global.update') : __('global.submit') }}
-            <span wire:loading wire:target="store">
+            <span wire:loading wire:target="{{ $updateMode ? 'update' : 'store' }}">
                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
             </span>
         </button>
