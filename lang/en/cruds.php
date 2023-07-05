@@ -204,7 +204,7 @@ return [
     ],
 
     'dashboard'  => [
-        'total_buyer'  => 'Total Buyer',
-        'total_seller'  => 'Total Seller',
+        'total_buyer'  => 'Total Buyers',
+        'total_seller'  => 'Total Sellers',
     ]
 ];
