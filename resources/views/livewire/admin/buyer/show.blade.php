@@ -309,7 +309,7 @@
 
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.status')}}</th>
-            <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
+            <td> {{ ($details->status ? 'Active' : 'Block') }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
@@ -317,11 +317,12 @@
         </tr>
     </table>
     <div class="text-right">
-        <button wire:click.prevent="cancel" class="btn btn-fill btn-dark">
-        {{ __('global.back')}}
-        <span wire:loading wire:target="cancel">
-            <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-        </span>
-    </button>
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">
+            {{ __('global.back')}}
+            <span wire:loading wire:target="cancel">
+                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            </span>
+        </button>
+    </div>
 
                

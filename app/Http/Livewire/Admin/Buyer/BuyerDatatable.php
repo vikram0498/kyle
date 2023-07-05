@@ -28,11 +28,11 @@ class BuyerDatatable extends LivewireDatatable
 
             Column::callback(['id', 'size_min'], function ($id) {
                 return 0;
-            })->label(trans('cruds.buyer.fields.like'))->sortable(),
+            })->label(trans('cruds.buyer.fields.like'))->unsortable(),
 
             Column::callback(['id', 'size_max'], function () {
                 return 0;
-            })->label(trans('cruds.buyer.fields.dislike'))->sortable(),
+            })->label(trans('cruds.buyer.fields.dislike'))->unsortable(),
 
             Column::callback(['id', 'is_ban'], function ($id, $isBan) {
                 $flgHtml = '';
@@ -41,7 +41,7 @@ class BuyerDatatable extends LivewireDatatable
                 }
                 
                 return $flgHtml;
-            })->label(trans('cruds.buyer.fields.flag_mark'))->sortable(),
+            })->label(trans('cruds.buyer.fields.flag_mark'))->unsortable(),
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             Column::callback(['id', 'user_id'], function ($id, $user_id) {

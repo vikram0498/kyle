@@ -13,13 +13,14 @@
         <p class="text-muted mb-1">{{ $authUser->profile->profession ?? ''  }}</p>
         <div class="d-flex mb-2">
 
-        @if($showConfirmCancel)
-            <button class="btn btn-outline-success ms-1 mr-1" wire:key="action-{{generateRandomString(5)}}" wire:click.prevent="$emitSelf('confirmUpdateProfileImage')"><i class="fa fa-check"></i></button>
+            @if($showConfirmCancel)
+                <button class="btn btn-outline-success ms-1 mr-1" wire:key="action-{{generateRandomString(5)}}" wire:click.prevent="$emitSelf('confirmUpdateProfileImage')"><i class="fa fa-check"></i></button>
 
-            <button class="btn btn-outline-danger ms-1" wire:key="action-{{generateRandomString(5)}}"  wire:click.prevent="$emitSelf('cancelUpdateProfileImage')"><i class="fa fa-close"></i></button>
-        @else
-            <input id="profile-image-upload" wire:model.defer="profile_image" class="d-none" type="file" wire:change="validateProfileImage" accept="image/*">
-            <button type="button" class="btn change ms-1" onclick="document.getElementById('profile-image-upload').click();" >Change</button>
-        @endif
+                <button class="btn btn-outline-danger ms-1" wire:key="action-{{generateRandomString(5)}}"  wire:click.prevent="$emitSelf('cancelUpdateProfileImage')"><i class="fa fa-close"></i></button>
+            @else
+                <input id="profile-image-upload" wire:model.defer="profile_image" class="d-none" type="file" wire:change="validateProfileImage" accept="image/*">
+                <button type="button" class="btn change ms-1" onclick="document.getElementById('profile-image-upload').click();" >Change</button>
+            @endif
+        </div>
     </div>
 </div>
