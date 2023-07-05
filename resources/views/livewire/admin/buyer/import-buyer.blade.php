@@ -22,15 +22,17 @@
                             </div>
                         </div>
                     
-                        <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue mr-2">
-                            {{ __('cruds.buyer.fields.import_buyers') }}
-                            <span wire:loading wire:target="importBuyers">
-                                <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                        <a href="{{route('admin.buyer')}}" class="btn btn-fill btn-light">
-                            {{ __('global.back')}}
-                        </a>
+                       <div class="d-flex justify-content-between"> 
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue mr-2">
+                                {{ __('cruds.buyer.fields.import_buyers') }}
+                                <span wire:loading wire:target="importBuyers">
+                                    <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            <a href="{{route('admin.buyer')}}" class="btn btn-fill btn-dark">
+                                {{ __('global.back')}}
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>

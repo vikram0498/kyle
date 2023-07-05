@@ -258,14 +258,14 @@
 <!--End row-1  -->
 
 
-<div class="text-center mt-3">
+<div class="text-center mt-3 d-flex justify-content-between">
     <button class="btn btn-fill btn-blue" type="submit" wire:loading.attr="disabled">
        {{ $updateMode ? __('global.update') : __('global.submit') }}     
         <span wire:loading wire:target="{{ $updateMode ? 'update' : 'store' }}">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
         </span>
     </button>
-    <button class="btn btn-fill btn-light" wire:loading.attr="disabled" wire:click.prevent="cancel">
+    <button class="btn btn-fill btn-dark" wire:loading.attr="disabled" wire:click.prevent="cancel">
         {{ __('global.back')}}
         <span wire:loading wire:target="cancel">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>

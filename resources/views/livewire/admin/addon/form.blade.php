@@ -42,16 +42,18 @@
         </div>
     </div>
 
-    <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue mr-2">
+    <div class="d-flex justify-content-between">
+        <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue mr-2">
         {{ $updateMode ? __('global.update') : __('global.submit') }}
         <span wire:loading wire:target="store">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
         </span>
     </button>
-    <button wire:click.prevent="cancel" class="btn btn-fill btn-light">
+    <button wire:click.prevent="cancel" class="btn btn-fill btn-dark">
         {{ __('global.back')}}
         <span wire:loading wire:target="cancel">
             <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
         </span>
     </button>
+    </div>
 </form>

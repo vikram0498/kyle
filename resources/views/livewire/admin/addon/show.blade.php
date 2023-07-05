@@ -26,7 +26,7 @@
         </tr>
     </table>
     <div class="text-right">
-        <button wire:click.prevent="cancel" class="btn btn-fill btn-blue">
+        <button wire:click.prevent="cancel" class="btn btn-fill btn-dark">
             {{ __('global.back')}}
             <span wire:loading wire:target="cancel">
                 <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>

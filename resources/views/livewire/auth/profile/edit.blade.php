@@ -1,6 +1,6 @@
  
- <form wire:submit.prevent="updateProfile">
- <div class="row mt-5">
+ <form wire:submit.prevent="updateProfile" class="mt-5">
+ <div class="row">
     <div class="col-12 col-lg-6">
         <div class="form-group">
             <label for="first_name">{{ __('cruds.user.fields.first_name') }}</label>

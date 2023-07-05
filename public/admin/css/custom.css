@@ -254,10 +254,10 @@ button.btn, a.btn {
   border-color: #0A2540;
   background: #0A2540;
 }
-.btn-light{
-  color: #0A2540;
-    background: #D7E4F1;
-    border-color: #D7E4F1;
+.btn-dark {
+    color: #ffffff;
+    background: #0A2540;
+    border-color: #0A2540;
 }
 .btn-blue{
   background: #3F53FE;
@@ -611,6 +611,9 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 }
 .user-dropdown .dropdown-menu li .dropdown-item img {
     margin-right: 12px;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: unset !important;
 }
 .user-dropdown .dropdown-menu li:last-child a{
     border-bottom: 0;
@@ -657,6 +660,7 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .heading-card {
     margin-bottom: 17px;
     line-height: 12px;
+    color: #121639;
 }
 .box-count {
     font-size: 25px;
@@ -835,6 +839,9 @@ footer.footer {
 }
 .changepassword-block .form-control {
     padding-right: 50px !important;
+}
+.stretch-card > .card a:hover{
+    text-decoration: none !important;
 }
 /*--------- Media Query ----------*/
 @media (max-width:991px){
