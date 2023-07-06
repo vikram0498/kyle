@@ -1,12 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Testing</h1>
-    </div>
-  );
+import RoutesList from './RoutesList';
+
+class App extends Component {
+  render() {
+    return (
+        <RoutesList />
+    );
+  }
 }
 
 export default App;
