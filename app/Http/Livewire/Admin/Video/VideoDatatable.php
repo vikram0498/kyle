@@ -10,6 +10,16 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
   
 class VideoDatatable extends LivewireDatatable
 {
+    public function mount($model = false, $include = [], $exclude = [], $hide = [], $dates = [], $times = [], $searchable = [], $sort = null, $hideHeader = null, $hidePagination = null, $perPage = null, $exportable = false, $hideable = false, $beforeTableSlot = false, $buttonsSlot = false, $afterTableSlot = false, $params = [])
+    {
+        parent::mount($model, $include, $exclude, $hide, $dates, $times, $searchable, $sort, $hideHeader, $hidePagination, $perPage, $exportable, $hideable, $beforeTableSlot, $buttonsSlot, $afterTableSlot, $params);
+
+        // $this->resetTable();
+        $this->perPage = config('livewire-datatables.default_per_page', 10);
+        $this->sort(3, 'desc');
+        $this->search = null;
+        $this->setPage(1);
+    }
 
     public function builder()
     {

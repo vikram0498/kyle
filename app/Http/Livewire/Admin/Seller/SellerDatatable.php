@@ -11,12 +11,23 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 class SellerDatatable extends LivewireDatatable
 {
 
+    public function mount($model = false, $include = [], $exclude = [], $hide = [], $dates = [], $times = [], $searchable = [], $sort = null, $hideHeader = null, $hidePagination = null, $perPage = null, $exportable = false, $hideable = false, $beforeTableSlot = false, $buttonsSlot = false, $afterTableSlot = false, $params = [])
+    {
+        parent::mount($model, $include, $exclude, $hide, $dates, $times, $searchable, $sort, $hideHeader, $hidePagination, $perPage, $exportable, $hideable, $beforeTableSlot, $buttonsSlot, $afterTableSlot, $params);
+
+        // $this->resetTable();
+        $this->perPage = config('livewire-datatables.default_per_page', 10);
+        $this->sort(6, 'desc');
+        $this->search = null;
+        $this->setPage(1);
+    }
+
     public function builder()
     {
         return User::query()->withCount('buyers')
         ->whereHas('roles',function($query){
             $query->whereIn('id',[2]);
-        }); // Include the related table data
+        });
     }
   
     /**
@@ -48,6 +59,7 @@ class SellerDatatable extends LivewireDatatable
             })->label(trans('cruds.user.fields.purchased_buyer'))->sortable(),
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
+            
             Column::callback(['id', 'phone'], function ($id, $phone) {
                 $array = ['show', 'delete'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
