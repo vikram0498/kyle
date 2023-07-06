@@ -198,10 +198,10 @@ class Index extends Component
 // Custom validation rule
 Validator::extend('without_spaces', function ($attribute, $value, $parameters, $validator) {
     $cleanValue = trim(strip_tags($value));
-
-    if (empty($cleanValue) || strpos($value, '&nbsp;') !== false || strpos($value, '&ensp;') !== false || strpos($value, '&emsp;') !== false) {
+    $replacedVal = trim(str_replace(['&nbsp;', '&ensp;', '&emsp;'], ['','',''], $cleanValue));
+    
+    if (empty($replacedVal)) {
         return false;
     }
-
     return true;
 });

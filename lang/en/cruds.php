@@ -27,6 +27,7 @@ return [
             'buyer_count'              => 'Self Buyers',
             'purchased_buyer'          => 'Purchased Buyers',
             'package'                  => 'Package',
+            'level_type'               => 'Level Type',
             'confirm_password'         => 'Password Confirm',
             'role'                     => 'User Level',
             'created_at'               => 'Created at',

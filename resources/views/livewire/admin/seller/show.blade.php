@@ -29,6 +29,10 @@
             <td> {{ $purchasedBuyerCount ?? 'N/A' }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.user.fields.level_type')}}</th>
+            <td> Level 1</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.user.fields.package')}}</th>
             <td> Free</td>
         </tr>

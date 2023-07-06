@@ -17,7 +17,7 @@ class SellerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(6, 'desc');
+        $this->sort(7, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
@@ -50,13 +50,17 @@ class SellerDatatable extends LivewireDatatable
                 return User::find($id)->buyers()->count();
             })->label(trans('cruds.user.fields.buyer_count'))->sortable(),
 
+            Column::callback(['id', 'deleted_at'], function ($id) {
+                return 'Level 1';
+            })->label(trans('cruds.user.fields.level_type'))->unsortable(),
+
             Column::callback(['id', 'address'], function ($id) {
                 return 'Free';
-            })->label(trans('cruds.user.fields.package'))->sortable(),
+            })->label(trans('cruds.user.fields.package'))->unsortable(),
 
             Column::callback(['id', 'updated_at'], function ($id) {
                 return 0;
-            })->label(trans('cruds.user.fields.purchased_buyer'))->sortable(),
+            })->label(trans('cruds.user.fields.purchased_buyer'))->unsortable(),
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             
