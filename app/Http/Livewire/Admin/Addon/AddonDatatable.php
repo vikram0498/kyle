@@ -16,7 +16,7 @@ class AddonDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(5, 'desc');
+        $this->sort(0, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
@@ -34,6 +34,10 @@ class AddonDatatable extends LivewireDatatable
     public function columns()
     {
         return [
+            Column::callback(['id'], function ($id) {
+                return $id;
+            })->sortable()->defaultSort('desc')->hide(),
+
             Column::index($this)->unsortable(),
             Column::name('title')->label(trans('cruds.addon.fields.title'))->sortable()->searchable(),
 
@@ -47,8 +51,8 @@ class AddonDatatable extends LivewireDatatable
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Inactive']);
             })->label(trans('cruds.addon.fields.status'))->sortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
-            Column::callback(['id'], function ($id) {
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            Column::callback(['id', 'deleted_at'], function ($id) {
                 return view('livewire.datatables.actions', ['id' => $id]);
             })->label(trans('global.action'))->unsortable(),
         ];

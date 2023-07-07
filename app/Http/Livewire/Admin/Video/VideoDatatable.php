@@ -16,7 +16,7 @@ class VideoDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(3, 'desc');
+        $this->sort(0, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
@@ -34,6 +34,10 @@ class VideoDatatable extends LivewireDatatable
     public function columns()
     {
         return [
+            Column::callback(['id'], function ($id) {
+                return $id;
+            })->sortable()->defaultSort('desc')->hide(),
+
             Column::index($this)->unsortable(),
             Column::name('title')->label(trans('cruds.video.fields.title'))->sortable()->searchable(),
 
@@ -42,8 +46,8 @@ class VideoDatatable extends LivewireDatatable
             })->label(trans('cruds.video.fields.status'))->sortable(),
 
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
-            Column::callback(['id'], function ($id) {
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            Column::callback(['id', 'deleted_at'], function ($id) {
                 return view('livewire.datatables.actions', ['id' => $id]);
             })->label(trans('global.action'))->unsortable(),
         ];

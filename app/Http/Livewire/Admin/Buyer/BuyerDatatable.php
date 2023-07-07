@@ -16,7 +16,7 @@ class BuyerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(6, 'desc');
+        $this->sort(0, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
@@ -34,6 +34,10 @@ class BuyerDatatable extends LivewireDatatable
     public function columns()
     {
         return [
+            Column::callback(['id'], function ($id) {
+                return $id;
+            })->sortable()->defaultSort('desc')->hide(),
+            
             Column::index($this)->unsortable(),
             Column::name('first_name')->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
             Column::callback(['id', 'status'], function ($id, $status) {

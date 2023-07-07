@@ -17,7 +17,7 @@ class SearchLogDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(2, 'desc');
+        $this->sort(0, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
@@ -36,12 +36,16 @@ class SearchLogDatatable extends LivewireDatatable
     public function columns()
     {
         return [
+            Column::callback(['id'], function ($id) {
+                return $id;
+            })->sortable()->defaultSort('desc')->hide(),
+
             Column::index($this)->unsortable(),
             
             Column::name('users.name')->label(trans('cruds.search_log.fields.user_id'))->sortable()->searchable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
-            Column::callback(['id'], function ($id) {
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            Column::callback(['id', 'deleted_at'], function ($id) {
                 $arr = ['show'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $arr]);
             })->label(trans('global.action'))->unsortable(),
