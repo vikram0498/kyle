@@ -133,6 +133,9 @@ class Index extends Component
     public function deleteConfirm($id){
         $model = Addon::find($id);
         $model->delete();
+
+        $this->emit('refreshLivewireDatatable');
+
         $this->alert('success', trans('messages.delete_success_message'));
     }
 

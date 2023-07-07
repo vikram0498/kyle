@@ -101,7 +101,7 @@
     })
     $(document).on('click', '.deleteBtn', function(e){
         var _this = $(this);
-        var id = _this.data('id');
+        var id = _this.attr('data-id');
        
         Swal.fire({
             title: 'Are you sure you want to delete it?',
