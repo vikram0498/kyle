@@ -8,6 +8,9 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class BuyersImport implements ToModel, WithStartRow
 {
+    private $rowCount = 0;
+    private $insertedCount = 0;
+
     public function startRow(): int
     {
         return 2;
@@ -127,6 +130,7 @@ class BuyersImport implements ToModel, WithStartRow
                 }
             }
         }
+        ++$this->rowCount;
     }
 
     private function setMultiSelectValues($value, $type, $buyerArr = []){
@@ -343,7 +347,7 @@ class BuyersImport implements ToModel, WithStartRow
             if(!empty($pmArr)){
                 $purchaseMethod = $pmArr;
                 $buyerArr['purchase_method'] = $purchaseMethod;
-                // dd($buyerArr);
+                $this->insertedCount++;
                 return Buyer::create($buyerArr);
             }
         }
@@ -355,4 +359,14 @@ class BuyersImport implements ToModel, WithStartRow
         $data = htmlspecialchars($data);
         return $data;
       }
+
+      public function totalRowCount(): int
+    {
+        return $this->rowCount;
+    }
+
+    public function insertedCount(): int
+    {
+        return $this->insertedCount;
+    }
 }

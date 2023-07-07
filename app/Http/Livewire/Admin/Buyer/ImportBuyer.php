@@ -36,8 +36,28 @@ Class ImportBuyer extends Component {
             'csv_file' => ['required', 'mimes:csv,xlsx,xls,txt']
         ])->validate();
 
-        Excel::import(new BuyersImport, $this->state['csv_file']->store('temp'));
-        $this->flash('success',trans('messages.add_success_message'));
-        return to_route('admin.buyer');
+        $import = new BuyersImport;
+        Excel::import($import, $this->state['csv_file']->store('temp'));
+
+        $totalCount         = $import->totalRowCount();
+        $insertedRowCount   = $import->insertedCount();
+        $skippedCount       = $totalCount - $insertedRowCount;
+
+        // dd($totalCount, $insertedRowCount, $skippedCount);
+
+        if($insertedRowCount == 0){
+            $this->flash('error',trans('No rows inserted during the import process.'));
+            return to_route('admin.import-buyers');
+        } else if($skippedCount > 0 && $insertedRowCount > 0){
+            $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+            $this->flash('success',trans($message));
+            return to_route('admin.buyer');
+        } else if($skippedCount == 0) {
+            $this->flash('success',trans('messages.add_success_message'));
+            return to_route('admin.buyer');
+        }
+
+        // $this->flash('success',trans('messages.add_success_message'));
+        // return to_route('admin.buyer');
     }
 }
