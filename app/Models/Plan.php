@@ -22,6 +22,7 @@ class Plan extends Model
         'title',
         'month_amount',
         'year_amount',
+        'monthly_credit',
         'description',
         'status',
         'created_by',

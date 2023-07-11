@@ -22,7 +22,7 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $month_amount, $year_amount, $status = 1, $description='',$image=null,$viewMode = false,$originalImage;
+    public  $title, $month_amount, $year_amount, $monthly_credit, $status = 1, $description='',$image=null,$viewMode = false,$originalImage;
 
     public $plan_id =null;
 
@@ -55,6 +55,7 @@ class Index extends Component
                 'title'  => ['required'],
                 'month_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'year_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+                'monthly_credit' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'description' => ['required', 'without_spaces'],
                 'status' => 'required',
                 'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
@@ -88,6 +89,7 @@ class Index extends Component
         $this->title  = $plan->title;
         $this->month_amount = $plan->month_amount;
         $this->year_amount = $plan->year_amount;
+        $this->monthly_credit = $plan->monthly_credit;
         $this->description = $plan->description;
         $this->status = $plan->status;
         $this->originalImage = $plan->image_url;
@@ -104,6 +106,7 @@ class Index extends Component
             'title' => 'required',
             'month_amount' => 'required|numeric|min:0|max:99999999.99',
             'year_amount' => 'required|numeric|min:0|max:99999999.99',
+            'monthly_credit' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'description' => 'required|without_spaces',
             'status' => 'required',
         ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']);
@@ -161,6 +164,7 @@ class Index extends Component
         $this->title = '';
         $this->month_amount = '';
         $this->year_amount = '';
+        $this->monthly_credit = '';
         $this->description = '';
         $this->status = 1;
         $this->image =null;

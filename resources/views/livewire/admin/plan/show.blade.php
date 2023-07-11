@@ -21,6 +21,10 @@
             <td> {{ $details->month_amount ? '$'.number_format($details->year_amount,2) : 'N/A' }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.plan.fields.monthly_credit')}}</th>
+            <td> {{ $details->monthly_credit ?? 'N/A' }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.plan.fields.description')}}</th>
             <td>{!! $details->description !!}</td>
         </tr>

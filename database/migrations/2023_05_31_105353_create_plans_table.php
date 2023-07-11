@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->double('month_amount',15,2)->default(0);
             $table->double('year_amount',15,2)->default(0);
-            $table->text('description')->nullable();           
+            $table->integer('monthly_credit')->default(0);
+            $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

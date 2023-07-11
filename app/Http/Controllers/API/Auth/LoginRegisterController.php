@@ -19,9 +19,9 @@ class LoginRegisterController extends BaseController
         $validator = Validator::make($request->all(), [
             'first_name'                => 'required',
             'last_name'                 => 'required',
-            'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NUL',
+            'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'phone'                     => 'required|numeric|digits:10|unique:users,phone,NULL,id,deleted_at,NULL',
-            'address'                   => 'required',
+            // 'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8|confirmed',
             'password_confirmation'     => 'required',
@@ -40,7 +40,7 @@ class LoginRegisterController extends BaseController
 
         $user->roles()->sync(2);
 
-        $success['token'] =  $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+        // $success['token'] =  $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
         $success['name'] =  $user->name;   
 
         return $this->sendResponse($success, 'User register successfully.');
@@ -61,9 +61,10 @@ class LoginRegisterController extends BaseController
                 $user->sendEmailVerificationNotification();
                 return $this->sendError('unverified.', ['error'=>'Your account is not verified', 'verify_mail_send' => true]);
             }
-            $success['token'] =  $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+            $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+            $success['access_token'] =  $accessToken;
             $success['name'] =  $user->name;
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->sendResponse($success, 'User login successfully.', $accessToken);
         } else{
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }

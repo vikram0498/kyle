@@ -5,13 +5,15 @@
 
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.plan.fields.title')}}</label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.plan.fields.title')}}">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-md-4">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.plan.fields.month_amount')}}</label>
@@ -23,6 +25,13 @@
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.plan.fields.year_amount')}}</label>
                 <input type="number" class="form-control" wire:model.defer="year_amount" placeholder="{{ __('cruds.plan.fields.year_amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
+                @error('year_amount') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.plan.fields.monthly_credit')}}</label>
+                <input type="number" class="form-control" wire:model.defer="monthly_credit" placeholder="{{ __('cruds.plan.title_singular') }} {{ __('cruds.plan.fields.monthly_credit')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
                 @error('year_amount') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>

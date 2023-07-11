@@ -27,6 +27,9 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::post('reset-password', 'resetPassword');
 
 });
+/* Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+}); */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -51,6 +51,8 @@ class PlanDatatable extends LivewireDatatable
                 return '$'.number_format($yearAmount,2);
             })->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
 
+            Column::name('monthly_credit')->label(trans('cruds.plan.fields.monthly_credit'))->sortable()->searchable(),
+
             Column::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Inactive']);
             })->label(trans('cruds.plan.fields.status'))->sortable(),
