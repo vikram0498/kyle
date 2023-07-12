@@ -21,7 +21,7 @@ class Index extends Component
 
     protected $layout = null;
 
-    public $search = '', $formMode = false , $updateMode = false;
+    public $search = '', $formMode = false , $updateMode = false, $redFlagView = false;
 
     public $creativeBuyer = false, $multiFamilyBuyer = false;
 
@@ -33,7 +33,8 @@ class Index extends Component
     ];
 
     protected $listeners = [
-       'show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty'
+       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView',
+       
     ];
 
     protected $buyer = null;
@@ -190,6 +191,15 @@ class Index extends Component
         $this->buyer_id = $id;
         $this->formMode = false;
         $this->viewMode = true;
+        $this->redFlagView = false;
+    }
+
+    public function redFlagView($id) {
+        // dd($id);
+        $this->buyer_id = $id;
+        $this->formMode = false;
+        $this->viewMode = false;
+        $this->redFlagView = true;
     }
 
     public function deleteConfirm($id) {
@@ -205,6 +215,7 @@ class Index extends Component
         $this->formMode = false;
         $this->updateMode = false;
         $this->viewMode = false;
+        $this->redFlagView = false;
         $this->resetInputFields();
         $this->resetValidation();
     }

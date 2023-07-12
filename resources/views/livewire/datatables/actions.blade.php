@@ -14,4 +14,10 @@
             <i class="ti-trash"></i>
         </button>
     @endif
+    @if(isset($events) && in_array('flag_btn', $events))
+        <button style="cursor:pointer;" wire:click="$emitUp('redFlagView', {{ $id }})" class="seller_flg_mark  btn btn-twitter" >
+            <i class="fa fa-flag"></i>
+        </button>
+        <span class="badge badge-dark badge-counter">{{ $buyerFlagCount }}</span>
+    @endif
 </div>

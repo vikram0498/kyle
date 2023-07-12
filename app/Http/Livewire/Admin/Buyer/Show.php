@@ -11,7 +11,8 @@ class Show extends Component
     
     public $details;
 
-    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null;
+    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null;
+
 
     public function mount($buyer_id){
         $this->details = Buyer::find($buyer_id);
@@ -22,6 +23,8 @@ class Show extends Component
         $this->buyerTypes = config('constants.buyer_types');
         $this->buildingClassValue =config('constants.building_class_values');
         $this->purchaseMethods = config('constants.purchase_methods');
+
+        $this->radioButtonFields = config('constants.radio_buttons_fields');
     }
 
     public function render()

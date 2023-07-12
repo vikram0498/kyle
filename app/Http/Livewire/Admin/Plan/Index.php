@@ -22,9 +22,11 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $month_amount, $year_amount, $monthly_credit, $status = 1, $description='',$image=null,$viewMode = false,$originalImage;
+    public  $title, $month_amount, $year_amount, $monthly_credit, $status = 1, $description='',$image=null, $viewMode = false,$originalImage;
 
     public $plan_id =null;
+
+    public $removeImage=false;
 
     protected $listeners = [
         'show', 'edit', 'confirmedToggleAction','deleteConfirm'
@@ -59,7 +61,7 @@ class Index extends Component
                 'description' => ['required', 'without_spaces'],
                 'status' => 'required',
                 'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
-            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']
+            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'monthly_credit' => 'Credits per month']
         );
         
         $validatedData['status'] = $this->status;
@@ -102,19 +104,22 @@ class Index extends Component
     }
 
     public function update(){
-        $validatedData = $this->validate([
+        
+      $validateArr = [
             'title' => 'required',
             'month_amount' => 'required|numeric|min:0|max:99999999.99',
             'year_amount' => 'required|numeric|min:0|max:99999999.99',
             'monthly_credit' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'description' => 'required|without_spaces',
             'status' => 'required',
-        ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']);
+        ];
 
-        if($this->image){
-            $validatedData['image'] = 'required|image|max:'.config('constants.img_max_size');
+        if($this->image || $this->removeImage){
+            $validateArr['image'] = 'required|image|max:'.config('constants.img_max_size');
         }
   
+        $validatedData = $this->validate($validateArr, ['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'monthly_credit' => 'Credits per month']);
+
         $validatedData['status'] = $this->status;
 
         $plan = Plan::find($this->plan_id);

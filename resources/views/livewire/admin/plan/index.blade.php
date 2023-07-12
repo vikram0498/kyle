@@ -72,8 +72,19 @@
                     @this.set('description', content);
                 }
             }
-        });
-      
+        });      
+    });
+
+    $(document).on('click', '.dropify-clear', function(e) {
+        e.preventDefault();
+        var elementName = $(this).siblings('input[type=file]').attr('id');
+        if(elementName == 'dropify-image'){
+            $('.dropify').dropify('reset');
+
+            @this.set('image',null);
+            @this.set('originalImage',null);
+            @this.set('removeImage',true);
+        }
     });
 
     $(document).on('click', '.toggleSwitchMain', function(e){

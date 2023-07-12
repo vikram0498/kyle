@@ -891,3 +891,12 @@ footer.footer {
         margin-right: 0;
     }
 }
+
+
+.badge-counter {
+    position: relative;
+    top: -20px;
+    left: -20px;
+    border: 1px solid black;
+    border-radius: 50%;
+}

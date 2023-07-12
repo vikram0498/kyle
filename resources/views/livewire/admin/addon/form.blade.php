@@ -7,21 +7,21 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.addon.fields.title')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.addon.fields.title')}} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.addon.fields.title')}}">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.addon.fields.price')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.addon.fields.price')}} <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" wire:model.defer="price" placeholder="{{ __('cruds.addon.fields.price')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
                 @error('price') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.addon.fields.credit')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.addon.fields.credit')}} <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" wire:model.defer="credit" placeholder="{{ __('cruds.addon.fields.credit')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" autocomplete="off">
                 @error('credit') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>

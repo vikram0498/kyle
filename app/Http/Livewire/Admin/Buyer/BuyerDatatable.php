@@ -53,21 +53,25 @@ class BuyerDatatable extends LivewireDatatable
             })->label(trans('cruds.buyer.fields.dislike'))->unsortable(),
 
             Column::callback(['id', 'is_ban'], function ($id, $isBan) {
-                $flgHtml = '';
-                if($isBan == 1){
-                    $flgHtml = '<a href="javascript:void(0);" class="seller_flg_mark" data-id="'.$id.'"><img src="'.asset('images/icons/red-flag.svg').'" /></a>';
-                }
+                $buyer = Buyer::find($id);
+                $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
                 
-                return $flgHtml;
+                return view('livewire.datatables.red_flag_btn', ['id' => $id, 'flag_count' => $buyerFlagCount]);
+                
             })->label(trans('cruds.buyer.fields.flag_mark'))->unsortable(),
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
             Column::callback(['id', 'user_id'], function ($id, $user_id) {
                 $array = ['show', 'edit', 'delete'];
+                $buyer = Buyer::find($id);
+                $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
                 if(auth()->user()->id != $user_id){
                     $array = array_diff( $array, ['delete', 'edit'] );
                 }
-                return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
+                if($buyerFlagCount > 0){
+                    $array[] = 'flag_btn';
+                }
+                return view('livewire.datatables.actions', ['id' => $id, 'events' => $array, 'buyerFlagCount' => $buyerFlagCount]);
             })->label(trans('global.action'))->unsortable(),
         ];
     }

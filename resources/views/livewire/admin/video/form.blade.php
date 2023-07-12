@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.video.fields.title')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.video.fields.title')}} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" wire:model.defer="title" placeholder="{{ __('cruds.video.fields.title')}}">
                 @error('title') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold">{{ __('cruds.video.fields.description')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.video.fields.description')}} <span class="text-danger">*</span></label>
                 <textarea class="form-control" id="summernote" wire:model.defer="description" rows="4"></textarea>
             </div>
             @error('description') <span class="error text-danger">{{ $message }}</span>@enderror
@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
-                <label class="font-weight-bold">{{ __('cruds.video.fields.video')}}</label>
+                <label class="font-weight-bold">{{ __('cruds.video.fields.video')}} <span class="text-danger">*</span></label>
                 <div class='file-input'>
                   <input type="file"  wire:model.defer="video" class="form-control" >
                   <span class='button'>Choose</span>

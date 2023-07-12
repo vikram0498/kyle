@@ -65,6 +65,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Uploads::class, 'uploadsable');
     }
 
+    public function redFlagedBuyer(){
+        return $this->belongsToMany(Buyer::class)->withPivot('reason', 'status');
+    }
+
     public function buyers()
     {
         return $this->hasMany(Buyer::class, 'user_id', 'id');

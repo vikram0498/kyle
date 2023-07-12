@@ -11,7 +11,8 @@
                     @elseif($viewMode)
 
                         @livewire('admin.buyer.show', ['buyer_id' => $buyer_id])
-
+                    @elseif($redFlagView)
+                        @livewire('admin.buyer.red-flag-show', ['buyer_id' => $buyer_id])
                     @else
                         <div wire:loading wire:target="{{ $updateMode ? 'edit' : 'create' }}" class="loader"></div>
                         <div class="card-title top-box-set">
@@ -126,6 +127,63 @@
                 @this.emit('confirmedToggleAction', data);
             } else if (result.isDenied) {
                 _this.prop("checked", flag);
+            }
+        })
+    })
+
+
+    // red flag page events
+    $(document).on('click', '#resolveAllFlag', function(e){
+        var _this = $(this);
+        var id = _this.data('buyer_id');
+       
+        Swal.fire({
+            title: 'Are you sure you want to resolve all flags?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('resolveAllFlag', id);
+            }
+        })
+    })
+
+    $(document).on('click', '.resolve_flag', function(e){
+        var _this = $(this);
+        var buyer_id = _this.data('buyer_id');
+        var seller_id = _this.data('seller_id');
+       
+        var data = { buyer_id: buyer_id, seller_id: seller_id }
+        Swal.fire({
+            title: 'Are you sure you want to resolve this flag?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('resolveFlag', data);
+            }
+        })
+    })
+
+    $(document).on('click', '.reject_flag', function(e){
+        var _this = $(this);
+        var buyer_id = _this.data('buyer_id');
+        var seller_id = _this.data('seller_id');
+       
+        var data = { buyer_id: buyer_id, seller_id: seller_id }
+        Swal.fire({
+            title: 'Are you sure you want to resolve this flag?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('rejectFlag', data);
             }
         })
     })

@@ -159,6 +159,16 @@ return [
             'status'                        => 'Status', 
             'created_at'                    => 'Created At',
         ],
+        'red_flag_view' => [
+            'heading'   => 'Red Flag',
+            'resolve_all_btn'   => 'Resolve All Flag',
+            'resolve_flag_btn'   => 'Resolve Flag',
+            'reject_flag_btn'   => 'Reject Flag',
+            'buyer_info_heading'   => 'Buyer Information',
+            'heading'   => 'Buyer Red Flag',
+            'heading'   => 'Buyer Red Flag',
+            'heading'   => 'Buyer Red Flag',
+        ],
     ],
 
     'search_log' => [

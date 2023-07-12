@@ -56,8 +56,8 @@
                      <table class="table table-responsive-sm table-bordered card-box-table">
                         <thead>
                            <tr>
-                              <th scope="col">Seller Name</th>
                               <th scope="col">Buyer Name</th>
+                              <th scope="col">Seller Name</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -67,43 +67,47 @@
                         </tbody>
                         <!-- <tbody>
                            <tr>
-                              <td>Cameron Williamson</td>
+                              <td>
+                                 <div class="side-by-side-data">
+                                    <span>Haword Johnson</span>
+                                    <span class="purchased">20 sellers purchased</span>
+                                 </div>
+                                 <td>Cameron Williamson</td>
+                              </td>
+                           </tr>
+                           <tr>
+                              
                               <td>
                                  <div class="side-by-side-data">
                                     <span>Haword Johnson</span>
                                     <span class="purchased">20 sellers purchased</span>
                                  </div>
                               </td>
+                              <td>Cameron Williamson</td>
                            </tr>
                            <tr>
-                              <td>Cameron Williamson</td>
+                              
                               <td>
                                  <div class="side-by-side-data">
                                     <span>Haword Johnson</span>
                                     <span class="purchased">20 sellers purchased</span>
                                  </div>
                               </td>
+                              <td>Cameron Williamson</td>
                            </tr>
                            <tr>
-                              <td>Cameron Williamson</td>
-                              <td>
-                                 <div class="side-by-side-data">
-                                    <span>Haword Johnson</span>
-                                    <span class="purchased">20 sellers purchased</span>
-                                 </div>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td>Cameron Williamson</td>
+                              
                               <td>
                                  <span>Haword Johnson</span>
                               </td>
+                              <td>Cameron Williamson</td>
                            </tr>
                            <tr>
-                              <td>Cameron Williamson</td>
+                              
                               <td>
                                  <span>Haword Johnson</span>
                               </td>
+                              <td>Cameron Williamson</td>
                            </tr>
                         </tbody> -->
                      </table>
