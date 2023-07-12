@@ -35,13 +35,13 @@
         <tbody>
             @foreach($buyerFlagData as $key => $flagData)
                 <tr>
-                    <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
+                    <td >
                         <div class="row align-items-center">
                         <div class="img-user"><img src="{{ isset($flagData->profile_image_url) && !empty($flagData->profile_image_url) ? $flagData->profile_image_url : asset(config('constants.default.profile_image')) }}"  class="img-fluid" alt=""></div>
                         <span>{{ $flagData->name }}</span>
                         </div>
                     </td>
-                    <td>
+                    <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
                         {!! $flagData->pivot->reason !!}
                     </td>
                     <td>
