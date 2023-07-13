@@ -39,7 +39,12 @@ class BuyerDatatable extends LivewireDatatable
             })->sortable()->defaultSort('desc')->hide(),
             
             Column::index($this)->unsortable(),
-            Column::name('first_name')->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
+            // Column::name('first_name')->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
+
+            Column::callback(['first_name', 'last_name'], function ($firstName, $lastName) {
+                return ucfirst($firstName).' '. ucfirst($lastName);
+            })->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
+
             Column::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Block']);
             })->label(trans('cruds.buyer.fields.status'))->sortable(),
