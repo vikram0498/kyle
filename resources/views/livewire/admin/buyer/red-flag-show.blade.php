@@ -50,10 +50,6 @@
 
                             <button class="btn btn-outline-danger ms-1 reject_flag" title="{{ __('cruds.buyer.red_flag_view.reject_flag_btn') }}" data-buyer_id="{{ $data->id }}" data-seller_id="{{ $flagData->id }}" ><i class="fa fa-close"></i></button>
                         </div>
-
-                        <!-- <button type="button" class="btn btn-info resolve_flag" title="{{ __('cruds.buyer.red_flag_view.resolve_flag_btn') }}" data-buyer_id="{{ $data->id }}" data-seller_id="{{ $flagData->id }}"></button>
-                        
-                        <button type="button" class="btn btn-danger reject_flag" data-buyer_id="{{ $data->id }}" data-seller_id="{{ $flagData->id }}">{{ __('cruds.buyer.red_flag_view.resolve_flag_btn') }}</button> -->
                     </td>
                 </tr>
             @endforeach
