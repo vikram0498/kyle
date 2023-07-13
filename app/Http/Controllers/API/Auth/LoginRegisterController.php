@@ -36,7 +36,7 @@ class LoginRegisterController extends BaseController
         $user = User::create($input);
 
         //Verification mail sent
-        $user->sendEmailVerificationNotification();
+        $user->NotificationSendToVerifyEmail();
 
         $user->roles()->sync(2);
 
@@ -58,7 +58,7 @@ class LoginRegisterController extends BaseController
             // $user = Auth::user();
             $user = User::find(Auth::id());
             if(is_null($user->email_verified_at)){
-                $user->sendEmailVerificationNotification();
+                // $user->sendEmailVerificationNotification();
                 return $this->sendError('unverified.', ['error'=>'Your account is not verified', 'verify_mail_send' => true]);
             }
             $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
@@ -124,5 +124,22 @@ class LoginRegisterController extends BaseController
             // Set Flash Message
             return $this->sendResponse(['password_reset' => true], __('passwords.reset'));
         }
+    }
+
+    public function verifyEmail($id, $hash){
+        $user = User::find($id);
+        
+        if(!is_null($user->email_verified_at)){
+            return $this->sendResponse(['already_verified' => true], 'Email is aleready verifed.');
+        }
+        if ($user && $hash === sha1($user->email)) {
+            $user->update(['email_verified_at' => date('Y-m-d H:i:s')]);
+
+            // Email verification success
+            return $this->sendResponse(['mail_verify' => true], 'User login successfully.');
+        }
+
+        // Email verification failed
+        return $this->sendError('verification Failed', ['error'=>'Mail verification failed']);
     }
 }

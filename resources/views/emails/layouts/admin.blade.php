@@ -32,7 +32,14 @@
 
                                 @yield('email-content') 
                                 <tr>
-                                    <td style="color:#153643;"><p style="margin:0 0 12px 0;">Thank you</p></td>
+                                    <td style="color:#153643;"><p style="margin:0 0 12px 0;"></p></td>
+                                </tr>
+
+								<tr>
+                                    <td >
+										<p>Regards, </p>
+										<p> {{ config('app.name') }} </p>
+									</td>
                                 </tr>
 
                             </table>

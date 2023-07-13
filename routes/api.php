@@ -26,6 +26,8 @@ Route::controller(LoginRegisterController::class)->group(function(){
 
     Route::post('reset-password', 'resetPassword');
 
+    Route::get('/email/verify/{id}/{hash}', 'verifyEmail');
+
 });
 /* Route::get('/csrf-token', function () {
     return response()->json(['csrf_token' => csrf_token()]);

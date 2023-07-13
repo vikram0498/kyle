@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmailMail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -97,4 +99,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return "";
     }
    
+    public function NotificationSendToVerifyEmail (){
+        $user = $this;
+        
+        $url = config('constants.front_end_url').'email/verify/'.$user->id.'/'.sha1($user->email);
+
+        $subject = 'Verify Email Address';
+
+        Mail::to($user->email)->queue(new VerifyEmailMail($user->name, $url, $subject));
+    }
 }

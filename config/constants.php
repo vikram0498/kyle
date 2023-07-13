@@ -11,6 +11,7 @@ return [
     |
     */ 
     'app_name' => 'Kyle',
+    'front_end_url' => env('FRONTEND_URL'),
     'app_mode' => env('APP_MODE','staging'),
     'default' => [
         'logo' => 'images/logo.png',

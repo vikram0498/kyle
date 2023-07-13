@@ -4,7 +4,7 @@
 <tr>
 	<td>
 		<p class="mail-title">
-			<b>Hello</b> {{ $name ?? "" }},
+			<b>Hello {{ $name ?? "" }} </b>,
 		</p>
 		<div class="mail-desc">
 			<p>You are receiving this email because we received a password reset request for your account</p>
@@ -14,7 +14,7 @@
     <tr>
         <td style="box-sizing:border-box;text-align: center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'">
 
-        <a href="{{ $reset_password_url }}" style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';border-radius:4px;color:#fff;display:inline-block;overflow:hidden;text-decoration:none;background-color:#f34d03;border-bottom:8px solid #f34d03;border-left:18px solid #f34d03;border-right:18px solid #f34d03;border-top:8px solid #f34d03" target="_blank">Reset Password</a>
+        <a href="{{ $reset_password_url }}" style="border-radius:4px;color:#fff;display:inline-block;overflow:hidden;text-decoration:none;background-color:#3f53fe;padding: 10px 20px;" target="_blank">Reset Password</a>
 
         </td>
     </tr>
