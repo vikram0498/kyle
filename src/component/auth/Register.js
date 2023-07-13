@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import ReCAPTCHA from "react-google-recaptcha";
+
 
 import { Link } from 'react-router-dom';
 
@@ -12,9 +16,20 @@ import eyeIcon from './../../assets/images/eye.svg';
 import facebookImg from './../../assets/images/facebook.svg';
 import googleImg from './../../assets/images/google.svg';
 
+import {useForm} from "../../hooks/useForm";
+
+import ButtonLoader from '../partials/MiniLoader'
+
 import Layout from './Layout';
   
-function Register (){
+const Register = () => { 
+
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    function onCaptchaChange(value) {
+        console.log("Captcha value:", value);
+      }
 
     const [showPassoword, setshowPassoword] = useState(false);
     const togglePasswordVisibility  = () => {
@@ -26,6 +41,59 @@ function Register (){
         setshowConfirmPassword(!showConfirmPassword);
     };
 
+    const [first_name, setFirstName] = useState('');
+    const [last_name, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [company_name, setCompanyName] = useState('');
+    const [password, setPassword] = useState('');
+    const [password_confirmation, setPasswordConfirmation] = useState('');
+
+    const { setErrors, renderFieldError, navigate } = useForm();
+
+    
+    const [loading, setLoading] = useState(false);
+
+    const submitRegisterForm = (e) => {
+        e.preventDefault();
+        setErrors(null);
+
+        setLoading(true);
+
+        axios.get(backendUrl+'sanctum/csrf-cookie').then(() => {
+            const payload = { 
+                first_name,
+                last_name,
+                email,
+                phone,
+                company_name,
+                password,
+                password_confirmation,
+            };
+
+            let headers = {
+                "Accept": "application/json", 
+            }
+
+            axios.post(apiUrl+'register', payload, { headers: headers }).then(response => {
+                setLoading(false);
+                if(response.data.user_data) {
+                    toast.success('Registration successful. Please check your email for verification.', {
+                        position: toast.POSITION.TOP_RIGHT
+                    });
+                    navigate('/login');
+                }
+            }).catch(error => {
+                setLoading(false);
+                if(error.response) {
+                    if (error.response.data.errors) {
+                        setErrors(error.response.data.errors);
+                    }
+                }
+            });   
+        });   
+    }
+    
     return (
         <Layout>
             <div className="gap-between">
@@ -34,76 +102,157 @@ function Register (){
                         <img src={Logo} className="img-fluid" alt="" />
                         <h2>Welcome to Inucation!</h2>
                     </div>
-                    <form>
-                        <div className="row">
+                    <form method="POST" action="#" onSubmit={submitRegisterForm} >
+                        <div className="row" >
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div className="form-group">
-                                    <label>First Name</label>
+                                    <label htmlFor='first_name'>First Name</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={userIcon} className="img-fluid" alt="" /></span>
-                                        <input type="text" placeholder="First Name" name="" className="form-control" />
+                                        <input 
+                                            type="text" 
+                                            name="first_name"
+                                            id="first_name"
+                                            className="form-control"
+                                            value={first_name}
+                                            onChange={e => setFirstName(e.target.value)}
+                                            placeholder="First Name"   
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                     </div>
+                                    {renderFieldError('first_name') }
                                 </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div className="form-group">
-                                    <label>Last Name</label>
+                                    <label htmlFor='last_name'>Last Name</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={userIcon} className="img-fluid" alt="" /></span>
-                                        <input type="text" placeholder="Last Name" name="" className="form-control" />
+                                        <input 
+                                            type="text" 
+                                            name="last_name" 
+                                            id="last_name" 
+                                            className="form-control" 
+                                            value={last_name}
+                                            onChange={e => setLastName(e.target.value)}
+                                            placeholder="Last Name"  
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                     </div>
+                                    {renderFieldError('last_name') }
                                 </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div className="form-group">
-                                    <label>Email</label>
+                                    <label htmlFor='email'>Email</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="" /></span>
-                                        <input type="email" placeholder="Enter Your Email" name="" className="form-control" />
+                                        <input 
+                                            type="email" 
+                                            name="email" 
+                                            id="email"   
+                                            className="form-control" 
+                                            value={email}
+                                            onChange={e => setEmail(e.target.value)}
+                                            placeholder="Enter Your Email"
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                     </div>
+                                    {renderFieldError('email') }
                                 </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div className="form-group">
-                                    <label>Mobile Number</label>
+                                    <label htmlFor='phone'>Mobile Number</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={phoneIcon} className="img-fluid" alt="" /></span>
-                                        <input type="text" placeholder="(123) 456-7890" name="" className="form-control" />
+                                        <input 
+                                            type="number" 
+                                            name="phone" 
+                                            id="phone" 
+                                            className="form-control" 
+                                            value={phone}
+                                            onChange={e => setPhone(e.target.value)}
+                                            placeholder="1234567890"
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                     </div>
+                                    {renderFieldError('phone') }
                                 </div>
                             </div>
                             <div className="col-12 col-lg-12">
                                 <div className="form-group">
-                                    <label>Company Name</label>
+                                    <label htmlFor='company_name' >Company Name</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={mapPinIcon} className="img-fluid" alt="" /></span>
-                                        <input type="text" placeholder="Enter Your Password" name="" className="form-control" />
+                                        <input 
+                                            type="text" 
+                                            name="company_name" 
+                                            id="company_name" 
+                                            className="form-control" 
+                                            value={company_name}
+                                            onChange={e => setCompanyName(e.target.value)}
+                                            placeholder="Enter Your Company Name"  
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                     </div>
+                                    {renderFieldError('company_name') }
                                 </div>
                             </div>
                             <div className="col-12 col-lg-12">
                                 <div className="form-group">
-                                    <label>password</label>
+                                    <label htmlFor='pass_log_id'>Password</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
-                                        <input id="pass_log_id" type={showPassoword ? 'text' : 'password'} placeholder="Enter Your Password"  className="form-control" />
+                                        <input  
+                                            type={showPassoword ? 'text' : 'password'} 
+                                            name="password" 
+                                            id="pass_log_id" 
+                                            className="form-control"
+                                            value={password}
+                                            onChange={e => setPassword(e.target.value)}
+                                            placeholder="Enter Your Password"   
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                         <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
                                     </div>
+                                    {renderFieldError('password') }
                                 </div>
                             </div>
                             <div className="col-12 col-lg-12">
                                 <div className="form-group mb-0">
-                                    <label>Confirm password</label>
+                                    <label htmlFor='conpass_log_id'>Confirm password</label>
                                     <div className="form-group-inner">
                                         <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
-                                        <input id="conpass_log_id" type={showConfirmPassword ? 'text' : 'password'} placeholder="Enter Your Password" className="form-control" />
+                                        <input 
+                                            type={showConfirmPassword ? 'text' : 'password'} 
+                                            name="password_confirmation"
+                                            id="conpass_log_id" 
+                                            className="form-control"
+                                            value={password_confirmation}
+                                            onChange={e => setPasswordConfirmation(e.target.value)}
+                                            placeholder="Enter Your Confirm Password"  
+                                            disabled={ loading ? 'disabled' : ''}
+                                        />
                                         <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
                                     </div>
+                                    {renderFieldError('password_confirmation') }
                                 </div>
                             </div>
                             <div className="col-12 col-lg-12">
+                                <div className="form-group mb-0">
+                                {/* <ReCAPTCHA
+                                    sitekey="6LeVrBMnAAAAAIS-NlhcphH2xt7ITfpebUeTkP2j"
+                                    onChange={onCaptchaChange}
+                                /> */}
+                                </div>
+                            </div>                            
+                            <div className="col-12 col-lg-12">
                                 <div className="form-group-btn">
-                                    <a href="" className="btn btn-fill">Register Now!</a>
+                                    <button type="submit" className="btn btn-fill" disabled={ loading ? 'disabled' : ''} >
+                                        Register Now! 
+                                        { loading ? <ButtonLoader /> : ''}
+                                    </button>
                                 </div>
                             </div>
                             <div className="col-12 col-lg-12">
