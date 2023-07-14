@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // Import your components for each route
 import Home from './component/Home';
@@ -16,7 +16,11 @@ import AuthContext from "./context/authContext";
 const RoutesList = () => {
   
   const {userData} = useAuth();
-  const [authData, setAuthData] = useState({signedIn: userData.signedIn, user: userData.user});
+
+  // console.log(userData);
+
+  const [authData, setAuthData] = useState({signedIn: userData.signedIn, user: userData.user, access_token: userData.access_token});
+
   return (      
       <AuthContext.Provider value={{authData, setAuthData }}>
         <Routes>
@@ -24,8 +28,10 @@ const RoutesList = () => {
             <Route index path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forget-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/reset-password/:token/:hash" element={<ResetPassword />} />
             <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
+
+            {/* App routes */}
             <Route path="/" element={<Home />}>
             </Route>
         </Routes>

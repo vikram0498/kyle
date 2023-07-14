@@ -5,13 +5,19 @@ import AuthContext from "../context/authContext";
 function Home (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
+    
     useEffect(() => {
         if(!authData.signedIn) {
             navigate('/login');
         }
-    }, []);
+    }, [navigate, authData]);
 
-    return <h1>Home</h1>
+    return (
+        <div>
+        Home
+        </div>
+    )
+    
 }
   
 export default Home;

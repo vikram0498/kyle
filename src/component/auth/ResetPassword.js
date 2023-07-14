@@ -5,8 +5,17 @@ import passwordIcon from './../../assets/images/password.svg';
 import eyeIcon from './../../assets/images/eye.svg';
 
 import Layout from './Layout';
+import { useParams } from 'react-router-dom';
+
+
+import ButtonLoader from '../partials/MiniLoader'
+import {useForm} from "../../hooks/useForm";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function ResetPassword (){
+
+    const { token, hash } = useParams();
 
     const [showPassoword, setshowPassoword] = useState(false);
     const togglePasswordVisibility  = () => {
@@ -18,6 +27,45 @@ function ResetPassword (){
         setshowConfirmPassword(!showConfirmPassword);
     };
 
+    const [password, setPassword] = useState('');
+    const [password_confirmation, setPasswordConfirmation] = useState('');
+
+    const { setErrors, renderFieldError, setMessage, navigate } = useForm();
+
+    const submitResetPasswordForm = (e) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        setErrors(null);
+
+        setMessage('');
+
+        const apiUrl = process.env.REACT_APP_API_URL;
+
+        let headers = {
+            "Accept": "application/json", 
+        }
+
+        axios.post(apiUrl+`reset-password/${token}/${hash}`, {email}, {headers: headers}).then(response => {
+            setLoading(false);
+            if(response.data.status) {
+                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+            }
+        }).catch(error => {
+            setLoading(false);
+            if(error.response) {
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
+                }
+                /* if (error.response.data.errors.error_message) {
+                    toast.error(error.response.data.errors.error_message, {position: toast.POSITION.TOP_RIGHT});
+                } */
+            }
+        });
+
+    };
+
     return (
         <Layout>
             <div className="account-in">
@@ -25,31 +73,51 @@ function ResetPassword (){
                     <img src={Logo} className="img-fluid" alt="" />
                     <h2>Reset Password</h2>
                 </div>
-                <form>
+                <form method='post' onSubmit={submitResetPasswordForm}>
                     <div className="row">
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label>password</label>
+                                <label htmlFor='pass_log_id'>Password</label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
-                                    <input id="pass_log_id" type={showPassoword ? 'text' : 'password'} placeholder="Enter Your Password"  className="form-control" />
+                                    <input  
+                                        type={showPassoword ? 'text' : 'password'} 
+                                        name="password" 
+                                        id="pass_log_id" 
+                                        className="form-control"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder="Enter Your Password"   
+                                        disabled={ loading ? 'disabled' : ''}
+                                    />
                                     <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
                                 </div>
+                                {renderFieldError('password') }
                             </div>
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group mb-0">
-                                <label>Confirm password</label>
+                                <label htmlFor='conpass_log_id'>Confirm password</label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
-                                    <input id="conpass_log_id" type={showConfirmPassword ? 'text' : 'password'} placeholder="Enter Your Password" className="form-control" />
+                                    <input 
+                                        type={showConfirmPassword ? 'text' : 'password'} 
+                                        name="password_confirmation"
+                                        id="conpass_log_id" 
+                                        className="form-control"
+                                        value={password_confirmation}
+                                        onChange={e => setPasswordConfirmation(e.target.value)}
+                                        placeholder="Enter Your Confirm Password"  
+                                        disabled={ loading ? 'disabled' : ''}
+                                    />
                                     <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
                                 </div>
+                                {renderFieldError('password_confirmation') }
                             </div>
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group-btn mb-0">
-                                <a href="" className="btn btn-fill">Submit</a>
+                            <button type="submit" className="btn btn-fill" disabled={ loading ? 'disabled' : ''}> Submit { loading ? <ButtonLoader/> : ''} </button>
                             </div>
                         </div>
                     </div>

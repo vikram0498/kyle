@@ -25,7 +25,6 @@ import Layout from './Layout';
 const Register = () => { 
 
     const apiUrl = process.env.REACT_APP_API_URL;
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
     function onCaptchaChange(value) {
         console.log("Captcha value:", value);
@@ -60,38 +59,36 @@ const Register = () => {
 
         setLoading(true);
 
-        axios.get(backendUrl+'sanctum/csrf-cookie').then(() => {
-            const payload = { 
-                first_name,
-                last_name,
-                email,
-                phone,
-                company_name,
-                password,
-                password_confirmation,
-            };
+        let payload = { 
+            first_name,
+            last_name,
+            email,
+            phone,
+            company_name,
+            password,
+            password_confirmation,
+        };
 
-            let headers = {
-                "Accept": "application/json", 
+        let headers = {
+            "Accept": "application/json", 
+        }
+
+        axios.post(apiUrl+'register', payload, { headers: headers }).then(response => {
+            setLoading(false);
+            if(response.data.user_data) {
+                toast.success('Registration successful. Please check your email for verification.', {
+                    position: toast.POSITION.TOP_RIGHT
+                });
+                navigate('/login');
             }
-
-            axios.post(apiUrl+'register', payload, { headers: headers }).then(response => {
-                setLoading(false);
-                if(response.data.user_data) {
-                    toast.success('Registration successful. Please check your email for verification.', {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-                    navigate('/login');
+        }).catch(error => {
+            setLoading(false);
+            if(error.response) {
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
                 }
-            }).catch(error => {
-                setLoading(false);
-                if(error.response) {
-                    if (error.response.data.errors) {
-                        setErrors(error.response.data.errors);
-                    }
-                }
-            });   
-        });   
+            }
+        });
     }
     
     return (
