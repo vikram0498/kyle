@@ -54,19 +54,30 @@ class LoginRegisterController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            // $user = Auth::user();
+        $remember_me = !is_null($request->remember) ? true : false;
+        $credentialsOnly = [
+            'email'    => $request->email,
+            'password' => $request->password,
+        ]; 
+
+
+        if(Auth::attempt($credentialsOnly, $remember_me)){
             $user = User::find(Auth::id());
             if(is_null($user->email_verified_at)){
-                // $user->sendEmailVerificationNotification();
-                return $this->sendError('unverified.', ['error'=>'Your account is not verified', 'verify_mail_send' => true]);
+                // $user->NotificationSendToVerifyEmail();
+                return $this->sendError('unverified.', ['error_message'=>'Your account is not verified', 'verify_mail_send' => true]);
             }
+
             $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-            $success['access_token'] =  $accessToken;
-            $success['name'] =  $user->name;
-            return $this->sendResponse($success, 'User login successfully.', $accessToken);
+            $success = [
+                'access_token'      => $accessToken,
+                'remember_me_token' => $user->remember_token,
+                'user'              => $user,
+            ];
+
+            return $this->sendResponse($success, 'You have logged in successfully!', $accessToken);
         } else{
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendError('Unauthorised.', ['error_message'=>'These credentials do not match our records.']);
         }
     }
 
@@ -86,7 +97,7 @@ class LoginRegisterController extends BaseController
         $userDetails = array();
         $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
 
-        $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password?token='.$token.'&hash='.encrypt($email_id);
+        $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
     
         DB::table('password_resets')->insert([
             'email'         => $email_id, 
@@ -114,7 +125,7 @@ class LoginRegisterController extends BaseController
         $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
 
         if(!$updatePassword){
-            return $this->sendError('Invalid Token', trans('passwords.token'));
+            return $this->sendError('Invalid Token', ['error_message' => trans('passwords.token')]);
         }else{
             $user = User::where('email', $email)
             ->update(['password' => bcrypt($request->password)]);
