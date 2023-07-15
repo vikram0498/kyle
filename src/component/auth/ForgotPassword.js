@@ -62,7 +62,7 @@ function ForgotPassword (){
                     <div className="row">
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label htmlFor="email" >Username</label>
+                                <label htmlFor="email" >Email</label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="mail-icon" /></span>
                                     <input 

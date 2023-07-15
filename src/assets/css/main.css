@@ -407,7 +407,7 @@ input[type="radio"]:checked:before{
     font-size: 14px;
     padding: 0 4px;
 }
-.account-with-social a {
+.account-with-social a, .account-with-social button {
     border: 1px solid #EAECEB;
     padding: 12px 20px;
     border-radius: 5px;
@@ -416,11 +416,11 @@ input[type="radio"]:checked:before{
     display: flex;
     align-items: center;
 }
-.account-with-social a img {
+.account-with-social a img, .account-with-social button img {
     margin-right: 10px;
 }
 .account-with-social {
-    max-width: 380px;
+    /* max-width: 380px; */
     margin: 0 auto;
     display: flex;
     justify-content: center;
@@ -439,6 +439,7 @@ input[type="radio"]:checked:before{
     margin: 30px auto;
     width: 100%;
     background: #fff;
+    margin-top: 60px;
 }
 .session-img img {
     width: 100%;

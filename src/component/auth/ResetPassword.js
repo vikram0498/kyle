@@ -30,6 +30,8 @@ function ResetPassword (){
     const [password, setPassword] = useState('');
     const [password_confirmation, setPasswordConfirmation] = useState('');
 
+    const [loading, setLoading] = useState('');
+
     const { setErrors, renderFieldError, setMessage, navigate } = useForm();
 
     const submitResetPasswordForm = (e) => {
@@ -47,10 +49,12 @@ function ResetPassword (){
             "Accept": "application/json", 
         }
 
-        axios.post(apiUrl+`reset-password/${token}/${hash}`, {email}, {headers: headers}).then(response => {
+        axios.post(apiUrl+'reset-password', {token: token, hash: hash, password, password_confirmation}, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status) {
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+
+                navigate('/login')
             }
         }).catch(error => {
             setLoading(false);

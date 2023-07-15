@@ -100,7 +100,7 @@ function Login (props){
                     <div className="row">
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label htmlFor="email" >Username</label>
+                                <label htmlFor="email" >Email</label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="mail-icon" /></span>
                                     <input 
@@ -155,7 +155,7 @@ function Login (props){
                             </div>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                            <Link to="/forget-password" className="link-pass">Forgot Password</Link>
+                            <Link to="/forget-password" className="link-pass">Forgot Password?</Link>
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group-btn">
@@ -164,12 +164,12 @@ function Login (props){
                         </div>
                         <div className="col-12 col-lg-12">
                             <p className="account-now">Don’t Have an account?  
-                                <Link to="/register"> Sign up Now!</Link>
+                                <Link to="/register"> Sign up now!</Link>
                             </p>
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social list-unstyled mb-0">
-                                <li><Link to="https://facebook.com"><img src={facebookImg} className="img-fluid" alt='fb-icon'/> with Facebook</Link></li>
-                                <li><Link to="https://google.com"><img src={googleImg} className="img-fluid" alt='google-icon'/> with Google</Link></li>
+                                <li><Link to="https://facebook.com"><img src={facebookImg} className="img-fluid" alt='fb-icon'/> With Facebook</Link></li>
+                                <li><Link to="https://google.com"><img src={googleImg} className="img-fluid" alt='google-icon'/> With Google</Link></li>
                             </ul>
                         </div>
                     </div>

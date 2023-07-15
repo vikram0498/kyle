@@ -10,6 +10,9 @@ import ResetPassword from './component/auth/ResetPassword';
 import VerifyEmail from './component/auth/VerifyEmail';
 
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+
 import {useAuth} from "./hooks/useAuth";
 import AuthContext from "./context/authContext";
 
@@ -22,6 +25,7 @@ const RoutesList = () => {
   const [authData, setAuthData] = useState({signedIn: userData.signedIn, user: userData.user, access_token: userData.access_token});
 
   return (      
+    <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
       <AuthContext.Provider value={{authData, setAuthData }}>
         <Routes>
             {/* Auth routes */}
@@ -36,6 +40,7 @@ const RoutesList = () => {
             </Route>
         </Routes>
       </AuthContext.Provider>
+      </GoogleOAuthProvider>
   );
 };
 
