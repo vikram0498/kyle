@@ -22,13 +22,11 @@ export const useAuth = () => {
     function setAsLogged(user_data, access_token, remember_token='') {
         const cookie = new Cookies();
         cookie.set('is_auth', true, {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
+        console.log('remember_token :',remember_token);
         if(remember_token.trim() !== ''){
             cookie.set('remember_me_token', remember_token, {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         }
-        // setUserData({signedIn: true, user: user_data, access_token: access_token});
-
         sessionStorage.setItem('userData', JSON.stringify({signedIn: true, user: user_data, access_token: access_token}));
-
         navigate('/');
     }
 

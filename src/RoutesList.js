@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // Import your components for each route
-import Home from './component/Home';
+import Home from './pages/Home';
 import Login from './component/auth/Login';
 import Register from './component/auth/Register';
 import ForgotPassword from './component/auth/ForgotPassword';

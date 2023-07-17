@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import AuthContext from "../context/authContext";
 
-function Home (){
+function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
     
@@ -14,10 +14,10 @@ function Home (){
 
     return (
         <div>
-        <p>Home</p>
+        <p>Home2</p>
         </div>
     )
     
 }
   
-export default Home;
+export default AddBuyerDetails;

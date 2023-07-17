@@ -20,7 +20,6 @@ const GoogleLoginComponent = () => {
     
     return (
         <div>
-
             {/* <Link onClick={() => login()}><img src={googleImg} className="img-fluid" /> With Google</Link>  */}
             
             <GoogleLogin
