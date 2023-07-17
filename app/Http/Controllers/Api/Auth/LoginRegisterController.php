@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon; 
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
