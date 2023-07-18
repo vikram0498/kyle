@@ -2,13 +2,15 @@ import React, {useState} from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // Import your components for each route
-import Home from './pages/Home';
+
 import Login from './component/auth/Login';
 import Register from './component/auth/Register';
 import ForgotPassword from './component/auth/ForgotPassword';
 import ResetPassword from './component/auth/ResetPassword';
 import VerifyEmail from './component/auth/VerifyEmail';
 
+import Home from './pages/Home';
+import AddBuyerDetails from './pages/AddBuyerDetails';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -36,7 +38,9 @@ const RoutesList = () => {
             <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
 
             {/* App routes */}
-            <Route path="/" element={<Home />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/add-buyer-details" element={<AddBuyerDetails />}>
+
             </Route>
         </Routes>
       </AuthContext.Provider>

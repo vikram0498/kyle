@@ -29,7 +29,7 @@ const Register = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
     const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
     const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;    
-
+    console.log(apiUrl,'user ', capchaSiteKey);
     const [showPassoword, setshowPassoword] = useState(false);
     const togglePasswordVisibility  = () => {
         setshowPassoword(!showPassoword);
@@ -109,6 +109,7 @@ const Register = () => {
         }
     }
     
+    console.log(capchaSiteKey,'capchaSiteKey');
     return (
         
         <Layout>

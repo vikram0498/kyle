@@ -1,9 +1,8 @@
 import React from 'react';
-import './../../assets/css/bootstrap.min.css';
-import './../../assets/css/main.css';
-import './../../assets/css/responsive.css';
+// import './../../assets/css/bootstrap.min.css';
+// import './../../assets/css/main.css';
+// import './../../assets/css/responsive.css';
 
-import BgImage from './../../assets/images/bg.jpg'
 import { Link, useLocation } from 'react-router-dom';
   
 const  Layout = ({ children }) => { 
@@ -28,7 +27,7 @@ const  Layout = ({ children }) => {
                         </div>
                         <div className="col-12 col-lg-6">
                             <div className="session-img">
-                                <img src={BgImage} className="img-fluid" alt="logo" />
+                                <img src="http://localhost:3000/assets/images/bg.jpg" className="img-fluid" alt="logo" />
                             </div>
                         </div>
                     </div>
