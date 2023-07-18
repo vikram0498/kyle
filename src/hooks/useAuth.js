@@ -45,6 +45,9 @@ export const useAuth = () => {
         cookie.remove('is_auth', {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         cookie.remove('remember_me_token', {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         setUserData({signedIn: false, user: null, access_token: null});
+
+        sessionStorage.removeItem("userData");
+
         navigate('/login');
     }
 

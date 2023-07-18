@@ -1,31 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import ReCAPTCHA from "react-google-recaptcha";
-
-
 import { Link } from 'react-router-dom';
-
-import Logo from './../../assets/images/logo.svg';
-import userIcon from './../../assets/images/user.svg';
-import mailIcon from './../../assets/images/mail.svg';
-import phoneIcon from './../../assets/images/phone.svg';
-import mapPinIcon from './../../assets/images/map-pin.svg';
-import passwordIcon from './../../assets/images/password.svg';
-import eyeIcon from './../../assets/images/eye.svg';
-import facebookImg from './../../assets/images/facebook.svg';
-import GoogleLoginComponent from '../partials/GoogleLoginComponent';
-
 import {useForm} from "../../hooks/useForm";
-
 import ButtonLoader from '../partials/MiniLoader'
-
 import Layout from './Layout';
-
+import ReCAPTCHA from "react-google-recaptcha";
+import GoogleLoginComponent from '../partials/GoogleLoginComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-
+import FacebookLoginButton from '../partials/FacebookLoginButton';
 const Register = () => { 
-
     const apiUrl = process.env.REACT_APP_API_URL;
     const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
     const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;    
@@ -108,14 +92,13 @@ const Register = () => {
             setRecaptchaError('Please complete reCAPTCHA verification.');
         }
     }
-    
     console.log(capchaSiteKey,'capchaSiteKey');
     return (
         
         <Layout>
             <div className="account-in">
                 <div className="center-content">
-                    <img src={Logo} className="img-fluid" alt="" />
+                    <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
                     <h2>Welcome to Inucation!</h2>
                 </div>
                 <form method="POST" action="#" onSubmit={submitRegisterForm} >
@@ -124,7 +107,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='first_name'>First Name</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={userIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/user.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type="text" 
                                         name="first_name"
@@ -143,7 +126,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='last_name'>Last Name</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={userIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/user.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type="text" 
                                         name="last_name" 
@@ -162,7 +145,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='email'>Email</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/mail.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type="email" 
                                         name="email" 
@@ -181,7 +164,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='phone'>Mobile Number</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={phoneIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/phone.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type="number" 
                                         name="phone" 
@@ -200,7 +183,8 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='company_name' >Company Name</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={mapPinIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon">
+                                        <img src="./assets/images/map-pin.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type="text" 
                                         name="company_name" 
@@ -219,7 +203,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='pass_log_id'>Password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input  
                                         type={showPassoword ? 'text' : 'password'} 
                                         name="password" 
@@ -230,7 +214,7 @@ const Register = () => {
                                         placeholder="Enter Your Password"   
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
+                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password') }
                             </div>
@@ -239,7 +223,7 @@ const Register = () => {
                             <div className="form-group">
                                 <label htmlFor='conpass_log_id'>Confirm password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type={showConfirmPassword ? 'text' : 'password'} 
                                         name="password_confirmation"
@@ -250,7 +234,7 @@ const Register = () => {
                                         placeholder="Enter Your Confirm Password"  
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
+                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password_confirmation') }
                             </div>
@@ -276,12 +260,19 @@ const Register = () => {
                             <p className="account-now">Already Have an account? <Link to="/login">Login Now!</Link></p>
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social list-unstyled mb-0">
-                                <li><Link to="https://facebook.com"><img src={facebookImg} className="img-fluid" /> With Facebook</Link></li>
                                 <li>
-                                    {/* <Link to="https://google.com"><img src={googleImg} className="img-fluid" /> With Google</Link> */}
-                                    <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
-                                        <GoogleLoginComponent />
-                                    </GoogleOAuthProvider>
+                                    {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link> */}
+                                    <FacebookLoginButton/>
+                                </li>
+                                <li>
+                                <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
+                                    <GoogleLoginComponent 
+                                        apiUrl={apiUrl}
+                                        setLoading={setLoading}
+                                        navigate={navigate}
+                                        setErrors={setErrors}
+                                    />
+                                </GoogleOAuthProvider>
                                 </li>
                             </ul>
                         </div>

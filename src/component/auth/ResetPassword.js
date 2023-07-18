@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 
-import Logo from './../../assets/images/logo.svg';
-import passwordIcon from './../../assets/images/password.svg';
-import eyeIcon from './../../assets/images/eye.svg';
-
 import Layout from './Layout';
 import { useParams } from 'react-router-dom';
 
@@ -12,6 +8,9 @@ import ButtonLoader from '../partials/MiniLoader'
 import {useForm} from "../../hooks/useForm";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
+import eyeIcon from './../../assets/images/eye.svg';
+
 
 function ResetPassword (){
 
@@ -74,7 +73,7 @@ function ResetPassword (){
         <Layout>
             <div className="account-in">
                 <div className="center-content">
-                    <img src={Logo} className="img-fluid" alt="" />
+                    <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
                     <h2>Reset Password</h2>
                 </div>
                 <form method='post' onSubmit={submitResetPasswordForm}>
@@ -83,7 +82,7 @@ function ResetPassword (){
                             <div className="form-group">
                                 <label htmlFor='pass_log_id'>Password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input  
                                         type={showPassoword ? 'text' : 'password'} 
                                         name="password" 
@@ -103,7 +102,7 @@ function ResetPassword (){
                             <div className="form-group mb-0">
                                 <label htmlFor='conpass_log_id'>Confirm password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type={showConfirmPassword ? 'text' : 'password'} 
                                         name="password_confirmation"

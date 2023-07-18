@@ -18,7 +18,7 @@ const  Layout = ({ children }) => {
                                 <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
-                            Back
+                            Back 
                         </Link> : ''
                     }
                     <div className="row align-items-center g-0 h-100vh">
@@ -27,7 +27,7 @@ const  Layout = ({ children }) => {
                         </div>
                         <div className="col-12 col-lg-6">
                             <div className="session-img">
-                                <img src="http://localhost:3000/assets/images/bg.jpg" className="img-fluid" alt="logo" />
+                                <img src="./assets/images/bg.jpg" className="img-fluid" alt="logo" />
                             </div>
                         </div>
                     </div>

@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 
-import Logo from './../../assets/images/logo.svg';
-import mailIcon from './../../assets/images/mail.svg';
-
 import Layout from './Layout';
 
 import ButtonLoader from '../partials/MiniLoader'
@@ -55,7 +52,7 @@ function ForgotPassword (){
         <Layout>
             <div className="account-in">
                 <div className="center-content">
-                    <img src={Logo} className="img-fluid" alt="" />
+                    <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
                     <h2>Forgot Password</h2>
                 </div>
                 <form method='post' onSubmit={submitForgotPasswordForm}>
@@ -64,7 +61,7 @@ function ForgotPassword (){
                             <div className="form-group">
                                 <label htmlFor="email" >Email</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="mail-icon" /></span>
+                                    <span className="form-icon"><img src="./assets/images/mail.svg" className="img-fluid" alt="mail-icon" /></span>
                                     <input 
                                         type="email" 
                                         id="email"

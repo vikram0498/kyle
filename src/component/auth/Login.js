@@ -3,20 +3,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 import { Link } from 'react-router-dom';
-
-import Logo from './../../assets/images/logo.svg'
-import mailIcon from './../../assets/images/mail.svg'
-import passwordIcon from './../../assets/images/password.svg'
-import eyeIcon from './../../assets/images/eye.svg'
-import facebookImg from './../../assets/images/facebook.svg'
-import googleImg from './../../assets/images/google.svg'
-
 import {useForm} from "../../hooks/useForm";
 import {useAuth} from "../../hooks/useAuth";
 import AuthContext from "../../context/authContext";
 
 import ButtonLoader from '../partials/MiniLoader'
-
+import GoogleLoginComponent from '../partials/GoogleLoginComponent';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import FacebookLoginButton from '../partials/FacebookLoginButton';
 import Layout from './Layout';
   
 function Login (props){
@@ -43,6 +37,8 @@ function Login (props){
     const [remember, setRemember] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+    console.log(apiUrl,'apiUrl');
     const submitLoginForm = (e) => {
         e.preventDefault();
 
@@ -51,9 +47,6 @@ function Login (props){
         setErrors(null);
 
         setMessage('');
-
-        const apiUrl = process.env.REACT_APP_API_URL;
-
         let payload = {
             email,
             password
@@ -93,7 +86,7 @@ function Login (props){
         <Layout>
             <div className="account-in">
                 <div className="center-content">
-                    <img src={Logo} className="img-fluid" alt="logo" />
+                    <img src="./assets/images/logo.svg" className="img-fluid" alt="logo" />
                     <h2>Welcome Back!</h2>
                 </div>
                 <form method='post' onSubmit={submitLoginForm}>
@@ -102,7 +95,7 @@ function Login (props){
                             <div className="form-group">
                                 <label htmlFor="email" >Email</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={mailIcon} className="img-fluid" alt="mail-icon" /></span>
+                                    <span className="form-icon"><img src="./assets/images/mail.svg" className="img-fluid" alt="mail-icon" /></span>
                                     <input 
                                         type="email" 
                                         id="email"
@@ -122,7 +115,7 @@ function Login (props){
                             <div className="form-group">
                                 <label htmlFor='pass_log_id'>password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src={passwordIcon} className="img-fluid" alt="password-icon" /></span>
+                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="password-icon" /></span>
                                     <input 
                                         id="pass_log_id" 
                                         name="password"
@@ -135,7 +128,9 @@ function Login (props){
                                         disabled={ loading ? 'disabled' : ''}
                                         autoComplete='off'
                                     />
-                                    <span onClick={togglePasswordVisibility} className={`form-icon-password toggle-password ${showPassoword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="eye-icon" /></span>
+                                    <span onClick={togglePasswordVisibility} className={`form-icon-password toggle-password ${showPassoword ? '' : 'eye-close'}`}>
+                                        <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>
+                                    </span>
                                 </div>
                                 {renderFieldError('password') }
                             </div>
@@ -168,8 +163,21 @@ function Login (props){
                             </p>
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social list-unstyled mb-0">
-                                <li><Link to="https://facebook.com"><img src={facebookImg} className="img-fluid" alt='fb-icon'/> With Facebook</Link></li>
-                                <li><Link to="https://google.com"><img src={googleImg} className="img-fluid" alt='google-icon'/> With Google</Link></li>
+                                <li>
+                                    {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link> */}
+                                    <FacebookLoginButton/>
+                                </li>
+                                <li>
+                                    {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
+                                    <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
+                                        <GoogleLoginComponent 
+                                         apiUrl={apiUrl}
+                                         setLoading={setLoading}
+                                         navigate={navigate}
+                                         setErrors={setErrors}
+                                        />
+                                    </GoogleOAuthProvider>
+                                </li>
                             </ul>
                         </div>
                     </div>

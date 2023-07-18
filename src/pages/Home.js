@@ -1,8 +1,9 @@
 import React, {useContext, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link , useNavigate} from "react-router-dom";
 import AuthContext from "../context/authContext";
 
-import Head from "./Head"
+import Header from "./Header"
+import Footer from "./Footer";
 
 function Home (){
     const {authData} = useContext(AuthContext);
@@ -13,10 +14,9 @@ function Home (){
             navigate('/login');
         }
     }, [navigate, authData]);
-    const baseUrl = process.env.BASE_URL;
     return (
         <>
-            <Head/>
+            <Header/>
             <section className="main-section pt-120 pb-5 position-relative">
                 <div className="watch-video block-fix">
                     <p>Don’t Know How to Upload</p>
@@ -38,23 +38,24 @@ function Home (){
                         </div>
                     </div>
                     <div className="row row-gap">
+                        
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <Link to='/add-buyer-details' className="grid-block-view">
+                                    <div className="grid-block-icon"><img src="./assets/images/upload-buyer.svg" className="img-fluid" alt="" /></div>
+                                    <h3>Upload Buyer</h3>
+                                </Link>
+                            </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <a href="single-buyer.html" className="grid-block-view">
-                                <div className="grid-block-icon"><img src="./assets/images/upload-buyer.svg" className="img-fluid" alt="" /></div>
-                                <h3>Upload Buyer</h3>
-                            </a>
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <a href="sellers-form.html" className="grid-block-view">
+                            <Link to='/sellers-form' className="grid-block-view">
                                 <div className="grid-block-icon"><img src="./assets/images/buybox-search.svg" className="img-fluid" alt="" /></div>
                                 <h3>Buybox Search</h3>
-                            </a>
+                            </Link>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <a href="my-buyers.html" className="grid-block-view">
+                            <Link to='/my-buyers' className="grid-block-view">
                                 <div className="grid-block-icon"><img src="./assets/images/my-buyers.svg" className="img-fluid" alt="" /></div>
                                 <h3>My Buyers</h3>
-                            </a>
+                            </Link>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
                             <form className="form-container upload-multiple-data" encType='multipart/form-data'>
@@ -86,6 +87,7 @@ function Home (){
                     </div>
                 </div>
             </section>
+            <Footer/>
         </>
     )
 }

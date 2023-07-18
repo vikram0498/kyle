@@ -8,16 +8,17 @@ import Register from './component/auth/Register';
 import ForgotPassword from './component/auth/ForgotPassword';
 import ResetPassword from './component/auth/ResetPassword';
 import VerifyEmail from './component/auth/VerifyEmail';
-
-import Home from './pages/Home';
-import AddBuyerDetails from './pages/AddBuyerDetails';
-
 import { GoogleOAuthProvider } from '@react-oauth/google';
-
 
 import {useAuth} from "./hooks/useAuth";
 import AuthContext from "./context/authContext";
-
+import Home from './pages/Home';
+import AddBuyerDetails from './pages/AddBuyerDetails';
+import MyBuyer from './pages/MyBuyers';
+import SellerForm from './pages/SellerForm';
+import Development from './pages/Development';
+import MultiFamilyResidential from './pages/MultiFamilyResidential';
+import Condo from './pages/Condo';
 const RoutesList = () => {
   
   const {userData} = useAuth();
@@ -39,9 +40,12 @@ const RoutesList = () => {
 
             {/* App routes */}
             <Route path="/" element={<Home />} />
-            <Route path="/add-buyer-details" element={<AddBuyerDetails />}>
-
-            </Route>
+            <Route path="/add-buyer-details" element={<AddBuyerDetails />} />
+            <Route path="/my-buyers" element={<MyBuyer />} />
+            <Route path="/sellers-form" element={<SellerForm/>} />
+            <Route path="/condo" element={<Condo/>} />
+            <Route path="/development" element={<Development/>} />
+            <Route path="/multifamily-residential" element={<MultiFamilyResidential/>} />
         </Routes>
       </AuthContext.Provider>
       </GoogleOAuthProvider>

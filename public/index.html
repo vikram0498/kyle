@@ -26,12 +26,14 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-
     <!-- FONT FAMILY -->
 	  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
    	<!-- BOOTSTRAP CSS -->
 	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/bootstrap.min.css">
+	
+  <!-- Select-2 CSS -->
+	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/select2.min.css">
 
 	<!-- MAIN CSS -->
 	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/main.css">
@@ -39,12 +41,13 @@
 	<!-- RESPONSIVE CSS -->
 	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/responsive.css">
 
+  
 	<!-- FONT FAMILY -->
 	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
     <title>React App</title>
   </head>
-  <body>
+  <body class="bg-img position-relative">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
@@ -57,11 +60,44 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    	<!-- SCRIPTS -->
+<!-- SCRIPTS -->
 	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/popper.min.js"></script>
 	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="%PUBLIC_URL%/assets/js/select2.min.js"></script>
+
 	<!-- <script type="text/javascript" src="%PUBLIC_URL%/assets/js/custom.js"></script> -->
+  <script type="text/javascript">
+		$(document).ready(function(){
+			$("#single").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Select Property Type"
+	      	});
+
+			$("#city").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Choose City"
+	      	});
+
+	      	$("#state").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Choose State"
+	      	});
+	      	$("#parking").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Select parking"
+	      	});
+	      	$("#financing").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Select purchase method"
+	      	});
+	      	$("#location-flaws").select2({
+				minimumResultsForSearch: Infinity,
+	          	placeholder: "Select Location Type"
+	      	});
+		})
+	</script>
+
   </body>
  
 </html>
