@@ -8,9 +8,9 @@ import {useAuth} from "../../hooks/useAuth";
 import AuthContext from "../../context/authContext";
 
 import ButtonLoader from '../partials/MiniLoader'
-import GoogleLoginComponent from '../partials/GoogleLoginComponent';
+import GoogleLoginComponent from '../partials/SocialLogin/GoogleLoginComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import FacebookLoginButton from '../partials/FacebookLoginButton';
+import FacebookLoginButton from '../partials/SocialLogin/FacebookLoginButton';
 import Layout from './Layout';
   
 function Login (props){

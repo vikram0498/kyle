@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from './Header';
-import Footer from './Footer';
+import Header from "../partials/Layouts/Header";
+import Footer from "../partials/Layouts/Footer";
 const Development = ()=>{
  return (
     <>

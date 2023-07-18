@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from "react";
 import {useNavigate , Link} from "react-router-dom";
-import AuthContext from "../context/authContext";
-import Header from "./Header";
-import Footer from "./Footer";
+import AuthContext from "../../context/authContext";
+import Header from "../partials/Layouts/Header";
+import Footer from "../partials/Layouts/Footer";
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();

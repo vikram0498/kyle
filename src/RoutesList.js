@@ -12,13 +12,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import {useAuth} from "./hooks/useAuth";
 import AuthContext from "./context/authContext";
-import Home from './pages/Home';
-import AddBuyerDetails from './pages/AddBuyerDetails';
-import MyBuyer from './pages/MyBuyers';
-import SellerForm from './pages/SellerForm';
-import Development from './pages/Development';
-import MultiFamilyResidential from './pages/MultiFamilyResidential';
-import Condo from './pages/Condo';
+import Home from './component/pages/Home';
+import AddBuyerDetails from './component/pages/AddBuyerDetails';
+import MyBuyer from './component/pages/MyBuyers';
+import SellerForm from './component/pages/SellerForm';
+import Development from './component/pages/Development';
+import MultiFamilyResidential from './component/pages/MultiFamilyResidential';
+import Condo from './component/pages/Condo';
 const RoutesList = () => {
   
   const {userData} = useAuth();

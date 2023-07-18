@@ -6,9 +6,9 @@ import {useForm} from "../../hooks/useForm";
 import ButtonLoader from '../partials/MiniLoader'
 import Layout from './Layout';
 import ReCAPTCHA from "react-google-recaptcha";
-import GoogleLoginComponent from '../partials/GoogleLoginComponent';
+import GoogleLoginComponent from '../partials/SocialLogin/GoogleLoginComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import FacebookLoginButton from '../partials/FacebookLoginButton';
+import FacebookLoginButton from '../partials/SocialLogin/FacebookLoginButton';
 const Register = () => { 
     const apiUrl = process.env.REACT_APP_API_URL;
     const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;

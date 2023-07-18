@@ -1,9 +1,8 @@
 import React, {useContext, useEffect} from "react";
 import {Link , useNavigate} from "react-router-dom";
-import AuthContext from "../context/authContext";
-
-import Header from "./Header"
-import Footer from "./Footer";
+import AuthContext from "../../context/authContext";
+import Header from "../partials/Layouts/Header";
+import Footer from "../partials/Layouts/Footer";
 
 function Home (){
     const {authData} = useContext(AuthContext);
