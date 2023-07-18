@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Auth\LoginRegisterController;
+use App\Http\Controllers\Api\Auth\SocialMediaController;
+use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\User\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +32,16 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::get('/email/verify/{id}/{hash}', 'verifyEmail');
 
 });
-/* Route::get('/csrf-token', function () {
-    return response()->json(['csrf_token' => csrf_token()]);
-}); */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(SocialMediaController::class)->group(function(){
+
+    Route::post('handle-google', 'handleGoogle');
+
+    Route::post('handle-facebook', 'handleFacebook');
+
+});
+
+Route::middleware('auth:sanctum')->group(function () { 
+    Route::get('/user-details', [ProfileController::class, 'userDetails']);
+   
 });

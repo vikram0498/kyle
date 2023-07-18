@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use Illuminate\Support\Facades\DB; 
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon; 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\DB; 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
-class LoginRegisterController extends BaseController
+class LoginRegisterController extends Controller
 {
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
@@ -27,7 +27,12 @@ class LoginRegisterController extends BaseController
             'password_confirmation'     => 'required',
         ]);
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+             //Error Response Send
+             $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 401);
         }
 
         $input = $request->all();
@@ -40,10 +45,12 @@ class LoginRegisterController extends BaseController
 
         $user->roles()->sync(2);
 
-        // $success['token'] =  $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-        $success['name'] =  $user->name;   
-
-        return $this->sendResponse($success, 'User register successfully.');
+        //Success Response Send
+        $responseData = [
+            'status'        => true,
+            'message'       => 'Register successfully!',
+        ];  
+        return response()->json($responseData, 200);
     }
 
     public function login(Request $request){
@@ -52,7 +59,12 @@ class LoginRegisterController extends BaseController
             'password'          => 'required|min:8'
         ]);
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 401);
         }
         $remember_me = !is_null($request->remember) ? true : false;
         $credentialsOnly = [
@@ -65,19 +77,35 @@ class LoginRegisterController extends BaseController
             $user = User::find(Auth::id());
             if(is_null($user->email_verified_at)){
                 // $user->NotificationSendToVerifyEmail();
-                return $this->sendError('unverified.', ['error_message'=>'Your account is not verified', 'verify_mail_send' => true]);
+
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account is not verified!',
+                ];
+                return response()->json($responseData, 401);
             }
 
             $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-            $success = [
-                'access_token'      => $accessToken,
-                'remember_me_token' => $user->remember_token,
-                'user'              => $user,
-            ];
 
-            return $this->sendResponse($success, 'You have logged in successfully!', $accessToken);
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'message'           => 'You have logged in successfully!',
+                'remember_me_token' => $user->remember_token,
+                'access_token'      => $accessToken
+            ];
+            return response()->json($responseData, 200);
+
         } else{
-            return $this->sendError('Unauthorised.', ['error_message'=>'These credentials do not match our records.']);
+
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'error'         => 'These credentials do not match our records!',
+            ];
+            return response()->json($responseData, 401);
+
         }
     }
 
@@ -87,7 +115,12 @@ class LoginRegisterController extends BaseController
         ]);
 
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 401);
         }
         
         $token = Str::random(64);
@@ -108,7 +141,12 @@ class LoginRegisterController extends BaseController
         $subject = 'Reset Password Notification';
         Mail::to($email_id)->queue(new ResetPasswordMail($userDetails['name'],$userDetails['reset_password_url'], $subject));
 
-        return $this->sendResponse(['send_email' => true], __('passwords.sent'));
+        //Success Response Send
+        $responseData = [
+            'status'        => true,
+            'message'         => __('passwords.sent'),
+        ];
+        return response()->json($responseData, 200);
     }
 
     public function resetPassword(Request $request){
@@ -117,7 +155,12 @@ class LoginRegisterController extends BaseController
             'password_confirmation'     => 'required',
         ]);
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 401);
         }
         $token = $request->token;
         $email = decrypt($request->hash);
@@ -125,15 +168,27 @@ class LoginRegisterController extends BaseController
         $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
 
         if(!$updatePassword){
-            return $this->sendError('Invalid Token', ['error_message' => trans('passwords.token')]);
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('passwords.token'),
+            ];
+            return response()->json($responseData, 401);
+
         }else{
+
             $user = User::where('email', $email)
             ->update(['password' => bcrypt($request->password)]);
 
             DB::table('password_resets')->where(['email'=> $email])->delete();
 
-            // Set Flash Message
-            return $this->sendResponse(['password_reset' => true], __('passwords.reset'));
+            //Success Response Send
+            $responseData = [
+                'status'  => true,
+                'message' => __('passwords.reset'),
+            ];
+            return response()->json($responseData, 200);
+
         }
     }
 
@@ -141,16 +196,29 @@ class LoginRegisterController extends BaseController
         $user = User::find($id);
         
         if(!is_null($user->email_verified_at)){
-            return $this->sendResponse(['already_verified' => true], 'Email is aleready verifed.');
+            
+            $responseData = [
+                'status'  => true,
+                'message' => 'Email is aleready verifed!',
+            ];
+            return response()->json($responseData, 200);
         }
         if ($user && $hash === sha1($user->email)) {
             $user->update(['email_verified_at' => date('Y-m-d H:i:s')]);
 
-            // Email verification success
-            return $this->sendResponse(['mail_verify' => true], 'User login successfully.');
+            //Success Response Send
+            $responseData = [
+                'status'  => true,
+                'message' => 'Email Verified successfully!',
+            ];
+            return response()->json($responseData, 200);
         }
 
-        // Email verification failed
-        return $this->sendError('verification Failed', ['error'=>'Mail verification failed']);
+        // Error Response Send
+        $responseData = [
+            'status'  => false,
+            'error'   => 'Mail verification failed!',
+        ];
+        return response()->json($responseData, 401);
     }
 }

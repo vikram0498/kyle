@@ -8,17 +8,17 @@ class BaseController extends Controller
 {
     public function sendResponse($result, $message, $accessToken=''){
     	$response = [
-            'status' => true,
-            'user_data'    => $result,
-            'message' => $message,
-            'access_token' => $accessToken
+            'status'        => true,
+            'result'        => $result,
+            'message'       => $message,
+            'access_token'  => $accessToken
         ];
         return response()->json($response, 200);
     }
 
     public function sendError($error, $errorMessages = [], $code = 422){
     	$response = [
-            'status' => false,
+            'status'  => false,
             'message' => $error,
         ];
         if(!empty($errorMessages)){
