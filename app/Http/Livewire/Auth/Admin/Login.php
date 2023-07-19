@@ -32,8 +32,10 @@ class Login extends BaseComponent
     public function submitLogin()
     {
         $validated = $this->validate([
-            'email'    => ['required','email'],
+            'email'    => ['required','email', 'exists:users,email'],
             'password' => 'required',
+        ], [
+            'email.exists' => "These credentials do not match our records"
         ]);
          
         $remember_me = !is_null($this->remember_me) ? true : false;
@@ -45,31 +47,34 @@ class Login extends BaseComponent
         try {
             // $checkVerified = User::where('email',$this->email)->whereNull('email_verified_at')->first();
             $user = User::where('email', $this->email)->first();
-            $checkVerified = $user->email_verified_at;
-            
-            if($user->is_admin){
-                if(!is_null($checkVerified)){                
-                    if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) {
-                        $this->resetInputFields();
-                        $this->resetErrorBag();
-                        $this->resetValidation();
-    
-                        $this->flash('success', trans('panel.message.login_success'));
+            if($user){
+                if($user->is_admin){
+                    $checkVerified = $user->email_verified_at;
+                    if(!is_null($checkVerified)){                
+                        if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) {
+                            $this->resetInputFields();
+                            $this->resetErrorBag();
+                            $this->resetValidation();
+        
+                            $this->flash('success', trans('panel.message.login_success'));
 
-                        return redirect()->route('admin.dashboard');
+                            return redirect()->route('admin.dashboard');
+                        }
+                        $this->addError('email', trans('auth.failed'));
+                    } else{
+                        // $user->sendEmailVerificationNotification();
+                        $this->alert('error', trans('panel.message.email_verify_first'));
+                        // $this->verifyMailComponent = true;
+
                     }
+                    // $this->resetInputFields();
+                } else {
                     $this->addError('email', trans('auth.failed'));
-                }else{
-                    // $user->sendEmailVerificationNotification();
-                    $this->alert('error', trans('panel.message.email_verify_first'));
-                    // $this->verifyMailComponent = true;
-
                 }
             } else {
                 $this->addError('email', trans('auth.failed'));
             }
             
-            $this->resetInputFields();
         
         } catch (ValidationException $e) {
 
