@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Auth\LoginRegisterController;
+use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\SocialMediaController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\HomeController;
@@ -42,6 +43,9 @@ Route::controller(SocialMediaController::class)->group(function(){
 });
 
 Route::middleware('auth:sanctum')->group(function () { 
+
+    Route::post('logout', [LogoutController::class, 'logout']);
+    
     Route::get('/user-details', [ProfileController::class, 'userDetails']);
    
 });
