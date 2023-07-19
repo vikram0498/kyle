@@ -10,7 +10,6 @@ class LogoutController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-
         // Revoke all user's tokens to logout
         $user->tokens()->delete();
 

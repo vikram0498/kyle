@@ -13,7 +13,7 @@ class SocialMediaController extends Controller
     public function handleGoogle(Request $request){
         try {
             $social_id = 'google_'.$request->sub;
-            $isUser = User::where('email', $request->email)->where('social_id', $social_id)->first();
+            $isUser = User::where('email', $request->email)->first();
             if($isUser){
                 $userAuthenticated = Auth::loginUsingId($isUser->id);
                 if($userAuthenticated){
@@ -61,7 +61,7 @@ class SocialMediaController extends Controller
             }
         
         } catch (\Exception $e) {
-            // dd($e->getMessage());
+            //  dd($e->getMessage());
             $responseData = [
                 'status'        => false,
                 'message'       => 'Something went wrong!',
@@ -73,7 +73,7 @@ class SocialMediaController extends Controller
     public function handleFacebook(Request $request){
         try {
             $social_id = 'facebook_'.$request->id;
-            $isUser = User::where('social_id', $social_id)->first();
+            $isUser = User::where('social_id', $social_id)->orWhere('email',$request->email)->first();
     
             if($isUser){
                 $userAuthenticated = Auth::loginUsingId($isUser->id);
