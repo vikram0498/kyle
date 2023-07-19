@@ -33,7 +33,7 @@ Class ImportBuyer extends Component {
     public function importBuyers(){
 
         Validator::make($this->state, [
-            'csv_file' => ['required', 'mimes:csv,xlsx,xls,txt']
+            'csv_file' => ['required', 'mimes:csv,xlsx,xls']
         ])->validate();
 
         $import = new BuyersImport;

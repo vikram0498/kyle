@@ -35,22 +35,38 @@ class LoginRegisterController extends Controller
             return response()->json($responseData, 401);
         }
 
-        $input = $request->all();
-        $input['name'] = $input['first_name'].' '.$input['last_name'];
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
+        DB::beginTransaction();
+        try {
+            $input = $request->all();
+            $input['name'] = $input['first_name'].' '.$input['last_name'];
+            $input['password'] = bcrypt($input['password']);
+            $user = User::create($input);
 
-        //Verification mail sent
-        $user->NotificationSendToVerifyEmail();
+            //Verification mail sent
+            $user->NotificationSendToVerifyEmail();
 
-        $user->roles()->sync(2);
+            $user->roles()->sync(2);
+            
+            DB::commit();
 
-        //Success Response Send
-        $responseData = [
-            'status'        => true,
-            'message'       => 'Register successfully!',
-        ];  
-        return response()->json($responseData, 200);
+            //Success Response Send
+            $responseData = [
+                'status'        => true,
+                'message'       => 'Register successfully!',
+            ];  
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 401);
+        }
     }
 
     public function login(Request $request){
@@ -66,46 +82,62 @@ class LoginRegisterController extends Controller
             ];
             return response()->json($responseData, 401);
         }
-        $remember_me = !is_null($request->remember) ? true : false;
-        $credentialsOnly = [
-            'email'    => $request->email,
-            'password' => $request->password,
-        ]; 
+
+        DB::beginTransaction();
+        try {
+
+            $remember_me = !is_null($request->remember) ? true : false;
+            $credentialsOnly = [
+                'email'    => $request->email,
+                'password' => $request->password,
+            ]; 
 
 
-        if(Auth::attempt($credentialsOnly, $remember_me)){
-            $user = User::find(Auth::id());
-            if(is_null($user->email_verified_at)){
-                // $user->NotificationSendToVerifyEmail();
+            if(Auth::attempt($credentialsOnly, $remember_me)){
+                $user = User::find(Auth::id());
+                if(is_null($user->email_verified_at)){
+                    // $user->NotificationSendToVerifyEmail();
+
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account is not verified!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
+                $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+
+                DB::commit();
+
+                //Success Response Send
+                $responseData = [
+                    'status'            => true,
+                    'message'           => 'You have logged in successfully!',
+                    'remember_me_token' => $user->remember_token,
+                    'access_token'      => $accessToken
+                ];
+                return response()->json($responseData, 200);
+
+            } else{
 
                 //Error Response Send
                 $responseData = [
                     'status'        => false,
-                    'error'         => 'Your account is not verified!',
+                    'error'         => 'These credentials do not match our records!',
                 ];
                 return response()->json($responseData, 401);
             }
-
-            $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-
-            //Success Response Send
-            $responseData = [
-                'status'            => true,
-                'message'           => 'You have logged in successfully!',
-                'remember_me_token' => $user->remember_token,
-                'access_token'      => $accessToken
-            ];
-            return response()->json($responseData, 200);
-
-        } else{
-
-            //Error Response Send
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => 'These credentials do not match our records!',
+                'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 401);
-
         }
     }
 
@@ -123,30 +155,46 @@ class LoginRegisterController extends Controller
             return response()->json($responseData, 401);
         }
         
-        $token = Str::random(64);
-        $email_id = $request->email;
-        $user = User::where('email', $email_id)->first();
+        DB::beginTransaction();
+        try {
+            $token = Str::random(64);
+            $email_id = $request->email;
+            $user = User::where('email', $email_id)->first();
 
-        $userDetails = array();
-        $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
+            $userDetails = array();
+            $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
 
-        $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
-    
-        DB::table('password_resets')->insert([
-            'email'         => $email_id, 
-            'token'         => $token, 
-            'created_at'    => Carbon::now()
-        ]);
+            $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
+        
+            DB::table('password_resets')->insert([
+                'email'         => $email_id, 
+                'token'         => $token, 
+                'created_at'    => Carbon::now()
+            ]);
 
-        $subject = 'Reset Password Notification';
-        Mail::to($email_id)->queue(new ResetPasswordMail($userDetails['name'],$userDetails['reset_password_url'], $subject));
+            $subject = 'Reset Password Notification';
+            Mail::to($email_id)->queue(new ResetPasswordMail($userDetails['name'],$userDetails['reset_password_url'], $subject));
 
-        //Success Response Send
-        $responseData = [
-            'status'        => true,
-            'message'         => __('passwords.sent'),
-        ];
-        return response()->json($responseData, 200);
+            DB::commit();
+
+            //Success Response Send
+            $responseData = [
+                'status'        => true,
+                'message'         => __('passwords.sent'),
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 401);
+        }
     }
 
     public function resetPassword(Request $request){
@@ -162,33 +210,49 @@ class LoginRegisterController extends Controller
             ];
             return response()->json($responseData, 401);
         }
-        $token = $request->token;
-        $email = decrypt($request->hash);
 
-        $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
+        DB::beginTransaction();
+        try {
+            $token = $request->token;
+            $email = decrypt($request->hash);
 
-        if(!$updatePassword){
-            //Error Response Send
+            $updatePassword = DB::table('password_resets')->where(['email' => $email,'token' => $token])->first();
+
+            if(!$updatePassword){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('passwords.token'),
+                ];
+                return response()->json($responseData, 401);
+
+            }else{
+
+                $user = User::where('email', $email)
+                ->update(['password' => bcrypt($request->password)]);
+
+                DB::table('password_resets')->where(['email'=> $email])->delete();
+
+                DB::commit();
+
+                //Success Response Send
+                $responseData = [
+                    'status'  => true,
+                    'message' => __('passwords.reset'),
+                ];
+                return response()->json($responseData, 200);
+
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('passwords.token'),
+                'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 401);
-
-        }else{
-
-            $user = User::where('email', $email)
-            ->update(['password' => bcrypt($request->password)]);
-
-            DB::table('password_resets')->where(['email'=> $email])->delete();
-
-            //Success Response Send
-            $responseData = [
-                'status'  => true,
-                'message' => __('passwords.reset'),
-            ];
-            return response()->json($responseData, 200);
-
         }
     }
 

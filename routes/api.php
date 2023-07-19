@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\SocialMediaController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\HomeController;
+use App\Http\Controllers\Api\User\BuyerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +48,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [LogoutController::class, 'logout']);
     
-    Route::get('/user-details', [ProfileController::class, 'userDetails']);
+    Route::get('user-details', [ProfileController::class, 'userDetails']);
+
+    Route::post('upload-single-buyer-details', [BuyerController::class, 'uploadSingleBuyerDetails']);
+
+    Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);
+
+    Route::post('buy-box-search', [BuyerController::class, 'buyBoxSearch']);
+
+    Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
+
+
+    
    
 });
