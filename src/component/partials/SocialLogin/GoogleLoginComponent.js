@@ -4,6 +4,8 @@ import React from 'react';
 import jwtDecode from "jwt-decode";
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
+import {useAuth} from "../../../hooks/useAuth";
+
 // import googleImg from './../../assets/images/google.svg';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -11,24 +13,25 @@ import { toast } from 'react-toastify';
 const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => { 
 
     const auto_select = false;
-
     // const login = useGoogleLogin({
     //     onSuccess: tokenResponse => console.log(tokenResponse),
     //     flow:'implicit'
     //   });
+    const {setAsLogged} = useAuth();
+
     const googleLogin = (data) =>{
-        console.log("response ", data);
         let headers = {
             "Accept": "application/json", 
         }
-
-        axios.post(apiUrl+'register', data, { headers: headers }).then(response => {
+        console.log('api data',data);
+        axios.post(apiUrl+'handle-google', data, { headers: headers }).then(response => {
             setLoading(false);
-            if(response.data.user_data) {
-                toast.success('Registration successful. Please check your email for verification.', {
+            console.log('res ',response.data);
+            if(response.data.status) {
+                toast.success('Login successfully!', {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                navigate('/login');
+                setAsLogged(response.data.access_token);
             }
         }).catch(error => {
             setLoading(false);

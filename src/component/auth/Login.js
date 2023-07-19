@@ -15,73 +15,69 @@ import Layout from './Layout';
   
 function Login (props){
 
-    const {setAsLogged} = useAuth();
+    const {setAsLogged,getRememberMeData} = useAuth();
     const {authData} = useContext(AuthContext);
-    
     const { setErrors, renderFieldError, setMessage, navigate } = useForm();
-
-    useEffect(() => {
-        if(authData.signedIn) {
-            navigate('/');
-        }
-    }, [authData, navigate]);
-    
-
-    const [showPassoword, setshowPassoword] = useState(false);
-    const togglePasswordVisibility  = () => {
-        setshowPassoword(!showPassoword);
-    };
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
     const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        let userData = getRememberMeData();
+        setEmail(userData.username);
+        setPassword(userData.password);
+        setRemember(userData.isRemember);
+
+        if(authData.signedIn) {
+            navigate('/');
+        }
+    }, [authData, navigate]);
+    
+    const [showPassoword, setshowPassoword] = useState(false);
+    const togglePasswordVisibility  = () => {
+        setshowPassoword(!showPassoword);
+    };
 
     const apiUrl = process.env.REACT_APP_API_URL;
-    console.log(apiUrl,'apiUrl');
     const submitLoginForm = (e) => {
         e.preventDefault();
-
         setLoading(true);
-
         setErrors(null);
-
         setMessage('');
-        let payload = {
-            email,
-            password
-        }
+        let payload = {email,password}
         if(remember) {
             payload.remember = true;
         }
-
-        let headers = {
-            'Accept': 'application/json'
+        let headers = { 
+            'Accept': 'application/json' 
         };
-
         axios.post(apiUrl+'login', payload, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status) {
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                var user_data = response.data.user_data.user;
-                var access_token = response.data.user_data.access_token;
-                var remember_me_token = response.data.user_data.remember_me_token;
-
-                setAsLogged(user_data, access_token, remember_me_token);
+                var access_token = response.data.access_token;
+                var remember_me_token = response.data.remember_me_token;
+                let remember_me_user_data = {username:'',password:'',isRemember:false};
+                if(payload.remember){
+                    remember_me_user_data = {username:email,password:password,isRemember:true};
+                }
+                setAsLogged(access_token, remember_me_token,remember_me_user_data);
             }
         }).catch(error => {
             setLoading(false);
             if(error.response) {
-                if (error.response.data.errors) {
-                    setErrors(error.response.data.errors);
+                if (error.response.data.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
                 }
-                if (error.response.data.errors.error_message) {
-                    toast.error(error.response.data.errors.error_message, {position: toast.POSITION.TOP_RIGHT});
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
                 }
             }
         });
+       
     }
-
     return (
         <Layout>
             <div className="account-in">
@@ -143,6 +139,7 @@ function Login (props){
                                         name="remember"
                                         onChange={e => { setRemember(e.target.checked ? 1 : 0) } }
                                         disabled={ loading ? 'disabled' : ''}
+                                        checked = {remember ? 'checked':''}
                                     />
                                     <span className="slider round"></span>
                                 </label>
@@ -165,7 +162,12 @@ function Login (props){
                             <ul className="account-with-social list-unstyled mb-0">
                                 <li>
                                     {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link> */}
-                                    <FacebookLoginButton/>
+                                    <FacebookLoginButton
+                                     apiUrl={apiUrl}
+                                     setLoading={setLoading}
+                                     navigate={navigate}
+                                     setErrors={setErrors}
+                                    />
                                 </li>
                                 <li>
                                     {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}

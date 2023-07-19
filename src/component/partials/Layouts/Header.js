@@ -37,7 +37,7 @@ function Header() {
 	                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 	                            <ul className="list-unstyled mb-0">
 	                                <li>
-										<a className="dropdown-item" href="my-profile.html">
+										<a className="dropdown-item" href="my-profile">
 											<img src="./assets/images/user-login.svg" className="img-fluid" />My Profile
 										</a>
 									</li>

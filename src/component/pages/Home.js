@@ -7,7 +7,6 @@ import Footer from "../partials/Layouts/Footer";
 function Home (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
-    
     useEffect(() => {
         if(!authData.signedIn) {
             navigate('/login');

@@ -262,7 +262,12 @@ const Register = () => {
                             <ul className="account-with-social list-unstyled mb-0">
                                 <li>
                                     {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link> */}
-                                    <FacebookLoginButton/>
+                                    <FacebookLoginButton
+                                    apiUrl={apiUrl}
+                                    setLoading={setLoading}
+                                    navigate={navigate}
+                                    setErrors={setErrors}
+                                    />
                                 </li>
                                 <li>
                                 <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">

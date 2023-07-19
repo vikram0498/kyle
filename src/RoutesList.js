@@ -19,9 +19,14 @@ import SellerForm from './component/pages/SellerForm';
 import Development from './component/pages/Development';
 import MultiFamilyResidential from './component/pages/MultiFamilyResidential';
 import Condo from './component/pages/Condo';
+import ChooseYourPlan from './component/pages/ChooseYourPlan';
+import AdditionalCreadits from './component/pages/AdditionalCreadits';
+import AdminMessage from './component/pages/AdminMessage';
+import AdminRequest from './component/pages/AdminRequest';
+import MyProfile from './component/pages/MyProfile';
 const RoutesList = () => {
   
-  const {userData} = useAuth();
+  const {userData,isLogin} = useAuth();
 
   // console.log(userData);
 
@@ -46,6 +51,11 @@ const RoutesList = () => {
             <Route path="/condo" element={<Condo/>} />
             <Route path="/development" element={<Development/>} />
             <Route path="/multifamily-residential" element={<MultiFamilyResidential/>} />
+            <Route path="/choose-your-plan" element={<ChooseYourPlan/>} />
+            <Route path="/additional-credits" element={<AdditionalCreadits/>} />
+            <Route path="/admin-message" element={<AdminMessage/>} />
+            <Route path="/admin-request" element={<AdminRequest/>} />
+            <Route path="/my-profile" element={<MyProfile/>} />
         </Routes>
       </AuthContext.Provider>
       </GoogleOAuthProvider>
