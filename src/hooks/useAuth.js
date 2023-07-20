@@ -8,7 +8,7 @@ export const useAuth = () => {
 
     let navigate = useNavigate();
     const [userData, setUserData] = useState(getUserData());
-    const [isLogin, setIsLogin] = useState(checkLogin());
+    const [isLogin, setIsLogin] = useState(getTokenData());
     const {setAuthData} = useContext(AuthContext);
     
     useEffect(() => {
@@ -44,7 +44,7 @@ export const useAuth = () => {
         var storedUserData = JSON.parse(sessionStorage.getItem('userData'));
         return storedUserData;
     }
-    function checkLogin(){
+    function getTokenData(){
         if(sessionStorage.getItem("_token") != null ){
             var storedUserData = JSON.parse(sessionStorage.getItem('_token'));
             return storedUserData;
@@ -56,7 +56,7 @@ export const useAuth = () => {
         const apiUrl = process.env.REACT_APP_API_URL;
         let headers = {
             "Accept": "application/json", 
-            'Authorization': 'Bearer ' + checkLogin().access_token
+            'Authorization': 'Bearer ' + getTokenData().access_token
         }
         axios.post(apiUrl+'logout', {}, { headers: headers }).then(response => {
         })
@@ -87,6 +87,7 @@ export const useAuth = () => {
     return {
         userData,
         isLogin,
+        getTokenData,
         setAsLogged,
         setLogout,
         getRememberMeData,

@@ -1,14 +1,30 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
+import axios from 'axios';
+import {useAuth} from "../../hooks/useAuth";
 
  const MyProfile = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const {getTokenData} = useAuth();
+    const [userData, setUserData] = useState(null);
+    let headers = {
+        "Accept": "application/json", 
+        'Authorization': 'Bearer ' + getTokenData().access_token,
+    }
+    const getUsers = async () => {
+        let res = await axios.get(apiUrl+'user-details', { headers: headers });
+        let { data } = res.data.data;
+        setUserData(res.data.data)
+    };
+    getUsers();
     return(
         <>
             <Header/>
             <section className="main-section position-relative pt-4 pb-120">
                 <div className="container position-relative">
                     <div className="card-box mt-0">
+                        {(!userData) ? <div class="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
                         <div className="row">
                             <div className="col-12 col-lg-8">
                                 <div className="card-box-inner">
@@ -19,19 +35,19 @@ import Footer from "../partials/Layouts/Footer";
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Username</label>
-                                                    <input type="text" name="" className="form-control-form" placeholder="Username" /> 
+                                                    <input type="text" name="" className="form-control-form" placeholder="Username" value={(userData.first_name != null) ? userData.first_name : ''}/> 
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Email</label>
-                                                    <input type="email" name="" className="form-control-form" placeholder="Email" /> 
+                                                    <input type="email" name="" className="form-control-form" placeholder="Email" value={(userData.email != null) ? userData.email : ''}/> 
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Phone Number</label>
-                                                    <input type="text" name="" className="form-control-form" placeholder="Phone Number" /> 
+                                                    <input type="text" name="" className="form-control-form" placeholder="Phone Number" value={(userData.phone != null) ? userData.phone : ''}/> 
                                                 </div>
                                             </div>
                                         </div>
@@ -77,6 +93,7 @@ import Footer from "../partials/Layouts/Footer";
                                 </form>
                             </div>
                         </div>
+                        }
                     </div>
                 </div>
             </section>

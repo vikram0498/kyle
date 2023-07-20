@@ -27,7 +27,7 @@ const  Layout = ({ children }) => {
                         </div>
                         <div className="col-12 col-lg-6">
                             <div className="session-img">
-                                <img src="./assets/images/bg.jpg" className="img-fluid" alt="logo" />
+                                <img src="/assets/images/bg.jpg" className="img-fluid" alt="logo" />
                             </div>
                         </div>
                     </div>

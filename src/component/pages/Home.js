@@ -4,7 +4,7 @@ import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 
-function Home (){
+function Home ({userDetails}){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect(() => {
@@ -36,13 +36,12 @@ function Home (){
                         </div>
                     </div>
                     <div className="row row-gap">
-                        
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <Link to='/add-buyer-details' className="grid-block-view">
-                                    <div className="grid-block-icon"><img src="./assets/images/upload-buyer.svg" className="img-fluid" alt="" /></div>
-                                    <h3>Upload Buyer</h3>
-                                </Link>
-                            </div>
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-3">
+                            <Link to='/add-buyer-details' className="grid-block-view">
+                                <div className="grid-block-icon"><img src="./assets/images/upload-buyer.svg" className="img-fluid" alt="" /></div>
+                                <h3>Upload Buyer</h3>
+                            </Link>
+                        </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
                             <Link to='/sellers-form' className="grid-block-view">
                                 <div className="grid-block-icon"><img src="./assets/images/buybox-search.svg" className="img-fluid" alt="" /></div>

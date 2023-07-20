@@ -73,7 +73,7 @@ function ResetPassword (){
         <Layout>
             <div className="account-in">
                 <div className="center-content">
-                    <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
+                    <img src="/assets/images/logo.svg" className="img-fluid" alt="" />
                     <h2>Reset Password</h2>
                 </div>
                 <form method='post' onSubmit={submitResetPasswordForm}>
@@ -82,7 +82,7 @@ function ResetPassword (){
                             <div className="form-group">
                                 <label htmlFor='pass_log_id'>Password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="/assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input  
                                         type={showPassoword ? 'text' : 'password'} 
                                         name="password" 
@@ -102,7 +102,7 @@ function ResetPassword (){
                             <div className="form-group mb-0">
                                 <label htmlFor='conpass_log_id'>Confirm password</label>
                                 <div className="form-group-inner">
-                                    <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
+                                    <span className="form-icon"><img src="/assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input 
                                         type={showConfirmPassword ? 'text' : 'password'} 
                                         name="password_confirmation"

@@ -15,7 +15,7 @@ import Layout from './Layout';
   
 function Login (props){
 
-    const {setAsLogged,getRememberMeData} = useAuth();
+    const {setAsLogged,getRememberMeData,getTokenData} = useAuth();
     const {authData} = useContext(AuthContext);
     const { setErrors, renderFieldError, setMessage, navigate } = useForm();
 
@@ -76,8 +76,8 @@ function Login (props){
                 }
             }
         });
-       
     }
+   
     return (
         <Layout>
             <div className="account-in">

@@ -3,6 +3,7 @@ import {useNavigate , Link} from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
+import SingleSelect from "../partials/Select2/SingleSelect";
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
@@ -12,11 +13,14 @@ function AddBuyerDetails (){
             navigate('/login');
         }
     }, [navigate, authData]);
-
-
     function handleChange(event) {
         // Update the state of your application accordingly.
     }
+    const cityOptions = [
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "vanilla", label: "Vanilla" },
+    ];
     return (
         <>
            <Header/>
