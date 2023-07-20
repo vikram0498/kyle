@@ -23,6 +23,42 @@ class BuyerController extends Controller
         ];
         return response()->json($responseData, 200);
    }
+
+   public function getBuildingClassNames(){
+        //Return Success Response
+        $responseData = [
+            'status'       => true,
+            'result'       => config('constants.building_class_values'),
+        ];
+        return response()->json($responseData, 200);
+    }
+
+    public function getPurchaseMethods(){
+        //Return Success Response
+        $responseData = [
+            'status'       => true,
+            'result'       => config('constants.purchase_methods'),
+        ];
+        return response()->json($responseData, 200);
+    }
+
+    public function getParkings(){
+        //Return Success Response
+        $responseData = [
+            'status'       => true,
+            'result'       => config('constants.parking_values'),
+        ];
+        return response()->json($responseData, 200);
+    }
+
+    public function getProertyFlaws(){
+        //Return Success Response
+        $responseData = [
+            'status'       => true,
+            'result'       => config('constants.property_flaws'),
+        ];
+        return response()->json($responseData, 200);
+    }
    
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
         DB::beginTransaction();

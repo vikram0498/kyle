@@ -58,7 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
 
+    Route::get('getBuildingClassNames', [BuyerController::class, 'getBuildingClassNames']);
 
-    
-   
+    Route::get('getPurchaseMethods', [BuyerController::class, 'getPurchaseMethods']);
+
+    Route::get('getParkings', [BuyerController::class, 'getParkings']);
+
+    Route::get('getProertyFlaws', [BuyerController::class, 'getProertyFlaws']);
+
 });
