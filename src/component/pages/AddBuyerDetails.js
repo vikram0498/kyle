@@ -1,47 +1,106 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate , Link} from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import SingleSelect from "../partials/Select2/SingleSelect";
 import MultiSelect from "../partials/Select2/MultiSelect";
-import { useState } from "react";
+import { City, Country, State } from "country-state-city";
+import {useAuth} from "../../hooks/useAuth";
+import Select from "react-select";
 
+import axios from 'axios';
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
+    const {getTokenData} = useAuth();
     const navigate = useNavigate();
-    const [property, setProperty] = useState([])
-    const [city, setCity] = useState([])
+    const [isLoader, setIsLoader] = useState(true);
+    let countryData = Country.getAllCountries();
+    const [stateData, setStateData] = useState();
+    const [cityData, setCityData] = useState();
+    const [country, setCountry] = useState({value:countryData[0].isoCode,label:countryData[0].name
+    });
+    const [state, setState] = useState();
+    const [city, setCity] = useState();
+    const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([])
+    const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([])
+    const [propertyTypeOption, setPropertyTypeOption] = useState([]);
+    const [parkingOption, setParkingOption] = useState([]);
+    const [locationFlawsOption,setLocationFlawsOption] = useState([]);
+
     useEffect(() => {
-        console.log('status', authData.signedIn);
-        if(!authData.signedIn) {
-            navigate('/login');
+        let states = State.getStatesOfCountry(country?.value);
+        let stateArray = [];
+        for(let state of states){
+            let Object = {
+                value:state.isoCode,
+                label:state.name
+            }
+            stateArray.push(Object);
         }
-        const propertyOption = [
-            { value: "produto 01", label: "Produto 01" },
-            { value: "produto 02", label: "Produto 02" },
-            { value: "produto 03", label: "Produto 03" },
-            { value: "produto 04", label: "Produto 04" },
-            { value: "produto 05", label: "Produto 05" },
-            { value: "produto 06", label: "Produto 06" },
-            { value: "produto 07", label: "Produto 07" },
-            { value: "produto 08", label: "Produto 08" },
-        ];
-        const cityOption = [
-            {value:1,label:"Jaipur"},
-            {value:2,label:"Jodhpur"},
-            {value:3,label:"Agar"},
-            {value:4,label:"Udaipur"}
-        ]
-        setCity(cityOption);
-        setProperty(propertyOption);
-    }, [navigate, authData]);
+        setStateData(stateArray);
+    }, [country]);
+
+    useEffect(() => {
+        let cities = City.getCitiesOfState(country?.value, state?.value);
+        let cityArray = [];
+        for(let city of cities){
+            let Object = {
+                value:city.isoCode,
+                label:city.name
+            }
+            cityArray.push(Object);
+        }
+        setCityData(cityArray);
+        
+    }, [state]);
+
+    useEffect(() => {
+        stateData && setState([]);
+    }, [stateData]);
+
+    useEffect(() => {
+        cityData && setCity(cityData[0]);
+    }, [cityData]);
+
+    useEffect(() => {
+        getOptionsValues();
+    }, [navigate, /*authData*/]);
     function handleChange(event) {
         // Update the state of your application accordingly.
+    }
+    console.log('StateData',stateData);
+    const countryOption = []
+    for(let countries of countryData){
+        let Object = {
+            value:countries.isoCode,
+            label:countries.name
+        }
+        countryOption.push(Object);
+    }
+    const apiUrl = process.env.REACT_APP_API_URL;
+    let headers = { 
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + getTokenData().access_token
+    };
+    const getOptionsValues = () =>{
+        axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
+            if(response.data.status){
+                let result = response.data.result;
+                setPurchaseMethodsOption(result.purchase_methods);
+                setBuildingClassNamesOption(result.building_class_values);
+                setPropertyTypeOption(result.property_types);
+                setLocationFlawsOption(result.location_flaws);
+                setParkingOption(result.parking_values);
+                setIsLoader(false);
+            }
+        })
     }
     return (
         <>
            <Header/>
+           {
+           (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
            <section className="main-section position-relative pt-4 pb-120">
                 <div className="container position-relative">
                     <div className="back-block">
@@ -109,23 +168,63 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
-                                                    <label>City<span>*</span></label>
+                                                    <label>Country<span>*</span></label>
                                                     <div className="form-group">
-                                                        <SingleSelect
-                                                        options={city}
-                                                        placeholder='Select City'
-                                                        />
-                                                        {/* <select id="city" data-minimum-results-for-search="Infinity">
-                                                            <option>Choose City</option>
+                                                    <Select
+                                                        defaultValue={countryOption[0]}
+                                                        options={countryOption}
+                                                        onChange={(item) => setCountry(item)}
+                                                        className="select"
+                                                        isClearable={true}
+                                                        isSearchable={true}
+                                                        isDisabled={false}
+                                                        isLoading={false}
+                                                        isRtl={false}
+                                                        closeMenuOnSelect={true}
+                                                    />
+                                                        
+                                                        {/* <select id="state" className="" data-minimum-results-for-search="Infinity">
+                                                            <option>Choose State</option>
                                                         </select> */}
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
                                                     <label>State<span>*</span></label>
                                                     <div className="form-group">
-                                                        <select id="state" className="" data-minimum-results-for-search="Infinity">
+                                                        <Select
+                                                            defaultValue={stateData[0]}
+                                                            options={stateData}
+                                                            onChange={(item) => setState(item)}
+                                                            className="select"
+                                                            isClearable={true}
+                                                            isSearchable={true}
+                                                            isDisabled={false}
+                                                            isLoading={false}
+                                                            isRtl={false}
+                                                            closeMenuOnSelect={true}
+                                                        />
+                                                        {/* <select id="state" className="" data-minimum-results-for-search="Infinity">
                                                             <option>Choose State</option>
-                                                        </select>
+                                                        </select> */}
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-md-4 col-lg-4">
+                                                    <label>City<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <Select
+                                                            options={cityData}
+                                                            onChange={(item) => setCity(item)}
+                                                            className="select"
+                                                            isClearable={true}
+                                                            isSearchable={true}
+                                                            isDisabled={false}
+                                                            isLoading={false}
+                                                            isRtl={false}
+                                                            closeMenuOnSelect={true}
+                                                        />
+                                                        {/* <select id="city" data-minimum-results-for-search="Infinity">
+                                                            <option>Choose City</option>
+                                                        </select> */}
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
@@ -141,7 +240,7 @@ function AddBuyerDetails (){
                                                         <label>Property Type<span>*</span></label>
                                                         <div className="form-group">
                                                             <MultiSelect 
-                                                            options={property} 
+                                                            options={propertyTypeOption} 
                                                             placeholder='Select Property Type'
                                                             />
                                                         </div>
@@ -168,12 +267,16 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Building className<span>*</span></label>
                                                     <div className="form-group">
-                                                        <select className="form-control">
+                                                        <SingleSelect
+                                                        options={buildingClassNamesOption}
+                                                        placeholder='Select Option'
+                                                        />
+                                                        {/* <select className="form-control">
                                                             <option>A</option>
                                                             <option>A</option>
                                                             <option>A</option>
                                                             <option>A</option>
-                                                        </select>
+                                                        </select> */}
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-12 col-lg-3">
@@ -194,13 +297,17 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-lg-9">
                                                     <label>Purchase Method<span>*</span></label>
                                                     <div className="form-group">
-                                                        <select id="financing" data-minimum-results-for-search="Infinity">
+                                                        <SingleSelect
+                                                            options={purchaseMethodsOption}
+                                                            placeholder='Select Purchase Method'
+                                                        />
+                                                        {/* <select id="financing" data-minimum-results-for-search="Infinity">
                                                             <option>Creative Financing</option>
                                                             <option>Creative Financing</option>
                                                             <option>Creative Financing</option>
                                                             <option>Creative Financing</option>
                                                             <option>Creative Financing</option>
-                                                        </select>
+                                                        </select> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,21 +422,29 @@ function AddBuyerDetails (){
                                                     <div className="col-12 col-lg-12">
                                                         <label>Parking<span>*</span></label>
                                                         <div className="form-group">
-                                                            <select id="parking" data-minimum-results-for-search="Infinity">
+                                                            <SingleSelect
+                                                                options={parkingOption}
+                                                                placeholder='Choose Parking'
+                                                            />
+                                                            {/* <select id="parking" data-minimum-results-for-search="Infinity">
                                                                 <option>Choose Parking</option>
-                                                            </select>
+                                                            </select> */}
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-lg-12">
                                                         <div className="form-group">
                                                             <label>Location Flaws</label>
                                                             <div className="form-group">
-                                                                <select id="location-flaws" multiple="multiple" data-minimum-results-for-search="Infinity">
+                                                                <MultiSelect 
+                                                                options={locationFlawsOption} 
+                                                                placeholder='Select Location Flaws'
+                                                                />
+                                                                {/* <select id="location-flaws" multiple="multiple" data-minimum-results-for-search="Infinity">
                                                                     <option>Assigned</option>
                                                                     <option>Carport</option>
                                                                     <option>Driveway</option>
                                                                     <option>Boarders non-residential</option>
-                                                                </select>
+                                                                </select> */}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -589,6 +704,7 @@ function AddBuyerDetails (){
                     </div>
                 </div>
            </section>
+           }
             <Footer/>
         </>
     )

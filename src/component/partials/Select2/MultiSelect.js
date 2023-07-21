@@ -14,7 +14,7 @@ function MultiSelect({options,placeholder}) {
         isMulti
         options={options}
         onChange={(item) => setSelectedOptions(item)}
-        className="select"
+        className="multi-select"
         isClearable={true}
         isSearchable={true}
         isDisabled={false}

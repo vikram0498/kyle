@@ -1,5 +1,6 @@
 import React,{useEffect,useState}  from 'react'
 import {useAuth} from "../../../hooks/useAuth";
+import {Link , useNavigate} from "react-router-dom";
 import axios from 'axios';
 
 function Header() {
@@ -27,7 +28,9 @@ function Header() {
 				<div className="row align-items-center">
 					<div className="col-6 col-sm-6 col-md-4 col-lg-3">
 						<div className="header-logo">
-							<a href=""><img src="./assets/images/logo.svg" className="img-fluid" /></a>
+							<Link to='/'>
+								<img src="./assets/images/logo.svg" className="img-fluid" />
+							</Link>
 						</div>
 					</div>
 					<div className="col-6 col-sm-6 col-md-8 col-lg-9">
