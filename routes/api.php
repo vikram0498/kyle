@@ -66,4 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
 
+    Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFormElementValues']);
+    
+
 });

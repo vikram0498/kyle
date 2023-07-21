@@ -75,6 +75,64 @@ class BuyerController extends Controller
         return response()->json(['options'=>$options], 200);
     }
    
+    public function singleBuyerFormElementValues(){
+        $elementValues = [];
+        try{
+            $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['building_class_values'] = collect(config('constants.building_class_values'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['purchase_methods'] = collect(config('constants.purchase_methods'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['parking_values'] = collect(config('constants.parking_values'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['location_flaws'] = collect(config('constants.property_flaws'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            //Return Error Response
+            $responseData = [
+                'status'        => true,
+                'result'        => $elementValues,
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'result'        => $elementValues,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 401);
+
+        }
+    }
+
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
         DB::beginTransaction();
         try {
