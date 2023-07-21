@@ -44,6 +44,7 @@ const RoutesList = () => {
             <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
 
             {/* App routes */}
+            
             <Route path="/" element={<Home />} />
             <Route path="/add-buyer-details" element={<AddBuyerDetails />} />
             <Route path="/my-buyers" element={<MyBuyer />} />

@@ -4,23 +4,41 @@ import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import SingleSelect from "../partials/Select2/SingleSelect";
+import MultiSelect from "../partials/Select2/MultiSelect";
+import { useState } from "react";
+
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const navigate = useNavigate();
-    
+    const [property, setProperty] = useState([])
+    const [city, setCity] = useState([])
     useEffect(() => {
+        console.log('status', authData.signedIn);
         if(!authData.signedIn) {
             navigate('/login');
         }
+        const propertyOption = [
+            { value: "produto 01", label: "Produto 01" },
+            { value: "produto 02", label: "Produto 02" },
+            { value: "produto 03", label: "Produto 03" },
+            { value: "produto 04", label: "Produto 04" },
+            { value: "produto 05", label: "Produto 05" },
+            { value: "produto 06", label: "Produto 06" },
+            { value: "produto 07", label: "Produto 07" },
+            { value: "produto 08", label: "Produto 08" },
+        ];
+        const cityOption = [
+            {value:1,label:"Jaipur"},
+            {value:2,label:"Jodhpur"},
+            {value:3,label:"Agar"},
+            {value:4,label:"Udaipur"}
+        ]
+        setCity(cityOption);
+        setProperty(propertyOption);
     }, [navigate, authData]);
     function handleChange(event) {
         // Update the state of your application accordingly.
     }
-    const cityOptions = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
-        { value: "vanilla", label: "Vanilla" },
-    ];
     return (
         <>
            <Header/>
@@ -93,9 +111,13 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-md-4 col-lg-4">
                                                     <label>City<span>*</span></label>
                                                     <div className="form-group">
-                                                        <select id="city" data-minimum-results-for-search="Infinity">
+                                                        <SingleSelect
+                                                        options={city}
+                                                        placeholder='Select City'
+                                                        />
+                                                        {/* <select id="city" data-minimum-results-for-search="Infinity">
                                                             <option>Choose City</option>
-                                                        </select>
+                                                        </select> */}
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
@@ -118,24 +140,10 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <label>Property Type<span>*</span></label>
                                                         <div className="form-group">
-                                                            <select id="single" data-minimum-results-for-search="Infinity" multiple="multiple">
-                                                                <option>Select Property Type</option>
-                                                                <option>Attached</option>
-                                                                <option>Apartment Buildings</option>
-                                                                <option>Commercial - Retail</option>
-                                                                <option>Condo</option>
-                                                                <option>Detached</option>
-                                                                <option>Development</option>
-                                                                <option>Land</option>
-                                                                <option>Manufactured</option>
-                                                                <option>Mobile Home</option>
-                                                                <option>Multi-Family - Commercial</option>
-                                                                <option>Multi-Family - Residential</option>
-                                                                <option>Single Family</option>
-                                                                <option>Townhouse</option>
-                                                                <option>Mobile Home Park</option>
-                                                                <option>Hotel/Motel</option>
-                                                            </select>
+                                                            <MultiSelect 
+                                                            options={property} 
+                                                            placeholder='Select Property Type'
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>

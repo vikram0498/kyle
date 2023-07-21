@@ -9,15 +9,15 @@ function Header() {
 		let data = ''
 		const apiUrl = process.env.REACT_APP_API_URL;
 		if(getTokenData().access_token != null){
-			let headers = {
-				"Accept": "application/json", 
-				'Authorization': 'Bearer ' + getTokenData().access_token,
-			}
-			axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
-				if(response.data.status){
-					setUserDetails(response.data.data);
-				}
-			})
+			// let headers = {
+			// 	"Accept": "application/json", 
+			// 	'Authorization': 'Bearer ' + getTokenData().access_token,
+			// }
+			// axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
+			// 	if(response.data.status){
+			// 		setUserDetails(response.data.data);
+			// 	}
+			// })
 		}
     }, []);
   return (
