@@ -56,6 +56,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'email'       => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone'       => ['required', 'numeric', 'digits:10'], 
             'address'     => ['required'], 
+            'country'     => ['required'],
             'city'        => ['required'], 
             'state'       => ['required'], 
             'zip_code'    => ['required'],

@@ -32,6 +32,7 @@ class Buyer extends Model
         'address',
         'city',
         'state',
+        'country',
         'zip_code',
         'bedroom_min',
         'bedroom_max',

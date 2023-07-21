@@ -25,10 +25,10 @@ return new class extends Migration
             $table->string('replacing_occupation')->nullable();
             $table->string('company_name')->nullable();
             $table->string('address');
-            $table->string('city');
+            $table->string('country');
             $table->string('state');
+            $table->string('city');
             $table->string('zip_code');
-
             $table->integer('bedroom_min');
             $table->integer('bedroom_max');
             $table->integer('bath_min')->nullable();
