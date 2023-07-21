@@ -17,47 +17,62 @@ class BuyerController extends Controller
 {
     public function getPropertyTypes(){
         //Return Success Response
-        $responseData = [
-            'status'       => true,
-            'result'       => config('constants.property_types'),
-        ];
-        return response()->json($responseData, 200);
+        $options = collect(config('constants.property_types'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
    }
 
    public function getBuildingClassNames(){
         //Return Success Response
-        $responseData = [
-            'status'       => true,
-            'result'       => config('constants.building_class_values'),
-        ];
-        return response()->json($responseData, 200);
+        $options = collect(config('constants.building_class_values'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
     }
 
     public function getPurchaseMethods(){
         //Return Success Response
-        $responseData = [
-            'status'       => true,
-            'result'       => config('constants.purchase_methods'),
-        ];
-        return response()->json($responseData, 200);
+        $options = collect(config('constants.purchase_methods'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
     }
 
     public function getParkings(){
         //Return Success Response
-        $responseData = [
-            'status'       => true,
-            'result'       => config('constants.parking_values'),
-        ];
-        return response()->json($responseData, 200);
+        $options = collect(config('constants.parking_values'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
     }
 
     public function getProertyFlaws(){
         //Return Success Response
-        $responseData = [
-            'status'       => true,
-            'result'       => config('constants.property_flaws'),
-        ];
-        return response()->json($responseData, 200);
+        $options = collect(config('constants.property_flaws'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
     }
    
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
