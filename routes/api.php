@@ -64,6 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('getParkings', [BuyerController::class, 'getParkings']);
 
-    Route::get('getProertyFlaws', [BuyerController::class, 'getProertyFlaws']);
+    Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
 
 });

@@ -63,7 +63,7 @@ class BuyerController extends Controller
         return response()->json(['options'=>$options], 200);
     }
 
-    public function getProertyFlaws(){
+    public function getLocationFlaws(){
         //Return Success Response
         $options = collect(config('constants.property_flaws'))->map(function ($label, $value) {
             return [
