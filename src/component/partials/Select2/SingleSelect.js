@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
 import Select from "react-select";
 
-const SingleSelect = ({options,placeholder}) => {
+const SingleSelect = ({options,placeholder,name}) => {
 const [selectedOptions, setSelectedOptions] = useState([]);
  return (
     <>
       <Select
+        name={name}
         defaultValue={[]}
         options={options}
         onChange={(item) => setSelectedOptions(item)}

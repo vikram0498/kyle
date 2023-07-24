@@ -26,9 +26,11 @@ function Login (props){
     
     useEffect(() => {
         let userData = getRememberMeData();
-        setEmail(userData.username);
-        setPassword(userData.password);
-        setRemember(userData.isRemember);
+        if(userData !='' && userData != undefined){
+            setEmail(userData.username);
+            setPassword(userData.password);
+            setRemember(userData.isRemember);
+        }
 
         if(authData.signedIn) {
             navigate('/');

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Select from "react-select";
-function MultiSelect({options,placeholder}) {
+function MultiSelect({options,placeholder,name}) {
     
       const [selectedOptions, setSelectedOptions] = useState([]);
     //   const handleSelect = () => {
@@ -10,6 +10,7 @@ function MultiSelect({options,placeholder}) {
   return (
     <>
     <Select
+        name={name}
         defaultValue={[]}
         isMulti
         options={options}

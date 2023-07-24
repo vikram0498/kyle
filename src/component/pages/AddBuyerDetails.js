@@ -39,6 +39,7 @@ function AddBuyerDetails (){
             stateArray.push(Object);
         }
         setStateData(stateArray);
+
     }, [country]);
 
     useEffect(() => {
@@ -46,7 +47,7 @@ function AddBuyerDetails (){
         let cityArray = [];
         for(let city of cities){
             let Object = {
-                value:city.isoCode,
+                value:city.name,
                 label:city.name
             }
             cityArray.push(Object);
@@ -60,7 +61,7 @@ function AddBuyerDetails (){
     }, [stateData]);
 
     useEffect(() => {
-        cityData && setCity(cityData[0]);
+        cityData && setCity([]);
     }, [cityData]);
 
     useEffect(() => {
@@ -69,7 +70,6 @@ function AddBuyerDetails (){
     function handleChange(event) {
         // Update the state of your application accordingly.
     }
-    console.log('StateData',stateData);
     const countryOption = []
     for(let countries of countryData){
         let Object = {
@@ -95,6 +95,12 @@ function AddBuyerDetails (){
                 setIsLoader(false);
             }
         })
+    }
+    const submitSingleBuyerForm = (e) => {
+        e.preventDefault();
+        var data = new FormData(e.target);
+        let formObject = Object.fromEntries(data.entries());
+        console.log(formObject);
     }
     return (
         <>
@@ -140,37 +146,38 @@ function AddBuyerDetails (){
                                             </button>
                                         </div>
                                     </div>
-                                    <form>
+                                    <form method='post' onSubmit={submitSingleBuyerForm}>
                                         <div className="card-box-blocks">
                                             <div className="row">
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>First Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="First Name" />
+                                                        <input type="text" name="first_name" className="form-control" placeholder="First Name" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Last Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="Last Name" />
+                                                        <input type="text" name="last_name" className="form-control" placeholder="Last Name" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Email Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="email" name="" className="form-control" placeholder="Email Address" />
+                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="(123) 456-7890" />
+                                                        <input type="text" name="phone_number" className="form-control" placeholder="(123) 456-7890" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
                                                     <Select
+                                                        name="country"
                                                         defaultValue={countryOption[0]}
                                                         options={countryOption}
                                                         onChange={(item) => setCountry(item)}
@@ -192,6 +199,7 @@ function AddBuyerDetails (){
                                                     <label>State<span>*</span></label>
                                                     <div className="form-group">
                                                         <Select
+                                                            name="state"
                                                             defaultValue={stateData[0]}
                                                             options={stateData}
                                                             onChange={(item) => setState(item)}
@@ -200,6 +208,7 @@ function AddBuyerDetails (){
                                                             isSearchable={true}
                                                             isDisabled={false}
                                                             isLoading={false}
+                                                            value={state}
                                                             isRtl={false}
                                                             closeMenuOnSelect={true}
                                                         />
@@ -212,6 +221,8 @@ function AddBuyerDetails (){
                                                     <label>City<span>*</span></label>
                                                     <div className="form-group">
                                                         <Select
+                                                            name="city"
+                                                            defaultValue={cityData[0]}
                                                             options={cityData}
                                                             onChange={(item) => setCity(item)}
                                                             className="select"
@@ -219,8 +230,9 @@ function AddBuyerDetails (){
                                                             isSearchable={true}
                                                             isDisabled={false}
                                                             isLoading={false}
+                                                            value={city}
                                                             isRtl={false}
-                                                            closeMenuOnSelect={true}
+                                                            closeMenuOnSelect={false}
                                                         />
                                                         {/* <select id="city" data-minimum-results-for-search="Infinity">
                                                             <option>Choose City</option>
@@ -230,16 +242,18 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-md-4 col-lg-4">
                                                     <label>Company/LLC<span>*</span></label>
                                                     <div className="form-group">
-                                                        <select className="form-control">
+                                                        {/* <select className="form-control">
                                                             <option>Company/LLC*</option>
-                                                        </select>
+                                                        </select> */}
+                                                        <input type="text" className="form-control" name="company" placeholder="Company LLC"/>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-lg-12">
                                                     <div className="form-group">
                                                         <label>Property Type<span>*</span></label>
                                                         <div className="form-group">
-                                                            <MultiSelect 
+                                                            <MultiSelect
+                                                            name="property_type" 
                                                             options={propertyTypeOption} 
                                                             placeholder='Select Property Type'
                                                             />
@@ -249,13 +263,13 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Additional Fields<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="Additional Fields" />
+                                                        <input type="text" name="additional_fields" className="form-control" placeholder="Additional Fields" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Minimum Units<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="Minimum Units" />
+                                                        <input type="text" name="minimum_units" className="form-control" placeholder="Minimum Units" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -268,6 +282,7 @@ function AddBuyerDetails (){
                                                     <label>Building className<span>*</span></label>
                                                     <div className="form-group">
                                                         <SingleSelect
+                                                        name="building_classname"
                                                         options={buildingClassNamesOption}
                                                         placeholder='Select Option'
                                                         />
@@ -298,6 +313,7 @@ function AddBuyerDetails (){
                                                     <label>Purchase Method<span>*</span></label>
                                                     <div className="form-group">
                                                         <SingleSelect
+                                                            name="purchase_method"
                                                             options={purchaseMethodsOption}
                                                             placeholder='Select Purchase Method'
                                                         />
@@ -317,19 +333,19 @@ function AddBuyerDetails (){
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Down Payment (%)</label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Down Payment (%)" />
+                                                            <input type="text" name="down_payment_percent" className="form-control" placeholder="Down Payment (%)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Down Payment ($)</label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Down Payment ($)" />
+                                                            <input type="text" name="down_payment_dollar" className="form-control" placeholder="Down Payment ($)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Interest Rate (%)</label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Interest Rate (%)"  />
+                                                            <input type="text" name="interest_rate" className="form-control" placeholder="Interest Rate (%)"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -337,11 +353,11 @@ function AddBuyerDetails (){
                                                         <div className="form-group">
                                                             <div className="radio-block">
                                                                 <div className="label-container">
-                                                                    <input type="radio" name="payment" checked onChange={handleChange} />
+                                                                    <input type="radio" name="balloon_payment" checked onChange={handleChange} />
                                                                     <span>Yes</span>
                                                                 </div>
                                                                 <div className="label-container">
-                                                                    <input type="radio" name="payment" />
+                                                                    <input type="radio" name="balloon_payment" />
                                                                     <span>No</span>
                                                                 </div>
                                                             </div>
@@ -350,79 +366,80 @@ function AddBuyerDetails (){
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Bedroom (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Bedroom (min)"  />
+                                                            <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Bedroom (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Bedroom (max)" />
+                                                            <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Bath (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Bath (min)" />
+                                                            <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Bath (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Bath (max)" />
+                                                            <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Sq Ft Min<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Sq Ft Min"  />
+                                                            <input type="text" name="sq_ft_min" className="form-control" placeholder="Sq Ft Min"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Sq Ft Max<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Sq Ft Max"  />
+                                                            <input type="text" name="sq_ft_max" className="form-control" placeholder="Sq Ft Max"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
+                                                            <input type="text" name="lot_size_sq_ft_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Lot Size Sq Ft (max)" />
+                                                            <input type="text" name="lot_size_sq_ft_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Year Built (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Year Built (min)"/>
+                                                            <input type="text" name="year_built_min" className="form-control" placeholder="Year Built (min)"/>
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Year Built (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="Year Built (max)"/>
+                                                            <input type="text" name="year_built_max" className="form-control" placeholder="Year Built (max)"/>
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>ARV (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="ARV (min)" />
+                                                            <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>ARV (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="" className="form-control" placeholder="ARV (max)" />
+                                                            <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-lg-12">
                                                         <label>Parking<span>*</span></label>
                                                         <div className="form-group">
                                                             <SingleSelect
+                                                                name="parking"
                                                                 options={parkingOption}
                                                                 placeholder='Choose Parking'
                                                             />
@@ -436,6 +453,7 @@ function AddBuyerDetails (){
                                                             <label>Location Flaws</label>
                                                             <div className="form-group">
                                                                 <MultiSelect 
+                                                                name="location_flaws"
                                                                 options={locationFlawsOption} 
                                                                 placeholder='Select Location Flaws'
                                                                 />
@@ -507,11 +525,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Age restriction</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Age restriction" checked onChange={handleChange} />
+                                                            <input type="radio" name="age_restriction" checked onChange={handleChange} />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Age restriction" />
+                                                            <input type="radio" name="age_restriction" />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -520,11 +538,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Rental Restriction</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Rental Restriction" checked onChange={handleChange} />
+                                                            <input type="radio" name="rental_restriction" checked onChange={handleChange} />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Rental Restriction" />
+                                                            <input type="radio" name="rental_restriction" />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -546,11 +564,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Tenant Conveys</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Tenant Conveys" />
+                                                            <input type="radio" name="tenant_conveys" />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Tenant Conveys" checked onChange={handleChange} />
+                                                            <input type="radio" name="tenant_conveys" checked onChange={handleChange} />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -559,11 +577,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Post-Possession</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Post-Possession" checked onChange={handleChange} />
+                                                            <input type="radio" name="post_possession" checked onChange={handleChange} />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Post-Possession" />
+                                                            <input type="radio" name="post_possession" />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -572,11 +590,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Building Required</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Building Required" checked onChange={handleChange} />
+                                                            <input type="radio" name="building_required" checked onChange={handleChange} />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Building Required" />
+                                                            <input type="radio" name="building_required" />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -585,11 +603,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Foundation Issues</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Foundation Issues" />
+                                                            <input type="radio" name="foundation_issues" />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Foundation Issues" checked onChange={handleChange} />
+                                                            <input type="radio" name="foundation_issues" checked onChange={handleChange} />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -611,11 +629,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Fire Damaged</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Fire Damaged" checked onChange={handleChange} />
+                                                            <input type="radio" name="fire_damaged" checked onChange={handleChange} />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Fire Damaged" />
+                                                            <input type="radio" name="fire_damaged" />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -624,11 +642,11 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Rebuild</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Rebuild" />
+                                                            <input type="radio" name="rebuild" />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Rebuild" checked onChange={handleChange} />
+                                                            <input type="radio" name="rebuild" checked onChange={handleChange} />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
@@ -637,18 +655,19 @@ function AddBuyerDetails (){
                                                     <div className="radio-block-group">
                                                         <label>Squatters</label>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Squatters" />
+                                                            <input type="radio" name="squatters" />
                                                             <span>Yes</span>
                                                         </div>
                                                         <div className="label-container">
-                                                            <input type="radio" name="Squatters" checked onChange={handleChange} />
+                                                            <input type="radio" name="squatters" checked onChange={handleChange} />
                                                             <span>No</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="submit-btn">
-                                                <a href="" className="btn btn-fill">Submit Now!</a>
+                                                <button type="submit" className="btn btn-fill">Submit Now!</button>
+                                                {/* <a href="" className="btn btn-fill">Submit Now!</a> */}
                                             </div>
                                         </div>
                                     </form>
