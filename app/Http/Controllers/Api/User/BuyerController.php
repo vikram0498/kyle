@@ -32,7 +32,7 @@ class BuyerController extends Controller
    public function getStates(Request $request){
        $country_id = $request->country_id;
         //Return Success Response
-        $states = DB::table('states')->where('country_id',$country_id)->pluck('title','id');
+        $states = DB::table('states')->where('country_id',$country_id)->pluck('name','id');
 
         $options = $states->map(function ($label, $value) {
             return [
@@ -49,7 +49,7 @@ class BuyerController extends Controller
         $state_id   = $request->state_id;
 
         //Return Success Response
-        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('title','id');
+        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('name','id');
 
         $options = $cities->map(function ($label, $value) {
             return [
@@ -187,8 +187,8 @@ class BuyerController extends Controller
 
             $validatedData['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
 
-            $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('title');
-            $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('title');
+            $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('name');
+            $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
 
             Buyer::create($validatedData);
 

@@ -50,11 +50,11 @@ class BuyersImport implements ToModel, WithStartRow
                             if(!empty($countryData)){
                                 $countryId = $countryData->id;
 
-                                $stateData = DB::table('states')->where('country_id', $countryId)->where('title', $state)->first();
+                                $stateData = DB::table('states')->where('country_id', $countryId)->where('name', $state)->first();
                                 if(!empty($stateData)){
                                     $stateId = $stateData->id;
 
-                                    $cityData = DB::table('cities')->where('state_id', $stateId)->where('title', $city)->first();
+                                    $cityData = DB::table('cities')->where('state_id', $stateId)->where('name', $city)->first();
                                     if(!empty($cityData)){
                                         $cityId = $cityData->id;
                                     }

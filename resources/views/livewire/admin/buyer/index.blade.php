@@ -103,9 +103,7 @@
         } else if(pr == 'country'){
             @this.emit('getStates', $('.country').select2('val'));
         } else if(pr == 'state'){
-            var country = $('.country').select2('val');
-            var state = $('.state').select2('val');
-            @this.emit('getCities', {country: country, state: state});
+            @this.emit('getCities', $('.state').select2('val'));
         } 
     });
 

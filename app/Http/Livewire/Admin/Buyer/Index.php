@@ -153,8 +153,8 @@ class Index extends Component
         $this->state['user_id'] = auth()->user()->id;
 
         $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
-        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->title;
-        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->title;
+        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
         
         Buyer::create($this->state);
     
@@ -179,15 +179,15 @@ class Index extends Component
         $cityName = $buyer->city;
 
         $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
-        $stateId = DB::table('states')->where('country_id', $countryId)->where('title', $stateName)->first()->id;
-        $cityId = DB::table('cities')->where('state_id', $stateId)->where('title', $cityName)->first()->id;
+        $stateId = DB::table('states')->where('country_id', $countryId)->where('name', $stateName)->first()->id;
+        $cityId = DB::table('cities')->where('state_id', $stateId)->where('name', $cityName)->first()->id;
 
         $this->state['country'] = $countryId;
         $this->state['state'] = $stateId;
         $this->state['city'] = $cityId;
 
-        $this->states = DB::table('states')->where('country_id', $countryId)->pluck('title', 'id');
-        $this->cities = DB::table('cities')->where('state_id', $stateId)->pluck('title', 'id');
+        $this->states = DB::table('states')->where('country_id', $countryId)->pluck('name', 'id');
+        $this->cities = DB::table('cities')->where('state_id', $stateId)->pluck('name', 'id');
 
         $this->buyer_id = $id;
 
@@ -202,8 +202,8 @@ class Index extends Component
         $this->validatiionForm();
 
         $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
-        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->title;
-        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->title;
+        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
 
         $buyer = Buyer::find($this->buyer_id);
         $buyer->update($this->state);
@@ -279,7 +279,7 @@ class Index extends Component
     public function getStates($countryId){
         $this->cities = [];
         if($countryId){
-            $stateData = DB::table('states')->where('country_id', $countryId)->pluck('title', 'id');
+            $stateData = DB::table('states')->where('country_id', $countryId)->orderBy('name', 'asc')->pluck('name', 'id');
             if($stateData->count() > 0){
                 $this->states = $stateData;
             } else {
@@ -296,7 +296,7 @@ class Index extends Component
 
     public function getCities($stateId){
         if($stateId){
-            $cityData = DB::table('cities')->where('state_id', $stateId)->pluck('title', 'id');
+            $cityData = DB::table('cities')->where('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
             if($cityData->count() > 0){
                 $this->cities = $cityData;
             } else {
