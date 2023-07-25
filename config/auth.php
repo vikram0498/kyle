@@ -40,7 +40,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+         // Other guards...
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
     ],
+
+   
 
     /*
     |--------------------------------------------------------------------------
