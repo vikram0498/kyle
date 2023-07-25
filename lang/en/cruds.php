@@ -106,6 +106,7 @@ return [
             'company_name'                  => 'Company/LLC',
             'address'                       => 'Address',
             'city'                          => 'City',
+            'country'                       => 'Country',
             'state'                         => 'State',
             'zip_code'                      => 'Zip',
             'bedroom_min'                   => 'Bedroom (min)',

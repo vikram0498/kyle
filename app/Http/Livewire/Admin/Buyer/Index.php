@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
 
+use Illuminate\Support\Facades\DB; 
+
 class Index extends Component
 {
     use WithPagination, LivewireAlert,WithFileUploads;
@@ -33,7 +35,7 @@ class Index extends Component
     ];
 
     protected $listeners = [
-       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView',
+       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView', 'getStates', 'getCities'
        
     ];
 
@@ -42,6 +44,8 @@ class Index extends Component
     public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null;
 
     public  $status = 1, $viewMode = false;
+
+    public $countries = [], $states = [], $cities = [];
 
     public $buyer_id =null;
 
@@ -56,6 +60,8 @@ class Index extends Component
         $this->purchaseMethods = config('constants.purchase_methods');
         $this->radioButtonFields = config('constants.radio_buttons_fields');
 
+        $this->countries = DB::table('countries')->pluck('name', 'id');
+
         $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
         $this->buyerFormLink = $url.'add/buyer?token='.$encryptedId;
@@ -68,8 +74,9 @@ class Index extends Component
             'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone' => ['required', 'numeric', 'digits:10'], 
             'address' => ['required'], 
-            'city' => ['required'], 
-            'state' => ['required'], 
+            'country' => ['required', 'exists:countries,id'], 
+            'state' => ['required', 'exists:states,id'], 
+            'city' => ['required', 'exists:cities,id'], 
             'zip_code' => ['required'],
 
             'bedroom_min' => ['required', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
@@ -114,11 +121,9 @@ class Index extends Component
     }
 
     public function updateProperty($data) {
-        // dd($data);
-        
         $this->state[$data['property']] = $data['pr_vals'];
 
-        $this->validatiionForm();
+        // $this->validatiionForm();
     }
 
     private function validatiionForm(){
@@ -146,6 +151,10 @@ class Index extends Component
         $this->validatiionForm();
         
         $this->state['user_id'] = auth()->user()->id;
+
+        $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
+        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->title;
+        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->title;
         
         Buyer::create($this->state);
     
@@ -164,6 +173,22 @@ class Index extends Component
 
         $this->buyer = $buyer;
         $this->state = $buyer->toArray();
+
+        $countryName = $buyer->country;
+        $stateName = $buyer->state;
+        $cityName = $buyer->city;
+
+        $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
+        $stateId = DB::table('states')->where('country_id', $countryId)->where('title', $stateName)->first()->id;
+        $cityId = DB::table('cities')->where('state_id', $stateId)->where('title', $cityName)->first()->id;
+
+        $this->state['country'] = $countryId;
+        $this->state['state'] = $stateId;
+        $this->state['city'] = $cityId;
+
+        $this->states = DB::table('states')->where('country_id', $countryId)->pluck('title', 'id');
+        $this->cities = DB::table('cities')->where('state_id', $stateId)->pluck('title', 'id');
+
         $this->buyer_id = $id;
 
         $this->formMode = true;
@@ -175,6 +200,10 @@ class Index extends Component
 
     public function update() {
         $this->validatiionForm();
+
+        $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
+        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->title;
+        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->title;
 
         $buyer = Buyer::find($this->buyer_id);
         $buyer->update($this->state);
@@ -246,6 +275,39 @@ class Index extends Component
         }
         $this->initializePlugins();
     } 
+
+    public function getStates($countryId){
+        $this->cities = [];
+        if($countryId){
+            $stateData = DB::table('states')->where('country_id', $countryId)->pluck('title', 'id');
+            if($stateData->count() > 0){
+                $this->states = $stateData;
+            } else {
+                $this->states = [];
+                $this->addError('country', 'Please select valid country');
+            }
+        } else {
+            $this->states = [];
+            $this->cities = [];
+        }
+        
+        $this->initializePlugins();
+    }
+
+    public function getCities($stateId){
+        if($stateId){
+            $cityData = DB::table('cities')->where('state_id', $stateId)->pluck('title', 'id');
+            if($cityData->count() > 0){
+                $this->cities = $cityData;
+            } else {
+                $this->cities = [];
+                $this->addError('country', 'Please select valid state');
+            }
+        } else {
+            $this->cities = [];
+        }
+        $this->initializePlugins();
+    }
 
     private function resetInputFields(){
         $this->state = [

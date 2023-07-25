@@ -6,6 +6,7 @@ use App\Models\Buyer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
+use Illuminate\Support\Facades\DB; 
 class BuyersImport implements ToModel, WithStartRow
 {
     private $rowCount = 0;
@@ -35,32 +36,59 @@ class BuyersImport implements ToModel, WithStartRow
                         $phone = $this->modifiedString($row[3]);
                         if(!empty($phone) && is_numeric($phone)){
                             $buyerArr['phone'] = $phone;
-                            $address = $this->modifiedString($row[4]); $city = $this->modifiedString($row[5]); $state = $this->modifiedString($row[6]); $zipCode = $this->modifiedString($row[7]);
-                            if(!empty($address) && !empty($city) && !empty($state) && !empty($zipCode)){
+                            $address = $this->modifiedString($row[4]); 
+                            
+                            $country = $this->modifiedString($row[5]); 
+                            $city = $this->modifiedString($row[6]); 
+                            $state = $this->modifiedString($row[7]); 
+
+                            $countryId = 0;
+                            $stateId = 0;
+                            $cityId = 0;
+                            
+                            $countryData = DB::table('countries')->where('name', $country)->first();
+                            if(!empty($countryData)){
+                                $countryId = $countryData->id;
+
+                                $stateData = DB::table('states')->where('country_id', $countryId)->where('title', $state)->first();
+                                if(!empty($stateData)){
+                                    $stateId = $stateData->id;
+
+                                    $cityData = DB::table('cities')->where('state_id', $stateId)->where('title', $city)->first();
+                                    if(!empty($cityData)){
+                                        $cityId = $cityData->id;
+                                    }
+                                }
+                            }                            
+
+                            $zipCode = $this->modifiedString($row[8]);
+
+                            if(!empty($address) && !empty($country) && !empty($city) && !empty($state) && !empty($zipCode) && $countryId > 0 && $stateId > 0 && $cityId > 0){
                                 $buyerArr['address'] = $address;
+                                $buyerArr['country'] = $country;
                                 $buyerArr['city'] = $city;
                                 $buyerArr['state'] = $state;
                                 $buyerArr['zip_code'] = $zipCode;                                
 
-                                $companyName = strtolower($this->modifiedString($row[8]));
+                                $companyName = strtolower($this->modifiedString($row[9]));
                                 $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
                                 $buyerArr['company_name'] = $companyName;
 
-                                $occupation = strtolower($this->modifiedString($row[9]));
+                                $occupation = strtolower($this->modifiedString($row[10]));
                                 $companyName = (empty($occupation) || $occupation == 'blank') ? NULL : $occupation;
                                 $buyerArr['occupation'] = $occupation;
 
-                                $replacingOccupation = strtolower($this->modifiedString($row[10]));
+                                $replacingOccupation = strtolower($this->modifiedString($row[11]));
                                 $replacingOccupation = (empty($replacingOccupation) || $replacingOccupation == 'blank') ? NULL : $replacingOccupation;
                                 $buyerArr['replacing_occupation'] = $replacingOccupation;
 
                                 // number values min and max
-                                $bedroomMin     = strtolower($this->modifiedString($row[11]));      $bedroomMax      = strtolower($this->modifiedString($row[12]));
-                                $bathMin        = strtolower($this->modifiedString($row[13]));      $bathMax         = strtolower($this->modifiedString($row[14]));
-                                $sizeMin        = strtolower($this->modifiedString($row[15]));      $sizeMax         = strtolower($this->modifiedString($row[16]));
-                                $lotSizeMin     = strtolower($this->modifiedString($row[17]));      $lotSizeMax      = strtolower($this->modifiedString($row[18]));
-                                $buildYearMin   = strtolower($this->modifiedString($row[19]));      $buildYearMax    = strtolower($this->modifiedString($row[20]));
-                                $arvMin         = strtolower($this->modifiedString($row[21]));      $arvMax          = strtolower($this->modifiedString($row[22]));
+                                $bedroomMin     = strtolower($this->modifiedString($row[12]));      $bedroomMax      = strtolower($this->modifiedString($row[13]));
+                                $bathMin        = strtolower($this->modifiedString($row[14]));      $bathMax         = strtolower($this->modifiedString($row[15]));
+                                $sizeMin        = strtolower($this->modifiedString($row[16]));      $sizeMax         = strtolower($this->modifiedString($row[17]));
+                                $lotSizeMin     = strtolower($this->modifiedString($row[18]));      $lotSizeMax      = strtolower($this->modifiedString($row[19]));
+                                $buildYearMin   = strtolower($this->modifiedString($row[20]));      $buildYearMax    = strtolower($this->modifiedString($row[21]));
+                                $arvMin         = strtolower($this->modifiedString($row[22]));      $arvMax          = strtolower($this->modifiedString($row[23]));
 
                                 if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) ){
                                     if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax)){
@@ -84,7 +112,7 @@ class BuyersImport implements ToModel, WithStartRow
                                         $buyerArr['build_year_min'] = $buildYearMin;    $buyerArr['build_year_max'] = $buildYearMax;
                                         $buyerArr['arv_min']        = $arvMin;          $buyerArr['arv_max']        = $arvMax;
 
-                                        $propertyType = strtolower($this->modifiedString($row[24])); 
+                                        $propertyType = strtolower($this->modifiedString($row[25])); 
                                         if(!empty($propertyType) && $propertyType != 'blank'){
                                             $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
                                             if(!empty($ptArr)){
@@ -99,7 +127,7 @@ class BuyersImport implements ToModel, WithStartRow
                                                 // set all radio button values
                                                 $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
 
-                                                $buyerType = strtolower($this->modifiedString($row[40])); 
+                                                $buyerType = strtolower($this->modifiedString($row[41])); 
                                                 if(!empty($buyerType) && $buyerType != 'blank'){
                                                     $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
                                                     
@@ -148,7 +176,7 @@ class BuyersImport implements ToModel, WithStartRow
             }
             return $ptArr;
         } else if($type == 'parking'){
-            $parking = strtolower($this->modifiedString($value[23])); 
+            $parking = strtolower($this->modifiedString($value[24])); 
                                                 
             if(empty($parking) || $parking == 'blank'){
                 $parking = NULL;
@@ -173,7 +201,7 @@ class BuyersImport implements ToModel, WithStartRow
             $buyerArr['parking'] = $parking;
             return $buyerArr;
         } else if($type == 'property_flaw'){
-            $propertyFlaw = strtolower($this->modifiedString($value[25]));
+            $propertyFlaw = strtolower($this->modifiedString($value[26]));
             if(empty($value) || $value == 'blank'){
                 $propertyFlaw = NULL;
             } else {
@@ -213,7 +241,7 @@ class BuyersImport implements ToModel, WithStartRow
     }
 
     private function setRadioButtonValues($row, $buyerArr){
-        $solar = strtolower($this->modifiedString($row[26])); 
+        $solar = strtolower($this->modifiedString($row[27])); 
         $solar = (($solar == 'yes') ? 1 : (($solar == 'no') ? 0 : NULL));
         $buyerArr['solar'] = $solar;
         
@@ -221,51 +249,51 @@ class BuyersImport implements ToModel, WithStartRow
         $pool = (($pool == 'yes') ? 1 : (($pool == 'no') ? 0 : NULL));
         $buyerArr['pool'] = $pool;
         
-        $septic = strtolower($this->modifiedString($row[28])); 
+        $septic = strtolower($this->modifiedString($row[29])); 
         $septic = (($septic == 'yes') ? 1 : (($septic == 'no') ? 0 : NULL));
         $buyerArr['septic'] = $septic;
         
-        $well = strtolower($this->modifiedString($row[29]));
+        $well = strtolower($this->modifiedString($row[30]));
         $well = (($well == 'yes') ? 1 : (($well == 'no') ? 0 : NULL));
         $buyerArr['well'] = $well;
         
-        $ageRestriction = strtolower($this->modifiedString($row[30]));
+        $ageRestriction = strtolower($this->modifiedString($row[31]));
         $ageRestriction = (($ageRestriction == 'yes') ? 1 : (($ageRestriction == 'no') ? 0 : NULL));
         $buyerArr['age_restriction'] = $ageRestriction;
         
-        $rentalRestriction = strtolower($this->modifiedString($row[31]));
+        $rentalRestriction = strtolower($this->modifiedString($row[32]));
         $rentalRestriction = (($rentalRestriction == 'yes') ? 1 : (($rentalRestriction == 'no') ? 0 : NULL));
         $buyerArr['rental_restriction'] = $rentalRestriction;
         
-        $hoa = strtolower($this->modifiedString($row[32]));
+        $hoa = strtolower($this->modifiedString($row[33]));
         $hoa = (($hoa == 'yes') ? 1 : (($hoa == 'no') ? 0 : NULL));
         $buyerArr['hoa'] = $hoa;
         
-        $tenant = strtolower($this->modifiedString($row[33]));
+        $tenant = strtolower($this->modifiedString($row[34]));
         $tenant = (($tenant == 'yes') ? 1 : (($tenant == 'no') ? 0 : NULL));
         $buyerArr['tenant'] = $tenant;
         
-        $postPossession = strtolower($this->modifiedString($row[34]));
+        $postPossession = strtolower($this->modifiedString($row[35]));
         $postPossession = (($postPossession == 'yes') ? 1 : (($postPossession == 'no') ? 0 : NULL));
         $buyerArr['post_possession'] = $postPossession;
         
-        $buildingRequired = strtolower($this->modifiedString($row[35]));
+        $buildingRequired = strtolower($this->modifiedString($row[36]));
         $buildingRequired = (($buildingRequired == 'yes') ? 1 : (($buildingRequired == 'no') ? 0 : NULL));
         $buyerArr['building_required'] = $buildingRequired;
         
-        $foundationIssues = strtolower($this->modifiedString($row[36]));
+        $foundationIssues = strtolower($this->modifiedString($row[37]));
         $foundationIssues = (($foundationIssues == 'yes') ? 1 : (($foundationIssues == 'no') ? 0 : NULL));
         $buyerArr['foundation_issues'] = $foundationIssues;
         
-        $mold = strtolower($this->modifiedString($row[37]));
+        $mold = strtolower($this->modifiedString($row[38]));
         $mold = (($mold == 'yes') ? 1 : (($mold == 'no') ? 0 : NULL));
         $buyerArr['mold'] = $mold;
         
-        $fireDamaged = strtolower($this->modifiedString($row[38]));
+        $fireDamaged = strtolower($this->modifiedString($row[39]));
         $fireDamaged = (($fireDamaged == 'yes') ? 1 : (($fireDamaged == 'no') ? 0 : NULL));
         $buyerArr['fire_damaged'] = $fireDamaged;
         
-        $rebuild = strtolower($this->modifiedString($row[39]));
+        $rebuild = strtolower($this->modifiedString($row[40]));
         $rebuild = (($rebuild == 'yes') ? 1 : (($rebuild == 'no') ? 0 : NULL));
         $buyerArr['rebuild'] = $rebuild;
         
@@ -273,10 +301,10 @@ class BuyersImport implements ToModel, WithStartRow
     }
 
     private function setCreativeBuyer($row, $buyerArr, $buyerTypeArr){
-        $maxDownPaymentPercentage = strtolower($this->modifiedString($row[41]));
-        $maxDownPaymentMoney = strtolower($this->modifiedString($row[42]));
-        $maxInterestRate = strtolower($this->modifiedString($row[43])); 
-        $balloonPayment = strtolower($this->modifiedString($row[44]));
+        $maxDownPaymentPercentage = strtolower($this->modifiedString($row[42]));
+        $maxDownPaymentMoney = strtolower($this->modifiedString($row[43]));
+        $maxInterestRate = strtolower($this->modifiedString($row[44])); 
+        $balloonPayment = strtolower($this->modifiedString($row[45]));
         if(!empty($maxDownPaymentPercentage) && $maxDownPaymentPercentage != 'blank' && is_numeric($maxDownPaymentPercentage)){
             if(!empty($maxInterestRate) && $maxInterestRate != 'blank' && is_numeric($maxInterestRate)){
                 if(!empty($balloonPayment) && $balloonPayment != 'blank' && ($balloonPayment == 'yes' || $balloonPayment == 'no')){                                                                        
@@ -300,10 +328,10 @@ class BuyersImport implements ToModel, WithStartRow
     }
 
     private function setMultiFamilyBuyer($row, $buyerArr){
-        $unitMin = strtolower($this->modifiedString($row[45]));
-        $unitMax = strtolower($this->modifiedString($row[46]));
-        $buildingClass = strtolower($this->modifiedString($row[47])); 
-        $valueAdd = strtolower($this->modifiedString($row[48]));
+        $unitMin = strtolower($this->modifiedString($row[46]));
+        $unitMax = strtolower($this->modifiedString($row[47]));
+        $buildingClass = strtolower($this->modifiedString($row[48])); 
+        $valueAdd = strtolower($this->modifiedString($row[49]));
 
         if(!empty($unitMin) && !empty($unitMax) && !empty($buildingClass) && is_numeric($unitMin) && is_numeric($unitMax) && ($valueAdd == 'yes' || $valueAdd == 'no')){
             $buildingClassValues = config('constants.building_class_values');
@@ -331,7 +359,7 @@ class BuyersImport implements ToModel, WithStartRow
     }
 
     private function setPurchaseMethod($row, $buyerArr){
-        $purchaseMethod = strtolower($this->modifiedString($row[49]));
+        $purchaseMethod = strtolower($this->modifiedString($row[50]));
         if(!empty($purchaseMethod) && $purchaseMethod != 'blank'){
             $purchaseMethodValues = config('constants.purchase_methods');
             $purchaseMethodValues = array_map('strtolower',$purchaseMethodValues);

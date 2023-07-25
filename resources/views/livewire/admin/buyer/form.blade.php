@@ -7,15 +7,15 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.first_name')}} <span class="text-danger">*</span> </label>
-                    <input type="text" class="form-control" wire:model.defer="state.first_name" placeholder="{{ __('cruds.buyer.fields.first_name')}}" >
+                    <label for="first_name" class="font-weight-bold">{{ __('cruds.buyer.fields.first_name')}} <span class="text-danger">*</span> </label>
+                    <input type="text" class="form-control" wire:model.defer="state.first_name" placeholder="{{ __('cruds.buyer.fields.first_name')}}" id="first_name">
                     @error('first_name') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.last_name')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.last_name" placeholder="{{ __('cruds.buyer.fields.last_name')}}" autocomplete="off" >
+                    <label for="last_name" class="font-weight-bold">{{ __('cruds.buyer.fields.last_name')}} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" wire:model.defer="state.last_name" placeholder="{{ __('cruds.buyer.fields.last_name')}}" autocomplete="off" id="last_name">
                     @error('last_name') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -43,19 +43,47 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.city" placeholder="{{ __('cruds.buyer.fields.city')}}" autocomplete="off" >
-                    @error('city') <span class="error text-danger">{{ $message }}</span>@enderror
+                    <label for="country" class="font-weight-bold">{{ __('cruds.buyer.fields.country')}} <span class="text-danger">*</span></label>
+                    <div wire:ignore>
+                        <select wire:model.defer="state.country" id="country" class="form-control country select2" id="country" data-property="country">
+                            <option value="">Select {{ __('cruds.buyer.fields.country')}}</option>
+                            @foreach($countries as $key => $country)
+                                <option value="{{$key}}"> {{$country}} </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('country') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" >
+                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} <span class="text-danger">*</span></label>
+                    <!-- <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" > -->
+                    <!-- <div wire:ignore> -->
+                        <select wire:model.defer="state.state" id="state" class="form-control state select2" id="state" data-property="state">
+                            <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
+                            @foreach($states as $key => $stateName)
+                                <option value="{{$key}}"> {{$stateName}} </option>
+                            @endforeach
+                        </select>
+                    <!-- </div> -->
                     @error('state') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} <span class="text-danger">*</span></label>
+                    <!-- <div wire:ignore> -->
+                    <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city">
+                        <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>
+                        @foreach($cities as $key => $cityName)
+                            <option value="{{$key}}"> {{$cityName}} </option>
+                        @endforeach
+                    </select>
+                    <!-- </div> -->
+                    @error('city') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>            
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.zip_code')}} <span class="text-danger">*</span></label>

@@ -30,13 +30,17 @@
             <td> {{ $details->address ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.city')}}</th>
-            <td> {{ $details->city ?? 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.buyer.fields.country')}}</th>
+            <td> {{ $details->country ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.state')}}</th>
             <td> {{ $details->state ?? 'N/A' }}</td>
         </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.city')}}</th>
+            <td> {{ $details->city ?? 'N/A' }}</td>
+        </tr>        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
             <td> {{ $details->zip_code ?? 'N/A' }}</td>
