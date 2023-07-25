@@ -15,6 +15,52 @@ use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 
 class BuyerController extends Controller
 {
+    public function getCountries(){
+        //Return Success Response
+        $countries = DB::table('countries')->pluck('name','id');
+
+        $options = $countries->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+      
+        return response()->json(['options'=>$options], 200);
+   }
+
+   public function getStates(Request $request){
+       $country_id = $request->country_id;
+        //Return Success Response
+        $states = DB::table('states')->where('country_id',$country_id)->pluck('title','id');
+
+        $options = $states->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+    
+        return response()->json(['options'=>$options], 200);
+    }
+
+    public function getCities(Request $request){
+        $country_id = $request->country_id;
+        $state_id   = $request->state_id;
+
+        //Return Success Response
+        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('title','id');
+
+        $options = $cities->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucfirst(strtolower($label)),
+            ];
+        })->values()->all();
+    
+        return response()->json(['options'=>$options], 200);
+    }
+
     public function getPropertyTypes(){
         //Return Success Response
         $options = collect(config('constants.property_types'))->map(function ($label, $value) {
@@ -139,6 +185,11 @@ class BuyerController extends Controller
             $validatedData = $request->all();
             $validatedData['user_id'] = auth()->user()->id;
 
+            $validatedData['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
+
+            $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('title');
+            $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('title');
+
             Buyer::create($validatedData);
 
             DB::commit();
@@ -165,7 +216,7 @@ class BuyerController extends Controller
 
     public function buyBoxSearch(Request $request){
         $validator = Validator::make($request->all(), [
-            'property_type'  => 'required|int',
+            'property_type'  => 'int',
         ]);
 
         if($validator->fails()){
@@ -180,8 +231,18 @@ class BuyerController extends Controller
         DB::beginTransaction();
         try {
 
-
+            $userId = auth()->user()->id;
+            $buyers = Buyer::where('user_id',$userId)->paginate(10);
+        
             DB::commit();
+
+            //Return Success Response
+            $responseData = [
+                'status'        => true,
+                'buyers'        => $buyers,
+            ];
+
+            return response()->json($responseData, 401);
 
         } catch (\Exception $e) {
             DB::rollBack();
