@@ -17,7 +17,7 @@ class BuyerController extends Controller
 {
     public function getCountries(){
         //Return Success Response
-        $countries = DB::table('countries')->pluck('name','id');
+        $countries = DB::table('countries')->pluck('name','id')->orderBy('name','ASC');
 
         $options = $countries->map(function ($label, $value) {
             return [
@@ -32,7 +32,7 @@ class BuyerController extends Controller
    public function getStates(Request $request){
        $country_id = $request->country_id;
         //Return Success Response
-        $states = DB::table('states')->where('country_id',$country_id)->pluck('name','id');
+        $states = DB::table('states')->where('country_id',$country_id)->pluck('name','id')->orderBy('name','ASC');
 
         $options = $states->map(function ($label, $value) {
             return [
@@ -49,7 +49,7 @@ class BuyerController extends Controller
         $state_id   = $request->state_id;
 
         //Return Success Response
-        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('name','id');
+        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('name','id')->orderBy('name','ASC');
 
         $options = $cities->map(function ($label, $value) {
             return [
@@ -159,6 +159,21 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
 
+            $elementValues['buyer_types'] = collect(config('constants.buyer_types'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $countries = DB::table('countries')->pluck('name','id')->orderBy('name','ASC');
+            $elementValues['countries'] = $countries->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
             //Return Error Response
             $responseData = [
                 'status'        => true,
@@ -233,6 +248,51 @@ class BuyerController extends Controller
 
             $userId = auth()->user()->id;
             $buyers = Buyer::where('user_id',$userId)->paginate(10);
+        
+            DB::commit();
+
+            //Return Success Response
+            $responseData = [
+                'status'        => true,
+                'buyers'        => $buyers,
+            ];
+
+            return response()->json($responseData, 401);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 401);
+        }
+
+    }
+
+    public function fetchBuyers(Request $request){
+        $validator = Validator::make($request->all(), [
+            'property_type'  => 'int',
+        ]);
+
+        if($validator->fails()){
+             //Error Response Send
+             $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 401);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            $perPage = $request->input('perPage', 10);
+            $userId = auth()->user()->id;
+            $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
         
             DB::commit();
 

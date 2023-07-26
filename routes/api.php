@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('buy-box-search', [BuyerController::class, 'buyBoxSearch']);
 
+    Route::post('fetch-buyers', [BuyerController::class, 'fetchBuyers']);
+
     Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
 
     Route::get('getBuildingClassNames', [BuyerController::class, 'getBuildingClassNames']);
