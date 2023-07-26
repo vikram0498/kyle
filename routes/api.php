@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\LoginRegisterController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\SocialMediaController;
-use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\BuyerController;
+use App\Http\Controllers\Api\Auth\ProfileController;
 
 
 /*
@@ -75,5 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('getStates', [BuyerController::class, 'getStates']);
 
     Route::post('getCities', [BuyerController::class, 'getCities']);
+
+    Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
 });

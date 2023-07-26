@@ -253,7 +253,7 @@ class BuyerController extends Controller
             $buyers = Buyer::where('user_id',$userId)->where('status', 1);
         
             $buyers = $buyers->paginate(10);
-            
+
             DB::commit();
 
             //Return Success Response
@@ -262,7 +262,7 @@ class BuyerController extends Controller
                 'buyers'        => $buyers,
             ];
 
-            return response()->json($responseData, 400);
+            return response()->json($responseData, 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
