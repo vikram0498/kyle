@@ -17,7 +17,7 @@ class BuyerController extends Controller
 {
     public function getCountries(){
         //Return Success Response
-        $countries = DB::table('countries')->pluck('name','id')->orderBy('name','ASC');
+        $countries = DB::table('countries')->orderBy('name','ASC')->pluck('name','id');
 
         $options = $countries->map(function ($label, $value) {
             return [
@@ -32,7 +32,7 @@ class BuyerController extends Controller
    public function getStates(Request $request){
        $country_id = $request->country_id;
         //Return Success Response
-        $states = DB::table('states')->where('country_id',$country_id)->pluck('name','id')->orderBy('name','ASC');
+        $states = DB::table('states')->where('country_id',$country_id)->orderBy('name','ASC')->pluck('name','id');
 
         $options = $states->map(function ($label, $value) {
             return [
@@ -49,7 +49,7 @@ class BuyerController extends Controller
         $state_id   = $request->state_id;
 
         //Return Success Response
-        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->pluck('name','id')->orderBy('name','ASC');
+        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->orderBy('name','ASC')->pluck('name','id');
 
         $options = $cities->map(function ($label, $value) {
             return [
@@ -166,7 +166,7 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
 
-            $countries = DB::table('countries')->pluck('name','id')->orderBy('name','ASC');
+            $countries = DB::table('countries')->orderBy('name','ASC')->pluck('name','id');
             $elementValues['countries'] = $countries->map(function ($label, $value) {
                 return [
                     'value' => $value,
@@ -182,7 +182,8 @@ class BuyerController extends Controller
             return response()->json($responseData, 200);
 
         } catch (\Exception $e) {
-
+            // dd($e->getMessage().'->'.$e->getLine());
+            
             //Return Error Response
             $responseData = [
                 'status'        => false,
