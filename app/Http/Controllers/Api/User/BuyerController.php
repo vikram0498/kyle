@@ -247,10 +247,13 @@ class BuyerController extends Controller
 
         DB::beginTransaction();
         try {
-
             $userId = auth()->user()->id;
-            $buyers = Buyer::where('user_id',$userId)->paginate(10);
+
+            $buyers = Buyer::query();
+            $buyers = Buyer::where('user_id',$userId)->where('status', 1);
         
+            $buyers = $buyers->paginate(10);
+            
             DB::commit();
 
             //Return Success Response
