@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Models\Buyer;
 use App\Imports\MultipleBuyerImport;
+use App\Imports\BuyersImport;
 use Illuminate\Support\Arr;
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
@@ -73,7 +74,7 @@ class BuyerController extends Controller
         return response()->json(['options'=>$options], 200);
    }
 
-   public function getBuildingClassNames(){
+    public function getBuildingClassNames(){
         //Return Success Response
         $options = collect(config('constants.building_class_values'))->map(function ($label, $value) {
             return [
@@ -290,9 +291,9 @@ class BuyerController extends Controller
 
         DB::beginTransaction();
         try {
-
             $perPage = 10;
             $userId = auth()->user()->id;
+            $totalBuyers = Buyer::count();
             $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
         
             DB::commit();
@@ -301,6 +302,7 @@ class BuyerController extends Controller
             $responseData = [
                 'status'        => true,
                 'buyers'        => $buyers,
+                'totalBuyers'   => $totalBuyers
             ];
 
             return response()->json($responseData, 200);
