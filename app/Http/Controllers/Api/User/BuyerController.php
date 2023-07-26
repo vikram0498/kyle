@@ -190,7 +190,7 @@ class BuyerController extends Controller
                 'result'        => $elementValues,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
 
         }
     }
@@ -226,7 +226,7 @@ class BuyerController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         }
     }
 
@@ -241,7 +241,7 @@ class BuyerController extends Controller
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         }
 
         DB::beginTransaction();
@@ -258,7 +258,7 @@ class BuyerController extends Controller
                 'buyers'        => $buyers,
             ];
 
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -269,7 +269,7 @@ class BuyerController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         }
 
     }
@@ -285,13 +285,13 @@ class BuyerController extends Controller
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         }
 
         DB::beginTransaction();
         try {
 
-            $perPage = $request->input('perPage', 10);
+            $perPage = 10;
             $userId = auth()->user()->id;
             $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
         
@@ -303,7 +303,7 @@ class BuyerController extends Controller
                 'buyers'        => $buyers,
             ];
 
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -314,7 +314,7 @@ class BuyerController extends Controller
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         }
 
     }
@@ -330,7 +330,7 @@ class BuyerController extends Controller
                 'status'        => false,
                 'errors'        => $import->failures(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 400);
         } else {
             //Return Success Response
             $responseData = [
