@@ -1,9 +1,24 @@
 import React, {useState} from 'react'
 import Select from "react-select";
-function MultiSelect({options,placeholder,name,setMultiSelectedOptions}) {
-    //   const handleSelect = () => {
-    //     console.log(selectedOptions);
-    //   };
+function MultiSelect({options,placeholder,name, setMultiselectOption, showCreative='', showmultiFamily=''}) {
+    
+      // const [selectedOptions, setSelectedOptions] = useState([]);
+      const handleSelect = (e) => {
+        const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
+        if(name == 'buyer_type'){
+          if (selectedValues.includes(1)) {
+            showCreative(true);
+          } else {
+            showCreative(false);
+          }
+          if (selectedValues.includes(3)) {
+            showmultiFamily(true);
+          } else {
+            showmultiFamily(false);
+          }
+        }
+        setMultiselectOption(selectedValues);
+    };
     const style = {margin:'auto'};
   return (
     <>
@@ -12,7 +27,7 @@ function MultiSelect({options,placeholder,name,setMultiSelectedOptions}) {
         defaultValue={[]}
         isMulti
         options={options}
-        onChange={(item) => setMultiSelectedOptions(item)}
+        onChange={handleSelect}
         className="multi-select"
         isClearable={true}
         isSearchable={true}

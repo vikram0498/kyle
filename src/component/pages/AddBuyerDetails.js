@@ -3,84 +3,57 @@ import {useNavigate , Link} from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
-import SingleSelect from "../partials/Select2/SingleSelect";
+// import SingleSelect from "../partials/Select2/SingleSelect";
 import MultiSelect from "../partials/Select2/MultiSelect";
-import { City, Country, State } from "country-state-city";
+// import { City, Country, State } from "country-state-city";
 import {useAuth} from "../../hooks/useAuth";
 import Select from "react-select";
+import {useForm} from "../../hooks/useForm";
 
 import axios from 'axios';
+import MiniLoader from "../partials/MiniLoader";
+import { toast } from "react-toastify";
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const {getTokenData} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
-    let countryData = Country.getAllCountries();
-    const [stateData, setStateData] = useState();
-    const [cityData, setCityData] = useState();
-    const [country, setCountry] = useState({value:countryData[0].isoCode,label:countryData[0].name
-    });
-    const [state, setState] = useState();
-    const [city, setCity] = useState();
+
+    const { setErrors, renderFieldError } = useForm();
+    
+    const [country, setCountry] = useState([]);
+    const [state, setState] = useState([]);
+    const [city, setCity] = useState([]);
+
     const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([])
     const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([])
     const [propertyTypeOption, setPropertyTypeOption] = useState([]);
     const [parkingOption, setParkingOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
-    const [selectedPropertyType, setSelectedPropertyType] = useState([]);
-    const [selectedLocationFlaws, setSelectedLocationFlaws] = useState([]);
+    const [buyerTypeOption,setbuyerTypeOption] = useState([]);
+
+    const [countryOptions,setCountryOptions] = useState([]);
+    const [stateOptions,setStateOptions] = useState([]);
+    const [cityOptions,setCityOptions] = useState([]);
+    
+    const [creativeBuyerSelected,setCreativeBuyerSelected] = useState(false);
+    const [multiFamilyBuyerSelected,setMultiFamilyBuyerSelected] = useState(false);
 
 
-    useEffect(() => {
-        let states = State.getStatesOfCountry(country?.value);
-        let stateArray = [];
-        for(let state of states){
-            let Object = {
-                value:state.isoCode,
-                label:state.name
-            }
-            stateArray.push(Object);
-        }
-        setStateData(stateArray);
+    const [parkingValue, setParkingValue] = useState([]);
+    const [propertyTypeValue, setPropertyTypeValue] = useState([]);
+    const [locationFlawsValue,setLocationFlawsValue] = useState([]);
+    const [buyerTypeValue,setBuyerTypeValue] = useState([]);
+    const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
+    const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
 
-    }, [country]);
-
-    useEffect(() => {
-        let cities = City.getCitiesOfState(country?.value, state?.value);
-        let cityArray = [];
-        for(let city of cities){
-            let Object = {
-                value:city.name,
-                label:city.name
-            }
-            cityArray.push(Object);
-        }
-        setCityData(cityArray);
-        
-    }, [state]);
-
-    useEffect(() => {
-        stateData && setState([]);
-    }, [stateData]);
-
-    useEffect(() => {
-        cityData && setCity([]);
-    }, [cityData]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getOptionsValues();
     }, [navigate, /*authData*/]);
-    function handleChange(event) {
-        // Update the state of your application accordingly.
-    }
-    const countryOption = []
-    for(let countries of countryData){
-        let Object = {
-            value:countries.isoCode,
-            label:countries.name
-        }
-        countryOption.push(Object);
-    }
+    
+    
     const apiUrl = process.env.REACT_APP_API_URL;
     console.log(getTokenData().access_token,'token data');
     let headers = { 
@@ -91,31 +64,89 @@ function AddBuyerDetails (){
         axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
             if(response.data.status){
                 let result = response.data.result;
+
                 setPurchaseMethodsOption(result.purchase_methods);
                 setBuildingClassNamesOption(result.building_class_values);
                 setPropertyTypeOption(result.property_types);
                 setLocationFlawsOption(result.location_flaws);
                 setParkingOption(result.parking_values);
+                setCountryOptions(result.countries);
+                setbuyerTypeOption(result.buyer_types);
                 setIsLoader(false);
+
             }
         })
     }
+
+    const getStates = (country_id) => {
+        if(country_id == null){
+            setCountry([]); setState([]); setCity([]);
+
+            setStateOptions([]); setCityOptions([]);
+        } else {            
+            axios.post(apiUrl+'getStates', { country_id: country_id }, { headers: headers }).then(response => {
+                let result = response.data.options;
+
+                setCountry([]); setState([]); setCity([]);                
+                
+                setCountry(country_id); setStateOptions(result);
+            });
+        }
+    }
+
+    const getCities = (state_id) => {
+        if(state_id == null){
+            setState([]); setCity([]);
+
+            setCityOptions([]);
+        } else { 
+            let country_id = {country};
+            axios.post(apiUrl+'getCities', { state_id: state_id, country_id: country_id }, { headers: headers }).then(response => {
+                let result = response.data.options;
+
+                setState([]); setCity([]);
+                
+                setState(state_id); setCityOptions(result);
+            });
+        }
+    }
+
     const submitSingleBuyerForm = (e) => {
         e.preventDefault();
+
+        setLoading(true);
+
         var data = new FormData(e.target);
         let formObject = Object.fromEntries(data.entries());
-        const property_type = selectedPropertyType.map((item) => {
-            return item.value;
-        });
-        const location_flaws = selectedLocationFlaws.map((item) => {
-            return item.value;
-        });
-        formObject.property_type = property_type;
-        formObject.location_flaws = location_flaws;
-        /** post data */
+
+        formObject.parking          =  parkingValue;        
+        formObject.property_type    =  propertyTypeValue;
+        formObject.property_flaw    =  locationFlawsValue;
+        formObject.buyer_type       =  buyerTypeValue;
+        formObject.purchase_method  =  purchaseMethodsValue;
+
+        if (formObject.hasOwnProperty('building_class')) {
+            formObject.building_class =  buildingClassNamesValue;
+        }
+        console.log(formObject, "sdgsdghsdh")
         axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers}).then(response => {
-            console.log(response)
-        })
+            setLoading(false);
+            if(response.data.status){
+                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                navigate('/my-buyers')
+            }
+            
+        }).catch(error => {
+            setLoading(false);
+            if(error.response) {
+                if (error.response.data.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
+                }
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        });
     }
     /** upload multiple buyer using csv  */
     const [csvData, setCsvData] = useState([]);
@@ -182,56 +213,65 @@ function AddBuyerDetails (){
                                                     <label>First Name<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="first_name" className="form-control" placeholder="First Name" />
+                                                        {renderFieldError('first_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Last Name<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="last_name" className="form-control" placeholder="Last Name" />
+                                                        {renderFieldError('last_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Email Address<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="email" name="email" className="form-control" placeholder="Email Address" />
+                                                        {renderFieldError('email') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" />
+                                                        {renderFieldError('phone') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-4 col-lg-4">
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Address<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" />
+                                                        {renderFieldError('address') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
-                                                    <Select
-                                                        name="country"
-                                                        defaultValue={countryOption[0]}
-                                                        options={countryOption}
-                                                        onChange={(item) => setCountry(item)}
-                                                        className="select"
-                                                        isClearable={true}
-                                                        isSearchable={true}
-                                                        isDisabled={false}
-                                                        isLoading={false}
-                                                        isRtl={false}
-                                                        closeMenuOnSelect={true}
-                                                    />
-                                                        
-                                                        {/* <select id="state" className="" data-minimum-results-for-search="Infinity">
-                                                            <option>Choose State</option>
-                                                        </select> */}
+                                                        <Select
+                                                            name="country"
+                                                            defaultValue=''
+                                                            options={countryOptions}
+                                                            onChange={(item) => getStates(item)}
+                                                            className="select"
+                                                            isClearable={true}
+                                                            isSearchable={true}
+                                                            isDisabled={false}
+                                                            isLoading={false}
+                                                            isRtl={false}
+                                                            placeholder= "Select Country"
+                                                            closeMenuOnSelect={true}
+                                                        />
+                                                        {renderFieldError('country') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-4 col-lg-4">
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>State<span>*</span></label>
                                                     <div className="form-group">
                                                         <Select
                                                             name="state"
-                                                            defaultValue={stateData[0]}
-                                                            options={stateData}
-                                                            onChange={(item) => setState(item)}
+                                                            defaultValue=''
+                                                            options={stateOptions}
+                                                            onChange={(item) => getCities(item)}
                                                             className="select"
                                                             isClearable={true}
                                                             isSearchable={true}
@@ -239,20 +279,19 @@ function AddBuyerDetails (){
                                                             isLoading={false}
                                                             value={state}
                                                             isRtl={false}
+                                                            placeholder="Select State"
                                                             closeMenuOnSelect={true}
                                                         />
-                                                        {/* <select id="state" className="" data-minimum-results-for-search="Infinity">
-                                                            <option>Choose State</option>
-                                                        </select> */}
+                                                        {renderFieldError('state') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-4 col-lg-4">
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>City<span>*</span></label>
                                                     <div className="form-group">
                                                         <Select
                                                             name="city"
-                                                            defaultValue={cityData[0]}
-                                                            options={cityData}
+                                                            defaultValue=''
+                                                            options={cityOptions}
                                                             onChange={(item) => setCity(item)}
                                                             className="select"
                                                             isClearable={true}
@@ -261,20 +300,134 @@ function AddBuyerDetails (){
                                                             isLoading={false}
                                                             value={city}
                                                             isRtl={false}
-                                                            closeMenuOnSelect={false}
+                                                            placeholder="Select City"
+                                                            closeMenuOnSelect={true}
                                                         />
-                                                        {/* <select id="city" data-minimum-results-for-search="Infinity">
-                                                            <option>Choose City</option>
-                                                        </select> */}
+                                                        {renderFieldError('city') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-4 col-lg-4">
-                                                    <label>Company/LLC<span>*</span></label>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Zip Code<span>*</span></label>
                                                     <div className="form-group">
-                                                        {/* <select className="form-control">
-                                                            <option>Company/LLC*</option>
-                                                        </select> */}
-                                                        <input type="text" className="form-control" name="company" placeholder="Company LLC"/>
+                                                        <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" />
+                                                        {renderFieldError('zip_code') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Company/LLC</label>
+                                                    <div className="form-group">
+                                                        <input type="text" className="form-control" name="company_name" placeholder="Company LLC"/>
+                                                        {renderFieldError('company_name') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Occupation</label>
+                                                    <div className="form-group">
+                                                        <input type="text" className="form-control" name="occupation" placeholder="Occupation"/>
+                                                        {renderFieldError('occupation') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Replacing Occupation</label>
+                                                    <div className="form-group">
+                                                        <input type="text" className="form-control" name="replacing_occupation" placeholder="Replacing Occupation"/>
+                                                        {renderFieldError('replacing_occupation') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Bedroom (min)<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  />
+                                                        {renderFieldError('bedroom_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Bedroom (max)<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" />
+                                                        {renderFieldError('bedroom_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Bath (min)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)" />
+                                                        {renderFieldError('bath_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Bath (max)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" />
+                                                        {renderFieldError('bath_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Sq Ft Min<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="size_min" className="form-control" placeholder="Sq Ft Min"  />
+                                                        {renderFieldError('size_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Sq Ft Max<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="size_max" className="form-control" placeholder="Sq Ft Max"  />
+                                                        {renderFieldError('size_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Lot Size Sq Ft (min)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
+                                                        {renderFieldError('lot_size_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Lot Size Sq Ft (max)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
+                                                        {renderFieldError('lot_size_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Year Built (min)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="build_year_min" className="form-control" placeholder="Year Built (min)"/>
+                                                        {renderFieldError('build_year_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>Year Built (max)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="build_year_max" className="form-control" placeholder="Year Built (max)"/>
+                                                        {renderFieldError('build_year_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>ARV (min)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" />
+                                                        {renderFieldError('arv_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>ARV (max)</label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" />
+                                                        {renderFieldError('arv_max') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-lg-12">
+                                                    <label>Parking</label>
+                                                    <div className="form-group">
+                                                        <MultiSelect
+                                                            name="parking"
+                                                            options={parkingOption}
+                                                            placeholder='Select Parking'
+                                                            setMultiselectOption = {setParkingValue}
+                                                        />
+                                                        {renderFieldError('parking') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-lg-12">
@@ -282,423 +435,363 @@ function AddBuyerDetails (){
                                                         <label>Property Type<span>*</span></label>
                                                         <div className="form-group">
                                                             <MultiSelect
-                                                            name="property_type" 
-                                                            options={propertyTypeOption} 
-                                                            placeholder='Select Property Type'
-                                                            setMultiSelectedOptions={setSelectedPropertyType}
+                                                                name="property_type" 
+                                                                options={propertyTypeOption} 
+                                                                placeholder='Select Property Type'
+                                                                setMultiselectOption = {setPropertyTypeValue}
                                                             />
+                                                            {renderFieldError('property_type') }
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Additional Fields<span>*</span></label>
+                                                <div className="col-12 col-lg-12">
                                                     <div className="form-group">
-                                                        <input type="text" name="additional_fields" className="form-control" placeholder="Additional Fields" />
+                                                        <label>Location Flaws</label>
+                                                        <div className="form-group">
+                                                            <MultiSelect 
+                                                                name="property_flaw"
+                                                                options={locationFlawsOption} 
+                                                                placeholder='Select Location Flaws'
+                                                                setMultiselectOption = {setLocationFlawsValue}
+                                                            />
+                                                            {renderFieldError('property_flaw') }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Minimum Units<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="minimum_units" className="form-control" placeholder="Minimum Units" />
+                                                <div className="column--grid">
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Solar</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="solar" value="1" id="solar_yes"/>
+                                                                <label className="mb-0" htmlFor="solar_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="solar" value="0" id="solar_no"/>
+                                                                <label className="mb-0" htmlFor="solar_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('solar') }
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Maximum Units<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="" className="form-control" placeholder="Maximum Units" />
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Pool</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="pool" value="1" id="pool_yes"/>
+                                                                <label className="mb-0" htmlFor="pool_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="pool" value="0" id="pool_no"/>
+                                                                <label className="mb-0" htmlFor="pool_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        { renderFieldError('pool') }
                                                     </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Septic</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="septic" value="1" id="septic_yes"/>
+                                                                <label className="mb-0" htmlFor="septic_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="septic" value="0" id="septic_no"/>
+                                                                <label className="mb-0" htmlFor="septic_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('septic') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Well</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="well" value="1" id="well_yes"/>
+                                                                <label className="mb-0" htmlFor="well_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="well" value="0" id="well_no"/>
+                                                                <label className="mb-0" htmlFor="well_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('well') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Age restriction</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="age_restriction" value="1" id="age_restriction_yes"/>
+                                                                <label className="mb-0" htmlFor="age_restriction_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="age_restriction" value="0" id="age_restriction_no"/>
+                                                                <label className="mb-0" htmlFor="age_restriction_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('age_restriction') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Rental Restriction</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rental_restriction" value="1" id="rental_restriction_yes"/>
+                                                                <label className="mb-0" htmlFor="rental_restriction_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rental_restriction" value="0" id="rental_restriction_no"/>
+                                                                <label className="mb-0" htmlFor="rental_restriction_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('rental_restriction') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>HOA</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="hoa" value="1" id="hoa_yes"/>
+                                                                <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="hoa" value="0" id="hoa_no"/>
+                                                                <label className="mb-0" htmlFor="hoa_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('hoa') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Tenant Conveys</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="tenant" value="1" id="tenant_yes"/>
+                                                                <label className="mb-0" htmlFor="tenant_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="tenant" value="0" id="tenant_no"/>
+                                                                <label className="mb-0" htmlFor="tenant_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('tenant') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Post-Possession</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="post_possession" value="1" id="post_possession_yes"/>
+                                                                <label className="mb-0" htmlFor="post_possession_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="post_possession" value="0" id="post_possession_no"/>
+                                                                <label className="mb-0" htmlFor="post_possession_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('post_possession') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Building Required</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="building_required" value="1" id="building_required_yes"/>
+                                                                <label className="mb-0" htmlFor="building_required_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="building_required" value="0" id="building_required_no"/>
+                                                                <label className="mb-0" htmlFor="building_required_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('building_required') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Foundation Issues</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="foundation_issues" value="1" id="foundation_issues_yes"/>
+                                                                <label className="mb-0" htmlFor="foundation_issues_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="foundation_issues" value="0" id="foundation_issues_no" />
+                                                                <label className="mb-0" htmlFor="foundation_issues_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('foundation_issues') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Mold</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="mold" value="1" id="mold_yes" />
+                                                                <label className="mb-0" htmlFor="mold_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="mold" value="0" id="mold_no"/>
+                                                                <label className="mb-0" htmlFor="mold_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('mold') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Fire Damaged</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="fire_damaged" value="1" id="fire_damaged_yes"/>
+                                                                <label className="mb-0" htmlFor="fire_damaged_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="fire_damaged" value="0" id="fire_damaged_no"/>
+                                                                <label className="mb-0" htmlFor="fire_damaged_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('fire_damaged') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Rebuild</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rebuild" value="1" id="rebuild_yes"/>
+                                                                <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rebuild" value="0" id="rebuild_no"/>
+                                                                <label className="mb-0" htmlFor="rebuild_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('rebuild') }
+                                                    </div>
+                                                    {/* <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Squatters</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="squatters" />
+                                                                <label className="mb-0" htmlFor="pool_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="squatters" checked onChange={handleChange} />
+                                                                <label className="mb-0" htmlFor="pool_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                    </div> */}
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Building className<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <SingleSelect
-                                                        name="building_classname"
-                                                        options={buildingClassNamesOption}
-                                                        placeholder='Select Option'
+                                                <div className="col-12 col-lg-12">
+                                                    <label>Buyer Type<span>*</span></label>
+                                                    <div className="form-group">     
+                                                        <MultiSelect
+                                                            name="buyer_type"
+                                                            options={buyerTypeOption}
+                                                            placeholder='Select Buyer Type'
+                                                            setMultiselectOption = {setBuyerTypeValue}
+                                                            showCreative={setCreativeBuyerSelected}
+                                                            showmultiFamily={setMultiFamilyBuyerSelected}
                                                         />
-                                                        {/* <select className="form-control">
-                                                            <option>A</option>
-                                                            <option>A</option>
-                                                            <option>A</option>
-                                                            <option>A</option>
-                                                        </select> */}
+                                                        {renderFieldError('buyer_type') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-md-12 col-lg-3">
-                                                    <label>Value Add</label>
-                                                    <div className="form-group">
-                                                        <div className="radio-block">
-                                                            <div className="label-container">
-                                                                <input type="radio" name="valueadd" />
-                                                                <span>Yes</span>
+                                                { creativeBuyerSelected && 
+                                                    <div className="block-divide">
+                                                        <h5>Creative Buyer</h5>
+                                                        <div className="row">
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Down Payment (%)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="max_down_payment_percentage" className="form-control" placeholder="Down Payment (%)" />
+                                                                    {renderFieldError('max_down_payment_percentage') }
+                                                                </div>
                                                             </div>
-                                                            <div className="label-container">
-                                                                <input type="radio" name="valueadd" checked onChange={handleChange} />
-                                                                <span>No</span>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Down Payment ($)</label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="max_down_payment_money" className="form-control" placeholder="Down Payment ($)" />
+                                                                    {renderFieldError('max_down_payment_money') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Interest Rate (%)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="max_interest_rate" className="form-control" placeholder="Interest Rate (%)"  />
+                                                                    {renderFieldError('max_interest_rate') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Balloon Payment <span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <div className="radio-block">
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="balloon_payment" value="1" id="balloon_payment_yes"/>
+                                                                            <label className="mb-0" htmlFor="balloon_payment_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="balloon_payment" value="0" id="balloon_payment_no"/>
+                                                                            <label className="mb-0" htmlFor="balloon_payment_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('balloon_payment') }
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-lg-9">
+                                                }
+                                                { multiFamilyBuyerSelected && 
+                                                    <div className="block-divide">
+                                                        <h5>Multi Family Buyer</h5>
+                                                        <div className="row">
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Minimum Units<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="unit_min" className="form-control" placeholder="Minimum Units" />
+                                                                    {renderFieldError('unit_min') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Maximum Units<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="unit_max" className="form-control" placeholder="Maximum Units" />
+                                                                    {renderFieldError('unit_max') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Building className<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <MultiSelect
+                                                                        name="building_class"
+                                                                        options={buildingClassNamesOption}
+                                                                        placeholder='Select Option'
+                                                                        setMultiselectOption = {setBuildingClassNamesValue}
+                                                                    />
+                                                                    {renderFieldError('building_class') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-md-12 col-lg-3">
+                                                                <label>Value Add <span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <div className="radio-block">
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="value_add" value="0" id="value_add_yes"/>
+                                                                            <label className="mb-0" htmlFor="value_add_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="value_add" value="1" id="value_add_no"/>
+                                                                            <label className="mb-0" htmlFor="value_add_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('value_add') }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                <div className="col-12 col-lg-12">
                                                     <label>Purchase Method<span>*</span></label>
                                                     <div className="form-group">
-                                                        <SingleSelect
+                                                        <MultiSelect
                                                             name="purchase_method"
                                                             options={purchaseMethodsOption}
                                                             placeholder='Select Purchase Method'
+                                                            setMultiselectOption = {setPurchaseMethodsValue}
                                                         />
-                                                        {/* <select id="financing" data-minimum-results-for-search="Infinity">
-                                                            <option>Creative Financing</option>
-                                                            <option>Creative Financing</option>
-                                                            <option>Creative Financing</option>
-                                                            <option>Creative Financing</option>
-                                                            <option>Creative Financing</option>
-                                                        </select> */}
+                                                        {renderFieldError('purchase_method') }
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="block-divide">
-                                                <h5>Creative Financing</h5>
-                                                <div className="row">
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Down Payment (%)</label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="down_payment_percent" className="form-control" placeholder="Down Payment (%)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Down Payment ($)</label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="down_payment_dollar" className="form-control" placeholder="Down Payment ($)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Interest Rate (%)</label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="interest_rate" className="form-control" placeholder="Interest Rate (%)"  />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Balloon Payment</label>
-                                                        <div className="form-group">
-                                                            <div className="radio-block">
-                                                                <div className="label-container">
-                                                                    <input type="radio" name="balloon_payment" checked onChange={handleChange} />
-                                                                    <span>Yes</span>
-                                                                </div>
-                                                                <div className="label-container">
-                                                                    <input type="radio" name="balloon_payment" />
-                                                                    <span>No</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Bedroom (min)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Bedroom (max)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Bath (min)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Bath (max)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Sq Ft Min<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="sq_ft_min" className="form-control" placeholder="Sq Ft Min"  />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Sq Ft Max<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="sq_ft_max" className="form-control" placeholder="Sq Ft Max"  />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Lot Size Sq Ft (min)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Lot Size Sq Ft (max)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Year Built (min)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="build_year_min" className="form-control" placeholder="Year Built (min)"/>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>Year Built (max)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="build_year_max" className="form-control" placeholder="Year Built (max)"/>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>ARV (min)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                        <label>ARV (max)<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-lg-12">
-                                                        <label>Parking<span>*</span></label>
-                                                        <div className="form-group">
-                                                            <SingleSelect
-                                                                name="parking"
-                                                                options={parkingOption}
-                                                                placeholder='Choose Parking'
-                                                            />
-                                                            {/* <select id="parking" data-minimum-results-for-search="Infinity">
-                                                                <option>Choose Parking</option>
-                                                            </select> */}
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 col-lg-12">
-                                                        <div className="form-group">
-                                                            <label>Location Flaws</label>
-                                                            <div className="form-group">
-                                                                <MultiSelect 
-                                                                name="location_flaws"
-                                                                options={locationFlawsOption} 
-                                                                placeholder='Select Location Flaws'
-                                                                setMultiSelectedOptions={setSelectedLocationFlaws}
-                                                                />
-                                                                {/* <select id="location-flaws" multiple="multiple" data-minimum-results-for-search="Infinity">
-                                                                    <option>Assigned</option>
-                                                                    <option>Carport</option>
-                                                                    <option>Driveway</option>
-                                                                    <option>Boarders non-residential</option>
-                                                                </select> */}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="column--grid">
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Solar</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Solar" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Solar" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Pool</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Pool" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Pool" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Septic</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Septic" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Septic" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Well</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Well" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Well" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Age restriction</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="age_restriction" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="age_restriction" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Rental Restriction</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="rental_restriction" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="rental_restriction" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>HOA</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="HOA" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="HOA" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Tenant Conveys</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="tenant_conveys" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="tenant_conveys" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Post-Possession</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="post_possession" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="post_possession" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Building Required</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="building_required" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="building_required" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Foundation Issues</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="foundation_issues" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="foundation_issues" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Mold</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Mold" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="Mold" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Fire Damaged</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="fire_damaged" checked onChange={handleChange} />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="fire_damaged" />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Rebuild</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="rebuild" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="rebuild" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="grid-template-col">
-                                                    <div className="radio-block-group">
-                                                        <label>Squatters</label>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="squatters" />
-                                                            <span>Yes</span>
-                                                        </div>
-                                                        <div className="label-container">
-                                                            <input type="radio" name="squatters" checked onChange={handleChange} />
-                                                            <span>No</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="submit-btn">
-                                                <button type="submit" className="btn btn-fill">Submit Now!</button>
-                                                {/* <a href="" className="btn btn-fill">Submit Now!</a> */}
+                                                <button type="submit" className="btn btn-fill" disabled={ loading ? 'disabled' : ''}>Submit Now! { loading ? <MiniLoader/> : ''} </button>
                                             </div>
                                         </div>
                                     </form>
