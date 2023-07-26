@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Models\Buyer;
-use App\Imports\MultipleBuyerImport;
 use App\Imports\BuyersImport;
 use Illuminate\Support\Arr;
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
@@ -323,23 +323,56 @@ class BuyerController extends Controller
 
     public function import(Request $request)
     {
-        $import = new MultipleBuyerImport();
-        $import->import($request->file('file'));
+        $request->validate([
+            'csvFile' => 'required|mimes:csv,xlsx,xls',
+        ]);
 
-        if ($import->failures()->count() > 0) {
+        try {
+            $import = new BuyersImport;
+            Excel::import($import, $request->file('csvFile'));
+
+            $totalCount         = $import->totalRowCount();
+            $insertedRowCount   = $import->insertedCount();
+            $skippedCount       = $totalCount - $insertedRowCount;
+
+            // dd($totalCount, $insertedRowCount, $skippedCount);
+            
+            if($insertedRowCount == 0){
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'message'       => trans('No rows inserted during the import process.'),
+                ];
+                return response()->json($responseData, 400);
+
+            } else if($skippedCount > 0 && $insertedRowCount > 0){
+                $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+            
+                //Return Error Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => $message,
+                ];
+                return response()->json($responseData, 200);
+
+            } else if($skippedCount == 0) {
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Buyers imported successfully!',
+                ];
+                return response()->json($responseData, 200);
+            }
+
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'errors'        => $import->failures(),
+                'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 400);
-        } else {
-            //Return Success Response
-            $responseData = [
-                'status'        => true,
-                'message'       => 'Buyers imported successfully!',
-            ];
-            return response()->json($responseData, 200);
         }
     }
 
