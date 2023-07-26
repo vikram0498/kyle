@@ -2,7 +2,6 @@ import React ,{ useEffect, useState} from 'react';
 import {Link , useNavigate} from "react-router-dom";
 import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
-
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 
@@ -13,6 +12,7 @@ const MyBuyer = () =>{
 	const [isLoader, setIsLoader] = useState(true);
 	const [totalRecord,setTotalRecord] = useState(0);
 	const [currentRecord,setCurrentRecord] = useState(0);
+	const [totalPage,setTotalPage] = useState(1);
 	useEffect(() => {
         getBuyerLists();
     },[]);
@@ -32,13 +32,21 @@ const MyBuyer = () =>{
 			setIsLoader(false);
 			setCurrentRecord(response.data.buyers.data.length);
 			setTotalRecord(response.data.totalBuyers);
+			setTotalPage(response.data.buyers.last_page);
         })
 	}
-	const handleClick = () =>{
+	const handleClickNext = () =>{
+		setIsLoader(true);
 		let count = pageNumber+1;
 		setPageNumber(count);
 		getBuyerLists(count);
 	}
+	const handleClickPrev = () =>{
+		setIsLoader(true);
+		let count = pageNumber-1;
+		setPageNumber(count);
+		getBuyerLists(count);
+	} 
  return (
     <>
     <Header/>
@@ -70,7 +78,7 @@ const MyBuyer = () =>{
 						<div className="card-box-inner">
 							<h3 className="text-center">Property Criteria Match With 10 Buyers</h3>
 							<div className="property-critera">
-								<div className="row">
+								<div className="row ">
 									{ buyerData.map((data) => { 
 									return(<div className="col-12 col-lg-6" key={data.id}>
 										<div className="property-critera-block">
@@ -100,19 +108,22 @@ const MyBuyer = () =>{
 													</li>
 												</ul>
 											</div>
-											<div className="cornor-block">
+											{/* <div className="cornor-block">
 												<div className="red-flag"><img src="./assets/images/red-flag.svg" className="img-fluid" /></div>
-											</div>
+											</div> */}
 										</div>
 									</div>)})}
 								</div>
 								<div className="row justify-content-center">
-									<div className="col-12 col-lg-12">
+									{(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
+									{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''}
+									
+									{/* <div className="col-12 col-lg-12">
 										<div className="want-to-see">
 											<h3 className="text-center">Want to see more buyer!</h3>
 											<a className="btn btn-fill" onClick={handleClick}>Click Here</a>
 										</div>
-									</div>
+									</div> */}
 								</div>
 							</div>
 						</div>

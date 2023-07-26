@@ -9,10 +9,10 @@ import MultiSelect from "../partials/Select2/MultiSelect";
 import {useAuth} from "../../hooks/useAuth";
 import Select from "react-select";
 import {useForm} from "../../hooks/useForm";
-
 import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
 import { toast } from "react-toastify";
+
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
     const {getTokenData} = useAuth();
@@ -58,7 +58,7 @@ function AddBuyerDetails (){
     console.log(getTokenData().access_token,'token data');
     let headers = { 
         'Accept': 'application/json',
-        'Authorization': 'Bearer ' + getTokenData().access_token
+        'Authorization': 'Bearer ' + getTokenData().access_token,
     };
     const getOptionsValues = () =>{
         axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
@@ -149,19 +149,36 @@ function AddBuyerDetails (){
         });
     }
     /** upload multiple buyer using csv  */
-    const [csvData, setCsvData] = useState([]);
+    const [csvFile, setCsvFile] = useState();
+    const formData = new FormData();
+    if (csvFile){
+        formData.append('csvFile', csvFile);
+    }
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setCsvData(file);
-        // Upload the CSV file to the server
-        // axios.post("/api/upload-single-buyer-details", {
-        //   csvFile: file,
-        // });
+        setCsvFile(file);
     };
     const submitCsvFile = (e) => {
         e.preventDefault();
-        console.log(csvData,'csvData');
-    }
+        let headers = { 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + getTokenData().access_token,
+            "Content-Type": "multipart/form-data"
+        };
+        async function fetchData() {
+            const response = await axios.post(apiUrl+"upload-multiple-buyers-csv",formData,{headers: headers});
+            if(response.data.status){
+                setCsvFile('');
+                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                navigate('/add-buyer-details');
+            }
+        }
+        if(csvFile !=''){
+            fetchData();
+        }else{
+            toast.error('Please Upload Csv First', {position: toast.POSITION.TOP_RIGHT});
+        }
+    };
     return (
         <>
            <Header/>
