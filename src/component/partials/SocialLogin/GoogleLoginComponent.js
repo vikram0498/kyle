@@ -23,7 +23,6 @@ const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => {
         let headers = {
             "Accept": "application/json", 
         }
-        console.log('api data',data);
         axios.post(apiUrl+'handle-google', data, { headers: headers }).then(response => {
             setLoading(false);
             console.log('res ',response.data);

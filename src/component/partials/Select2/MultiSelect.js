@@ -1,8 +1,6 @@
 import React, {useState} from 'react'
 import Select from "react-select";
-function MultiSelect({options,placeholder,name}) {
-    
-      const [selectedOptions, setSelectedOptions] = useState([]);
+function MultiSelect({options,placeholder,name,setMultiSelectedOptions}) {
     //   const handleSelect = () => {
     //     console.log(selectedOptions);
     //   };
@@ -14,7 +12,7 @@ function MultiSelect({options,placeholder,name}) {
         defaultValue={[]}
         isMulti
         options={options}
-        onChange={(item) => setSelectedOptions(item)}
+        onChange={(item) => setMultiSelectedOptions(item)}
         className="multi-select"
         isClearable={true}
         isSearchable={true}

@@ -10,15 +10,15 @@ function Header() {
 		let data = ''
 		const apiUrl = process.env.REACT_APP_API_URL;
 		if(getTokenData().access_token != null){
-			// let headers = {
-			// 	"Accept": "application/json", 
-			// 	'Authorization': 'Bearer ' + getTokenData().access_token,
-			// }
-			// axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
-			// 	if(response.data.status){
-			// 		setUserDetails(response.data.data);
-			// 	}
-			// })
+			let headers = {
+				"Accept": "application/json", 
+				'Authorization': 'Bearer ' + getTokenData().access_token,
+			}
+			axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
+				if(response.data.status){
+					setUserDetails(response.data.data);
+				}
+			})
 		}
     }, []);
   return (
@@ -44,7 +44,7 @@ function Header() {
 								<button className="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 									<div className="dropdown-data">
 										<div className="img-user"><img src="./assets/images/avtar.png" className="img-fluid" alt="" /></div>
-										<div className="welcome-user">
+										<div className="welcome-user" style={{display:'block'}}>
 											<span className="welcome">welcome</span>
 											<span className="user-name-title">{(userDetails !=null) ? userDetails.first_name+' '+ userDetails.last_name : ''}</span>
 											{/* <span className="user-name-title">John Thomsan</span> */}

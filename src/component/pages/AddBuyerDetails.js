@@ -27,6 +27,9 @@ function AddBuyerDetails (){
     const [propertyTypeOption, setPropertyTypeOption] = useState([]);
     const [parkingOption, setParkingOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
+    const [selectedPropertyType, setSelectedPropertyType] = useState([]);
+    const [selectedLocationFlaws, setSelectedLocationFlaws] = useState([]);
+
 
     useEffect(() => {
         let states = State.getStatesOfCountry(country?.value);
@@ -79,6 +82,7 @@ function AddBuyerDetails (){
         countryOption.push(Object);
     }
     const apiUrl = process.env.REACT_APP_API_URL;
+    console.log(getTokenData().access_token,'token data');
     let headers = { 
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + getTokenData().access_token
@@ -100,7 +104,32 @@ function AddBuyerDetails (){
         e.preventDefault();
         var data = new FormData(e.target);
         let formObject = Object.fromEntries(data.entries());
-        console.log(formObject);
+        const property_type = selectedPropertyType.map((item) => {
+            return item.value;
+        });
+        const location_flaws = selectedLocationFlaws.map((item) => {
+            return item.value;
+        });
+        formObject.property_type = property_type;
+        formObject.location_flaws = location_flaws;
+        /** post data */
+        axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers}).then(response => {
+            console.log(response)
+        })
+    }
+    /** upload multiple buyer using csv  */
+    const [csvData, setCsvData] = useState([]);
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setCsvData(file);
+        // Upload the CSV file to the server
+        // axios.post("/api/upload-single-buyer-details", {
+        //   csvFile: file,
+        // });
+    };
+    const submitCsvFile = (e) => {
+        e.preventDefault();
+        console.log(csvData,'csvData');
     }
     return (
         <>
@@ -170,7 +199,7 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="phone_number" className="form-control" placeholder="(123) 456-7890" />
+                                                        <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-md-4 col-lg-4">
@@ -256,6 +285,7 @@ function AddBuyerDetails (){
                                                             name="property_type" 
                                                             options={propertyTypeOption} 
                                                             placeholder='Select Property Type'
+                                                            setMultiSelectedOptions={setSelectedPropertyType}
                                                             />
                                                         </div>
                                                     </div>
@@ -402,25 +432,25 @@ function AddBuyerDetails (){
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="lot_size_sq_ft_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
+                                                            <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="lot_size_sq_ft_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
+                                                            <input type="text" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Year Built (min)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="year_built_min" className="form-control" placeholder="Year Built (min)"/>
+                                                            <input type="text" name="build_year_min" className="form-control" placeholder="Year Built (min)"/>
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                         <label>Year Built (max)<span>*</span></label>
                                                         <div className="form-group">
-                                                            <input type="text" name="year_built_max" className="form-control" placeholder="Year Built (max)"/>
+                                                            <input type="text" name="build_year_max" className="form-control" placeholder="Year Built (max)"/>
                                                         </div>
                                                     </div>
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -456,6 +486,7 @@ function AddBuyerDetails (){
                                                                 name="location_flaws"
                                                                 options={locationFlawsOption} 
                                                                 placeholder='Select Location Flaws'
+                                                                setMultiSelectedOptions={setSelectedLocationFlaws}
                                                                 />
                                                                 {/* <select id="location-flaws" multiple="multiple" data-minimum-results-for-search="Infinity">
                                                                     <option>Assigned</option>
@@ -674,7 +705,7 @@ function AddBuyerDetails (){
                                 </div>
                             </div>
                             <div className="col-12 col-lg-4 w-30">
-                                <form className="form-container">
+                                <form className="form-container" method='post' onSubmit={submitCsvFile}>
                                     <div className="outer-heading text-center">
                                         <h3>Upload Multiple Buyer </h3>
                                         <p>Lorem Ipsum is simply dummy text of the printing.</p>
@@ -687,7 +718,8 @@ function AddBuyerDetails (){
                                                 </button>
                                                 <label className="label d-block">
                                                     <span className="browse-files">
-                                                        <input type="file" className="default-file-input"/> 
+                                                        
+                                                        <input type="file" name="csvFile" onChange={handleFileChange}className="default-file-input"/> 
                                                         <span className="d-block upload-file">Upload your .CSV file</span>
                                                         <span className="browse-files-text">browse Now!</span> 
                                                     </span> 
@@ -705,7 +737,7 @@ function AddBuyerDetails (){
                                         </div>
                                     </div>
                                     <div className="submit-btn my-30">
-                                        <a href="" className="btn btn-fill">Submit Now!</a>
+                                        <button className="btn btn-fill">Submit Now!</button> 
                                     </div>
                                 </form>
                                 <div className="watch-video">

@@ -24,14 +24,13 @@ import AdditionalCreadits from './component/pages/AdditionalCreadits';
 import AdminMessage from './component/pages/AdminMessage';
 import AdminRequest from './component/pages/AdminRequest';
 import MyProfile from './component/pages/MyProfile';
+import PrivacyPolicy from './component/pages/PrivacyPolicy';
+import TermCondition from './component/pages/TermCondition';
+import Protected from './util/Protected';
+
 const RoutesList = () => {
-  
   const {userData,isLogin} = useAuth();
-
-  // console.log(userData);
-
   const [authData, setAuthData] = useState({signedIn: userData.signedIn, user: userData.user, access_token: userData.access_token});
-
   return (      
     <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
       <AuthContext.Provider value={{authData, setAuthData }}>
@@ -45,18 +44,20 @@ const RoutesList = () => {
 
             {/* App routes */}
             
-            <Route path="/" element={<Home />} />
-            <Route path="/add-buyer-details" element={<AddBuyerDetails />} />
-            <Route path="/my-buyers" element={<MyBuyer />} />
-            <Route path="/sellers-form" element={<SellerForm/>} />
-            <Route path="/condo" element={<Condo/>} />
-            <Route path="/development" element={<Development/>} />
-            <Route path="/multifamily-residential" element={<MultiFamilyResidential/>} />
-            <Route path="/choose-your-plan" element={<ChooseYourPlan/>} />
-            <Route path="/additional-credits" element={<AdditionalCreadits/>} />
-            <Route path="/admin-message" element={<AdminMessage/>} />
-            <Route path="/admin-request" element={<AdminRequest/>} />
-            <Route path="/my-profile" element={<MyProfile/>} />
+            <Route path="/" element={<Protected Component={Home} />} />
+            <Route path="/add-buyer-details" element={<Protected Component={AddBuyerDetails}/>} />
+            <Route path="/my-buyers" element={<Protected Component={MyBuyer}/>} />
+            <Route path="/sellers-form" element={<Protected Component={SellerForm}/>} />
+            <Route path="/condo" element={<Protected Component={Condo}/>} />
+            <Route path="/development" element={<Protected Component={Development}/>} />
+            <Route path="/multifamily-residential" element={<Protected Component={MultiFamilyResidential}/>} />
+            <Route path="/choose-your-plan" element={<Protected Component={ChooseYourPlan}/>} />
+            <Route path="/additional-credits" element={<Protected Component={AdditionalCreadits}/>} />
+            <Route path="/admin-message" element={<Protected Component={AdminMessage}/>} />
+            <Route path="/admin-request" element={<Protected Component={AdminRequest}/>} />
+            <Route path="/my-profile" element={<Protected Component={MyProfile}/>} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
+            <Route path="/terms-and-condition" element={<TermCondition/>} />
         </Routes>
       </AuthContext.Provider>
       </GoogleOAuthProvider>

@@ -31,23 +31,25 @@ export const useAuth = () => {
         const expires = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000);
         cookie.set('remember_me_user_data', JSON.stringify(remember_me_user_data), {path: '/', expires: expires, sameSite: 'lax', httpOnly: false});
 
-        sessionStorage.setItem('_token', JSON.stringify({signedIn: true, access_token: access_token}));
-        
+        /* token for login */
+        const twoHoursLater = new Date(Date.now()  + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
+        cookie.set('_token', JSON.stringify({access_token: access_token}), {expires: twoHoursLater});
         navigate('/');
     }
 
     function getUserData(){
-        if(sessionStorage.getItem("userData") == null){
+        if(localStorage.getItem("userData") == null){
             var deft = {signedIn: false, user: null, access_token: null} ;
             return deft;
         }
-        var storedUserData = JSON.parse(sessionStorage.getItem('userData'));
+        var storedUserData = JSON.parse(localStorage.getItem('userData'));
         return storedUserData;
     }
     function getTokenData(){
-        if(sessionStorage.getItem("_token") != null ){
-            var storedUserData = JSON.parse(sessionStorage.getItem('_token'));
-            return storedUserData;
+        const cookie = new Cookies();
+        let token = cookie.get('_token');
+        if(token !== '' && token !== undefined){
+            return token;
         }
         var deft = {signedIn: false, access_token: null} ;
         return deft;
@@ -65,7 +67,7 @@ export const useAuth = () => {
         cookie.remove('is_auth', {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         cookie.remove('remember_me_token', {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         setIsLogin({signedIn: false, access_token: null});
-        sessionStorage.removeItem("_token");
+        cookie.remove("_token");
     }
 
     function loginUserOnStartup(){

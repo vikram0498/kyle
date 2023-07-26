@@ -25,6 +25,7 @@ function Login (props){
     const [loading, setLoading] = useState(false);
     
     useEffect(() => {
+        let login = localStorage.getItem('_token');
         let userData = getRememberMeData();
         if(userData !='' && userData != undefined){
             setEmail(userData.username);
@@ -32,10 +33,10 @@ function Login (props){
             setRemember(userData.isRemember);
         }
 
-        if(authData.signedIn) {
+        if(login !='' && login !=null){
             navigate('/');
         }
-    }, [authData, navigate]);
+    }, []);
     
     const [showPassoword, setshowPassoword] = useState(false);
     const togglePasswordVisibility  = () => {
@@ -43,6 +44,7 @@ function Login (props){
     };
 
     const apiUrl = process.env.REACT_APP_API_URL;
+
     const submitLoginForm = (e) => {
         e.preventDefault();
         setLoading(true);

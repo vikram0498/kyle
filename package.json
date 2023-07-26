@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kyle-react.hipl-staging3.com",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.15.8",
     "@react-oauth/google": "^0.11.0",

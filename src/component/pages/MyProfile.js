@@ -21,11 +21,10 @@ import {useAuth} from "../../hooks/useAuth";
     return(
         <>
             <Header/>
-            
             <section className="main-section position-relative pt-4 pb-120">
                 <div className="container position-relative">
                     <div className="card-box mt-0">
-                        {(!userData) ? <div class="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
+                        {(!userData) ? <div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
                         <div className="row">
                             <div className="col-12 col-lg-8">
                                 <div className="card-box-inner">

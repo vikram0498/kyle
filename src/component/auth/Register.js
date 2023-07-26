@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
@@ -10,10 +10,17 @@ import GoogleLoginComponent from '../partials/SocialLogin/GoogleLoginComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLoginButton from '../partials/SocialLogin/FacebookLoginButton';
 const Register = () => { 
+
+    useEffect(() => {
+        let login = localStorage.getItem('_token');
+        if(login !='' && login !=null){
+            navigate('/');
+        }
+    });
+
     const apiUrl = process.env.REACT_APP_API_URL;
     const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
     const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;    
-    console.log(apiUrl,'user ', capchaSiteKey);
     const [showPassoword, setshowPassoword] = useState(false);
     const togglePasswordVisibility  = () => {
         setshowPassoword(!showPassoword);
