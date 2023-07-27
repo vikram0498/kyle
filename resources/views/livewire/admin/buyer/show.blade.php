@@ -216,59 +216,58 @@
             </td>
         </tr>
         <!-- creative Buyer -->
-        @if(in_array(1, $details->buyer_type))
             <!-- <tr><td></td></tr> -->
-            <tr>
+            <!-- <tr>
                 <th colspan="2" class="text-left"> <h4 class="font-weight-bolder"> {{ __('cruds.buyer.creative_buyer') }}</h4> </th>
-            </tr>
+            </tr> -->
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.max_down_payment_percentage')}}</th>
-                <td> {{ ($details->max_down_payment_percentage ) }}</td>
+                <td> {{ (!is_null($details->max_down_payment_percentage) && !empty($details->max_down_payment_percentage)) ? $details->max_down_payment_percentage : 'N/A' }}</td>
             </tr>
-            @if(!is_null($details->max_down_payment_money) && !empty($details->max_down_payment_money))
-                <tr>
-                    <th width="25%">{{ __('cruds.buyer.fields.max_down_payment_money')}}</th>
-                    <td> {{ ($details->max_down_payment_money ) }}</td>
-                </tr>
-            @endif
+            <tr>
+                <th width="25%">{{ __('cruds.buyer.fields.max_down_payment_money')}}</th>
+                <td> {{ (!is_null($details->max_down_payment_money) && !empty($details->max_down_payment_money)) ? $details->max_down_payment_money : 'N/A' }}</td>
+            </tr>
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.max_interest_rate')}}</th>
-                <td> {{ ($details->max_interest_rate) }}</td>
+                <td> {{ (!is_null($details->max_interest_rate) && !empty($details->max_interest_rate)) ? $details->max_interest_rate : 'N/A' }}</td>
             </tr>
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.balloon_payment')}}</th>
-                <td> {{ ($details->balloon_payment == 1 ? __('global.yes') : __('global.no')) }}</td>
+                <td> {{ (!is_null($details->balloon_payment) ? ($details->balloon_payment == 1 ? __('global.yes') : __('global.no')) : 'N/A' ) }}</td>
             </tr>
-        @endif
 
          <!-- Multi family Buyer -->
-        @if(in_array(3, $details->buyer_type))
             <!-- <tr><td></td></tr> -->
-            <tr>
+            <!-- <tr>
                 <th colspan="2" class="text-left"> <h4 class="font-weight-bolder">{{ __('cruds.buyer.multi_family_buyer') }}</h4> </th>
-            </tr>
+            </tr> -->
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.unit_min')}}</th>
-                <td> {{ ($details->unit_min ) }}</td>
+                <td> {{ (!is_null($details->unit_min) && !empty($details->unit_min)) ? $details->unit_min : 'N/A' }}</td>
             </tr>
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.unit_max')}}</th>
-                <td> {{ ($details->unit_max ) }}</td>
+                <td> {{ (!is_null($details->unit_max) && !empty($details->unit_max)) ? $details->unit_max : 'N/A' }}</td>
             </tr>
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.building_class')}}</th>
                 <td> 
-                    @foreach($details->building_class as $buildingClass)
-                        <span class="badge bg-primary text-white"> {{ $buildingClassValue[$buildingClass] }} </span>
-                    @endforeach
+                    @if(!is_null($details->building_class) && !empty($details->building_class))
+                        @foreach($details->building_class as $buildingClass)
+                            <span class="badge bg-primary text-white"> {{ $buildingClassValue[$buildingClass] }} </span>
+                        @endforeach
+
+                    @else 
+                        N/A
+                    @endif
                 </td>
             </tr>
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.value_add')}}</th>
-                <td> {{ ($details->value_add == 1 ? __('global.yes') : __('global.no')) }}</td>
+                <td> {{ (!is_null($details->value_add) ? ($details->value_add == 1 ? __('global.yes') : __('global.no')) : 'N/A' ) }}</td>
             </tr>
             <!-- <tr><td></td></tr> -->
-        @endif
 
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.purchase_method')}}</th>
