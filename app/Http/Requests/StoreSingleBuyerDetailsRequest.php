@@ -55,11 +55,11 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'last_name'   => ['required'], 
             'email'       => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone'       => ['required', 'numeric', 'digits:10'], 
-            // 'address'     => ['required'], 
+            'address'     => ['required'], 
             'country'     => ['required'],
             'city'        => ['required'], 
             'state'       => ['required'], 
-            // 'zip_code'    => ['required'],
+            'zip_code'    => ['required'],
             'company_name'   => ['required'], 
 
             'bedroom_min' => ['required', !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''], 

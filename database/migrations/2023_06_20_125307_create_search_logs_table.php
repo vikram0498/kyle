@@ -17,17 +17,20 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
 
-            $table->string('address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('zip_code');
+            $table->string('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip_code')->nullable();
 
-            $table->integer('bedroom_min');
-            $table->integer('bedroom_max');
+            $table->double('price')->nullable();
+
+            $table->integer('bedroom_min')->nullable();
+            $table->integer('bedroom_max')->nullable();
             $table->integer('bath_min')->nullable();
             $table->integer('bath_max')->nullable();
-            $table->integer('size_min');
-            $table->integer('size_max');
+            $table->integer('size_min')->nullable();
+            $table->integer('size_max')->nullable();
             $table->integer('lot_size_min')->nullable();
             $table->integer('lot_size_max')->nullable();
             $table->integer('build_year_min')->nullable();
@@ -53,8 +56,21 @@ return new class extends Migration
             $table->tinyInteger('mold')->nullable();
             $table->tinyInteger('fire_damaged')->nullable();
             $table->tinyInteger('rebuild')->nullable();
+            $table->tinyInteger('squatters')->nullable();
 
-            $table->json('purchase_method');    
+            $table->json('purchase_method');
+
+            $table->double('max_down_payment_percentage', 15, 2)->nullable();
+            $table->double('max_down_payment_money', 15, 2)->nullable();
+            $table->double('max_interest_rate', 15, 2)->nullable();
+            $table->tinyInteger('balloon_payment')->nullable();
+
+            $table->integer('total_units')->nullable();
+
+            $table->integer('unit_min')->nullable();
+            $table->integer('unit_max')->nullable();
+            $table->json('building_class')->nullable();
+            $table->tinyInteger('value_add')->nullable();
 
             $table->boolean('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');
