@@ -114,6 +114,10 @@ class LoginRegisterController extends Controller
                 $responseData = [
                     'status'            => true,
                     'message'           => 'You have logged in successfully!',
+                    'userData'          => [
+                        'name'=> $user->name ?? '',
+                        'profile_image'=> $user->profile_image_url ?? '',
+                    ],
                     'remember_me_token' => $user->remember_token,
                     'access_token'      => $accessToken
                 ];

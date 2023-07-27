@@ -44,28 +44,43 @@ class ProfileController extends Controller
             'name'       => 'required',
             'email'      => ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')],
             'phone' => 'required',
-            'old_password'     => ['required', 'string','min:8',new MatchOldPassword],
-            'new_password'     => ['required', 'string', 'min:8', 'different:old_password'],
-            'confirm_password' => ['required','min:8','same:new_password'],
+            'profile_image'    => 'image|mimes:jpeg,jpg,png|max:1024',
+            'old_password'     => [/*'required',*/ 'string','min:8',new MatchOldPassword],
+            'new_password'     => [/*'required',*/ 'string', 'min:8', 'different:old_password'],
+            'confirm_password' => [/*'required',*/'min:8','same:new_password'],
         ],[
             'confirm_password.same' => 'The confirm password and new password must match.'
         ]);
 
         DB::beginTransaction();
         try {
-           
             $updateRecords = [
                 'name'  => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'password'=> Hash::make($request->new_password),
             ];
+
+            if($request->new_password){
+                $updateRecords['password'] = Hash::make($request->new_password);
+            }
 
             $updatedUserRecord = User::find($userId)->update($updateRecords);
 
             DB::commit();
 
             if($updatedUserRecord){
+                // Start to Update Profile Image
+                if($request->hasFile('profile_image')){
+                    $actionType = 'save';
+                    $uploadId = null;
+                    if($updatedUserRecord->profileImage){
+                        $uploadId = $updatedUserRecord->id;
+                        $actionType = 'update';
+                    }
+                    uploadImage($user, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
+                }
+                // End to Update Profile Image
+
                 //Return Success Response
                 $responseData = [
                     'status'        => true,

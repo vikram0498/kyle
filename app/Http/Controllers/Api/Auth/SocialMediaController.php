@@ -21,6 +21,10 @@ class SocialMediaController extends Controller
 
                     $responseData = [
                         'status'        => true,
+                        'userData'          => [
+                            'name'=> $isUser->name ?? '',
+                            'profile_image'=> $isUser->profile_image_url ?? '',
+                        ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
                     ];
@@ -54,6 +58,10 @@ class SocialMediaController extends Controller
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
                 $responseData = [
                     'status'        => true,
+                    'userData'          => [
+                        'name'=> $newUser->name ?? '',
+                        'profile_image'=> $newUser->profile_image_url ?? '',
+                    ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
                 ];
@@ -82,6 +90,10 @@ class SocialMediaController extends Controller
 
                     $responseData = [
                         'status'        => true,
+                        'userData'          => [
+                            'name'=> $isUser->name ?? '',
+                            'profile_image'=> $isUser->profile_image_url ?? '',
+                        ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
                     ];
@@ -115,6 +127,10 @@ class SocialMediaController extends Controller
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
                 $responseData = [
                     'status'        => true,
+                    'userData'      => [
+                        'name'=> $newUser->name ?? '',
+                        'profile_image'=> $newUser->profile_image_url ?? '',
+                    ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
                 ];
