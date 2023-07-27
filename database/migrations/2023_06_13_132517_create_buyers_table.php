@@ -24,17 +24,17 @@ return new class extends Migration
             $table->string('occupation')->nullable();
             $table->string('replacing_occupation')->nullable();
             $table->string('company_name')->nullable();
-            $table->string('address');
-            $table->string('country');
-            $table->string('state');
-            $table->string('city');
-            $table->string('zip_code');
-            $table->integer('bedroom_min');
-            $table->integer('bedroom_max');
+            $table->string('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->integer('bedroom_min')->nullable();
+            $table->integer('bedroom_max')->nullable();
             $table->integer('bath_min')->nullable();
             $table->integer('bath_max')->nullable();
-            $table->integer('size_min');
-            $table->integer('size_max');
+            $table->integer('size_min')->nullable();
+            $table->integer('size_max')->nullable();
             $table->integer('lot_size_min')->nullable();
             $table->integer('lot_size_max')->nullable();
             $table->integer('build_year_min')->nullable();
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->tinyInteger('fire_damaged')->nullable();
             $table->tinyInteger('rebuild')->nullable();
 
-            $table->json('buyer_type');
+            $table->json('buyer_type')->nullable();
 
             // creative buyer type
             $table->double('max_down_payment_percentage', 15, 2)->nullable();

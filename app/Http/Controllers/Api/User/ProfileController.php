@@ -40,15 +40,20 @@ class ProfileController extends Controller
 
         $userId = auth()->user()->id;
 
-        $request->validate([
-            'name'       => 'required',
-            'email'      => ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')],
+        $validatedData = [
+            'name'  => 'required',
             'phone' => 'required',
             'profile_image'    => 'image|mimes:jpeg,jpg,png|max:1024',
             'old_password'     => [/*'required',*/ 'string','min:8',new MatchOldPassword],
             'new_password'     => [/*'required',*/ 'string', 'min:8', 'different:old_password'],
             'confirm_password' => [/*'required',*/'min:8','same:new_password'],
-        ],[
+        ];
+
+        if(!auth()->user()->email){
+            $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
+        }
+
+        $request->validate($validatedData,[
             'confirm_password.same' => 'The confirm password and new password must match.'
         ]);
 
@@ -56,9 +61,12 @@ class ProfileController extends Controller
         try {
             $updateRecords = [
                 'name'  => $request->name,
-                'email' => $request->email,
                 'phone' => $request->phone,
             ];
+
+            if($request->email){
+                $updateRecords['email'] = $request->email;
+            }
 
             if($request->new_password){
                 $updateRecords['password'] = Hash::make($request->new_password);

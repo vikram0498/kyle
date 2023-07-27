@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SearchBuyersRequest;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
+
 
 class BuyerController extends Controller
 {
@@ -231,20 +233,7 @@ class BuyerController extends Controller
         }
     }
 
-    public function buyBoxSearch(Request $request){
-        $validator = Validator::make($request->all(), [
-            'property_type'  => 'int',
-        ]);
-
-        if($validator->fails()){
-             //Error Response Send
-             $responseData = [
-                'status'        => false,
-                'validation_errors' => $validator->errors(),
-            ];
-            return response()->json($responseData, 400);
-        }
-
+    public function buyBoxSearch(SearchBuyersRequest $request){
         DB::beginTransaction();
         try {
             $userId = auth()->user()->id;
