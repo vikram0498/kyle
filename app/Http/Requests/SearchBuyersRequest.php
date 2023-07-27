@@ -81,7 +81,7 @@ class SearchBuyersRequest extends FormRequest
             'arv_max' => ['nullable', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
 
 
-            'parking' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
+            'parking' => ['nullable', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
             
             //Location flaws
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
@@ -101,22 +101,23 @@ class SearchBuyersRequest extends FormRequest
             'fire_damaged'  => [],
             'rebuild'       => [],
             'squatters'     => [],
+            'total_units'   => [],
 
-
-            'buyer_type' => [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.buyer_types')))],
-
-            'purchase_method' => ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))],
-
-            'max_down_payment_percentage'     => [],
-            'max_down_payment_money'          => [],
-            'max_interest_rate'               => [],
-            'balloon_payment'                 => [],
-            'unit_min'                        => [],
-            'unit_max'                        => [],
-            'building_class'                  => [],
-            'value_add'                       => [],
-            
         ];
+
+        // $rules['buyer_type'] = [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.buyer_types')))];
+
+        $rules['purchase_method'] = ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))];
+
+        $rules['max_down_payment_percentage'] = [];
+        $rules['max_down_payment_money'] = [];
+        $rules['max_interest_rate'] = [];
+        $rules['balloon_payment'] = [];
+
+        // $rules['unit_min'] = [];
+        // $rules['unit_max'] = [];
+        $rules['building_class'] = ['in:'.implode(',', array_keys(config('constants.building_class_values')))];
+        $rules['value_add'] = [];
 
         return $rules;
     }
