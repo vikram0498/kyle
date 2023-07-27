@@ -138,6 +138,7 @@ return [
             'mold'                          => 'Mold',
             'fire_damaged'                  => 'Fire Damaged',
             'rebuild'                       => 'Rebuild',
+            'squatters'                       => 'Squatters',
             'buyer_type'                    => 'Buyer Type',
             'max_down_payment_percentage'   => 'Maximum Down Payment (%)',
             'max_down_payment_money'        => 'Maximum Down Payment ($)',

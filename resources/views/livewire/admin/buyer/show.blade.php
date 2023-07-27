@@ -106,6 +106,10 @@
             <th width="25%">{{ __('cruds.buyer.fields.arv_max')}}</th>
             <td> {{ (!is_null($details->arv_max) && !empty($details->arv_max)) ? $details->arv_max : 'N/A' }}</td>
         </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.squatters')}}</th>
+            <td> {{ (!is_null($details->squatters) && !empty($details->squatters)) ? $details->squatters : 'N/A' }}</td>
+        </tr>
        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
