@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\SocialMediaController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\BuyerController;
-use App\Http\Controllers\Api\Auth\ProfileController;
+use App\Http\Controllers\Api\User\ProfileController;
 
 
 /*
