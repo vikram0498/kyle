@@ -7,7 +7,7 @@ function Header() {
 	const [userDetails, setUserDetails] = useState(null);
 	const {setLogout, getTokenData} = useAuth();
 	useEffect(() => {
-		let data = ''
+		let data = '';
 		const apiUrl = process.env.REACT_APP_API_URL;
 		if(getTokenData().access_token != null){
 			/* let headers = {

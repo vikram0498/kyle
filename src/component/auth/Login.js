@@ -163,8 +163,9 @@ function Login (props){
                             <p className="account-now">Don’t Have an account?  
                                 <Link to="/register"> Sign up now!</Link>
                             </p>
+
                             <div className="or"><span>OR</span></div>
-                            <ul className="account-with-social list-unstyled mb-0">
+                            <ul className="account-with-social social-login-link list-unstyled mb-0">
                                 <li>
                                     {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link> */}
                                     <FacebookLoginButton

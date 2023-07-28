@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
-import FacebookLogin from 'react-facebook-login';
+//import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props' 
+
 import {useAuth} from "../../../hooks/useAuth";
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -43,6 +45,9 @@ const FacebookLoginButton = ({apiUrl , setLoading, navigate, setErrors}) => {
             fields="name,email,picture"
             onClick={componentClicked}
             callback={responseFacebook} 
+            render={renderProps => (
+                <button class="kep-login-facebook" onClick={renderProps.onClick}><img src="/assets/images/facebook.svg" class="img-fluid"/>With Facebook</button>
+            )}
         />
     </>
     )
