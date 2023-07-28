@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);
 
-    Route::post('buy-box-search', [BuyerController::class, 'buyBoxSearch']);
+    Route::post('buy-box-search/{page?}', [BuyerController::class, 'buyBoxSearch']);
 
     Route::get('fetch-buyers/{page?}', [BuyerController::class, 'fetchBuyers']);
 

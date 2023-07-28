@@ -243,7 +243,8 @@ class BuyerController extends Controller
             $buyers = $buyers->where('user_id',$userId)->where('status', 1);
         
             if($request->property_type){
-                $buyers->whereJsonContains('property_type', $request->property_type);
+                $propertyType = $request->property_type;
+                $buyers->whereJsonContains('property_type', intval($propertyType));
             }
 
             if($request->address){
@@ -319,7 +320,7 @@ class BuyerController extends Controller
             }
 
             if($request->parking){
-                $buyers = $buyers->whereJsonContains('parking', $request->parking);
+                $buyers = $buyers->whereJsonContains('parking', intval($request->parking));
             }
 
             if($request->property_flaw){
@@ -330,9 +331,9 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('purchase_method', $request->purchase_method);
             }
 
-            if($request->building_class){
+            /* if($request->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
-            }
+            } */
 
 
             if($request->solar){
@@ -416,12 +417,14 @@ class BuyerController extends Controller
             }
 
             if($request->building_class){
-                $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
+                $buyers = $buyers->whereJsonContains('building_class', intval($request->building_class));
             }
 
             if($request->value_add){
                 $buyers = $buyers->where('value_add', $request->value_add);
             }
+
+            $totalRecord = $buyers->count();
 
             $buyers = $buyers->paginate(10);
 
@@ -436,6 +439,7 @@ class BuyerController extends Controller
             $responseData = [
                 'status'        => true,
                 'buyers'        => $buyers,
+                'total_records' => $totalRecord
             ];
 
             return response()->json($responseData, 200);

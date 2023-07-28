@@ -116,7 +116,7 @@ class SearchBuyersRequest extends FormRequest
 
         // $rules['unit_min'] = [];
         // $rules['unit_max'] = [];
-        $rules['building_class'] = ['in:'.implode(',', array_keys(config('constants.building_class_values')))];
+        $rules['building_class'] = ['nullable', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
         $rules['value_add'] = [];
 
         return $rules;
