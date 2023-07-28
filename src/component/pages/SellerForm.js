@@ -17,6 +17,7 @@ import CondoPropertySearch from './FilterPropertyForm/Condo';
 import DevelopmentPropertySearch from './FilterPropertyForm/Development';
 import MultiFamilyPropertySearch from './FilterPropertyForm/MultiFamilyResidential';
 import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
+import FilterResult from "../partials/FilterResult";
 
 
 
@@ -25,6 +26,8 @@ const SellerForm = () =>{
     const {getTokenData} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
+
+	const [isFiltered,setIsFiltered] = useState(false);
 
     const { setErrors, renderFieldError } = useForm();
    
@@ -115,14 +118,17 @@ const SellerForm = () =>{
 		if (formObject.hasOwnProperty('purchase_method')) {
             formObject.purchase_method =  purchaseMethodsValue;
         }
+
+		formObject.filterType = 'search_page';
 		
         axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
                 localStorage.setItem('filter_buyer_fields', JSON.stringify(formObject));
-                localStorage.setItem('get_filtered_data', JSON.stringify(response.data.buyers));
+                // localStorage.setItem('get_filtered_data', JSON.stringify(response.data.buyers));
 
-                navigate('/my-buyers')
+                // navigate('/my-buyers')
+				setIsFiltered(true);
             }
             
         }).catch(error => {
@@ -144,7 +150,9 @@ const SellerForm = () =>{
     <>
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
-			<section className="main-section position-relative pt-4 pb-120">
+			isFiltered ? 
+				<FilterResult  setIsFiltered = {setIsFiltered} /> :
+				<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">
 					<div className="back-block">
 						<Link to="/" className="back">
@@ -237,8 +245,8 @@ const SellerForm = () =>{
 						</div>
 					</div>
 				</div>
-			</section>
-		}	
+			</section>			
+		}
 	<Footer/>
     </>
  )

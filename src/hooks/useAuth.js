@@ -71,6 +71,9 @@ export const useAuth = () => {
         cookie.remove('remember_me_token', {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         setIsLogin({signedIn: false, access_token: null});
         cookie.remove("_token");
+
+        localStorage.removeItem('user_data');
+        localStorage.removeItem('filter_buyer_fields');
     }
 
     function loginUserOnStartup(){

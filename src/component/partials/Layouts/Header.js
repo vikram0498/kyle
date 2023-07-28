@@ -1,11 +1,21 @@
 import React,{useEffect,useState}  from 'react'
 import {useAuth} from "../../../hooks/useAuth";
-import {Link , useNavigate} from "react-router-dom";
+import {Link , useLocation, useNavigate} from "react-router-dom";
 import axios from 'axios';
 
 function Header() {
 	const [userDetails, setUserDetails] = useState(null);
 	const {setLogout, getTokenData} = useAuth();
+
+	const location = useLocation();
+    const isNotMyBuyerPage = location.pathname !== '/my-buyers';
+    const isNotSearchPage = location.pathname !== '/sellers-form';
+
+	if(isNotMyBuyerPage && isNotSearchPage){
+		localStorage.removeItem('filter_buyer_fields');
+	}
+
+
 	useEffect(() => {
 		let data = '';
 		const apiUrl = process.env.REACT_APP_API_URL;
