@@ -30,7 +30,7 @@ const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => {
                 toast.success('Login successfully!', {
                     position: toast.POSITION.TOP_RIGHT
                 });
-                setAsLogged(response.data.access_token);
+                setAsLogged(response.data.access_token, '', '', response.data.userData);
             }
         }).catch(error => {
             setLoading(false);

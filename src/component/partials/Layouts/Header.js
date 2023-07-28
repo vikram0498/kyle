@@ -10,17 +10,18 @@ function Header() {
 		let data = ''
 		const apiUrl = process.env.REACT_APP_API_URL;
 		if(getTokenData().access_token != null){
-			let headers = {
+			/* let headers = {
 				"Accept": "application/json", 
 				'Authorization': 'Bearer ' + getTokenData().access_token,
+			} */
+			if(localStorage.getItem('user_data') !== null){
+				let userData = localStorage.getItem('user_data');   
+				setUserDetails(JSON.parse(userData));
 			}
-			axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
-				if(response.data.status){
-					setUserDetails(response.data.data);
-				}
-			})
 		}
+		
     }, []);
+	
   return (
     <>
 		<header className="dashboard-header">
@@ -43,11 +44,12 @@ function Header() {
 							<div className="dropdown user-dropdown">
 								<button className="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 									<div className="dropdown-data">
-										<div className="img-user"><img src="./assets/images/avtar.png" className="img-fluid" alt="" /></div>
+										<div className="img-user"><img src={(userDetails !=null && userDetails.profile_image != '') ? userDetails.profile_image : './assets/images/avtar.png'} className="img-fluid" alt="" /></div>
 										<div className="welcome-user" style={{display:'block'}}>
 											<span className="welcome">welcome</span>
-											<span className="user-name-title">{(userDetails !=null) ? userDetails.first_name+' '+ userDetails.last_name : ''}</span>
-											{/* <span className="user-name-title">John Thomsan</span> */}
+											<span className="user-name-title">
+												{(userDetails !=null) ? userDetails.name : ''}
+											</span>
 										</div>
 									</div>
 									<span className="arrow-icon">
@@ -59,14 +61,14 @@ function Header() {
 								<div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 									<ul className="list-unstyled mb-0">
 										<li>
-											<a className="dropdown-item" href="my-profile">
+											<Link className="dropdown-item" to="/my-profile">
 												<img src="./assets/images/user-login.svg" className="img-fluid" />My Profile
-											</a>
+											</Link >
 										</li>
 										<li>
-											<a className="dropdown-item" href="#">
+											<Link className="dropdown-item" to="/my-buyers">
 												<img src="./assets/images/booksaved.svg" className="img-fluid" />My Buyers Data
-											</a>
+											</Link>
 										</li>
 										<li>
 											<a className="dropdown-item" href="#"><img src="./assets/images/messages.svg" className="img-fluid" />Support

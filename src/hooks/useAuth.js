@@ -20,7 +20,7 @@ export const useAuth = () => {
         date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));  // 7 days
         return date;
     }
-    function setAsLogged(access_token, remember_token='',remember_me_user_data) {
+    function setAsLogged(access_token, remember_token='',remember_me_user_data, userData) {
         const cookie = new Cookies();
         cookie.set('is_auth', true, {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         if(remember_token.trim() !== ''){
@@ -34,6 +34,9 @@ export const useAuth = () => {
         /* token for login */
         const twoHoursLater = new Date(Date.now()  + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
         cookie.set('_token', JSON.stringify({access_token: access_token}), {expires: twoHoursLater});
+
+        localStorage.setItem('user_data', JSON.stringify(userData));
+
         navigate('/');
     }
 

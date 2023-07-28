@@ -15,12 +15,11 @@ const FacebookLoginButton = ({apiUrl , setLoading, navigate, setErrors}) => {
                 }
                 axios.post(apiUrl+'handle-facebook', response, { headers: headers }).then(response => {
                     setLoading(false);
-                    console.log('res ',response.data);
                     if(response.data.status) {
                         toast.success('Login successfully!', {
                             position: toast.POSITION.TOP_RIGHT
                         });
-                        setAsLogged(response.data.access_token);
+                        setAsLogged(response.data.access_token, '', '', response.data.userData);
                     }
                 }).catch(error => {
                     setLoading(false);

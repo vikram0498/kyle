@@ -16,9 +16,6 @@ import Home from './component/pages/Home';
 import AddBuyerDetails from './component/pages/AddBuyerDetails';
 import MyBuyer from './component/pages/MyBuyers';
 import SellerForm from './component/pages/SellerForm';
-import Development from './component/pages/Development';
-import MultiFamilyResidential from './component/pages/MultiFamilyResidential';
-import Condo from './component/pages/Condo';
 import ChooseYourPlan from './component/pages/ChooseYourPlan';
 import AdditionalCreadits from './component/pages/AdditionalCreadits';
 import AdminMessage from './component/pages/AdminMessage';
@@ -48,9 +45,9 @@ const RoutesList = () => {
             <Route path="/add-buyer-details" element={<Protected Component={AddBuyerDetails}/>} />
             <Route path="/my-buyers" element={<Protected Component={MyBuyer}/>} />
             <Route path="/sellers-form" element={<Protected Component={SellerForm}/>} />
-            <Route path="/condo" element={<Protected Component={Condo}/>} />
-            <Route path="/development" element={<Protected Component={Development}/>} />
-            <Route path="/multifamily-residential" element={<Protected Component={MultiFamilyResidential}/>} />
+            {/* <Route path="/condo" element={<Protected Component={Condo}/>} /> */}
+            {/* <Route path="/development" element={<Protected Component={Development}/>} /> */}
+            {/* <Route path="/multifamily-residential" element={<Protected Component={MultiFamilyResidential}/>} /> */}
             <Route path="/choose-your-plan" element={<Protected Component={ChooseYourPlan}/>} />
             <Route path="/additional-credits" element={<Protected Component={AdditionalCreadits}/>} />
             <Route path="/admin-message" element={<Protected Component={AdminMessage}/>} />

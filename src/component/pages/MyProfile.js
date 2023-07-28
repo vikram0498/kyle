@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import React ,{useEffect, useState} from 'react';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import axios from 'axios';
@@ -17,7 +17,9 @@ import {useAuth} from "../../hooks/useAuth";
         let { data } = res.data.data;
         setUserData(res.data.data)
     };
-    getUsers();
+    useEffect(()=>{
+        getUsers();
+    },[])
     return(
         <>
             <Header/>

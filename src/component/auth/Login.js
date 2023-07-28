@@ -67,7 +67,8 @@ function Login (props){
                 if(payload.remember){
                     remember_me_user_data = {username:email,password:password,isRemember:true};
                 }
-                setAsLogged(access_token, remember_me_token,remember_me_user_data);
+                console.log(response.data.userData);
+                setAsLogged(access_token, remember_me_token,remember_me_user_data, response.data.userData);
             }
         }).catch(error => {
             setLoading(false);

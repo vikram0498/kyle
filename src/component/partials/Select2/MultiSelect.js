@@ -1,20 +1,21 @@
 import React, {useState} from 'react'
 import Select from "react-select";
-function MultiSelect({options,placeholder,name, setMultiselectOption, showCreative='', showmultiFamily=''}) {
+function MultiSelect({options,placeholder,name, setMultiselectOption, showCreative=''}) {
     
       // const [selectedOptions, setSelectedOptions] = useState([]);
       const handleSelect = (e) => {
         const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
-        if(name == 'buyer_type'){
-          if (selectedValues.includes(1)) {
+        if(name == 'property_type'){
+          if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
             showCreative(true);
           } else {
             showCreative(false);
           }
-          if (selectedValues.includes(3)) {
-            showmultiFamily(true);
+        } else if(name == 'purchase_method'){
+          if (selectedValues.includes(5)) {
+            showCreative(true);
           } else {
-            showmultiFamily(false);
+            showCreative(false);
           }
         }
         setMultiselectOption(selectedValues);

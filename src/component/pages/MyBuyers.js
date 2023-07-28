@@ -14,7 +14,12 @@ const MyBuyer = () =>{
 	const [currentRecord,setCurrentRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
 	useEffect(() => {
-        getBuyerLists();
+		if(localStorage.getItem('filter_buyer_fields') !== null){
+			getFilteredBuyers();
+		} else {
+			getBuyerLists();
+		}
+        
     },[]);
 
 	const getBuyerLists = (page='') =>{
@@ -35,17 +40,46 @@ const MyBuyer = () =>{
 			setTotalPage(response.data.buyers.last_page);
         })
 	}
+
+	const getFilteredBuyers = (page='') => {
+		const apiUrl = process.env.REACT_APP_API_URL;
+		let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
+		let headers = { 
+			'Accept': 'application/json',
+			'Authorization': 'Bearer ' + getTokenData().access_token
+		};
+		let url = apiUrl+'buy-box-search';
+		if(page>1){
+			url = apiUrl+'buy-box-search?page='+page;
+		}
+		axios.post(url, searchFields, { headers: headers }).then(response => {
+			setBuyerData(response.data.buyers.data)
+			setIsLoader(false);
+			setCurrentRecord(response.data.buyers.data.length);
+			setTotalRecord(response.data.total_records);
+			setTotalPage(response.data.buyers.last_page);
+        })
+	}
+
 	const handleClickNext = () =>{
 		setIsLoader(true);
 		let count = pageNumber+1;
 		setPageNumber(count);
-		getBuyerLists(count);
+		if(localStorage.getItem('filter_buyer_fields') !== null){
+			getFilteredBuyers(count);
+		} else {
+			getBuyerLists(count);
+		}
 	}
 	const handleClickPrev = () =>{
 		setIsLoader(true);
 		let count = pageNumber-1;
 		setPageNumber(count);
-		getBuyerLists(count);
+		if(localStorage.getItem('filter_buyer_fields') !== null){
+			getFilteredBuyers(count);
+		} else {
+			getBuyerLists(count);
+		}
 	} 
  return (
     <>
