@@ -430,8 +430,10 @@ class BuyerController extends Controller
 
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
-            
-            SearchLog::create($insertLogRecords);
+
+            if(isset($request->filterType) && $request->filterType == 'search_page' ){
+                SearchLog::create($insertLogRecords);
+            }
 
             DB::commit();
 
