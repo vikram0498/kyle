@@ -268,7 +268,7 @@ const Register = () => {
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social list-unstyled mb-0 social-login-link">
                                 <li>
-                                    {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link> */}
+                                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link>
                                     <FacebookLoginButton
                                     apiUrl={apiUrl}
                                     setLoading={setLoading}
@@ -277,6 +277,7 @@ const Register = () => {
                                     />
                                 </li>
                                 <li>
+                                <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link>
                                 <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
                                     <GoogleLoginComponent 
                                         apiUrl={apiUrl}

@@ -167,6 +167,7 @@ function Login (props){
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social social-login-link list-unstyled mb-0">
                                 <li>
+                                <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
                                     {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link> */}
                                     <FacebookLoginButton
                                      apiUrl={apiUrl}
@@ -176,6 +177,7 @@ function Login (props){
                                     />
                                 </li>
                                 <li>
+                                <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link>
                                     {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
                                     <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
                                         <GoogleLoginComponent 
