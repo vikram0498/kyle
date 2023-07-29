@@ -42,14 +42,18 @@ class ProfileController extends Controller
         $userId = auth()->user()->id;
 
         $validatedData = [
-            'name'  => 'required',
-            'phone' => 'required',
+            'first_name'  => 'required',
+            'last_name'   => 'required',
+            'phone'       => 'required',
             'profile_image'    => 'image|mimes:jpeg,jpg,png|max:1024',
-            'old_password'     => [/*'required',*/ 'string','min:8',new MatchOldPassword],
-            'new_password'     => [/*'required',*/ 'string', 'min:8', 'different:old_password'],
-            'confirm_password' => [/*'required',*/'min:8','same:new_password'],
         ];
 
+        if($request->old_password){
+            $validatedData['old_password'] = [/*'required',*/ 'string','min:8',new MatchOldPassword];
+            $validatedData['new_password'] =  [/*'required',*/ 'string', 'min:8', 'different:old_password'];
+            $validatedData['confirm_password'] = [/*'required',*/'min:8','same:new_password'];
+        }
+       
         if(!auth()->user()->email){
             $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
         }

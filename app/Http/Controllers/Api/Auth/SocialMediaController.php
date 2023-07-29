@@ -22,7 +22,8 @@ class SocialMediaController extends Controller
                     $responseData = [
                         'status'        => true,
                         'userData'          => [
-                            'name'=> $isUser->name ?? '',
+                            'first_name'   => $isUser->first_name ?? '',
+                            'last_name'    => $isUser->last_name ?? '',
                             'profile_image'=> $isUser->profile_image_url ?? '',
                         ],
                         'message'       => 'Login successfully!',
@@ -59,7 +60,8 @@ class SocialMediaController extends Controller
                 $responseData = [
                     'status'        => true,
                     'userData'          => [
-                        'name'=> $newUser->name ?? '',
+                        'first_name'   => $newUser->first_name ?? '',
+                        'last_name'    => $newUser->last_name ?? '',
                         'profile_image'=> $newUser->profile_image_url ?? '',
                     ],
                     'message'       => 'Login successfully!',
@@ -91,7 +93,8 @@ class SocialMediaController extends Controller
                     $responseData = [
                         'status'        => true,
                         'userData'          => [
-                            'name'=> $isUser->name ?? '',
+                            'first_name'   => $isUser->first_name ?? '',
+                            'last_name'    => $isUser->last_name ?? '',
                             'profile_image'=> $isUser->profile_image_url ?? '',
                         ],
                         'message'       => 'Login successfully!',
@@ -128,7 +131,8 @@ class SocialMediaController extends Controller
                 $responseData = [
                     'status'        => true,
                     'userData'      => [
-                        'name'=> $newUser->name ?? '',
+                        'first_name'   => $newUser->first_name ?? '',
+                        'last_name'    => $newUser->last_name ?? '',
                         'profile_image'=> $newUser->profile_image_url ?? '',
                     ],
                     'message'       => 'Login successfully!',
