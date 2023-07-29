@@ -266,7 +266,7 @@ const Register = () => {
                         <div className="col-12 col-lg-12">
                             <p className="account-now">Already Have an account? <Link to="/login">Login Now!</Link></p>
                             <div className="or"><span>OR</span></div>
-                            <ul className="account-with-social list-unstyled mb-0">
+                            <ul className="account-with-social list-unstyled mb-0 social-login-link">
                                 <li>
                                     {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link> */}
                                     <FacebookLoginButton

@@ -16,7 +16,7 @@ import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
 
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
-    const {getTokenData} = useAuth();
+    const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
 
@@ -62,21 +62,26 @@ function AddBuyerDetails (){
         'Authorization': 'Bearer ' + getTokenData().access_token,
     };
     const getOptionsValues = () =>{
-        axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
-            if(response.data.status){
-                let result = response.data.result;
-
-                setPurchaseMethodsOption(result.purchase_methods);
-                setBuildingClassNamesOption(result.building_class_values);
-                setPropertyTypeOption(result.property_types);
-                setLocationFlawsOption(result.location_flaws);
-                setParkingOption(result.parking_values);
-                setCountryOptions(result.countries);
-                // setbuyerTypeOption(result.buyer_types);
-                setIsLoader(false);
-
-            }
-        })
+        try{
+            axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
+                if(response.data.status){
+                    let result = response.data.result;
+    
+                    setPurchaseMethodsOption(result.purchase_methods);
+                    setBuildingClassNamesOption(result.building_class_values);
+                    setPropertyTypeOption(result.property_types);
+                    setLocationFlawsOption(result.location_flaws);
+                    setParkingOption(result.parking_values);
+                    setCountryOptions(result.countries);
+                    // setbuyerTypeOption(result.buyer_types);
+                    setIsLoader(false);
+    
+                }
+            })
+        }catch{
+            setLogout();
+            navigate('/login');
+        }
     }
 
     const getStates = (country_id) => {

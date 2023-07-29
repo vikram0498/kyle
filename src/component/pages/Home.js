@@ -3,7 +3,8 @@ import {Link , useNavigate} from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
-import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
+import UploadMultipleBuyersOnChange from "../partials/UploadMultipleBuyersOnChange";
+
 function Home ({userDetails}){
     const {authData} = useContext(AuthContext);
     return (
@@ -49,32 +50,7 @@ function Home ({userDetails}){
                             </Link>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            {/* <form className="form-container upload-multiple-data" encType='multipart/form-data'>
-                                <div className="upload-files-container">
-                                    <div className="drag-file-area">
-                                        <span className="upload-icon"> </span>
-                                        <h5>Upload Multiple Buyer Data</h5>
-                                        <p className="dynamic-message mb-0">Drag & Drop</p>
-                                        <button type="button" className="upload-button">
-                                            <img src="./assets/images/folder-big.svg" className="img-fluid" alt="" />
-                                        </button>
-                                        <label className="label">
-                                            <span className="browse-files">
-                                                <input type="file" className="default-file-input"/> 
-                                                <span className="d-block upload-file">Upload your .CSV file</span>
-                                                <span className="browse-files-text">browse Now</span> 
-                                            </span> 
-                                        </label>
-                                    </div>
-                                    <span className="cannot-upload-message"> <span className="error">error</span> Please select a file first <span className="cancel-alert-button">cancel</span> </span>
-                                    <div className="file-block">
-                                        <div className="file-info"><span className="file-name"> </span> | <span className="file-size">  </span> </div>
-                                        
-                                        <div className="progress-bar"> </div>
-                                    </div>
-                                </div>
-                            </form> */}
-                            <UploadMultipleBuyers/>
+                           <UploadMultipleBuyersOnChange/>
                         </div>
                     </div>
                 </div>

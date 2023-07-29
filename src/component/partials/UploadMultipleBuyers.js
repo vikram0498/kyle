@@ -16,6 +16,7 @@ const UploadMultipleBuyers = () => {
     const [border, setBorder] = useState("1px dashed #677AAB");
     const [validCsv, setValidCsv] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
+    const [filename, setFileName] = useState('Upload your .CSV file');
     const formData = new FormData();
     if (csvFile){
         formData.append('csvFile', csvFile);
@@ -28,17 +29,19 @@ const UploadMultipleBuyers = () => {
         if(fileType != 'text/csv'){
             setBorder('1px dashed #ff0018');
             setValidCsv(false);
-            setErrorMsg('Please add valid file');
+            setErrorMsg('Please add valid file (csv)');
+            setFileName('Upload your .CSV file');
         }else if (fileSize > maxFileSize) {
             setBorder('1px dashed #ff0018');
             setValidCsv(false);
+            setFileName('Upload your .CSV file');
             setErrorMsg('File size is too large. Please upload a file that is less than 5MB.');
         }else{
             setErrorMsg('');
             setBorder('1px dashed #677AAB');
             setValidCsv(true);
+            setFileName(file.name);
         }
-        console.log(file);
         setCsvFile(file);
     };
     const submitCsvFile = (e) => {
@@ -49,11 +52,19 @@ const UploadMultipleBuyers = () => {
             "Content-Type": "multipart/form-data"
         };
         async function fetchData() {
-            const response = await axios.post(apiUrl+"upload-multiple-buyers-csv",formData,{headers: headers});
-            if(response.data.status){
-                setCsvFile('');
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                navigate('/add-buyer-details');
+            try{
+                const response = await axios.post(apiUrl+"upload-multiple-buyers-csv",formData,{headers: headers});
+                if(response.data.status){
+                    setCsvFile('');
+                    toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                    navigate('/my-buyers');
+                }else{
+                    console.log('false ',response.data.message);
+                    toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                    navigate('/');
+                }
+            }catch{
+                toast.error("Sorry ! No rows are Inserted", {position: toast.POSITION.TOP_RIGHT});  
             }
         }
         if(csvFile !=''){
@@ -80,7 +91,7 @@ const UploadMultipleBuyers = () => {
                             <span className="browse-files">
                                 
                                 <input type="file" name="csvFile" accept=".csv" onChange={handleFileChange}className="default-file-input"/> 
-                                <span className="d-block upload-file">Upload your .CSV file</span>
+                                <span className="d-block upload-file">{filename}</span>
                                 <span className="browse-files-text">browse Now!</span> 
                             </span> 
                         </label>

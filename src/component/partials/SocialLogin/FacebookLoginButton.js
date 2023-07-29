@@ -46,7 +46,7 @@ const FacebookLoginButton = ({apiUrl , setLoading, navigate, setErrors}) => {
             onClick={componentClicked}
             callback={responseFacebook} 
             render={renderProps => (
-                <button class="kep-login-facebook" onClick={renderProps.onClick}><img src="/assets/images/facebook.svg" class="img-fluid"/>With Facebook</button>
+                <button type="button" class="kep-login-facebook" onClick={renderProps.onClick}><img src="/assets/images/facebook.svg" class="img-fluid"/>With Facebook</button>
             )}
         />
     </>
