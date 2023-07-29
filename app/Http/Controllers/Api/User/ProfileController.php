@@ -18,6 +18,7 @@ class ProfileController extends Controller
     {
         // Get the authenticated user
         $user = Auth::user();
+       
         $user_details = [
             'first_name' => $user->first_name ?? null,
             'last_name'  => $user->last_name ?? null,
@@ -25,8 +26,8 @@ class ProfileController extends Controller
             'email'      => $user->email ?? null,
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
-            'is_active'  => $user->is_active,
-            'is_block'   => $user->is_block,
+            'is_active'  => $user->is_active ?? 0,
+            'is_block'   => $user->is_block ?? 0,
         ];
         // Return response
         $responseData = [

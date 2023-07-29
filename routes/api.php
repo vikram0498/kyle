@@ -44,7 +44,7 @@ Route::controller(SocialMediaController::class)->group(function(){
 
 });
 
-Route::middleware('auth:sanctum')->group(function () { 
+Route::group(['middleware' => ['set.authorization.header','auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);
     
