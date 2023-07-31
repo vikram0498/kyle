@@ -65,7 +65,9 @@ class ProfileController extends Controller
         DB::beginTransaction();
         try {
             $updateRecords = [
-                'name'  => $request->name,
+                'first_name'  => $request->first_name,
+                'last_name'  => $request->last_name,
+                'name'  => $request->first_name.' '.$request->last_name ,
                 'phone' => $request->phone,
             ];
 
