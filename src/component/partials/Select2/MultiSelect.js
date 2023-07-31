@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import Select from "react-select";
-function MultiSelect({options,placeholder,name, setMultiselectOption, showCreative=''}) {
+function MultiSelect({options,placeholder,name, setMultiselectOption, showCreative='', selectValue='', setSelectValues=''}) {
     
-      // const [selectedOptions, setSelectedOptions] = useState([]);
       const handleSelect = (e) => {
         const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
         if(name == 'property_type'){
@@ -19,13 +18,16 @@ function MultiSelect({options,placeholder,name, setMultiselectOption, showCreati
           }
         }
         setMultiselectOption(selectedValues);
+        if(setSelectValues != ''){
+          setSelectValues(e);
+        }
     };
     const style = {margin:'auto'};
   return (
     <>
     <Select
         name={name}
-        defaultValue={[]}
+        defaultValue={selectValue}
         isMulti
         options={options}
         onChange={handleSelect}

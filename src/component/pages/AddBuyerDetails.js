@@ -350,7 +350,7 @@ function AddBuyerDetails (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Building className<span>*</span></label>
+                                                                <label>Building class<span>*</span></label>
                                                                 <div className="form-group">
                                                                     <MultiSelect
                                                                         name="building_class"

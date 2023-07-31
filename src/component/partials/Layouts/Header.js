@@ -8,10 +8,9 @@ function Header() {
 	const {setLogout, getTokenData} = useAuth();
 
 	const location = useLocation();
-    const isNotMyBuyerPage = location.pathname !== '/my-buyers';
     const isNotSearchPage = location.pathname !== '/sellers-form';
 
-	if(isNotMyBuyerPage && isNotSearchPage){
+	if(isNotSearchPage){
 		localStorage.removeItem('filter_buyer_fields');
 	}
 
@@ -58,7 +57,7 @@ function Header() {
 										<div className="welcome-user" style={{display:'block'}}>
 											<span className="welcome">welcome</span>
 											<span className="user-name-title">
-												{(userDetails !=null) ? userDetails.first_name+' '+userDetails.last_name: ''}
+												{(userDetails !=null) ? userDetails.first_name + ' ' + userDetails.last_name : ''}
 											</span>
 										</div>
 									</div>

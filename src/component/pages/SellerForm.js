@@ -30,16 +30,77 @@ const SellerForm = () =>{
 	const [isFiltered,setIsFiltered] = useState(false);
 
     const { setErrors, renderFieldError } = useForm();
-   
+
+	const [address, setAddress] = useState('');
+	const [country, setCountry] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
+    const [zipCode, setZipCode] = useState('');
+
+    const [price, setPrice] = useState('');
+
+    const [bedroomMin, setBedroomMin] = useState('');
+    const [bedroomMax, setBedroomMax] = useState('');
+    const [bathMin, setBathMin] = useState('');
+    const [bathMax, setBathMax] = useState('');
+    const [sizeMin, setSizeMin] = useState('');
+    const [sizeMax, setSizeMax] = useState('');
+    const [lotSizeMin, setLotSizeMin] = useState('');
+    const [lotSizeMax, setLotSizeMax] = useState('');
+    const [yearBuildMin, setYearBuildMin] = useState('');
+    const [yearBuildMax, setYearBuildMax] = useState('');
+    const [arvMin, setArvMin] = useState('');
+    const [arvMax, setArvMax] = useState('');
+
+    const [parking, setParking] = useState([]);
+    const [locationFlaw, setLocationFlaw] = useState([]);
+    const [purchaseMethod, setPurchaseMethod] = useState([]);	
+    const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
+    const [downPaymentMoney, setDownPaymentMoney] = useState('');
+    const [interestRate, setInterestRate] = useState('');
+    const [balloonPayment, setBalloonPayment] = useState(null);
+
+	const [solar, setSolar] = useState(null);
+    const [pool, SetPool] = useState(null);
+    const [septic, setSeptic] = useState(null);
+    const [well, setWell] = useState(null);
+    const [ageRestriction, setAgeRestriction] = useState(null);
+    const [rentalRestriction, setRentalRestriction] = useState(null);
+    const [hoa, setHoa] = useState(null);
+    const [tenant, setTenant] = useState(null);
+    const [postPossession, setPostPossession] = useState(null);
+    const [buildingRequired, setBuildingRequired] = useState(null);
+    const [foundationIssues, setFoundationIssues] = useState(null);
+    const [mold, setMold] = useState(null);
+    const [fireDamaged, setFireDamaged] = useState(null);
+    const [rebuild, setRebuild] = useState(null);
+    const [squatters, setSquatters] = useState(null);
+
+    const [totalUnits, setTotalUnits] = useState('');
+    const [buildingClass, setBuildingClass] = useState('');
+    const [valueAdd, setValueAdd] = useState(null);
+
+    const [countryOptions,setCountryOptions] = useState([]);
+	const [stateOptions,setStateOptions] = useState([]);
+    const [cityOptions,setCityOptions] = useState([]);
+
+    const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([])
+    const [parkingOption, setParkingOption] = useState([]);
+    const [locationFlawsOption,setLocationFlawsOption] = useState([]);
 	const [propertyTypeOption, setPropertyTypeOption] = useState([]);
+	const [buildingClassOption, setBuildingClassOption] = useState([])
+
+    const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     
     const [conodoSelected,setConodoSelected] = useState(false);
     const [landSelected,setLandSelected] = useState(false);
     const [multiFamilySelected,setMultiFamilySelected] = useState(false);
 
 
-    const [propertyTypeValue, setPropertyTypeValue] = useState('');
+    const [parkingValue, setParkingValue] = useState([]);
+    const [propertyTypeValue, setPropertyTypeValue] = useState([]);
     const [locationFlawsValue,setLocationFlawsValue] = useState([]);
+    // const [buyerTypeValue,setBuyerTypeValue] = useState([]);
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -61,10 +122,46 @@ const SellerForm = () =>{
             if(response.data.status){
                 let result = response.data.result;
 
+				setPurchaseMethodsOption(result.purchase_methods);
+                setLocationFlawsOption(result.location_flaws);
+                setParkingOption(result.parking_values);
+                setCountryOptions(result.countries);     
                 setPropertyTypeOption(result.property_types);
+				setBuildingClassOption(result.building_class_values);
+
                 setIsLoader(false);
             }
         })
+    }
+
+	
+	const getStates = (country_id) => {
+        if(country_id == null){
+            setCountry(''); setState(''); setCity('');
+            setStateOptions(''); setCityOptions('');
+        } else {            
+            axios.post(apiUrl+'getStates', { country_id: country_id }, { headers: headers }).then(response => {
+                let result = response.data.options;
+
+                setState(''); setCity('');                
+                setCountry(country_id); setStateOptions(result);
+            });
+        }
+    }
+
+    const getCities = (state_id) => {
+        if(state_id == null){
+            setState(''); setCity('');
+            setCityOptions('');
+        } else { 
+            let country_id = country;
+            axios.post(apiUrl+'getCities', { state_id: state_id, country_id: country_id }, { headers: headers }).then(response => {
+                let result = response.data.options;
+
+                setCity('');                
+                setState(state_id); setCityOptions(result);
+            });
+        }
     }
 
 	const handlePropertyTypeChange = (value) => {
@@ -114,10 +211,10 @@ const SellerForm = () =>{
         let formObject = Object.fromEntries(data.entries());
 
 		if (formObject.hasOwnProperty('property_flaw')) {
-            formObject.property_flaw =  locationFlawsValue;
+            formObject.property_flaw =  locationFlaw;
         }
 		if (formObject.hasOwnProperty('purchase_method')) {
-            formObject.purchase_method =  purchaseMethodsValue;
+            formObject.purchase_method =  purchaseMethod;
         }
 
 		formObject.filterType = 'search_page';
@@ -129,6 +226,8 @@ const SellerForm = () =>{
                 // localStorage.setItem('get_filtered_data', JSON.stringify(response.data.buyers));
 
                 // navigate('/my-buyers')
+				window.history.pushState(null, "", "/my-buyers");
+				// setIsLoader(true);
 				setIsFiltered(true);
             }
             
@@ -146,13 +245,89 @@ const SellerForm = () =>{
     }
 
 
+	const dataObj = {
+		address, setAddress,
+		country, setCountry,
+		state, setState,
+		city,	setCity,
+		zipCode, setZipCode,
+
+		price, setPrice,
+
+		bedroomMin, setBedroomMin,
+		bedroomMax, setBedroomMax,
+		bathMin, setBathMin,
+		bathMax, setBathMax,
+		sizeMin, setSizeMin,
+		sizeMax, setSizeMax,
+		lotSizeMin, setLotSizeMin,
+		lotSizeMax, setLotSizeMax,
+		yearBuildMin, setYearBuildMin,
+		yearBuildMax, setYearBuildMax,
+		arvMin, setArvMin,
+		arvMax, setArvMax,
+
+		parking,  setParking,
+		totalUnits,  setTotalUnits,
+		buildingClass, setBuildingClass,
+		valueAdd, setValueAdd,
+
+		purchaseMethod, setPurchaseMethod,
+
+		downPaymentPercentage, setDownPaymentPercentage,
+		downPaymentMoney, setDownPaymentMoney,
+		interestRate, setInterestRate,
+		balloonPayment, setBalloonPayment,
+
+		locationFlaw, setLocationFlaw,
+
+		solar, setSolar,
+		pool, SetPool,
+		septic, setSeptic,
+		well, setWell,
+		ageRestriction, setAgeRestriction,
+		rentalRestriction, setRentalRestriction,
+		hoa, setHoa,
+		tenant, setTenant,
+		postPossession, setPostPossession,
+		buildingRequired, setBuildingRequired,
+		foundationIssues, setFoundationIssues,
+		mold, setMold,
+		fireDamaged, setFireDamaged,
+		rebuild, setRebuild,
+		squatters,  setSquatters,
+
+		renderFieldError,
+
+		countryOptions,
+		stateOptions,
+		cityOptions,
+
+		getStates,
+		getCities,
+
+		locationFlawsOption,
+		purchaseMethodsOption,
+		parkingOption,
+		buildingClassOption,
+
+		showCreativeFinancing,
+		setShowCreativeFinancing,
+
+		locationFlawsValue,
+		setLocationFlawsValue,
+
+		purchaseMethodsValue,
+		setPurchaseMethodsValue,
+	}
+
 
  return (
     <>
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 			isFiltered ? 
-				<FilterResult  setIsFiltered = {setIsFiltered} /> :
+				<FilterResult  setIsFiltered = {setIsFiltered} setIsLoader = {setIsLoader} /> :
 				<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">
 					<div className="back-block">
@@ -197,30 +372,18 @@ const SellerForm = () =>{
 											</div>
 
 											{ conodoSelected 
-												&& 
-												<CondoPropertySearch 
-													renderFieldError = {renderFieldError}
-													setPurchaseMethodsValue = {setPurchaseMethodsValue}
-													setLocationFlawsValue = {setLocationFlawsValue}										
-												/> 
+												&& 												
+												<CondoPropertySearch data = {dataObj} /> 
 											}
 
 											{ landSelected 
 												&& 
-												<DevelopmentPropertySearch 
-													renderFieldError = {renderFieldError}
-													setPurchaseMethodsValue = {setPurchaseMethodsValue}
-													setLocationFlawsValue = {setLocationFlawsValue}										
-												/> 
+												<DevelopmentPropertySearch data = {dataObj} /> 
 											}
 
 											{ multiFamilySelected 
 												&& 
-												<MultiFamilyPropertySearch 
-													renderFieldError = {renderFieldError}
-													setPurchaseMethodsValue = {setPurchaseMethodsValue}
-													setLocationFlawsValue = {setLocationFlawsValue}										
-												/> 
+												<MultiFamilyPropertySearch data = {dataObj} /> 
 											}
 
 											<div className="submit-btn">

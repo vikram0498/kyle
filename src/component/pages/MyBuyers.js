@@ -12,13 +12,11 @@ const MyBuyer = () =>{
 	const [isLoader, setIsLoader] = useState(true);
 	const [totalRecord,setTotalRecord] = useState(0);
 	const [currentRecord,setCurrentRecord] = useState(0);
+	const [fromRecord,setFromRecord] = useState(0);
+	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
 	useEffect(() => {
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers();
-		} else {
 			getBuyerLists();
-		}
         
     },[]);
 
@@ -39,49 +37,26 @@ const MyBuyer = () =>{
 			setCurrentRecord(response.data.buyers.data.length);
 			setTotalRecord(response.data.totalBuyers);
 			setTotalPage(response.data.buyers.last_page);
+
+			setFromRecord(response.data.buyers.from);
+			setToRecord(response.data.buyers.to);
         })
 	}
 
-	const getFilteredBuyers = (page='') => {
-		const apiUrl = process.env.REACT_APP_API_URL;
-		let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
-		let headers = { 
-			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token,
-			'auth-token' : getTokenData().access_token,
-		};
-		let url = apiUrl+'buy-box-search';
-		if(page>1){
-			url = apiUrl+'buy-box-search?page='+page;
-		}
-		axios.post(url, searchFields, { headers: headers }).then(response => {
-			setBuyerData(response.data.buyers.data)
-			setIsLoader(false);
-			setCurrentRecord(response.data.buyers.data.length);
-			setTotalRecord(response.data.total_records);
-			setTotalPage(response.data.buyers.last_page);
-        })
-	}
 
 	const handleClickNext = () =>{
 		setIsLoader(true);
 		let count = pageNumber+1;
 		setPageNumber(count);
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers(count);
-		} else {
-			getBuyerLists(count);
-		}
+		
+		getBuyerLists(count);
 	}
 	const handleClickPrev = () =>{
 		setIsLoader(true);
 		let count = pageNumber-1;
 		setPageNumber(count);
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers(count);
-		} else {
-			getBuyerLists(count);
-		}
+
+		getBuyerLists(count);
 	} 
  return (
     <>
@@ -104,13 +79,14 @@ const MyBuyer = () =>{
 						<h6 className="center-head text-center mb-0">My Buyers</h6>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-						<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{currentRecord} Out of {totalRecord}</p>
+					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{fromRecord} to {toRecord} Out of {totalRecord}</p>
 					</div>
 				</div>
 			</div>
 			<div className="card-box bg-white-gradient">
 				<div className="row">
 					<div className="col-12 col-lg-12">
+					{ (totalRecord == 0)?<div className="card-box-inner"> <h5>No Data Found</h5> </div>: 
 						<div className="card-box-inner">
 							<h3 className="text-center">Property Criteria Match With 10 Buyers</h3>
 							<div className="property-critera">
@@ -163,6 +139,7 @@ const MyBuyer = () =>{
 								</div>
 							</div>
 						</div>
+					}
 					</div>
 				</div>
 			</div>
