@@ -36,6 +36,7 @@ import { useForm } from './../../../hooks/useForm';
     let headers = { 
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + getTokenData().access_token,
+        'auth-token' : getTokenData().access_token,
     };
 
     const getOptionsValues = () =>{

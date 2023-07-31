@@ -13,17 +13,18 @@ function VerifyEmail({ match }) {
         const emailVerifyFun = async () => {
             try {
                 const response = await axios.get(`${apiUrl}email/verify/${id}/${hash}`);
-                
-                if(response.data.user_data.already_verified === true) {
+                if(response.data.status) {
                     toast.success(response.data.message, {
                         position: toast.POSITION.TOP_RIGHT
                     });
                     navigate('/login');
                 } else{
-                    toast.success('Email verified successfully.', {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
-                    navigate('/login');
+                    // console.log('case 2');
+                    // toast.success('Email verified successfully.', {
+                    //     position: toast.POSITION.TOP_RIGHT
+                    // });
+                    // navigate('/login');
+                    // console.log('case 2');
                 }
             } catch (error) {
                 if (error.response) {

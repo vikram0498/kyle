@@ -32,7 +32,8 @@ const FilterResult = ({setIsFiltered}) =>{
 
 		let headers = { 
 			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token
+			'Authorization': 'Bearer ' + getTokenData().access_token,
+			'auth-token' : getTokenData().access_token,
 		};
 		let url = apiUrl+'buy-box-search';
 		if(page>1){

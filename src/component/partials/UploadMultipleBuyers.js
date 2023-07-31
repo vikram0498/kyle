@@ -49,6 +49,7 @@ const UploadMultipleBuyers = () => {
         let headers = { 
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + getTokenData().access_token,
+            'auth-token' : getTokenData().access_token,
             "Content-Type": "multipart/form-data"
         };
         async function fetchData() {
@@ -64,7 +65,7 @@ const UploadMultipleBuyers = () => {
                     navigate('/');
                 }
             }catch{
-                toast.error("Sorry ! No rows are Inserted", {position: toast.POSITION.TOP_RIGHT});  
+                toast.error("No rows inserted during the import process", {position: toast.POSITION.TOP_RIGHT});  
             }
         }
         if(csvFile !=''){

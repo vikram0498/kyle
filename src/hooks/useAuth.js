@@ -61,7 +61,8 @@ export const useAuth = () => {
         const apiUrl = process.env.REACT_APP_API_URL;
         let headers = {
             "Accept": "application/json", 
-            'Authorization': 'Bearer ' + getTokenData().access_token
+            'Authorization': 'Bearer ' + getTokenData().access_token,
+            'auth-token' : getTokenData().access_token,
         }
         axios.post(apiUrl+'logout', {}, { headers: headers }).then(response => {
         })

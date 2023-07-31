@@ -37,6 +37,7 @@ const MultiFamilyResidential = ({renderFieldError, setPurchaseMethodsValue, setL
     let headers = { 
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + getTokenData().access_token,
+        'auth-token' : getTokenData().access_token,
     };
 
     const getOptionsValues = () =>{

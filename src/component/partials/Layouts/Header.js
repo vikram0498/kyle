@@ -58,7 +58,7 @@ function Header() {
 										<div className="welcome-user" style={{display:'block'}}>
 											<span className="welcome">welcome</span>
 											<span className="user-name-title">
-												{(userDetails !=null) ? userDetails.name : ''}
+												{(userDetails !=null) ? userDetails.first_name+' '+userDetails.last_name: ''}
 											</span>
 										</div>
 									</div>

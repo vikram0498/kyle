@@ -80,7 +80,7 @@ const Register = () => {
 
             axios.post(apiUrl+'register', payload, { headers: headers }).then(response => {
                 setLoading(false);
-                if(response.data.user_data) {
+                if(response.data.status) {
                     toast.success('Registration successful. Please check your email for verification.', {
                         position: toast.POSITION.TOP_RIGHT
                     });
@@ -89,8 +89,11 @@ const Register = () => {
             }).catch(error => {
                 setLoading(false);
                 if(error.response) {
-                    if (error.response.data.errors) {
-                        setErrors(error.response.data.errors);
+                    if (error.response.data.validation_errors) {
+                        setErrors(error.response.data.validation_errors);
+                    }
+                    if (error.response.data.error) {
+                        toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
                     }
                 }
             });
@@ -99,7 +102,6 @@ const Register = () => {
             setRecaptchaError('Please complete reCAPTCHA verification.');
         }
     }
-    console.log(capchaSiteKey,'capchaSiteKey');
     return (
         
         <Layout>
@@ -112,7 +114,7 @@ const Register = () => {
                     <div className="row" >
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                             <div className="form-group">
-                                <label htmlFor='first_name'>First Name</label>
+                                <label htmlFor='first_name'>First Name <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/user.svg" className="img-fluid" alt="" /></span>
                                     <input 
@@ -131,7 +133,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                             <div className="form-group">
-                                <label htmlFor='last_name'>Last Name</label>
+                                <label htmlFor='last_name'>Last Name <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/user.svg" className="img-fluid" alt="" /></span>
                                     <input 
@@ -150,7 +152,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                             <div className="form-group">
-                                <label htmlFor='email'>Email</label>
+                                <label htmlFor='email'>Email <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/mail.svg" className="img-fluid" alt="" /></span>
                                     <input 
@@ -169,7 +171,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                             <div className="form-group">
-                                <label htmlFor='phone'>Mobile Number</label>
+                                <label htmlFor='phone'>Mobile Number <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/phone.svg" className="img-fluid" alt="" /></span>
                                     <input 
@@ -188,7 +190,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label htmlFor='company_name' >Company Name</label>
+                                <label htmlFor='company_name' >Company Name <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon">
                                         <img src="./assets/images/map-pin.svg" className="img-fluid" alt="" /></span>
@@ -208,7 +210,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label htmlFor='pass_log_id'>Password</label>
+                                <label htmlFor='pass_log_id'>Password <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input  
@@ -228,7 +230,7 @@ const Register = () => {
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group">
-                                <label htmlFor='conpass_log_id'>Confirm password</label>
+                                <label htmlFor='conpass_log_id'>Confirm password <span style={{color:'red'}}>*</span></label>
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="" /></span>
                                     <input 
@@ -267,7 +269,7 @@ const Register = () => {
                             <p className="account-now">Already Have an account? <Link to="/login">Login Now!</Link></p>
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social list-unstyled mb-0 social-login-link">
-                                <li>
+                                {/* <li>
                                     <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link>
                                     <FacebookLoginButton
                                     apiUrl={apiUrl}
@@ -275,7 +277,7 @@ const Register = () => {
                                     navigate={navigate}
                                     setErrors={setErrors}
                                     />
-                                </li>
+                                </li> */}
                                 <li>
                                 <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link>
                                 <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">

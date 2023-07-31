@@ -9,6 +9,7 @@ import {useAuth} from "../../../hooks/useAuth";
 // import googleImg from './../../assets/images/google.svg';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { toHaveAttribute } from '@testing-library/jest-dom/matchers';
 
 const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => { 
 
@@ -24,9 +25,9 @@ const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => {
             "Accept": "application/json", 
         }
         axios.post(apiUrl+'handle-google', data, { headers: headers }).then(response => {
-            setLoading(false);
-            console.log('res ',response.data);
+            setLoading(toHaveAttribute);
             if(response.data.status) {
+                setLoading(false);
                 toast.success('Login successfully!', {
                     position: toast.POSITION.TOP_RIGHT
                 });

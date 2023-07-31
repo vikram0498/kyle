@@ -54,6 +54,7 @@ const SellerForm = () =>{
     let headers = { 
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + getTokenData().access_token,
+		'auth-token' : getTokenData().access_token,
     };
     const getOptionsValues = () =>{
         axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {

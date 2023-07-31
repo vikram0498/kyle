@@ -25,10 +25,12 @@ const UploadMultipleBuyersOnChange = () => {
             setBorder('1px dashed #ff0018');
             setErrorMsg('Please add valid file (csv)');
             setFileName('Upload your .CSV file');
+            return;
         }else if (fileSize > maxFileSize) {
             setBorder('1px dashed #ff0018');
             setErrorMsg('File size is too large. Please upload a file that is less than 5MB.');
             setFileName('Upload your .CSV file');
+            return;
         }else{
             setErrorMsg('');
             setBorder('1px dashed #677AAB');
@@ -41,6 +43,7 @@ const UploadMultipleBuyersOnChange = () => {
         let headers = { 
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + getTokenData().access_token,
+            'auth-token' : getTokenData().access_token,
             "Content-Type": "multipart/form-data"
         };
         async function fetchData() {
@@ -51,7 +54,7 @@ const UploadMultipleBuyersOnChange = () => {
                     navigate('/my-buyers');
                 }
             }catch{
-                toast.error("Sorry ! No rows are Inserted", {position: toast.POSITION.TOP_RIGHT});            
+                toast.error("No rows inserted during the import process", {position: toast.POSITION.TOP_RIGHT});            
             }
         }
         if(file !=''){
@@ -79,7 +82,7 @@ const UploadMultipleBuyersOnChange = () => {
                         </span> 
                     </label>
                 </div>
-                <span className="cannot-upload-message"> <span className="error">error</span> Please select a file first <span className="cancel-alert-button">cancel</span> </span>
+                <span className="cannot-upload-message"> <span className="error"></span> Please select a file first <span className="cancel-alert-button">cancel</span> </span>
                 <div className="file-block">
                     <div className="file-info"><span className="file-name"> </span> | <span className="file-size">  </span> </div>
                     
@@ -87,6 +90,7 @@ const UploadMultipleBuyersOnChange = () => {
                 </div>
             </div>
         </form>
+        <p style={{padding: '6px',textAlign: 'center',fontSize: '13px',color: 'red',fontWeight: '700'}}>{errorMsg}</p>
         </>
     );
 }

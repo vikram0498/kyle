@@ -26,7 +26,8 @@ const MyBuyer = () =>{
 		const apiUrl = process.env.REACT_APP_API_URL;
 		let headers = { 
 			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token
+			'Authorization': 'Bearer ' + getTokenData().access_token,
+			'auth-token' : getTokenData().access_token,
 		};
 		let url = apiUrl+'fetch-buyers';
 		if(page>1){
@@ -46,7 +47,8 @@ const MyBuyer = () =>{
 		let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
 		let headers = { 
 			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token
+			'Authorization': 'Bearer ' + getTokenData().access_token,
+			'auth-token' : getTokenData().access_token,
 		};
 		let url = apiUrl+'buy-box-search';
 		if(page>1){

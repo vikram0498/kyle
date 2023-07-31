@@ -166,16 +166,15 @@ function Login (props){
 
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social social-login-link list-unstyled mb-0">
-                                <li>
+                                {/* <li>
                                 <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
-                                    {/* <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link> */}
                                     <FacebookLoginButton
                                      apiUrl={apiUrl}
                                      setLoading={setLoading}
                                      navigate={navigate}
                                      setErrors={setErrors}
                                     />
-                                </li>
+                                </li> */}
                                 <li>
                                 <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link>
                                     {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
@@ -198,3 +197,4 @@ function Login (props){
 }
   
 export default Login;
+
