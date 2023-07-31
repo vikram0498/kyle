@@ -94,7 +94,7 @@ class ProfileController extends Controller
                     $uploadId = null;
                     $updatedUser= User::find($userId);
                     if($updatedUser->profileImage){
-                        $uploadId = $updatedUser->id;
+                        $uploadId = $updatedUser->profileImage->id;
                         $actionType = 'update';
                     }
                     uploadImage($updatedUser, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
@@ -113,7 +113,7 @@ class ProfileController extends Controller
 
         }catch (\Exception $e) {
             DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
+             dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
