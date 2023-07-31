@@ -45,7 +45,6 @@ class ProfileController extends Controller
             'first_name'  => 'required',
             'last_name'   => 'required',
             'phone'       => 'required',
-            'profile_image'    => 'image|mimes:jpeg,jpg,png|max:1024',
         ];
 
         if((!is_null($request->old_password)) || $request->old_password != ''){
@@ -56,6 +55,10 @@ class ProfileController extends Controller
        
         if(!auth()->user()->email){
             $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
+        }
+
+        if($request->hasFile('profile_image')){
+            $validatedData['profile_image'] = ['image','mimes:jpeg,jpg,png','max:1024'];
         }
 
         $request->validate($validatedData,[
