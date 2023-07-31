@@ -252,24 +252,27 @@ class BuyerController extends Controller
             }
 
             if($request->country){
-                $buyers->where('country', $request->country);
+                $country =  DB::table('countries')->where('id',$request->country)->value('name');
+                $buyers->where('country', $country);
             }
 
             if($request->state){
-                $buyers->where('state', $request->state);
+                $state   =  DB::table('states')->where('id',$request->state)->value('name');
+                $buyers->where('state', $state);
             }
 
             if($request->city){
-                $buyers->where('city', $request->city);
+                $city    =  DB::table('cities')->where('id',$request->city)->value('name');
+                $buyers->where('city', $city);
             }
 
             if($request->zip_code){
                 $buyers->where('zip_code', $request->zip_code);
             }
 
-            if($request->price){
+            /* if($request->price){
                 $buyers->where('price', $request->price);
-            }
+            } */
 
             if($request->bedroom_min && is_numeric($request->bedroom_min)){
                 $buyers = $buyers->where('bedroom_min', '>=', $request->bedroom_min);
@@ -432,6 +435,11 @@ class BuyerController extends Controller
             $insertLogRecords['user_id'] = $userId;
 
             if(isset($request->filterType) && $request->filterType == 'search_page' ){
+
+                $insertLogRecords['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
+                $insertLogRecords['state']   =  DB::table('states')->where('id',$request->state)->value('name');
+                $insertLogRecords['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
+
                 SearchLog::create($insertLogRecords);
             }
 
@@ -478,7 +486,7 @@ class BuyerController extends Controller
         try {
             $perPage = 10;
             $userId = auth()->user()->id;
-            $totalBuyers = Buyer::count();
+            $totalBuyers = Buyer::where('user_id', $userId)->count();
             $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
         
             DB::commit();
