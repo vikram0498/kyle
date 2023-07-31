@@ -48,8 +48,8 @@ class ProfileController extends Controller
             'profile_image'    => 'image|mimes:jpeg,jpg,png|max:1024',
         ];
 
-        if($request->old_password){
-            $validatedData['old_password'] = [/*'required',*/ 'string','min:8',new MatchOldPassword];
+        if((!is_null($request->old_password)) || $request->old_password != ''){
+            $validatedData['old_password'] = [/*'required',*/ 'string','min:8'/*,new MatchOldPassword*/];
             $validatedData['new_password'] =  [/*'required',*/ 'string', 'min:8', 'different:old_password'];
             $validatedData['confirm_password'] = [/*'required',*/'min:8','same:new_password'];
         }

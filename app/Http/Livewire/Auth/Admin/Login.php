@@ -50,8 +50,9 @@ class Login extends BaseComponent
             if($user){
                 if($user->is_admin){
                     $checkVerified = $user->email_verified_at;
-                    if(!is_null($checkVerified)){                
-                        if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) {
+                    if(!is_null($checkVerified)){  
+                                   
+                        if (Auth::guard('web')->attempt($credentialsOnly, $remember_me)) { 
                             $this->resetInputFields();
                             $this->resetErrorBag();
                             $this->resetValidation();

@@ -169,8 +169,12 @@ class LoginRegisterController extends Controller
             $userDetails = array();
             $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
 
-            $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
+            // $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
+
+            $userDetails['reset_password_url'] = 'https://kyle-react.hipl-staging3.com/reset-password/'.$token.'/'.encrypt($email_id);
+
         
+            
             DB::table('password_resets')->insert([
                 'email'         => $email_id, 
                 'token'         => $token, 

@@ -128,6 +128,7 @@ class SocialMediaController extends Controller
                 Auth::login($newUser);
 
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+                
                 $responseData = [
                     'status'        => true,
                     'userData'      => [
