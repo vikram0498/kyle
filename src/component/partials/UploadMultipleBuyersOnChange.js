@@ -18,7 +18,7 @@ const UploadMultipleBuyersOnChange = () => {
     const [filename, setFileName] = useState('Upload your .CSV file');
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        const maxFileSize = 1 * 1024 * 1024; // 5MB
+        const maxFileSize = 5 * 1024 * 1024; // 5MB
         const fileSize = file.size;
         const fileType = file.type;
         if(fileType != 'text/csv'){

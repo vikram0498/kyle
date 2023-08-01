@@ -137,7 +137,6 @@ function AddBuyerDetails (){
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
-        console.log(formObject, "sdgsdghsdh")
         axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){

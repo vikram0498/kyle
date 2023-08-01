@@ -24,6 +24,7 @@ import MyProfile from './component/pages/MyProfile';
 import PrivacyPolicy from './component/pages/PrivacyPolicy';
 import TermCondition from './component/pages/TermCondition';
 import Protected from './util/Protected';
+import Support from './component/pages/Support';
 
 const RoutesList = () => {
   const {userData,isLogin} = useAuth();
@@ -55,6 +56,7 @@ const RoutesList = () => {
             <Route path="/my-profile" element={<Protected Component={MyProfile}/>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
+            <Route path="/support" element={<Support/>} />
         </Routes>
       </AuthContext.Provider>
       </GoogleOAuthProvider>

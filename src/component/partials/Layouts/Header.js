@@ -53,7 +53,7 @@ function Header() {
 							<div className="dropdown user-dropdown">
 								<button className="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 									<div className="dropdown-data">
-										<div className="img-user"><img src={(userDetails !=null && userDetails.profile_image != '') ? userDetails.profile_image : './assets/images/avtar.png'} className="img-fluid" alt="" /></div>
+										<div className="img-user"><img src={(userDetails !=null && userDetails.profile_image != '') ? userDetails.profile_image : './assets/images/avtar.png'} className="img-fluid user-profile" alt="" /></div>
 										<div className="welcome-user" style={{display:'block'}}>
 											<span className="welcome">welcome</span>
 											<span className="user-name-title">
@@ -80,7 +80,7 @@ function Header() {
 											</Link>
 										</li>
 										<li>
-											<a className="dropdown-item" href="#"><img src="./assets/images/messages.svg" className="img-fluid" />Support
+											<a className="dropdown-item" href="/support"><img src="./assets/images/messages.svg" className="img-fluid" />Support
 											</a>
 										</li>
 										<li>

@@ -1618,3 +1618,12 @@ body .css-t3ipsp-control {
     background: #fff !important;
     border: 1px solid #E1E3E7 !important;
 }
+.error{
+    color: red;
+    font-size: 13px;
+    font-weight: 600;
+}
+.support-textarea{
+ height:141px;
+ border: 1px solid #E1E3E7 !important;
+}
