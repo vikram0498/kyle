@@ -2,12 +2,10 @@ import React ,{ useEffect, useState} from 'react';
 import {Link , useNavigate} from "react-router-dom";
 import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
-import Header from "../partials/Layouts/Header";
-import Footer from "../partials/Layouts/Footer";
+import Pagination from './Layouts/Pagination';
 
-const FilterResult = ({setIsFiltered, setIsLoader}) =>{
+const FilterResult = ({setIsFiltered}) =>{
 	
-
 	const {getTokenData} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
@@ -17,13 +15,18 @@ const FilterResult = ({setIsFiltered, setIsLoader}) =>{
 	const [fromRecord,setFromRecord] = useState(0);
 	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
-	useEffect(() => {
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers();
-		}        
-    },[]);
 
-	
+	const [showLoader,setShowLoader] = useState(false);
+
+
+	useEffect(() => {
+		if(localStorage.getItem('get_filtered_data') !== null){
+			if(localStorage.getItem('filter_buyer_fields') !== null){			
+				let res = JSON.parse(localStorage.getItem('get_filtered_data'));				
+				addBuyerDetails(res);
+			}
+		}
+    }, []);	
 
 	const getFilteredBuyers = (page='') => {
 		const apiUrl = process.env.REACT_APP_API_URL;
@@ -41,70 +44,73 @@ const FilterResult = ({setIsFiltered, setIsLoader}) =>{
 			url = apiUrl+'buy-box-search?page='+page;
 		}
 		axios.post(url, searchFields, { headers: headers }).then(response => {
-			setBuyerData(response.data.buyers.data)
-			
-			setCurrentRecord(response.data.buyers.data.length);
-			setTotalRecord(response.data.total_records);
-			setTotalPage(response.data.buyers.last_page);
-
-			setFromRecord(response.data.buyers.from);
-			setToRecord(response.data.buyers.to);
-
-			setIsLoader(false);
-
+			addBuyerDetails(response.data);
         })
 	}
 
-	const handleClickNext = () =>{
-		setIsLoader(true);
-		let count = pageNumber+1;
-		setPageNumber(count);
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers(count);
-		}
+	const addBuyerDetails = (buyer_data) => {
+		setBuyerData(buyer_data.buyers.data)
+			
+		setCurrentRecord(buyer_data.buyers.data.length);
+		setTotalRecord(buyer_data.total_records);
+		setTotalPage(buyer_data.buyers.last_page);
+
+		setFromRecord(buyer_data.buyers.from);
+		setToRecord(buyer_data.buyers.to);
+		
+		setShowLoader(false);
 	}
-	const handleClickPrev = () =>{
-		setIsLoader(true);
-		let count = pageNumber-1;
-		setPageNumber(count);
-		if(localStorage.getItem('filter_buyer_fields') !== null){
-			getFilteredBuyers(count);
-		} 
-	} 
 
 	const handleBackClick = () => {
+		if(localStorage.getItem('get_filtered_data') !== null){
+			localStorage.removeItem('get_filtered_data');
+		}
 		setIsFiltered(false)
 		window.history.pushState(null, "", "/sellers-form")
-		// setIsLoader(true)
 	}
+
+	const handlePagination = (page_number) =>{
+		if(localStorage.getItem('get_filtered_data') !== null){
+			localStorage.removeItem('get_filtered_data');
+		}
+		setShowLoader(true);
+
+		setPageNumber(page_number);
+
+		if(localStorage.getItem('filter_buyer_fields') !== null){
+			getFilteredBuyers(page_number);
+		} 
+	} 
+	
  return (
     <>
-    <section className="main-section position-relative pt-4 pb-120">
-		<div className="container position-relative">
-			<div className="back-block">
-				<div className="row">
-					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                        <a onClick={handleBackClick} style={{ cursor: 'pointer'}} className="back">
-							<svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-								<path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-							</svg>
-							Back
-						</a>
-					</div>
-					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-						<h6 className="center-head text-center mb-0">My Buyers</h6>
-					</div>
-					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-						<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{fromRecord} to {toRecord} Out of {totalRecord}</p>
+	{ (showLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
+		<section className="main-section position-relative pt-4 pb-120">
+			<div className="container position-relative">
+				<div className="back-block">
+					<div className="row">
+						<div className="col-12 col-sm-4 col-md-4 col-lg-4">
+							<a onClick={handleBackClick} style={{ cursor: 'pointer'}} className="back">
+								<svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+									<path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+								</svg>
+								Back
+							</a>
+						</div>
+						<div className="col-12 col-sm-4 col-md-4 col-lg-4">
+							<h6 className="center-head text-center mb-0">My Buyers</h6>
+						</div>
+						<div className="col-12 col-sm-4 col-md-4 col-lg-4">
+							<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord == null) ? 0 : fromRecord} to {(toRecord == null) ? 0 : toRecord} Out of {totalRecord}</p>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className="card-box bg-white-gradient">
-				<div className="row">
-					<div className="col-12 col-lg-12">
-						{ (totalRecord == 0)?<div className="card-box-inner"> <h5>No Data Found</h5> </div>: 
-							<div className="card-box-inner">
+				<div className="card-box bg-white-gradient">
+					<div className="row">
+						<div className="col-12 col-lg-12">
+							{ (totalRecord == 0)?<div className="card-box-inner"> <h5>No Data Found</h5> </div>: 
+								<div className="card-box-inner">
 									<h3 className="text-center">Property Criteria Match With {totalRecord} Buyers</h3>
 									<div className="property-critera">
 										<div className="row ">
@@ -122,8 +128,9 @@ const FilterResult = ({setIsFiltered, setIsLoader}) =>{
 														<ul className="list-unstyled mb-0">
 															<li>
 																<span className="detail-icon">
-																	<img src="./assets/images/user-gradient.svg" className="img-fluid" /></span>
-																<span className="name-dealer">{data.first_name}</span>
+																	<img src="./assets/images/user-gradient.svg" className="img-fluid" />
+																</span>
+																<span className="name-dealer">{data.first_name} {data.last_name}</span>
 															</li>
 															<li>
 																<span className="detail-icon">
@@ -144,24 +151,33 @@ const FilterResult = ({setIsFiltered, setIsLoader}) =>{
 											</div>)})}
 										</div>
 										<div className="row justify-content-center">
-											{(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
-											{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''}
+											{/* {(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
+											{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''} */}
+
 											
-											{/* <div className="col-12 col-lg-12">
+
+											<Pagination
+												totalPage={totalPage}
+												currentPage={pageNumber}
+												onPageChange={handlePagination}
+											/>
+											
+											<div className="col-12 col-lg-12">
 												<div className="want-to-see">
 													<h3 className="text-center">Want to see more buyer!</h3>
-													<a className="btn btn-fill" onClick={handleClick}>Click Here</a>
+													<Link className="btn btn-fill" to={'/choose-your-plan'}>Click Here</Link>
 												</div>
-											</div> */}
+											</div>
 										</div>
 									</div>
-							</div>
-						}
+								</div>
+							}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	}
     </>
  )
 }

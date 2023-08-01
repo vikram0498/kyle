@@ -4,6 +4,7 @@ import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
+import Pagination from '../partials/Layouts/Pagination';
 
 const MyBuyer = () =>{
 	const {getTokenData} = useAuth();
@@ -44,19 +45,12 @@ const MyBuyer = () =>{
 	}
 
 
-	const handleClickNext = () =>{
+	const handlePagination = (page_number) =>{
 		setIsLoader(true);
-		let count = pageNumber+1;
-		setPageNumber(count);
-		
-		getBuyerLists(count);
-	}
-	const handleClickPrev = () =>{
-		setIsLoader(true);
-		let count = pageNumber-1;
-		setPageNumber(count);
 
-		getBuyerLists(count);
+		setPageNumber(page_number);
+
+		getBuyerLists(page_number);
 	} 
  return (
     <>
@@ -105,8 +99,9 @@ const MyBuyer = () =>{
 												<ul className="list-unstyled mb-0">
 													<li>
 														<span className="detail-icon">
-                                                            <img src="./assets/images/user-gradient.svg" className="img-fluid" /></span>
-														<span className="name-dealer">{data.first_name}</span>
+                                                            <img src="./assets/images/user-gradient.svg" className="img-fluid" />
+														</span>
+														<span className="name-dealer">{data.first_name} {data.last_name}</span>
 													</li>
 													<li>
 														<span className="detail-icon">
@@ -127,15 +122,21 @@ const MyBuyer = () =>{
 									</div>)})}
 								</div>
 								<div className="row justify-content-center">
-									{(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
-									{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''}
+									{/* {(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
+									{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''} */}
 									
-									{/* <div className="col-12 col-lg-12">
+									<Pagination
+										totalPage={totalPage}
+										currentPage={pageNumber}
+										onPageChange={handlePagination}
+									/>
+									
+									<div className="col-12 col-lg-12">
 										<div className="want-to-see">
 											<h3 className="text-center">Want to see more buyer!</h3>
-											<a className="btn btn-fill" onClick={handleClick}>Click Here</a>
+											<Link className="btn btn-fill" to={'/choose-your-plan'}>Click Here</Link>
 										</div>
-									</div> */}
+									</div>
 								</div>
 							</div>
 						</div>

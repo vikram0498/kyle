@@ -12,6 +12,7 @@ function Header() {
 
 	if(isNotSearchPage){
 		localStorage.removeItem('filter_buyer_fields');
+		localStorage.removeItem('get_filtered_data');
 	}
 
 

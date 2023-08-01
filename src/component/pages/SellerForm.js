@@ -61,7 +61,7 @@ const SellerForm = () =>{
     const [balloonPayment, setBalloonPayment] = useState(null);
 
 	const [solar, setSolar] = useState(null);
-    const [pool, SetPool] = useState(null);
+    const [pool, setPool] = useState(null);
     const [septic, setSeptic] = useState(null);
     const [well, setWell] = useState(null);
     const [ageRestriction, setAgeRestriction] = useState(null);
@@ -164,7 +164,42 @@ const SellerForm = () =>{
         }
     }
 
+	const makeStateBlank = () => {
+
+		setAddress(''); setCountry(''); setState(''); setCity(''); setZipCode(''); 
+
+		setPrice('');
+
+		setBedroomMin(''); 		setBedroomMax(''); 
+		setBathMin(''); 		setBathMax(''); 
+		setSizeMin(''); 		setSizeMax('');
+		setLotSizeMin(''); 		setLotSizeMax('');
+		setYearBuildMin(''); 	setYearBuildMax('');
+		setArvMin(''); 			setArvMax('');
+
+		setParking([]); setTotalUnits(''); setBuildingClass(''); setValueAdd(null);
+
+		setPurchaseMethod([]); 
+		
+		setDownPaymentPercentage(''); setDownPaymentMoney(''); setInterestRate(''); setBalloonPayment(null);
+
+		setLocationFlaw([]);
+
+		setSolar(null); setPool(null); setBalloonPayment(null); setWell(null); setAgeRestriction(null);
+		setRentalRestriction(null); setHoa(null); setTenant(null); setPostPossession(null); setBuildingRequired(null);
+		setFoundationIssues(null); setMold(null); setFireDamaged(null); setRebuild(null); setSquatters(null);
+
+		setLocationFlawsValue([]);
+
+		setPurchaseMethodsValue([]);
+
+		setCityOptions([]);
+		setStateOptions([]);
+
+	}
+
 	const handlePropertyTypeChange = (value) => {
+		makeStateBlank();
 		setErrors(null);
 		if(value == null){
 			setConodoSelected(false);
@@ -223,7 +258,7 @@ const SellerForm = () =>{
             setLoading(false);
             if(response.data.status){
                 localStorage.setItem('filter_buyer_fields', JSON.stringify(formObject));
-                // localStorage.setItem('get_filtered_data', JSON.stringify(response.data.buyers));
+                localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
 
                 // navigate('/my-buyers')
 				window.history.pushState(null, "", "/my-buyers");
@@ -282,7 +317,7 @@ const SellerForm = () =>{
 		locationFlaw, setLocationFlaw,
 
 		solar, setSolar,
-		pool, SetPool,
+		pool, setPool,
 		septic, setSeptic,
 		well, setWell,
 		ageRestriction, setAgeRestriction,
@@ -327,8 +362,8 @@ const SellerForm = () =>{
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 			isFiltered ? 
-				<FilterResult  setIsFiltered = {setIsFiltered} setIsLoader = {setIsLoader} /> :
-				<section className="main-section position-relative pt-4 pb-120">
+			<FilterResult  setIsFiltered = {setIsFiltered} setIsLoader = {setIsLoader} /> :
+			<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">
 					<div className="back-block">
 						<Link to="/" className="back">

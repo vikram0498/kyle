@@ -126,6 +126,7 @@ const Register = () => {
                                         onChange={e => setFirstName(e.target.value)}
                                         placeholder="First Name"   
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                 </div>
                                 {renderFieldError('first_name') }
@@ -145,6 +146,7 @@ const Register = () => {
                                         onChange={e => setLastName(e.target.value)}
                                         placeholder="Last Name"  
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                 </div>
                                 {renderFieldError('last_name') }
@@ -164,6 +166,7 @@ const Register = () => {
                                         onChange={e => setEmail(e.target.value)}
                                         placeholder="Enter Your Email"
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                 </div>
                                 {renderFieldError('email') }
@@ -183,6 +186,7 @@ const Register = () => {
                                         onChange={e => setPhone(e.target.value)}
                                         placeholder="1234567890"
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                 </div>
                                 {renderFieldError('phone') }
@@ -203,6 +207,7 @@ const Register = () => {
                                         onChange={e => setCompanyName(e.target.value)}
                                         placeholder="Enter Company Name"  
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                 </div>
                                 {renderFieldError('company_name') }
@@ -222,6 +227,7 @@ const Register = () => {
                                         onChange={e => setPassword(e.target.value)}
                                         placeholder="Enter Your Password"   
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                     <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
@@ -242,6 +248,7 @@ const Register = () => {
                                         onChange={e => setPasswordConfirmation(e.target.value)}
                                         placeholder="Enter Your Confirm Password"  
                                         disabled={ loading ? 'disabled' : ''}
+                                        required
                                     />
                                     <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>

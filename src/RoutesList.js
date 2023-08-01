@@ -25,6 +25,8 @@ import PrivacyPolicy from './component/pages/PrivacyPolicy';
 import TermCondition from './component/pages/TermCondition';
 import Protected from './util/Protected';
 import Support from './component/pages/Support';
+import CopyAddBuyer from './component/pages/CopyAddBuyer';
+
 
 const RoutesList = () => {
   const {userData,isLogin} = useAuth();
@@ -39,6 +41,10 @@ const RoutesList = () => {
             <Route path="/forget-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token/:hash" element={<ResetPassword />} />
             <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
+
+            {/* add buyer link */}
+            <Route path="/add-buyer/:token" element={<CopyAddBuyer />} />
+
 
             {/* App routes */}
             

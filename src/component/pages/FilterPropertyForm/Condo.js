@@ -1,11 +1,7 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
-import { useAuth } from './../../../hooks/useAuth';
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
-import { useForm } from './../../../hooks/useForm';
 
  const Condo = ( {data}) => {
 
@@ -178,20 +174,21 @@ import { useForm } from './../../../hooks/useForm';
                         {data.renderFieldError('balloon_payment') }
                     </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col-12 col-lg-6">
+            
+                <div className="col-12 col-lg-9">
                     <label>Parking</label>
                     <div className="form-group">
                         <SingleSelect
                             name="parking"
                             options={data.parkingOption}
                             placeholder='Select Parking'
+                            setValue={data.setParking}
+                            value={data.parking}
                         />
                         {data.renderFieldError('parking') }
                     </div>
                 </div>
-                <div className="col-12 col-lg-6">
+                <div className="col-12 col-lg-12">
                     <label>Purchase Method <span>*</span></label>
                     <div className="form-group">
 						<MultiSelect
@@ -289,7 +286,7 @@ import { useForm } from './../../../hooks/useForm';
                     <div className="radio-block-group">
                         <label>Pool</label>
                         <div className="label-container">
-                            <input type="radio" name="pool" value="1" id="pool_yes" checked={data.solar == 1 ? 'checked' : ''} onChange={ e=>data.setSolar(e.target.value) } />
+                            <input type="radio" name="pool" value="1" id="pool_yes" checked={data.pool == 1 ? 'checked' : ''} onChange={ e=>data.setPool(e.target.value) } />
                             <label className="mb-0" htmlFor="pool_yes">Yes</label>
                         </div>
                         <div className="label-container">

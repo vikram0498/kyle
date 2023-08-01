@@ -1,11 +1,7 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
-import { useAuth } from './../../../hooks/useAuth';
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
-// import { useForm } from './../../../hooks/useForm';
 
 const MultiFamilyResidential = ({data}) =>{ 
 
@@ -185,6 +181,8 @@ const MultiFamilyResidential = ({data}) =>{
                             name="parking"
                             options={data.parkingOption}
                             placeholder='Select Parking'
+                            setValue={data.setParking}
+                            value={data.parking}
                         />
                         {data.renderFieldError('parking') }
                     </div>
@@ -202,6 +200,8 @@ const MultiFamilyResidential = ({data}) =>{
                             name="building_class"
                             options={data.buildingClassOption}
                             placeholder='Select Option'
+                            setValue={data.setBuildingClass}
+                            value={data.buildingClass}
                         />
                         {data.renderFieldError('building_class') }
                     </div>
@@ -211,11 +211,11 @@ const MultiFamilyResidential = ({data}) =>{
                     <div className="form-group">
                         <div className="radio-block">
                             <div className="label-container">
-                                <input type="radio" name="value_add" value="0" id="value_add_yes" checked={data.valueAdd == 1 ? 'checked' : ''} onChange={ e=>data.setValueAdd(e.target.value) }/>
+                                <input type="radio" name="value_add" value="1" id="value_add_yes" checked={data.valueAdd == 1 ? 'checked' : ''} onChange={ e=>data.setValueAdd(e.target.value) }/>
                                 <label className="mb-0" htmlFor="value_add_yes">Yes</label>
                             </div>
                             <div className="label-container">
-                                <input type="radio" name="value_add" value="1" id="value_add_no" checked={data.valueAdd == 0 ? 'checked' : ''} onChange={ e=>data.setValueAdd(e.target.value) }/>
+                                <input type="radio" name="value_add" value="0" id="value_add_no" checked={data.valueAdd == 0 ? 'checked' : ''} onChange={ e=>data.setValueAdd(e.target.value) }/>
                                 <label className="mb-0" htmlFor="value_add_no">No</label>
                             </div>
                         </div>
@@ -317,10 +317,10 @@ const MultiFamilyResidential = ({data}) =>{
                     {data.renderFieldError('solar') }
                 </div>
                 <div className="grid-template-col">
-                    <div className="radio-block-group">
+                <div className="radio-block-group">
                         <label>Pool</label>
                         <div className="label-container">
-                            <input type="radio" name="pool" value="1" id="pool_yes" checked={data.solar == 1 ? 'checked' : ''} onChange={ e=>data.setSolar(e.target.value) } />
+                            <input type="radio" name="pool" value="1" id="pool_yes" checked={data.pool == 1 ? 'checked' : ''} onChange={ e=>data.setPool(e.target.value) } />
                             <label className="mb-0" htmlFor="pool_yes">Yes</label>
                         </div>
                         <div className="label-container">

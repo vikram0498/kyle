@@ -48,7 +48,11 @@ function AddBuyerDetails (){
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
     const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
 
+    const [copySuccess, setCopySuccess] = useState(false);
+
     const [loading, setLoading] = useState(false);
+
+    const baseURL = window.location.origin;
 
     useEffect(() => {
         getOptionsValues();
@@ -157,6 +161,32 @@ function AddBuyerDetails (){
         });
     }
 
+    const copyAddBuyerLink = () => {
+        try{
+            axios.get(apiUrl+'copy-single-buyer-form-link', { headers: headers }).then(response => {
+                if(response.data.status){
+                    let token = response.data.data.copy_token;
+                    
+                    let copyUrl = baseURL+"/add-buyer/"+token;
+
+                    navigator.clipboard.writeText(copyUrl).then(() => {
+                        console.log('coied')
+                        setCopySuccess(true);
+                        setTimeout(() => {
+                            setCopySuccess(false);
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        toast.error('Failed to copy URL', {position: toast.POSITION.TOP_RIGHT});
+                    });
+                }
+            })
+        }catch{
+            setLogout();
+            navigate('/login');
+        }
+    }
+
     return (
         <>
            <Header/>
@@ -183,7 +213,7 @@ function AddBuyerDetails (){
                                             <p>Fill the below form OR send link to the buyer</p>
                                         </div>
                                         <div className="col-12 col-sm-5 col-md-6 col-lg-6">
-                                            <button type="button" className="copy-link">
+                                            <button type="button" className="copy-link" onClick={copyAddBuyerLink}>
                                                 <span className="link-icon">
                                                     <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <g clipPath="url(#clip0_270_17734)">
@@ -199,6 +229,9 @@ function AddBuyerDetails (){
                                                 </span>
                                                 Copy Form Link
                                             </button>
+                                            {copySuccess && 
+                                                <p className="text-success text-end">URL Copied to Clipboard!</p>
+                                            }
                                         </div>
                                     </div>
                                     <form method='post' onSubmit={submitSingleBuyerForm}>
