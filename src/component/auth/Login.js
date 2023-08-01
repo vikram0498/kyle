@@ -129,7 +129,7 @@ function Login (props){
                                         disabled={ loading ? 'disabled' : ''}
                                         autoComplete='off'
                                     />
-                                    <span onClick={togglePasswordVisibility} className={`form-icon-password toggle-password ${showPassoword ? '' : 'eye-close'}`}>
+                                    <span onClick={togglePasswordVisibility} className={`form-icon-password toggle-password ${showPassoword ? 'eye-open' : 'eye-close'}`}>
                                         <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>
                                     </span>
                                 </div>
@@ -160,7 +160,7 @@ function Login (props){
                             </div>
                         </div>
                         <div className="col-12 col-lg-12">
-                            <p className="account-now">Don’t Have an account?  
+                            <p className="account-now"><span style={{marginRight:'2px'}}>Don’t Have an account? </span>    
                                 <Link to="/register"> Sign up now!</Link>
                             </p>
 

@@ -223,7 +223,7 @@ const Register = () => {
                                         placeholder="Enter Your Password"   
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
+                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password') }
                             </div>
@@ -243,7 +243,7 @@ const Register = () => {
                                         placeholder="Enter Your Confirm Password"  
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
+                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password_confirmation') }
                             </div>
