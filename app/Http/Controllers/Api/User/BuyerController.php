@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\Token;
 use Illuminate\Support\Str;
 use App\Models\SearchLog;
 use App\Imports\BuyersImport;
@@ -573,37 +574,52 @@ class BuyerController extends Controller
 
     public function copySingleBuyerFormLink(){
         
-        $authUser = auth()->user();
+        try {
+            $authUserId = auth()->user()->id;
 
-        $token = Str::random(32);
-        $currentDateTime = Carbon::now();
-        
-        $tokenRecords = [
-            'token_value'        => $token,
-            'token_expired_time' => $currentDateTime->addMinutes(config('constant.token_expired_time')),
-            'is_used'            => 0,
-        ];
-
-        $checkToken = $authUser->copyTokens()->whereDate('token_expired_time', '<=', Carbon::now())->orWhere('is_used',1)->first();
-
-        $isTokenGenerated = false;
-        if($checkToken){
-            $checkToken->update($tokenRecords);
-            $isTokenGenerated = true;
-        }else{
-            $authUser->copyTokens()->create($tokenRecords);
-            $isTokenGenerated = true;
-        }
-
-        if($isTokenGenerated){
-            //Return Success Response
-            $responseData = [
-                'status'        => true,
-                'data'          => ['copy_token'=>$token],
+            $token = Str::random(32);
+            $currentDateTime = Carbon::now();
+            
+            $tokenRecords = [
+                'user_id'            => $authUserId,
+                'token_value'        => $token,
+                'token_expired_time' => $currentDateTime->addMinutes(config('constant.token_expired_time')),
+                'is_used'            => 0,
             ];
 
-            return response()->json($responseData, 200);
-        }else{
+            $checkToken = Token::where('user_id',$authUserId)->where(function($query){
+                $query->whereDate('token_expired_time', '<=', Carbon::now())
+                ->orWhere('is_used',1);
+            })->first();
+
+            $isTokenGenerated = false;
+            if($checkToken){
+                Token::where('token_value',$checkToken->token_value)->update($tokenRecords);
+                $isTokenGenerated = true;
+            }else{
+                Token::create($tokenRecords);
+                $isTokenGenerated = true;
+            }
+
+            if($isTokenGenerated){
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'data'          => ['copy_token'=>$token],
+                ];
+
+                return response()->json($responseData, 200);
+            }else{
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.error_message'),
+                ];
+                return response()->json($responseData, 400);
+            }
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
             //Return Error Response
             $responseData = [
                 'status'        => false,
