@@ -63,6 +63,7 @@ class Buyer extends Model
         'mold',
         'fire_damaged',
         'rebuild',
+        'squatters',
         'buyer_type',
         'max_down_payment_percentage',
         'max_down_payment_money',

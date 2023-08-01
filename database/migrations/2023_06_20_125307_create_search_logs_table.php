@@ -69,7 +69,7 @@ return new class extends Migration
 
             $table->integer('unit_min')->nullable();
             $table->integer('unit_max')->nullable();
-            $table->json('building_class')->nullable();
+            $table->integer('building_class')->nullable();
             $table->tinyInteger('value_add')->nullable();
 
             $table->boolean('status')->default(1)->comment('0=> deactive, 1=> active');
