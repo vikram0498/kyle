@@ -113,7 +113,7 @@ class ProfileController extends Controller
 
         }catch (\Exception $e) {
             DB::rollBack();
-             dd($e->getMessage().'->'.$e->getLine());
+            //  dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [

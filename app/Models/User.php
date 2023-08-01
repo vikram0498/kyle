@@ -111,4 +111,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
         Mail::to($user->email)->queue(new VerifyEmailMail($user->name, $url, $subject));
     }
+
+    public function copyTokens()
+    {
+        return $this->hasMany(Token::class);
+    }
+
 }

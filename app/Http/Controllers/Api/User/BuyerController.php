@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use Carbon\Carbon;
 use App\Models\Buyer;
+use Illuminate\Support\Str;
 use App\Models\SearchLog;
 use App\Imports\BuyersImport;
 use Illuminate\Support\Arr;
@@ -569,4 +571,45 @@ class BuyerController extends Controller
         }
     }
 
+    public function copySingleBuyerFormLink(){
+        
+        $authUser = auth()->user();
+
+        $token = Str::random(32);
+        $currentDateTime = Carbon::now();
+        
+        $tokenRecords = [
+            'token_value'        => $token,
+            'token_expired_time' => $currentDateTime->addMinutes(config('constant.token_expired_time')),
+            'is_used'            => 0,
+        ];
+
+        $checkToken = $authUser->copyTokens()->whereDate('token_expired_time', '<=', Carbon::now())->orWhere('is_used',1)->first();
+
+        $isTokenGenerated = false;
+        if($checkToken){
+            $checkToken->update($tokenRecords);
+            $isTokenGenerated = true;
+        }else{
+            $authUser->copyTokens()->create($tokenRecords);
+            $isTokenGenerated = true;
+        }
+
+        if($isTokenGenerated){
+            //Return Success Response
+            $responseData = [
+                'status'        => true,
+                'data'          => ['copy_token'=>$token],
+            ];
+
+            return response()->json($responseData, 200);
+        }else{
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
 }

@@ -37,6 +37,8 @@ return [
 
     'copy_right_content'=>'All Rights Reserved.',
 
+    'token_expired_time'=>'1',
+
     'number_of_rows' => [
         10 => '10',
         25 => '25',

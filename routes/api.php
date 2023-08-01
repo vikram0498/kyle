@@ -76,6 +76,8 @@ Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],f
 
     Route::post('getCities', [BuyerController::class, 'getCities']);
 
+    Route::get('copy-single-buyer-form-link', [BuyerController::class, 'copySingleBuyerFormLink']);
+
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
 });

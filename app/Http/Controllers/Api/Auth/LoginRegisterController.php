@@ -23,8 +23,12 @@ class LoginRegisterController extends Controller
             'phone'                     => 'required|numeric|digits:10|unique:users,phone,NULL,id,deleted_at,NULL',
             // 'address'                   => 'required',
             'company_name'              => 'required',
-            'password'                  => 'required|min:8|confirmed',
-            'password_confirmation'     => 'required',
+            'password'                  => 'required|min:8',
+            'password_confirmation'     => 'required|same:password',
+        ],[
+            'phone.required'=>'The mobile number field is required',
+            'phone.digits' =>'The mobile number must be 10 digits',
+            'phone.unique' =>'The mobile number already exists.',
         ]);
         if($validator->fails()){
              //Error Response Send
