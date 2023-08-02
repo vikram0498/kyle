@@ -379,7 +379,7 @@ class BuyerController extends Controller
             }
 
             if(!is_null($request->well) && in_array($request->well, $radioValues)){
-                $buyers = $buyers->where('well', $request->septic);
+                $buyers = $buyers->where('well', $request->well);
             }
 
             if(!is_null($request->age_restriction) && in_array($request->age_restriction, $radioValues)){
