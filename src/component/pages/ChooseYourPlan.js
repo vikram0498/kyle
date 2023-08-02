@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
-
+import { Link } from 'react-router-dom';
  const ChooseYourPlan = () => {
     return(
         <>
@@ -11,13 +11,13 @@ import Footer from "../partials/Layouts/Footer";
                     <div class="back-block">
                         <div class="row">
                             <div class="col-12 col-lg-4">
-                                <a href="#" class="back">
+                                <Link to="/" class="back">
                                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     Back
-                                </a>
+                                </Link>
                             </div>
                             <div class="col-12 col-lg-4">
                                 <h6 class="center-head text-center mb-0">Pricing Page</h6>

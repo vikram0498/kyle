@@ -19,6 +19,8 @@ function AddBuyerDetails (){
     const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const { setErrors, renderFieldError } = useForm();
     
@@ -163,6 +165,22 @@ function AddBuyerDetails (){
         });
     }
 
+    const handleChangeFirstName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            setFirstName(new_value);
+        }
+    }
+    const handleChangeLastName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            console.log(new_value);
+            setLastName(new_value);
+        }
+    }
+
     const copyAddBuyerLink = () => {
         setCopyLoading(true);
         try{
@@ -245,14 +263,20 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>First Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="first_name" className="form-control" placeholder="First Name" required />
+                                                        <input type="text" name="first_name" className="form-control" placeholder="First Name"
+                                                         value={firstName}
+                                                        onChange={handleChangeFirstName} 
+                                                        />
                                                         {renderFieldError('first_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Last Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="last_name" className="form-control" placeholder="Last Name" required />
+                                                        <input type="text" name="last_name" className="form-control" placeholder="Last Name"
+                                                         value={lastName} 
+                                                        onChange={handleChangeLastName}
+                                                        />
                                                         {renderFieldError('last_name') }
                                                     </div>
                                                 </div>

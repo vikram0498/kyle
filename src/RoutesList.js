@@ -26,6 +26,7 @@ import TermCondition from './component/pages/TermCondition';
 import Protected from './util/Protected';
 import Support from './component/pages/Support';
 import CopyAddBuyer from './component/pages/CopyAddBuyer';
+import ResultPage from './component/pages/ResultPage';
 
 
 const RoutesList = () => {
@@ -60,6 +61,7 @@ const RoutesList = () => {
             <Route path="/admin-message" element={<Protected Component={AdminMessage}/>} />
             <Route path="/admin-request" element={<Protected Component={AdminRequest}/>} />
             <Route path="/my-profile" element={<Protected Component={MyProfile}/>} />
+            <Route path="/result-page" element={<Protected Component={ResultPage}/>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
             <Route path="/support" element={<Support/>} />

@@ -102,6 +102,21 @@ const Register = () => {
             setRecaptchaError('Please complete reCAPTCHA verification.');
         }
     }
+    const handleChangeFirstName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            setFirstName(new_value);
+        }
+    }
+    const handleChangeLastName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            console.log(new_value);
+            setLastName(new_value);
+        }
+    }
     return (
         
         <Layout>
@@ -123,7 +138,7 @@ const Register = () => {
                                         id="first_name"
                                         className="form-control"
                                         value={first_name}
-                                        onChange={e => setFirstName(e.target.value)}
+                                        onChange={handleChangeFirstName}
                                         placeholder="First Name"   
                                         disabled={ loading ? 'disabled' : ''}
                                         required
@@ -143,7 +158,7 @@ const Register = () => {
                                         id="last_name" 
                                         className="form-control" 
                                         value={last_name}
-                                        onChange={e => setLastName(e.target.value)}
+                                        onChange={handleChangeLastName}
                                         placeholder="Last Name"  
                                         disabled={ loading ? 'disabled' : ''}
                                         required
@@ -227,7 +242,6 @@ const Register = () => {
                                         onChange={e => setPassword(e.target.value)}
                                         placeholder="Enter Your Password"   
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
                                     />
                                     <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>

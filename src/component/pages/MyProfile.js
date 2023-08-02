@@ -18,7 +18,8 @@ import axios from 'axios';
     const [loader,setLoader] = useState(true);
     const { setErrors, renderFieldError } = useForm();
     const [previewImageUrl, setPreviewImageUrl] = useState('');
-
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     // console.log('sdss',getTokenData().access_token);
     let headers = {
         "Accept": "application/json", 
@@ -29,6 +30,8 @@ import axios from 'axios';
         axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
             let { data } = response.data.data;
             setUserData(response.data.data);
+            setFirstName(response.data.data.first_name);
+            setLastName(response.data.data.last_name);
             const userData = {
                 'first_name':response.data.data.first_name,
                 'last_name':response.data.data.last_name,
@@ -126,6 +129,21 @@ import axios from 'axios';
             reader.readAsDataURL(e.target.files[0]);
           }
     }
+
+    const handleChangeFirstName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            setFirstName(new_value);
+        }
+    }
+    const handleChangeLastName = (e) => {
+        const regex = /^[a-zA-Z]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        if (regex.test(new_value)) {
+            setLastName(new_value);
+        }
+    }
     return(
         <>
             <Header/>
@@ -143,14 +161,18 @@ import axios from 'axios';
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>First Name</label>
-                                                    <input type="text" name="first_name" className="form-control-form" placeholder="First Name" defaultValue={userData.first_name}/>
+                                                    <input type="text" name="first_name" className="form-control-form" placeholder="First Name" 
+                                                    onChange={handleChangeFirstName}
+                                                    value={firstName}/>
                                                     {renderFieldError('first_name') } 
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Last Name</label>
-                                                    <input type="text" name="last_name" className="form-control-form" placeholder="Last Name" defaultValue={userData.last_name}/> 
+                                                    <input type="text" name="last_name" className="form-control-form" placeholder="Last Name" 
+                                                    value={lastName}
+                                                    onChange={handleChangeLastName}/> 
                                                     {renderFieldError('last_name') }
                                                 </div>
                                             </div>
