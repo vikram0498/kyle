@@ -655,24 +655,40 @@ class BuyerController extends Controller
     }
 
     public function isValidateToken($token){
-        $checkToken = Token::where('token_value',$token)->where(function($query){
-            $query->where('token_expired_time', '<=', Carbon::now())
-            ->orWhere('is_used',0);
-        })->first();
-        if($checkToken){
+        $tokenExpired = $this->checkTokenValidate($token);
+
+        if($tokenExpired){
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error_type'    => 'token_expired',
+                'error'         => 'Token has been expired!',
+            ];
+            return response()->json($responseData, 400);
+        }else{
             //Success Response Send
             $responseData = [
                 'status'            => true,
                 'message'           => 'Token is validate!',
             ];
             return response()->json($responseData, 200);
-        }else{
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error'         => 'Token has been expired!',
-            ];
-            return response()->json($responseData, 400);
         }
+
+    }
+
+    private function checkTokenValidate($token){
+        $currentDateTime = Carbon::now();
+        $tokenExpired = true;
+        $checkToken = Token::where('token_value',$token)->first();
+        if($checkToken){
+            if($checkToken->token_expired_time > $currentDateTime) {
+                $tokenExpired = false;
+            }
+            if($checkToken->is_used == 1) {
+                $tokenExpired = false;
+            }
+        }
+
+        return $tokenExpired;
     }
 }

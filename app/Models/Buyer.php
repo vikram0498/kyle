@@ -86,7 +86,7 @@ class Buyer extends Model
     {
         parent::boot();
         static::creating(function(Buyer $model) {
-            $model->created_by = auth()->user()->id;
+            $model->created_by = auth()->user() ?? $model->user_id;
         });               
     }
 
