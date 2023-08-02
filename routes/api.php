@@ -44,7 +44,25 @@ Route::controller(SocialMediaController::class)->group(function(){
 
 });
 
-Route::post('upload-single-buyer-details/{token}', [BuyerController::class, 'uploadSingleBuyerDetails']);
+Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
+
+Route::get('getBuildingClassNames', [BuyerController::class, 'getBuildingClassNames']);
+
+Route::get('getPurchaseMethods', [BuyerController::class, 'getPurchaseMethods']);
+
+Route::get('getParkings', [BuyerController::class, 'getParkings']);
+
+Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
+
+Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFormElementValues']);
+
+Route::get('getCountries', [BuyerController::class, 'getCountries']);
+
+Route::post('getStates', [BuyerController::class, 'getStates']);
+
+Route::post('getCities', [BuyerController::class, 'getCities']);
+
+Route::post('upload-single-buyer-details/{token?}', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
 Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],function () { 
 
@@ -59,24 +77,6 @@ Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],f
     Route::post('buy-box-search/{page?}', [BuyerController::class, 'buyBoxSearch']);
 
     Route::get('fetch-buyers/{page?}', [BuyerController::class, 'fetchBuyers']);
-
-    Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
-
-    Route::get('getBuildingClassNames', [BuyerController::class, 'getBuildingClassNames']);
-
-    Route::get('getPurchaseMethods', [BuyerController::class, 'getPurchaseMethods']);
-
-    Route::get('getParkings', [BuyerController::class, 'getParkings']);
-
-    Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
-
-    Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFormElementValues']);
-
-    Route::get('getCountries', [BuyerController::class, 'getCountries']);
-
-    Route::post('getStates', [BuyerController::class, 'getStates']);
-
-    Route::post('getCities', [BuyerController::class, 'getCities']);
 
     Route::get('copy-single-buyer-form-link', [BuyerController::class, 'copySingleBuyerFormLink']);
 
