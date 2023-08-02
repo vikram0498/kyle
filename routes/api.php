@@ -62,7 +62,7 @@ Route::post('getStates', [BuyerController::class, 'getStates']);
 
 Route::post('getCities', [BuyerController::class, 'getCities']);
 
-Route::post('upload-single-buyer-details/{token?}', [BuyerController::class, 'uploadSingleBuyerDetails']);
+Route::post('store-single-buyer-details/{token?}', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
 Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],function () { 
 
