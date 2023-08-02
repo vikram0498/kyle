@@ -205,7 +205,6 @@ class BuyerController extends Controller
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request,$token = null){
         DB::beginTransaction();
         try {
-            $checkToken = null;
             $validatedData = $request->all();
 
             // Start token functionality
@@ -235,8 +234,8 @@ class BuyerController extends Controller
 
             Buyer::create($validatedData);
 
-            if($token && $checkToken){
-              Token::where('user_id',$checkToken->user_id)->where('token_value',$token)->update(['is_used'=>1]);
+            if($token){
+              Token::where('token_value',$token)->update(['is_used'=>1]);
             }
 
             DB::commit();
@@ -677,12 +676,9 @@ class BuyerController extends Controller
     private function checkTokenValidate($token){
         $currentDateTime = Carbon::now();
         $tokenExpired = true;
-        $checkToken = Token::where('token_value',$token)->first();
+        $checkToken = Token::where('token_value',$token)->where('is_used',0)->first();
         if($checkToken){
             if($checkToken->token_expired_time > $currentDateTime) {
-                $tokenExpired = false;
-            }
-            if($checkToken->is_used == 1) {
                 $tokenExpired = false;
             }
         }
