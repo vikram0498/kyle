@@ -44,6 +44,8 @@ Route::controller(SocialMediaController::class)->group(function(){
 
 });
 
+Route::post('upload-single-buyer-details/{token}', [BuyerController::class, 'uploadSingleBuyerDetails']);
+
 Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);

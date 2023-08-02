@@ -202,11 +202,33 @@ class BuyerController extends Controller
         }
     }
 
-    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
+    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request,$token = null){
         DB::beginTransaction();
         try {
+            $checkToken = null;
             $validatedData = $request->all();
-            $validatedData['user_id'] = auth()->user()->id;
+
+            // Start token functionality
+            if($token){
+                $checkToken = Token::where('token_value',$token)->where(function($query){
+                    $query->where('token_expired_time', '<=', Carbon::now())
+                    ->orWhere('is_used',0);
+                })->first();
+                if($checkToken){
+                    $validatedData['user_id'] = $checkToken->user_id;
+                }else{
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Token has been expired!',
+                    ];
+                    return response()->json($responseData, 400);
+                }
+               
+            }else{
+                $validatedData['user_id'] = auth()->user()->id;
+            }
+            // End token functionality
 
             $validatedData['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
 
@@ -214,6 +236,10 @@ class BuyerController extends Controller
             $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
 
             Buyer::create($validatedData);
+
+            if($token && $checkToken){
+              Token::where('user_id',$checkToken->user_id)->where('token_value',$token)->update(['is_used'=>1]);
+            }
 
             DB::commit();
             
@@ -573,22 +599,21 @@ class BuyerController extends Controller
     }
 
     public function copySingleBuyerFormLink(){
-        
         try {
             $authUserId = auth()->user()->id;
 
             $token = Str::random(32);
             $currentDateTime = Carbon::now();
-            
+
             $tokenRecords = [
                 'user_id'            => $authUserId,
                 'token_value'        => $token,
-                'token_expired_time' => $currentDateTime->addMinutes(config('constant.token_expired_time')),
+                'token_expired_time' => $currentDateTime->addMinutes(config('constants.token_expired_time')),
                 'is_used'            => 0,
             ];
 
             $checkToken = Token::where('user_id',$authUserId)->where(function($query){
-                $query->whereDate('token_expired_time', '<=', Carbon::now())
+                $query->where('token_expired_time', '<=', Carbon::now())
                 ->orWhere('is_used',1);
             })->first();
 
