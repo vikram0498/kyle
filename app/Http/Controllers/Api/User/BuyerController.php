@@ -210,19 +210,17 @@ class BuyerController extends Controller
 
             // Start token functionality
             if($token){
-                $checkToken = Token::where('token_value',$token)->where(function($query){
-                    $query->where('token_expired_time', '<=', Carbon::now())
-                    ->orWhere('is_used',0);
-                })->first();
-                if($checkToken){
-                    $validatedData['user_id'] = $checkToken->user_id;
-                }else{
-                    //Return Error Response
-                    $responseData = [
+                $tokenExpired = $this->checkTokenValidate($token);
+                if($tokenExpired){
+                     //Return Error Response
+                     $responseData = [
                         'status'        => false,
+                        'error_type'    => 'token_expired',
                         'error'         => 'Token has been expired!',
                     ];
                     return response()->json($responseData, 400);
+                }else{
+                    $validatedData['user_id'] = Token::where('token_value',$token)->value('user_id');
                 }
                
             }else{
