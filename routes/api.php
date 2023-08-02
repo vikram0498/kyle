@@ -64,6 +64,8 @@ Route::post('getCities', [BuyerController::class, 'getCities']);
 
 Route::post('store-single-buyer-details/{token?}', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
+Route::get('check-token/{token}', [BuyerController::class, 'isValidateToken']);
+
 Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);
