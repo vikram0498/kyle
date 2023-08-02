@@ -30,8 +30,8 @@ class BuyersImport implements ToModel, WithStartRow
                 $buyerArr['name'] = $fName.' '.$lName;
                 $email = $this->modifiedString($row[2]);
                 if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
-                    $buyerExists = Buyer::where('email', $email)->exists();
-                    if(!$buyerExists){
+                    // $buyerExists = Buyer::where('email', $email)->exists();
+                    // if(!$buyerExists){
                         $buyerArr['email'] = $email;
                         $phone = $this->modifiedString($row[3]);
                         if(!empty($phone) && is_numeric($phone)){
@@ -154,7 +154,7 @@ class BuyersImport implements ToModel, WithStartRow
                                 }
                             }
                         }
-                    }
+                    // }
                 }
             }
         }
