@@ -52,6 +52,8 @@ function AddBuyerDetails (){
 
     const [loading, setLoading] = useState(false);
 
+    const [copyLoading, setCopyLoading] = useState(false);
+
     const baseURL = window.location.origin;
 
     useEffect(() => {
@@ -162,6 +164,7 @@ function AddBuyerDetails (){
     }
 
     const copyAddBuyerLink = () => {
+        setCopyLoading(true);
         try{
             axios.get(apiUrl+'copy-single-buyer-form-link', { headers: headers }).then(response => {
                 if(response.data.status){
@@ -172,11 +175,13 @@ function AddBuyerDetails (){
                     navigator.clipboard.writeText(copyUrl).then(() => {
                         console.log('coied')
                         setCopySuccess(true);
+                        setCopyLoading(false);
                         setTimeout(() => {
                             setCopySuccess(false);
                         }, 2000);
                     })
                     .catch((error) => {
+                        setCopyLoading(false);
                         toast.error('Failed to copy URL', {position: toast.POSITION.TOP_RIGHT});
                     });
                 }
@@ -213,7 +218,7 @@ function AddBuyerDetails (){
                                             <p>Fill the below form OR send link to the buyer</p>
                                         </div>
                                         <div className="col-12 col-sm-5 col-md-6 col-lg-6">
-                                            <button type="button" className="copy-link" onClick={copyAddBuyerLink}>
+                                            <button type="button" className="copy-link" onClick={copyAddBuyerLink} disabled={ copyLoading ? <MiniLoader/> : ''}>
                                                 <span className="link-icon">
                                                     <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <g clipPath="url(#clip0_270_17734)">
@@ -227,7 +232,7 @@ function AddBuyerDetails (){
                                                         </defs>
                                                     </svg>
                                                 </span>
-                                                Copy Form Link
+                                                Copy Form Link { copyLoading ? <MiniLoader/> : ''}
                                             </button>
                                             {copySuccess && 
                                                 <p className="text-success text-end">URL Copied to Clipboard!</p>
@@ -240,35 +245,35 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>First Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="first_name" className="form-control" placeholder="First Name" />
+                                                        <input type="text" name="first_name" className="form-control" placeholder="First Name" required />
                                                         {renderFieldError('first_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Last Name<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="last_name" className="form-control" placeholder="Last Name" />
+                                                        <input type="text" name="last_name" className="form-control" placeholder="Last Name" required />
                                                         {renderFieldError('last_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Email Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" />
+                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" required />
                                                         {renderFieldError('email') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" />
+                                                        <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" required />
                                                         {renderFieldError('phone') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" />
+                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" required />
                                                         {renderFieldError('address') }
                                                     </div>
                                                 </div>
@@ -337,14 +342,14 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Zip<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" />
+                                                        <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" required />
                                                         {renderFieldError('zip_code') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Company/LLC<span>*</span></label>
+                                                    <label>Company/LLC</label>
                                                     <div className="form-group">
-                                                        <input type="text" className="form-control" name="company_name" placeholder="Company LLC"/>
+                                                        <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
                                                         {renderFieldError('company_name') }
                                                     </div>
                                                 </div>
@@ -370,14 +375,14 @@ function AddBuyerDetails (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Minimum Units<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" />
+                                                                    <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" required />
                                                                     {renderFieldError('unit_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Maximum Units<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units" />
+                                                                    <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units" required />
                                                                     {renderFieldError('unit_max') }
                                                                 </div>
                                                             </div>
@@ -474,84 +479,84 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  />
+                                                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)" required />
                                                         {renderFieldError('bedroom_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" />
+                                                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" required />
                                                         {renderFieldError('bedroom_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bath (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)" />
+                                                        <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)" required />
                                                         {renderFieldError('bath_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bath (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" />
+                                                        <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" required />
                                                         {renderFieldError('bath_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Sq Ft Min<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min"  />
+                                                        <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min" required />
                                                         {renderFieldError('size_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Sq Ft Max<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max"  />
+                                                        <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max" required />
                                                         {renderFieldError('size_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"  />
+                                                        <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)" required />
                                                         {renderFieldError('lot_size_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" />
+                                                        <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" required />
                                                         {renderFieldError('lot_size_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Year Built (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)"/>
+                                                        <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)" required />
                                                         {renderFieldError('build_year_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Year Built (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)"/>
+                                                        <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" required />
                                                         {renderFieldError('build_year_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>ARV (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" />
+                                                        <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" required />
                                                         {renderFieldError('arv_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>ARV (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" />
+                                                        <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" required />
                                                         {renderFieldError('arv_max') }
                                                     </div>
                                                 </div>
@@ -794,23 +799,6 @@ function AddBuyerDetails (){
                                                         {renderFieldError('squatters') }
                                                     </div>
                                                 </div>
-                                                {/* <div className="col-12 col-lg-12">
-                                                    <label>Buyer Type<span>*</span></label>
-                                                    <div className="form-group">     
-                                                        <MultiSelect
-                                                            name="buyer_type"
-                                                            options={buyerTypeOption}
-                                                            placeholder='Select Buyer Type'
-                                                            setMultiselectOption = {setBuyerTypeValue}
-                                                            showCreative={setCreativeBuyerSelected}
-                                                            showmultiFamily={setMultiFamilyBuyerSelected}
-                                                        />
-                                                        {renderFieldError('buyer_type') }
-                                                    </div>
-                                                </div> */}
-                                                
-                                                
-                                                
                                             </div>
                                             
                                             <div className="submit-btn">
