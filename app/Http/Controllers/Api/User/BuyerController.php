@@ -261,6 +261,7 @@ class BuyerController extends Controller
     }
 
     public function buyBoxSearch(SearchBuyersRequest $request){
+        $radioValues = [0,1];
         DB::beginTransaction();
         try {
             $userId = auth()->user()->id;
@@ -365,63 +366,63 @@ class BuyerController extends Controller
             } */
 
 
-            if($request->solar){
+            if(!is_null($request->solar) && in_array($request->solar, $radioValues)){
                 $buyers = $buyers->where('solar', $request->solar);
             }
 
-            if($request->pool){
+            if(!is_null($request->pool) && in_array($request->pool, $radioValues)){
                 $buyers = $buyers->where('pool', $request->pool);
             }
 
-            if($request->septic){
+            if(!is_null($request->septic) && in_array($request->septic, $radioValues)){
                 $buyers = $buyers->where('septic', $request->septic);
             }
 
-            if($request->well){
-                $buyers = $buyers->where('well', $request->well);
+            if(!is_null($request->well) && in_array($request->well, $radioValues)){
+                $buyers = $buyers->where('well', $request->septic);
             }
 
-            if($request->age_restriction){
+            if(!is_null($request->age_restriction) && in_array($request->age_restriction, $radioValues)){
                 $buyers = $buyers->where('age_restriction', $request->age_restriction);
             }
 
-            if($request->rental_restriction){
+            if(!is_null($request->rental_restriction) && in_array($request->rental_restriction, $radioValues)){
                 $buyers = $buyers->where('rental_restriction', $request->rental_restriction);
             }
 
-            if($request->hoa){
+            if(!is_null($request->hoa) && in_array($request->hoa, $radioValues)){
                 $buyers = $buyers->where('hoa', $request->hoa);
             }
 
-            if($request->tenant){
+            if(!is_null($request->tenant) && in_array($request->tenant, $radioValues)){
                 $buyers = $buyers->where('tenant', $request->tenant);
             }
 
-            if($request->post_possession){
+            if(!is_null($request->post_possession) && in_array($request->post_possession, $radioValues)){
                 $buyers = $buyers->where('post_possession', $request->post_possession);
             }
 
-            if($request->building_required){
+            if(!is_null($request->building_required) && in_array($request->building_required, $radioValues)){
                 $buyers = $buyers->where('building_required', $request->building_required);
             }
 
-            if($request->foundation_issues){
+            if(!is_null($request->foundation_issues) && in_array($request->foundation_issues, $radioValues)){
                 $buyers = $buyers->where('foundation_issues', $request->foundation_issues);
             }
 
-            if($request->mold){
+            if(!is_null($request->mold) && in_array($request->mold, $radioValues)){
                 $buyers = $buyers->where('mold', $request->mold);
             }
 
-            if($request->fire_damaged){
+            if(!is_null($request->fire_damaged) && in_array($request->fire_damaged, $radioValues)){
                 $buyers = $buyers->where('fire_damaged', $request->fire_damaged);
             }
 
-            if($request->rebuild){
+            if(!is_null($request->rebuild) && in_array($request->rebuild, $radioValues)){
                 $buyers = $buyers->where('rebuild', $request->rebuild);
             }
 
-            if($request->squatters){
+            if(!is_null($request->squatters) && in_array($request->squatters, $radioValues)){
                 $buyers = $buyers->where('squatters', $request->squatters);
             }
             
@@ -441,7 +442,7 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('max_interest_rate', $request->max_interest_rate);
             }
 
-            if($request->balloon_payment){
+            if(!is_null($request->balloon_payment) && in_array($request->balloon_payment, $radioValues)){
                 $buyers = $buyers->where('balloon_payment', $request->balloon_payment);
             }
 
@@ -449,7 +450,7 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('building_class', intval($request->building_class));
             }
 
-            if($request->value_add){
+            if(!is_null($request->value_add) && in_array($request->value_add, $radioValues)){
                 $buyers = $buyers->where('value_add', $request->value_add);
             }
 
