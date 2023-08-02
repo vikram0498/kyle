@@ -131,17 +131,23 @@ import axios from 'axios';
     }
 
     const handleChangeFirstName = (e) => {
-        const regex = /^[a-zA-Z]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        const regex = /^[a-zA-Z\s]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
         if (regex.test(new_value)) {
             setFirstName(new_value);
         }
+        if(new_value ==''){
+            setFirstName('');
+        }
     }
     const handleChangeLastName = (e) => {
-        const regex = /^[a-zA-Z]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        const regex = /^[a-zA-Z\s]+$/;
+        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
         if (regex.test(new_value)) {
             setLastName(new_value);
+        }
+        if(new_value ==''){
+            setLastName('');
         }
     }
     return(
