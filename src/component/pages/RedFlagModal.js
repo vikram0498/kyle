@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 const RedFlagModal = ({buyer_id, buyer_status}) =>{
 
     const [reason, setReason] = useState('');
-
+    const handleRedFlagSubmit = () => {
+        
+    }
     return(
         <>
-            { (buyer_status == 'not_sent') ?
+            {/* { (buyer_status == 'not_sent') ? */}
                 <div className="modal fade modal-form-main" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{display: 'none'}}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
@@ -48,7 +50,7 @@ const RedFlagModal = ({buyer_id, buyer_status}) =>{
                     </div>
                 </div> 
 
-                : 
+                {/* :  */}
 
                 <div className="modal fade modal-form-main" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{display: 'none'}}>
                     <div className="modal-dialog mx-block modal-dialog-centered">
@@ -73,7 +75,7 @@ const RedFlagModal = ({buyer_id, buyer_status}) =>{
                     </div>
                 </div>
 
-            }
+            {/* } */}
         </>
     );
 }

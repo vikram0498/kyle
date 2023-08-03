@@ -18,6 +18,7 @@ import DevelopmentPropertySearch from './FilterPropertyForm/Development';
 import MultiFamilyPropertySearch from './FilterPropertyForm/MultiFamilyResidential';
 import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
 import FilterResult from "../partials/FilterResult";
+import ResultPage from "./ResultPage";
 
 
 
@@ -104,6 +105,10 @@ const SellerForm = () =>{
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
 
     const [loading, setLoading] = useState(false);
+
+	/** states for level 2 users start */
+	const [buyerType, setBuyerType] = useState('my_buyers');
+	/** states for level 2 users end  */
 
     useEffect(() => {
         getOptionsValues();
@@ -261,7 +266,8 @@ const SellerForm = () =>{
                 localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
 
                 // navigate('/my-buyers')
-				window.history.pushState(null, "", "/my-buyers");
+				// window.history.pushState(null, "", "/my-buyers");
+				 window.history.pushState(null, "", "/result-page");
 				// setIsLoader(true);
 				setIsFiltered(true);
             }
@@ -362,7 +368,8 @@ const SellerForm = () =>{
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 			isFiltered ? 
-			<FilterResult  setIsFiltered = {setIsFiltered} setIsLoader = {setIsLoader} /> :
+			// <FilterResult  setIsFiltered = {setIsFiltered} /> 
+			<ResultPage setIsFiltered = {setIsFiltered}/>:
 			<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">
 					<div className="back-block">
