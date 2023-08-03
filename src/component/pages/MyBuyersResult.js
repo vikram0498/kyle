@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Link , useNavigate} from "react-router-dom";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 
-const MyBuyersResult = () =>{
+const MyBuyersResult = ({handleRFClick}) =>{
+
+    const handleRedFlagClick = (buyer_id, buyer_status) => {
+        handleRFClick(buyer_id, buyer_status);
+    }
+
  return (
     <>
        <div className="tab-pane fade show active" id="pills-my-buyers" role="tabpanel" aria-labelledby="pills-my-buyers-tab">
@@ -44,7 +49,7 @@ const MyBuyersResult = () =>{
                                 </ul>
                             </div>
                             <div className="cornor-block">
-                                <div className="red-flag"><img src="/assets/images/red-flag.svg" className="img-fluid" /></div>
+                                <div className="red-flag" onClick={handleRedFlagClick(2, 'not_send')}><img src="/assets/images/red-flag.svg" className="img-fluid" /></div>
                             </div>
                         </div>
                     </div>
@@ -83,7 +88,7 @@ const MyBuyersResult = () =>{
                                 </ul>
                             </div>
                             <div className="cornor-block">
-                                <div className="red-flag"><img src="/assets/images/red-flag.svg" className="img-fluid" /></div>
+                                <div className="red-flag" onClick={handleRedFlagClick(3, 'sent')}><img src="/assets/images/red-flag.svg" className="img-fluid" /></div>
                             </div>
                         </div>
                     </div>

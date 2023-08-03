@@ -5,8 +5,18 @@ import HedgeFundResult from "./HedgefundResult";
 import InvestorsResult from "./InvestorsResult";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
+import RedFlagModal from "./RedFlagModal";
 
 const ResultPage = () =>{
+
+    const [buyerId, setBuyerId] = useState(0);
+    const [buyerStatus, setBuyerStatus] = useState('');
+
+    const handleRedFlagClick = (buyer_id, buyer_status) => {
+        setBuyerId(buyer_id);
+        setBuyerStatus(buyer_status);
+    }
+
     return(
         <>
             <Header/>
@@ -68,10 +78,12 @@ const ResultPage = () =>{
                                         </div>
                                     </div>
                                     <div className="tab-content" id="pills-tabContent">
-                                        <MyBuyersResult/>
+                                        <MyBuyersResult handleRFClick = {handleRedFlagClick} />
                                         <MoreBuyersResult/>
                                         <HedgeFundResult/>
                                         <InvestorsResult/>
+
+                                        <RedFlagModal buyer_id={buyerId} buyer_status={buyerStatus} />
                                     </div>
                                 </div>
                             </div>
