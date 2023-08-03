@@ -66,7 +66,7 @@ Route::post('store-single-buyer-details/{token}', [BuyerController::class, 'uplo
 
 Route::get('check-token/{token}', [BuyerController::class, 'isValidateToken']);
 
-Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],function () { 
+Route::group(['middleware' => [/*'set.authorization.header',*/'api','auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);
     
