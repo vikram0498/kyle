@@ -94,6 +94,7 @@ return [
         8 => 'Wholesaler',
         9 => 'Portfolio',
         10 => 'Builder',
+        11 => 'Investors',
     ],
 
     'building_class_values' => [

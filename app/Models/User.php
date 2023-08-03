@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function redFlagedBuyer(){
-        return $this->belongsToMany(Buyer::class)->withPivot('reason', 'status');
+        return $this->belongsToMany(Buyer::class)->withPivot(['reason', 'status']);
     }
 
     public function buyers()

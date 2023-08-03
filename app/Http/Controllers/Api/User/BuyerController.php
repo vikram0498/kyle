@@ -267,7 +267,16 @@ class BuyerController extends Controller
             $userId = auth()->user()->id;
 
             $buyers = Buyer::query();
-            $buyers = $buyers->where('user_id',$userId)->where('status', 1);
+
+            if($request->activeTab){
+                if($request->activeTab == 'my_buyers'){
+                    $buyers = $buyers->where('user_id',$userId);
+                }elseif($request->activeTab == 'more_buyers'){
+                    $buyers = $buyers->where('user_id','!=',$userId);
+                }
+            }
+
+            $buyers = $buyers->where('status', 1);
         
             if($request->property_type){
                 $propertyType = $request->property_type;
@@ -452,6 +461,10 @@ class BuyerController extends Controller
 
             if(!is_null($request->value_add) && in_array($request->value_add, $radioValues)){
                 $buyers = $buyers->where('value_add', $request->value_add);
+            }
+
+            if($request->buyer_type){
+                $buyers = $buyers->whereJsonContains('buyer_type', intval($request->buyer_type));
             }
 
             $totalRecord = $buyers->count();
@@ -685,5 +698,35 @@ class BuyerController extends Controller
         }
 
         return $tokenExpired;
+    }
+
+    public function redFlagBuyer(Request $request){
+        DB::beginTransaction();
+        try {
+            $redFlagRecord[0]['buyer_id'] = $request->buyer_id;
+            $redFlagRecord[0]['reason'] = $request->reason;
+           
+            $authUser = auth()->user();
+            $authUser->redFlagedBuyer()->sync($redFlagRecord);
+
+            DB::commit();
+            //Return Success Response
+            $responseData = [
+                'status'        => true,
+                'message'       => 'Flag added successfully!',
+            ];
+
+            return response()->json($responseData, 200);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
     }
 }

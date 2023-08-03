@@ -82,6 +82,8 @@ Route::group(['middleware' => [/*'set.authorization.header',*/'auth:sanctum']],f
 
     Route::get('copy-single-buyer-form-link', [BuyerController::class, 'copySingleBuyerFormLink']);
 
+    Route::post('red-flag-buyer', [BuyerController::class, 'redFlagBuyer']);
+
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
 });
