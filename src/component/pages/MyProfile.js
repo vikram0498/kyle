@@ -166,28 +166,28 @@ import axios from 'axios';
                                         <div className="row">
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
-                                                    <label>First Name</label>
+                                                    <label>First Name <span className="error">*</span></label>
                                                     <input type="text" name="first_name" className="form-control-form" placeholder="First Name" 
                                                     onChange={handleChangeFirstName}
-                                                    value={firstName}/>
+                                                    value={firstName} required/>
                                                     {renderFieldError('first_name') } 
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
-                                                    <label>Last Name</label>
+                                                    <label>Last Name <span className="error">*</span></label>
                                                     <input type="text" name="last_name" className="form-control-form" placeholder="Last Name" 
                                                     value={lastName}
-                                                    onChange={handleChangeLastName}/> 
+                                                    onChange={handleChangeLastName} required/> 
                                                     {renderFieldError('last_name') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
-                                                    <label>Email</label>
-                                                    {userData.email !='' && userData.email != null ? <p className="form-control-form">{userData.email}</p>:
+                                                    <label>Email <span className="error">*</span></label>
+                                                    {userData.email !='' && userData.email != null ? <p className="form-control-form" style={{background:'#e8f0fe'}}>{userData.email}</p>:
                                                     <>
-                                                    <input type="email" name="email" className="form-control-form" placeholder="Email" defaultValue={userData.email}/>
+                                                    <input type="email" name="email" className="form-control-form" placeholder="Email" defaultValue={userData.email} required/>
                                                     {renderFieldError('email') }
                                                     {/* <span>Verify Email</span> */}
                                                     </>
@@ -196,8 +196,8 @@ import axios from 'axios';
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
-                                                    <label>Phone Number</label>
-                                                    <input type="text" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone}/> 
+                                                    <label>Phone Number <span className="error">*</span></label>
+                                                    <input type="number" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone} required/> 
                                                     {renderFieldError('phone') }
                                                 </div>
                                             </div>
@@ -209,19 +209,22 @@ import axios from 'axios';
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Old Password</label>
-                                                    <input type="password" name="old_password" className="form-control-form" placeholder="Enter your old password"  /> 
+                                                    <input type="password" name="old_password" className="form-control-form" placeholder="Old Password" /> 
+                                                    {renderFieldError('old_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>New Password</label>
                                                     <input type="password" name="new_password" className="form-control-form" placeholder="New Password" /> 
+                                                    {renderFieldError('new_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Confirm Password</label>
                                                     <input type="password" name="confirm_password" className="form-control-form" placeholder="Confirm Password" /> 
+                                                    {renderFieldError('confirm_password') }
                                                 </div>
                                             </div>
                                         </div>

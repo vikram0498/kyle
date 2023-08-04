@@ -34,15 +34,15 @@ const ResultPage = ({setIsFiltered}) =>{
 		if(localStorage.getItem('get_filtered_data') !== null){
 			getFilterResult();
 		}
-    }, []);	
+    }, [activeTab,buyerType]);	
     
     const getFilterResult = (page="") => {
+        setShowLoader(true);
 		const apiUrl = process.env.REACT_APP_API_URL;
         let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
 		searchFields.activeTab = activeTab;
 		searchFields.buyer_type = buyerType;
 		searchFields.filterType = '';
-        console.log(searchFields,'searchFields');
         let headers = { 
 			'Accept': 'application/json',
 			'Authorization': 'Bearer ' + getTokenData().access_token,
@@ -71,7 +71,7 @@ const ResultPage = ({setIsFiltered}) =>{
 		if(localStorage.getItem('get_filtered_data') !== null){
 			localStorage.removeItem('get_filtered_data');
 		}
-		setIsFiltered(false)
+		setIsFiltered(false);
 		window.history.pushState(null, "", "/sellers-form")
 	}
     const handlePagination = (page_number) =>{
@@ -80,17 +80,19 @@ const ResultPage = ({setIsFiltered}) =>{
 		}
 		setShowLoader(true);
 		setPageNumber(page_number);
-		getFilterResult(pageNumber);
+		getFilterResult(page_number);
 	}
     const handleClickMyBuyers = () => {
-        setShowLoader(true);
-        setActiveTab('more_buyers');
-        getFilterResult();
+        setActiveTab('my_buyers');
     }
     const handleClickMoreBuyers = () => {
-        setShowLoader(true);
-        setActiveTab('my_buyers');
-        getFilterResult();
+        setActiveTab('more_buyers');
+    }
+    const handleClickHedgeFund = () => {
+        setBuyerType(5);
+    }
+    const handleClickInvestors = () => {
+        setBuyerType(11);
     }
     return(
         <>
@@ -111,7 +113,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                 <h6 className="center-head text-center mb-0">Result Page</h6>
                             </div>
                             <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">20 Out of 20</p>
+                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{toRecord} Out of {totalRecord}</p>
                             </div>
                         </div>
                     </div>
@@ -142,28 +144,27 @@ const ResultPage = ({setIsFiltered}) =>{
                                             <div className="buyers-tabs">
                                                 <ul className="nav nav-pills mb-0" id="pills-tab" role="tablist">
                                                     <li className="nav-item" role="presentation">
-                                                        <button className="nav-link" id="pills-hedgefund-tab" data-bs-toggle="pill" data-bs-target="#pills-hedgefund" type="button" role="tab" aria-controls="pills-hedgefund" aria-selected="true">Hedgefund</button>
+                                                        <button className="nav-link" id="pills-hedgefund-tab" data-bs-toggle="pill" data-bs-target="#pills-hedgefund" type="button" role="tab" aria-controls="pills-hedgefund" aria-selected="true" onClick={handleClickHedgeFund}>Hedgefund</button>
                                                     </li>
                                                     <li className="nav-item" role="presentation">
-                                                        <button className="nav-link" id="pills-investors-tab" data-bs-toggle="pill" data-bs-target="#pills-investors" type="button" role="tab" aria-controls="pills-investors" aria-selected="false">Investors</button>
+                                                        <button className="nav-link" id="pills-investors-tab" data-bs-toggle="pill" data-bs-target="#pills-investors" type="button" role="tab" aria-controls="pills-investors" aria-selected="false" onClick={handleClickInvestors}>Investors</button>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="tab-content" id="pills-tabContent">
-                                    <div>
                                         {showLoader && <Loader />}
                                         {!showLoader && (
                                             <div>
                                                 <MyBuyersResult buyerData={buyerData}/>
-                                                <MoreBuyersResult buyerData={buyerData}/>
-                                                <HedgeFundResult/>
-                                                <InvestorsResult/>
+                                                {/* <MoreBuyersResult buyerData={buyerData}/>
+                                                <HedgeFundResult buyerData={buyerData}/>
+                                                <InvestorsResult buyerData={buyerData}/> */}
+                                                {/* <RedFlagModal/> */}
+
                                             </div>
                                         )}
-                                    </div>
-                                        {/* <RedFlagModal buyer_id={buyerId} buyer_status={buyerStatus} /> */}
                                     </div>
                                 </div>
                                 <div className="row justify-content-center">

@@ -10,7 +10,7 @@ export const useForm = () => {
         // alert(field);
         if(errors && errors.hasOwnProperty(field)) {
             return errors[field][0] ? (
-                <span className="invalid-feedback" role="alert"><strong>{errors[field][0]}</strong></span>
+                <span className="invalid-feedback" role="alert">{errors[field][0]}</span>
             ) : null;
         }
         return null;

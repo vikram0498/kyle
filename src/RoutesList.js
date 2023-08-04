@@ -27,6 +27,8 @@ import Protected from './util/Protected';
 import Support from './component/pages/Support';
 import CopyAddBuyer from './component/pages/CopyAddBuyer';
 import ResultPage from './component/pages/ResultPage';
+import EditRequest from './component/partials/Modal/EditRequest';
+import SentRequest from './component/partials/Modal/SentRequest';
 
 
 const RoutesList = () => {
@@ -65,6 +67,8 @@ const RoutesList = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
             <Route path="/support" element={<Support/>} />
+            <Route path="/edit-modal" element={<EditRequest/>} />
+            <Route path="/submit-modal" element={<SentRequest/>} />
         </Routes>
       </AuthContext.Provider>
       </GoogleOAuthProvider>

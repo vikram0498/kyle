@@ -21,7 +21,7 @@ function AddBuyerDetails (){
     const [isLoader, setIsLoader] = useState(true);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-
+    const [generatedUrl, setGeneratedUrl] = useState('');
     const { setErrors, renderFieldError } = useForm();
     
     const [country, setCountry] = useState([]);
@@ -186,22 +186,27 @@ function AddBuyerDetails (){
         }
     }
 
+    const handleCopyToClipBoard = (url) => {
+        navigator.clipboard.writeText(url);
+        toast.success('Url Copied Successfully !', {position: toast.POSITION.TOP_RIGHT});
+    }
     const copyAddBuyerLink = () => {
         setCopyLoading(true);
+        setGeneratedUrl('');
         try{
             axios.get(apiUrl+'copy-single-buyer-form-link', { headers: headers }).then(response => {
                 if(response.data.status){
                     let token = response.data.data.copy_token;
                     
                     let copyUrl = baseURL+"/add-buyer/"+token;
-
+                    setGeneratedUrl(copyUrl);
                     navigator.clipboard.writeText(copyUrl).then(() => {
-                        console.log('coied')
                         setCopySuccess(true);
                         setCopyLoading(false);
+                        toast.success('Url Generated Successfully', {position: toast.POSITION.TOP_RIGHT});
                         setTimeout(() => {
                             setCopySuccess(false);
-                        }, 2000);
+                        }, 5000);
                     })
                     .catch((error) => {
                         setCopyLoading(false);
@@ -257,11 +262,15 @@ function AddBuyerDetails (){
                                                 </span>
                                                 Copy Form Link { copyLoading ? <MiniLoader/> : ''}
                                             </button>
-                                            {copySuccess && 
-                                                <p className="text-success text-end">URL Copied to Clipboard!</p>
-                                            }
                                         </div>
                                     </div>
+                                    {(copySuccess && generatedUrl !='') ? <div id="inviteCode" class="invite-page">
+                                        <input  id="link" value={generatedUrl} readonly/>
+                                        <div id="copy">
+                                        <i class="fa fa-clipboard" aria-hidden="true" data-copytarget="#link" onClick={() => handleCopyToClipBoard(generatedUrl)}></i>
+                                        </div>
+                                    </div>:''
+                                    }
                                     <form method='post' onSubmit={submitSingleBuyerForm}>
                                         <div className="card-box-blocks">
                                             <div className="row">

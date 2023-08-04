@@ -27,7 +27,7 @@ const RedFlagModal = ({buyer_id, buyer_status}) =>{
                                         <h3>Do you want to edit?</h3>
                                         <p>Please share the reason with us</p>
                                     </div>
-                                    <form className="modal-form" onSubmit={handleRedFlagSubmit}>
+                                    <form className="modal-form" >
                                         <div className="row">
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
@@ -74,7 +74,6 @@ const RedFlagModal = ({buyer_id, buyer_status}) =>{
                         </div>
                     </div>
                 </div>
-
             {/* } */}
         </>
     );

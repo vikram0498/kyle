@@ -33,7 +33,7 @@ const FilterResult = ({setIsFiltered}) =>{
 		let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
 
 		searchFields.filterType = 'my_buyer'
-
+		searchFields.activeTab  = 'my_buyers';
 		let headers = { 
 			'Accept': 'application/json',
 			'Authorization': 'Bearer ' + getTokenData().access_token,
