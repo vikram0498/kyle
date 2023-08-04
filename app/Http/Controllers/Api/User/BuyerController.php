@@ -703,14 +703,14 @@ class BuyerController extends Controller
     public function redFlagBuyer(Request $request){
         DB::beginTransaction();
         try {
-            // $redFlagRecord[0]['buyer_id'] = $request->buyer_id;
-            $redFlagRecord[$request->buyer_id]['reason'] = $request->reason;
+          
+            $authUserId = auth()->user()->id;
+            $redFlagRecord[$authUserId]['reason'] = $request->reason;
+            $buyer = Buyer::find($request->buyer_id);
            
-            $authUser = auth()->user();
-            
-            if(!$authUser->redFlagedBuyer()->exists()){
-                // $authUser->redFlagedBuyer()->sync($redFlagRecord);
-                $authUser->redFlagedBuyer()->attach($redFlagRecord);
+            if(!$buyer->redFlagedData()->exists()){
+                // $buyer->redFlagedData()->sync($redFlagRecord);
+                $buyer->redFlagedData()->attach($redFlagRecord);
 
                 DB::commit();
                 //Return Success Response
