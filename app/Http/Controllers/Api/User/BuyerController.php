@@ -232,7 +232,10 @@ class BuyerController extends Controller
             $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('name');
             $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
 
-            Buyer::create($validatedData);
+            $createdBuyer = Buyer::create($validatedData);
+            $syncData[0]['user_id']    = auth()->user()->id;
+            $syncData[0]['created_at'] = Carbon::now();
+            $createdBuyer->buyersPurchasedByUser()->attach($syncData);
 
             if($token){
               Token::where('token_value',$token)->update(['is_used'=>1]);
@@ -270,9 +273,11 @@ class BuyerController extends Controller
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
-                    $buyers = $buyers->where('user_id',$userId);
+                    // $buyers = $buyers->where('user_id',$userId);
+                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
                 }elseif($request->activeTab == 'more_buyers'){
-                    $buyers = $buyers->where('user_id','!=',$userId);
+                    // $buyers = $buyers->where('user_id','!=',$userId);
+                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
                 }
             }
 
@@ -526,8 +531,11 @@ class BuyerController extends Controller
         try {
             $perPage = 10;
             $userId = auth()->user()->id;
-            $totalBuyers = Buyer::where('user_id', $userId)->count();
-            $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
+            // $totalBuyers = Buyer::where('user_id', $userId)->count();
+            // $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
+
+            $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
+            $buyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
             DB::commit();
 
@@ -598,7 +606,7 @@ class BuyerController extends Controller
             }
 
         }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -740,4 +748,36 @@ class BuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
+
+    public function unhideBuyer(Request $request){
+        DB::beginTransaction();
+        try {
+            $fetchBuyer = Buyer::find($request->buyer_id);
+            $syncData[0]['user_id']    = auth()->user()->id;
+            $syncData[0]['created_at'] = Carbon::now();
+            $fetchBuyer->buyersPurchasedByUser()->attach($syncData);
+
+            DB::commit();
+
+            //Success Response Send
+            $responseData = [
+                'status'   => true,
+                'data'     => ['buyer' => $fetchBuyer]
+            ];
+            return response()->json($responseData, 200);
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+
 }

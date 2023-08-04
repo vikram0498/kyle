@@ -66,11 +66,14 @@ Route::post('store-single-buyer-details/{token}', [BuyerController::class, 'uplo
 
 Route::get('check-token/{token}', [BuyerController::class, 'isValidateToken']);
 
-Route::group(['middleware' => [/*'set.authorization.header',*/'api','auth:sanctum']],function () { 
+Route::group(['middleware' => ['api','auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);
     
     Route::get('user-details', [ProfileController::class, 'userDetails']);
+
+    Route::post('update-profile', [ProfileController::class, 'updateProfile']);
+
 
     Route::post('upload-single-buyer-details', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
@@ -84,6 +87,13 @@ Route::group(['middleware' => [/*'set.authorization.header',*/'api','auth:sanctu
 
     Route::post('red-flag-buyer', [BuyerController::class, 'redFlagBuyer']);
 
-    Route::post('update-profile', [ProfileController::class, 'updateProfile']);
+    Route::post('unhide-buyer', [BuyerController::class, 'unhideBuyer']);
 
+
+    Route::get('getPlans', [HomeController::class, 'getPlans']);
+
+    Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);
+
+
+    
 });

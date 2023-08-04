@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use Carbon\Carbon;
 use App\Models\Buyer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
@@ -376,7 +377,14 @@ class BuyersImport implements ToModel, WithStartRow
                 $purchaseMethod = $pmArr;
                 $buyerArr['purchase_method'] = $purchaseMethod;
                 $this->insertedCount++;
-                return Buyer::create($buyerArr);
+               
+                $createdBuyer = Buyer::create($buyerArr);
+                $syncData[0]['user_id'] = auth()->user()->id;
+                $syncData[0]['created_at'] = Carbon::now();
+                $createdBuyer->buyersPurchasedByUser()->attach($syncData);
+                
+                return $createdBuyer;
+                // return Buyer::create($buyerArr);
             }
         }
     }

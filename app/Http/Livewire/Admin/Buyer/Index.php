@@ -156,8 +156,12 @@ class Index extends Component
         $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
         $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
         
-        Buyer::create($this->state);
+        $createdBuyer = Buyer::create($this->state);
     
+        $syncData[0]['user_id']    = auth()->user()->id;
+        $syncData[0]['created_at'] = \Carbon\Carbon::now();
+        $createdBuyer->buyersPurchasedByUser()->attach($syncData);
+
         $this->formMode = false;
 
         $this->resetInputFields();

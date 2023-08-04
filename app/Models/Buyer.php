@@ -100,6 +100,6 @@ class Buyer extends Model
     }
 
     public function buyersPurchasedByUser(){
-        return $this->belongsToMany(User::class)->withPivot(['created_at', 'updated_at','deleted_at']);
+        return $this->belongsToMany(User::class, 'user_purchased_buyers', 'buyer_id', 'user_id')->withPivot(['created_at', 'updated_at','deleted_at']);
     }
 }
