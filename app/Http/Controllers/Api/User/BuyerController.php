@@ -496,7 +496,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -703,20 +703,31 @@ class BuyerController extends Controller
     public function redFlagBuyer(Request $request){
         DB::beginTransaction();
         try {
-            $redFlagRecord[0]['buyer_id'] = $request->buyer_id;
-            $redFlagRecord[0]['reason'] = $request->reason;
+            // $redFlagRecord[0]['buyer_id'] = $request->buyer_id;
+            $redFlagRecord[$request->buyer_id]['reason'] = $request->reason;
            
             $authUser = auth()->user();
-            $authUser->redFlagedBuyer()->sync($redFlagRecord);
+            
+            if(!$authUser->redFlagedBuyer()->exists()){
+                // $authUser->redFlagedBuyer()->sync($redFlagRecord);
+                $authUser->redFlagedBuyer()->attach($redFlagRecord);
 
-            DB::commit();
-            //Return Success Response
-            $responseData = [
-                'status'        => true,
-                'message'       => 'Flag added successfully!',
-            ];
-
-            return response()->json($responseData, 200);
+                DB::commit();
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Flag added successfully!',
+                ];
+                
+                return response()->json($responseData, 200);
+            }else{
+                 //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Flag already added!',
+                ];
+                return response()->json($responseData, 400);
+            }
         }catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());

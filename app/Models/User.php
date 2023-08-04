@@ -117,4 +117,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Token::class);
     }
 
+    public function purchasedBuyers(){
+        return $this->belongsToMany(Buyer::class)->withPivot(['created_at', 'updated_at','deleted_at']);
+    }
+
 }

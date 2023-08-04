@@ -47,8 +47,6 @@ class Kernel extends HttpKernel
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\AuthGates::class,
-            // \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
-            // \App\Http\Middleware\CorsMiddleware::class,
         ],
     ];
 
@@ -70,8 +68,5 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'preventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
-        'set.authorization.header' => \App\Http\Middleware\SetHttpAuthorizationHeader::class,
-        // 'cros'=> \App\Http\Middleware\CorsMiddleware::class,
-       
     ];
 }
