@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\UserBuyerLikes;
 use App\Models\Token;
 use Illuminate\Support\Str;
 use App\Models\SearchLog;
@@ -17,7 +18,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\SearchBuyersRequest;
-use Illuminate\Pagination\Paginator;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 
 
@@ -495,28 +495,24 @@ class BuyerController extends Controller
                 $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers' && $buyerPurchased){
-                        
-                        $allBuyers[$key]['buyer_id']   = $buyer->id;
-                        $allBuyers[$key]['name']    = $name ?? null;
-                        $allBuyers[$key]['email']   = $buyer->email ?? null;
-                        $allBuyers[$key]['phone']   = $buyer->phone ?? null;
-                        $allBuyers[$key]['redflag'] = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+
+                        $buyer->name =  $name;
+                        $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                        $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                        $buyer->buyerUnlikes = totalUnlikes($buyer->id);
 
                     }elseif($request->activeTab == 'more_buyers' && (!$buyerPurchased)){
                         
-                        $allBuyers[$key]['buyer_id']   = $buyer->id;
-                        $allBuyers[$key]['name'] = substr($name, 0, 3).str_repeat("X", strlen($name)-3);
-                        $allBuyers[$key]['email'] = substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
-                        $allBuyers[$key]['phone'] = substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
-                        $allBuyers[$key]['redflag'] = $buyer->redFlagedData()->where('user_id',$userId)->exists();
-                        
+                        $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                        $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
+                        $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
+                        $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                        $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                        $buyer->buyerUnlikes = totalUnlikes($buyer->id);
+
                     }
                 }
             }
-
-            $buyers = new Paginator($allBuyers, 10);
-
-            // dd($buyers);
 
             DB::commit();
 
@@ -567,6 +563,13 @@ class BuyerController extends Controller
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
             $buyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
+             // Add the $allBuyers values to each buyer in the collection
+             foreach ($buyers as $buyer) {
+                $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                $buyer->buyerUnlikes = totalUnlikes($buyer->id);
+            }
+
             DB::commit();
 
             //Return Success Response
@@ -796,6 +799,69 @@ class BuyerController extends Controller
             ];
             return response()->json($responseData, 200);
 
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    public function storeBuyerLikeOrUnlike(Request $request){
+        $request->validate([
+            'buyer_id' => ['required','numeric'],
+            'like'     => ['required','in:0,1'],
+            'unlike'   => ['required','in:0,1'],
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $fetchBuyer = Buyer::find($request->buyer_id);
+            if($fetchBuyer){
+              
+                $userId = auth()->user()->id;
+                $flag = false;
+
+                $buyerData['liked']      = (int)$request->like;
+                $buyerData['disliked']   = (int)$request->unlike;
+
+                $entryExists = UserBuyerLikes::where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->exists();
+                if($entryExists){
+                    $buyerData['updated_at'] = Carbon::now();
+                    UserBuyerLikes::where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->update($buyerData);
+                    $flag = true;
+                }else{
+                    $buyerData['user_id']    = $userId;
+                    $buyerData['buyer_id']   = $fetchBuyer->id;
+                    $buyerData['created_at'] = Carbon::now();
+                    UserBuyerLikes::create($buyerData);
+                    $flag = true;
+                }
+
+                DB::commit();
+    
+                if($flag){
+                    //Success Response Send
+                    $responseData = [
+                        'status'   => true,
+                        'message'  => 'Updated Successfully!'
+                    ];
+                    return response()->json($responseData, 200);
+                }else{
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => trans('messages.error_message'),
+                    ];
+                    return response()->json($responseData, 400);
+                }
+               
+            }
         }catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());

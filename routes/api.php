@@ -89,6 +89,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('unhide-buyer', [BuyerController::class, 'unhideBuyer']);
 
+    Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);
 
     Route::get('getPlans', [HomeController::class, 'getPlans']);
 

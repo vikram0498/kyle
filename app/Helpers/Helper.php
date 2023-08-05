@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Uploads;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\UserBuyerLikes;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -184,5 +185,21 @@ if (!function_exists('convertDateTimeFormat')) {
 			return $changeFormatValue->format(config('constants.datetime_format'));
 		}
 		return $changeFormatValue;
+	}
+}
+
+if (!function_exists('totalLikes')) {
+	function totalLikes($buyerId)
+	{
+		$total_likes = UserBuyerLikes::where('buyer_id',$buyerId)->where('liked',1)->count();
+		return $total_likes;
+	}
+}
+
+if (!function_exists('totalUnlikes')) {
+	function totalUnlikes($buyerId)
+	{
+		$total_likes = UserBuyerLikes::where('buyer_id',$buyerId)->where('disliked',1)->count();
+		return $total_likes;
 	}
 }
