@@ -489,7 +489,6 @@ class BuyerController extends Controller
                 SearchLog::create($insertLogRecords);
             }
 
-            $allBuyers = [];
             foreach ($buyers as $key=>$buyer) {
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
@@ -560,7 +559,6 @@ class BuyerController extends Controller
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
             $buyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
-             // Add the $allBuyers values to each buyer in the collection
              foreach ($buyers as $buyer) {
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
