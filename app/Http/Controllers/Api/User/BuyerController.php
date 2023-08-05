@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\SearchBuyersRequest;
+use Illuminate\Pagination\Paginator;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 
 
@@ -488,6 +489,35 @@ class BuyerController extends Controller
                 SearchLog::create($insertLogRecords);
             }
 
+            $allBuyers = [];
+            foreach ($buyers as $key=>$buyer) {
+                $name = $buyer->first_name.' '.$buyer->last_name;
+                $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
+                if($request->activeTab){
+                    if($request->activeTab == 'my_buyers' && $buyerPurchased){
+                        
+                        $allBuyers[$key]['buyer_id']   = $buyer->id;
+                        $allBuyers[$key]['name']    = $name ?? null;
+                        $allBuyers[$key]['email']   = $buyer->email ?? null;
+                        $allBuyers[$key]['phone']   = $buyer->phone ?? null;
+                        $allBuyers[$key]['redflag'] = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+
+                    }elseif($request->activeTab == 'more_buyers' && (!$buyerPurchased)){
+                        
+                        $allBuyers[$key]['buyer_id']   = $buyer->id;
+                        $allBuyers[$key]['name'] = substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                        $allBuyers[$key]['email'] = substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
+                        $allBuyers[$key]['phone'] = substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
+                        $allBuyers[$key]['redflag'] = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                        
+                    }
+                }
+            }
+
+            $buyers = new Paginator($allBuyers, 10);
+
+            // dd($buyers);
+
             DB::commit();
 
             //Return Success Response
@@ -501,7 +531,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [

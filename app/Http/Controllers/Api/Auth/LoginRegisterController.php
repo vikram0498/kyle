@@ -20,7 +20,7 @@ class LoginRegisterController extends Controller
             'first_name'                => 'required',
             'last_name'                 => 'required',
             'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
-            'phone'                     => 'required|numeric|digits:10|unique:users,phone,NULL,id,deleted_at,NULL',
+            'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
             // 'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
