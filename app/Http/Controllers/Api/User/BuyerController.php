@@ -499,7 +499,7 @@ class BuyerController extends Controller
                         $buyer->name =  $name;
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
-                        $buyer->buyerUnlikes = totalUnlikes($buyer->id);
+                        $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
 
                     }elseif($request->activeTab == 'more_buyers' && (!$buyerPurchased)){
                         
@@ -508,7 +508,7 @@ class BuyerController extends Controller
                         $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
-                        $buyer->buyerUnlikes = totalUnlikes($buyer->id);
+                        $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
 
                     }
                 }
@@ -557,9 +557,6 @@ class BuyerController extends Controller
         try {
             $perPage = 10;
             $userId = auth()->user()->id;
-            // $totalBuyers = Buyer::where('user_id', $userId)->count();
-            // $buyers = Buyer::where('user_id',$userId)->paginate($perPage);
-
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
             $buyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
@@ -567,7 +564,7 @@ class BuyerController extends Controller
              foreach ($buyers as $buyer) {
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
-                $buyer->buyerUnlikes = totalUnlikes($buyer->id);
+                $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
             }
 
             DB::commit();
