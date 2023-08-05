@@ -60,15 +60,14 @@ function Login (props){
         axios.post(apiUrl+'login', payload, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status) {
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                 var access_token = response.data.access_token;
                 var remember_me_token = response.data.remember_me_token;
                 let remember_me_user_data = {username:'',password:'',isRemember:false};
                 if(payload.remember){
                     remember_me_user_data = {username:email,password:password,isRemember:true};
                 }
-                console.log(response.data.userData);
                 setAsLogged(access_token, remember_me_token,remember_me_user_data, response.data.userData);
+                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
             }
         }).catch(error => {
             setLoading(false);

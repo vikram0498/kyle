@@ -3,8 +3,10 @@ import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import {useNavigate , Link} from "react-router-dom";
 import {useAuth} from "../../hooks/useAuth";
-import {useForm} from "../../hooks/useForm";
+//import {useForm} from "../../hooks/useForm";
+import { useFormError } from '../../hooks/useFormError';
 import { toast } from "react-toastify";
+import {useForm } from "react-hook-form";
 import axios from 'axios';
 
  const MyProfile = () => {
@@ -16,10 +18,13 @@ import axios from 'axios';
     const [errorMsg, setErrorMsg] = useState('');
     const [border, setBorder] = useState("1px dashed #677AAB");
     const [loader,setLoader] = useState(true);
-    const { setErrors, renderFieldError } = useForm();
+    const { setErrors, renderFieldError } = useFormError();
     const [previewImageUrl, setPreviewImageUrl] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const { register, handleSubmit, watch, formState: { errors }  } = useForm();
+
+   
     // console.log('sdss',getTokenData().access_token);
     let headers = {
         "Accept": "application/json", 
@@ -67,7 +72,7 @@ import axios from 'axios';
             toast.error(error.message, {position: toast.POSITION.TOP_RIGHT});
         })
     }
-    const handleSubmit = (e) => {
+    const handleFormSubmit = (data,e) => {
         e.preventDefault();
         setIsProfileUpdate('false');
         var data = new FormData(e.target);
@@ -130,26 +135,27 @@ import axios from 'axios';
           }
     }
 
-    const handleChangeFirstName = (e) => {
-        const regex = /^[a-zA-Z\s]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-        if (regex.test(new_value)) {
-            setFirstName(new_value);
-        }
-        if(new_value ==''){
-            setFirstName('');
-        }
-    }
-    const handleChangeLastName = (e) => {
-        const regex = /^[a-zA-Z\s]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-        if (regex.test(new_value)) {
-            setLastName(new_value);
-        }
-        if(new_value ==''){
-            setLastName('');
-        }
-    }
+    // const handleChangeFirstName = (e) => {
+    //     const regex = /^[a-zA-Z\s]+$/;
+    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    //     if (regex.test(new_value)) {
+    //         setFirstName(new_value);
+    //     }
+    //     if(new_value ==''){
+    //         setFirstName('');
+    //     }
+    // }
+    // const handleChangeLastName = (e) => {
+    //     const regex = /^[a-zA-Z\s]+$/;
+    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    //     if (regex.test(new_value)) {
+    //         setLastName(new_value);
+    //     }
+    //     if(new_value ==''){
+    //         setLastName('');
+    //     }
+    // }
+    console.log(watch("first_name"),'watcheddd',errors); 
     return(
         <>
             <Header/>
@@ -157,7 +163,7 @@ import axios from 'axios';
                 <div className="container position-relative">
                     <div className="card-box mt-0">
                         {(loader) ? <div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
-                        <form className="profile-account" method="post" onSubmit={handleSubmit}>
+                        <form className="profile-account" method="post" onSubmit={handleSubmit(handleFormSubmit)}>
                             <div className="row">
                                 <div className="col-12 col-lg-8">
                                     <div className="card-box-inner">
@@ -167,18 +173,33 @@ import axios from 'axios';
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>First Name <span className="error">*</span></label>
-                                                    <input type="text" name="first_name" className="form-control-form" placeholder="First Name" 
-                                                    onChange={handleChangeFirstName}
-                                                    value={firstName} required/>
+                                                    <input type="text" name="first_name" className="form-control-form" placeholder="First Name"
+                                                    defaultValue={userData.first_name}  
+                                                    {...register("first_name", { required: 'First Name is required' , validate: {
+                                                        maxLength: (v) =>
+                                                        v.length <= 50 || "The First Name should have at most 50 characters",
+                                                        matchPattern: (v) =>
+                                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                                        "First Name can not include number or special character",
+                                                    } })}  />
+
+                                                    {errors.first_name && <p className="error">{errors.first_name?.message}</p>}
+
                                                     {renderFieldError('first_name') } 
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Last Name <span className="error">*</span></label>
-                                                    <input type="text" name="last_name" className="form-control-form" placeholder="Last Name" 
-                                                    value={lastName}
-                                                    onChange={handleChangeLastName} required/> 
+                                                    <input type="text" defaultValue={userData.last_name}  name="last_name" className="form-control-form" placeholder="Last Name" 
+                                                    {...register("last_name", { required: 'Last Name is required', validate: {
+                                                        maxLength: (v) =>
+                                                        v.length <= 50 || "The Last Name should have at most 50 characters",
+                                                        matchPattern: (v) =>
+                                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                                        "Last Name can not include number or special character",
+                                                    }})}  />
+                                                    {errors.last_name && <p className="error">{errors.last_name?.message}</p>}
                                                     {renderFieldError('last_name') }
                                                 </div>
                                             </div>
@@ -187,7 +208,22 @@ import axios from 'axios';
                                                     <label>Email <span className="error">*</span></label>
                                                     {userData.email !='' && userData.email != null ? <p className="form-control-form" style={{background:'#e8f0fe'}}>{userData.email}</p>:
                                                     <>
-                                                    <input type="email" name="email" className="form-control-form" placeholder="Email" defaultValue={userData.email} required/>
+                                                    <input type="email" name="email" className="form-control-form" placeholder="Email" defaultValue={userData.email} 
+                                                    {
+                                                        ...register("email", {
+                                                            required: "Email is required",
+                                                            validate: {
+                                                                maxLength: (v) =>
+                                                                v.length <= 50 || "The email should have at most 50 characters",
+                                                                matchPattern: (v) =>
+                                                                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                                                                "Email address must be a valid address",
+                                                            },
+                                                        })
+                                                    }/>
+
+                                                    {errors.email && <p className="error">{errors.email?.message}</p>}
+
                                                     {renderFieldError('email') }
                                                     {/* <span>Verify Email</span> */}
                                                     </>
@@ -197,7 +233,22 @@ import axios from 'axios';
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Phone Number <span className="error">*</span></label>
-                                                    <input type="number" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone} required/> 
+                                                    <input type="number" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone} autoComplete="no-phone"
+                                                    {
+                                                        ...register("phone", {
+                                                            required: "Phone is required",
+                                                            validate: {
+                                                                matchPattern: (v) =>
+                                                                /^[0-9]\d*$/.test(v) ||
+                                                                "Please enter valid phone number",
+                                                                maxLength: (v) =>
+                                                                v.length <= 15 && v.length >= 5 || "The phone number should be more than 4 digit and less than equal 15",
+                                                            },
+                                                        })
+                                                    }
+                                                    /> 
+                                                    {errors.phone && <p className="error">{errors.phone?.message}</p>}
+
                                                     {renderFieldError('phone') }
                                                 </div>
                                             </div>
@@ -209,14 +260,14 @@ import axios from 'axios';
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Old Password</label>
-                                                    <input type="password" name="old_password" className="form-control-form" placeholder="Old Password" /> 
+                                                    <input type="password" name="password" className="form-control-form" placeholder="Old Password" autoComplete="new-password"/> 
                                                     {renderFieldError('old_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>New Password</label>
-                                                    <input type="password" name="new_password" className="form-control-form" placeholder="New Password" /> 
+                                                    <input type="password" name="new_password" className="form-control-form" placeholder="New Password"/> 
                                                     {renderFieldError('new_password') }
                                                 </div>
                                             </div>

@@ -8,21 +8,24 @@ import MultiSelect from "../partials/Select2/MultiSelect";
 // import { City, Country, State } from "country-state-city";
 import {useAuth} from "../../hooks/useAuth";
 import Select from "react-select";
-import {useForm} from "../../hooks/useForm";
+// import {useForm} from "../../hooks/useForm";
+import { useFormError } from '../../hooks/useFormError';
 import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
 import { toast } from "react-toastify";
+import {useForm, Controller  } from "react-hook-form";
 import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
 
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
+    const { register, handleSubmit, control , formState: { errors }  } = useForm();
     const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [generatedUrl, setGeneratedUrl] = useState('');
-    const { setErrors, renderFieldError } = useForm();
+    const { setErrors, renderFieldError } = useFormError();
     
     const [country, setCountry] = useState([]);
     const [state, setState] = useState([]);
@@ -165,26 +168,26 @@ function AddBuyerDetails (){
         });
     }
 
-    const handleChangeFirstName = (e) => {
-        const regex = /^[a-zA-Z\s]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-        if (regex.test(new_value)) {
-            setFirstName(new_value);
-        }
-        if(new_value ==''){
-            setFirstName('');
-        }
-    }
-    const handleChangeLastName = (e) => {
-        const regex = /^[a-zA-Z\s]+$/;
-        const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-        if (regex.test(new_value)) {
-            setLastName(new_value);
-        }
-        if(new_value ==''){
-            setLastName('');
-        }
-    }
+    // const handleChangeFirstName = (e) => {
+    //     const regex = /^[a-zA-Z\s]+$/;
+    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    //     if (regex.test(new_value)) {
+    //         setFirstName(new_value);
+    //     }
+    //     if(new_value ==''){
+    //         setFirstName('');
+    //     }
+    // }
+    // const handleChangeLastName = (e) => {
+    //     const regex = /^[a-zA-Z\s]+$/;
+    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    //     if (regex.test(new_value)) {
+    //         setLastName(new_value);
+    //     }
+    //     if(new_value ==''){
+    //         setLastName('');
+    //     }
+    // }
 
     const handleCopyToClipBoard = (url) => {
         navigator.clipboard.writeText(url);
@@ -219,7 +222,6 @@ function AddBuyerDetails (){
             navigate('/login');
         }
     }
-
     return (
         <>
            <Header/>
@@ -267,20 +269,26 @@ function AddBuyerDetails (){
                                     {(copySuccess && generatedUrl !='') ? <div id="inviteCode" class="invite-page">
                                         <input  id="link" value={generatedUrl} readonly/>
                                         <div id="copy">
-                                        <i class="fa fa-clipboard" aria-hidden="true" data-copytarget="#link" onClick={() => handleCopyToClipBoard(generatedUrl)}></i>
+                                        <i class="fa-solid fa-copy" aria-hidden="true" data-copytarget="#link" onClick={() => handleCopyToClipBoard(generatedUrl)}></i>
                                         </div>
                                     </div>:''
                                     }
-                                    <form method='post' onSubmit={submitSingleBuyerForm}>
+                                    <form method='post' onSubmit={handleSubmit(submitSingleBuyerForm)}>
                                         <div className="card-box-blocks">
                                             <div className="row">
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>First Name<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="first_name" className="form-control" placeholder="First Name"
-                                                         value={firstName}
-                                                        onChange={handleChangeFirstName} 
-                                                        required/>
+                                                         {...register("first_name", { required: 'First Name is required' , validate: {
+                                                            maxLength: (v) =>
+                                                            v.length <= 50 || "The First Name should have at most 50 characters",
+                                                            matchPattern: (v) =>
+                                                            /^[a-zA-Z\s]+$/.test(v) ||
+                                                            "First Name can not include number or special character",
+                                                        } })}/>
+
+                                                        {errors.first_name && <p className="error">{errors.first_name?.message}</p>}
                                                         {renderFieldError('first_name') }
                                                     </div>
                                                 </div>
@@ -288,50 +296,94 @@ function AddBuyerDetails (){
                                                     <label>Last Name<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="last_name" className="form-control" placeholder="Last Name"
-                                                         value={lastName} 
-                                                        onChange={handleChangeLastName}
-                                                        required/>
+                                                         {...register("last_name", { required: 'Last Name is required' , validate: {
+                                                            maxLength: (v) =>
+                                                            v.length <= 50 || "The Last Name should have at most 50 characters",
+                                                            matchPattern: (v) =>
+                                                            /^[a-zA-Z\s]+$/.test(v) ||
+                                                            "Last Name can not include number or special character",
+                                                        } })}/>
+
+                                                        {errors.last_name && <p className="error">{errors.last_name?.message}</p>}
                                                         {renderFieldError('last_name') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Email Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" required />
+                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" {
+                                                        ...register("email", {
+                                                            required: "Email is required",
+                                                            validate: {
+                                                                maxLength: (v) =>
+                                                                v.length <= 50 || "The email should have at most 50 characters",
+                                                                matchPattern: (v) =>
+                                                                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                                                                "Email address must be a valid address",
+                                                            },
+                                                        })
+                                                    } />
+                                                    {errors.email && <p className="error">{errors.email?.message}</p>}
                                                         {renderFieldError('email') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" required />
+                                                        <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" {
+                                                        ...register("phone", {
+                                                            required: "Phone is required",
+                                                            validate: {
+                                                                matchPattern: (v) =>
+                                                                /^[0-9]\d*$/.test(v) ||
+                                                                "Please enter valid phone number",
+                                                                maxLength: (v) =>
+                                                                v.length <= 15 && v.length >= 5 || "The phone number should be more than 4 digit and less than equal 15",
+                                                            },
+                                                        })
+                                                    } />
+                                                        {errors.phone && <p className="error">{errors.phone?.message}</p>}
                                                         {renderFieldError('phone') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" required />
+                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" {
+                                                        ...register("address", {
+                                                            required: "Address is required",
+                                                        })
+                                                        } />
+                                                         {errors.address && <p className="error">{errors.address?.message}</p>}
                                                         {renderFieldError('address') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
-                                                        <Select
-                                                            name="country"
+                                                    <Controller
+                                                        control={control}
+                                                        name="country"
+                                                        rules={{ required: true }}
+                                                        render={({ field: { value, onChange } }) => (
+                                                            <Select
                                                             defaultValue=''
-                                                            options={countryOptions}
+                                                            value={value}
                                                             onChange={(item) => getStates(item)}
                                                             className="select"
                                                             isClearable={true}
                                                             isSearchable={true}
                                                             isDisabled={false}
                                                             isLoading={false}
-                                                            isRtl={false}
+                                                            options={countryOptions}
                                                             placeholder= "Select Country"
-                                                            closeMenuOnSelect={true}
-                                                        />
+                                                            />
+                                                        )}
+                                                    />
+                                                       {errors.country?.message && <div class="validationText">{errors.item?.message}</div>}
+
+                                                        {errors.country && <p className="error">{errors.country?.message}</p>}
+                                                        
                                                         {renderFieldError('country') }
                                                     </div>
                                                 </div>
@@ -380,7 +432,12 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Zip<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" required />
+                                                        <input type="number" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                                        ...register("zip_code", {
+                                                            required: "Zip Code is required",
+                                                        })
+                                                        } />
+                                                         {errors.address && <p className="error">{errors.zip_code?.message}</p>}
                                                         {renderFieldError('zip_code') }
                                                     </div>
                                                 </div>
@@ -413,14 +470,25 @@ function AddBuyerDetails (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Minimum Units<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" required />
+                                                                    <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" {
+                                                                ...register("unit_min", {
+                                                                    required: "Minimum Units is required",
+                                                                })
+                                                                } />
+                                                                    {errors.unit_min && <p className="error">{errors.unit_min?.message}</p>}
+
                                                                     {renderFieldError('unit_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Maximum Units<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units" required />
+                                                                    <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units"  {
+                                                                    ...register("unit_max", {
+                                                                        required: "Maximum Units is required",
+                                                                    })
+                                                                    } />
+                                                                        {errors.unit_max && <p className="error">{errors.unit_max?.message}</p>}
                                                                     {renderFieldError('unit_max') }
                                                                 </div>
                                                             </div>
@@ -517,84 +585,157 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)" required />
+                                                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
+                                                            ...register("bedroom_min", {
+                                                                required: "Bedroom (min) is required",
+                                                            })
+                                                            } />
+                                                            {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
+
                                                         {renderFieldError('bedroom_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" required />
+                                                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
+                                                         {
+                                                        ...register("bedroom_max", {
+                                                            required: "Bedroom (max) is required",
+                                                        })
+                                                        } />
+                                                        {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
+
                                                         {renderFieldError('bedroom_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bath (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)" required />
+                                                        <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)"
+                                                        {
+                                                        ...register("bath_min", {
+                                                            required: "Bath (min) is required",
+                                                        })
+                                                        } />
+                                                        {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
                                                         {renderFieldError('bath_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bath (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" required />
+                                                        <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" {
+                                                        ...register("bath_max", {
+                                                            required: "Bath (max) is required",
+                                                        })
+                                                        } />
+                                                        {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
+                                                        
                                                         {renderFieldError('bath_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Sq Ft Min<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min" required />
+                                                        <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
+                                                        ...register("size_min", {
+                                                            required: "Sq Ft Min is required",
+                                                        })
+                                                        } />
+                                                        {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
+
                                                         {renderFieldError('size_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Sq Ft Max<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max" required />
+                                                        <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
+                                                        ...register("size_max", {
+                                                            required: "Sq Ft Max is required",
+                                                        })
+                                                        } />
+                                                        {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
+
                                                         {renderFieldError('size_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)" required />
+                                                        <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
+                                                        ...register("lot_size_min", {
+                                                            required: "Lot Size Sq Ft (Min) is required",
+                                                        })
+                                                        } />
+                                                        {errors.lot_size_min && <p className="error">{errors.lot_size_min?.message}</p>}
+
                                                         {renderFieldError('lot_size_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" required />
+                                                        <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)"    {
+                                                        ...register("lot_size_max", {
+                                                            required: "Lot Size Sq Ft (max) is required",
+                                                        })
+                                                        } />
+                                                        {errors.lot_size_max && <p className="error">{errors.lot_size_max?.message}</p>}
+
                                                         {renderFieldError('lot_size_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Year Built (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)" required />
+                                                        <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)"   {
+                                                        ...register("build_year_min", {
+                                                            required: "Year Built (min) is required",
+                                                        })
+                                                        } />
+                                                         {errors.build_year_min && <p className="error">{errors.build_year_min?.message}</p>}
+
                                                         {renderFieldError('build_year_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Year Built (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" required />
+                                                        <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" {
+                                                        ...register("build_year_max", {
+                                                            required: "Year Built (max) is required",
+                                                        })
+                                                        } />
+                                                         {errors.build_year_max && <p className="error">{errors.build_year_max?.message}</p>}
                                                         {renderFieldError('build_year_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>ARV (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" required />
+                                                        <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                                        {
+                                                        ...register("arv_min", {
+                                                            required: "ARV (min) is required",
+                                                        })
+                                                        } />
+                                                         {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
+
                                                         {renderFieldError('arv_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>ARV (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" required />
+                                                        <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                                        ...register("arv_max", {
+                                                            required: "ARV (max) is required",
+                                                        })
+                                                        } />
+                                                         {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+
                                                         {renderFieldError('arv_max') }
                                                     </div>
                                                 </div>

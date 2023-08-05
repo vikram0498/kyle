@@ -2,14 +2,17 @@ import React, { useState ,useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import {useForm} from "../../hooks/useForm";
 import ButtonLoader from '../partials/MiniLoader'
 import Layout from './Layout';
 import ReCAPTCHA from "react-google-recaptcha";
+import { useFormError } from '../../hooks/useFormError';
 import GoogleLoginComponent from '../partials/SocialLogin/GoogleLoginComponent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookLoginButton from '../partials/SocialLogin/FacebookLoginButton';
+import {useForm } from "react-hook-form";
+
 const Register = () => { 
+    const { register, handleSubmit, watch, formState: { errors }  } = useForm();
 
     useEffect(() => {
         let login = localStorage.getItem('_token');
@@ -42,7 +45,7 @@ const Register = () => {
     const [captchaVerified, setCaptchaVerified] = useState(false);
     const [recaptchaError, setRecaptchaError] = useState('');
 
-    const { setErrors, renderFieldError, navigate } = useForm();
+    const { setErrors, renderFieldError, navigate } = useFormError();
 
     
     const [loading, setLoading] = useState(false);
@@ -55,7 +58,7 @@ const Register = () => {
         }
     }
 
-    const submitRegisterForm = (e) => {
+    const submitRegisterForm = (data, e) => {
         e.preventDefault();
         setErrors(null);
 
@@ -64,16 +67,18 @@ const Register = () => {
         setLoading(true);
 
         if(captchaVerified){
-            let payload = { 
-                first_name,
-                last_name,
-                email,
-                phone,
-                company_name,
-                password,
-                password_confirmation,
-            };
-
+            // let payload = { 
+            //     first_name,
+            //     last_name,
+            //     email,
+            //     phone,
+            //     company_name,
+            //     password,
+            //     password_confirmation,
+            // };
+            var data = new FormData(e.target);
+            let payload = Object.fromEntries(data.entries());
+            console.log(payload,'formData');
             let headers = {
                 "Accept": "application/json", 
             }
@@ -105,8 +110,11 @@ const Register = () => {
     const handleChangeFirstName = (e) => {
         const regex = /^[a-zA-Z]+$/;
         const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
+        console.log(new_value,'new_value ');
         if (regex.test(new_value)) {
             setFirstName(new_value);
+        }else{
+            setFirstName('');
         }
     }
     const handleChangeLastName = (e) => {
@@ -115,6 +123,8 @@ const Register = () => {
         if (regex.test(new_value)) {
             console.log(new_value);
             setLastName(new_value);
+        }else{
+            setLastName('');
         }
     }
     return (
@@ -125,7 +135,7 @@ const Register = () => {
                     <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
                     <h2>Welcome to Inucation!</h2>
                 </div>
-                <form method="POST" action="#" onSubmit={submitRegisterForm} >
+                <form method="POST" action="#" onSubmit={handleSubmit(submitRegisterForm)}>
                     <div className="row" >
                         <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                             <div className="form-group">
@@ -137,13 +147,20 @@ const Register = () => {
                                         name="first_name"
                                         id="first_name"
                                         className="form-control"
-                                        value={first_name}
-                                        onChange={handleChangeFirstName}
+                                        //value={first_name}
+                                        //onChange={handleChangeFirstName}
                                         placeholder="First Name"   
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
-                                    />
+                                        {...register("first_name", { required: 'First Name is required' , validate: {
+                                            maxLength: (v) =>
+                                            v.length <= 50 || "The first name should have at most 50 characters",
+                                            matchPattern: (v) =>
+                                            /^[a-zA-Z\s]+$/.test(v) ||
+                                            "First Name can not include number or special character",
+                                        } })}  />
                                 </div>
+                                
+                                {errors.first_name && <p className="error">{errors.first_name?.message}</p>}
                                 {renderFieldError('first_name') }
                             </div>
                         </div>
@@ -157,13 +174,19 @@ const Register = () => {
                                         name="last_name" 
                                         id="last_name" 
                                         className="form-control" 
-                                        value={last_name}
-                                        onChange={handleChangeLastName}
+                                        //value={last_name}
+                                        //onChange={handleChangeLastName}
                                         placeholder="Last Name"  
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
-                                    />
+                                        {...register("last_name", { required: 'Last Name is required', validate: {
+                                            maxLength: (v) =>
+                                            v.length <= 50 || "The last name should have at most 50 characters",
+                                            matchPattern: (v) =>
+                                            /^[a-zA-Z\s]+$/.test(v) ||
+                                            "Last Name can not include number or special character",
+                                        }})}  />
                                 </div>
+                                {errors.last_name && <p className="error">{errors.last_name?.message}</p>}
                                 {renderFieldError('last_name') }
                             </div>
                         </div>
@@ -177,13 +200,24 @@ const Register = () => {
                                         name="email" 
                                         id="email"   
                                         className="form-control" 
-                                        value={email}
-                                        onChange={e => setEmail(e.target.value)}
+                                        autoComplete='no-email'
+                                        //onChange={e => setEmail(e.target.value)}
                                         placeholder="Enter Your Email"
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
-                                    />
+                                        {
+                                            ...register("email", {
+                                                required: "Email is required",
+                                                validate: {
+                                                    maxLength: (v) =>
+                                                    v.length <= 50 || "The email should have at most 50 characters",
+                                                    matchPattern: (v) =>
+                                                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                                                    "Email address must be a valid address",
+                                                },
+                                            })
+                                        }/>
                                 </div>
+                                {errors.email && <p className="error">{errors.email?.message}</p>}
                                 {renderFieldError('email') }
                             </div>
                         </div>
@@ -197,13 +231,25 @@ const Register = () => {
                                         name="phone" 
                                         id="phone" 
                                         className="form-control" 
-                                        value={phone}
-                                        onChange={e => setPhone(e.target.value)}
+                                        //value={phone}
+                                        //onChange={e => setPhone(e.target.value)}
                                         placeholder="1234567890"
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
+                                        {
+                                            ...register("phone", {
+                                                required: "Phone is required",
+                                                validate: {
+                                                    matchPattern: (v) =>
+                                                    /^[0-9]\d*$/.test(v) ||
+                                                    "Please enter valid phone number",
+                                                    maxLength: (v) =>
+                                                    v.length <= 15 && v.length >= 5 || "The phone number should be more than 4 digit and less than equal 15",
+                                                },
+                                            })
+                                        }
                                     />
                                 </div>
+                                {errors.phone && <p className="error">{errors.phone?.message}</p>}
                                 {renderFieldError('phone') }
                             </div>
                         </div>
@@ -218,13 +264,18 @@ const Register = () => {
                                         name="company_name" 
                                         id="company_name" 
                                         className="form-control" 
-                                        value={company_name}
-                                        onChange={e => setCompanyName(e.target.value)}
+                                        //value={company_name}
+                                        //onChange={e => setCompanyName(e.target.value)}
                                         placeholder="Enter Company Name"  
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
+                                        {
+                                            ...register("company_name", {
+                                                required: "Company Name is required",
+                                            })
+                                        }
                                     />
                                 </div>
+                                {errors.company_name && <p className="error">{errors.company_name?.message}</p>}
                                 {renderFieldError('company_name') }
                             </div>
                         </div>
@@ -238,13 +289,20 @@ const Register = () => {
                                         name="password" 
                                         id="pass_log_id" 
                                         className="form-control"
-                                        value={password}
-                                        onChange={e => setPassword(e.target.value)}
-                                        placeholder="Enter Your Password"   
+                                        //value={password}
+                                        //onChange={e => setPassword(e.target.value)}
+                                        placeholder="Enter Your Password"  
+                                        autoComplete="new-password" 
                                         disabled={ loading ? 'disabled' : ''}
+                                        {
+                                            ...register("password", {
+                                                required: "Password is required",
+                                            })
+                                        }
                                     />
                                     <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
+                                {errors.password && <p className="error">{errors.password?.message}</p>}
                                 {renderFieldError('password') }
                             </div>
                         </div>
@@ -258,14 +316,20 @@ const Register = () => {
                                         name="password_confirmation"
                                         id="conpass_log_id" 
                                         className="form-control"
-                                        value={password_confirmation}
-                                        onChange={e => setPasswordConfirmation(e.target.value)}
+                                        //value={password_confirmation}
+                                        //onChange={e => setPasswordConfirmation(e.target.value)}
                                         placeholder="Enter Your Confirm Password"  
                                         disabled={ loading ? 'disabled' : ''}
-                                        required
+                                        {
+                                            ...register("password_confirmation", {
+                                                required: "Confirm password is required",
+                                            })
+                                        }
+                                        
                                     />
                                     <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? 'eye-open' : 'eye-close'}`}><img src="./assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
+                                {errors.password_confirmation && <p className="error">{errors.password_confirmation?.message}</p>}
                                 {renderFieldError('password_confirmation') }
                             </div>
                         </div>

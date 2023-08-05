@@ -23,7 +23,7 @@ export const useAuth = () => {
     function setAsLogged(access_token, remember_token='',remember_me_user_data, userData) {
         const cookie = new Cookies();
         cookie.set('is_auth', true, {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
-        if(remember_token.trim() !== ''){
+        if(remember_token !== '' || remember_token !== null){
             cookie.set('remember_me_token', remember_token, {path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false});
         }
         // set cookie for remember me 
