@@ -369,7 +369,8 @@ const SellerForm = () =>{
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 			isFiltered ? 
-			<FilterResult  setIsFiltered = {setIsFiltered} />:
+			<ResultPage setIsFiltered = {setIsFiltered}  />:
+			// <FilterResult  setIsFiltered = {setIsFiltered} />:
 			<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">
 					<div className="back-block">

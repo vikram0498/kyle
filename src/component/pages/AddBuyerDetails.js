@@ -99,7 +99,6 @@ function AddBuyerDetails (){
     const getStates = (country_id) => {
         if(country_id == null){
             setCountry([]); setState([]); setCity([]);
-
             setStateOptions([]); setCityOptions([]);
         } else {            
             axios.post(apiUrl+'getStates', { country_id: country_id }, { headers: headers }).then(response => {
@@ -128,8 +127,7 @@ function AddBuyerDetails (){
             });
         }
     }
-
-    const submitSingleBuyerForm = (e) => {
+    const submitSingleBuyerForm = (data, e) => {
         e.preventDefault();
 
         setErrors(null);
@@ -144,7 +142,7 @@ function AddBuyerDetails (){
         formObject.property_flaw    =  locationFlawsValue;
         // formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
-
+        console.log(purchaseMethodsValue,'purchaseMethodsValue');
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
@@ -221,6 +219,34 @@ function AddBuyerDetails (){
             setLogout();
             navigate('/login');
         }
+    }
+    const handleCustum = (e,name) => {
+        const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
+        if(name == 'property_type'){
+          if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
+            setMultiFamilyBuyerSelected(true);
+          } else {
+            setMultiFamilyBuyerSelected(false);
+          }
+          setPropertyTypeValue(selectedValues);
+        }else if(name == 'purchase_method'){
+            if (selectedValues.includes(5)) {
+                setShowCreativeFinancing(true);
+            } else {
+                setShowCreativeFinancing(false);
+            }
+            setPurchaseMethodsValue(selectedValues);
+        }else if(name == 'parking'){
+            setParkingValue(selectedValues);
+        }else if(name == 'country'){
+            getStates(e)
+        }else if(name == 'state'){
+            setState(e);
+            getCities(e);
+        }else if(name == 'city'){
+            setCity(e);
+        }
+
     }
     return (
         <>
@@ -361,36 +387,44 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
+                                                    {/* <Select
+                                                        name="country"
+                                                        defaultValue=''
+                                                        options={countryOptions}
+                                                        onChange={(item) => getStates(item)}
+                                                        className="select"
+                                                        isClearable={true}
+                                                        isSearchable={true}
+                                                        isDisabled={false}
+                                                        isLoading={false}
+                                                        isRtl={false}
+                                                        placeholder= "Select Country"
+                                                        closeMenuOnSelect={true}
+                                                    /> */}
                                                     <Controller
                                                         control={control}
                                                         name="country"
-                                                        rules={{ required: true }}
-                                                        render={({ field: { value, onChange } }) => (
-                                                            <Select
-                                                            defaultValue=''
-                                                            value={value}
-                                                            onChange={(item) => getStates(item)}
-                                                            className="select"
-                                                            isClearable={true}
-                                                            isSearchable={true}
-                                                            isDisabled={false}
-                                                            isLoading={false}
+                                                        rules={{ required: 'Country is required' }}
+                                                        render={({ field: { value, onChange, name } }) => (
+                                                        <Select
                                                             options={countryOptions}
-                                                            placeholder= "Select Country"
-                                                            />
+                                                            name = {name}
+                                                            placeholder='Select Country'
+                                                            onChange={(e)=>{
+                                                                onChange(e)
+                                                                handleCustum(e,'country')
+                                                            }}
+                                                        />
                                                         )}
                                                     />
-                                                       {errors.country?.message && <div class="validationText">{errors.item?.message}</div>}
-
-                                                        {errors.country && <p className="error">{errors.country?.message}</p>}
-                                                        
+                                                        {errors.country && <p className="error">{errors.country?.message}</p>}    
                                                         {renderFieldError('country') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>State<span>*</span></label>
                                                     <div className="form-group">
-                                                        <Select
+                                                        {/* <Select
                                                             name="state"
                                                             defaultValue=''
                                                             options={stateOptions}
@@ -404,14 +438,34 @@ function AddBuyerDetails (){
                                                             isRtl={false}
                                                             placeholder="Select State"
                                                             closeMenuOnSelect={true}
+                                                        /> */}
+                                                        <Controller
+                                                            control={control}
+                                                            name="state"
+                                                            rules={{ required: 'State is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                                options={stateOptions}
+                                                                name = {name}
+                                                                value={state}
+                                                                isClearable={true}
+                                                                className="select"
+                                                                placeholder='Select State'
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'state')
+                                                                }}
+                                                            />
+                                                            )}
                                                         />
+                                                        {errors.state && <p className="error">{errors.state?.message}</p>}
                                                         {renderFieldError('state') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>City<span>*</span></label>
                                                     <div className="form-group">
-                                                        <Select
+                                                        {/* <Select
                                                             name="city"
                                                             defaultValue=''
                                                             options={cityOptions}
@@ -425,7 +479,28 @@ function AddBuyerDetails (){
                                                             isRtl={false}
                                                             placeholder="Select City"
                                                             closeMenuOnSelect={true}
+                                                        /> */}
+                                                        <Controller
+                                                            control={control}
+                                                            name="city"
+                                                            rules={{ required: 'City is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                                options={cityOptions}
+                                                                name = {name}
+                                                                value={city}
+                                                                isClearable={true}
+                                                                className="select"
+                                                                placeholder='Select City'
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'city')
+                                                                }}
+                                                            />
+                                                            )}
                                                         />
+                                                        {errors.city && <p className="error">{errors.city?.message}</p>}
+
                                                         {renderFieldError('city') }
                                                     </div>
                                                 </div>
@@ -452,13 +527,27 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <label>Property Type<span>*</span></label>
                                                         <div className="form-group">
-                                                            <MultiSelect
-                                                                name="property_type" 
-                                                                options={propertyTypeOption} 
+                                                            <Controller
+                                                            control={control}
+                                                            name="property_type"
+                                                            rules={{ required: 'Property Type is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                                options={propertyTypeOption}
+                                                                name = {name}
                                                                 placeholder='Select Property Type'
                                                                 setMultiselectOption = {setPropertyTypeValue}
                                                                 showCreative={setMultiFamilyBuyerSelected}
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'property_type')
+                                                                }}
+                                                                isMulti
+                                                                />
+                                                            )}
                                                             />
+                                                            {errors.property_type && <p className="error">{errors.property_type?.message}</p>}
+                                                            
                                                             {renderFieldError('property_type') }
                                                         </div>
                                                     </div>
@@ -526,13 +615,35 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-lg-12">
                                                     <label>Purchase Method<span>*</span></label>
                                                     <div className="form-group">
-                                                        <MultiSelect
+                                                        {/* <MultiSelect
                                                             name="purchase_method"
                                                             options={purchaseMethodsOption}
                                                             placeholder='Select Purchase Method'
                                                             setMultiselectOption = {setPurchaseMethodsValue}
                                                             showCreative = {setShowCreativeFinancing}
-                                                        />
+                                                        /> */}
+
+                                                         <Controller
+                                                            control={control}
+                                                            name="purchase_method"
+                                                            rules={{ required: 'Purchase Method is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                                options={purchaseMethodsOption}
+                                                                name = {name}
+                                                                placeholder='Select Property Type'
+                                                                setMultiselectOption = {setPurchaseMethodsValue}
+                                                                showCreative={setShowCreativeFinancing}
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'purchase_method')
+                                                                }}
+                                                                isMulti
+                                                                />
+                                                            )}
+                                                            />
+                                                            {errors.purchase_method && <p className="error">{errors.purchase_method?.message}</p>}
+
                                                         {renderFieldError('purchase_method') }
                                                     </div>
                                                 </div>
@@ -742,12 +853,32 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-lg-12">
                                                     <label>Parking<span>*</span></label>
                                                     <div className="form-group">
-                                                        <MultiSelect
+                                                        {/* <MultiSelect
                                                             name="parking"
                                                             options={parkingOption}
                                                             placeholder='Select Parking'
                                                             setMultiselectOption = {setParkingValue}
-                                                        />
+                                                        /> */}
+                                                         <Controller
+                                                            control={control}
+                                                            name="parking"
+                                                            rules={{ required: 'Parking is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                                options={parkingOption}
+                                                                name = {name}
+                                                                placeholder='Select parking'
+                                                                setMultiselectOption = {setParkingValue}
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'parking')
+                                                                }}
+                                                                isMulti
+                                                                />
+                                                            )}
+                                                            />
+                                                            {errors.parking && <p className="error">{errors.parking?.message}</p>}
+
                                                         {renderFieldError('parking') }
                                                     </div>
                                                 </div>
