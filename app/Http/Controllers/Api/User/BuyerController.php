@@ -278,9 +278,7 @@ class BuyerController extends Controller
                     $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
                 }elseif($request->activeTab == 'more_buyers'){
                     // $buyers = $buyers->where('user_id','!=',$userId);
-                    // $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
-                    $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser');
-
+                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
                 }
             }
 
@@ -494,7 +492,7 @@ class BuyerController extends Controller
             foreach ($buyers as $key=>$buyer){
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
-                $buyerRecordNotInPurchased = $buyer->whereDoesntHave('buyersPurchasedByUser')->exists();
+                // $buyerRecordNotInPurchased = $buyer->whereDoesntHave('buyersPurchasedByUser')->exists();
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers' && $buyerPurchased){
                         $buyer->name =  $name;
@@ -502,7 +500,8 @@ class BuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
 
-                    }else if($request->activeTab == 'more_buyers' && $buyerRecordNotInPurchased){
+                    }else if($request->activeTab == 'more_buyers'){
+                        // $buyer->user = $buyer->user_id;
                         $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
                         $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
                         $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
@@ -559,7 +558,7 @@ class BuyerController extends Controller
             $perPage = 10;
             $userId = auth()->user()->id;
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
-            $buyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
+            $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
              foreach ($buyers as $buyer) {
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
