@@ -520,6 +520,7 @@ class BuyerController extends Controller
             $responseData = [
                 'status'        => true,
                 'buyers'        => $buyers,
+                'activeTab'     => $request->activeTab,
                 'total_records' => $totalRecord
             ];
 
@@ -847,12 +848,17 @@ class BuyerController extends Controller
                 DB::commit();
     
                 if($flag){
+                    $responseData['totalBuyerLikes'] = totalLikes($fetchBuyer->id);
+                    $responseData['totalBuyerUnlikes'] = totalUnlikes($fetchBuyer->id);
+
                     //Success Response Send
                     $responseData = [
                         'status'   => true,
+                        'data'     => $responseData,
                         'message'  => 'Updated Successfully!'
                     ];
                     return response()->json($responseData, 200);
+
                 }else{
                     //Return Error Response
                     $responseData = [
