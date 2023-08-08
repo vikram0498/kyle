@@ -270,7 +270,7 @@ class BuyerController extends Controller
         try {
             $userId = auth()->user()->id;
 
-            $buyers = Buyer::query();
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone');
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
@@ -278,7 +278,9 @@ class BuyerController extends Controller
                     $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
                 }elseif($request->activeTab == 'more_buyers'){
                     // $buyers = $buyers->where('user_id','!=',$userId);
-                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
+                    // $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
+                    $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser');
+
                 }
             }
 
@@ -489,31 +491,31 @@ class BuyerController extends Controller
                 SearchLog::create($insertLogRecords);
             }
 
-            foreach ($buyers as $key=>$buyer) {
+            foreach ($buyers as $key=>$buyer){
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
+                $buyerRecordNotInPurchased = $buyer->whereDoesntHave('buyersPurchasedByUser')->exists();
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers' && $buyerPurchased){
-
                         $buyer->name =  $name;
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
 
-                    }elseif($request->activeTab == 'more_buyers' && (!$buyerPurchased)){
-                        
+                    }else if($request->activeTab == 'more_buyers' && $buyerRecordNotInPurchased){
                         $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
                         $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
                         $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-
                     }
                 }
             }
 
             DB::commit();
+
+            // dd($buyer);
 
             //Return Success Response
             $responseData = [
@@ -784,7 +786,12 @@ class BuyerController extends Controller
             $syncData[0]['user_id']    = auth()->user()->id;
             $syncData[0]['created_at'] = Carbon::now();
             $fetchBuyer->buyersPurchasedByUser()->attach($syncData);
-
+        
+            $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id',auth()->user()->id)->exists();
+            $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
+            $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
+            
+           
             DB::commit();
 
             //Success Response Send
@@ -796,7 +803,7 @@ class BuyerController extends Controller
 
         }catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
