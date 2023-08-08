@@ -267,8 +267,8 @@ const SellerForm = () =>{
                 localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
 
                 // navigate('/my-buyers')
-				 window.history.pushState(null, "", "/my-buyers");
-				 //window.history.pushState(null, "", "/result-page");
+				 //window.history.pushState(null, "", "/my-buyers");
+				window.history.pushState(null, "", "/result-page");
 				// setIsLoader(true);
 				setIsFiltered(true);
             }

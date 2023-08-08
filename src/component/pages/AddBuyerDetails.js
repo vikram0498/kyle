@@ -142,7 +142,6 @@ function AddBuyerDetails (){
         formObject.property_flaw    =  locationFlawsValue;
         // formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
-        console.log(purchaseMethodsValue,'purchaseMethodsValue');
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
@@ -152,7 +151,6 @@ function AddBuyerDetails (){
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                 navigate('/my-buyers')
             }
-            
         }).catch(error => {
             setLoading(false);
             if(error.response) {

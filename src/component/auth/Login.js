@@ -27,6 +27,7 @@ function Login (props){
     useEffect(() => {
         let login = localStorage.getItem('_token');
         let userData = getRememberMeData();
+        console.log(userData,'userData',remember);
         if(userData !='' && userData != undefined){
             setEmail(userData.username);
             setPassword(userData.password);
@@ -97,15 +98,16 @@ function Login (props){
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/mail.svg" className="img-fluid" alt="mail-icon" /></span>
                                     <input 
+                                        disabled={ loading ? 'disabled' : ''}
                                         type="email" 
                                         id="email"
                                         name="email" 
-                                        className="form-control"                                         
+                                        className="form-control"                         autoComplete="no-email"                
                                         placeholder="Enter Your Email" 
                                         value={email} 
                                         onChange={e => setEmail(e.target.value)} 
-                                        required autoComplete="email" autoFocus
-                                        disabled={ loading ? 'disabled' : ''}
+                                        required 
+                                        autoFocus
                                     />
                                 </div>
                                 {renderFieldError('email') }
@@ -117,6 +119,7 @@ function Login (props){
                                 <div className="form-group-inner">
                                     <span className="form-icon"><img src="./assets/images/password.svg" className="img-fluid" alt="password-icon" /></span>
                                     <input 
+                                        disabled={ loading ? 'disabled' : ''}
                                         id="pass_log_id" 
                                         name="password"
                                         type={showPassoword ? 'text' : 'password'} 
@@ -125,8 +128,7 @@ function Login (props){
                                         value={password}
                                         onChange={e=>setPassword(e.target.value)}
                                         required
-                                        disabled={ loading ? 'disabled' : ''}
-                                        autoComplete='off'
+                                        autoComplete="no-password" 
                                     />
                                     <span onClick={togglePasswordVisibility} className={`form-icon-password toggle-password ${showPassoword ? 'eye-open' : 'eye-close'}`}>
                                         <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>

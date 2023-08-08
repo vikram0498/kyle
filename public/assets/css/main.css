@@ -1752,3 +1752,15 @@ li.page-item {
     opacity: 0;
   }
 }
+.data-loader{
+    width: 100%;
+    text-align: center;
+}
+.data-loader img{
+    text-align: center;
+    width: 100px;
+    margin-top: 9%;
+}
+span.ico-no {
+    cursor: pointer;
+}

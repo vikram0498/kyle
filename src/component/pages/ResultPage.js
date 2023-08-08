@@ -34,14 +34,14 @@ const ResultPage = ({setIsFiltered}) =>{
 		if(localStorage.getItem('get_filtered_data') !== null){
 			getFilterResult();
 		}
-    }, [activeTab,buyerType]);	
+    }, []);	
     
-    const getFilterResult = (page="") => {
+    const getFilterResult = (page="",active_tab=activeTab,buyer_type=buyerType) => {
         setShowLoader(true);
 		const apiUrl = process.env.REACT_APP_API_URL;
         let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
-		searchFields.activeTab = activeTab;
-		searchFields.buyer_type = buyerType;
+		searchFields.activeTab = active_tab;
+		searchFields.buyer_type = buyer_type;
 		searchFields.filterType = '';
         let headers = { 
 			'Accept': 'application/json',
@@ -83,15 +83,25 @@ const ResultPage = ({setIsFiltered}) =>{
 		getFilterResult(page_number);
 	}
     const handleClickMyBuyers = () => {
+        setPageNumber(1);
         setActiveTab('my_buyers');
+        getFilterResult('','my_buyers');
+
     }
     const handleClickMoreBuyers = () => {
+        setPageNumber(1);
         setActiveTab('more_buyers');
+        getFilterResult('','more_buyers');
+
     }
     const handleClickHedgeFund = () => {
+        getFilterResult('',activeTab,5);
+        setPageNumber(1);
         setBuyerType(5);
     }
     const handleClickInvestors = () => {
+        getFilterResult('',activeTab,11);
+        setPageNumber(1)
         setBuyerType(11);
     }
     return(
@@ -113,7 +123,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                 <h6 className="center-head text-center mb-0">Result Page</h6>
                             </div>
                             <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{toRecord} Out of {totalRecord}</p>
+                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord)?toRecord:0} Out of {totalRecord}</p>
                             </div>
                         </div>
                     </div>
@@ -136,7 +146,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                         </div>
                                         <div className="column-6">
                                             <div className="inner-page-title text-center">
-                                                <h3 className="text-center">Property Criteria Match With 10 Buyers</h3>
+                                                <h3 className="text-center">Property Criteria Match With {totalRecord} Buyers</h3>
                                                 <p className="mb-0">5 Additional Buyer interested in similar property</p>
                                             </div>
                                         </div>
@@ -157,7 +167,13 @@ const ResultPage = ({setIsFiltered}) =>{
                                         {showLoader && <Loader />}
                                         {!showLoader && (
                                             <div>
-                                                <MyBuyersResult buyerData={buyerData}/>
+                                                <MyBuyersResult 
+                                                    buyerData={buyerData}
+                                                    getFilterResult={getFilterResult}
+                                                    pageNumber={pageNumber}
+                                                    activeTab={activeTab}
+                                                    buyerType={buyerType}
+                                                />
                                                 {/* <MoreBuyersResult buyerData={buyerData}/>
                                                 <HedgeFundResult buyerData={buyerData}/>
                                                 <InvestorsResult buyerData={buyerData}/> */}
