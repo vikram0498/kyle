@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable()->default(null);
             $table->rememberToken();
+            $table->tinyInteger('level_type')->default(1)->comment('1=>Level 1, 2=>Level 2, 3=>Level 3');
             $table->boolean('is_active')->default(1)->comment('1=> active, 0=>deactive');
             $table->boolean('is_block')->default(0)->comment('1=> Blocked, 0=> Unblock');
             $table->timestamps();

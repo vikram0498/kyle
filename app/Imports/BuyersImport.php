@@ -379,12 +379,17 @@ class BuyersImport implements ToModel, WithStartRow
                 $this->insertedCount++;
                
                 $createdBuyer = Buyer::create($buyerArr);
-                $syncData[0]['user_id'] = auth()->user()->id;
-                $syncData[0]['created_at'] = Carbon::now();
-                $createdBuyer->buyersPurchasedByUser()->attach($syncData);
+
+                if(auth()->user()->is_seller){
+                    //Purchased buyer
+                    $syncData['buyer_id'] = $createdBuyer->id;
+                    $syncData['created_at'] = Carbon::now();
+
+                    auth()->user()->purchasedBuyers()->create($syncData);
+                }
                 
                 return $createdBuyer;
-                // return Buyer::create($buyerArr);
+                
             }
         }
     }

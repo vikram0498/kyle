@@ -13,15 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_purchased_buyers', function (Blueprint $table) {
+        Schema::create('purchased_buyers', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
             $table->unsignedBigInteger('buyer_id');
-            $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
-
+            // Other columns related to the purchase, such as purchase_date, amount, etc.
             $table->timestamps();
             $table->softDeletes();
+    
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('buyer_id')->references('id')->on('buyers')->onDelete('cascade');
         });
     }
 
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_purchased_buyers');
+        Schema::dropIfExists('purchased_buyers');
     }
 };

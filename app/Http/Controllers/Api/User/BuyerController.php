@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use Carbon\Carbon;
 use App\Models\Buyer;
 use App\Models\UserBuyerLikes;
+use App\Models\PurchasedBuyer;
 use App\Models\Token;
 use Illuminate\Support\Str;
 use App\Models\SearchLog;
@@ -234,9 +235,13 @@ class BuyerController extends Controller
             $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
 
             $createdBuyer = Buyer::create($validatedData);
-            $syncData[0]['user_id']    = auth()->user()->id;
-            $syncData[0]['created_at'] = Carbon::now();
-            $createdBuyer->buyersPurchasedByUser()->attach($syncData);
+            if(auth()->user()->is_seller){
+                //Purchased buyer
+                $syncData['buyer_id'] = $createdBuyer->id;
+                $syncData['created_at'] = Carbon::now();
+          
+                auth()->user()->purchasedBuyers()->create($syncData);
+            }
 
             if($token){
               Token::where('token_value',$token)->update(['is_used'=>1]);
@@ -274,11 +279,11 @@ class BuyerController extends Controller
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
-                    // $buyers = $buyers->where('user_id',$userId);
                     $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
                 }elseif($request->activeTab == 'more_buyers'){
-                    // $buyers = $buyers->where('user_id','!=',$userId);
-                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '!=', $userId);
+                    $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                        $query->where('user_id', '=',$userId);
+                    })->where('user_id', '=', 1);
                 }
             }
 
@@ -491,14 +496,13 @@ class BuyerController extends Controller
 
             foreach ($buyers as $key=>$buyer){
                 $name = $buyer->first_name.' '.$buyer->last_name;
-                $buyerPurchased = $buyer->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->exists();
-                // $buyerRecordNotInPurchased = $buyer->whereDoesntHave('buyersPurchasedByUser')->exists();
                 if($request->activeTab){
-                    if($request->activeTab == 'my_buyers' && $buyerPurchased){
+                    if($request->activeTab == 'my_buyers'){
                         $buyer->name =  $name;
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
 
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
@@ -508,6 +512,7 @@ class BuyerController extends Controller
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
                     }
                 }
             }
@@ -565,6 +570,7 @@ class BuyerController extends Controller
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
             }
 
             DB::commit();
@@ -664,6 +670,7 @@ class BuyerController extends Controller
             $checkToken = Token::where('user_id',$authUserId)->where(function($query){
                 $query->where('token_expired_time', '<=', Carbon::now())
                 ->orWhere('is_used',1);
+                // $query->where('is_used',1);
             })->first();
 
             $isTokenGenerated = false;
@@ -783,14 +790,18 @@ class BuyerController extends Controller
         DB::beginTransaction();
         try {
             $fetchBuyer = Buyer::find($request->buyer_id);
-            $syncData[0]['user_id']    = auth()->user()->id;
-            $syncData[0]['created_at'] = Carbon::now();
-            $fetchBuyer->buyersPurchasedByUser()->attach($syncData);
+            if(auth()->user()->is_seller){
+                //Purchased buyer
+                $syncData['buyer_id'] = $fetchBuyer->id;
+                $syncData['created_at'] = Carbon::now();
+
+                auth()->user()->purchasedBuyers()->create($syncData);
+            }
         
             $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id',auth()->user()->id)->exists();
             $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
             $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
-            
+            $fetchBuyer->redFlagShow = $fetchBuyer->buyersPurchasedByUser()->exists();
            
             DB::commit();
 
@@ -803,7 +814,7 @@ class BuyerController extends Controller
 
         }catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
