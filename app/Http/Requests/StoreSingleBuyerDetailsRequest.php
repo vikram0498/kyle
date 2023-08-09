@@ -86,7 +86,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'parking' => ['required','array', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_types')))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
-            // 'buyer_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.buyer_types')))],
+            'buyer_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.buyer_types')))],
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))],
         ];
 

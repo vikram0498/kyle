@@ -122,6 +122,7 @@ class LoginRegisterController extends Controller
                         'first_name'   => $user->first_name ?? '',
                         'last_name'    => $user->last_name ?? '',
                         'profile_image'=> $user->profile_image_url ?? '',
+                        'level_type'   => $user->level_type,
                     ],
                     'remember_me_token' => $user->remember_token,
                     'access_token'      => $accessToken

@@ -26,6 +26,7 @@ class ProfileController extends Controller
             'email'      => $user->email ?? null,
             'phone'      => $user->phone ?? null,
             'profile_image' => $user->profile_image_url ?? null,
+            'level_type' => $user->level_type ?? null,
             'is_active'  => $user->is_active ?? 0,
             'is_block'   => $user->is_block ?? 0,
         ];

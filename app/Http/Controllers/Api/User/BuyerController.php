@@ -620,11 +620,12 @@ class BuyerController extends Controller
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
             $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
-             foreach ($buyers as $buyer) {
+            foreach ($buyers as $buyer) {
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                 $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
             }
 
             DB::commit();
@@ -946,6 +947,5 @@ class BuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
-
 
 }
