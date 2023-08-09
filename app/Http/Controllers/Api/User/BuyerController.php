@@ -276,6 +276,7 @@ class BuyerController extends Controller
             $userId = auth()->user()->id;
 
             $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone');
+            $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
@@ -291,30 +292,36 @@ class BuyerController extends Controller
         
             if($request->property_type){
                 $propertyType = $request->property_type;
-                $buyers->whereJsonContains('property_type', intval($propertyType));
+                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
             }
 
             if($request->address){
-                $buyers->where('address', 'like', '%'.$request->address.'%');
+                $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
+                $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
             }
 
             if($request->country){
                 $country =  DB::table('countries')->where('id',$request->country)->value('name');
-                $buyers->where('country', $country);
+                $buyers = $buyers->where('country', $country);
+                $additionalBuyers = $additionalBuyers->where('country', $country);
             }
 
             if($request->state){
                 $state   =  DB::table('states')->where('id',$request->state)->value('name');
-                $buyers->where('state', $state);
+                $buyers = $buyers->where('state', $state);
+                $additionalBuyers = $additionalBuyers->where('state', $state);
             }
 
             if($request->city){
                 $city    =  DB::table('cities')->where('id',$request->city)->value('name');
-                $buyers->where('city', $city);
+                $buyers = $buyers->where('city', $city);
+                $additionalBuyers = $additionalBuyers->where('city', $city);
             }
 
             if($request->zip_code){
-                $buyers->where('zip_code', $request->zip_code);
+                $buyers = $buyers->where('zip_code', $request->zip_code);
+                $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
             }
 
             /* if($request->price){
@@ -323,62 +330,78 @@ class BuyerController extends Controller
 
             if($request->bedroom_min && is_numeric($request->bedroom_min)){
                 $buyers = $buyers->where('bedroom_min', '>=', $request->bedroom_min);
+                $additionalBuyers = $additionalBuyers->where('bedroom_min', '>=', $request->bedroom_min);
             } 
 
             if($request->bedroom_max && is_numeric($request->bedroom_max)){
                 $buyers = $buyers->where('bedroom_max', '<=', $request->bedroom_max);
+                $additionalBuyers = $additionalBuyers->where('bedroom_max', '<=', $request->bedroom_max);
+
             } 
 
             if($request->bath_min && is_numeric($request->bath_min)){
                 $buyers = $buyers->where('bath_min', '>=', $request->bath_min);
+                $additionalBuyers = $additionalBuyers->where('bath_min', '>=', $request->bath_min);
             } 
 
             if($request->bath_max && is_numeric($request->bath_max)){
                 $buyers = $buyers->where('bath_max', '<=', $request->bath_max);
+                $additionalBuyers = $additionalBuyers->where('bath_max', '<=', $request->bath_max);
             } 
 
             if($request->size_min && is_numeric($request->size_min)){
                 $buyers = $buyers->where('size_min', '>=', $request->size_min);
+                $additionalBuyers = $additionalBuyers->where('size_min', '>=', $request->size_min);
             } 
 
             if($request->size_max && is_numeric($request->size_max)){
                 $buyers = $buyers->where('size_max', '<=', $request->size_max);
+                $additionalBuyers = $additionalBuyers->where('size_max', '<=', $request->size_max);
             } 
 
             if($request->lot_size_min && is_numeric($request->lot_size_min)){
                 $buyers = $buyers->where('lot_size_min', '>=', $request->lot_size_min);
+                $additionalBuyers = $additionalBuyers->where('lot_size_min', '>=', $request->lot_size_min);
             } 
 
             if($request->lot_size_max && is_numeric($request->lot_size_max)){
                 $buyers = $buyers->where('lot_size_max', '<=', $request->lot_size_max);
+                $additionalBuyers = $additionalBuyers->where('lot_size_max', '<=', $request->lot_size_max);
             }
             
             if($request->build_year_min && is_numeric($request->build_year_min)){
                 $buyers = $buyers->where('build_year_min', '>=', $request->build_year_min);
+                $additionalBuyers = $additionalBuyers->where('build_year_min', '>=', $request->build_year_min);
             }
 
             if($request->build_year_max && is_numeric($request->build_year_max)){
                 $buyers = $buyers->where('build_year_max', '<=', $request->build_year_max);
+                $additionalBuyers = $additionalBuyers->where('build_year_max', '<=', $request->build_year_max);
             }
 
             if($request->arv_min && is_numeric($request->arv_min)){
                 $buyers = $buyers->where('arv_min', '>=', $request->arv_min);
+                $additionalBuyers = $additionalBuyers->where('arv_min', '>=', $request->arv_min);
             }
 
             if($request->arv_max && is_numeric($request->arv_max)){
                 $buyers = $buyers->where('arv_max', '<=', $request->arv_max);
+                $additionalBuyers = $additionalBuyers->where('arv_max', '<=', $request->arv_max);
             }
 
             if($request->parking){
                 $buyers = $buyers->whereJsonContains('parking', intval($request->parking));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('parking', intval($request->parking));
             }
 
             if($request->property_flaw){
                 $buyers = $buyers->whereJsonContains('property_flaw', $request->property_flaw);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('property_flaw', $request->property_flaw);
             }
 
             if($request->purchase_method){
                 $buyers = $buyers->whereJsonContains('purchase_method', $request->purchase_method);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $request->purchase_method);
             }
 
             /* if($request->building_class){
@@ -388,99 +411,127 @@ class BuyerController extends Controller
 
             if(!is_null($request->solar) && in_array($request->solar, $radioValues)){
                 $buyers = $buyers->where('solar', $request->solar);
+                $additionalBuyers = $additionalBuyers->where('solar', $request->solar);
             }
 
             if(!is_null($request->pool) && in_array($request->pool, $radioValues)){
                 $buyers = $buyers->where('pool', $request->pool);
+                $additionalBuyers = $additionalBuyers->where('pool', $request->pool);
             }
 
             if(!is_null($request->septic) && in_array($request->septic, $radioValues)){
                 $buyers = $buyers->where('septic', $request->septic);
+                $additionalBuyers = $additionalBuyers->where('septic', $request->septic);
             }
 
             if(!is_null($request->well) && in_array($request->well, $radioValues)){
                 $buyers = $buyers->where('well', $request->well);
+                $additionalBuyers = $additionalBuyers->where('well', $request->well);
             }
 
             if(!is_null($request->age_restriction) && in_array($request->age_restriction, $radioValues)){
                 $buyers = $buyers->where('age_restriction', $request->age_restriction);
+                $additionalBuyers = $additionalBuyers->where('age_restriction', $request->age_restriction);
             }
 
             if(!is_null($request->rental_restriction) && in_array($request->rental_restriction, $radioValues)){
                 $buyers = $buyers->where('rental_restriction', $request->rental_restriction);
+                $additionalBuyers = $additionalBuyers->where('rental_restriction', $request->rental_restriction);
             }
 
             if(!is_null($request->hoa) && in_array($request->hoa, $radioValues)){
                 $buyers = $buyers->where('hoa', $request->hoa);
+                $additionalBuyers = $additionalBuyers->where('hoa', $request->hoa);
             }
 
             if(!is_null($request->tenant) && in_array($request->tenant, $radioValues)){
                 $buyers = $buyers->where('tenant', $request->tenant);
+                $additionalBuyers = $additionalBuyers->where('tenant', $request->tenant);
             }
 
             if(!is_null($request->post_possession) && in_array($request->post_possession, $radioValues)){
                 $buyers = $buyers->where('post_possession', $request->post_possession);
+                $additionalBuyers = $additionalBuyers->where('post_possession', $request->post_possession);
             }
 
             if(!is_null($request->building_required) && in_array($request->building_required, $radioValues)){
                 $buyers = $buyers->where('building_required', $request->building_required);
+                $additionalBuyers = $additionalBuyers->where('building_required', $request->building_required);
             }
 
             if(!is_null($request->foundation_issues) && in_array($request->foundation_issues, $radioValues)){
                 $buyers = $buyers->where('foundation_issues', $request->foundation_issues);
+                $additionalBuyers = $additionalBuyers->where('foundation_issues', $request->foundation_issues);
             }
 
             if(!is_null($request->mold) && in_array($request->mold, $radioValues)){
                 $buyers = $buyers->where('mold', $request->mold);
+                $additionalBuyers = $additionalBuyers->where('mold', $request->mold);
             }
 
             if(!is_null($request->fire_damaged) && in_array($request->fire_damaged, $radioValues)){
                 $buyers = $buyers->where('fire_damaged', $request->fire_damaged);
+                $additionalBuyers = $additionalBuyers->where('fire_damaged', $request->fire_damaged);
             }
 
             if(!is_null($request->rebuild) && in_array($request->rebuild, $radioValues)){
                 $buyers = $buyers->where('rebuild', $request->rebuild);
+                $additionalBuyers = $additionalBuyers->where('rebuild', $request->rebuild);
             }
 
             if(!is_null($request->squatters) && in_array($request->squatters, $radioValues)){
                 $buyers = $buyers->where('squatters', $request->squatters);
+                $additionalBuyers = $additionalBuyers->where('squatters', $request->squatters);
             }
             
             if($request->total_units){
                 $buyers = $buyers->where('unit_min', '<=', $request->total_units)->where('unit_max' ,'>=',$request->total_units);
+                $additionalBuyers = $additionalBuyers->where('unit_min', '<=', $request->total_units)->where('unit_max' ,'>=',$request->total_units);
             }
 
             if($request->max_down_payment_percentage){
                 $buyers = $buyers->where('max_down_payment_percentage', $request->max_down_payment_percentage);
+                $additionalBuyers = $additionalBuyers->where('max_down_payment_percentage', $request->max_down_payment_percentage);
             }
 
             if($request->max_down_payment_money){
                 $buyers = $buyers->where('max_down_payment_money', $request->max_down_payment_money);
+                $additionalBuyers = $additionalBuyers->where('max_down_payment_money', $request->max_down_payment_money);
             }
 
             if($request->max_interest_rate){
                 $buyers = $buyers->where('max_interest_rate', $request->max_interest_rate);
+                $additionalBuyers = $additionalBuyers->where('max_interest_rate', $request->max_interest_rate);
             }
 
             if(!is_null($request->balloon_payment) && in_array($request->balloon_payment, $radioValues)){
                 $buyers = $buyers->where('balloon_payment', $request->balloon_payment);
+                $additionalBuyers = $additionalBuyers->where('balloon_payment', $request->balloon_payment);
             }
 
             if($request->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', intval($request->building_class));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('building_class', intval($request->building_class));
             }
 
             if(!is_null($request->value_add) && in_array($request->value_add, $radioValues)){
                 $buyers = $buyers->where('value_add', $request->value_add);
+                $additionalBuyers = $additionalBuyers->where('value_add', $request->value_add);
             }
 
             if($request->buyer_type){
                 $buyers = $buyers->whereJsonContains('buyer_type', intval($request->buyer_type));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('buyer_type', intval($request->buyer_type));
             }
 
             $totalRecord = $buyers->count();
 
             $buyers = $buyers->paginate(10);
+
+            // Get additional buyer
+            $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                $query->where('user_id', '=',$userId);
+            })->where('user_id', '=', 1);
 
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
@@ -526,6 +577,7 @@ class BuyerController extends Controller
                 'status'        => true,
                 'buyers'        => $buyers,
                 'activeTab'     => $request->activeTab,
+                'additional_buyers_count' => $additionalBuyers->count(),
                 'total_records' => $totalRecord
             ];
 
