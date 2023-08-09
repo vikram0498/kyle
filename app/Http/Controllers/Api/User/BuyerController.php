@@ -275,7 +275,7 @@ class BuyerController extends Controller
         try {
             $userId = auth()->user()->id;
 
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone');
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by');
             $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
@@ -554,6 +554,7 @@ class BuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                         $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
 
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
@@ -564,6 +565,7 @@ class BuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                         $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
                     }
                 }
             }
