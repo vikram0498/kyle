@@ -25,6 +25,8 @@ class SocialMediaController extends Controller
                             'first_name'   => $isUser->first_name ?? '',
                             'last_name'    => $isUser->last_name ?? '',
                             'profile_image'=> $isUser->profile_image_url ?? '',
+                            'level_type'   => $isUser->level_type,
+                            'total_buyer_uploaded' => $isUser->purchasedBuyers()->count(),
                         ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
@@ -63,6 +65,8 @@ class SocialMediaController extends Controller
                         'first_name'   => $newUser->first_name ?? '',
                         'last_name'    => $newUser->last_name ?? '',
                         'profile_image'=> $newUser->profile_image_url ?? '',
+                        'level_type'   => $newUser->level_type,
+                        'total_buyer_uploaded' => $newUser->purchasedBuyers()->count(),
                     ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
@@ -96,6 +100,8 @@ class SocialMediaController extends Controller
                             'first_name'   => $isUser->first_name ?? '',
                             'last_name'    => $isUser->last_name ?? '',
                             'profile_image'=> $isUser->profile_image_url ?? '',
+                            'level_type'   => $isUser->level_type,
+                            'total_buyer_uploaded' => $isUser->purchasedBuyers()->count(),
                         ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
@@ -135,6 +141,8 @@ class SocialMediaController extends Controller
                         'first_name'   => $newUser->first_name ?? '',
                         'last_name'    => $newUser->last_name ?? '',
                         'profile_image'=> $newUser->profile_image_url ?? '',
+                        'level_type'   => $newUser->level_type,
+                        'total_buyer_uploaded' => $newUser->purchasedBuyers()->count(),
                     ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
