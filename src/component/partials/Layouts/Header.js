@@ -31,7 +31,6 @@ function Header() {
 		}
 		
     }, []);
-	
   return (
     <>
 		<header className="dashboard-header">
@@ -51,6 +50,12 @@ function Header() {
 									<img src="./assets/images/folder.svg" className="img-fluid" /></span>
 								<p>uploaded Buyer Data : <b>0</b></p>
 							</div>
+							{(userDetails !=null && userDetails.level_type !=1)?
+							<div class="upload-buyer">
+								<span class="upload-buyer-icon"><img src="./assets/images/wallet.svg" class="img-fluid" /></span>
+								<p>Credits Points : <b>40</b></p>
+							</div>:''}
+							
 							<div className="dropdown user-dropdown">
 								<button className="btn dropdown-toggle ms-auto" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 									<div className="dropdown-data">

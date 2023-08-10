@@ -1764,3 +1764,20 @@ li.page-item {
 span.ico-no {
     cursor: pointer;
 }
+.like-btn-disabled{
+cursor: not-allowed !important;
+}
+.msg-passwrd {
+    font-size: 9px;
+    color: #787575;
+    font-weight: 400;
+}
+.video-loader{
+    width: 100%;
+    text-align: center;
+    height: 200px;
+}
+.video-loader img {
+    width: 100px;
+    margin-top: 30px;
+}

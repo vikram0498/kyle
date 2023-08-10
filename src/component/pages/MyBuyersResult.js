@@ -49,7 +49,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             // const addLoader = document.querySelector(`.property-section-${id}`);
             const addLoaderParent = document.querySelectorAll(`.property-critera-block`)[index];
             const addLoaderChild = addLoaderParent.querySelectorAll('.property-critera-details')[0];
-            addLoaderChild.innerHTML = '<div className="data-loader"><img src="/assets/images/data-loader.svg"/></div>';
+            addLoaderChild.innerHTML = '<div className="data-loader" style="width: 100%;text-align: center;"><img src="/assets/images/data-loader.svg" style="width: 100px;"/></div>';
             const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
                 'Accept': 'application/json',
@@ -62,18 +62,18 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                 let data = response.data.data.buyer;
                 const currentElement = document.querySelectorAll(`.property-critera-block`)[index];
                 const childElements = currentElement.querySelectorAll('.property-critera-details')[0];
-                console.log(currentElement,'currentElement',index);
-                let html = `<ul className="list-unstyled mb-0">
+                currentElement.querySelectorAll('.cornor-block')[0].remove();
+                let html = `<ul className="list-unstyled mb-0" style="padding-left:0px;">
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
+                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
                         <span className="name-dealer">${data.first_name+' '+ data.last_name}</span>
                     </li>
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
+                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
                         <a href=${data.phone} className="name-dealer">${data.phone}</a>
                     </li>
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
+                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
                         <a href=${'mailto:'+data.email} className="name-dealer">${data.email}</a>
                     </li>
                 </ul>`;
@@ -142,18 +142,34 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                     <div className="critera-card">
                                         <div className="center-align">
                                             <span className="price-img"><img src="/assets/images/price.svg" className="img-fluid" /></span>
-                                            <p>Buyer</p>
+                                            <p>Buyer </p>
+                                            {(activeTab =='more_buyers')?
+                                            <ul className="like-unlike mb-0 list-unstyled">
+                                                <li>
+                                                    <span className="numb like-span ">{data.totalBuyerLikes}</span>
+                                                    
+                                                    <span className="ico-no ml-min like-btn-disabled">
+                                                    <img src="/assets/images/like.svg" className="img-fluid" /></span>
+                                                </li>
+                                                <li>
+                                                    <span className="ico-no mr-min like-btn-disabled"><img src="/assets/images/unlike.svg" className="img-fluid" /></span>
+                                                    <span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
+                                                </li>
+                                            </ul>
+                                            :
                                             <ul className="like-unlike mb-0 list-unstyled">
                                                 <li>
                                                     <span className="numb like-span">{data.totalBuyerLikes}</span>
                                                     
-                                                    <span className="ico-no ml-min" onClick={()=>{likeUnlikeBuyer(data.id,1,0,index)}}><img src="/assets/images/like.svg" className="img-fluid" /></span>
+                                                    <span className="ico-no ml-min" onClick={()=>{likeUnlikeBuyer(data.id,1,0,index)}}>
+                                                    <img src="/assets/images/like.svg" className="img-fluid" /></span>
                                                 </li>
                                                 <li>
                                                     <span className="ico-no mr-min" onClick={()=>{likeUnlikeBuyer(data.id,0,1,index)}}><img src="/assets/images/unlike.svg" className="img-fluid" /></span>
                                                     <span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
                                                 </li>
                                             </ul>
+                                            }
                                         </div>
                                     </div>
                                     <div className={"property-critera-details unhide-"+index}>
@@ -164,7 +180,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
-                                                <a href={data.phone} className="name-dealer">{data.phone}</a>
+                                                <a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
@@ -172,29 +188,34 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                             </li>
                                         </ul>
                                     </div>
-                                    {(activeTab =='more_buyers')?<div className="cornor-block">
-                                        <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
-                                            <img src="/assets/images/red-flag.svg" className="img-fluid" />
-                                        </div>
-    
-                                        <div className="show-hide-data">
-                                            <button type="button" className="unhide-btn" onClick={()=>{handleClickConfirmation(data.id,index)}}>
-                                                <span className="icon-unhide">
-                                                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g clipPath="url(#clip0_677_7400)">
-                                                    <path d="M1.16699 7.99996C1.16699 7.99996 3.83366 2.66663 8.50033 2.66663C13.167 2.66663 15.8337 7.99996 15.8337 7.99996C15.8337 7.99996 13.167 13.3333 8.50033 13.3333C3.83366 13.3333 1.16699 7.99996 1.16699 7.99996Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"></path>
-                                                    <path d="M8.5 10C9.60457 10 10.5 9.10457 10.5 8C10.5 6.89543 9.60457 6 8.5 6C7.39543 6 6.5 6.89543 6.5 8C6.5 9.10457 7.39543 10 8.5 10Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"></path>
-                                                    </g>
-                                                    <defs>
-                                                    <clipPath id="clip0_677_7400">
-                                                    <rect width="16" height="16" fill="white" transform="translate(0.5)"></rect>
-                                                    </clipPath>
-                                                    </defs>
-                                                    </svg>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </div>:''}
+                                    <div className="cornor-block">
+                                        {
+                                            (data.createdByAdmin)?
+                                                (data.redFlagShow) ? <>
+                                                    <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
+                                                        <img src="/assets/images/red-flag.svg" className="img-fluid" />
+                                                    </div>
+                                                </>:
+                                                <div className="show-hide-data">
+                                                    <button type="button" className="unhide-btn" onClick={()=>{handleClickConfirmation(data.id,index)}}>
+                                                        <span className="icon-unhide">
+                                                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <g clipPath="url(#clip0_677_7400)">
+                                                            <path d="M1.16699 7.99996C1.16699 7.99996 3.83366 2.66663 8.50033 2.66663C13.167 2.66663 15.8337 7.99996 15.8337 7.99996C15.8337 7.99996 13.167 13.3333 8.50033 13.3333C3.83366 13.3333 1.16699 7.99996 1.16699 7.99996Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                            <path d="M8.5 10C9.60457 10 10.5 9.10457 10.5 8C10.5 6.89543 9.60457 6 8.5 6C7.39543 6 6.5 6.89543 6.5 8C6.5 9.10457 7.39543 10 8.5 10Z" stroke="white" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                            </g>
+                                                            <defs>
+                                                            <clipPath id="clip0_677_7400">
+                                                            <rect width="16" height="16" fill="white" transform="translate(0.5)"></rect>
+                                                            </clipPath>
+                                                            </defs>
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                </div>:''
+                                        }
+                                        
+                                    </div>
                                 </div>
                             </div>)
                         })}
@@ -217,5 +238,16 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
         </div>
     </>
  )
+ const styles = {
+    background: "#FFFFFF",
+    width: "38px",
+    height: "38px",
+    minWidth: "38px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: "100%",
+    marginRight: "12px",
+  };
 }
 export default MyBuyersResult;

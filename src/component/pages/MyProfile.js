@@ -14,6 +14,9 @@ import axios from 'axios';
     const {getTokenData} = useAuth();
     const navigate = useNavigate();
     const [userData, setUserData] = useState('');
+    const [oldPassword,setOldPassword] = useState('');
+    const [newPassword,setNewPassword] = useState('');
+    const [confirmPassword,setConfirmPassword] = useState('');
     const [isProfileUpdate, setIsProfileUpdate] = useState('false');
     const [errorMsg, setErrorMsg] = useState('');
     const [border, setBorder] = useState("1px dashed #677AAB");
@@ -75,6 +78,7 @@ import axios from 'axios';
     const handleFormSubmit = (data,e) => {
         e.preventDefault();
         setIsProfileUpdate('false');
+        setErrors('');
         var data = new FormData(e.target);
         let formData = Object.fromEntries(data.entries());
         let headers = { 
@@ -107,7 +111,6 @@ import axios from 'axios';
             const response = await axios.post(apiUrl+"update-profile",formData,{headers: headers});
             if(response.data.status){
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                
                 setIsProfileUpdate('true');
                 //await fetchUserData();
             }
@@ -135,16 +138,16 @@ import axios from 'axios';
           }
     }
 
-    // const handleChangeFirstName = (e) => {
-    //     const regex = /^[a-zA-Z\s]+$/;
-    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-    //     if (regex.test(new_value)) {
-    //         setFirstName(new_value);
-    //     }
-    //     if(new_value ==''){
-    //         setFirstName('');
-    //     }
-    // }
+    const handleOldPassword = (e) => {
+        setOldPassword(e.target.value);
+    }
+    const handleNewPassword = (e) => {
+        setNewPassword(e.target.value);
+    }
+    const handleConfirmPassword = (e) => {
+        setConfirmPassword(e.target.value);
+    }
+
     // const handleChangeLastName = (e) => {
     //     const regex = /^[a-zA-Z\s]+$/;
     //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
@@ -155,7 +158,6 @@ import axios from 'axios';
     //         setLastName('');
     //     }
     // }
-    console.log(watch("first_name"),'watcheddd',errors); 
     return(
         <>
             <Header/>
@@ -254,20 +256,24 @@ import axios from 'axios';
                                             </div>
                                         </div>
                                         <div className="form-title">
-                                            <h5>Change Password</h5>
+                                            <h5>Change Password <span className="msg-passwrd">(Leave blank if you don’t want to update password)</span></h5>
                                         </div>
                                         <div className="row">
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Old Password</label>
-                                                    <input type="password" name="password" className="form-control-form" placeholder="Old Password" autoComplete="new-password"/> 
+                                                    <input type="password" name="old_password" className="form-control-form" placeholder="Old Password" autoComplete="new-password"
+                                                    value={oldPassword}
+                                                    onChange={handleOldPassword}
+                                                    /> 
                                                     {renderFieldError('old_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>New Password</label>
-                                                    <input type="password" name="new_password" className="form-control-form" placeholder="New Password"/> 
+                                                    <input type="password" name="new_password" className="form-control-form" placeholder="New Password"
+                                                    /> 
                                                     {renderFieldError('new_password') }
                                                 </div>
                                             </div>

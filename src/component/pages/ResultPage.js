@@ -11,6 +11,8 @@ import RedFlagModal from "./RedFlagModal";
 import {useAuth} from "../../hooks/useAuth";
 import Pagination from "../partials/Layouts/Pagination";
 import Loader from "../partials/Layouts/Loader";
+import { toast } from 'react-toastify';
+import { useFormError } from "../../hooks/useFormError";
 
 const ResultPage = ({setIsFiltered}) =>{
 
@@ -22,25 +24,24 @@ const ResultPage = ({setIsFiltered}) =>{
 	const {getTokenData} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
-	
+	const [additionalBuyerCount,setAdditionalBuyerCount] = useState(0);
 	const [totalRecord,setTotalRecord] = useState(0);
 	const [currentRecord,setCurrentRecord] = useState(0);
 	const [fromRecord,setFromRecord] = useState(0);
 	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
 	const [showLoader,setShowLoader] = useState(true);
+    const { setErrors, renderFieldError } = useFormError();
 
     useEffect(() => {
-		if(localStorage.getItem('get_filtered_data') !== null){
-			getFilterResult();
-		}
-    }, []);	
+		getFilterResult();
+    }, [activeTab,buyerType,pageNumber]);	
     
-    const getFilterResult = (page="",active_tab=activeTab,buyer_type=buyerType) => {
+    const getFilterResult = (page=pageNumber,active_tab=activeTab,buyer_type=buyerType) => {
         setShowLoader(true);
 		const apiUrl = process.env.REACT_APP_API_URL;
         let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
-		searchFields.activeTab = active_tab;
+		searchFields.activeTab = (active_tab==null)?'my_buyers':activeTab;
 		searchFields.buyer_type = buyer_type;
 		searchFields.filterType = '';
         let headers = { 
@@ -54,7 +55,20 @@ const ResultPage = ({setIsFiltered}) =>{
 		}
 		axios.post(url, searchFields, { headers: headers }).then(response => {
 			addBuyerDetails(response.data);
-        })
+        }).catch(error => {
+            setShowLoader(false);
+            if(error.response) {
+                if (error.response.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
+                }
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        });
     }
     const addBuyerDetails = (buyer_data) => {
 		setBuyerData(buyer_data.buyers.data)
@@ -62,7 +76,7 @@ const ResultPage = ({setIsFiltered}) =>{
 		setCurrentRecord(buyer_data.buyers.data.length);
 		setTotalRecord(buyer_data.total_records);
 		setTotalPage(buyer_data.buyers.last_page);
-
+        setAdditionalBuyerCount(buyer_data.additional_buyers_count);
 		setFromRecord(buyer_data.buyers.from);
 		setToRecord(buyer_data.buyers.to);
 		setShowLoader(false);
@@ -72,35 +86,31 @@ const ResultPage = ({setIsFiltered}) =>{
 			localStorage.removeItem('get_filtered_data');
 		}
 		setIsFiltered(false);
-		window.history.pushState(null, "", "/sellers-form")
+		//window.history.pushState(null, "", "/sellers-form")
 	}
     const handlePagination = (page_number) =>{
 		if(localStorage.getItem('get_filtered_data') !== null){
 			localStorage.removeItem('get_filtered_data');
 		}
-		setShowLoader(true);
 		setPageNumber(page_number);
-		getFilterResult(page_number);
 	}
     const handleClickMyBuyers = () => {
         setPageNumber(1);
+        setBuyerType('');
         setActiveTab('my_buyers');
-        getFilterResult('','my_buyers');
-
+        console.log(activeTab,'activeTab1',pageNumber);
     }
     const handleClickMoreBuyers = () => {
         setPageNumber(1);
+        setBuyerType('');
         setActiveTab('more_buyers');
-        getFilterResult('','more_buyers');
-
+        console.log(activeTab,'activeTab33',pageNumber);
     }
     const handleClickHedgeFund = () => {
-        getFilterResult('',activeTab,5);
         setPageNumber(1);
         setBuyerType(5);
     }
     const handleClickInvestors = () => {
-        getFilterResult('',activeTab,11);
         setPageNumber(1)
         setBuyerType(11);
     }
@@ -147,17 +157,17 @@ const ResultPage = ({setIsFiltered}) =>{
                                         <div className="column-6">
                                             <div className="inner-page-title text-center">
                                                 <h3 className="text-center">Property Criteria Match With {totalRecord} Buyers</h3>
-                                                <p className="mb-0">5 Additional Buyer interested in similar property</p>
+                                                <p className="mb-0">{additionalBuyerCount} Additional Buyer interested in similar property</p>
                                             </div>
                                         </div>
                                         <div className="column-3">
                                             <div className="buyers-tabs">
                                                 <ul className="nav nav-pills mb-0" id="pills-tab" role="tablist">
                                                     <li className="nav-item" role="presentation">
-                                                        <button className="nav-link" id="pills-hedgefund-tab" data-bs-toggle="pill" data-bs-target="#pills-hedgefund" type="button" role="tab" aria-controls="pills-hedgefund" aria-selected="true" onClick={handleClickHedgeFund}>Hedgefund</button>
+                                                        <button className={`nav-link ${buyerType === 5 ? ' active' : ''}`} id="pills-hedgefund-tab" data-bs-toggle="pill" data-bs-target="#pills-hedgefund" type="button" role="tab" aria-controls="pills-hedgefund" aria-selected="true" onClick={handleClickHedgeFund}>Hedgefund</button>
                                                     </li>
                                                     <li className="nav-item" role="presentation">
-                                                        <button className="nav-link" id="pills-investors-tab" data-bs-toggle="pill" data-bs-target="#pills-investors" type="button" role="tab" aria-controls="pills-investors" aria-selected="false" onClick={handleClickInvestors}>Investors</button>
+                                                        <button className={`nav-link ${buyerType === 11 ? ' active' : ''}`} id="pills-investors-tab" data-bs-toggle="pill" data-bs-target="#pills-investors" type="button" role="tab" aria-controls="pills-investors" aria-selected="false" onClick={handleClickInvestors}>Investors</button>
                                                     </li>
                                                 </ul>
                                             </div>

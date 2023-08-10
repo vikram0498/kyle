@@ -2,7 +2,8 @@ import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import MultiSelect from "../partials/Select2/MultiSelect";
 import Select from "react-select";
-import {useForm} from "../../hooks/useForm";
+import { useFormError } from '../../hooks/useFormError';
+import {useForm, Controller  } from "react-hook-form";
 import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
 import { toast } from "react-toastify";
@@ -16,8 +17,10 @@ function CopyAddBuyer (){
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
-    const { setErrors, renderFieldError } = useForm();
-    
+    const { setErrors, renderFieldError } = useFormError();
+    const { register, handleSubmit, control , formState: { errors }  } = useForm();
+
+
     const [country, setCountry] = useState([]);
     const [state, setState] = useState([]);
     const [city, setCity] = useState([]);
@@ -27,7 +30,7 @@ function CopyAddBuyer (){
     const [propertyTypeOption, setPropertyTypeOption] = useState([]);
     const [parkingOption, setParkingOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
-    // const [buyerTypeOption,setbuyerTypeOption] = useState([]);
+    const [buyerTypeOption,setbuyerTypeOption] = useState([]);
 
     const [countryOptions,setCountryOptions] = useState([]);
     const [stateOptions,setStateOptions] = useState([]);
@@ -40,7 +43,7 @@ function CopyAddBuyer (){
     const [parkingValue, setParkingValue] = useState([]);
     const [propertyTypeValue, setPropertyTypeValue] = useState([]);
     const [locationFlawsValue,setLocationFlawsValue] = useState([]);
-    // const [buyerTypeValue,setBuyerTypeValue] = useState([]);
+    const [buyerTypeValue,setBuyerTypeValue] = useState([]);
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
     const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
 
@@ -98,7 +101,7 @@ function CopyAddBuyer (){
                     setLocationFlawsOption(result.location_flaws);
                     setParkingOption(result.parking_values);
                     setCountryOptions(result.countries);
-                    // setbuyerTypeOption(result.buyer_types);
+                    setbuyerTypeOption(result.buyer_types);
                     setIsLoader(false);
     
                 }
@@ -142,7 +145,7 @@ function CopyAddBuyer (){
         }
     }
 
-    const submitSingleBuyerForm = (e) => {
+    const submitSingleBuyerForm = (data,e) => {
         e.preventDefault();
 
         setErrors(null);
@@ -152,15 +155,16 @@ function CopyAddBuyer (){
         var data = new FormData(e.target);
         let formObject = Object.fromEntries(data.entries());
 
-        formObject.parking          =  parkingValue;        
+        //formObject.parking          =  parkingValue;        
         formObject.property_type    =  propertyTypeValue;
         formObject.property_flaw    =  locationFlawsValue;
         // formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
-
+        console.log(formObject.hasOwnProperty('building_class'),'check');
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
+        console.log(formObject,'formObject');
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
@@ -206,6 +210,40 @@ function CopyAddBuyer (){
             setLastName('');
         }
     }
+    const handleCustum = (e,name) => {
+        const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
+        if(name == 'property_type'){
+          if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
+            setMultiFamilyBuyerSelected(true);
+          } else {
+            setMultiFamilyBuyerSelected(false);
+          }
+          setPropertyTypeValue(selectedValues);
+        }else if(name == 'purchase_method'){
+            if (selectedValues.includes(5)) {
+                setShowCreativeFinancing(true);
+            } else {
+                setShowCreativeFinancing(false);
+            }
+            setPurchaseMethodsValue(selectedValues);
+        }else if(name == 'parking'){
+            setParkingValue(e);
+        }else if(name == 'country'){
+            getStates(e)
+        }else if(name == 'state'){
+            setState(e);
+            getCities(e);
+        }else if(name == 'city'){
+            setCity(e);
+        }
+        else if(name == 'building_class'){
+            setBuildingClassNamesValue(selectedValues);
+        }else if(name == 'parking'){
+            setParkingValue(e);
+        }else if(name == 'buyer_type'){
+            setBuyerTypeValue(e);
+        }
+    }
     return (
         <>
            { (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="/assets/images/loader.svg"/></div> :
@@ -228,73 +266,132 @@ function CopyAddBuyer (){
                                                     </div>
                                                 </div>
 
-                                                <form method='post' onSubmit={submitSingleBuyerForm}>
+                                                <form method='post' onSubmit={handleSubmit(submitSingleBuyerForm)}>
                                                     <div className="card-box-blocks">
                                                         <div className="row">
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>First Name<span>*</span></label>
                                                                 <div className="form-group">
                                                                     <input type="text" name="first_name" className="form-control" placeholder="First Name"
-                                                                     value={firstName} 
-                                                                     onChange={handleChangeFirstName}
-                                                                     required />
+                                                                    {...register("first_name", { required: 'First Name is required' , validate: {
+                                                                        maxLength: (v) =>
+                                                                        v.length <= 50 || "The First Name should have at most 50 characters",
+                                                                        matchPattern: (v) =>
+                                                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                                                        "First Name can not include number or special character",
+                                                                    } })}/>
+
+                                                                    {errors.first_name && <p className="error">{errors.first_name?.message}</p>}
                                                                     {renderFieldError('first_name') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Last Name<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="last_name" className="form-control" placeholder="Last Name" value={lastName} 
-                                                                     onChange={handleChangeLastName}
-                                                                     required />
+                                                                    <input type="text" name="last_name" className="form-control" placeholder="Last Name"
+                                                                    {...register("last_name", { required: 'Last Name is required' , validate: {
+                                                                        maxLength: (v) =>
+                                                                        v.length <= 50 || "The Last Name should have at most 50 characters",
+                                                                        matchPattern: (v) =>
+                                                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                                                        "Last Name can not include number or special character",
+                                                                    } })}/>
+
+                                                                    {errors.last_name && <p className="error">{errors.last_name?.message}</p>}
                                                                     {renderFieldError('last_name') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Email Address<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="email" name="email" className="form-control" placeholder="Email Address" required />
+                                                                    <input type="text" name="email" className="form-control" placeholder="Email Address" {
+                                                                    ...register("email", {
+                                                                        required: "Email is required",
+                                                                        validate: {
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 50 || "The email should have at most 50 characters",
+                                                                            matchPattern: (v) =>
+                                                                            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                                                                            "Email address must be a valid address",
+                                                                        },
+                                                                    })
+                                                                } />
+                                                                {errors.email && <p className="error">{errors.email?.message}</p>}
                                                                     {renderFieldError('email') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Phone Number<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" required />
+                                                                    <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" {
+                                                                    ...register("phone", {
+                                                                        required: "Phone is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid phone number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 15 && v.length >= 5 || "The phone number should be more than 4 digit and less than equal 15",
+                                                                        },
+                                                                    })
+                                                                } />
+                                                                    {errors.phone && <p className="error">{errors.phone?.message}</p>}
                                                                     {renderFieldError('phone') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Address<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="address" className="form-control" placeholder="Enter Address" required />
+                                                                    <input type="text" name="address" className="form-control" placeholder="Enter Address" {
+                                                                    ...register("address", {
+                                                                        required: "Address is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.address?.message}</p>}
                                                                     {renderFieldError('address') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Country<span>*</span></label>
                                                                 <div className="form-group">
+                                                                {/* <Select
+                                                                    name="country"
+                                                                    defaultValue=''
+                                                                    options={countryOptions}
+                                                                    onChange={(item) => getStates(item)}
+                                                                    className="select"
+                                                                    isClearable={true}
+                                                                    isSearchable={true}
+                                                                    isDisabled={false}
+                                                                    isLoading={false}
+                                                                    isRtl={false}
+                                                                    placeholder= "Select Country"
+                                                                    closeMenuOnSelect={true}
+                                                                /> */}
+                                                                <Controller
+                                                                    control={control}
+                                                                    name="country"
+                                                                    rules={{ required: 'Country is required' }}
+                                                                    render={({ field: { value, onChange, name } }) => (
                                                                     <Select
-                                                                        name="country"
-                                                                        defaultValue=''
                                                                         options={countryOptions}
-                                                                        onChange={(item) => getStates(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        isRtl={false}
-                                                                        placeholder= "Select Country"
-                                                                        closeMenuOnSelect={true}
+                                                                        name = {name}
+                                                                        placeholder='Select Country'
+                                                                        onChange={(e)=>{
+                                                                            onChange(e)
+                                                                            handleCustum(e,'country')
+                                                                        }}
                                                                     />
+                                                                    )}
+                                                                />
+                                                                    {errors.country && <p className="error">{errors.country?.message}</p>}    
                                                                     {renderFieldError('country') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>State<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <Select
+                                                                    {/* <Select
                                                                         name="state"
                                                                         defaultValue=''
                                                                         options={stateOptions}
@@ -308,14 +405,34 @@ function CopyAddBuyer (){
                                                                         isRtl={false}
                                                                         placeholder="Select State"
                                                                         closeMenuOnSelect={true}
+                                                                    /> */}
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="state"
+                                                                        rules={{ required: 'State is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={stateOptions}
+                                                                            name = {name}
+                                                                            value={state}
+                                                                            isClearable={true}
+                                                                            className="select"
+                                                                            placeholder='Select State'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'state')
+                                                                            }}
+                                                                        />
+                                                                        )}
                                                                     />
+                                                                    {errors.state && <p className="error">{errors.state?.message}</p>}
                                                                     {renderFieldError('state') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>City<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <Select
+                                                                    {/* <Select
                                                                         name="city"
                                                                         defaultValue=''
                                                                         options={cityOptions}
@@ -329,14 +446,40 @@ function CopyAddBuyer (){
                                                                         isRtl={false}
                                                                         placeholder="Select City"
                                                                         closeMenuOnSelect={true}
+                                                                    /> */}
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="city"
+                                                                        rules={{ required: 'City is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={cityOptions}
+                                                                            name = {name}
+                                                                            value={city}
+                                                                            isClearable={true}
+                                                                            className="select"
+                                                                            placeholder='Select City'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'city')
+                                                                            }}
+                                                                        />
+                                                                        )}
                                                                     />
+                                                                    {errors.city && <p className="error">{errors.city?.message}</p>}
+
                                                                     {renderFieldError('city') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Zip<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" required />
+                                                                    <input type="number" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                                                    ...register("zip_code", {
+                                                                        required: "Zip Code is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
                                                                     {renderFieldError('zip_code') }
                                                                 </div>
                                                             </div>
@@ -351,13 +494,28 @@ function CopyAddBuyer (){
                                                                 <div className="form-group">
                                                                     <label>Property Type<span>*</span></label>
                                                                     <div className="form-group">
-                                                                        <MultiSelect
-                                                                            name="property_type" 
-                                                                            options={propertyTypeOption} 
+                                                                        <Controller
+                                                                        control={control}
+                                                                        name="property_type"
+                                                                        rules={{ required: 'Property Type is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={propertyTypeOption}
+                                                                            name = {name}
                                                                             placeholder='Select Property Type'
                                                                             setMultiselectOption = {setPropertyTypeValue}
                                                                             showCreative={setMultiFamilyBuyerSelected}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'property_type')
+                                                                            }}
+                                                                            closeMenuOnSelect={false}
+                                                                            isMulti
+                                                                            />
+                                                                        )}
                                                                         />
+                                                                        {errors.property_type && <p className="error">{errors.property_type?.message}</p>}
+                                                                        
                                                                         {renderFieldError('property_type') }
                                                                     </div>
                                                                 </div>
@@ -369,26 +527,52 @@ function CopyAddBuyer (){
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Minimum Units<span>*</span></label>
                                                                             <div className="form-group">
-                                                                                <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" required />
+                                                                                <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" {
+                                                                            ...register("unit_min", {
+                                                                                required: "Minimum Units is required",
+                                                                            })
+                                                                            } />
+                                                                                {errors.unit_min && <p className="error">{errors.unit_min?.message}</p>}
+
                                                                                 {renderFieldError('unit_min') }
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Maximum Units<span>*</span></label>
                                                                             <div className="form-group">
-                                                                                <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units" required />
+                                                                                <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units"  {
+                                                                                ...register("unit_max", {
+                                                                                    required: "Maximum Units is required",
+                                                                                })
+                                                                                } />
+                                                                                    {errors.unit_max && <p className="error">{errors.unit_max?.message}</p>}
                                                                                 {renderFieldError('unit_max') }
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Building class<span>*</span></label>
                                                                             <div className="form-group">
-                                                                                <MultiSelect
+                                                                                <Controller
+                                                                                    control={control}
                                                                                     name="building_class"
-                                                                                    options={buildingClassNamesOption}
-                                                                                    placeholder='Select Option'
-                                                                                    setMultiselectOption = {setBuildingClassNamesValue}
+                                                                                    rules={{ required: 'Building class is required' }}
+                                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                                    <Select
+                                                                                        options={buildingClassNamesOption}
+                                                                                        name = {name}
+                                                                                        placeholder='Select Building class'
+                                                                                        setMultiselectOption = {setBuildingClassNamesValue}
+                                                                                        showCreative={setBuildingClassNamesValue}
+                                                                                        onChange={(e)=>{
+                                                                                            onChange(e)
+                                                                                            handleCustum(e,'building_class')
+                                                                                        }}
+                                                                                        closeMenuOnSelect={false}
+                                                                                        isMulti
+                                                                                        />
+                                                                                    )}
                                                                                 />
+                                                                                {errors.building_class && <p className="error">{errors.building_class?.message}</p>}
                                                                                 {renderFieldError('building_class') }
                                                                             </div>
                                                                         </div>
@@ -414,13 +598,36 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-lg-12">
                                                                 <label>Purchase Method<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <MultiSelect
+                                                                    {/* <MultiSelect
                                                                         name="purchase_method"
                                                                         options={purchaseMethodsOption}
                                                                         placeholder='Select Purchase Method'
                                                                         setMultiselectOption = {setPurchaseMethodsValue}
                                                                         showCreative = {setShowCreativeFinancing}
-                                                                    />
+                                                                    /> */}
+
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="purchase_method"
+                                                                        rules={{ required: 'Purchase Method is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={purchaseMethodsOption}
+                                                                            name = {name}
+                                                                            placeholder='Select Purchase Method'
+                                                                            setMultiselectOption = {setPurchaseMethodsValue}
+                                                                            showCreative={setShowCreativeFinancing}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'purchase_method')
+                                                                            }}
+                                                                            closeMenuOnSelect={false}
+                                                                            isMulti
+                                                                            />
+                                                                        )}
+                                                                        />
+                                                                        {errors.purchase_method && <p className="error">{errors.purchase_method?.message}</p>}
+
                                                                     {renderFieldError('purchase_method') }
                                                                 </div>
                                                             </div>
@@ -473,100 +680,218 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bedroom (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)" required />
+                                                                    <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
+                                                                        ...register("bedroom_min", {
+                                                                            required: "Bedroom (min) is required",
+                                                                        })
+                                                                        } />
+                                                                        {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
+
                                                                     {renderFieldError('bedroom_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bedroom (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" required />
+                                                                    <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
+                                                                    {
+                                                                    ...register("bedroom_max", {
+                                                                        required: "Bedroom (max) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
+
                                                                     {renderFieldError('bedroom_max') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bath (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)" required />
+                                                                    <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)"
+                                                                    {
+                                                                    ...register("bath_min", {
+                                                                        required: "Bath (min) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
                                                                     {renderFieldError('bath_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bath (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" required />
+                                                                    <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" {
+                                                                    ...register("bath_max", {
+                                                                        required: "Bath (max) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
+                                                                    
                                                                     {renderFieldError('bath_max') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Sq Ft Min<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min" required />
+                                                                    <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
+                                                                    ...register("size_min", {
+                                                                        required: "Sq Ft Min is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
+
                                                                     {renderFieldError('size_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Sq Ft Max<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max" required />
+                                                                    <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
+                                                                    ...register("size_max", {
+                                                                        required: "Sq Ft Max is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
+
                                                                     {renderFieldError('size_max') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)" required />
+                                                                    <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
+                                                                    ...register("lot_size_min", {
+                                                                        required: "Lot Size Sq Ft (Min) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.lot_size_min && <p className="error">{errors.lot_size_min?.message}</p>}
+
                                                                     {renderFieldError('lot_size_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" required />
+                                                                    <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)"    {
+                                                                    ...register("lot_size_max", {
+                                                                        required: "Lot Size Sq Ft (max) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.lot_size_max && <p className="error">{errors.lot_size_max?.message}</p>}
+
                                                                     {renderFieldError('lot_size_max') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Year Built (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)" required />
+                                                                    <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)"   {
+                                                                    ...register("build_year_min", {
+                                                                        required: "Year Built (min) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.build_year_min && <p className="error">{errors.build_year_min?.message}</p>}
+
                                                                     {renderFieldError('build_year_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Year Built (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" required />
+                                                                    <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" {
+                                                                    ...register("build_year_max", {
+                                                                        required: "Year Built (max) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.build_year_max && <p className="error">{errors.build_year_max?.message}</p>}
                                                                     {renderFieldError('build_year_max') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>ARV (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" required />
+                                                                    <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                                                    {
+                                                                    ...register("arv_min", {
+                                                                        required: "ARV (min) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
+
                                                                     {renderFieldError('arv_min') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>ARV (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" required />
+                                                                    <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                                                    ...register("arv_max", {
+                                                                        required: "ARV (max) is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+
                                                                     {renderFieldError('arv_max') }
                                                                 </div>
                                                             </div>
-                                                            <div className="col-12 col-lg-12">
+                                                            <div className="col-6 col-lg-6">
                                                                 <label>Parking<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <MultiSelect
+                                                                    {/* <MultiSelect
                                                                         name="parking"
                                                                         options={parkingOption}
                                                                         placeholder='Select Parking'
                                                                         setMultiselectOption = {setParkingValue}
-                                                                    />
+                                                                    /> */}
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="parking"
+                                                                        rules={{ required: 'Parking is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={parkingOption}
+                                                                            name = {name}
+                                                                            placeholder='Select parking'
+                                                                            setMultiselectOption = {setParkingValue}
+                                                                            showCreative={setParkingValue}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'parking')
+                                                                            }}
+                                                                            />
+                                                                        )}
+                                                                        />
+                                                                        {errors.parking && <p className="error">{errors.parking?.message}</p>}
+
                                                                     {renderFieldError('parking') }
                                                                 </div>
                                                             </div>
-                                                            
+                                                            <div className="col-6 col-lg-6">
+                                                                <label>Buyer Type<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="buyer_type"
+                                                                        rules={{ required: 'Buyer Type is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                        options={buyerTypeOption}
+                                                                        name = {name}
+                                                                            placeholder='Select Buyer Type'
+                                                                            setMultiselectOption = {setBuyerTypeValue}
+                                                                            showCreative={setBuyerTypeValue}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'buyer_type')
+                                                                            }}
+                                                                            />
+                                                                        )}
+                                                                        />
+                                                                        {errors.buyer_type && <p className="error">{errors.buyer_type?.message}</p>}
+
+                                                                    {renderFieldError('buyer_type') }
+                                                                </div>
+                                                            </div>
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
                                                                     <label>Location Flaws</label>

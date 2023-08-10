@@ -73,7 +73,7 @@ const MyBuyer = () =>{
 						<h6 className="center-head text-center mb-0">My Buyers</h6>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{fromRecord} to {toRecord} Out of {totalRecord}</p>
+					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord)?fromRecord:0} Out of {totalRecord}</p>
 					</div>
 				</div>
 			</div>
@@ -106,7 +106,7 @@ const MyBuyer = () =>{
 													<li>
 														<span className="detail-icon">
                                                             <img src="./assets/images/phone-gradient.svg" className="img-fluid" /></span>
-														<a href="91123456789" className="name-dealer">{data.phone}</a>
+														<a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
 													</li>
 													<li>
 														<span className="detail-icon">

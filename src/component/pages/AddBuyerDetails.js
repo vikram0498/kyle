@@ -26,6 +26,10 @@ function AddBuyerDetails (){
     const [lastName, setLastName] = useState('');
     const [generatedUrl, setGeneratedUrl] = useState('');
     const { setErrors, renderFieldError } = useFormError();
+
+    const [isVideoLoader, setIsVideoloader] = useState(true);
+    const [videoUrl, setVideoUrl] = useState('');
+
     
     const [country, setCountry] = useState([]);
     const [state, setState] = useState([]);
@@ -36,7 +40,7 @@ function AddBuyerDetails (){
     const [propertyTypeOption, setPropertyTypeOption] = useState([]);
     const [parkingOption, setParkingOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
-    // const [buyerTypeOption,setbuyerTypeOption] = useState([]);
+    const [buyerTypeOption,setbuyerTypeOption] = useState([]);
 
     const [countryOptions,setCountryOptions] = useState([]);
     const [stateOptions,setStateOptions] = useState([]);
@@ -49,7 +53,7 @@ function AddBuyerDetails (){
     const [parkingValue, setParkingValue] = useState([]);
     const [propertyTypeValue, setPropertyTypeValue] = useState([]);
     const [locationFlawsValue,setLocationFlawsValue] = useState([]);
-    // const [buyerTypeValue,setBuyerTypeValue] = useState([]);
+    const [buyerTypeValue,setBuyerTypeValue] = useState([]);
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
     const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
 
@@ -63,6 +67,7 @@ function AddBuyerDetails (){
 
     useEffect(() => {
         getOptionsValues();
+        getVideoUrl();
     }, [navigate, /*authData*/]);
     
     
@@ -78,14 +83,14 @@ function AddBuyerDetails (){
             axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
                 if(response.data.status){
                     let result = response.data.result;
-    
+                    console.log(result.property_types);
                     setPurchaseMethodsOption(result.purchase_methods);
                     setBuildingClassNamesOption(result.building_class_values);
                     setPropertyTypeOption(result.property_types);
                     setLocationFlawsOption(result.location_flaws);
                     setParkingOption(result.parking_values);
                     setCountryOptions(result.countries);
-                    // setbuyerTypeOption(result.buyer_types);
+                    setbuyerTypeOption(result.buyer_types);
                     setIsLoader(false);
     
                 }
@@ -96,6 +101,34 @@ function AddBuyerDetails (){
         }
     }
 
+    const getVideoUrl = () => {
+        try{
+            const apiUrl = process.env.REACT_APP_API_URL;
+            let headers = { 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + getTokenData().access_token,
+                'auth-token' : getTokenData().access_token,
+            };
+            axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers }).then(response => {
+                console.log(response.data.videoDetails.video.video_link,'response');
+                let videoLink = response.data.videoDetails.video.video_link;
+                setVideoUrl(videoLink);
+                setIsVideoloader(false)
+            })
+        }catch(error){
+            if(error.response) {
+                if (error.response.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
+                }
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        }
+    }
     const getStates = (country_id) => {
         if(country_id == null){
             setCountry([]); setState([]); setCity([]);
@@ -105,7 +138,7 @@ function AddBuyerDetails (){
                 let result = response.data.options;
 
                 setCountry([]); setState([]); setCity([]);                
-                
+                setCityOptions([]);
                 setCountry(country_id); setStateOptions(result);
             });
         }
@@ -137,10 +170,10 @@ function AddBuyerDetails (){
         var data = new FormData(e.target);
         let formObject = Object.fromEntries(data.entries());
 
-        formObject.parking          =  parkingValue;        
+        //formObject.parking          =  parkingValue;        
         formObject.property_type    =  propertyTypeValue;
         formObject.property_flaw    =  locationFlawsValue;
-        // formObject.buyer_type       =  buyerTypeValue;
+        //formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
@@ -154,11 +187,14 @@ function AddBuyerDetails (){
         }).catch(error => {
             setLoading(false);
             if(error.response) {
-                if (error.response.data.validation_errors) {
+                if (error.response.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }
-                if (error.response.data.error) {
-                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
                 }
             }
         });
@@ -186,6 +222,7 @@ function AddBuyerDetails (){
     // }
 
     const handleCopyToClipBoard = (url) => {
+        console.log(url,'url');
         navigator.clipboard.writeText(url);
         toast.success('Url Copied Successfully !', {position: toast.POSITION.TOP_RIGHT});
     }
@@ -199,6 +236,7 @@ function AddBuyerDetails (){
                     
                     let copyUrl = baseURL+"/add-buyer/"+token;
                     setGeneratedUrl(copyUrl);
+                    console.log(copyUrl,'copyUrl');
                     navigator.clipboard.writeText(copyUrl).then(() => {
                         setCopySuccess(true);
                         setCopyLoading(false);
@@ -220,6 +258,7 @@ function AddBuyerDetails (){
     }
     const handleCustum = (e,name) => {
         const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
+        console.log(selectedValues,'selectedValues',name);
         if(name == 'property_type'){
           if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
             setMultiFamilyBuyerSelected(true);
@@ -243,8 +282,15 @@ function AddBuyerDetails (){
             getCities(e);
         }else if(name == 'city'){
             setCity(e);
+        }else if(name == 'building_class'){
+            setBuildingClassNamesValue(selectedValues);
+        }else if(name == 'parking'){
+            setParkingValue(e);
+        }else if(name == 'buyer_type'){
+            setBuyerTypeValue(e);
         }
 
+ 
     }
     return (
         <>
@@ -335,7 +381,7 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Email Address<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="email" name="email" className="form-control" placeholder="Email Address" {
+                                                        <input type="text" name="email" className="form-control" placeholder="Email Address" {
                                                         ...register("email", {
                                                             required: "Email is required",
                                                             validate: {
@@ -408,6 +454,7 @@ function AddBuyerDetails (){
                                                             options={countryOptions}
                                                             name = {name}
                                                             placeholder='Select Country'
+                                                            isClearable={true}
                                                             onChange={(e)=>{
                                                                 onChange(e)
                                                                 handleCustum(e,'country')
@@ -420,9 +467,9 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>State<span>*</span></label>
+                                                    <label>State</label>
                                                     <div className="form-group">
-                                                        {/* <Select
+                                                        <Select
                                                             name="state"
                                                             defaultValue=''
                                                             options={stateOptions}
@@ -436,8 +483,8 @@ function AddBuyerDetails (){
                                                             isRtl={false}
                                                             placeholder="Select State"
                                                             closeMenuOnSelect={true}
-                                                        /> */}
-                                                        <Controller
+                                                        />
+                                                        {/* <Controller
                                                             control={control}
                                                             name="state"
                                                             rules={{ required: 'State is required' }}
@@ -457,13 +504,13 @@ function AddBuyerDetails (){
                                                             )}
                                                         />
                                                         {errors.state && <p className="error">{errors.state?.message}</p>}
-                                                        {renderFieldError('state') }
+                                                        {renderFieldError('state') } */}
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>City<span>*</span></label>
+                                                    <label>City</label>
                                                     <div className="form-group">
-                                                        {/* <Select
+                                                        <Select
                                                             name="city"
                                                             defaultValue=''
                                                             options={cityOptions}
@@ -477,8 +524,8 @@ function AddBuyerDetails (){
                                                             isRtl={false}
                                                             placeholder="Select City"
                                                             closeMenuOnSelect={true}
-                                                        /> */}
-                                                        <Controller
+                                                        />
+                                                        {/* <Controller
                                                             control={control}
                                                             name="city"
                                                             rules={{ required: 'City is required' }}
@@ -497,7 +544,7 @@ function AddBuyerDetails (){
                                                             />
                                                             )}
                                                         />
-                                                        {errors.city && <p className="error">{errors.city?.message}</p>}
+                                                        {errors.city && <p className="error">{errors.city?.message}</p>} */}
 
                                                         {renderFieldError('city') }
                                                     </div>
@@ -506,9 +553,9 @@ function AddBuyerDetails (){
                                                     <label>Zip<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="number" name="zip_code" className="form-control" placeholder="Zip Code" {
-                                                        ...register("zip_code", {
-                                                            required: "Zip Code is required",
-                                                        })
+                                                            ...register("zip_code", {
+                                                                required: "Zip Code is required",
+                                                            })
                                                         } />
                                                          {errors.address && <p className="error">{errors.zip_code?.message}</p>}
                                                         {renderFieldError('zip_code') }
@@ -541,6 +588,7 @@ function AddBuyerDetails (){
                                                                     handleCustum(e,'property_type')
                                                                 }}
                                                                 isMulti
+                                                                closeMenuOnSelect={false}
                                                                 />
                                                             )}
                                                             />
@@ -558,9 +606,9 @@ function AddBuyerDetails (){
                                                                 <label>Minimum Units<span>*</span></label>
                                                                 <div className="form-group">
                                                                     <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" {
-                                                                ...register("unit_min", {
-                                                                    required: "Minimum Units is required",
-                                                                })
+                                                                    ...register("unit_min", {
+                                                                        required: "Minimum Units is required",
+                                                                    })
                                                                 } />
                                                                     {errors.unit_min && <p className="error">{errors.unit_min?.message}</p>}
 
@@ -582,12 +630,31 @@ function AddBuyerDetails (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Building class<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <MultiSelect
+                                                                    {/* <MultiSelect
                                                                         name="building_class"
                                                                         options={buildingClassNamesOption}
                                                                         placeholder='Select Option'
                                                                         setMultiselectOption = {setBuildingClassNamesValue}
+                                                                    /> */}
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="building_class"
+                                                                        rules={{ required: 'Building class is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={buildingClassNamesOption}
+                                                                            name = {name}
+                                                                            placeholder='Select Building class'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'building_class')
+                                                                            }}
+                                                                            closeMenuOnSelect={false}
+                                                                            isMulti
+                                                                            />
+                                                                        )}
                                                                     />
+                                                                     {errors.building_class && <p className="error">{errors.building_class?.message}</p>}
                                                                     {renderFieldError('building_class') }
                                                                 </div>
                                                             </div>
@@ -629,13 +696,14 @@ function AddBuyerDetails (){
                                                             <Select
                                                                 options={purchaseMethodsOption}
                                                                 name = {name}
-                                                                placeholder='Select Property Type'
+                                                                placeholder='Select Purchase Method'
                                                                 setMultiselectOption = {setPurchaseMethodsValue}
                                                                 showCreative={setShowCreativeFinancing}
                                                                 onChange={(e)=>{
                                                                     onChange(e)
                                                                     handleCustum(e,'purchase_method')
                                                                 }}
+                                                                closeMenuOnSelect={false}
                                                                 isMulti
                                                                 />
                                                             )}
@@ -694,9 +762,16 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
+                                                        <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                             ...register("bedroom_min", {
                                                                 required: "Bedroom (min) is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid phone number",
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                },
                                                             })
                                                             } />
                                                             {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
@@ -707,10 +782,17 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Bedroom (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
+                                                        <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                          {
                                                         ...register("bedroom_max", {
                                                             required: "Bedroom (max) is required",
+                                                            validate: {
+                                                                matchPattern: (v) =>
+                                                                /^[0-9]\d*$/.test(v) ||
+                                                                "Please enter valid phone number",
+                                                                maxLength: (v) =>
+                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                            },
                                                         })
                                                         } />
                                                         {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
@@ -848,7 +930,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('arv_max') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-lg-12">
+                                                <div className="col-6 col-lg-6">
                                                     <label>Parking<span>*</span></label>
                                                     <div className="form-group">
                                                         {/* <MultiSelect
@@ -871,7 +953,6 @@ function AddBuyerDetails (){
                                                                     onChange(e)
                                                                     handleCustum(e,'parking')
                                                                 }}
-                                                                isMulti
                                                                 />
                                                             )}
                                                             />
@@ -880,7 +961,31 @@ function AddBuyerDetails (){
                                                         {renderFieldError('parking') }
                                                     </div>
                                                 </div>
-                                                
+                                                <div className="col-6 col-lg-6">
+                                                    <label>Buyer Type<span>*</span></label>
+                                                    <div className="form-group">
+                                                         <Controller
+                                                            control={control}
+                                                            name="buyer_type"
+                                                            rules={{ required: 'Buyer Type is required' }}
+                                                            render={({ field: { value, onChange, name } }) => (
+                                                            <Select
+                                                            options={buyerTypeOption}
+                                                            name = {name}
+                                                                placeholder='Select Buyer Type'
+                                                                setMultiselectOption = {setBuyerTypeValue}
+                                                                onChange={(e)=>{
+                                                                    onChange(e)
+                                                                    handleCustum(e,'buyer_type')
+                                                                }}
+                                                                />
+                                                            )}
+                                                            />
+                                                            {errors.buyer_type && <p className="error">{errors.buyer_type?.message}</p>}
+
+                                                        {renderFieldError('buyer_type') }
+                                                    </div>
+                                                </div>
                                                 <div className="col-12 col-lg-12">
                                                     <div className="form-group">
                                                         <label>Location Flaws</label>
@@ -1120,7 +1225,7 @@ function AddBuyerDetails (){
                                 <UploadMultipleBuyers/>
                                 <div className="watch-video">
                                     <p>Don’t Know How to Upload</p>
-                                    <a href="" className="title">
+                                    <a href=""  data-bs-toggle="modal" data-bs-target="#exampleModal"  className="title">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                             <path d="M10 8L16 12L10 16V8Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1128,6 +1233,25 @@ function AddBuyerDetails (){
                                         Watch the Video!
                                     </a>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* modal box for video */}
+                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Watch the Video</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                            {(isLoader)?<div className="video-loader"> <img src="/assets/images/data-loader.svg"/></div>:
+                                <div className="video">
+                                    <video width="460" height="240" src={videoUrl} loop autoPlay muted/>
+                                </div>
+                            }
                             </div>
                         </div>
                     </div>
