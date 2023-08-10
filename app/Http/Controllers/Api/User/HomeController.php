@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Models\Plan;
 use App\Models\Addon;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -27,5 +28,28 @@ class HomeController extends Controller
             'data'     => ['additional_credits' => $additionalCredits]
         ];
         return response()->json($responseData, 200);
+    }
+
+    public function getVideo($key){
+        try{
+            $video = Video::where('video_key',$key)->where('status',1)->first();
+            $video->video_link = $video->video_url;
+            //Success Response Send
+            $responseData = [
+                'status'          => true,
+                'videoDetails'    => ['video' => $video]
+            ];
+            return response()->json($responseData, 200);
+        }catch (\Exception $e) {
+             dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+       
     }
 }

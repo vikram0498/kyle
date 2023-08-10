@@ -48,10 +48,10 @@ class ProfileController extends Controller
             'phone'       => 'required',
         ];
 
-        if((!is_null($request->old_password)) || $request->old_password != ''){
-            $validatedData['old_password'] = [/*'required',*/ 'string','min:8'/*,new MatchOldPassword*/];
-            $validatedData['new_password'] =  [/*'required',*/ 'string', 'min:8', 'different:old_password'];
-            $validatedData['confirm_password'] = [/*'required',*/'min:8','same:new_password'];
+        if($request->old_password || $request->new_password || $request->confirm_password){
+            $validatedData['old_password'] = ['required', 'string','min:8',new MatchOldPassword];
+            $validatedData['new_password'] =  ['required', 'string', 'min:8', 'different:old_password'];
+            $validatedData['confirm_password'] = ['required','min:8','same:new_password'];
         }
        
         if(!auth()->user()->email){

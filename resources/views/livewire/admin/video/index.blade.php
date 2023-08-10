@@ -17,10 +17,10 @@
                     <div class="card-title top-box-set">
                         <h4 class="card-title-heading">{{__('cruds.video.title')}} {{ __('global.list') }}</h4>
                         <div class="card-top-box-item">
-                            <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
+                            {{-- <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
                                 <i class="ti-plus btn-icon-prepend"></i>                                                    
                                     {{__('global.add')}}
-                            </button>
+                            </button> --}}
                         </div>
                     </div>                
                     <div class="table-responsive search-table-data">

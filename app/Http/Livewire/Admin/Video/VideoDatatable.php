@@ -48,7 +48,8 @@ class VideoDatatable extends LivewireDatatable
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
             Column::callback(['id', 'deleted_at'], function ($id) {
-                return view('livewire.datatables.actions', ['id' => $id]);
+            $array = ['show', 'edit' /*,'delete'*/];
+                return view('livewire.datatables.actions', ['id' => $id,'events' => $array,]);
             })->label(trans('global.action'))->unsortable(),
         ];
     }

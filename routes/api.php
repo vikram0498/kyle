@@ -95,6 +95,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);
 
+    Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
 
-    
+
 });

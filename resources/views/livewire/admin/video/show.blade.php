@@ -8,8 +8,8 @@
         <tr>
             <th width="25%">{{ __('cruds.video.fields.video')}}</th>
             <td>
-                <video width="320" height="240" controls>
-                    <source src="{{ $details->video_url }}" >
+                <video controls="" width="450" height="315" preload="none" poster="" id="clip-video"  playsinline>
+                    <source class="js-video" src="{{ $details->video_url }}" type="video/{{$details->uploadedVideo->extension }}">
                 </video>
             </td>
         </tr>

@@ -525,8 +525,17 @@ class BuyerController extends Controller
             }
 
             $totalRecord = $buyers->count();
+            
+            $authUserLevelType = auth()->user()->level_type;
 
-            $buyers = $buyers->paginate(10);
+            $pagination = 10;
+            if($authUserLevelType == 2 && $request->activeTab == 'more_buyers'){
+                $pagination = 20;
+            }elseif($authUserLevelType == 3 && $request->activeTab == 'more_buyers'){
+                $pagination = 50;
+            }
+
+            $buyers = $buyers->paginate($pagination);
 
             // Get additional buyer
             $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {

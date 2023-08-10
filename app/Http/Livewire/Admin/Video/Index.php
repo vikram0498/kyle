@@ -109,8 +109,12 @@ class Index extends Component
         // Check if the photo has been changed
         $uploadId = null;
         if ($this->video) {
-            $uploadId = $video->packageImage->id;
-            uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'update', $uploadId);
+            if($video->uploadedVideo){
+                $uploadId = $video->uploadedVideo->id;
+                uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'update', $uploadId);
+            }else{
+                uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'save', $uploadId);
+            }
         }
         
         $updateRecord = $this->except(['search','formMode','updateMode','video_id','video','page','paginators']);

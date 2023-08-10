@@ -28,7 +28,7 @@
             <div class="form-group mb-0" wire:ignore>
                 <label class="font-weight-bold">{{ __('cruds.video.fields.video')}} <span class="text-danger">*</span></label>
                 <div class='file-input'>
-                  <input type="file"  wire:model.defer="video" class="form-control" >
+                  <input type="file"  wire:model.defer="video" class="form-control" accept="video/webm, video/mp4, video/avi,video/wmv,video/flv,video/mov">
                   <span class='button'>Choose</span>
                   <span class='label' data-js-label>No file selected</label>
                 </div>
