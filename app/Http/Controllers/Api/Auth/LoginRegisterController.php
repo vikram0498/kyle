@@ -100,12 +100,12 @@ class LoginRegisterController extends Controller
             if(Auth::attempt($credentialsOnly, $remember_me)){
                 $user = User::find(Auth::id());
                 if(is_null($user->email_verified_at)){
-                    // $user->NotificationSendToVerifyEmail();
+                    $user->NotificationSendToVerifyEmail();
 
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
-                        'error'         => 'Your account is not verified!',
+                        'error'         => 'Your account is not verified! Please check your mail',
                     ];
                     return response()->json($responseData, 401);
                 }
