@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use App\Models\Buyer;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-
 use Illuminate\Support\Facades\DB; 
+
 class BuyersImport implements ToModel, WithStartRow
 {
     private $rowCount = 0;
@@ -17,7 +17,7 @@ class BuyersImport implements ToModel, WithStartRow
     {
         return 2;
     }
-    
+
     public function model(array $row)
     {
         if($row[0] != 'First Name'){

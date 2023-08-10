@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\User;
 use App\Models\UserBuyerLikes;
 use App\Models\PurchasedBuyer;
 use App\Models\Token;
@@ -169,11 +170,13 @@ class BuyerController extends Controller
             })->values()->all();
 
             $elementValues['buyer_types'] = collect(config('constants.buyer_types'))->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
-                ];
-            })->values()->all();
+                if(in_array($value,array(5,11))){
+                    return [
+                        'value' => $value,
+                        'label' => ucfirst(strtolower($label)),
+                    ];
+                }
+            })->whereNotNull('value')->values()->all();
 
             $countries = DB::table('countries')->orderBy('name','ASC')->pluck('name','id');
             $elementValues['countries'] = $countries->map(function ($label, $value) {
@@ -211,13 +214,13 @@ class BuyerController extends Controller
 
             // Start token functionality
             if($token){
-                $tokenExpired = $this->checkTokenValidate($token);
-                if($tokenExpired){
+                $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
+                if($checkToken){
                      //Return Error Response
                      $responseData = [
                         'status'        => false,
-                        'error_type'    => 'token_expired',
-                        'error'         => 'Token has been expired!',
+                        'error_type'    => 'token_error',
+                        'error'         => 'Invalid Token!',
                     ];
                     return response()->json($responseData, 400);
                 }else{
@@ -235,13 +238,24 @@ class BuyerController extends Controller
             $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
 
             $createdBuyer = Buyer::create($validatedData);
-            if(auth()->user()->is_seller){
+            
+            if($token){
                 //Purchased buyer
                 $syncData['buyer_id'] = $createdBuyer->id;
                 $syncData['created_at'] = Carbon::now();
-          
-                auth()->user()->purchasedBuyers()->create($syncData);
+        
+                User::where('id',$validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
+
+            }else{
+                if(auth()->user()->is_seller){
+                    //Purchased buyer
+                    $syncData['buyer_id'] = $createdBuyer->id;
+                    $syncData['created_at'] = Carbon::now();
+              
+                    auth()->user()->purchasedBuyers()->create($syncData);
+                }
             }
+            
 
             if($token){
               Token::where('token_value',$token)->update(['is_used'=>1]);
@@ -258,7 +272,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -336,7 +350,6 @@ class BuyerController extends Controller
             if($request->bedroom_max && is_numeric($request->bedroom_max)){
                 $buyers = $buyers->where('bedroom_max', '<=', $request->bedroom_max);
                 $additionalBuyers = $additionalBuyers->where('bedroom_max', '<=', $request->bedroom_max);
-
             } 
 
             if($request->bath_min && is_numeric($request->bath_min)){
@@ -668,10 +681,11 @@ class BuyerController extends Controller
             'csvFile' => 'required|mimes:csv,xlsx,xls',
         ]);
 
-        try {
-            $import = new BuyersImport;
-            Excel::import($import, $request->file('csvFile'));
+        // Create an array of rules for each column in the CSV sheet.
+        $import = new BuyersImport;
+        Excel::import($import, $request->file('csvFile'));
 
+        try {
             $totalCount         = $import->totalRowCount();
             $insertedRowCount   = $import->insertedCount();
             $skippedCount       = $totalCount - $insertedRowCount;
@@ -731,11 +745,12 @@ class BuyerController extends Controller
                 'is_used'            => 0,
             ];
 
-            $checkToken = Token::where('user_id',$authUserId)->where(function($query){
-                $query->where('token_expired_time', '<=', Carbon::now())
-                ->orWhere('is_used',1);
-                // $query->where('is_used',1);
-            })->first();
+            // $checkToken = Token::where('user_id',$authUserId)->where(function($query){
+            //     $query->where('token_expired_time', '<=', Carbon::now())
+            //     ->orWhere('is_used',1);
+            // })->first();
+
+            $checkToken = Token::where('user_id',$authUserId)->where('is_used',1)->first();
 
             $isTokenGenerated = false;
             if($checkToken){
