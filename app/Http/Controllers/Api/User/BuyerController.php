@@ -137,35 +137,35 @@ class BuyerController extends Controller
             $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
             $elementValues['building_class_values'] = collect(config('constants.building_class_values'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
             $elementValues['purchase_methods'] = collect(config('constants.purchase_methods'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
             $elementValues['parking_values'] = collect(config('constants.parking_values'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
             $elementValues['location_flaws'] = collect(config('constants.property_flaws'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
@@ -173,7 +173,7 @@ class BuyerController extends Controller
                 if(in_array($value,array(5,11))){
                     return [
                         'value' => $value,
-                        'label' => ucfirst(strtolower($label)),
+                        'label' => ucwords(strtolower($label)),
                     ];
                 }
             })->whereNotNull('value')->values()->all();
@@ -182,7 +182,7 @@ class BuyerController extends Controller
             $elementValues['countries'] = $countries->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 
@@ -234,8 +234,13 @@ class BuyerController extends Controller
 
             $validatedData['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
 
-            $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('name');
-            $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
+            if($request->state){
+                $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('name');
+            }
+
+            if($request->city){
+                $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
+            }
 
             $createdBuyer = Buyer::create($validatedData);
             
@@ -272,7 +277,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [

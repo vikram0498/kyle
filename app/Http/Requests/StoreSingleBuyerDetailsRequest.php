@@ -57,9 +57,9 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'phone'       => ['required', 'numeric', /*'digits:10'*/'not_in:-'], 
             'address'     => ['required'], 
             'country'     => ['required'],
-            'city'        => ['required'], 
-            'state'       => ['required'], 
-            'zip_code'    => ['required'],
+            'city'        => [/*'required'*/], 
+            'state'       => [/*'required'*/], 
+            'zip_code'    => ['required','min:6','max:10'],
             // 'company_name'   => ['required'], 
 
             'bedroom_min' => ['required', !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''], 

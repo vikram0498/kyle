@@ -80,7 +80,7 @@ return [
     'property_flaws' => [
         1 => 'Railroad',
         2 => 'Major Road',
-        3 => 'Boarders non-residential',
+        3 => 'Boarders Non-residential',
     ],
 
     'buyer_types' => [

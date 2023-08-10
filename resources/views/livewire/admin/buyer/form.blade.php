@@ -57,10 +57,11 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} <span class="text-danger">*</span></label>
+                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} 
+                        </label>
                     <!-- <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" > -->
                     <!-- <div wire:ignore> -->
-                        <select wire:model.defer="state.state" id="state" class="form-control state select2" id="state" data-property="state">
+                        <select wire:model.defer="state.state" id="state" class="form-control state select2" data-property="state">
                             <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
                             @foreach($states as $key => $stateName)
                                 <option value="{{$key}}"> {{$stateName}} </option>
@@ -72,7 +73,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} </label>
                     <!-- <div wire:ignore> -->
                     <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city">
                         <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>

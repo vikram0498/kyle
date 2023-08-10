@@ -75,9 +75,9 @@ class Index extends Component
             'phone' => ['required', 'numeric', 'digits:10'], 
             'address' => ['required'], 
             'country' => ['required', 'exists:countries,id'], 
-            'state' => ['required', 'exists:states,id'], 
-            'city' => ['required', 'exists:cities,id'], 
-            'zip_code' => ['required'],
+            // 'state' => [/*'required', 'exists:states,id'*/], 
+            // 'city' => [/*'required', 'exists:cities,id'*/], 
+            'zip_code' => ['required','min:6','max:10'],
 
             'bedroom_min' => ['required', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
             'bedroom_max' => ['required', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
@@ -117,6 +117,15 @@ class Index extends Component
             $rules['value_add'] = ['required'];
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys($this->buildingClassValue))];
         }
+
+        if(isset($this->state['state']) && !empty($this->state['state'])){
+            $rules['state'] = ['exists:states,id'];
+        }
+
+        if(isset($this->state['city']) && !empty($this->state['city'])){
+            $rules['city'] = ['exists:cities,id'];
+        }
+
         return $rules;
     }
 
@@ -153,9 +162,15 @@ class Index extends Component
         $this->state['user_id'] = auth()->user()->id;
 
         $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
-        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
-        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
-        
+
+        if(isset($this->state['state']) && !empty($this->state['state'])){
+            $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+        }
+
+        if(isset($this->state['city']) && !empty($this->state['city'])){
+            $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+        }
+
         $createdBuyer = Buyer::create($this->state);
 
         $this->formMode = false;
@@ -170,6 +185,8 @@ class Index extends Component
 
     public function edit($id) {
         $buyer = Buyer::findOrFail($id);
+        $stateId = null;
+        $cityId = null;
 
         $this->buyer = $buyer;
         $this->state = $buyer->toArray();
@@ -179,8 +196,14 @@ class Index extends Component
         $cityName = $buyer->city;
 
         $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
-        $stateId = DB::table('states')->where('country_id', $countryId)->where('name', $stateName)->first()->id;
-        $cityId = DB::table('cities')->where('state_id', $stateId)->where('name', $cityName)->first()->id;
+        
+        if($stateName){
+            $stateId = DB::table('states')->where('country_id', $countryId)->where('name', $stateName)->first()->id;
+        }
+
+        if($cityName){
+            $cityId = DB::table('cities')->where('state_id', $stateId)->where('name', $cityName)->first()->id;
+        }
 
         $this->state['country'] = $countryId;
         $this->state['state'] = $stateId;
@@ -202,8 +225,14 @@ class Index extends Component
         $this->validatiionForm();
 
         $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
-        $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
-        $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+        
+        if(isset($this->state['state']) && !empty($this->state['state'])){
+            $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+        }
+
+        if(isset($this->state['city']) && !empty($this->state['city'])){
+            $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+        }
 
         $buyer = Buyer::find($this->buyer_id);
         $buyer->update($this->state);
