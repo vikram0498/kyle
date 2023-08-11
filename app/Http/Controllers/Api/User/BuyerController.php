@@ -137,7 +137,7 @@ class BuyerController extends Controller
             $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucwords(strtolower($label)),
+                    'label' => $label,
                 ];
             })->values()->all();
 

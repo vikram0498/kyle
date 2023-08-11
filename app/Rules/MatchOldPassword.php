@@ -26,6 +26,6 @@ class MatchOldPassword implements Rule
      */
     public function message()
     {
-        return 'The :attribute is not match.';
+        return 'The :attribute does not match.';
     }
 }
