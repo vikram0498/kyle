@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at'     => date('Y-m-d H:i:s'),
             ],
             [
-                'id'             => 2,
+                'id'             => 3,
                 'first_name'     => 'Developer',
                 'last_name'      => 'Role',
                 'name'           => 'Developer Role',
