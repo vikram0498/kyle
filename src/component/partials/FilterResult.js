@@ -103,7 +103,7 @@ const FilterResult = ({setIsFiltered}) =>{
 						</div>
 						<div className="col-12 col-sm-4 col-md-4 col-lg-4">
 							{/* <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord == null) ? 0 : fromRecord} to {(toRecord == null) ? 0 : toRecord} Out of {totalRecord}</p> */}
-							<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord == null || toRecord=='') ? 0 : toRecord} Out of {totalRecord}</p>
+							<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord == null || toRecord=='') ? 0 : toRecord} out of {totalRecord}</p>
 						</div>
 					</div>
 				</div>

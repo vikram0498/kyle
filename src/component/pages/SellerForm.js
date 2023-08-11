@@ -152,7 +152,7 @@ const SellerForm = () =>{
                 'auth-token' : getTokenData().access_token,
             };
             axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers }).then(response => {
-                console.log(response.data.videoDetails.video.video_link,'response');
+                //console.log(response.data.videoDetails.video.video_link,'response');
                 let videoLink = response.data.videoDetails.video.video_link;
                 setVideoUrl(videoLink);
                 setIsVideoloader(false)
@@ -395,7 +395,7 @@ const SellerForm = () =>{
 		setPurchaseMethodsValue,
 	}
 	const user_data = JSON.parse(localStorage.getItem('user_data'));
-	console.log(user_data,'user_data');
+	//console.log(user_data,'user_data');
  return (
     <>
      	<Header/>
@@ -498,7 +498,7 @@ const SellerForm = () =>{
                             <div className="modal-body">
                             {(isLoader)?<div className="video-loader"> <img src="/assets/images/data-loader.svg"/></div>:
                                 <div className="video">
-                                    <video width="460" height="240" src={videoUrl} loop autoPlay muted/>
+                                    <video width="460" height="240" src={videoUrl} loop autoPlay muted controls/>
                                 </div>
                             }
                             </div>

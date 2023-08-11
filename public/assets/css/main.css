@@ -655,6 +655,13 @@ section.main-section {
     color: #0A2540;
     font-weight: 600;
     margin: 17px 0 0;
+    white-space: nowrap;
+}
+.modal-body .video video {
+    width: 100%;
+    vertical-align: middle;
+    object-fit: cover;
+    border-radius: 20px;
 }
 .watch-video {
     background: #F5F7F9;
@@ -942,6 +949,13 @@ section.main-section {
 }
 .upload-single-data .upload-file {
     margin-bottom: 20px;
+}
+.upload-file{
+    margin: auto;
+        max-width: 192px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /*--------- Sellers Form End -----------*/
 
@@ -1780,4 +1794,20 @@ cursor: not-allowed !important;
 .video-loader img {
     width: 100px;
     margin-top: 30px;
+}
+.password-check{
+    position: relative;
+}
+body .Toastify__close-button--light {
+    position: absolute;
+    top: 50%;
+    margin: 0;
+    transform: translateY(-50%);
+    right: 10px;
+}
+.Toastify__toast-body{
+    padding-right: 30px !important;
+}
+#DatePicker {
+    cursor: pointer;
 }

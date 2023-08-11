@@ -139,7 +139,7 @@
 	}
 	.upload-buyer {
 	    padding: 10px;
-	    margin-right: 8px;
+	    margin-right: 0;
 	}
 	h2{
 		font-size: 30px;
@@ -174,9 +174,46 @@
 	.buyers-tabs .nav-link{
 		min-width: unset;
 	}
+	.user-dropdown .dropdown-menu {
+		right: 0px !important;
+	}
+	.block-session {
+		gap: 15px;
+	}
 }
 
 @media (max-width:575px){
+	.copyright-text {
+		font-size: 12px;
+	}
+	.user-name-title {
+		font-size: 12px;
+		line-height: 11px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 50px;
+	}
+	.header-logo img {
+		max-width: 120px;
+	}
+	.upload-buyer {
+		padding: 0;
+	}
+	.welcome {
+		font-size: 10px;
+		margin-bottom: 3px;
+	}
+	.img-user {
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+	}
+	.img-user .user-profile{
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
+	}
 	.link-pass{
 	    justify-content: left;
 	    margin-top: 10px;

@@ -58,7 +58,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             };
             const response = await axios.post(apiUrl+"unhide-buyer",{'buyer_id':id},{headers: headers});
             if(response.data.status){
-                console.log('response',response.data );
+                //console.log('response',response.data );
                 let data = response.data.data.buyer;
                 const currentElement = document.querySelectorAll(`.property-critera-block`)[index];
                 const childElements = currentElement.querySelectorAll('.property-critera-details')[0];
@@ -107,7 +107,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             const response = await axios.post(apiUrl+"like-unlike-buyer",{'buyer_id':id,'like':like,unlike:unlike},{headers: headers});
 
             if(response.data.status){
-                console.log(response.data,'resp');
+                //console.log(response.data,'resp');
                 const addLoaderParent = document.querySelectorAll(`.property-critera-block`)[index];
                 const likeCount = addLoaderParent.querySelectorAll('.like-span')[0];
                 const unLikeCount = addLoaderParent.querySelectorAll('.unlike-span')[0];

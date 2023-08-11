@@ -60,7 +60,7 @@ const UploadMultipleBuyers = () => {
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                     navigate('/my-buyers');
                 }else{
-                    console.log('false ',response.data.message);
+                    //console.log('false ',response.data.message);
                     toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                     navigate('/');
                 }

@@ -27,7 +27,7 @@ function Login (props){
     useEffect(() => {
         let login = localStorage.getItem('_token');
         let userData = getRememberMeData();
-        console.log(userData,'userData',remember);
+        //console.log(userData,'userData',remember);
         if(userData !='' && userData != undefined){
             setEmail(userData.username);
             setPassword(userData.password);

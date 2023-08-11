@@ -70,10 +70,10 @@ const MyBuyer = () =>{
 						</Link>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-						<h6 className="center-head text-center mb-0">My Buyers</h6>
+						<h6 className="center-head fs-3 text-center mb-0">My Buyers</h6>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord)?fromRecord:0} Out of {totalRecord}</p>
+					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord)?fromRecord:0} out of {totalRecord}</p>
 					</div>
 				</div>
 			</div>

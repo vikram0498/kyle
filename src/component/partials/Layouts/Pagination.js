@@ -9,7 +9,7 @@ const Pagination = ({ totalPage, currentPage, onPageChange }) => {
   return (
     <div>
       <nav>
-        <ul className="pagination justify-content-end pagination-lg">
+        <ul className="pagination justify-content-end pagination-md">
             {(currentPage >1) ? <li className="page-item "><a className="page-link" onClick={() =>handlePageChange(currentPage-1)}>Prev</a></li>: ''}
           
             {Array.from({ length: totalPage }).map((_, index) => (

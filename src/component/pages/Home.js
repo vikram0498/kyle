@@ -30,7 +30,7 @@ function Home ({userDetails}){
                 'auth-token' : getTokenData().access_token,
             };
             axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers }).then(response => {
-                console.log(response.data.videoDetails.video.video_link,'response');
+                //console.log(response.data.videoDetails.video.video_link,'response');
                 let videoLink = response.data.videoDetails.video.video_link;
                 setVideoUrl(videoLink);
                 setIsPlaying(true)
@@ -88,7 +88,7 @@ function Home ({userDetails}){
                             </Link>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <Link to='/my-buyers' className="grid-block-view">
+                            <Link to='/' className="grid-block-view" style={{cursor:'not-allowed'}}>
                                 <div className="grid-block-icon"><img src="./assets/images/my-buyers.svg" className="img-fluid" alt="" /></div>
                                 <h3>My Buyers</h3>
                             </Link>
@@ -113,7 +113,7 @@ function Home ({userDetails}){
                         <div className="modal-body">
                         {(isLoader)?<div className="video-loader"> <img src="/assets/images/data-loader.svg"/></div>:
                             <div className="video">
-                                <video width="460" height="240" src={videoUrl} loop autoPlay muted/>
+                                <video width="460" height="240" src={videoUrl} loop autoPlay muted controls/>
                             </div>
                         }
                         </div>

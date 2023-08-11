@@ -24,6 +24,9 @@ import axios from 'axios';
     const { setErrors, renderFieldError } = useFormError();
     const [previewImageUrl, setPreviewImageUrl] = useState('');
     const [firstName, setFirstName] = useState('');
+    const [showOldPassoword, setShowOldPassoword] = useState(false);
+    const [showNewPassoword, setShowNewPassoword] = useState(false);
+    const [showConfirmPassoword, setShowConfirmPassoword] = useState(false);
     const [lastName, setLastName] = useState('');
     const { register, handleSubmit, watch, formState: { errors }  } = useForm();
 
@@ -148,6 +151,16 @@ import axios from 'axios';
         setConfirmPassword(e.target.value);
     }
 
+    const toggleOldPasswordVisibility  = () => {
+        setShowOldPassoword(!showOldPassoword);
+    };
+
+    const toggleNewPasswordVisibility  = () => {
+        setShowNewPassoword(!showNewPassoword);
+    };
+    const toggleConfirmPasswordVisibility  = () => {
+        setShowConfirmPassoword(!showConfirmPassoword);
+    };
     // const handleChangeLastName = (e) => {
     //     const regex = /^[a-zA-Z\s]+$/;
     //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
@@ -262,25 +275,41 @@ import axios from 'axios';
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Old Password</label>
-                                                    <input type="password" name="old_password" className="form-control-form" placeholder="Old Password" autoComplete="new-password"
-                                                    value={oldPassword}
-                                                    onChange={handleOldPassword}
-                                                    /> 
+                                                    <div className=" password-check">
+                                                        <input type={showOldPassoword ? 'text' : 'password'}  name="old_password" className="form-control-form" placeholder="Old Password" autoComplete="new-password"
+                                                        value={oldPassword}
+                                                        onChange={handleOldPassword}
+                                                        /> 
+                                                        <span onClick={toggleOldPasswordVisibility} className={`form-icon-password toggle-password ${showOldPassoword ? 'eye-open' : 'eye-close'}`}>
+                                                            <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>
+                                                        </span>
+                                                    </div>
                                                     {renderFieldError('old_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>New Password</label>
-                                                    <input type="password" name="new_password" className="form-control-form" placeholder="New Password"
-                                                    /> 
+                                                    <div className=" password-check">
+                                                        <input type={showNewPassoword ? 'text' : 'password'}  name="new_password" className="form-control-form" placeholder="New Password"
+                                                        /> 
+                                                        <span onClick={toggleNewPasswordVisibility} className={`form-icon-password toggle-password ${showNewPassoword ? 'eye-open' : 'eye-close'}`}>
+                                                            <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>
+                                                        </span>
+                                                    </div>
                                                     {renderFieldError('new_password') }
                                                 </div>
                                             </div>
                                             <div className="col-12 col-lg-12">
                                                 <div className="form-group">
                                                     <label>Confirm Password</label>
-                                                    <input type="password" name="confirm_password" className="form-control-form" placeholder="Confirm Password" /> 
+                                                    <div className=" password-check">
+                                                        <input type={showConfirmPassoword ? 'text' : 'password'}  name="confirm_password" className="form-control-form" placeholder="Confirm Password" /> 
+                                                        
+                                                        <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassoword ? 'eye-open' : 'eye-close'}`}>
+                                                            <img src="./assets/images/eye.svg" className="img-fluid" alt="eye-icon"/>
+                                                        </span>
+                                                    </div>
                                                     {renderFieldError('confirm_password') }
                                                 </div>
                                             </div>

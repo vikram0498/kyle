@@ -51,8 +51,8 @@ function Header() {
 								<p>uploaded Buyer Data : <b>0</b></p>
 							</div>
 							{(userDetails !=null && userDetails.level_type !=1)?
-							<div class="upload-buyer">
-								<span class="upload-buyer-icon"><img src="./assets/images/wallet.svg" class="img-fluid" /></span>
+							<div className="upload-buyer">
+								<span className="upload-buyer-icon"><img src="./assets/images/wallet.svg" className="img-fluid" /></span>
 								<p>Credits Points : <b>40</b></p>
 							</div>:''}
 							

@@ -23,7 +23,7 @@ import Footer from "../partials/Layouts/Footer";
                                 <h6 className="center-head text-center mb-0">My Buyers</h6>
                             </div>
                             <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">20 Out of 20</p>
+                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">20 out of 20</p>
                             </div>
                         </div>
                     </div>

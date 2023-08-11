@@ -78,7 +78,7 @@ const Register = () => {
             // };
             var data = new FormData(e.target);
             let payload = Object.fromEntries(data.entries());
-            console.log(payload,'formData');
+            //console.log(payload,'formData');
             let headers = {
                 "Accept": "application/json", 
             }
@@ -110,7 +110,7 @@ const Register = () => {
     const handleChangeFirstName = (e) => {
         const regex = /^[a-zA-Z]+$/;
         const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
-        console.log(new_value,'new_value ');
+        //console.log(new_value,'new_value ');
         if (regex.test(new_value)) {
             setFirstName(new_value);
         }else{
@@ -121,7 +121,7 @@ const Register = () => {
         const regex = /^[a-zA-Z]+$/;
         const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
         if (regex.test(new_value)) {
-            console.log(new_value);
+            //console.log(new_value);
             setLastName(new_value);
         }else{
             setLastName('');

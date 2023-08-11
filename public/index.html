@@ -17,6 +17,7 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet"/>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -65,6 +66,7 @@
 	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/popper.min.js"></script>
 	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="%PUBLIC_URL%/assets/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
 	<!-- <script type="text/javascript" src="%PUBLIC_URL%/assets/js/custom.js"></script> -->
   <script type="text/javascript">
@@ -95,6 +97,17 @@
 				minimumResultsForSearch: Infinity,
 	          	placeholder: "Select Location Type"
 	      	});
+          var dp= $("#datepicker").datepicker({
+            format: "yyyy",
+            viewMode: "years", 
+            minViewMode: "years",
+            autoclose:true
+          });   
+          //changeYear event trigger's
+          dp.on('changeYear', function (e) {    
+            //do something here
+            alert("Year changed ");
+          });
 		})
 	</script>
 

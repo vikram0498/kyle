@@ -6,6 +6,10 @@ import { useFormError } from '../../hooks/useFormError';
 import {useForm, Controller  } from "react-hook-form";
 import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+
 import { toast } from "react-toastify";
 
 function CopyAddBuyer (){
@@ -16,6 +20,8 @@ function CopyAddBuyer (){
     const [isLoader, setIsLoader] = useState(true);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const { setErrors, renderFieldError } = useFormError();
     const { register, handleSubmit, control , formState: { errors }  } = useForm();
@@ -160,11 +166,11 @@ function CopyAddBuyer (){
         formObject.property_flaw    =  locationFlawsValue;
         // formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
-        console.log(formObject.hasOwnProperty('building_class'),'check');
+        //console.log(formObject.hasOwnProperty('building_class'),'check');
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
-        console.log(formObject,'formObject');
+        //console.log(formObject,'formObject');
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
@@ -242,7 +248,13 @@ function CopyAddBuyer (){
             setParkingValue(e);
         }else if(name == 'buyer_type'){
             setBuyerTypeValue(e);
+        }else if(name == 'start_date'){
+            setStartDate(e);
         }
+        else if(name == 'end_date'){
+            setEndDate(e);
+        }
+
     }
     return (
         <>
@@ -323,7 +335,7 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Phone Number<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="phone" className="form-control" placeholder="(123) 456-7890" {
+                                                                    <input type="text" name="phone" className="form-control" placeholder="" {
                                                                     ...register("phone", {
                                                                         required: "Phone is required",
                                                                         validate: {
@@ -377,6 +389,7 @@ function CopyAddBuyer (){
                                                                         options={countryOptions}
                                                                         name = {name}
                                                                         placeholder='Select Country'
+                                                                        isClearable={true}
                                                                         onChange={(e)=>{
                                                                             onChange(e)
                                                                             handleCustum(e,'country')
@@ -389,9 +402,9 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>State<span>*</span></label>
+                                                                <label>State</label>
                                                                 <div className="form-group">
-                                                                    {/* <Select
+                                                                    <Select
                                                                         name="state"
                                                                         defaultValue=''
                                                                         options={stateOptions}
@@ -405,8 +418,8 @@ function CopyAddBuyer (){
                                                                         isRtl={false}
                                                                         placeholder="Select State"
                                                                         closeMenuOnSelect={true}
-                                                                    /> */}
-                                                                    <Controller
+                                                                    />
+                                                                    {/* <Controller
                                                                         control={control}
                                                                         name="state"
                                                                         rules={{ required: 'State is required' }}
@@ -426,13 +439,13 @@ function CopyAddBuyer (){
                                                                         )}
                                                                     />
                                                                     {errors.state && <p className="error">{errors.state?.message}</p>}
-                                                                    {renderFieldError('state') }
+                                                                    {renderFieldError('state') } */}
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>City<span>*</span></label>
+                                                                <label>City</label>
                                                                 <div className="form-group">
-                                                                    {/* <Select
+                                                                    <Select
                                                                         name="city"
                                                                         defaultValue=''
                                                                         options={cityOptions}
@@ -446,8 +459,8 @@ function CopyAddBuyer (){
                                                                         isRtl={false}
                                                                         placeholder="Select City"
                                                                         closeMenuOnSelect={true}
-                                                                    /> */}
-                                                                    <Controller
+                                                                    />
+                                                                    {/* <Controller
                                                                         control={control}
                                                                         name="city"
                                                                         rules={{ required: 'City is required' }}
@@ -466,7 +479,7 @@ function CopyAddBuyer (){
                                                                         />
                                                                         )}
                                                                     />
-                                                                    {errors.city && <p className="error">{errors.city?.message}</p>}
+                                                                    {errors.city && <p className="error">{errors.city?.message}</p>} */}
 
                                                                     {renderFieldError('city') }
                                                                 </div>
@@ -474,10 +487,14 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Zip<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="zip_code" className="form-control" placeholder="Zip Code" {
-                                                                    ...register("zip_code", {
-                                                                        required: "Zip Code is required",
-                                                                    })
+                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                                                        ...register("zip_code", {
+                                                                            required: "Zip Code is required",
+                                                                            validate: {
+                                                                                maxLength: (v) =>
+                                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                                            },
+                                                                        })
                                                                     } />
                                                                     {errors.address && <p className="error">{errors.zip_code?.message}</p>}
                                                                     {renderFieldError('zip_code') }
@@ -509,8 +526,8 @@ function CopyAddBuyer (){
                                                                                 onChange(e)
                                                                                 handleCustum(e,'property_type')
                                                                             }}
-                                                                            closeMenuOnSelect={false}
                                                                             isMulti
+                                                                            closeMenuOnSelect={false}
                                                                             />
                                                                         )}
                                                                         />
@@ -527,10 +544,17 @@ function CopyAddBuyer (){
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Minimum Units<span>*</span></label>
                                                                             <div className="form-group">
-                                                                                <input type="number" name="unit_min" className="form-control" placeholder="Minimum Units" {
-                                                                            ...register("unit_min", {
-                                                                                required: "Minimum Units is required",
-                                                                            })
+                                                                                <input type="text" name="unit_min" className="form-control" placeholder="Minimum Units" {
+                                                                                ...register("unit_min", {
+                                                                                    required: "Minimum Units is required",
+                                                                                    validate: {
+                                                                                        matchPattern: (v) =>
+                                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                                        "Please enter valid number",
+                                                                                        maxLength: (v) =>
+                                                                                        v.length <= 10 || "The digit should be less than equal 10",
+                                                                                    },
+                                                                                })
                                                                             } />
                                                                                 {errors.unit_min && <p className="error">{errors.unit_min?.message}</p>}
 
@@ -540,9 +564,16 @@ function CopyAddBuyer (){
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Maximum Units<span>*</span></label>
                                                                             <div className="form-group">
-                                                                                <input type="number" name="unit_max" className="form-control" placeholder="Maximum Units"  {
+                                                                                <input type="text" name="unit_max" className="form-control" placeholder="Maximum Units"  {
                                                                                 ...register("unit_max", {
                                                                                     required: "Maximum Units is required",
+                                                                                    validate: {
+                                                                                        matchPattern: (v) =>
+                                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                                        "Please enter valid number",
+                                                                                        maxLength: (v) =>
+                                                                                        v.length <= 10 || "The digit should be less than equal 10",
+                                                                                    },
                                                                                 })
                                                                                 } />
                                                                                     {errors.unit_max && <p className="error">{errors.unit_max?.message}</p>}
@@ -552,6 +583,12 @@ function CopyAddBuyer (){
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                             <label>Building class<span>*</span></label>
                                                                             <div className="form-group">
+                                                                                {/* <MultiSelect
+                                                                                    name="building_class"
+                                                                                    options={buildingClassNamesOption}
+                                                                                    placeholder='Select Option'
+                                                                                    setMultiselectOption = {setBuildingClassNamesValue}
+                                                                                /> */}
                                                                                 <Controller
                                                                                     control={control}
                                                                                     name="building_class"
@@ -561,8 +598,6 @@ function CopyAddBuyer (){
                                                                                         options={buildingClassNamesOption}
                                                                                         name = {name}
                                                                                         placeholder='Select Building class'
-                                                                                        setMultiselectOption = {setBuildingClassNamesValue}
-                                                                                        showCreative={setBuildingClassNamesValue}
                                                                                         onChange={(e)=>{
                                                                                             onChange(e)
                                                                                             handleCustum(e,'building_class')
@@ -680,9 +715,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bedroom (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
+                                                                    <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                                         ...register("bedroom_min", {
                                                                             required: "Bedroom (min) is required",
+                                                                            validate: {
+                                                                                matchPattern: (v) =>
+                                                                                /^[0-9]\d*$/.test(v) ||
+                                                                                "Please enter valid number",
+                                                                                maxLength: (v) =>
+                                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                                            },
                                                                         })
                                                                         } />
                                                                         {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
@@ -693,10 +735,17 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bedroom (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
+                                                                    <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                                     {
                                                                     ...register("bedroom_max", {
                                                                         required: "Bedroom (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
@@ -707,10 +756,17 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bath (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)"
+                                                                    <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)"
                                                                     {
                                                                     ...register("bath_min", {
                                                                         required: "Bath (min) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
@@ -720,9 +776,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Bath (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" {
+                                                                    <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" {
                                                                     ...register("bath_max", {
                                                                         required: "Bath (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
@@ -733,9 +796,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Sq Ft Min<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
+                                                                    <input type="text" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
                                                                     ...register("size_min", {
                                                                         required: "Sq Ft Min is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
@@ -746,9 +816,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Sq Ft Max<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
+                                                                    <input type="text" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
                                                                     ...register("size_max", {
                                                                         required: "Sq Ft Max is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
@@ -759,9 +836,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
+                                                                    <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
                                                                     ...register("lot_size_min", {
                                                                         required: "Lot Size Sq Ft (Min) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.lot_size_min && <p className="error">{errors.lot_size_min?.message}</p>}
@@ -772,9 +856,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Lot Size Sq Ft (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)"    {
+                                                                    <input type="text" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)"    {
                                                                     ...register("lot_size_max", {
                                                                         required: "Lot Size Sq Ft (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.lot_size_max && <p className="error">{errors.lot_size_max?.message}</p>}
@@ -785,11 +876,30 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Year Built (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)"   {
-                                                                    ...register("build_year_min", {
-                                                                        required: "Year Built (min) is required",
-                                                                    })
-                                                                    } />
+                                                                <Controller
+                                                                        control={control}
+                                                                        name="build_year_min"
+                                                                        rules={{ required: 'Year Built (Min) is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                            <DatePicker
+                                                                                id="DatePicker"
+                                                                                type="string"
+                                                                                className="text-primary text-center form-control"
+                                                                                selected={startDate} 
+                                                                                placeholder="Year Built (Min)"
+                                                                                name="build_year_min" 
+                                                                                onChange={
+                                                                                    (e)=>{
+                                                                                        onChange(e)
+                                                                                        handleCustum(e,'start_date')
+                                                                                    }
+                                                                                }
+                                                                                showYearPicker
+                                                                                dateFormat="yyyy"
+                                                                                yearItemNumber={9}
+                                                                            />
+                                                                        )}
+                                                                />
                                                                     {errors.build_year_min && <p className="error">{errors.build_year_min?.message}</p>}
 
                                                                     {renderFieldError('build_year_min') }
@@ -798,11 +908,32 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Year Built (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" {
-                                                                    ...register("build_year_max", {
-                                                                        required: "Year Built (max) is required",
-                                                                    })
-                                                                    } />
+                                                                    <Controller
+                                                                            control={control}
+                                                                            name="build_year_max"
+                                                                            rules={{ required: 'Year Built (Max) is required' }}
+                                                                            render={({ field: { value, onChange, name } }) => (
+                                                                                <DatePicker
+                                                                                    minDate={startDate}
+                                                                                    id="DatePicker"
+                                                                                    type="string"
+                                                                                    className="text-primary text-center form-control"
+                                                                                    selected={endDate}
+                                                                                    name="build_year_max"
+                                                                                    placeholder="Year Built (Max)" 
+                                                                                    minYear={2020}
+                                                                                    onChange={
+                                                                                        (e)=>{
+                                                                                            onChange(e)
+                                                                                            handleCustum(e,'end_date')
+                                                                                        }
+                                                                                    }
+                                                                                    showYearPicker
+                                                                                    dateFormat="yyyy"
+                                                                                    yearItemNumber={9}
+                                                                                />
+                                                                            )}
+                                                                    />
                                                                     {errors.build_year_max && <p className="error">{errors.build_year_max?.message}</p>}
                                                                     {renderFieldError('build_year_max') }
                                                                 </div>
@@ -810,10 +941,17 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>ARV (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                                                    <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
                                                                     {
                                                                     ...register("arv_min", {
                                                                         required: "ARV (min) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
@@ -824,9 +962,16 @@ function CopyAddBuyer (){
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>ARV (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                                                    <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
                                                                     ...register("arv_max", {
                                                                         required: "ARV (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
                                                                     })
                                                                     } />
                                                                     {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
@@ -853,7 +998,6 @@ function CopyAddBuyer (){
                                                                             name = {name}
                                                                             placeholder='Select parking'
                                                                             setMultiselectOption = {setParkingValue}
-                                                                            showCreative={setParkingValue}
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
                                                                                 handleCustum(e,'parking')
@@ -879,7 +1023,6 @@ function CopyAddBuyer (){
                                                                         name = {name}
                                                                             placeholder='Select Buyer Type'
                                                                             setMultiselectOption = {setBuyerTypeValue}
-                                                                            showCreative={setBuyerTypeValue}
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
                                                                                 handleCustum(e,'buyer_type')

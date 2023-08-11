@@ -98,13 +98,13 @@ const ResultPage = ({setIsFiltered}) =>{
         setPageNumber(1);
         setBuyerType('');
         setActiveTab('my_buyers');
-        console.log(activeTab,'activeTab1',pageNumber);
+        //console.log(activeTab,'activeTab1',pageNumber);
     }
     const handleClickMoreBuyers = () => {
         setPageNumber(1);
         setBuyerType('');
         setActiveTab('more_buyers');
-        console.log(activeTab,'activeTab33',pageNumber);
+        //console.log(activeTab,'activeTab33',pageNumber);
     }
     const handleClickHedgeFund = () => {
         setPageNumber(1);
@@ -133,7 +133,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                 <h6 className="center-head text-center mb-0">Result Page</h6>
                             </div>
                             <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord)?toRecord:0} Out of {totalRecord}</p>
+                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord)?toRecord:0} out of {totalRecord}</p>
                             </div>
                         </div>
                     </div>

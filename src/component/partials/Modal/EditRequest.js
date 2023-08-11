@@ -32,7 +32,7 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
                 handleClose();
                 getFilterResult(pageNumber,activeTab,buyerType,);
             }else{
-                console.log('false ',response.data.message);
+                //console.log('false ',response.data.message);
                 toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});
             }
         }catch(error){
