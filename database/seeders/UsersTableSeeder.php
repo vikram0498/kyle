@@ -18,6 +18,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'admin@admin.com',
                 'password'       => bcrypt('password'),
                 'remember_token' => null,
+                'level_type'     => 1,
                 'email_verified_at' => date('Y-m-d H:i:s'),
                 'created_at'     => date('Y-m-d H:i:s'),
                 'updated_at'     => date('Y-m-d H:i:s'),
