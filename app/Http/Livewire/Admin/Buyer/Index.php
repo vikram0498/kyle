@@ -35,7 +35,7 @@ class Index extends Component
     ];
 
     protected $listeners = [
-       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView', 'getStates', 'getCities'
+       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView', 'getStates', 'getCities','initializePlugins'
        
     ];
 
@@ -79,24 +79,24 @@ class Index extends Component
             // 'city' => [/*'required', 'exists:cities,id'*/], 
             'zip_code' => ['required','min:6','max:10'],
 
-            'bedroom_min' => ['required', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
-            'bedroom_max' => ['required', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
+            'bedroom_min' => ['required','numeric', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
+            'bedroom_max' => ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
 
-            'bath_min' => ['nullable', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
-            'bath_max' => ['nullable', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
+            'bath_min' => ['nullable','numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
+            'bath_max' => ['nullable','numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
 
-            'size_min' => ['required', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'size_max') : ''], 
-            'size_max' => ['required', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'size_min') : ''], 
+            'size_min' => ['required','numeric', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'size_max') : ''], 
+            'size_max' => ['required','numeric', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'size_min') : ''], 
 
-            'lot_size_min' => ['nullable', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
-            'lot_size_max' => ['nullable', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
+            'lot_size_min' => ['nullable','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
+            'lot_size_max' => ['nullable', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
 
-            'build_year_min' => ['nullable', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''], 
-            'build_year_max' => ['nullable', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''], 
+            'build_year_min' => ['nullable', 'numeric', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''], 
+            'build_year_max' => ['nullable', 'numeric', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''], 
 
             
-            'arv_min' => ['nullable', !empty($this->state['arv_max']) ? new CheckMinValue($this->state['arv_max'], 'arv_max') : ''], 
-            'arv_max' => ['nullable', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
+            'arv_min' => ['nullable', 'numeric', !empty($this->state['arv_max']) ? new CheckMinValue($this->state['arv_max'], 'arv_max') : ''], 
+            'arv_max' => ['nullable', 'numeric', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
 
             'parking' => ['nullable','array', 'in:'.implode(',', array_keys($this->parkingValues))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys($this->propertyTypes))],
@@ -107,13 +107,13 @@ class Index extends Component
         ];
 
         if(!empty($this->state['buyer_type']) && in_array(1, $this->state['buyer_type'])){
-            $rules['max_down_payment_percentage'] = ['required'];
-            $rules['max_interest_rate'] = ['required'];
-            $rules['balloon_payment'] = ['required'];
+            $rules['max_down_payment_percentage'] = ['required','numeric','between:0,100'];
+            $rules['max_interest_rate'] = ['required','numeric','between:0,100'];
+            $rules['balloon_payment'] = ['required','numeric'];
         }
         if(!empty($this->state['buyer_type']) && in_array(3, $this->state['buyer_type'])){
-            $rules['unit_min'] = ['required', !empty($this->state['unit_max']) ? new CheckMinValue($this->state['unit_max'], 'unit_max') : ''];
-            $rules['unit_max'] = ['required', !empty($this->state['unit_min']) ? new CheckMaxValue($this->state['unit_min'], 'unit_min') : ''];
+            $rules['unit_min'] = ['required', 'numeric', !empty($this->state['unit_max']) ? new CheckMinValue($this->state['unit_max'], 'unit_max') : ''];
+            $rules['unit_max'] = ['required', 'numeric', !empty($this->state['unit_min']) ? new CheckMaxValue($this->state['unit_min'], 'unit_min') : ''];
             $rules['value_add'] = ['required'];
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys($this->buildingClassValue))];
         }
@@ -313,7 +313,7 @@ class Index extends Component
                 $this->states = $stateData;
             } else {
                 $this->states = [];
-                $this->addError('country', 'Please select valid country');
+                // $this->addError('country', 'Please select valid country');
             }
         } else {
             $this->states = [];
@@ -330,7 +330,7 @@ class Index extends Component
                 $this->cities = $cityData;
             } else {
                 $this->cities = [];
-                $this->addError('country', 'Please select valid state');
+                // $this->addError('state', 'Please select valid state');
             }
         } else {
             $this->cities = [];

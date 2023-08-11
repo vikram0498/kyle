@@ -900,3 +900,18 @@ footer.footer {
     border: 1px solid black;
     border-radius: 50%;
 }
+
+
+body .select2-container--default .select2-selection--single {
+    height: 50px;
+}
+body .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 50px;
+}
+
+body .datepicker.datepicker-dropdown{
+    max-width: min-content !important;
+}
+body .datepicker.datepicker-years.table-condensed{
+    margin: inherit !important;
+}

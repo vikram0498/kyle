@@ -117,7 +117,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bedroom_min" placeholder="{{ __('cruds.buyer.fields.bedroom_min')}}" autocomplete="off"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.bedroom_min" placeholder="{{ __('cruds.buyer.fields.bedroom_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('bedroom_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -125,21 +125,21 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bedroom_max" placeholder="{{ __('cruds.buyer.fields.bedroom_max')}}"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.bedroom_max" placeholder="{{ __('cruds.buyer.fields.bedroom_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('bedroom_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_min')}} </label>
-                    <input type="number" class="form-control" wire:model.defer="state.bath_min" placeholder="{{ __('cruds.buyer.fields.bath_min')}}" autocomplete="off"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.bath_min" placeholder="{{ __('cruds.buyer.fields.bath_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('bath_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_max')}} </label>
-                    <input type="number" class="form-control" wire:model.defer="state.bath_max" placeholder="{{ __('cruds.buyer.fields.bath_max')}}" autocomplete="off"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.bath_max" placeholder="{{ __('cruds.buyer.fields.bath_max')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('bath_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -147,21 +147,21 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.size_min" placeholder="{{ __('cruds.buyer.fields.size_min')}}"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.size_min" placeholder="{{ __('cruds.buyer.fields.size_min')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('size_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.size_max" placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.size_max" placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('size_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} </label>
-                    <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('lot_size_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -169,7 +169,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} </label>
-                    <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('lot_size_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -191,14 +191,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.arv_min')}}</label>
-                    <input type="number" class="form-control" wire:model.defer="state.arv_min" placeholder="{{ __('cruds.buyer.fields.arv_min')}}" min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.arv_min" placeholder="{{ __('cruds.buyer.fields.arv_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('arv_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.arv_max')}}</label>
-                    <input type="number" class="form-control" wire:model.defer="state.arv_max" placeholder="{{ __('cruds.buyer.fields.arv_max')}}" autocomplete="off" min="0">
+                    <input type="number" class="form-control" wire:model.defer="state.arv_max" placeholder="{{ __('cruds.buyer.fields.arv_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('arv_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -290,21 +290,22 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.max_down_payment_percentage')}} <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" wire:model.defer="state.max_down_payment_percentage" placeholder="{{ __('cruds.buyer.fields.max_down_payment_percentage')}}" autocomplete="off"  max="100" min="0"> 
+                            <input type="number" class="form-control" wire:model.defer="state.max_down_payment_percentage" placeholder="{{ __('cruds.buyer.fields.max_down_payment_percentage')}}" autocomplete="off" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <=5"  min="0" max="100" step=".01" > 
+
                             @error('max_down_payment_percentage') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.max_down_payment_money')}}</label>
-                            <input type="number" class="form-control" wire:model.defer="state.max_down_payment_money" placeholder="{{ __('cruds.buyer.fields.max_down_payment_money')}}" autocomplete="off" min="0">
+                            <input type="number" class="form-control" wire:model.defer="state.max_down_payment_money" placeholder="{{ __('cruds.buyer.fields.max_down_payment_money')}}" autocomplete="off" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <=15"  min="0" step=".01" >
                             @error('max_down_payment_money') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.max_interest_rate')}} <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" wire:model.defer="state.max_interest_rate" placeholder="{{ __('cruds.buyer.fields.max_interest_rate')}}" autocomplete="off" max="100" min="0" >
+                            <input type="number" class="form-control" wire:model.defer="state.max_interest_rate" placeholder="{{ __('cruds.buyer.fields.max_interest_rate')}}" autocomplete="off" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <=5"  min="0" max="100" step=".01" >
                             @error('max_interest_rate') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -329,14 +330,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.unit_min')}} <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" wire:model.defer="state.unit_min" placeholder="{{ __('cruds.buyer.fields.unit_min')}}" autocomplete="off"  min="0"> 
+                            <input type="number" class="form-control" wire:model.defer="state.unit_min" placeholder="{{ __('cruds.buyer.fields.unit_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9"> 
                             @error('unit_min') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.unit_max')}} <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" wire:model.defer="state.unit_max" placeholder="{{ __('cruds.buyer.fields.unit_max')}}" autocomplete="off" min="0" >
+                            <input type="number" class="form-control" wire:model.defer="state.unit_max" placeholder="{{ __('cruds.buyer.fields.unit_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9" >
                             @error('unit_max') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>

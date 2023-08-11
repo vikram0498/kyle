@@ -53,16 +53,32 @@
 
 
 @push('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" integrity="sha512-aD9ophpFQ61nFZP6hXYu4Q/b/USW7rpLCQLX6Bi0WJHXNO7Js/fUENpBQf/+P4NtpzNX0jSgR5zVvPOJp+W2Kg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
 @endpush
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js" integrity="sha512-4MvcHwcbqXKUHB6Lx3Zb5CEAVoE9u84qN+ZSMM6s7z8IeJriExrV3ND5zRze9mxNlABJ6k864P/Vl8m0Sd3DtQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js" integrity="sha512-4MvcHwcbqXKUHB6Lx3Zb5CEAVoE9u84qN+ZSMM6s7z8IeJriExrV3ND5zRze9mxNlABJ6k864P/Vl8m0Sd3DtQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
 
 <script type="text/javascript">
     document.addEventListener('loadPlugins', function (event) {
+        
         $('.select2').select2({
             theme: "classic"
         });
+
+        $('.country, .state, .city').select2();
+
+       
+        // $('#build_year_min').datepicker({
+        //     format: "yyyy",
+        //     viewMode: "years", 
+        //     minViewMode: "years",
+        //     autoclose:true
+        // });
+        
     });
 
     $(document).on('click','.copy_link', function (e) {
@@ -104,6 +120,8 @@
             @this.emit('getStates', $('.country').select2('val'));
         } else if(pr == 'state'){
             @this.emit('getCities', $('.state').select2('val'));
+        } else if(pr == 'city'){
+            @this.emit('initializePlugins');
         } 
     });
 
@@ -191,7 +209,5 @@
             }
         })
     })
-   
-
 </script>
 @endpush
