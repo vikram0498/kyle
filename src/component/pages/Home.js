@@ -88,7 +88,7 @@ function Home ({userDetails}){
                             </Link>
                         </div>
                         <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                            <Link to='/' className="grid-block-view" style={{cursor:'not-allowed'}}>
+                            <Link to='/my-buyers' className="grid-block-view">
                                 <div className="grid-block-icon"><img src="./assets/images/my-buyers.svg" className="img-fluid" alt="" /></div>
                                 <h3>My Buyers</h3>
                             </Link>

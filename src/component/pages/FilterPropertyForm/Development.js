@@ -92,18 +92,12 @@ const Development = ({data})=>{
 					</div>
 				</div>
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Lot Size Sq Ft (min)</label>
+					<label>Lot Size Sq Ft</label>
 					<div className="form-group">
-						<input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)" value={data.lotSizeMin}  onChange={ e=>data.setLotSizeMin(e.target.value) }/>
+						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
 					</div>
 				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Lot Size Sq Ft (max)</label>
-					<div className="form-group">
-						<input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" value={data.lotSizeMax} onChange={ e=>data.setLotSizeMax(e.target.value) }/>
-					</div>
-				</div>
-				<div className="col-12 col-lg-12">
+				<div className="col-12 col-lg-6">
 					<div className="form-group">
 						<label>Location Flaws</label>
 						<div className="form-group">

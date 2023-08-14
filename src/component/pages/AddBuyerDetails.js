@@ -14,8 +14,8 @@ import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
 import { toast } from "react-toastify";
 import {useForm, Controller  } from "react-hook-form";
-import DatePicker from "react-datepicker";
 import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 function AddBuyerDetails (){
@@ -52,6 +52,7 @@ function AddBuyerDetails (){
     
     const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     const [multiFamilyBuyerSelected,setMultiFamilyBuyerSelected] = useState(false);
+    const [isLandSelected,setIsLandSelected] = useState(false);
 
 
     const [parkingValue, setParkingValue] = useState([]);
@@ -96,7 +97,6 @@ function AddBuyerDetails (){
                     setCountryOptions(result.countries);
                     setbuyerTypeOption(result.buyer_types);
                     setIsLoader(false);
-    
                 }
             })
         }catch{
@@ -269,6 +269,11 @@ function AddBuyerDetails (){
           } else {
             setMultiFamilyBuyerSelected(false);
           }
+          if(selectedValues.includes(7)){
+            setIsLandSelected(true);
+          }else {
+            setIsLandSelected(false);
+          }
           setPropertyTypeValue(selectedValues);
         }else if(name == 'purchase_method'){
             if (selectedValues.includes(5)) {
@@ -291,7 +296,11 @@ function AddBuyerDetails (){
         }else if(name == 'parking'){
             setParkingValue(e);
         }else if(name == 'buyer_type'){
-            setBuyerTypeValue(e);
+            let value = '';
+            if(e){
+                value = parseInt(e)
+            }
+            setBuyerTypeValue(value);
         }else if(name == 'start_date'){
             setStartDate(e);
             setEndDate('');
@@ -300,7 +309,7 @@ function AddBuyerDetails (){
             setEndDate(e);
         }
     }
- 
+ console.log(multiFamilyBuyerSelected,'multiFamilyBuyerSelected');
 
     return (
         <>
@@ -565,6 +574,9 @@ function AddBuyerDetails (){
                                                             ...register("zip_code", {
                                                                 required: "Zip Code is required",
                                                                 validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[^+-]+$/.test(v) ||
+                                                                    "Please enter valid phone number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
                                                                 },
@@ -611,6 +623,23 @@ function AddBuyerDetails (){
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {/* {isLandSelected && 
+                                                <div className="block-divide">
+                                                    <div className="row">
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Zoning</label>
+                                                        <div className="form-group">
+                                                            <MultiSelect
+                                                            name="zoning"
+                                                            placeholder='Select Zoning'
+                                                            setMultiselectOption = {setParkingValue}
+                                                            />
+                                                            {renderFieldError('zoning') }
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                } */}
                                                 { multiFamilyBuyerSelected && 
                                                     <div className="block-divide">
                                                         {/* <h5>Multi Family Buyer</h5> */}
@@ -961,7 +990,7 @@ function AddBuyerDetails (){
                                                                     maxDate={new Date()}
                                                                     className="text-primary text-center form-control"
                                                                     selected={startDate} 
-                                                                    placeholder="Year Built (Min)"
+                                                                    placeholderText="Year Built (Min)"
                                                                     name="build_year_min"
                                                                     autoComplete="off"
                                                                     onChange={
@@ -997,7 +1026,7 @@ function AddBuyerDetails (){
                                                                         className="text-primary text-center form-control"
                                                                         selected={endDate}
                                                                         name="build_year_max"
-                                                                        placeholder="Year Built (Max)" 
+                                                                        placeholderText="Year Built (Max)" 
                                                                         autoComplete="off"
                                                                         onChange={
                                                                             (e)=>{
@@ -1185,6 +1214,20 @@ function AddBuyerDetails (){
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
+                                                            <label>HOA</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="hoa" value="1" id="hoa_yes"/>
+                                                                <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="hoa" value="0" id="hoa_no"/>
+                                                                <label className="mb-0" htmlFor="hoa_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('hoa') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
                                                             <label>Age restriction</label>
                                                             <div className="label-container">
                                                                 <input type="radio" name="age_restriction" value="1" id="age_restriction_yes"/>
@@ -1213,17 +1256,17 @@ function AddBuyerDetails (){
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
-                                                            <label>HOA</label>
+                                                            <label>Post-Possession</label>
                                                             <div className="label-container">
-                                                                <input type="radio" name="hoa" value="1" id="hoa_yes"/>
-                                                                <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                                                                <input type="radio" name="post_possession" value="1" id="post_possession_yes"/>
+                                                                <label className="mb-0" htmlFor="post_possession_yes">Yes</label>
                                                             </div>
                                                             <div className="label-container">
-                                                                <input type="radio" name="hoa" value="0" id="hoa_no"/>
-                                                                <label className="mb-0" htmlFor="hoa_no">No</label>
+                                                                <input type="radio" name="post_possession" value="0" id="post_possession_no"/>
+                                                                <label className="mb-0" htmlFor="post_possession_no">No</label>
                                                             </div>
                                                         </div>
-                                                        {renderFieldError('hoa') }
+                                                        {renderFieldError('post_possession') }
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
@@ -1241,17 +1284,17 @@ function AddBuyerDetails (){
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
-                                                            <label>Post-Possession</label>
+                                                            <label>Squatters</label>
                                                             <div className="label-container">
-                                                                <input type="radio" name="post_possession" value="1" id="post_possession_yes"/>
-                                                                <label className="mb-0" htmlFor="post_possession_yes">Yes</label>
+                                                                <input type="radio" name="squatters" value="1" id="squatters_yes"/>
+                                                                <label className="mb-0" htmlFor="squatters_yes">Yes</label>
                                                             </div>
                                                             <div className="label-container">
-                                                                <input type="radio" name="post_possession" value="0" id="post_possession_no"/>
-                                                                <label className="mb-0" htmlFor="post_possession_no">No</label>
+                                                                <input type="radio" name="squatters" value="0" id="squatters_no"/>
+                                                                <label className="mb-0" htmlFor="squatters_no">No</label>
                                                             </div>
                                                         </div>
-                                                        {renderFieldError('post_possession') }
+                                                        {renderFieldError('squatters') }
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
@@ -1266,6 +1309,20 @@ function AddBuyerDetails (){
                                                             </div>
                                                         </div>
                                                         {renderFieldError('building_required') }
+                                                    </div>
+                                                    <div className="grid-template-col">
+                                                        <div className="radio-block-group">
+                                                            <label>Rebuild</label>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rebuild" value="1" id="rebuild_yes"/>
+                                                                <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
+                                                            </div>
+                                                            <div className="label-container">
+                                                                <input type="radio" name="rebuild" value="0" id="rebuild_no"/>
+                                                                <label className="mb-0" htmlFor="rebuild_no">No</label>
+                                                            </div>
+                                                        </div>
+                                                        {renderFieldError('rebuild') }
                                                     </div>
                                                     <div className="grid-template-col">
                                                         <div className="radio-block-group">
@@ -1308,34 +1365,6 @@ function AddBuyerDetails (){
                                                             </div>
                                                         </div>
                                                         {renderFieldError('fire_damaged') }
-                                                    </div>
-                                                    <div className="grid-template-col">
-                                                        <div className="radio-block-group">
-                                                            <label>Rebuild</label>
-                                                            <div className="label-container">
-                                                                <input type="radio" name="rebuild" value="1" id="rebuild_yes"/>
-                                                                <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
-                                                            </div>
-                                                            <div className="label-container">
-                                                                <input type="radio" name="rebuild" value="0" id="rebuild_no"/>
-                                                                <label className="mb-0" htmlFor="rebuild_no">No</label>
-                                                            </div>
-                                                        </div>
-                                                        {renderFieldError('rebuild') }
-                                                    </div>
-                                                    <div className="grid-template-col">
-                                                        <div className="radio-block-group">
-                                                            <label>Squatters</label>
-                                                            <div className="label-container">
-                                                                <input type="radio" name="squatters" value="1" id="squatters_yes"/>
-                                                                <label className="mb-0" htmlFor="squatters_yes">Yes</label>
-                                                            </div>
-                                                            <div className="label-container">
-                                                                <input type="radio" name="squatters" value="0" id="squatters_no"/>
-                                                                <label className="mb-0" htmlFor="squatters_no">No</label>
-                                                            </div>
-                                                        </div>
-                                                        {renderFieldError('squatters') }
                                                     </div>
                                                 </div>
                                             </div>

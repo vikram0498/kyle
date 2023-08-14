@@ -43,18 +43,25 @@ const SellerForm = () =>{
 
     const [price, setPrice] = useState('');
 
-    const [bedroomMin, setBedroomMin] = useState('');
-    const [bedroomMax, setBedroomMax] = useState('');
-    const [bathMin, setBathMin] = useState('');
-    const [bathMax, setBathMax] = useState('');
-    const [sizeMin, setSizeMin] = useState('');
-    const [sizeMax, setSizeMax] = useState('');
-    const [lotSizeMin, setLotSizeMin] = useState('');
-    const [lotSizeMax, setLotSizeMax] = useState('');
-    const [yearBuildMin, setYearBuildMin] = useState('');
-    const [yearBuildMax, setYearBuildMax] = useState('');
-    const [arvMin, setArvMin] = useState('');
-    const [arvMax, setArvMax] = useState('');
+    //const [bedroomMin, setBedroomMin] = useState('');
+    // const [bedroomMax, setBedroomMax] = useState('');
+    // const [bathMin, setBathMin] = useState('');
+    // const [bathMax, setBathMax] = useState('');
+    // const [sizeMin, setSizeMin] = useState('');
+    // const [sizeMax, setSizeMax] = useState('');
+    // const [lotSizeMin, setLotSizeMin] = useState('');
+    // const [lotSizeMax, setLotSizeMax] = useState('');
+    // const [yearBuildMin, setYearBuildMin] = useState('');
+    // const [yearBuildMax, setYearBuildMax] = useState('');
+    // const [arvMin, setArvMin] = useState('');
+    // const [arvMax, setArvMax] = useState('');
+
+	const [bedroom, setBedroom] = useState('');
+    const [bath, setBath] = useState('');
+    const [size, setSize] = useState('');
+    const [lotSize, setLotSize] = useState('');
+    const [yearBuild, setYearBuild] = useState('');
+    const [arv, setArv] = useState('');
 
     const [parking, setParking] = useState([]);
     const [locationFlaw, setLocationFlaw] = useState([]);
@@ -174,13 +181,14 @@ const SellerForm = () =>{
 	
 	const getStates = (country_id) => {
         if(country_id == null){
-            setCountry(''); setState(''); setCity('');
-            setStateOptions(''); setCityOptions('');
+            setCountry([]); setState([]); setCity([]);
+            setStateOptions([]); setCityOptions([]);
         } else {            
             axios.post(apiUrl+'getStates', { country_id: country_id }, { headers: headers }).then(response => {
                 let result = response.data.options;
 
-                setState(''); setCity('');                
+                setCountry([]); setState([]); setCity([]);                
+                setCityOptions([]);
                 setCountry(country_id); setStateOptions(result);
             });
         }
@@ -188,14 +196,16 @@ const SellerForm = () =>{
 
     const getCities = (state_id) => {
         if(state_id == null){
-            setState(''); setCity('');
-            setCityOptions('');
+            setState([]); setCity([]);
+
+            setCityOptions([]);
         } else { 
-            let country_id = country;
+            let country_id = {country};
             axios.post(apiUrl+'getCities', { state_id: state_id, country_id: country_id }, { headers: headers }).then(response => {
                 let result = response.data.options;
 
-                setCity('');                
+                setState([]); setCity([]);
+                
                 setState(state_id); setCityOptions(result);
             });
         }
@@ -207,13 +217,19 @@ const SellerForm = () =>{
 
 		setPrice('');
 
-		setBedroomMin(''); 		setBedroomMax(''); 
-		setBathMin(''); 		setBathMax(''); 
-		setSizeMin(''); 		setSizeMax('');
-		setLotSizeMin(''); 		setLotSizeMax('');
-		setYearBuildMin(''); 	setYearBuildMax('');
-		setArvMin(''); 			setArvMax('');
+		//setBedroomMin(''); 		setBedroomMax(''); 
+		// setBathMin(''); 		setBathMax(''); 
+		// setSizeMin(''); 		setSizeMax('');
+		// setLotSizeMin(''); 		setLotSizeMax('');
+		// setYearBuildMin(''); 	setYearBuildMax('');
+		// setArvMin(''); 			setArvMax('');
 
+		setBedroom(''); 		
+		setBath(''); 		 
+		setSize(''); 		
+		setLotSize(''); 		
+		setYearBuild(''); 	
+		setArv(''); 	
 		setParking([]); setTotalUnits(''); setBuildingClass(''); setValueAdd(null);
 
 		setPurchaseMethod([]); 
@@ -328,24 +344,28 @@ const SellerForm = () =>{
 
 		price, setPrice,
 
-		bedroomMin, setBedroomMin,
-		bedroomMax, setBedroomMax,
-		bathMin, setBathMin,
-		bathMax, setBathMax,
-		sizeMin, setSizeMin,
-		sizeMax, setSizeMax,
-		lotSizeMin, setLotSizeMin,
-		lotSizeMax, setLotSizeMax,
-		yearBuildMin, setYearBuildMin,
-		yearBuildMax, setYearBuildMax,
-		arvMin, setArvMin,
-		arvMax, setArvMax,
-
+		//bedroomMin, setBedroomMin,
+		// bedroomMax, setBedroomMax,
+		// bathMin, setBathMin,
+		// bathMax, setBathMax,
+		// sizeMin, setSizeMin,
+		// sizeMax, setSizeMax,
+		// lotSizeMin, setLotSizeMin,
+		// lotSizeMax, setLotSizeMax,
+		// yearBuildMin, setYearBuildMin,
+		// yearBuildMax, setYearBuildMax,
+		// arvMin, setArvMin,
+		// arvMax, setArvMax,
+		bedroom, setBedroom,
+		bath, setBath,
+	    size, setSize,
+		lotSize, setLotSize,
+		yearBuild, setYearBuild,
 		parking,  setParking,
 		totalUnits,  setTotalUnits,
 		buildingClass, setBuildingClass,
 		valueAdd, setValueAdd,
-
+		arv, setArv,
 		purchaseMethod, setPurchaseMethod,
 
 		downPaymentPercentage, setDownPaymentPercentage,
@@ -401,9 +421,7 @@ const SellerForm = () =>{
      	<Header/>
 	 	{ (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 			isFiltered ? 
-				(user_data.level_type === 2) ? 
-					<ResultPage setIsFiltered = {setIsFiltered}  /> :
-					<FilterResult  setIsFiltered = {setIsFiltered} />
+				<ResultPage setIsFiltered = {setIsFiltered}  /> 
 			:
 			<section className="main-section position-relative pt-4 pb-120">
 				<div className="container position-relative">

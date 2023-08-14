@@ -1810,4 +1810,5 @@ body .Toastify__close-button--light {
 }
 #DatePicker {
     cursor: pointer;
+    text-align: left !important;
 }

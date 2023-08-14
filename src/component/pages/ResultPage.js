@@ -13,6 +13,7 @@ import Pagination from "../partials/Layouts/Pagination";
 import Loader from "../partials/Layouts/Loader";
 import { toast } from 'react-toastify';
 import { useFormError } from "../../hooks/useFormError";
+import {Link , useNavigate} from "react-router-dom";
 
 const ResultPage = ({setIsFiltered}) =>{
 
@@ -114,6 +115,7 @@ const ResultPage = ({setIsFiltered}) =>{
         setPageNumber(1)
         setBuyerType(11);
     }
+    const user_data = JSON.parse(localStorage.getItem('user_data'));
     return(
         <>
             <section className="main-section position-relative pt-4 pb-120">
@@ -148,9 +150,12 @@ const ResultPage = ({setIsFiltered}) =>{
                                                     <li className="nav-item" role="presentation">
                                                         <button className="nav-link active" id="pills-my-buyers-tab" data-bs-toggle="pill" data-bs-target="#pills-my-buyers" type="button" role="tab" aria-controls="pills-my-buyers" aria-selected="true" onClick={handleClickMyBuyers}>My Buyers</button>
                                                     </li>
+                                                    {(user_data.level_type === 2) ?
                                                     <li className="nav-item" role="presentation">
                                                         <button className="nav-link" id="pills-more-buyers-tab" data-bs-toggle="pill" data-bs-target="#pills-more-buyers" type="button" role="tab" aria-controls="pills-more-buyers" aria-selected="false" onClick={handleClickMoreBuyers}>More Buyers</button>
                                                     </li>
+                                                    :''
+                                                    }
                                                 </ul>
                                             </div>
                                         </div>
@@ -193,6 +198,17 @@ const ResultPage = ({setIsFiltered}) =>{
                                         )}
                                     </div>
                                 </div>
+                                {(user_data.level_type === 1) ? 
+                                    <div className="col-12 col-lg-12">
+                                        <div className="want-to-see">
+                                            <h3 className="text-center">Want to see more buyer!</h3>
+                                            <Link className="btn btn-fill" to={'/choose-your-plan'}>Click Here</Link>
+                                        </div>
+                                    </div>
+                                    :
+                                    ''
+                                }                
+                                
                                 <div className="row justify-content-center">
                                     <Pagination
                                         totalPage={totalPage}

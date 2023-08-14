@@ -1,9 +1,12 @@
-import React from 'react';
+import React,{useState}  from 'react';
 import Select from 'react-select';
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const MultiFamilyResidential = ({data}) =>{ 
+    const [startDate, setStartDate] = useState('');
 
     return (
         <>
@@ -93,88 +96,60 @@ const MultiFamilyResidential = ({data}) =>{
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bedroom (min)</label>
+                    <label>Bedroom</label>
                     <div className="form-group">
-                        <input type="number" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  value={data.bedroomMin}  onChange={ e=>data.setBedroomMin(e.target.value) }/>
-                        {data.renderFieldError('bedroom_min') }
+                        <input type="number" name="bedroom" className="form-control" placeholder="Bedroom"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
+                        {data.renderFieldError('bedroom') }
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bedroom (max)</label>
+                    <label>Bath</label>
                     <div className="form-group">
-                        <input type="number" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" value={data.bedroomMax}  onChange={ e=>data.setBedroomMax(e.target.value) } />
-                        {data.renderFieldError('bedroom_max') }
+                        <input type="number" name="bath" className="form-control" placeholder="Bath"  value={data.bath}  onChange={ e=>data.setBath(e.target.value) }/>
+                        {data.renderFieldError('bath') }
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bath (min)</label>
+                    <label>Sq Ft</label>
                     <div className="form-group">
-                        <input type="number" name="bath_min" className="form-control" placeholder="Bath (min)"  value={data.bathMin}  onChange={ e=>data.setBathMin(e.target.value) }/>
-                        {data.renderFieldError('bath_min') }
+                        <input type="number" name="size" className="form-control" placeholder="Sq Ft" value={data.size}  onChange={ e=>data.setSize(e.target.value) } />
+                        {data.renderFieldError('size') }
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bath (max)</label>
-                    <div className="form-group">
-                        <input type="number" name="bath_max" className="form-control" placeholder="Bath (max)" value={data.bathMax}  onChange={ e=>data.setBathMax(e.target.value) } />
-                        {data.renderFieldError('bath_max') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Sq Ft Min</label>
-                    <div className="form-group">
-                        <input type="number" name="size_min" className="form-control" placeholder="Sq Ft Min" value={data.sizeMin}  onChange={ e=>data.setSizeMin(e.target.value) } />
-                        {data.renderFieldError('size_min') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Sq Ft Max</label>
-                    <div className="form-group">
-                        <input type="number" name="size_max" className="form-control" placeholder="Sq Ft Max" value={data.sizeMax}  onChange={ e=>data.setSizeMax(e.target.value) } />
-                        {data.renderFieldError('balloon_payment') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Lot Size Sq Ft (min)</label>
+					<label>Lot Size Sq Ft</label>
 					<div className="form-group">
-						<input type="number" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)" value={data.lotSizeMin}  onChange={ e=>data.setLotSizeMin(e.target.value) }/>
-					</div>
-				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Lot Size Sq Ft (max)</label>
-					<div className="form-group">
-						<input type="number" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)" value={data.lotSizeMax} onChange={ e=>data.setLotSizeMax(e.target.value) }/>
+						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
 					</div>
 				</div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Year Built (min)</label>
+                    <label>Year Built</label>
                     <div className="form-group">
-                        <input type="number" name="build_year_min" className="form-control" placeholder="Year Built (min)" value={data.yearBuildMin}  onChange={ e=>data.setYearBuildMin(e.target.value) } />
-                        {data.renderFieldError('balloon_payment') }
+                    <DatePicker
+                        id="DatePicker"
+                        type="string"
+                        maxDate={new Date()}
+                        className="text-primary text-center form-control"
+                        selected={startDate} 
+                        name="build_year"
+                        autoComplete="off"
+                        showYearPicker
+                        dateFormat="yyyy"
+                        yearItemNumber={9}
+                        placeholderText='Year Built'
+                        onChange={(e)=>{setStartDate(e)}}
+                    />    
+                        {data.renderFieldError('build_year') }
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Year Built (max)</label>
+                    <label>ARV</label>
                     <div className="form-group">
-                        <input type="number" name="build_year_max" className="form-control" placeholder="Year Built (max)" value={data.yearBuildMax}  onChange={ e=>data.setYearBuildMax(e.target.value) } />
-                        {data.renderFieldError('balloon_payment') }
+                        <input type="number" name="arv" className="form-control" placeholder="ARV" value={data.arv}  onChange={ e=>data.setArv(e.target.value) }/>
+                        {data.renderFieldError('arv') }
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>ARV (min)</label>
-                    <div className="form-group">
-                        <input type="number" name="arv_min" className="form-control" placeholder="ARV (min)" value={data.arvMin}  onChange={ e=>data.setArvMin(e.target.value) }/>
-                        {data.renderFieldError('balloon_payment') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>ARV (max)</label>
-                    <div className="form-group">
-                        <input type="number" name="arv_max" className="form-control" placeholder="ARV (max)" value={data.arvMax}  onChange={ e=>data.setArvMax(e.target.value) } />
-                        {data.renderFieldError('balloon_payment') }
-                    </div>
-                </div>
-                <div className="col-12 col-lg-6">
                     <label>Parking</label>
                     <div className="form-group">
                         <SingleSelect
@@ -317,7 +292,7 @@ const MultiFamilyResidential = ({data}) =>{
                     {data.renderFieldError('solar') }
                 </div>
                 <div className="grid-template-col">
-                <div className="radio-block-group">
+                    <div className="radio-block-group">
                         <label>Pool</label>
                         <div className="label-container">
                             <input type="radio" name="pool" value="1" id="pool_yes" checked={data.pool == 1 ? 'checked' : ''} onChange={ e=>data.setPool(e.target.value) } />
@@ -360,6 +335,20 @@ const MultiFamilyResidential = ({data}) =>{
                 </div>
                 <div className="grid-template-col">
                     <div className="radio-block-group">
+                        <label>HOA</label>
+                        <div className="label-container">
+                            <input type="radio" name="hoa" value="1" id="hoa_yes" checked={data.hoa == 1 ? 'checked' : ''} onChange={ e=>data.setHoa(e.target.value) } />
+                            <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                        </div>
+                        <div className="label-container">
+                            <input type="radio" name="hoa" value="0" id="hoa_no" checked={data.hoa == 0 ? 'checked' : ''} onChange={ e=>data.setHoa(e.target.value) } />
+                            <label className="mb-0" htmlFor="hoa_no">No</label>
+                        </div>
+                    </div>
+                    {data.renderFieldError('hoa') }
+                </div>
+                <div className="grid-template-col">
+                    <div className="radio-block-group">
                         <label>Age restriction</label>
                         <div className="label-container">
                             <input type="radio" name="age_restriction" value="1" id="age_restriction_yes" checked={data.ageRestriction == 1 ? 'checked' : ''} onChange={ e=>data.setAgeRestriction(e.target.value) } />
@@ -386,19 +375,20 @@ const MultiFamilyResidential = ({data}) =>{
                     </div>
                     {data.renderFieldError('rental_restriction') }
                 </div>
+            
                 <div className="grid-template-col">
                     <div className="radio-block-group">
-                        <label>HOA</label>
+                        <label>Post-Possession</label>
                         <div className="label-container">
-                            <input type="radio" name="hoa" value="1" id="hoa_yes" checked={data.hoa == 1 ? 'checked' : ''} onChange={ e=>data.setHoa(e.target.value) } />
-                            <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                            <input type="radio" name="post_possession" value="1" id="post_possession_yes" checked={data.postPossession == 1 ? 'checked' : ''} onChange={ e=>data.setPostPossession(e.target.value) } />
+                            <label className="mb-0" htmlFor="post_possession_yes">Yes</label>
                         </div>
                         <div className="label-container">
-                            <input type="radio" name="hoa" value="0" id="hoa_no" checked={data.hoa == 0 ? 'checked' : ''} onChange={ e=>data.setHoa(e.target.value) } />
-                            <label className="mb-0" htmlFor="hoa_no">No</label>
+                            <input type="radio" name="post_possession" value="0" id="post_possession_no" checked={data.postPossession == 0 ? 'checked' : ''} onChange={ e=>data.setPostPossession(e.target.value) } />
+                            <label className="mb-0" htmlFor="post_possession_no">No</label>
                         </div>
                     </div>
-                    {data.renderFieldError('hoa') }
+                    {data.renderFieldError('post_possession') }
                 </div>
                 <div className="grid-template-col">
                     <div className="radio-block-group">
@@ -416,17 +406,17 @@ const MultiFamilyResidential = ({data}) =>{
                 </div>
                 <div className="grid-template-col">
                     <div className="radio-block-group">
-                        <label>Post-Possession</label>
+                        <label>Squatters</label>
                         <div className="label-container">
-                            <input type="radio" name="post_possession" value="1" id="post_possession_yes" checked={data.postPossession == 1 ? 'checked' : ''} onChange={ e=>data.setPostPossession(e.target.value) } />
-                            <label className="mb-0" htmlFor="post_possession_yes">Yes</label>
+                            <input type="radio" name="squatters" value="1" id="squatters_yes" checked={data.squatters == 1 ? 'checked' : ''} onChange={ e=>data.setSquatters(e.target.value) } />
+                            <label className="mb-0" htmlFor="squatters_yes">Yes</label>
                         </div>
                         <div className="label-container">
-                            <input type="radio" name="post_possession" value="0" id="post_possession_no" checked={data.postPossession == 0 ? 'checked' : ''} onChange={ e=>data.setPostPossession(e.target.value) } />
-                            <label className="mb-0" htmlFor="post_possession_no">No</label>
+                            <input type="radio" name="squatters" value="0" id="squatters_no" checked={data.squatters == 0 ? 'checked' : ''} onChange={ e=>data.setSquatters(e.target.value) } />
+                            <label className="mb-0" htmlFor="squatters_no">No</label>
                         </div>
                     </div>
-                    {data.renderFieldError('post_possession') }
+                    {data.renderFieldError('squatters') }
                 </div>
                 <div className="grid-template-col">
                     <div className="radio-block-group">
@@ -441,6 +431,20 @@ const MultiFamilyResidential = ({data}) =>{
                         </div>
                     </div>
                     {data.renderFieldError('building_required') }
+                </div>
+                <div className="grid-template-col">
+                    <div className="radio-block-group">
+                        <label>Rebuild</label>
+                        <div className="label-container">
+                            <input type="radio" name="rebuild" value="1" id="rebuild_yes" checked={data.rebuild == 1 ? 'checked' : ''} onChange={ e=>data.setRebuild(e.target.value) } />
+                            <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
+                        </div>
+                        <div className="label-container">
+                            <input type="radio" name="rebuild" value="0" id="rebuild_no" checked={data.rebuild == 0 ? 'checked' : ''} onChange={ e=>data.setRebuild(e.target.value) } />
+                            <label className="mb-0" htmlFor="rebuild_no">No</label>
+                        </div>
+                    </div>
+                    {data.renderFieldError('rebuild') }
                 </div>
                 <div className="grid-template-col">
                     <div className="radio-block-group">
@@ -484,34 +488,7 @@ const MultiFamilyResidential = ({data}) =>{
                     </div>
                     {data.renderFieldError('fire_damaged') }
                 </div>
-                <div className="grid-template-col">
-                    <div className="radio-block-group">
-                        <label>Rebuild</label>
-                        <div className="label-container">
-                            <input type="radio" name="rebuild" value="1" id="rebuild_yes" checked={data.rebuild == 1 ? 'checked' : ''} onChange={ e=>data.setRebuild(e.target.value) } />
-                            <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
-                        </div>
-                        <div className="label-container">
-                            <input type="radio" name="rebuild" value="0" id="rebuild_no" checked={data.rebuild == 0 ? 'checked' : ''} onChange={ e=>data.setRebuild(e.target.value) } />
-                            <label className="mb-0" htmlFor="rebuild_no">No</label>
-                        </div>
-                    </div>
-                    {data.renderFieldError('rebuild') }
-                </div>
-                <div className="grid-template-col">
-                    <div className="radio-block-group">
-                        <label>Squatters</label>
-                        <div className="label-container">
-                            <input type="radio" name="squatters" value="1" id="squatters_yes" checked={data.squatters == 1 ? 'checked' : ''} onChange={ e=>data.setSquatters(e.target.value) } />
-                            <label className="mb-0" htmlFor="squatters_yes">Yes</label>
-                        </div>
-                        <div className="label-container">
-                            <input type="radio" name="squatters" value="0" id="squatters_no" checked={data.squatters == 0 ? 'checked' : ''} onChange={ e=>data.setSquatters(e.target.value) } />
-                            <label className="mb-0" htmlFor="squatters_no">No</label>
-                        </div>
-                    </div>
-                    {data.renderFieldError('squatters') }
-                </div>
+            
             </div>
         </>
     )
