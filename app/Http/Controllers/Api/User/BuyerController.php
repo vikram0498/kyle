@@ -242,6 +242,14 @@ class BuyerController extends Controller
                 $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
             }
 
+            if($request->parking){
+                $validatedData['parking'] = (int)$request->parking;
+            }
+
+            if($request->buyer_type){
+                $validatedData['buyer_type'] = (int)$request->buyer_type;
+            }
+
             $createdBuyer = Buyer::create($validatedData);
             
             if($token){
@@ -277,7 +285,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [

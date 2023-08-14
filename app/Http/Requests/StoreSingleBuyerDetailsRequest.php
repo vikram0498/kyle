@@ -83,10 +83,10 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'arv_min' => ['required', 'numeric', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
             'arv_max' => ['required', 'numeric', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
 
-            'parking' => ['required',/*'array',*/ 'in:'.implode(',', array_keys(config('constants.parking_values')))],
+            'parking' => ['required', 'numeric'],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_types')))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
-            'buyer_type' => ['required',/*'array',*/ 'in:'.implode(',', array_keys(config('constants.buyer_types')))],
+            'buyer_type' => ['required','numeric'],
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))],
         ];
 

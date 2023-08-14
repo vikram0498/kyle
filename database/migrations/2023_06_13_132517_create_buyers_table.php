@@ -41,7 +41,7 @@ return new class extends Migration
             $table->integer('build_year_max')->nullable();            
             $table->integer('arv_min')->nullable();
             $table->integer('arv_max')->nullable();
-            $table->json('parking')->nullable();
+            $table->integer('parking')->nullable();
             $table->json('property_type');
             $table->json('property_flaw')->nullable();
 
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->tinyInteger('fire_damaged')->nullable();
             $table->tinyInteger('rebuild')->nullable();
 
-            $table->json('buyer_type')->nullable();
+            $table->integer('buyer_type')->nullable();
 
             // creative buyer type
             $table->double('max_down_payment_percentage', 15, 2)->nullable();
