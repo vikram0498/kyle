@@ -76,10 +76,14 @@
         //     format: "yyyy",
         //     viewMode: "years", 
         //     minViewMode: "years",
-        //     autoclose:true
+        //     autoclose:true,
         // });
         
     });
+
+    // $(document).on('change','#build_year_min', function (e) {
+    //     console.log($(this).val());
+    // });
 
     $(document).on('click','.copy_link', function (e) {
         e.preventDefault();

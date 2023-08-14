@@ -91,6 +91,10 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);
 
+    Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);
+
+    Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
+
     Route::get('getPlans', [HomeController::class, 'getPlans']);
 
     Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);

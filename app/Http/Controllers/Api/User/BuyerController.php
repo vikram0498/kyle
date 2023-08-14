@@ -977,4 +977,230 @@ class BuyerController extends Controller
         }
     }
 
+    public function lastSearchBuyers(){
+        try {
+            $radioValues = [0,1];
+            $userId = auth()->user()->id;
+            $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
+            
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+
+            
+            if($lastSearchLog->property_type){
+                $propertyType = $lastSearchLog->property_type;
+                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+            }
+
+            if($lastSearchLog->address){
+                $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
+            }
+
+            if($lastSearchLog->country){
+                $buyers = $buyers->where('country', $lastSearchLog->country);
+            }
+
+            if($lastSearchLog->state){
+                $buyers = $buyers->where('state', $lastSearchLog->state);
+            }
+
+            if($lastSearchLog->city){
+                $buyers = $buyers->where('city', $lastSearchLog->city);
+            }
+
+            if($lastSearchLog->zip_code){
+                $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
+            }
+
+            /* if($lastSearchLog->price){
+                $buyers->where('price', $lastSearchLog->price);
+            } */
+
+            if($lastSearchLog->bedroom_min && is_numeric($lastSearchLog->bedroom_min)){
+                $buyers = $buyers->where('bedroom_min', '>=', $lastSearchLog->bedroom_min);
+            } 
+
+            if($lastSearchLog->bedroom_max && is_numeric($lastSearchLog->bedroom_max)){
+                $buyers = $buyers->where('bedroom_max', '<=', $lastSearchLog->bedroom_max);
+            } 
+
+            if($lastSearchLog->bath_min && is_numeric($lastSearchLog->bath_min)){
+                $buyers = $buyers->where('bath_min', '>=', $lastSearchLog->bath_min);
+            } 
+
+            if($lastSearchLog->bath_max && is_numeric($lastSearchLog->bath_max)){
+                $buyers = $buyers->where('bath_max', '<=', $lastSearchLog->bath_max);
+            } 
+
+            if($lastSearchLog->size_min && is_numeric($lastSearchLog->size_min)){
+                $buyers = $buyers->where('size_min', '>=', $lastSearchLog->size_min);
+            } 
+
+            if($lastSearchLog->size_max && is_numeric($lastSearchLog->size_max)){
+                $buyers = $buyers->where('size_max', '<=', $lastSearchLog->size_max);
+            } 
+
+            if($lastSearchLog->lot_size_min && is_numeric($lastSearchLog->lot_size_min)){
+                $buyers = $buyers->where('lot_size_min', '>=', $lastSearchLog->lot_size_min);
+            } 
+
+            if($lastSearchLog->lot_size_max && is_numeric($lastSearchLog->lot_size_max)){
+                $buyers = $buyers->where('lot_size_max', '<=', $lastSearchLog->lot_size_max);
+            }
+            
+            if($lastSearchLog->build_year_min && is_numeric($lastSearchLog->build_year_min)){
+                $buyers = $buyers->where('build_year_min', '>=', $lastSearchLog->build_year_min);
+            }
+
+            if($lastSearchLog->build_year_max && is_numeric($lastSearchLog->build_year_max)){
+                $buyers = $buyers->where('build_year_max', '<=', $lastSearchLog->build_year_max);
+            }
+
+            if($lastSearchLog->arv_min && is_numeric($lastSearchLog->arv_min)){
+                $buyers = $buyers->where('arv_min', '>=', $lastSearchLog->arv_min);
+            }
+
+            if($lastSearchLog->arv_max && is_numeric($lastSearchLog->arv_max)){
+                $buyers = $buyers->where('arv_max', '<=', $lastSearchLog->arv_max);
+            }
+
+            if($lastSearchLog->parking){
+                $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
+            }
+
+            if($lastSearchLog->property_flaw){
+                $buyers = $buyers->whereJsonContains('property_flaw', $lastSearchLog->property_flaw);
+            }
+
+            if($lastSearchLog->purchase_method){
+                $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
+            }
+
+            /* if($lastSearchLog->building_class){
+                $buyers = $buyers->whereJsonContains('building_class', $lastSearchLog->building_class);
+            } */
+
+
+            if(!is_null($lastSearchLog->solar) && in_array($lastSearchLog->solar, $radioValues)){
+                $buyers = $buyers->where('solar', $lastSearchLog->solar);
+            }
+
+            if(!is_null($lastSearchLog->pool) && in_array($lastSearchLog->pool, $radioValues)){
+                $buyers = $buyers->where('pool', $lastSearchLog->pool);
+            }
+
+            if(!is_null($lastSearchLog->septic) && in_array($lastSearchLog->septic, $radioValues)){
+                $buyers = $buyers->where('septic', $lastSearchLog->septic);
+            }
+
+            if(!is_null($lastSearchLog->well) && in_array($lastSearchLog->well, $radioValues)){
+                $buyers = $buyers->where('well', $lastSearchLog->well);
+            }
+
+            if(!is_null($lastSearchLog->age_restriction) && in_array($lastSearchLog->age_restriction, $radioValues)){
+                $buyers = $buyers->where('age_restriction', $lastSearchLog->age_restriction);
+            }
+
+            if(!is_null($lastSearchLog->rental_restriction) && in_array($lastSearchLog->rental_restriction, $radioValues)){
+                $buyers = $buyers->where('rental_restriction', $lastSearchLog->rental_restriction);
+            }
+
+            if(!is_null($lastSearchLog->hoa) && in_array($lastSearchLog->hoa, $radioValues)){
+                $buyers = $buyers->where('hoa', $lastSearchLog->hoa);
+            }
+
+            if(!is_null($lastSearchLog->tenant) && in_array($lastSearchLog->tenant, $radioValues)){
+                $buyers = $buyers->where('tenant', $lastSearchLog->tenant);
+            }
+
+            if(!is_null($lastSearchLog->post_possession) && in_array($lastSearchLog->post_possession, $radioValues)){
+                $buyers = $buyers->where('post_possession', $lastSearchLog->post_possession);
+            }
+
+            if(!is_null($lastSearchLog->building_required) && in_array($lastSearchLog->building_required, $radioValues)){
+                $buyers = $buyers->where('building_required', $lastSearchLog->building_required);
+            }
+
+            if(!is_null($lastSearchLog->foundation_issues) && in_array($lastSearchLog->foundation_issues, $radioValues)){
+                $buyers = $buyers->where('foundation_issues', $lastSearchLog->foundation_issues);
+            }
+
+            if(!is_null($lastSearchLog->mold) && in_array($lastSearchLog->mold, $radioValues)){
+                $buyers = $buyers->where('mold', $lastSearchLog->mold);
+            }
+
+            if(!is_null($lastSearchLog->fire_damaged) && in_array($lastSearchLog->fire_damaged, $radioValues)){
+                $buyers = $buyers->where('fire_damaged', $lastSearchLog->fire_damaged);
+            }
+
+            if(!is_null($lastSearchLog->rebuild) && in_array($lastSearchLog->rebuild, $radioValues)){
+                $buyers = $buyers->where('rebuild', $lastSearchLog->rebuild);
+            }
+
+            if(!is_null($lastSearchLog->squatters) && in_array($lastSearchLog->squatters, $radioValues)){
+                $buyers = $buyers->where('squatters', $lastSearchLog->squatters);
+            }
+            
+            if($lastSearchLog->total_units){
+                $buyers = $buyers->where('unit_min', '<=', $lastSearchLog->total_units)->where('unit_max' ,'>=',$lastSearchLog->total_units);
+            }
+
+            if($lastSearchLog->max_down_payment_percentage){
+                $buyers = $buyers->where('max_down_payment_percentage', $lastSearchLog->max_down_payment_percentage);
+            }
+
+            if($lastSearchLog->max_down_payment_money){
+                $buyers = $buyers->where('max_down_payment_money', $lastSearchLog->max_down_payment_money);
+            }
+
+            if($lastSearchLog->max_interest_rate){
+                $buyers = $buyers->where('max_interest_rate', $lastSearchLog->max_interest_rate);
+            }
+
+            if(!is_null($lastSearchLog->balloon_payment) && in_array($lastSearchLog->balloon_payment, $radioValues)){
+                $buyers = $buyers->where('balloon_payment', $lastSearchLog->balloon_payment);
+            }
+
+            if($lastSearchLog->building_class){
+                $buyers = $buyers->whereJsonContains('building_class', intval($lastSearchLog->building_class));
+            }
+
+            if(!is_null($lastSearchLog->value_add) && in_array($lastSearchLog->value_add, $radioValues)){
+                $buyers = $buyers->where('value_add', $lastSearchLog->value_add);
+            }
+
+            if($lastSearchLog->buyer_type){
+                $buyers = $buyers->whereJsonContains('buyer_type', intval($lastSearchLog->buyer_type));
+            }
+
+            $buyers = $buyers->paginate(10);
+
+            foreach ($buyers as $key=>$buyer){
+                $name = $buyer->first_name.' '.$buyer->last_name;
+                $buyer->name =  $name;
+                $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+            }
+
+            //Return Success Response
+            $responseData = [
+                'status' => true,
+                'buyers' => $buyers,
+            ];
+
+            return response()->json($responseData, 200);
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
 }
