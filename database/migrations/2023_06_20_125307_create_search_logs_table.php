@@ -25,18 +25,12 @@ return new class extends Migration
 
             $table->double('price')->nullable();
 
-            $table->integer('bedroom_min')->nullable();
-            $table->integer('bedroom_max')->nullable();
-            $table->integer('bath_min')->nullable();
-            $table->integer('bath_max')->nullable();
-            $table->integer('size_min')->nullable();
-            $table->integer('size_max')->nullable();
-            $table->integer('lot_size_min')->nullable();
-            $table->integer('lot_size_max')->nullable();
-            $table->integer('build_year_min')->nullable();
-            $table->integer('build_year_max')->nullable();            
-            $table->integer('arv_min')->nullable();
-            $table->integer('arv_max')->nullable();
+            $table->integer('bedroom')->nullable();
+            $table->integer('bath')->nullable();
+            $table->integer('size')->nullable();
+            $table->integer('lot_size')->nullable();
+            $table->integer('build_year')->nullable();         
+            $table->integer('arv')->nullable();
 
             $table->integer('parking')->nullable();
             $table->integer('property_type');

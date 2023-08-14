@@ -347,64 +347,76 @@ class BuyerController extends Controller
                 $buyers->where('price', $request->price);
             } */
 
-            if($request->bedroom_min && is_numeric($request->bedroom_min)){
-                $buyers = $buyers->where('bedroom_min', '>=', $request->bedroom_min);
-                $additionalBuyers = $additionalBuyers->where('bedroom_min', '>=', $request->bedroom_min);
+            if($request->bedroom && is_numeric($request->bedroom)){
+                $bedroomValue = $request->bedroom;
+                $buyers = $buyers->where(function ($query) use ($bedroomValue) {
+                    $query->where('bedroom_min', '<=', $bedroomValue)
+                          ->where('bedroom_max', '>=', $bedroomValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($bedroomValue) {
+                    $query->where('bedroom_min', '<=', $bedroomValue)
+                          ->where('bedroom_max', '>=', $bedroomValue);
+                });
             } 
 
-            if($request->bedroom_max && is_numeric($request->bedroom_max)){
-                $buyers = $buyers->where('bedroom_max', '<=', $request->bedroom_max);
-                $additionalBuyers = $additionalBuyers->where('bedroom_max', '<=', $request->bedroom_max);
+            if($request->bath && is_numeric($request->bath)){
+                $bathValue = $request->bath;
+                $buyers = $buyers->where(function ($query) use ($bathValue) {
+                    $query->where('bath_min', '<=', $bathValue)
+                          ->where('bath_max', '>=', $bathValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($bathValue) {
+                    $query->where('bath_min', '<=', $bathValue)
+                          ->where('bath_max', '>=', $bathValue);
+                });
             } 
 
-            if($request->bath_min && is_numeric($request->bath_min)){
-                $buyers = $buyers->where('bath_min', '>=', $request->bath_min);
-                $additionalBuyers = $additionalBuyers->where('bath_min', '>=', $request->bath_min);
+            if($request->size && is_numeric($request->size)){
+                $sizeValue = $request->size;
+                $buyers = $buyers->where(function ($query) use ($sizeValue) {
+                    $query->where('size_min', '<=', $sizeValue)
+                          ->where('size_max', '>=', $sizeValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($sizeValue) {
+                    $query->where('size_min', '<=', $sizeValue)
+                          ->where('size_max', '>=', $sizeValue);
+                });
             } 
 
-            if($request->bath_max && is_numeric($request->bath_max)){
-                $buyers = $buyers->where('bath_max', '<=', $request->bath_max);
-                $additionalBuyers = $additionalBuyers->where('bath_max', '<=', $request->bath_max);
+            if($request->lot_size && is_numeric($request->lot_size)){
+                $lotSizeValue = $request->lot_size;
+                $buyers = $buyers->where(function ($query) use ($lotSizeValue) {
+                    $query->where('lot_size_min', '<=', $lotSizeValue)
+                          ->where('lot_size_max', '>=', $lotSizeValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($lotSizeValue) {
+                    $query->where('lot_size_min', '<=', $lotSizeValue)
+                          ->where('lot_size_max', '>=', $lotSizeValue);
+                });
             } 
-
-            if($request->size_min && is_numeric($request->size_min)){
-                $buyers = $buyers->where('size_min', '>=', $request->size_min);
-                $additionalBuyers = $additionalBuyers->where('size_min', '>=', $request->size_min);
-            } 
-
-            if($request->size_max && is_numeric($request->size_max)){
-                $buyers = $buyers->where('size_max', '<=', $request->size_max);
-                $additionalBuyers = $additionalBuyers->where('size_max', '<=', $request->size_max);
-            } 
-
-            if($request->lot_size_min && is_numeric($request->lot_size_min)){
-                $buyers = $buyers->where('lot_size_min', '>=', $request->lot_size_min);
-                $additionalBuyers = $additionalBuyers->where('lot_size_min', '>=', $request->lot_size_min);
-            } 
-
-            if($request->lot_size_max && is_numeric($request->lot_size_max)){
-                $buyers = $buyers->where('lot_size_max', '<=', $request->lot_size_max);
-                $additionalBuyers = $additionalBuyers->where('lot_size_max', '<=', $request->lot_size_max);
-            }
             
-            if($request->build_year_min && is_numeric($request->build_year_min)){
-                $buyers = $buyers->where('build_year_min', '>=', $request->build_year_min);
-                $additionalBuyers = $additionalBuyers->where('build_year_min', '>=', $request->build_year_min);
+            if($request->build_year && is_numeric($request->build_year)){
+                $buildYearValue = $request->build_year;
+                $buyers = $buyers->where(function ($query) use ($buildYearValue) {
+                    $query->where('build_year_min', '<=', $buildYearValue)
+                          ->where('build_year_max', '>=', $buildYearValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($buildYearValue) {
+                    $query->where('build_year_min', '<=', $buildYearValue)
+                          ->where('build_year_max', '>=', $buildYearValue);
+                });
             }
 
-            if($request->build_year_max && is_numeric($request->build_year_max)){
-                $buyers = $buyers->where('build_year_max', '<=', $request->build_year_max);
-                $additionalBuyers = $additionalBuyers->where('build_year_max', '<=', $request->build_year_max);
-            }
-
-            if($request->arv_min && is_numeric($request->arv_min)){
-                $buyers = $buyers->where('arv_min', '>=', $request->arv_min);
-                $additionalBuyers = $additionalBuyers->where('arv_min', '>=', $request->arv_min);
-            }
-
-            if($request->arv_max && is_numeric($request->arv_max)){
-                $buyers = $buyers->where('arv_max', '<=', $request->arv_max);
-                $additionalBuyers = $additionalBuyers->where('arv_max', '<=', $request->arv_max);
+            if($request->arv && is_numeric($request->arv)){
+                $arvValue = $request->arv;
+                $buyers = $buyers->where(function ($query) use ($arvValue) {
+                    $query->where('arv_min', '<=', $arvValue)
+                          ->where('arv_max', '>=', $arvValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($arvValue) {
+                    $query->where('arv_min', '<=', $arvValue)
+                          ->where('arv_max', '>=', $arvValue);
+                });
             }
 
             if($request->parking){
@@ -1015,52 +1027,53 @@ class BuyerController extends Controller
                 $buyers->where('price', $lastSearchLog->price);
             } */
 
-            if($lastSearchLog->bedroom_min && is_numeric($lastSearchLog->bedroom_min)){
-                $buyers = $buyers->where('bedroom_min', '>=', $lastSearchLog->bedroom_min);
+            if($lastSearchLog->bedroom && is_numeric($lastSearchLog->bedroom)){
+                $bedroomValue = $lastSearchLog->bedroom;
+                $buyers = $buyers->where(function ($query) use ($bedroomValue) {
+                    $query->where('bedroom_min', '<=', $bedroomValue)
+                          ->where('bedroom_max', '>=', $bedroomValue);
+                });
             } 
 
-            if($lastSearchLog->bedroom_max && is_numeric($lastSearchLog->bedroom_max)){
-                $buyers = $buyers->where('bedroom_max', '<=', $lastSearchLog->bedroom_max);
+            if($lastSearchLog->bath && is_numeric($lastSearchLog->bath)){
+                $bathValue = $lastSearchLog->bath;
+                $buyers = $buyers->where(function ($query) use ($bathValue) {
+                    $query->where('bath_min', '<=', $bathValue)
+                          ->where('bath_max', '>=', $bathValue);
+                });
             } 
 
-            if($lastSearchLog->bath_min && is_numeric($lastSearchLog->bath_min)){
-                $buyers = $buyers->where('bath_min', '>=', $lastSearchLog->bath_min);
+            if($lastSearchLog->size && is_numeric($lastSearchLog->size)){
+                $sizeValue = $lastSearchLog->size;
+                $buyers = $buyers->where(function ($query) use ($sizeValue) {
+                    $query->where('size_min', '<=', $sizeValue)
+                          ->where('size_max', '>=', $sizeValue);
+                });
             } 
 
-            if($lastSearchLog->bath_max && is_numeric($lastSearchLog->bath_max)){
-                $buyers = $buyers->where('bath_max', '<=', $lastSearchLog->bath_max);
+            if($lastSearchLog->lot_size && is_numeric($lastSearchLog->lot_size)){
+                $lotSizeValue = $lastSearchLog->lot_size;
+                $buyers = $buyers->where(function ($query) use ($lotSizeValue) {
+                    $query->where('lot_size_min', '<=', $lotSizeValue)
+                          ->where('lot_size_max', '>=', $lotSizeValue);
+                });
             } 
-
-            if($lastSearchLog->size_min && is_numeric($lastSearchLog->size_min)){
-                $buyers = $buyers->where('size_min', '>=', $lastSearchLog->size_min);
-            } 
-
-            if($lastSearchLog->size_max && is_numeric($lastSearchLog->size_max)){
-                $buyers = $buyers->where('size_max', '<=', $lastSearchLog->size_max);
-            } 
-
-            if($lastSearchLog->lot_size_min && is_numeric($lastSearchLog->lot_size_min)){
-                $buyers = $buyers->where('lot_size_min', '>=', $lastSearchLog->lot_size_min);
-            } 
-
-            if($lastSearchLog->lot_size_max && is_numeric($lastSearchLog->lot_size_max)){
-                $buyers = $buyers->where('lot_size_max', '<=', $lastSearchLog->lot_size_max);
-            }
             
-            if($lastSearchLog->build_year_min && is_numeric($lastSearchLog->build_year_min)){
-                $buyers = $buyers->where('build_year_min', '>=', $lastSearchLog->build_year_min);
+            if($lastSearchLog->build_year && is_numeric($lastSearchLog->build_year)){
+                $buildYearValue = $lastSearchLog->build_year;
+                $buyers = $buyers->where(function ($query) use ($buildYearValue) {
+                    $query->where('build_year_min', '<=', $buildYearValue)
+                          ->where('build_year_max', '>=', $buildYearValue);
+                });
             }
 
-            if($lastSearchLog->build_year_max && is_numeric($lastSearchLog->build_year_max)){
-                $buyers = $buyers->where('build_year_max', '<=', $lastSearchLog->build_year_max);
-            }
-
-            if($lastSearchLog->arv_min && is_numeric($lastSearchLog->arv_min)){
-                $buyers = $buyers->where('arv_min', '>=', $lastSearchLog->arv_min);
-            }
-
-            if($lastSearchLog->arv_max && is_numeric($lastSearchLog->arv_max)){
-                $buyers = $buyers->where('arv_max', '<=', $lastSearchLog->arv_max);
+            if($lastSearchLog->arv && is_numeric($lastSearchLog->arv)){
+                $arvValue = $lastSearchLog->arv;
+                $buyers = $buyers->where(function ($query) use ($arvValue) {
+                    $query->where('arv_min', '<=', $arvValue)
+                          ->where('arv_max', '>=', $arvValue);
+                });
+                
             }
 
             if($lastSearchLog->parking){

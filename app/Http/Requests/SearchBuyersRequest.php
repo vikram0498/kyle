@@ -58,27 +58,34 @@ class SearchBuyersRequest extends FormRequest
             'city'        => [], 
             'state'       => [], 
             'zip_code'    => [],
-            'price'       => [],
+            'price'       => ['nullable','numeric'],
 
-            'bedroom_min' => [/*'required',*/ !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''],
-            'bedroom_max' => [/*'required',*/ !empty($this->bedroom_min) ? new CheckMaxValue($this->bedroom_min, 'bedroom_min') : ''], 
+            'bedroom'      => ['nullable','numeric'],
+            'bath'         => ['nullable','numeric'],
+            'size'         => ['nullable','numeric'],
+            'lot_size'     => ['nullable','numeric'],
+            'build_year'   => ['nullable','numeric'],
+            'arv'          => ['nullable','numeric'],
 
-            'bath_min' => ['nullable', !empty($this->bath_max) ? new CheckMinValue($this->bath_max, 'bath_max') : ''], 
-            'bath_max' => ['nullable', !empty($this->bath_min) ? new CheckMaxValue($this->bath_min, 'bath_min') : ''], 
+            // 'bedroom_min' => [/*'required',*/ !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''],
+            // 'bedroom_max' => [/*'required',*/ !empty($this->bedroom_min) ? new CheckMaxValue($this->bedroom_min, 'bedroom_min') : ''], 
+
+            // 'bath_min' => ['nullable', !empty($this->bath_max) ? new CheckMinValue($this->bath_max, 'bath_max') : ''], 
+            // 'bath_max' => ['nullable', !empty($this->bath_min) ? new CheckMaxValue($this->bath_min, 'bath_min') : ''], 
     
-            'size_min' => [/*'required',*/ !empty($this->size_max) ? new CheckMinValue($this->size_max, 'size_max') : ''], 
-            'size_max' => [/*'required',*/ !empty($this->size_min) ? new CheckMaxValue($this->size_min, 'size_min') : ''], 
+            // 'size_min' => [/*'required',*/ !empty($this->size_max) ? new CheckMinValue($this->size_max, 'size_max') : ''], 
+            // 'size_max' => [/*'required',*/ !empty($this->size_min) ? new CheckMaxValue($this->size_min, 'size_min') : ''], 
 
-            'lot_size_min' => ['nullable', !empty($this->lot_size_max) ? new CheckMinValue($this->lot_size_max, 'lot_size_max') : ''], 
+            // 'lot_size_min' => ['nullable', !empty($this->lot_size_max) ? new CheckMinValue($this->lot_size_max, 'lot_size_max') : ''], 
 
-            'lot_size_max' => ['nullable', !empty($this->lot_size_min) ? new CheckMaxValue($this->lot_size_min, 'lot_size_min') : ''], 
+            // 'lot_size_max' => ['nullable', !empty($this->lot_size_min) ? new CheckMaxValue($this->lot_size_min, 'lot_size_min') : ''], 
 
-            'build_year_min' => ['nullable', !empty($this->build_year_max) ? new CheckMinValue($this->build_year_max, 'build_year_max') : ''], 
+            // 'build_year_min' => ['nullable', !empty($this->build_year_max) ? new CheckMinValue($this->build_year_max, 'build_year_max') : ''], 
 
-            'build_year_max' => ['nullable', !empty($this->build_year_min) ? new CheckMaxValue($this->build_year_min, 'build_year_min') : ''], 
+            // 'build_year_max' => ['nullable', !empty($this->build_year_min) ? new CheckMaxValue($this->build_year_min, 'build_year_min') : ''], 
 
-            'arv_min' => ['nullable', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
-            'arv_max' => ['nullable', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
+            // 'arv_min' => ['nullable', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
+            // 'arv_max' => ['nullable', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
 
 
             'parking' => ['nullable', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
