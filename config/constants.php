@@ -111,6 +111,42 @@ return [
         5 => 'Creative Finance',
     ],
 
+    'zonings' => [
+        1 => 'Agricultural',
+        2 => 'Residential',
+        3 => 'Multifamily',
+        4 => 'Mixed-Use',
+        5 => 'Commercial',
+        6 => 'Rural',
+        7 => 'Industrial',
+        8 => 'Recreational',
+    ],
+
+    'utilities' => [
+        1 => 'Electric On-site',
+        2 => 'Electric Available',
+        3 => 'Electric Nearby',
+        4 => 'No Electric',
+    ],
+
+    'sewers' => [
+        1 => 'Septic',
+        2 => 'None',
+    ],
+
+    'market_preferances' => [
+        1 => 'On Market',
+        2 => 'Off Market',
+        3 => 'No Preference',
+    ],
+
+    'contact_preferances' => [
+        1 => 'Email',
+        2 => 'Text',
+        3 => 'Call',
+        4 => 'No Preference',
+    ],
+
 
     'radio_buttons_fields' => [
         'solar' => [

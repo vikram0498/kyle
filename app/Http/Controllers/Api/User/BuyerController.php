@@ -186,6 +186,41 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
 
+            $elementValues['zonings'] = collect(config('constants.zonings'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['utilities'] = collect(config('constants.utilities'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['sewers'] = collect(config('constants.sewers'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+
+            $elementValues['contact_preferances'] = collect(config('constants.contact_preferances'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+
             //Return Error Response
             $responseData = [
                 'status'        => true,
@@ -351,9 +386,17 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
             }
 
-            /* if($request->price){
-                $buyers->where('price', $request->price);
-            } */
+            if($request->price){
+                $priceValue = $request->price;
+                $buyers = $buyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+            } 
 
             if($request->bedroom && is_numeric($request->bedroom)){
                 $bedroomValue = $request->bedroom;
@@ -442,9 +485,46 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $request->purchase_method);
             }
 
+            if($request->zoning){
+                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
+            }
+
+            if($request->utilities){
+                $buyers = $buyers->where('utilities', $request->utilities);
+                $additionalBuyers = $additionalBuyers->where('utilities', $request->utilities);
+            }
+
+            if($request->sewer){
+                $buyers = $buyers->where('sewer', $request->sewer);
+                $additionalBuyers = $additionalBuyers->where('sewer', $request->sewer);
+            }
+
+            if($request->market_preferance){
+                $buyers = $buyers->where('market_preferance', $request->market_preferance);
+                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance);
+            }
+
+            if($request->contact_preferance){
+                $buyers = $buyers->where('contact_preferance', $request->contact_preferance);
+                $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
+            }
+
             /* if($request->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
             } */
+
+            if($request->of_stories && is_numeric($request->of_stories)){
+                $of_stories_value = $request->of_stories;
+                $buyers = $buyers->where(function ($query) use ($of_stories_value) {
+                    $query->where('of_stories_min', '<=', $of_stories_value)
+                          ->where('of_stories_max', '>=', $of_stories_value);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($of_stories_value) {
+                    $query->where('of_stories_min', '<=', $of_stories_value)
+                          ->where('of_stories_max', '>=', $of_stories_value);
+                });
+            } 
 
 
             if(!is_null($request->solar) && in_array($request->solar, $radioValues)){
@@ -1031,9 +1111,17 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
             }
 
-            /* if($lastSearchLog->price){
-                $buyers->where('price', $lastSearchLog->price);
-            } */
+            if($lastSearchLog->price){
+                $priceValue = $lastSearchLog->price;
+                $buyers = $buyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+            } 
 
             if($lastSearchLog->bedroom && is_numeric($lastSearchLog->bedroom)){
                 $bedroomValue = $lastSearchLog->bedroom;
@@ -1096,11 +1184,48 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
             }
 
+            if($request->zoning){
+                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
+            }
+
+            if($request->utilities){
+                $buyers = $buyers->where('utilities', $request->utilities);
+                $additionalBuyers = $additionalBuyers->where('utilities', $request->utilities);
+            }
+
+            if($request->sewer){
+                $buyers = $buyers->where('sewer', $request->sewer);
+                $additionalBuyers = $additionalBuyers->where('sewer', $request->sewer);
+            }
+
+            if($request->market_preferance){
+                $buyers = $buyers->where('market_preferance', $request->market_preferance);
+                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance);
+            }
+
+            if($request->contact_preferance){
+                $buyers = $buyers->where('contact_preferance', $request->contact_preferance);
+                $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
+            }
+
             /* if($lastSearchLog->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', $lastSearchLog->building_class);
             } */
 
 
+            if($request->of_stories && is_numeric($request->of_stories)){
+                $of_stories_value = $request->of_stories;
+                $buyers = $buyers->where(function ($query) use ($of_stories_value) {
+                    $query->where('of_stories_min', '<=', $of_stories_value)
+                          ->where('of_stories_max', '>=', $of_stories_value);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($of_stories_value) {
+                    $query->where('of_stories_min', '<=', $of_stories_value)
+                          ->where('of_stories_max', '>=', $of_stories_value);
+                });
+            } 
+            
             if(!is_null($lastSearchLog->solar) && in_array($lastSearchLog->solar, $radioValues)){
                 $buyers = $buyers->where('solar', $lastSearchLog->solar);
             }

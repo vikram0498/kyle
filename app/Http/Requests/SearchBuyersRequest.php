@@ -66,6 +66,8 @@ class SearchBuyersRequest extends FormRequest
             'lot_size'     => ['nullable','numeric'],
             'build_year'   => ['nullable','numeric'],
             'arv'          => ['nullable','numeric'],
+            'of_stories'   => ['nullable','numeric'],
+
 
             // 'bedroom_min' => [/*'required',*/ !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''],
             // 'bedroom_max' => [/*'required',*/ !empty($this->bedroom_min) ? new CheckMaxValue($this->bedroom_min, 'bedroom_min') : ''], 
@@ -109,6 +111,12 @@ class SearchBuyersRequest extends FormRequest
             'rebuild'       => [],
             'squatters'     => [],
             'total_units'   => [],
+
+            'zoning' => [],
+            'utilities' => [],
+            'sewer' => [],
+            'market_preferance' => [],
+            'contact_preferance' => [],
 
         ];
 

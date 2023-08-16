@@ -62,6 +62,9 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'zip_code'    => ['required','min:3','max:10'],
             // 'company_name'   => ['required'], 
 
+            'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
+            'price_max' => ['required', 'numeric', !empty($this->price_min) ? new CheckMaxValue($this->price_min, 'price_min') : ''], 
+
             'bedroom_min' => ['required','numeric', !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''], 
             'bedroom_max' => ['required', 'numeric', !empty($this->bedroom_min) ? new CheckMaxValue($this->bedroom_min, 'bedroom_min') : ''], 
 
@@ -88,6 +91,19 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
             'buyer_type' => ['required','numeric'],
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))],
+
+         
+            'of_stories_min' => ['required','numeric', !empty($this->of_stories_max) ? new CheckMinValue($this->of_stories_max, 'of_stories_max') : ''], 
+            
+            'of_stories_max' => ['required', 'numeric', !empty($this->of_stories_min) ? new CheckMaxValue($this->of_stories_min, 'of_stories_min') : ''],
+
+
+            'zoning' => ['required','array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
+            'utilities' => ['required','numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
+            'sewer' => ['required','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
+            'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
+            'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
+
         ];
 
         // if(!empty($this->purchase_method) && in_array(5, $this->purchase_method)){
