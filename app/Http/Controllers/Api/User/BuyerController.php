@@ -486,13 +486,15 @@ class BuyerController extends Controller
             }
 
             if($request->purchase_method){
-                $buyers = $buyers->whereJsonContains('purchase_method', $request->purchase_method);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $request->purchase_method);
+                $purchaseMethod = json_encode($request->purchase_method);
+                $buyers = $buyers->whereJsonContains('purchase_method', $purchaseMethod);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $purchaseMethod);
             }
 
             if($request->zoning){
-                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
+                $zoning = json_encode($request->zoning);
+                $buyers = $buyers->whereJsonContains('zoning', $zoning);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $zoning);
             }
 
             if($request->utilities){
@@ -1194,27 +1196,22 @@ class BuyerController extends Controller
 
             if($lastSearchLog->zoning){
                 $buyers = $buyers->whereJsonContains('zoning', $lastSearchLog->zoning);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $lastSearchLog->zoning);
             }
 
             if($lastSearchLog->utilities){
                 $buyers = $buyers->where('utilities', $lastSearchLog->utilities);
-                $additionalBuyers = $additionalBuyers->where('utilities', $lastSearchLog->utilities);
             }
 
             if($lastSearchLog->sewer){
                 $buyers = $buyers->where('sewer', $lastSearchLog->sewer);
-                $additionalBuyers = $additionalBuyers->where('sewer', $lastSearchLog->sewer);
             }
 
             if($lastSearchLog->market_preferance){
                 $buyers = $buyers->where('market_preferance', $lastSearchLog->market_preferance);
-                $additionalBuyers = $additionalBuyers->where('market_preferance', $lastSearchLog->market_preferance);
             }
 
             if($lastSearchLog->contact_preferance){
                 $buyers = $buyers->where('contact_preferance',$lastSearchLog->contact_preferance);
-                $additionalBuyers = $additionalBuyers->where('contact_preferance', $lastSearchLog->contact_preferance);
             }
 
             /* if($lastSearchLog->building_class){
@@ -1225,10 +1222,6 @@ class BuyerController extends Controller
             if($lastSearchLog->of_stories && is_numeric($lastSearchLog->of_stories)){
                 $of_stories_value = $lastSearchLog->of_stories;
                 $buyers = $buyers->where(function ($query) use ($of_stories_value) {
-                    $query->where('of_stories_min', '<=', $of_stories_value)
-                          ->where('of_stories_max', '>=', $of_stories_value);
-                });
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($of_stories_value) {
                     $query->where('of_stories_min', '<=', $of_stories_value)
                           ->where('of_stories_max', '>=', $of_stories_value);
                 });
