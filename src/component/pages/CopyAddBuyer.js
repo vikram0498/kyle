@@ -44,7 +44,12 @@ function CopyAddBuyer (){
     
     const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     const [multiFamilyBuyerSelected,setMultiFamilyBuyerSelected] = useState(false);
-
+    const [isLandSelected,setIsLandSelected] = useState(false);
+    const [marketPreferanceOption, setMarketPreferanceOption] = useState([]);
+    const [contactPreferanceOption, setContactPreferanceOption] = useState([]);
+    const [zoningOption, setZoningOption] = useState([]);
+    const [sewerOption, setSewerOption] = useState([]);
+    const [utilitiesOption, setUtilitiesOption] = useState([]);
 
     const [parkingValue, setParkingValue] = useState([]);
     const [propertyTypeValue, setPropertyTypeValue] = useState([]);
@@ -52,7 +57,9 @@ function CopyAddBuyer (){
     const [buyerTypeValue,setBuyerTypeValue] = useState([]);
     const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
     const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
-
+    const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
+    const [contactPreferanceValue, setContactPreferanceValue] = useState([]);
+    const [zoningValue, setZoningValue] = useState([]);
 
     const [isTokenExpire, setIsTokenExpire] = useState(false);
 
@@ -108,6 +115,12 @@ function CopyAddBuyer (){
                     setParkingOption(result.parking_values);
                     setCountryOptions(result.countries);
                     setbuyerTypeOption(result.buyer_types);
+                    setMarketPreferanceOption(result.market_preferances);
+                    setContactPreferanceOption(result.contact_preferances);
+                    setZoningOption(result.zonings);
+                    setSewerOption(result.sewers);
+                    setUtilitiesOption(result.utilities);
+
                     setIsLoader(false);
     
                 }
@@ -224,6 +237,11 @@ function CopyAddBuyer (){
           } else {
             setMultiFamilyBuyerSelected(false);
           }
+          if(selectedValues.includes(7)){
+            setIsLandSelected(true);
+          }else {
+            setIsLandSelected(false);
+          }
           setPropertyTypeValue(selectedValues);
         }else if(name == 'purchase_method'){
             if (selectedValues.includes(5)) {
@@ -253,6 +271,11 @@ function CopyAddBuyer (){
         }
         else if(name == 'end_date'){
             setEndDate(e);
+        }else if(name == 'market_preferance'){
+            setMarketPreferanceValue(e);
+        }
+        else if(name == 'zoning'){
+            setZoningValue(selectedValues);
         }
 
     }
@@ -507,6 +530,54 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('company_name') }
                                                                 </div>
                                                             </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Market Preference<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="market_preferance"
+                                                                        rules={{ required: 'Market Preferance is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={marketPreferanceOption}
+                                                                            name = {name}
+                                                                            placeholder='Select Market Preferance'
+                                                                            isClearable={true}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'market_preferance')
+                                                                            }}
+                                                                        />
+                                                                        )}
+                                                                    />
+                                                                    {errors.market_preferance && <p className="error">{errors.market_preferance?.message}</p>}
+                                                                    {renderFieldError('market_preferance') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Contact Preference<span>*</span></label>
+                                                                <div className="form-group">
+                                                                <Controller
+                                                                    control={control}
+                                                                    name="contact_preferance"
+                                                                    rules={{ required: 'Contact Preferance is required' }}
+                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                    <Select
+                                                                        options={contactPreferanceOption}
+                                                                        name = {name}
+                                                                        placeholder='Select Contact Preferance'
+                                                                        isClearable={true}
+                                                                        onChange={(e)=>{
+                                                                            onChange(e)
+                                                                            handleCustum(e,'contact_preferance')
+                                                                        }}
+                                                                    />
+                                                                    )}
+                                                                />
+                                                                {errors.contact_preferance && <p className="error">{errors.contact_preferance?.message}</p>}
+                                                                {renderFieldError('contact_preferance') }
+                                                                </div>
+                                                            </div>
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
                                                                     <label>Property Type<span>*</span></label>
@@ -537,6 +608,83 @@ function CopyAddBuyer (){
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            {isLandSelected && 
+                                                                <div className="block-divide">
+                                                                    <div className="row">
+                                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                            <label>Zoning</label>
+                                                                            <div className="form-group">
+                                                                            <Controller
+                                                                            control={control}
+                                                                            name="zoning"
+                                                                            rules={{ required: 'Zoning Type is required' }}
+                                                                            render={({ field: { value, onChange, name } }) => (
+                                                                            <Select
+                                                                                options={zoningOption}
+                                                                                name = {name}
+                                                                                placeholder='Select Zoning Type'
+                                                                                onChange={(e)=>{
+                                                                                    onChange(e)
+                                                                                    handleCustum(e,'zoning')
+                                                                                }}
+                                                                                isMulti
+                                                                                closeMenuOnSelect={false}
+                                                                            />
+                                                                            )}
+                                                                            />
+                                                                                {renderFieldError('zoning') }
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                            <label>Utilities</label>
+                                                                            <div className="form-group">
+
+                                                                            <Controller
+                                                                                control={control}
+                                                                                name="utilities"
+                                                                                rules={{ required: 'Utilities Type is required' }}
+                                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                                        <Select
+                                                                                            options={utilitiesOption}
+                                                                                            name = {name}
+                                                                                            placeholder='Select Utilities Type'
+                                                                                            onChange={(e)=>{
+                                                                                                onChange(e)
+                                                                                                handleCustum(e,'utilities')
+                                                                                            }}
+                                                                                            closeMenuOnSelect={false}
+                                                                                        />
+                                                                                    )}
+                                                                            />
+                                                                                {renderFieldError('utilities') }
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                            <label>Sewer</label>
+                                                                            <div className="form-group">
+                                                                                <Controller
+                                                                                control={control}
+                                                                                name="sewer"
+                                                                                rules={{ required: 'Sewer Type is required' }}
+                                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                                        <Select
+                                                                                            options={sewerOption}
+                                                                                            name = {name}
+                                                                                            placeholder='Select Sewer Type'
+                                                                                            onChange={(e)=>{
+                                                                                                onChange(e)
+                                                                                                handleCustum(e,'sewer')
+                                                                                            }}
+                                                                                            closeMenuOnSelect={false}
+                                                                                        />
+                                                                                    )}
+                                                                                />
+                                                                                {renderFieldError('sewer') }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
                                                             { multiFamilyBuyerSelected && 
                                                                 <div className="block-divide">
                                                                     {/* <h5>Multi Family Buyer</h5> */}
@@ -979,6 +1127,88 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('arv_max') }
                                                                 </div>
                                                             </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Of stories (min)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="of_stories_min" className="form-control" placeholder="ARV (min)" 
+                                                                    {
+                                                                    ...register("of_stories_min", {
+                                                                        required: "Of Stories (min) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                        },
+                                                                    })
+                                                                    } />
+                                                                    {errors.of_stories_min && <p className="error">{errors.of_stories_min?.message}</p>}
+
+                                                                    {renderFieldError('of_stories_min') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Of stories (max)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="of_stories_max" className="form-control" placeholder="Of stories (max)" {
+                                                                    ...register("of_stories_max", {
+                                                                        required: "Of Stories (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                        },
+                                                                    })
+                                                                    } />
+                                                                    {errors.of_stories_max && <p className="error">{errors.of_stories_max?.message}</p>}
+
+                                                                    {renderFieldError('of_stories_max') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Price (min)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="price_min" className="form-control" placeholder="Price (min)" 
+                                                                    {
+                                                                    ...register("price_min", {
+                                                                        required: "Price (min) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
+                                                                    })
+                                                                    } />
+                                                                    {errors.price_min && <p className="error">{errors.price_min?.message}</p>}
+
+                                                                    {renderFieldError('arv_min') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Price (max)<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="price_max" className="form-control" placeholder="Price (max)" {
+                                                                    ...register("price_max", {
+                                                                        required: "Price (max) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid number",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 10 || "The digit should be less than equal 10",
+                                                                        },
+                                                                    })
+                                                                    } />
+                                                                    {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+
+                                                                    {renderFieldError('price_max') }
+                                                                </div>
+                                                            </div>
                                                             <div className="col-6 col-lg-6">
                                                                 <label>Parking<span>*</span></label>
                                                                 <div className="form-group">
@@ -1037,12 +1267,12 @@ function CopyAddBuyer (){
                                                             </div>
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
-                                                                    <label>Location Flaws</label>
+                                                                    <label>Property Flaws</label>
                                                                     <div className="form-group">
                                                                         <MultiSelect 
                                                                             name="property_flaw"
                                                                             options={locationFlawsOption} 
-                                                                            placeholder='Select Location Flaws'
+                                                                            placeholder='Select Property Flaws'
                                                                             setMultiselectOption = {setLocationFlawsValue}
                                                                         />
                                                                         {renderFieldError('property_flaw') }

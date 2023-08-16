@@ -324,9 +324,7 @@ function AddBuyerDetails (){
         }else if(name == 'market_preferance'){
             setMarketPreferanceValue(e);
         }
-        else if(name == 'contact_preferance'){
-
-        }else if(name == 'zoning'){
+        else if(name == 'zoning'){
             setZoningValue(selectedValues);
         }
     }
@@ -602,7 +600,7 @@ function AddBuyerDetails (){
                                                                 },
                                                             })
                                                         } />
-                                                         {errors.address && <p className="error">{errors.zip_code?.message}</p>}
+                                                         {errors.zip_code && <p className="error">{errors.zip_code?.message}</p>}
                                                         {renderFieldError('zip_code') }
                                                     </div>
                                                 </div>
@@ -633,6 +631,8 @@ function AddBuyerDetails (){
                                                             />
                                                             )}
                                                         />
+                                                        {errors.market_preferance && <p className="error">{errors.market_preferance?.message}</p>}
+
                                                         {renderFieldError('market_preferance') }
                                                     </div>
                                                 </div>
@@ -647,7 +647,7 @@ function AddBuyerDetails (){
                                                         <Select
                                                             options={contactPreferanceOption}
                                                             name = {name}
-                                                            placeholder='Select Market Preferance'
+                                                            placeholder='Select Contact Preferance'
                                                             isClearable={true}
                                                             onChange={(e)=>{
                                                                 onChange(e)
@@ -656,6 +656,7 @@ function AddBuyerDetails (){
                                                         />
                                                         )}
                                                     />
+                                                    {errors.contact_preferance && <p className="error">{errors.contact_preferance?.message}</p>}
                                                     {renderFieldError('contact_preferance') }
                                                     </div>
                                                 </div>
