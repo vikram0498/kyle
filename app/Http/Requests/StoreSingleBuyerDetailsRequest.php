@@ -93,9 +93,9 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))],
 
          
-            'of_stories_min' => ['required','numeric', !empty($this->of_stories_max) ? new CheckMinValue($this->of_stories_max, 'of_stories_max') : ''], 
+            'of_stories_min' => ['required','numeric','max:3', !empty($this->of_stories_max) ? new CheckMinValue($this->of_stories_max, 'of_stories_max') : ''], 
 
-            'of_stories_max' => ['required', 'numeric', !empty($this->of_stories_min) ? new CheckMaxValue($this->of_stories_min, 'of_stories_min') : ''],
+            'of_stories_max' => ['required', 'numeric', 'max:3', !empty($this->of_stories_min) ? new CheckMaxValue($this->of_stories_min, 'of_stories_min') : ''],
 
 
             'zoning' => [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
