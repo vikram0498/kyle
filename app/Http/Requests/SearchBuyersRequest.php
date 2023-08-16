@@ -115,8 +115,8 @@ class SearchBuyersRequest extends FormRequest
             'zoning' => [],
             'utilities' => [],
             'sewer' => [],
-            'market_preferance' => [],
-            'contact_preferance' => [],
+            'market_preferance' => ['required','in:'.implode(',', array_keys(config('constants.market_preferances')))],
+            'contact_preferance' => ['required','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 
         ];
 

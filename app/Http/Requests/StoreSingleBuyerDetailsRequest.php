@@ -94,13 +94,13 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
 
          
             'of_stories_min' => ['required','numeric', !empty($this->of_stories_max) ? new CheckMinValue($this->of_stories_max, 'of_stories_max') : ''], 
-            
+
             'of_stories_max' => ['required', 'numeric', !empty($this->of_stories_min) ? new CheckMaxValue($this->of_stories_min, 'of_stories_min') : ''],
 
 
-            'zoning' => ['required','array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
-            'utilities' => ['required','numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
-            'sewer' => ['required','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
+            'zoning' => [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
+            'utilities' => [/*'required',*/'numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
+            'sewer' => [/*'required',*/'numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
             'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 

@@ -277,14 +277,19 @@ class BuyerController extends Controller
                 $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
             }
 
+          
             if($request->parking){
                 $validatedData['parking'] = (int)$request->parking;
             }
-
+          
             if($request->buyer_type){
                 $validatedData['buyer_type'] = (int)$request->buyer_type;
             }
 
+            if($request->zoning){
+                $validatedData['zoning'] = json_encode($request->zoning);
+            }
+           
             $createdBuyer = Buyer::create($validatedData);
             
             if($token){
@@ -320,7 +325,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine(),'->'.json_encode(array_keys(config('constants.zonings'))));
             
             //Return Error Response
             $responseData = [
@@ -337,7 +342,7 @@ class BuyerController extends Controller
         try {
             $userId = auth()->user()->id;
 
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by');
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','contact_preferance','created_by');
             $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
@@ -677,6 +682,7 @@ class BuyerController extends Controller
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers'){
                         $buyer->name =  $name;
+                        $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
@@ -688,6 +694,7 @@ class BuyerController extends Controller
                         $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
                         $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
                         $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
+                        $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
@@ -748,6 +755,7 @@ class BuyerController extends Controller
             $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
         
             foreach ($buyers as $buyer) {
+                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
@@ -1225,7 +1233,7 @@ class BuyerController extends Controller
                           ->where('of_stories_max', '>=', $of_stories_value);
                 });
             } 
-            
+
             if(!is_null($lastSearchLog->solar) && in_array($lastSearchLog->solar, $radioValues)){
                 $buyers = $buyers->where('solar', $lastSearchLog->solar);
             }
@@ -1323,6 +1331,7 @@ class BuyerController extends Controller
             foreach ($buyers as $key=>$buyer){
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyer->name =  $name;
+                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
