@@ -486,15 +486,13 @@ class BuyerController extends Controller
             }
 
             if($request->purchase_method){
-                $purchaseMethod = json_encode($request->purchase_method);
-                $buyers = $buyers->whereJsonContains('purchase_method', $purchaseMethod);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $purchaseMethod);
+                $buyers = $buyers->whereJsonContains('purchase_method', $request->purchase_method);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $request->purchase_method);
             }
 
             if($request->zoning){
-                $zoning = json_encode($request->zoning);
-                $buyers = $buyers->whereJsonContains('zoning', $zoning);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $zoning);
+                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
             }
 
             if($request->utilities){
@@ -648,7 +646,7 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('buyer_type', intval($request->buyer_type));
                 $additionalBuyers = $additionalBuyers->whereJsonContains('buyer_type', intval($request->buyer_type));
             }
-
+           
             $totalRecord = $buyers->count();
             
             $authUserLevelType = auth()->user()->level_type;
@@ -706,10 +704,6 @@ class BuyerController extends Controller
                 }
             }
 
-            DB::commit();
-
-            // dd($buyer);
-
             //Return Success Response
             $responseData = [
                 'status'        => true,
@@ -718,6 +712,8 @@ class BuyerController extends Controller
                 'additional_buyers_count' => $additionalBuyers->count(),
                 'total_records' => $totalRecord
             ];
+
+            DB::commit();
 
             return response()->json($responseData, 200);
 
