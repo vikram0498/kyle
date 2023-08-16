@@ -673,7 +673,7 @@ class BuyerController extends Controller
                 $insertLogRecords['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
                 $insertLogRecords['state']   =  DB::table('states')->where('id',$request->state)->value('name');
                 $insertLogRecords['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
-
+                $insertLogRecords['zoning']    =  json_encode($request->zoning);
                 SearchLog::create($insertLogRecords);
             }
 
@@ -1192,29 +1192,29 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
             }
 
-            if($request->zoning){
-                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
+            if($lastSearchLog->zoning){
+                $buyers = $buyers->whereJsonContains('zoning', $lastSearchLog->zoning);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $lastSearchLog->zoning);
             }
 
-            if($request->utilities){
-                $buyers = $buyers->where('utilities', $request->utilities);
-                $additionalBuyers = $additionalBuyers->where('utilities', $request->utilities);
+            if($lastSearchLog->utilities){
+                $buyers = $buyers->where('utilities', $lastSearchLog->utilities);
+                $additionalBuyers = $additionalBuyers->where('utilities', $lastSearchLog->utilities);
             }
 
-            if($request->sewer){
-                $buyers = $buyers->where('sewer', $request->sewer);
-                $additionalBuyers = $additionalBuyers->where('sewer', $request->sewer);
+            if($lastSearchLog->sewer){
+                $buyers = $buyers->where('sewer', $lastSearchLog->sewer);
+                $additionalBuyers = $additionalBuyers->where('sewer', $lastSearchLog->sewer);
             }
 
-            if($request->market_preferance){
-                $buyers = $buyers->where('market_preferance', $request->market_preferance);
-                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance);
+            if($lastSearchLog->market_preferance){
+                $buyers = $buyers->where('market_preferance', $lastSearchLog->market_preferance);
+                $additionalBuyers = $additionalBuyers->where('market_preferance', $lastSearchLog->market_preferance);
             }
 
-            if($request->contact_preferance){
-                $buyers = $buyers->where('contact_preferance', $request->contact_preferance);
-                $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
+            if($lastSearchLog->contact_preferance){
+                $buyers = $buyers->where('contact_preferance',$lastSearchLog->contact_preferance);
+                $additionalBuyers = $additionalBuyers->where('contact_preferance', $lastSearchLog->contact_preferance);
             }
 
             /* if($lastSearchLog->building_class){
@@ -1222,8 +1222,8 @@ class BuyerController extends Controller
             } */
 
 
-            if($request->of_stories && is_numeric($request->of_stories)){
-                $of_stories_value = $request->of_stories;
+            if($lastSearchLog->of_stories && is_numeric($lastSearchLog->of_stories)){
+                $of_stories_value = $lastSearchLog->of_stories;
                 $buyers = $buyers->where(function ($query) use ($of_stories_value) {
                     $query->where('of_stories_min', '<=', $of_stories_value)
                           ->where('of_stories_max', '>=', $of_stories_value);
@@ -1347,7 +1347,7 @@ class BuyerController extends Controller
 
             return response()->json($responseData, 200);
         }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
