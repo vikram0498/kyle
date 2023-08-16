@@ -148,6 +148,13 @@ import "react-datepicker/dist/react-datepicker.css";
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+					<label>Of Stories</label>
+					<div className="form-group">
+						<input type="number" name="of_stories" className="form-control" placeholder="Enter Of Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
+						{data.renderFieldError('of_stories') }
+					</div>
+				</div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>Parking</label>
                     <div className="form-group">
                         <SingleSelect
@@ -160,7 +167,7 @@ import "react-datepicker/dist/react-datepicker.css";
                         {data.renderFieldError('parking') }
                     </div>
                 </div>
-                <div className="col-12 col-lg-12">
+                <div className="col-12 col-lg-6">
                     <label>Purchase Method <span>*</span></label>
                     <div className="form-group">
 						<MultiSelect
@@ -175,6 +182,48 @@ import "react-datepicker/dist/react-datepicker.css";
 						/>
 						{data.renderFieldError('purchase_method') }
 					</div>
+                </div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <label>Market Preference<span>*</span></label>
+                    <div className="form-group">
+						<Select
+                            name="market_preferance"
+                            defaultValue=''
+							onChange={(item) => data.setMarketPreferance(item)}
+                            options={data.marketPreferanceOption}
+                            className="select"
+                            isClearable={true}
+                            isSearchable={true}
+                            isDisabled={false}
+                            isLoading={false}
+                            value={data.marketPreferance}
+                            isRtl={false}
+                            placeholder= "Select Market Preferance"
+                            closeMenuOnSelect={true}
+                        />
+                        {data.renderFieldError('market_preferance') }
+                    </div>
+                </div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <label>Contact Preference<span>*</span></label>
+                    <div className="form-group">
+                        <Select
+                            name="contact_preferance"
+                            defaultValue=''
+							onChange={(item) => data.setContactPreferance(item)}
+                            options={data.contactPreferanceOption}
+                            className="select"
+                            isClearable={true}
+                            isSearchable={true}
+                            isDisabled={false}
+                            isLoading={false}
+                            value={data.contactPreferance}
+                            isRtl={false}
+                            placeholder= "Select Contact Preferance"
+                            closeMenuOnSelect={true}
+                        />
+                        {data.renderFieldError('contact_preferance') }
+                    </div>
                 </div>
             </div>
             { data.showCreativeFinancing && 
@@ -224,12 +273,12 @@ import "react-datepicker/dist/react-datepicker.css";
             <div className='row'>
                 <div className="col-12 col-lg-12">
                     <div className="form-group">
-						<label>Location Flaws</label>
+						<label>Property Flaws</label>
 						<div className="form-group">
 							<MultiSelect 
 								name="property_flaw"
 								options={data.locationFlawsOption} 
-								placeholder='Select Location Flaws'
+								placeholder='Select Property Flaws'
 								setMultiselectOption = {data.setLocationFlaw}
 								selectValue = {data.locationFlawsValue}
 								setSelectValues = {data.setLocationFlawsValue}

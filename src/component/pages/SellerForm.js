@@ -42,6 +42,8 @@ const SellerForm = () =>{
     const [zipCode, setZipCode] = useState('');
 
     const [price, setPrice] = useState('');
+    const [ofStories, setOfStories] = useState('');
+
 
     //const [bedroomMin, setBedroomMin] = useState('');
     // const [bedroomMax, setBedroomMax] = useState('');
@@ -70,6 +72,12 @@ const SellerForm = () =>{
     const [downPaymentMoney, setDownPaymentMoney] = useState('');
     const [interestRate, setInterestRate] = useState('');
     const [balloonPayment, setBalloonPayment] = useState(null);
+	const [zoning, setZoning] = useState([]);
+    const [utilities, setUtilities] = useState([]);
+    const [sewer, setSewer] = useState([]);
+    const [marketPreferance, setMarketPreferance] = useState([]);
+    const [contactPreferance, setContactPreferance] = useState([]);
+
 
 	const [solar, setSolar] = useState(null);
     const [pool, setPool] = useState(null);
@@ -99,16 +107,27 @@ const SellerForm = () =>{
     const [parkingOption, setParkingOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
 	const [propertyTypeOption, setPropertyTypeOption] = useState([]);
-	const [buildingClassOption, setBuildingClassOption] = useState([])
+	const [buildingClassOption, setBuildingClassOption] = useState([]);
+	const [marketPreferanceOption, setMarketPreferanceOption] = useState([]);
+    const [contactPreferanceOption, setContactPreferanceOption] = useState([]);
+    const [zoningOption, setZoningOption] = useState([]);
+    const [sewerOption, setSewerOption] = useState([]);
+    const [utilitiesOption, setUtilitiesOption] = useState([]);
+
 
     const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     
     const [conodoSelected,setConodoSelected] = useState(false);
     const [landSelected,setLandSelected] = useState(false);
+    const [developmentSelected,setDevelopmentSelected] = useState(false);
     const [multiFamilySelected,setMultiFamilySelected] = useState(false);
 
 
     const [parkingValue, setParkingValue] = useState([]);
+    const [zoningValue, setZoningValue] = useState([]);
+	const [utilitiesValue, setUtilitiesValue] = useState([]);
+	const [sewerValue, setSewerValue] = useState([]);
+
     const [propertyTypeValue, setPropertyTypeValue] = useState([]);
     const [locationFlawsValue,setLocationFlawsValue] = useState([]);
     // const [buyerTypeValue,setBuyerTypeValue] = useState([]);
@@ -137,13 +156,17 @@ const SellerForm = () =>{
         axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
             if(response.data.status){
                 let result = response.data.result;
-
 				setPurchaseMethodsOption(result.purchase_methods);
                 setLocationFlawsOption(result.location_flaws);
                 setParkingOption(result.parking_values);
                 setCountryOptions(result.countries);     
                 setPropertyTypeOption(result.property_types);
 				setBuildingClassOption(result.building_class_values);
+				setMarketPreferanceOption(result.market_preferances);
+				setContactPreferanceOption(result.contact_preferances);
+				setZoningOption(result.zonings);
+				setSewerOption(result.sewers);
+				setUtilitiesOption(result.utilities);
 
                 setIsLoader(false);
             }
@@ -216,7 +239,7 @@ const SellerForm = () =>{
 		setAddress(''); setCountry(''); setState(''); setCity(''); setZipCode(''); 
 
 		setPrice('');
-
+		setOfStories('');
 		//setBedroomMin(''); 		setBedroomMax(''); 
 		// setBathMin(''); 		setBathMax(''); 
 		// setSizeMin(''); 		setSizeMax('');
@@ -235,6 +258,11 @@ const SellerForm = () =>{
 		setPurchaseMethod([]); 
 		
 		setDownPaymentPercentage(''); setDownPaymentMoney(''); setInterestRate(''); setBalloonPayment(null);
+		setZoning([]);
+		setUtilities([]);
+		setSewer([]);
+		setMarketPreferance([]);
+		setContactPreferance([]);
 
 		setLocationFlaw([]);
 
@@ -257,6 +285,7 @@ const SellerForm = () =>{
 		if(value == null){
 			setConodoSelected(false);
 			setLandSelected(false);
+			setDevelopmentSelected(false);
 			setMultiFamilySelected(false);
 
 			setPropertyTypeValue('');
@@ -274,8 +303,14 @@ const SellerForm = () =>{
 			}
 
 			if (propertTypeLand.includes(propValue)) {
-				setLandSelected(true);
+				if(propValue === 7){
+					setLandSelected(true);
+				}else{
+					setLandSelected(false);
+				}
+				setDevelopmentSelected(true);
 			} else {
+				setDevelopmentSelected(false)
 				setLandSelected(false);
 			}
 
@@ -304,10 +339,13 @@ const SellerForm = () =>{
 		if (formObject.hasOwnProperty('purchase_method')) {
             formObject.purchase_method =  purchaseMethod;
         }
+		if (formObject.hasOwnProperty('zoning')) {
+            formObject.zoning =  zoning;
+        }
 
 		formObject.filterType = 'search_page';
 		formObject.activeTab  = 'my_buyers';
-		
+		console.log(formObject,'formObject');
         axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
@@ -343,6 +381,7 @@ const SellerForm = () =>{
 		zipCode, setZipCode,
 
 		price, setPrice,
+		ofStories, setOfStories,
 
 		//bedroomMin, setBedroomMin,
 		// bedroomMax, setBedroomMax,
@@ -372,7 +411,11 @@ const SellerForm = () =>{
 		downPaymentMoney, setDownPaymentMoney,
 		interestRate, setInterestRate,
 		balloonPayment, setBalloonPayment,
-
+		zoning, setZoning,
+		utilities, setUtilities,
+		sewer, setSewer,
+		marketPreferance, setMarketPreferance,
+		contactPreferance,setContactPreferance,
 		locationFlaw, setLocationFlaw,
 
 		solar, setSolar,
@@ -404,6 +447,11 @@ const SellerForm = () =>{
 		purchaseMethodsOption,
 		parkingOption,
 		buildingClassOption,
+		marketPreferanceOption,
+		contactPreferanceOption,
+		zoningOption,
+		sewerOption,
+		utilitiesOption,
 
 		showCreativeFinancing,
 		setShowCreativeFinancing,
@@ -413,6 +461,15 @@ const SellerForm = () =>{
 
 		purchaseMethodsValue,
 		setPurchaseMethodsValue,
+
+		zoningValue,
+		setZoningValue,
+
+		utilitiesValue,
+		setUtilitiesValue,
+
+		sewerValue,
+		setSewerValue,
 	}
 	const user_data = JSON.parse(localStorage.getItem('user_data'));
 	//console.log(user_data,'user_data');
@@ -471,9 +528,9 @@ const SellerForm = () =>{
 												<CondoPropertySearch data = {dataObj} /> 
 											}
 
-											{ landSelected 
+											{ developmentSelected 
 												&& 
-												<DevelopmentPropertySearch data = {dataObj} /> 
+												<DevelopmentPropertySearch data = {dataObj} landSelected={landSelected} /> 
 											}
 
 											{ multiFamilySelected 
@@ -497,7 +554,7 @@ const SellerForm = () =>{
 											<path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
 											<path d="M10 8L16 12L10 16V8Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
 										</svg>
-										Watch the Video!
+										Watch The Video!
 									</a>
 								</div>
 							</div>
@@ -509,7 +566,7 @@ const SellerForm = () =>{
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Watch the Video</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">Watch The Video</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
                             </div>

@@ -62,7 +62,7 @@ function Home ({userDetails}){
                             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M10 8L16 12L10 16V8Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
-                        Watch the Video!
+                        Watch The Video!
                     </a>
                 </div>
                 <div className="container position-relative">
@@ -106,7 +106,7 @@ function Home ({userDetails}){
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Watch the Video</h5>
+                            <h5 className="modal-title" id="exampleModalLabel">Watch The Video</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             </button>
                         </div>
