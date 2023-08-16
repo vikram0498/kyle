@@ -325,7 +325,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine(),'->'.json_encode(array_keys(config('constants.zonings'))));
+            // dd($e->getMessage().'->'.$e->getLine(),'->'.json_encode(array_keys(config('constants.zonings'))));
             
             //Return Error Response
             $responseData = [
