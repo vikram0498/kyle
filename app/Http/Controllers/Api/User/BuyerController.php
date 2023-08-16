@@ -1347,7 +1347,7 @@ class BuyerController extends Controller
 
             return response()->json($responseData, 200);
         }catch (\Exception $e) {
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
