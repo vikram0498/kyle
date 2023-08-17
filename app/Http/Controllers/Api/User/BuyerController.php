@@ -1089,7 +1089,7 @@ class BuyerController extends Controller
             $userId = auth()->user()->id;
             $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
             if($lastSearchLog->property_type){
