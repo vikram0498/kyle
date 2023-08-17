@@ -668,12 +668,12 @@ class BuyerController extends Controller
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
 
-            if(isset($request->filterType) && $request->filterType == 'search_page' ){
+            if(isset($request->filterType) && $request->filterType == 'search_page'){
 
                 $insertLogRecords['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
                 $insertLogRecords['state']   =  DB::table('states')->where('id',$request->state)->value('name');
                 $insertLogRecords['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
-                $insertLogRecords['zoning']    =  json_encode($request->zoning);
+                $insertLogRecords['zoning']  =  (count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
 
