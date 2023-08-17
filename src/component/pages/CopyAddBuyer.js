@@ -652,7 +652,7 @@ function CopyAddBuyer (){
                                                                                                 onChange(e)
                                                                                                 handleCustum(e,'utilities')
                                                                                             }}
-                                                                                            closeMenuOnSelect={false}
+                                                                                            closeMenuOnSelect={true}
                                                                                         />
                                                                                     )}
                                                                             />
@@ -675,7 +675,7 @@ function CopyAddBuyer (){
                                                                                                 onChange(e)
                                                                                                 handleCustum(e,'sewer')
                                                                                             }}
-                                                                                            closeMenuOnSelect={false}
+                                                                                            closeMenuOnSelect={true}
                                                                                         />
                                                                                     )}
                                                                                 />

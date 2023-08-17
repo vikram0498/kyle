@@ -103,6 +103,7 @@ const MyBuyer = () =>{
             }
         }
     }
+
  return (
     <>
     <Header/>
@@ -175,6 +176,10 @@ const MyBuyer = () =>{
 														<span className="detail-icon">
                                                             <img src="./assets/images/gmail.svg" className="img-fluid"/></span>
 														<a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+													</li>
+													<li>
+														<span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>
+														<a className="name-dealer">{data.contact_preferance}</a>
 													</li>
 												</ul>
 											</div>
