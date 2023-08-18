@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Auth\SocialMediaController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\BuyerController;
 use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\User\PaymentController;
 
 
 /*
@@ -101,5 +102,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
 
+    Route::get('config', [PaymentController::class, 'config']);
+
+    Route::get('create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 
 });

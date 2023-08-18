@@ -17,6 +17,10 @@ return [
 
     'name' => env('APP_NAME', 'Kyle'),
 
+    'stripe_publishable_key' => env('STRIPE_PUBLISHABLE_KEY', 'Kyle'),
+
+    'stripe_secret_key' => env('STRIPE_SECRET_KEY', 'Kyle'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
