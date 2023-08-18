@@ -18,7 +18,7 @@ class PaymentController extends Controller
         //       $this->payment_method_types = ['card'];
         //    }
 
-        $this->stripeSecret = \Stripe\Stripe::setApiKey(env('stripe_secret_key')); // test stripe pub key
+        $this->stripeSecret = \Stripe\Stripe::setApiKey(config('app.stripe_secret_key')); // test stripe pub key
     }
 
     public function config(){
