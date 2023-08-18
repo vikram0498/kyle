@@ -831,7 +831,7 @@ class BuyerController extends Controller
             }
 
         }catch (\Exception $e) {
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
