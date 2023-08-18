@@ -734,7 +734,7 @@ function AddBuyerDetails (){
                                                                                 onChange(e)
                                                                                 handleCustum(e,'utilities')
                                                                             }}
-                                                                            closeMenuOnSelect={false}
+                                                                            closeMenuOnSelect={true}
                                                                         />
                                                                     )}
                                                             />
@@ -757,7 +757,7 @@ function AddBuyerDetails (){
                                                                                 onChange(e)
                                                                                 handleCustum(e,'sewer')
                                                                             }}
-                                                                            closeMenuOnSelect={false}
+                                                                            closeMenuOnSelect={true}
                                                                         />
                                                                     )}
                                                                 />

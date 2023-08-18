@@ -1808,6 +1808,9 @@ body .Toastify__close-button--light {
 .Toastify__toast-body{
     padding-right: 30px !important;
 }
+.Toastify__toast-container.Toastify__toast-container--top-right {
+    width: auto;
+}
 #DatePicker {
     cursor: pointer;
     text-align: left !important;
