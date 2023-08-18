@@ -64,11 +64,12 @@ class BuyersImport implements ToModel, WithStartRow
 
                         $zipCode = $this->modifiedString($row[8]);
 
-                        if(!empty($address) && !empty($country) && !empty($city) && !empty($state) && !empty($zipCode) && $countryId > 0 && $stateId > 0 && $cityId > 0){
+                        // if(!empty($address) && !empty($country) && !empty($city) && !empty($state) && !empty($zipCode) && $countryId > 0 && $stateId > 0 && $cityId > 0){
+                        if(!empty($address) && !empty($country) && !empty($zipCode) && $countryId > 0){
                             $buyerArr['address'] = $address;
                             $buyerArr['country'] = $country;
-                            $buyerArr['city'] = $city;
-                            $buyerArr['state'] = $state;
+                            $buyerArr['city'] = $cityId > 0 ? $city : NULL;
+                            $buyerArr['state'] = $stateId > 0 ? $state : NULL;
                             $buyerArr['zip_code'] = $zipCode;                                
 
                             $companyName = strtolower($this->modifiedString($row[9]));
@@ -95,8 +96,8 @@ class BuyersImport implements ToModel, WithStartRow
 
                             $of_stories_min         = strtolower($this->modifiedString($row[53]));      $of_stories_max          = strtolower($this->modifiedString($row[54]));
 
-                            if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) ){
-                                if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax)){
+                            if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($of_stories_min) && !empty($of_stories_min)){
+                                if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($of_stories_min) && is_numeric($of_stories_max)){
 
                                     $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
                                     $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);
