@@ -25,7 +25,7 @@ class BuyersImport implements ToModel, WithStartRow
             $buyerArr = [];
             $fName = $this->modifiedString($row[0]); $lName = $this->modifiedString($row[1]);
             if(!empty($fName) && !empty($lName)){
-                $buyerArr['user_id'] = auth()->user()->id;
+                $buyerArr['user_id'] = 20;
                 $buyerArr['first_name'] = $fName;
                 $buyerArr['last_name'] = $lName;
                 $buyerArr['name'] = $fName.' '.$lName;
@@ -91,6 +91,10 @@ class BuyersImport implements ToModel, WithStartRow
                                 $buildYearMin   = strtolower($this->modifiedString($row[20]));      $buildYearMax    = strtolower($this->modifiedString($row[21]));
                                 $arvMin         = strtolower($this->modifiedString($row[22]));      $arvMax          = strtolower($this->modifiedString($row[23]));
 
+                                $priceMin         = strtolower($this->modifiedString($row[51]));      $priceMax          = strtolower($this->modifiedString($row[52]));
+
+                                $of_stories_min         = strtolower($this->modifiedString($row[53]));      $of_stories_max          = strtolower($this->modifiedString($row[54]));
+
                                 if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) ){
                                     if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax)){
 
@@ -106,6 +110,13 @@ class BuyersImport implements ToModel, WithStartRow
                                         $arvMin         = (empty($arvMin) || $arvMin == 'blank') ? NULL : (!is_numeric($arvMin) ? NULL : $arvMin);
                                         $arvMax         = (empty($arvMax) || $arvMax == 'blank') ? NULL : (!is_numeric($arvMax) ? NULL : $arvMax);
 
+                                        $priceMin         = (empty($priceMin) || $priceMin == 'blank') ? NULL : (!is_numeric($priceMin) ? NULL : $priceMin);
+                                        $priceMax         = (empty($priceMax) || $priceMax == 'blank') ? NULL : (!is_numeric($priceMax) ? NULL : $priceMax);
+
+                                        $of_stories_min  = (empty($of_stories_min) || $of_stories_min == 'blank') ? NULL : (!is_numeric($of_stories_min) ? NULL : $of_stories_min);
+
+                                        $of_stories_max  = (empty($of_stories_max) || $of_stories_max == 'blank') ? NULL : (!is_numeric($of_stories_max) ? NULL : $of_stories_max);
+
                                         $buyerArr['bedroom_min']    = $bedroomMin;      $buyerArr['bedroom_max']    = $bedroomMax;
                                         $buyerArr['bath_min']       = $bathMin;         $buyerArr['bath_max']       = $bathMax;
                                         $buyerArr['size_min']       = $sizeMin;         $buyerArr['size_max']       = $sizeMax;
@@ -113,21 +124,45 @@ class BuyersImport implements ToModel, WithStartRow
                                         $buyerArr['build_year_min'] = $buildYearMin;    $buyerArr['build_year_max'] = $buildYearMax;
                                         $buyerArr['arv_min']        = $arvMin;          $buyerArr['arv_max']        = $arvMax;
 
+                                        $buyerArr['price_min']       = $priceMin;       $buyerArr['price_max']      = $priceMax;
+
+                                        $buyerArr['of_stories_min']      = $of_stories_min;       
+                                        $buyerArr['of_stories_max']      = $of_stories_max;
+
                                         $propertyType = strtolower($this->modifiedString($row[25])); 
                                         if(!empty($propertyType) && $propertyType != 'blank'){
                                             $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
                                             if(!empty($ptArr)){
                                                 $buyerArr['property_type'] = $ptArr;
                                                 
+                                                if(in_array(7,$buyerArr['property_type'])){
+                                                    // set zoning value 
+                                                    $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
+
+                                                    // set utilities value 
+                                                    $buyerArr = $this->setSingleSelectValues($row[56], 'utilities', $buyerArr);
+
+                                                    // set sewer value 
+                                                    $buyerArr = $this->setSingleSelectValues($row[57], 'sewer', $buyerArr);
+                                                }
+
                                                 // set parking value 
-                                                $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
+                                                // $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
+                                           
+                                                $buyerArr = $this->setSingleSelectValues($row[24], 'parking', $buyerArr);
 
                                                 // set propert flow value
                                                 $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
-                                                
+
+                                                // // set market_preferance value 
+                                                $buyerArr = $this->setSingleSelectValues($row[58], 'market_preferance', $buyerArr);
+
+                                                // // set contact_preferance value 
+                                                $buyerArr = $this->setSingleSelectValues($row[59], 'contact_preferance', $buyerArr);
+
                                                 // set all radio button values
                                                 $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
-
+ 
                                                 $buyerType = strtolower($this->modifiedString($row[41])); 
                                                 if(!empty($buyerType) && $buyerType != 'blank'){
                                                     $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
@@ -136,12 +171,12 @@ class BuyersImport implements ToModel, WithStartRow
                                                         $buyerTypeArr = explode(',', $buyerType);
                                                         $buyerTypeArr = array_map('trim',$buyerTypeArr);
 
-                                                        $buyerArr['buyer_type'] = $btArr;
+                                                        $buyerArr['buyer_type'] = $btArr[0];
                                                         
                                                         if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
                                                             $this->setPurchaseMethod($row, $buyerArr);
                                                         }
-                                                        
+
                                                         if(in_array('creative', $buyerTypeArr)){
                                                             $this->setCreativeBuyer($row, $buyerArr, $buyerTypeArr);
                                                         } else if(in_array('multi family buyer', $buyerTypeArr)){
@@ -160,6 +195,62 @@ class BuyersImport implements ToModel, WithStartRow
             }
         }
         ++$this->rowCount;
+    }
+
+    private function setSingleSelectValues($value, $type,$buyerArr = []){
+        if($type == 'utilities'){
+            $utilitiesValues = config('constants.utilities');
+            $utilitiesValues = array_map('strtolower',$utilitiesValues);
+            $value = $this->modifiedString($value);
+            $valueId = null;
+            if(in_array($value, $utilitiesValues)){
+                $valueId = array_search ($value, $utilitiesValues);
+            }
+            $buyerArr['utilities'] = $valueId;
+            return $buyerArr;
+        }else if($type == 'sewer'){
+            $sewersValues = config('constants.sewers');
+            $sewersValues = array_map('strtolower',$sewersValues);
+            $value = strtolower($this->modifiedString($value));
+            $valueId = null;
+            if(in_array($value, $sewersValues)){
+                $valueId = array_search ($value, $sewersValues);
+            }
+            $buyerArr['sewer'] = $valueId;
+            return $buyerArr;
+        }else if($type == 'market_preferance'){
+            $marketPreferancesValues = config('constants.market_preferances');
+            $marketPreferancesValues = array_map('strtolower',$marketPreferancesValues);
+            $value = strtolower($this->modifiedString($value));
+            $valueId = null;
+            if(in_array($value, $marketPreferancesValues)){
+                $valueId = array_search ($value, $marketPreferancesValues);
+            }
+            $buyerArr['market_preferance'] = $valueId;
+            return $buyerArr;
+        }else if($type == 'contact_preferance'){
+            $contactPreferancesValues = config('constants.contact_preferances');
+            $contactPreferancesValues = array_map('strtolower',$contactPreferancesValues);
+            $value = strtolower($this->modifiedString($value));
+            $valueId = null;
+            if(in_array($value, $contactPreferancesValues)){
+                $valueId = array_search ($value, $contactPreferancesValues);
+            }
+            $buyerArr['contact_preferance'] = $valueId;
+            return $buyerArr;
+        }else if($type == 'parking'){
+            $parkingValues = config('constants.parking_values');
+            $parkingValues = array_map('strtolower',$parkingValues);
+            $value = strtolower($this->modifiedString($value));
+            $valueId = null;
+            if(in_array($value, $parkingValues)){
+                $valueId = array_search ($value, $parkingValues);
+            }
+            $buyerArr['parking'] = $valueId;
+            return $buyerArr;
+        }
+
+        
     }
 
     private function setMultiSelectValues($value, $type, $buyerArr = []){
@@ -225,7 +316,31 @@ class BuyersImport implements ToModel, WithStartRow
                 $buyerArr['property_flaw'] = $propertyFlaw;
                 return $buyerArr;
             }
-        } else if($type == 'buyer_type'){
+        }else if($type == 'zoning'){
+            $zoning = strtolower($this->modifiedString($value[55]));
+            if(empty($value) || $value == 'blank'){
+                $zoning = NULL;
+            } else {
+                $zoningValues = config('constants.zonings');
+                $zoningValues = array_map('strtolower',$zoningValues);
+                $zoningArr = explode(',', $zoning);
+                $zoningArr = array_map('trim', $zoningArr);
+                $pfArr = [];
+                foreach($zoningArr as $zoningVal){
+                    if(in_array($zoningVal, $zoningValues)){
+                        $pfKey = array_search ($zoningVal, $zoningValues);
+                        $pfArr[] = $pfKey;
+                    }
+                }
+                if(empty($pfArr)){
+                    $zoning = NULL;
+                } else {
+                    $zoning = $pfArr;
+                }
+                $buyerArr['zoning'] = $zoning;
+                return $buyerArr;
+            }
+        }else if($type == 'buyer_type'){
             $buyerTypeValues = config('constants.buyer_types');
             $buyerTypeValues = array_map('strtolower',$buyerTypeValues);
             $buyerTypeArr = explode(',', $value);
@@ -401,7 +516,7 @@ class BuyersImport implements ToModel, WithStartRow
         return $data;
       }
 
-      public function totalRowCount(): int
+    public function totalRowCount(): int
     {
         return $this->rowCount;
     }

@@ -154,6 +154,17 @@ return [
             'csv_file'                      => 'CSV File',
             'import_buyers'                 => 'Import Buyer',
             'copy_add_buyer_link'           => 'Copy Buyer Form Link',
+            
+            'price_min'                     => 'Price (Min)',
+            'price_max'                     => 'Price (Max)',
+            'of_stories_min'                => 'Of Stories (Min)',
+            'of_stories_max'                => 'Of Stories (Max)',
+            'zoning'                        => 'Zoning',
+            'utilities'                     => 'Utilities',
+            'sewer'                         => 'Sewer',
+            'market_preferance'             => 'Market Preferance',
+            'contact_preferance'            => 'Contact Preferance',
+
             'like'                          => 'Like',
             'dislike'                       => 'Dislike',
             'flag_mark'                     => 'Flag Mark',

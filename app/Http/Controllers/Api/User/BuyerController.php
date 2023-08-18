@@ -673,7 +673,7 @@ class BuyerController extends Controller
                 $insertLogRecords['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
                 $insertLogRecords['state']   =  DB::table('states')->where('id',$request->state)->value('name');
                 $insertLogRecords['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
-                $insertLogRecords['zoning']  =  (count($request->zoning) > 0) ? json_encode($request->zoning) : null;
+                $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
 

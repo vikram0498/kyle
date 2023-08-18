@@ -27,11 +27,11 @@ class BuyersExport implements FromArray, WithHeadings, ShouldAutoSize
 
             '(if Buyer Type= Multi Family Buyer => 11)/Blank', '(if Buyer Type= Multi Family Buyer => 22)/Blank', '(if Buyer Type= Multi Family Buyer => sample,sample1)/Blank', '(if Buyer Type= Multi Family Buyer => yes/no)/Blank',
 
-            'sample,sample1', 
+            'sample,sample1', '100','200','1 (Max 3)','2 (Max 3)', '(if Property Type == Land) sample1,sample2/Blank','(if Property Type == Land) sample/Blank','(if Property Type == Land) sample/Blank','[On Market,Off Market,No Preference]','[Email,Text,Call,No Preference]'
             ]
         ];
     }
-
+    
     /**
      * @return \Illuminate\Support\Collection
      */
@@ -89,6 +89,16 @@ class BuyersExport implements FromArray, WithHeadings, ShouldAutoSize
             __('cruds.buyer.fields.building_class'),
             __('cruds.buyer.fields.value_add'),
             __('cruds.buyer.fields.purchase_method'),
+            __('cruds.buyer.fields.price_min'),
+            __('cruds.buyer.fields.price_max'),
+            __('cruds.buyer.fields.of_stories_min'),
+            __('cruds.buyer.fields.of_stories_max'),
+            __('cruds.buyer.fields.zoning'),
+            __('cruds.buyer.fields.utilities'),
+            __('cruds.buyer.fields.sewer'),
+            __('cruds.buyer.fields.market_preferance'),
+            __('cruds.buyer.fields.contact_preferance'),
+
          ];
      }
 }
