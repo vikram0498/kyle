@@ -1089,6 +1089,8 @@ class BuyerController extends Controller
             $userId = auth()->user()->id;
             $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             
+            if($lastSearchLog){
+
             $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
@@ -1335,6 +1337,14 @@ class BuyerController extends Controller
             ];
 
             return response()->json($responseData, 200);
+         }else{
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'No Record Found!',
+                ];
+                return response()->json($responseData, 200);
+         }
         }catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
             

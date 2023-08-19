@@ -41,6 +41,7 @@ class PaymentController extends Controller
 
     public function createPaymentIntent(Request $request){
         try {
+
             $paymentIntent = \Stripe\PaymentIntent::create(
                 [
                     'amount' => 3000,
