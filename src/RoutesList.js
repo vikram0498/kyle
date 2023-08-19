@@ -29,6 +29,7 @@ import CopyAddBuyer from './component/pages/CopyAddBuyer';
 import ResultPage from './component/pages/ResultPage';
 import EditRequest from './component/partials/Modal/EditRequest';
 import SentRequest from './component/partials/Modal/SentRequest';
+import Payment from './component/pages/Payment';
 
 
 const RoutesList = () => {
@@ -64,6 +65,7 @@ const RoutesList = () => {
             <Route path="/admin-request" element={<Protected Component={AdminRequest}/>} />
             <Route path="/my-profile" element={<Protected Component={MyProfile}/>} />
             {/* <Route path="/result-page" element={<Protected Component={ResultPage} type={'result'}/>} /> */}
+            <Route path="/payment" element={<Payment/>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
             <Route path="/support" element={<Support/>} />

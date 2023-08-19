@@ -1819,3 +1819,41 @@ body .Toastify__close-button--light {
     color: #0d6efd;
     font-size: 19px;
 }
+
+#payment-form {
+    border: #F6F9FC solid 1px;
+    border-radius: 3px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 30px 50px -20px rgb(50 50 93 / 25%), 0 30px 60px -30px rgb(0 0 0 / 30%);
+    width: 50%;
+    /* text-align: center; */
+    margin: auto;
+}
+
+#messages {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New';
+  display: none; /* hide initially, then show once the first message arrives */
+  background-color: #0A253C;
+  color: #00D924;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 3px;
+  font-size:0.7em;
+}
+form > * {
+    margin: 10px 0;
+}
+#submit {
+    background:#635BFF;
+    border-radius: 3px;
+    color: white;
+    border: 0;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+}
+  

@@ -19,6 +19,7 @@ function Home ({userDetails}){
 
     useEffect(()=>{
         getVideoUrl();
+        
     },[])
 
     const getVideoUrl = () => {

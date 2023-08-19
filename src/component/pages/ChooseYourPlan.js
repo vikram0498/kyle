@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import {useAuth} from "../../hooks/useAuth"; 
-import { Link } from 'react-router-dom';
+import {useNavigate , Link} from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from 'axios';
 
@@ -12,6 +12,8 @@ import axios from 'axios';
     const [radioValue, setRadioValue] = useState('');
     const [errorMsg,setErrorsMsg] = useState('');
     const {getTokenData} = useAuth();
+    const navigate = useNavigate();
+
     const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
@@ -20,11 +22,11 @@ import axios from 'axios';
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(radioValue,'radioValuerrr')
         if(radioValue ==''){
             setErrorsMsg('Please choose any plan');
         }else{
             setErrorsMsg('');
+            navigate('/payment');
         }
     }
     const getPlans = async ()=>{
