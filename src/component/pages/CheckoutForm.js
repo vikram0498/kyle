@@ -1,10 +1,26 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
-import { useStripe, useElements } from "@stripe/react-stripe-js";
+import { useStripe, useElements,AddressElement } from "@stripe/react-stripe-js";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+
+  const [address, setAddress] = useState({
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    country: "",
+    zip: "",
+  });
+
+  const handleAddressChange = (event) => {
+      setAddress({
+        ...address,
+        [event.target.name]: event.target.value,
+      });
+  };
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -45,7 +61,11 @@ export default function CheckoutForm() {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <AddressElement id="address-element" addressMode="billing" />
+      {/* <AddressElement
+        addressMode="billing"
+        value={address}
+        onChange={handleAddressChange}
+      /> */}
       <button disabled={isProcessing || !stripe || !elements} id="submit">
         <span id="button-text">
           {isProcessing ? "Processing ... " : "Pay now"}

@@ -41,14 +41,15 @@ const MyBuyer = () =>{
 			url = apiUrl+'last-search-buyer?page='+page;
 		}
 		axios.post(url,{}, { headers: headers }).then(response => {
-			setBuyerData(response.data.buyers.data)
 			setIsLoader(false);
-			setCurrentRecord(response.data.buyers.data.length);
-			setTotalRecord(response.data.buyers.total);
-			setTotalPage(response.data.buyers.last_page);
-
-			setFromRecord(response.data.buyers.from);
-			setToRecord(response.data.buyers.to);
+			if(response.data.status){
+				setBuyerData(response.data.buyers.data)
+				setCurrentRecord(response.data.buyers.data.length);
+				setTotalRecord(response.data.buyers.total);
+				setTotalPage(response.data.buyers.last_page);
+				setFromRecord(response.data.buyers.from);
+				setToRecord(response.data.buyers.to);
+			}
         })
 	}
 
