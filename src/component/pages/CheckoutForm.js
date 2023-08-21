@@ -1,6 +1,5 @@
-import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
-import { useStripe, useElements } from "@stripe/react-stripe-js";
+import { useStripe, useElements,AddressElement, PaymentElement, LinkAuthenticationElement} from "@stripe/react-stripe-js";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -45,7 +44,8 @@ export default function CheckoutForm() {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <AddressElement id="address-element" addressMode="billing" />
+      <LinkAuthenticationElement/>
+      <AddressElement options={{mode: 'shipping'}} />
       <button disabled={isProcessing || !stripe || !elements} id="submit">
         <span id="button-text">
           {isProcessing ? "Processing ... " : "Pay now"}
