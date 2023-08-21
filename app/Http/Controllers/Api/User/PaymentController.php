@@ -7,6 +7,7 @@ use Stripe\Stripe;
 use Stripe\Event;
 use Stripe\Customer;
 use Stripe\Subscription;
+use App\Models\Plan;
 use App\Models\Transaction;
 
 class PaymentController extends Controller
@@ -44,17 +45,44 @@ class PaymentController extends Controller
     }
 
     public function createPaymentIntent(Request $request){
+        $request->validate([
+            'plan' => 'required'
+        ]);
         try {
+            $authUser = auth()->user();
+            $plan = Plan::where('plan_token',$request->plan_id)->first();
+            if($plan){
 
-            $paymentIntent = \Stripe\PaymentIntent::create(
-                [
-                    'amount' => 3000,
-                    'currency' => 'INR',
-                    'automatic_payment_methods' => ['enabled' => 'true'],
-                ]
-            );
+                // Create or retrieve Stripe customer
+                if (!$authUser->stripe_customer_id) {
+                    $customer = Customer::create([
+                        'email' => $authUser->email,
+                        // Add any additional customer data here
+                    ]);
+                    $authUser->stripe_customer_id = $customer->id;
+                    $authUser->save();
 
-            return response()->json($paymentIntent->client_secret, 200);
+                } else {
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
+                }
+
+                $paymentIntent = \Stripe\PaymentIntent::create(
+                    [
+                        'amount' => (float)$plan->price * 100,
+                        'currency' => 'usd',
+                        'customer' => $customer->id,
+                        'automatic_payment_methods' => ['enabled' => 'true'],
+                    ]
+                );
+    
+                return response()->json(['status'=>true,'message'=>'Success'], 200);
+            }else{
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Invalid Plan!',
+                ];
+                return response()->json($responseData, 500);
+            }
         }catch(\Exception $e){
            $responseData = [
                'status'        => false,
@@ -73,7 +101,7 @@ class PaymentController extends Controller
 
             $customer = Customer::create([
                 'email' => $authUser->email,
-                // 'source' => $request->payment_method, // Payment method ID or token
+                'source' => $request->payment_method, // Payment method ID or token
             ]);
 
             $subscription = Subscription::create([
@@ -81,7 +109,7 @@ class PaymentController extends Controller
                 'plan'     => $request->input('plan_id'),
             ]);
 
-            return response()->json(['message' => 'Subscription created successfully', 'subscription_id' => $subscription->id]);
+            return response()->json(['message' => 'Customer and subscription created successfully', 'subscription_id' => $subscription->id]);
         } catch (\Exception $e) {
             dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => $e->getMessage()], 500);
