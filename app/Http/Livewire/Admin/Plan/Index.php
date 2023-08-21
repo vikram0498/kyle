@@ -10,6 +10,8 @@ use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Stripe\Stripe;
+use Stripe\Plan as StripPlan;
 
 class Index extends Component
 {
@@ -22,7 +24,7 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $month_amount, $year_amount, $monthly_credit, $status = 1, $description='',$image=null, $viewMode = false,$originalImage;
+    public  $title, $price, $type, $credits, $status = 1, $description='',$image=null, $viewMode = false,$originalImage;
 
     public $plan_id =null;
 
@@ -54,32 +56,49 @@ class Index extends Component
         
         $validatedData = $this->validate(
             [
-                'title'  => ['required'],
-                'month_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-                'year_amount' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-                'monthly_credit' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+                'title'       => ['required'],
+                'price'       => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+                'type'        => ['required', 'in:monthly,yearly'],
+                'credits'     => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'description' => ['required', 'without_spaces'],
-                'status' => 'required',
+                'status'      => 'required',
                 'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
-            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'monthly_credit' => 'Credits per month']
+            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'Credits']
         );
         
         $validatedData['status'] = $this->status;
 
         $insertRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
 
-        $plan = Plan::create($insertRecord);
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+
+        $stripePlan = StripPlan::create([
+            'amount' => (float)$this->price * 100,
+            'currency' => 'usd',
+            'interval' => $this->type == 'monthly' ? 'month' : 'year',
+            'product' => [
+                'name' => $this->title,
+            ],
+        ]);
+
+        if($stripePlan){
+            $insertRecord['plan_token'] = $stripePlan->id;
+            $insertRecord['plan_json']  = json_encode($stripePlan);
     
-        uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
-
-        $this->formMode = false;
-
-        $this->resetInputFields();
-
-        $this->flash('success',trans('messages.add_success_message'));
+            $plan = Plan::create($insertRecord);
         
-        return redirect()->route('admin.plan');
-       
+            uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
+    
+            $this->formMode = false;
+    
+            $this->resetInputFields();
+    
+            $this->flash('success',trans('messages.add_success_message'));
+            
+            return redirect()->route('admin.plan');
+        }else{
+            $this->alert('error',trans('messages.error_message'));
+        }
     }
 
 
@@ -89,9 +108,9 @@ class Index extends Component
 
         $this->plan_id = $id;
         $this->title  = $plan->title;
-        $this->month_amount = $plan->month_amount;
-        $this->year_amount = $plan->year_amount;
-        $this->monthly_credit = $plan->monthly_credit;
+        $this->price  = $plan->price;
+        $this->type   = $plan->type;
+        $this->credits = $plan->credits;
         $this->description = $plan->description;
         $this->status = $plan->status;
         $this->originalImage = $plan->image_url;
@@ -107,9 +126,9 @@ class Index extends Component
         
       $validateArr = [
             'title' => 'required',
-            'month_amount' => 'required|numeric|min:0|max:99999999.99',
-            'year_amount' => 'required|numeric|min:0|max:99999999.99',
-            'monthly_credit' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'price' => 'required|numeric|min:0|max:99999999.99',
+            'type'  => 'required|in:monthly,yearly',
+            'credits' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'description' => 'required|without_spaces',
             'status' => 'required',
         ];
@@ -118,7 +137,7 @@ class Index extends Component
             $validateArr['image'] = 'required|image|max:'.config('constants.img_max_size');
         }
   
-        $validatedData = $this->validate($validateArr, ['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'monthly_credit' => 'Credits per month']);
+        $validatedData = $this->validate($validateArr, ['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'Credits']);
 
         $validatedData['status'] = $this->status;
 
@@ -133,15 +152,30 @@ class Index extends Component
         
         $updateRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
 
-        $plan->update($updateRecord);
-  
-        $this->formMode = false;
-        $this->updateMode = false;
-  
-        $this->flash('success',trans('messages.edit_success_message'));
-        $this->resetInputFields();
-        return redirect()->route('admin.plan');
+        if($plan){
+            Stripe::setApiKey(config('app.stripe_secret_key'));
 
+            $stripePlan = StripPlan::update(
+                $plan->plan_token,
+                [ 
+                    'nickname' => $this->title,
+                ]
+            );
+
+            $insertRecord['plan_json']  = json_encode($stripePlan);
+    
+            $plan->update($updateRecord);
+      
+            $this->formMode = false;
+            $this->updateMode = false;
+      
+            $this->flash('success',trans('messages.edit_success_message'));
+            $this->resetInputFields();
+            return redirect()->route('admin.plan');
+        }else{
+            $this->alert('error',trans('messages.error_message'));
+        }
+       
     }
 
     public function deleteConfirm($id){
@@ -152,8 +186,13 @@ class Index extends Component
             $model->uploads()->delete();
         }
         
-        $model->delete();
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+
+        $stripePlan = StripPlan::retrieve($model->plan_token);
+        $stripePlan->delete();
         
+        $model->delete();
+
         $this->emit('refreshLivewireDatatable');
 
         $this->alert('success', trans('messages.delete_success_message'));
@@ -167,9 +206,9 @@ class Index extends Component
 
     private function resetInputFields(){
         $this->title = '';
-        $this->month_amount = '';
-        $this->year_amount = '';
-        $this->monthly_credit = '';
+        $this->price = '';
+        $this->type = '';
+        $this->credits = '';
         $this->description = '';
         $this->status = 1;
         $this->image =null;

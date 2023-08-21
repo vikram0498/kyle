@@ -16,23 +16,27 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.plan.fields.month_amount')}} <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" wire:model.defer="month_amount" placeholder="{{ __('cruds.plan.fields.month_amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
-                @error('month_amount') <span class="error text-danger">{{ $message }}</span>@enderror
+                <label class="font-weight-bold">{{ __('cruds.plan.fields.price')}} <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" wire:model.defer="price" placeholder="{{ __('cruds.plan.fields.price')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
+                @error('price') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.plan.fields.year_amount')}} <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" wire:model.defer="year_amount" placeholder="{{ __('cruds.plan.fields.year_amount')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
-                @error('year_amount') <span class="error text-danger">{{ $message }}</span>@enderror
+                <label class="font-weight-bold">{{ __('cruds.plan.fields.type')}} <span class="text-danger">*</span></label>
+                <select class="form-control" wire:model.defer="type">
+                    <option>Select Type</option>
+                    <option value="monthly" {{ $type =='monthly' ? 'selected' : ''}}>Monthly</option>
+                    <option value="yearly" {{ $type =='yearly' ? 'selected' : ''}}>Yearly</option>
+                </select>
+                @error('type') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.plan.fields.monthly_credit')}} <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" wire:model.defer="monthly_credit" placeholder="{{ __('cruds.plan.title_singular') }} {{ __('cruds.plan.fields.monthly_credit')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
-                @error('monthly_credit') <span class="error text-danger">{{ $message }}</span>@enderror
+                <label class="font-weight-bold">{{ __('cruds.plan.fields.credits')}} <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" wire:model.defer="credits" placeholder="{{ __('cruds.plan.title_singular') }} {{ __('cruds.plan.fields.credits')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" step=".01" autocomplete="off">
+                @error('credits') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
     </div>

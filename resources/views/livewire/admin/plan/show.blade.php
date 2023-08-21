@@ -13,16 +13,16 @@
             <td>{{ $details->title ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.plan.fields.month_amount')}}</th>
-            <td> {{ $details->month_amount ? '$'.number_format($details->month_amount,2) : 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.plan.fields.price')}}</th>
+            <td> {{ $details->price ? '$'.number_format($details->price,2) : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.plan.fields.year_amount')}}</th>
-            <td> {{ $details->month_amount ? '$'.number_format($details->year_amount,2) : 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.plan.fields.type')}}</th>
+            <td> {{ ucfirst($details->type) ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.plan.fields.monthly_credit')}}</th>
-            <td> {{ $details->monthly_credit ?? 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.plan.fields.credits')}}</th>
+            <td> {{ $details->credits ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.plan.fields.description')}}</th>

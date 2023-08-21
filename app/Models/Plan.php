@@ -19,11 +19,13 @@ class Plan extends Model
     ];
 
     protected $fillable = [
+        'plan_token',
         'title',
-        'month_amount',
-        'year_amount',
-        'monthly_credit',
+        'price',
+        'type',
+        'credits',
         'description',
+        'plan_json',
         'status',
         'created_by',
         'created_at',

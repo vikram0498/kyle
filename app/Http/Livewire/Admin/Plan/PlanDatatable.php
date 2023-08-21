@@ -42,16 +42,16 @@ class PlanDatatable extends LivewireDatatable
             Column::name('title')->label(trans('cruds.plan.fields.title'))->sortable()->searchable(),
 
             // Column::name('month_amount')->label(trans('cruds.plan.fields.month_amount'))->sortable()->searchable(),
-            Column::callback(['month_amount'], function ($monthAmount) {
-                return '$'.number_format($monthAmount,2);
-            })->label(trans('cruds.plan.fields.month_amount'))->sortable()->searchable(),
+            Column::callback(['price'], function ($price) {
+                return '$'.number_format($price,2);
+            })->label(trans('cruds.plan.fields.price'))->sortable()->searchable(),
 
             // Column::name('year_amount')->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
-            Column::callback(['year_amount'], function ($yearAmount) {
-                return '$'.number_format($yearAmount,2);
-            })->label(trans('cruds.plan.fields.year_amount'))->sortable()->searchable(),
+            Column::callback(['type'], function ($type) {
+                return ucfirst($type);
+            })->label(trans('cruds.plan.fields.type'))->sortable()->searchable(),
 
-            Column::name('monthly_credit')->label(trans('cruds.plan.fields.monthly_credit'))->sortable()->searchable(),
+            Column::name('credits')->label(trans('cruds.plan.fields.credits'))->sortable()->searchable(),
 
             Column::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Inactive']);
@@ -59,8 +59,8 @@ class PlanDatatable extends LivewireDatatable
 
             DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
             Column::callback(['id', 'deleted_at'], function ($id) {
-                
-                return view('livewire.datatables.actions', ['id' => $id]);
+                $array = ['show', 'delete'];
+                return view('livewire.datatables.actions', ['id' => $id,'events' => $array]);
             })->label(trans('global.action'))->unsortable(),
         ];
     }
