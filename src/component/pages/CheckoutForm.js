@@ -1,9 +1,29 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { useStripe, useElements,AddressElement, PaymentElement, LinkAuthenticationElement} from "@stripe/react-stripe-js";
+=======
+import { useStripe, useElements,AddressElement } from "@stripe/react-stripe-js";
+>>>>>>> b682c1c7164047c0715044db521236531aea476b
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
+
+  const [address, setAddress] = useState({
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    country: "",
+    zip: "",
+  });
+
+  const handleAddressChange = (event) => {
+      setAddress({
+        ...address,
+        [event.target.name]: event.target.value,
+      });
+  };
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
