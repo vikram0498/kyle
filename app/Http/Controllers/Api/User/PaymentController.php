@@ -6,7 +6,6 @@ use Session;
 use Stripe\Stripe;
 use Stripe\Event;
 use Stripe\Customer;
-use Stripe\Subscription;
 use App\Models\Plan;
 use App\Models\Transaction;
 
@@ -76,7 +75,7 @@ class PaymentController extends Controller
                     ]
                 );
     
-                return response()->json(['status'=>true,'message'=>'Success'], 200);
+                return response()->json(['status'=>true,'client_secret'=>$paymentIntent->client_secret,'message'=>'Success'], 200);
             }else{
                 $responseData = [
                     'status'        => false,
@@ -100,13 +99,11 @@ class PaymentController extends Controller
         try {
             $authUser = auth()->user();
 
-           // Subscribe the user to the selected plan
-            $subscription = Subscription::create([
-                'customer' => $authUser->stripe_customer_id ,
-                'items' => [['plan' => $request->input('plan')]],
-                // Add any additional subscription data here
+            // Create a new subscription for the customer.
+            $subscription = \Stripe\Subscription::create([
+                'customer' => $authUser->stripe_customer_id,
+                'plan' => $request->input('plan'),
             ]);
-
           
             return response()->json(['message' => 'Subscription created successfully', 'subscription_id' => $subscription->id]);
         } catch (\Exception $e) {

@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('stripe_customer_id')->nullable()->after('id');
+        Schema::table('plan_subscription', function (Blueprint $table) {
+            $table->string('plan_id')->nullable();
+            $table->string('subscription_id')->nullable();
         });
     }
 
@@ -25,8 +26,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('stripe_customer_id');
+        Schema::table('plan_subscription', function (Blueprint $table) {
+            $table->dropColumn('plan_id');
+            $table->dropColumn('subscription_id');
+
         });
     }
 };
