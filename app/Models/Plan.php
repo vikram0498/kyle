@@ -58,4 +58,8 @@ class Plan extends Model
         }
         return "";
     }
+
+    public function subscriptions() {
+        return $this->belongsToMany(Subscription::class);
+    }
 }

@@ -205,5 +205,7 @@ return [
             [ 'id' => 'rebuild_issues_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'rebuild_issues_no', 'value' => '0', 'label' => 'no' ],
         ],
-    ]
+    ],
+
+    'currency' => 'INR',
 ];
