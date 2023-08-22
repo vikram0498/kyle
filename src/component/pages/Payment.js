@@ -6,15 +6,14 @@ import { loadStripe } from "@stripe/stripe-js";
 import {useAuth} from "../../hooks/useAuth"; 
 import axios from "axios";
 
-function Payment() {
+function Payment({clientSecret}) {
   const [stripePromise, setStripePromise] = useState(null);
-  const [clientSecret, setClientSecret] = useState("");
   const {getTokenData} = useAuth();
   const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     getPublishableKey();
-    getPaymentIntent();
+    //getPaymentIntent();
     // fetch("/config").then(async (r) => {
     //   const { publishableKey } = await r.json();
     //   setStripePromise(loadStripe(publishableKey));
@@ -35,20 +34,20 @@ function Payment() {
     }
   }
 
-  const getPaymentIntent = async () => {
-    try{
-      let headers = {
-        "Accept": "application/json", 
-        'Authorization': 'Bearer ' + getTokenData().access_token,
-        'auth-token' : getTokenData().access_token,
-      }
-      const response = await axios.get(`${apiUrl}create-payment-intent`, { headers: headers });
-      console.log(response);
-      setClientSecret(response.data);
-    }catch(error){
-      console.log(error);
-    }
-  }
+  // const getPaymentIntent = async () => {
+  //   try{
+  //     let headers = {
+  //       "Accept": "application/json", 
+  //       'Authorization': 'Bearer ' + getTokenData().access_token,
+  //       'auth-token' : getTokenData().access_token,
+  //     }
+  //     const response = await axios.get(`${apiUrl}create-payment-intent`, { headers: headers });
+  //     console.log(response);
+  //     setClientSecret(response.data);
+  //   }catch(error){
+  //     console.log(error);
+  //   }
+  // }
   // useEffect(() => {
   //   fetch("/create-payment-intent", {
   //     method: "POST",

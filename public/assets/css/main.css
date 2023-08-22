@@ -1574,6 +1574,8 @@ section.main-section {
     max-width: fit-content;
     margin-left: 16px;
     line-height: 17px;
+    text-transform:capitalize;
+
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     border: 0 !important;
@@ -1856,4 +1858,84 @@ form > * {
     transition: all 0.2s ease;
     display: block;
 }
+  
+.stripe-popup {
+    display: none;
+}
+/* payment complete page css */
+
+.payment-bg {
+  
+  background-color: #6C7BEE;
+  width: 480px;
+  overflow: hidden;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 40px;
+  font-family: 'Roboto';
+  margin-top: 40px;
+
+  
+}
+
+.payment-card {
+  
+  background-color: white;
+  width: 100%;
+  float: left;
+  margin-top: 40px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 80px 30px 25px 30px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+}
+.payment-card__success {
+    
+    position: absolute;
+    top: -50px;
+    left: 145px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: #60c878;
+    border: 5px solid white;
+}  
+.payment-card__success i {
+    color: #fff;
+    line-height: 100px;
+    font-size: 45px;
+}  
+.ion-checkmark:before {
+    content: "\f122";
+}
+    i {
+      
+      color: white;
+      line-height: 100px;
+      font-size: 45px;
+      
+    }
+    
+  
+  .payment-card__msg {
+    
+    text-transform: uppercase;
+    color: #55585b;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    
+  }
+  
+  .payment-card__submsg {
+    
+    color: #959a9e;
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 0px;
+    
+  }
+ /* ---end--------*/
   

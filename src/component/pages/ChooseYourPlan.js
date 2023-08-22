@@ -5,10 +5,13 @@ import {useAuth} from "../../hooks/useAuth";
 import {useNavigate , Link} from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from 'axios';
+import Payment from './Payment';
 
  const ChooseYourPlan = () => {
     const [plans,setPlans] = useState([]);
     const [isLoader, setIsLoader] = useState(true);
+    const [clientSecret, setClientSecret] = useState("");
+    const [loaderButton, setLoaderButton] = useState(false);
     const [radioValue, setRadioValue] = useState('');
     const [errorMsg,setErrorsMsg] = useState('');
     const {getTokenData} = useAuth();
@@ -20,13 +23,30 @@ import axios from 'axios';
         getPlans();
     },[]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if(radioValue ==''){
-            setErrorsMsg('Please choose any plan');
-        }else{
-            setErrorsMsg('');
-            navigate('/payment');
+        try{
+            setLoaderButton(true);
+            if(radioValue ==''){
+                setErrorsMsg('Please choose any plan');
+            }else{
+                const apiUrl = process.env.REACT_APP_API_URL;
+                let headers = { 
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + getTokenData().access_token,
+                    'auth-token' : getTokenData().access_token,
+                };
+                let data = {
+                    plan:radioValue,
+                }
+                const response = await axios.post(apiUrl+"create-payment-intent",data,{headers: headers});
+                if(response.data.status){
+                    setClientSecret(response.data.client_secret);
+                }
+
+            }
+        }catch(error){
+            console.log(error,'error');
         }
     }
     const getPlans = async ()=>{
@@ -52,7 +72,7 @@ import axios from 'axios';
             }
         }
     }
-    console.log(errorMsg,'plans',radioValue);
+    console.log('plans',plans);
     return(
         <>
             <Header/>
@@ -78,6 +98,7 @@ import axios from 'axios';
                     <div className="card-box">
                         <div className="row">
                             <div className="col-12 col-lg-12">
+                                {(clientSecret == '')?
                                 <div className="card-box-inner">
                                     <div className="inner-page-title text-center">
                                         <h3 className="text-center">Choose Your Plan</h3>
@@ -90,32 +111,16 @@ import axios from 'axios';
                                                 {plans.length >0 ? 
                                                     plans.map((data,index)=>{
                                                     return(
-                                                        <div className="row" key={index}>
-                                                            <div className="col-12 col-lg-6">
-                                                                <div className="radio-item-features">
-                                                                    <div className="package-plan">Monthly</div>
-                                                                    <label className="features-items">
-                                                                        <input type="radio" name="radio" onChange={(e)=>setRadioValue({id:data.id,type:'monthly'})}/>
-                                                                        <div className="feature-item-content">
-                                                                            <div className="feature-item-title">{data.monthly_credit} Credit Plans<span className="small-text"> /yearly</span></div>
-                                                                            <span className="price-pc">${data.month_amount}</span>
-                                                                        </div>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-lg-6">
-                                                                <div className="radio-item-features">
-                                                                    <div className="package-plan">Yearly</div>
-                                                                    <label className="features-items">
-                                                                        <input type="radio" name="radio"
-                                                                        onChange={(e)=>setRadioValue({id:data.id,type:'yearly'})}
-                                                                        />
-                                                                        <div className="feature-item-content">
-                                                                            <div className="feature-item-title">${data.monthly_credit} Credit<span className="small-text">/Monthly</span></div>
-                                                                            <span className="price-pc">${data.year_amount}</span>
-                                                                        </div>
-                                                                    </label>
-                                                                </div>
+                                                        <div className="col-12 col-lg-6" key={index}>
+                                                            <div className="radio-item-features">
+                                                                <div className="package-plan">{data.type}</div>
+                                                                <label className="features-items">
+                                                                    <input type="radio" name="radio" onChange={(e)=>setRadioValue(data.plan_token)}/>
+                                                                    <div className="feature-item-content">
+                                                                        <div className="feature-item-title">{data.credits} Credit Plans<span className="small-text"> /{data.type}</span></div>
+                                                                        <span className="price-pc">${data.price}</span>
+                                                                    </div>
+                                                                </label>
                                                             </div>
                                                         </div>
                                                     )
@@ -125,7 +130,7 @@ import axios from 'axios';
                                                     <p style={{textAlign: 'center',fontSize: '15px',color:'#ff0000'}}>{errorMsg}</p>
                                                     <div className="buynow-btn">
                                                         <button className="btn btn-fill">
-                                                            Buy Now!
+                                                        {(loaderButton)?'Processing ... ':'Buy Now!'} 
                                                         </button>
                                                     </div>
                                                     <div className="note">Note : 1 Credit is 1 Buyer</div>
@@ -134,6 +139,9 @@ import axios from 'axios';
                                         </form>}
                                     </div>
                                 </div>
+                                :
+                                <Payment clientSecret={clientSecret}/>
+                            }
                             </div>
                         </div>
                     </div>

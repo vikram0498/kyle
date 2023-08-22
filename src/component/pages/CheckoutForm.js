@@ -59,9 +59,22 @@ export default function CheckoutForm() {
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" />
-      <LinkAuthenticationElement/>
-      <AddressElement options={{mode: 'shipping'}} />
+        <PaymentElement id="payment-element" cancelUrl={`${window.location.origin}/cancel`}/>
+        {/* <LinkAuthenticationElement/> */}
+        {/* <AddressElement options={{
+          mode: 'shipping',
+          allowedCountries: ['IN'],
+          blockPoBox: true,
+            fields: {
+              phone: 'always',
+              email: 'always',
+            },
+            validation: {
+              phone: {
+                required: 'never',
+              },
+            },
+        }} /> */}
       <button disabled={isProcessing || !stripe || !elements} id="submit">
         <span id="button-text">
           {isProcessing ? "Processing ... " : "Pay now"}
