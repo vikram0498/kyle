@@ -50,7 +50,7 @@ class PaymentController extends Controller
         ]);
         try {
             $authUser = auth()->user();
-            $plan = Plan::where('plan_token',$request->plan_id)->first();
+            $plan = Plan::where('plan_token',$request->plan)->first();
             if($plan){
 
                 // Create or retrieve Stripe customer
