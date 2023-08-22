@@ -1907,35 +1907,23 @@ form > * {
     line-height: 100px;
     font-size: 45px;
 }  
-.ion-checkmark:before {
-    content: "\f122";
+.payment-card__msg {
+
+text-transform: uppercase;
+color: #55585b;
+font-size: 18px;
+font-weight: 500;
+margin-bottom: 5px;
+
 }
-    i {
-      
-      color: white;
-      line-height: 100px;
-      font-size: 45px;
-      
-    }
-    
   
-  .payment-card__msg {
-    
-    text-transform: uppercase;
-    color: #55585b;
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 5px;
-    
-  }
-  
-  .payment-card__submsg {
-    
-    color: #959a9e;
-    font-size: 16px;
-    font-weight: 400;
-    margin-top: 0px;
-    
-  }
+.payment-card__submsg {
+
+color: #959a9e;
+font-size: 16px;
+font-weight: 400;
+margin-top: 0px;
+
+}
  /* ---end--------*/
   
