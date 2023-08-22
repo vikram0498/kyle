@@ -63,7 +63,7 @@ function Payment({clientSecret}) {
     <section className="main-section position-relative pt-4 pb-120">
       <div className="container position-relative">
         <div className="card-box mt-0">
-          <h1>React Stripe and the Payment Element</h1>
+          <h3>Please Complete Your Payment</h3>
           {clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <CheckoutForm />
