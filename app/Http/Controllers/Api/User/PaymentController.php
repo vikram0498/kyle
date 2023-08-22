@@ -49,6 +49,7 @@ class PaymentController extends Controller
             'plan' => 'required'
         ]);
         try {
+            
             $authUser = auth()->user();
             $plan = Plan::where('plan_token',$request->plan)->first();
             if($plan){
@@ -99,17 +100,15 @@ class PaymentController extends Controller
         try {
             $authUser = auth()->user();
 
-            $customer = Customer::create([
-                'email' => $authUser->email,
-                'source' => $request->payment_method, // Payment method ID or token
-            ]);
-
+           // Subscribe the user to the selected plan
             $subscription = Subscription::create([
-                'customer' => $authUser->id,
-                'plan'     => $request->input('plan_id'),
+                'customer' => $authUser->stripe_customer_id ,
+                'items' => [['plan' => $request->input('plan')]],
+                // Add any additional subscription data here
             ]);
 
-            return response()->json(['message' => 'Customer and subscription created successfully', 'subscription_id' => $subscription->id]);
+          
+            return response()->json(['message' => 'Subscription created successfully', 'subscription_id' => $subscription->id]);
         } catch (\Exception $e) {
             dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => $e->getMessage()], 500);
