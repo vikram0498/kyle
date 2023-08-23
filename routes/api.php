@@ -75,7 +75,9 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
-
+    
+    Route::get('get-last-search', [BuyerController::class, 'lastSearchByUser']);
+    
     Route::post('upload-single-buyer-details', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
     Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);

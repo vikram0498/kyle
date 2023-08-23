@@ -124,38 +124,38 @@ class PaymentController extends Controller
                 $authUser->level_type = 2;
                 $authUser->save();
 
-                $retrievPlan = Plan::where('plan_token',$paymentIntentObject->plan)->first();
+                // $retrievPlan = Plan::where('plan_token',$paymentIntentObject->plan)->first();
 
-                if( $retrievPlan ){
-                    $subscription = \Stripe\Subscription::create([
-                        'customer' => $customer->id,
-                        'plan' => $retrievPlan->plan_token,
-                    ]);
+                // if( $retrievPlan ){
+                //     $subscription = \Stripe\Subscription::create([
+                //         'customer' => $customer->id,
+                //         'plan' => $retrievPlan->plan_token,
+                //     ]);
 
-                    Subscription::create([
-                        'plan_id'                => $retrievPlan->id,
-                        'stripe_customer_id'     => $customer->id,
-                        'stripe_plan_id'         => $retrievPlan->plan_token,
-                        'stripe_subscription_id' => $subscription->id,
-                        'start_date'             => $subscription->start_date,
-                        'end_date'               => $subscription->end_date,
-                        'subscription_json'      => json_encode($subscription),
-                    ]);
-                }
+                //     Subscription::create([
+                //         'plan_id'                => $retrievPlan->id,
+                //         'stripe_customer_id'     => $customer->id,
+                //         'stripe_plan_id'         => $retrievPlan->plan_token,
+                //         'stripe_subscription_id' => $subscription->id,
+                //         'start_date'             => $subscription->start_date,
+                //         'end_date'               => $subscription->end_date,
+                //         'subscription_json'      => json_encode($subscription),
+                //     ]);
+                // }
                 
-                Transaction::create([
-                    'user_id'  => $authUser->id,
-                    'amount'   => (float)$paymentIntentObject->amount/100, 
-                    'currency' => config('constants.currency'),
-                    'status'   => $request->redirect_status,
-                    'payment_method'   => $paymentIntentObject->payment_method,
-                    'payment_json'   => json_encode($paymentIntentObject),
-                ]);
+                // Transaction::create([
+                //     'user_id'  => $authUser->id,
+                //     'amount'   => (float)$paymentIntentObject->amount/100, 
+                //     'currency' => config('constants.currency'),
+                //     'status'   => $request->redirect_status,
+                //     'payment_method'   => $paymentIntentObject->payment_method,
+                //     'payment_json'   => json_encode($paymentIntentObject),
+                // ]);
               
                 return response()->json(['status'=>true,'message' => 'Success']);
             }
         } catch (\Exception $e) {
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => $e->getMessage()], 500);
         }
    }

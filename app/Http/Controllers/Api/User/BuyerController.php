@@ -1357,4 +1357,15 @@ class BuyerController extends Controller
         }
     }
 
+    public function lastSearchByUser(){
+        $searchLog = SearchLog::where('user_id',auth()->user()->id)->orderBy('id','desc')->first();
+
+        //Success Response Send
+         $responseData = [
+            'status'   => true,
+            'data'     => ['searchLog' => $searchLog]
+        ];
+
+        return response()->json($responseData, 200);
+    }
 }
