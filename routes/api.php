@@ -104,6 +104,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('config', [PaymentController::class, 'config']);
 
+    Route::get('fetch-payment-intent/{paymentIntentId}', [PaymentController::class, 'fetchPaymentIntent']);
+
     Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 
     Route::post('/subscribe', [PaymentController::class, 'createSubscription']);

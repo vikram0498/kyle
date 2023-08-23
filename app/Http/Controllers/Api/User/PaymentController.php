@@ -18,18 +18,11 @@ class PaymentController extends Controller
         $this->default_currency = config('constants.default_currency');
         $this->currency = $request->currency;
 
-        //    if($this->currency == 'CNY'){
-        //     $this->payment_method_types = ['card'];
-        //    }else{
-        //       $this->payment_method_types = ['card'];
-        //    }
-
         $this->stripeSecret = Stripe::setApiKey(config('app.stripe_secret_key')); // test stripe pub key
     }
 
     public function config(){
          try {
-         	
          	$responseData = [
                 'status'            => true,
                 'key'               => config('app.stripe_publishable_key'),
@@ -45,89 +38,42 @@ class PaymentController extends Controller
          }
     }
 
-    public function createPaymentIntent(Request $request){
+   public function createPaymentIntent(Request $request){
         $request->validate([
             'plan' => 'required'
         ]);
-        // try {
-            
+
+        try {
             $createPaymentIntent = true;
             $authUser = auth()->user();
             $plan = Plan::where('plan_token',$request->plan)->first();
             if($plan){
 
-                // Create or retrieve Stripe customer
-                if (!$authUser->stripe_customer_id) {
-                    $customer = Customer::create([
-                        'name'  => $authUser->name,
-                        'email' => $authUser->email,
-                    ]);
-                    $authUser->stripe_customer_id = $customer->id;
-                    $authUser->save();
-
-                } else {
-                    $customer = Customer::retrieve($authUser->stripe_customer_id);
-                }
-
-                // Retrieve the last payment intent for the customer
-                $intents = PaymentIntent::all([
-                    'customer' =>  $customer->id,
-                    'limit' => 1,
-                ]);
-
-                if(!empty($intents->data)){
-                    if($intents->data[0]->status =='incomplete'){
-                        $createPaymentIntent = false;
-
+                if($authUser->stripe_customer_id){
+                    // Retrieve the last payment intent for the customer
+                    $intents = PaymentIntent::retrieve('pi_3NhnqBSEd4hxtAFN1CMAosT4');
+                    if(!empty($intents->data)){
                         $lastPaymentIntent = $intents->data[0];
-    
-                        // update subscription for the customer.
-                        $subscription = \Stripe\Subscription::update([
-                            'customer' => $customer->id,
-                            'plan' => $plan->plan_token,
-                        ]);
-    
-                        $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
-                            'amount' => (float)$plan->price * 100,
-                            'currency' => config('constants.currency'),
-                            'customer' => $customer->id,
-                            'subscription' => $subscription->id,
-                            'automatic_payment_methods' => ['enabled' => 'true'],
-                        ]);
+                        if($lastPaymentIntent->status =='incomplete'){
+                            $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
+                                'amount' => (float)$plan->price * 100,
+                                'currency' => config('constants.currency'),
+                                'customer' => $authUser->stripe_customer_id,
+                                'automatic_payment_methods' => ['enabled' => 'true'],
+                            ]);
+                        }
                     }
+
+                }else{
+                    $paymentIntent = PaymentIntent::create([
+                        'amount' =>(float)$plan->price * 100, // Amount in cents
+                        'currency' => config('constants.currency'),
+                        'automatic_payment_methods' => ['enabled' => 'true'],
+                    ]);
                 }
                 
-                if($createPaymentIntent){
-                    // // Create a new subscription for the customer.
-                    // $subscription = \Stripe\Subscription::create([
-                    //     'customer' => $customer->id,
-                    //     'plan' => $plan->plan_token,
-                    //     'on_subscription' =>'off',
-                    // ]);
-
-                    // Subscription::create([
-                    //     'plan_id'                => $plan->id,
-                    //     'stripe_customer_id'     => $customer->id,
-                    //     'stripe_plan_id'         => $plan->plan_token,
-                    //     'stripe_subscription_id' => $subscription->id,
-                    //     'start_date'             => $subscription->start_date,
-                    //     'end_date'               => $subscription->end_date,
-                    //     'subscription_json'      => json_encode($subscription),
-                    // ]);
-
-
-                    $paymentIntent = PaymentIntent::create(
-                        [
-                            'amount' => (float)$plan->price * 100,
-                            'currency' => config('constants.currency'),
-                            'customer' => $customer->id,
-                            // 'subscription' => $subscription->id,
-                            'automatic_payment_methods' => ['enabled' => 'true'],
-                        ]
-                    );
-                }
-    
-                return response()->json(['status'=>true,'client_secret'=>$paymentIntent->client_secret,'message'=>'Success'], 200);
+                $clientSecret = $paymentIntent ? $paymentIntent->client_secret : null;
+                return response()->json(['status'=>true,'client_secret'=>$clientSecret,'message'=>'Success'], 200);
             }else{
                 $responseData = [
                     'status'        => false,
@@ -135,14 +81,14 @@ class PaymentController extends Controller
                 ];
                 return response()->json($responseData, 500);
             }
-        // }catch(\Exception $e){
-        //     dd($e->getMessage().'->'.$e->getLine());
-        //    $responseData = [
-        //        'status'        => false,
-        //        'error'         => trans('messages.error_message'),
-        //    ];
-        //    return response()->json($responseData, 400);
-        // }
+        }catch(\Exception $e){
+            // dd($e->getMessage().'->'.$e->getLine());
+           $responseData = [
+               'status'        => false,
+               'error'         => trans('messages.error_message'),
+           ];
+           return response()->json($responseData, 400);
+        }
    }
 
    public function createSubscription(Request $request){
@@ -152,7 +98,10 @@ class PaymentController extends Controller
         ]);
         try {
             if($request->redirect_status == 'succeeded'){
+                
                 $authUser = auth()->user();
+
+                
                
                 $authUser->level_type = 2;
                 $authUser->save();
@@ -174,6 +123,14 @@ class PaymentController extends Controller
             dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => $e->getMessage()], 500);
         }
+   }
+
+   public function fetchPaymentIntent($paymentIntentId){
+    
+    $paymentIntent = PaymentIntent::retrieve($paymentIntentId);
+
+    return response()->json(['status'=>true,'payment_intent'=>$paymentIntent,'message'=>'Success'], 200);
+
    }
 
    public function handleStripeWebhook(Request $request){
