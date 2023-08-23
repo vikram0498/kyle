@@ -3,6 +3,7 @@ import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import {useAuth} from "../../hooks/useAuth"; 
 import {useNavigate , Link} from "react-router-dom";
+import { useFormError } from '../../hooks/useFormError';
 import { toast } from "react-toastify";
 import axios from 'axios';
 import Payment from './Payment';
@@ -16,6 +17,7 @@ import Payment from './Payment';
     const [errorMsg,setErrorsMsg] = useState('');
     const {getTokenData} = useAuth();
     const navigate = useNavigate();
+    const { setErrors, renderFieldError } = useFormError();
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -26,10 +28,10 @@ import Payment from './Payment';
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            setLoaderButton(true);
             if(radioValue ==''){
                 setErrorsMsg('Please choose any plan');
             }else{
+                setLoaderButton(true);
                 const apiUrl = process.env.REACT_APP_API_URL;
                 let headers = { 
                     'Accept': 'application/json',
@@ -46,8 +48,16 @@ import Payment from './Payment';
 
             }
         }catch(error){
-            console.log(error,'error');
+            if(error.response) {
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
         }
+        setLoaderButton(false);
     }
     const getPlans = async ()=>{
         try{
@@ -72,7 +82,6 @@ import Payment from './Payment';
             }
         }
     }
-    console.log('plans',plans);
     return(
         <>
             <Header/>
@@ -140,7 +149,7 @@ import Payment from './Payment';
                                     </div>
                                 </div>
                                 :
-                                <Payment clientSecret={clientSecret}/>
+                                <Payment clientSecret={clientSecret} setClientSecret={setClientSecret}/>
                             }
                             </div>
                         </div>

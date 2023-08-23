@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { Elements } from "@stripe/react-stripe-js";
+import { Elements  } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import {useAuth} from "../../hooks/useAuth"; 
 import axios from "axios";
 
-function Payment({clientSecret}) {
+function Payment({clientSecret, setClientSecret}) {
   const [stripePromise, setStripePromise] = useState(null);
   const {getTokenData} = useAuth();
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -65,8 +65,9 @@ function Payment({clientSecret}) {
         <div className="card-box mt-0">
           <h3>Please Complete Your Payment</h3>
           {clientSecret && stripePromise && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <CheckoutForm />
+            <Elements stripe={stripePromise} options={{ clientSecret }}       disableIframe={true}
+            >
+              <CheckoutForm setClientSecret={setClientSecret}/>
             </Elements>
           )}
         </div>

@@ -23,6 +23,7 @@ import ResultPage from "./ResultPage";
 
 
 const SellerForm = () =>{
+	
 	const {authData} = useContext(AuthContext);
     const {getTokenData} = useAuth();
     const navigate = useNavigate();
@@ -140,6 +141,13 @@ const SellerForm = () =>{
 	/** states for level 2 users end  */
 
     useEffect(() => {
+		// redirect from payment completed page
+		const paramsObject = decodeURI(window.location.search)
+		.replace('?', '');
+		if(paramsObject === 'search'){
+			getLastSearch();
+		}
+		
         getOptionsValues();
 		getVideoUrl();
     }, []);
@@ -346,30 +354,7 @@ const SellerForm = () =>{
 		formObject.filterType = 'search_page';
 		formObject.activeTab  = 'my_buyers';
 		console.log(formObject,'formObject');
-        axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
-            setLoading(false);
-            if(response.data.status){
-                localStorage.setItem('filter_buyer_fields', JSON.stringify(formObject));
-                localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
-
-                // navigate('/my-buyers')
-				 //window.history.pushState(null, "", "/my-buyers");
-				//window.history.pushState(null, "", "/result-page");
-				// setIsLoader(true);
-				setIsFiltered(true);
-            }
-            
-        }).catch(error => {
-            setLoading(false);
-            if(error.response) {
-                if (error.response.data.errors) {
-                    setErrors(error.response.data.errors);
-                }
-                if (error.response.data.error) {
-                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
-                }
-            }
-        });
+		buyBoxSearch(formObject)
     }
 
 
@@ -473,6 +458,42 @@ const SellerForm = () =>{
 	}
 	const user_data = JSON.parse(localStorage.getItem('user_data'));
 	//console.log(user_data,'user_data');
+	function buyBoxSearch(formObject){
+		axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
+            setLoading(false);
+            if(response.data.status){
+                localStorage.setItem('filter_buyer_fields', JSON.stringify(formObject));
+                localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
+                // navigate('/my-buyers')
+				 //window.history.pushState(null, "", "/my-buyers");
+				//window.history.pushState(null, "", "/result-page");
+				// setIsLoader(true);
+				setIsFiltered(true);
+            }
+            
+        }).catch(error => {
+            setLoading(false);
+            if(error.response) {
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
+                }
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        });
+	}
+	const getLastSearch = () =>{
+		setIsLoader(true);
+		axios.get(apiUrl+'get-last-search', { headers: headers }).then(response => {
+			if(response.data.status){
+				let result = response.data.data.searchLog;
+				console.log(result);
+				buyBoxSearch(result)
+				setIsLoader(false);
+			}
+		})
+	}
  return (
     <>
      	<Header/>

@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useStripe, useElements,AddressElement, PaymentElement, LinkAuthenticationElement} from "@stripe/react-stripe-js";
+import {useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({setClientSecret}) {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const [address, setAddress] = useState({
     addressLine1: "",
@@ -44,13 +47,19 @@ export default function CheckoutForm() {
         return_url: `${baseUrl}/completion`,
       },
     });
+    console.log(error,'ss');
     if (!error) {
       // The payment was successful.
       console.log(`Payment successful! Amount: ${payment}`);
     } 
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
-    } else {
+    } else if(error.type === 'card_error' || error.type === 'invalid_request_error'){
+      //navigate('/choose-your-plan');
+      toast.error("Sorry! Your Payment is not Completed Try Again", {position: toast.POSITION.TOP_RIGHT});
+      window.location.reload();
+    }else {
+      console.log(error);
       setMessage("An unexpected error occured.");
     }
 

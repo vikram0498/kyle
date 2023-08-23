@@ -198,7 +198,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                         )}
                                     </div>
                                 </div>
-                                {(user_data.level_type === 1) ? 
+                                {(user_data.level_type === 1 && additionalBuyerCount >0 ) ? 
                                     <div className="col-12 col-lg-12">
                                         <div className="want-to-see">
                                             <h3 className="text-center">Want to see more buyer!</h3>
