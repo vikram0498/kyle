@@ -478,8 +478,11 @@ class BuyerController extends Controller
             }
 
             if($request->parking){
-                $buyers = $buyers->whereJsonContains('parking', intval($request->parking));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('parking', intval($request->parking));
+                // $buyers = $buyers->whereJsonContains('parking', intval($request->parking));
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('parking', intval($request->parking));
+                
+                 $buyers = $buyers->where('parking', $request->parking);
+                $additionalBuyers = $additionalBuyers->where('parking', $request->parking);
             }
 
             if($request->property_flaw){
@@ -726,7 +729,7 @@ class BuyerController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message'),
+                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 400);
         }
