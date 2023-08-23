@@ -50,8 +50,11 @@ class PaymentController extends Controller
             if($plan){
 
                 if($authUser->stripe_customer_id){
-                    // Retrieve the last payment intent for the customer
-                    $intents = PaymentIntent::retrieve('pi_3NhnqBSEd4hxtAFN1CMAosT4');
+                   // Retrieve the last payment intent for the customer
+                    $intents = PaymentIntent::all([
+                        'customer' =>  $authUser->stripe_customer_id,
+                        'limit' => 1,
+                    ]);
                     if(!empty($intents->data)){
                         $lastPaymentIntent = $intents->data[0];
                         if($lastPaymentIntent->status =='incomplete'){
