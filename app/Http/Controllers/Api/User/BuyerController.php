@@ -359,10 +359,10 @@ class BuyerController extends Controller
         
             if($request->property_type){
                 $propertyType = $request->property_type;
-                $buyers = $buyers->whereJsonContains('property_type', $propertyType);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
-                // $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
-                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
+                // $buyers = $buyers->whereJsonContains('property_type', $propertyType);
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
+                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
             }
 
             if($request->address){

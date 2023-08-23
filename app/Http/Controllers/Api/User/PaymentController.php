@@ -39,6 +39,7 @@ class PaymentController extends Controller
     }
 
    public function createPaymentIntent(Request $request){
+        Stripe::setApiKey(config('app.stripe_secret_key'));
         $request->validate([
             'plan' => 'required'
         ]);
@@ -103,9 +104,13 @@ class PaymentController extends Controller
             'payment_intent_client_secret' =>'required',
         ]);
         try {
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+
             if($request->redirect_status == 'succeeded'){
 
                $paymentIntentObject =  $this->fetchPaymentIntent($request->payment_intent);
+
+               $paymentIntentObject = json_decode($paymentIntentObject->content(),true)['payment_intent'];
 
                 $authUser = auth()->user();
 
@@ -114,7 +119,7 @@ class PaymentController extends Controller
                     $customer = Customer::create([
                         'name'  => $authUser->name,
                         'email' => $authUser->email,
-                        'payment_method' => $paymentIntentObject->payment_method,
+                        // 'payment_method' => $paymentIntentObject['payment_method'],
                     ]);
                     $authUser->stripe_customer_id = $customer->id;
                 } else {

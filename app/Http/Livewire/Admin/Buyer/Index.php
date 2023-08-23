@@ -121,7 +121,7 @@ class Index extends Component
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys($this->purchaseMethods))],
 
             
-            'zoning' => [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
+            'zoning' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
             'utilities' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
             'sewer' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
             'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
@@ -208,6 +208,14 @@ class Index extends Component
         if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
             $this->state['buyer_type'] = (int)$this->state['buyer_type'];
         }
+
+        if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
+            $this->state['property_type'] = array_map('intval', $this->state['property_type']);
+        }
+
+        if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
+            $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
+        }
     
         $createdBuyer = Buyer::create($this->state);
 
@@ -285,6 +293,15 @@ class Index extends Component
         if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
             $this->state['buyer_type'] = (int)$this->state['buyer_type'];
         }
+
+        if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
+            $this->state['property_type'] = array_map('intval', $this->state['property_type']);
+        }
+
+        if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
+            $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
+        }
+
 
         $buyer = Buyer::find($this->buyer_id);
         $buyer->update($this->state);
