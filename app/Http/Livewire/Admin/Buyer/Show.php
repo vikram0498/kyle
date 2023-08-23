@@ -11,7 +11,7 @@ class Show extends Component
     
     public $details;
 
-    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null;
+    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null,  $zonings= null,$utilities = null, $sewers = null,$market_preferances = null, $contact_preferances =null;
 
 
     public function mount($buyer_id){
@@ -25,6 +25,16 @@ class Show extends Component
         $this->purchaseMethods = config('constants.purchase_methods');
 
         $this->radioButtonFields = config('constants.radio_buttons_fields');
+
+        $this->zonings= config('constants.zonings');
+        $this->utilities = config('constants.utilities');
+        $this->sewers = config('constants.sewers');
+        $this->market_preferances = config('constants.market_preferances');
+        $this->contact_preferances = config('constants.contact_preferances');
+
+
+
+
     }
 
     public function render()

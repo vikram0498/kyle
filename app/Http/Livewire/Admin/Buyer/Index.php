@@ -41,7 +41,8 @@ class Index extends Component
 
     protected $buyer = null;
 
-    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null;
+    public $parkingValues = null, $propertyTypes = null, $propertyFlaws = null, $buyerTypes = null, $buildingClassValue = null, $purchaseMethods = null, $radioButtonFields = null, $zonings= null,$utilities = null, $sewers = null,$market_preferances = null, $contact_preferances =null;
+
 
     public  $status = 1, $viewMode = false;
 
@@ -61,6 +62,12 @@ class Index extends Component
         $this->radioButtonFields = config('constants.radio_buttons_fields');
 
         $this->countries = DB::table('countries')->pluck('name', 'id');
+
+        $this->zonings= config('constants.zonings');
+        $this->utilities = config('constants.utilities');
+        $this->sewers = config('constants.sewers');
+        $this->market_preferances = config('constants.market_preferances');
+        $this->contact_preferances = config('constants.contact_preferances');
 
         $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
@@ -98,20 +105,36 @@ class Index extends Component
             'arv_min' => ['nullable', 'numeric', !empty($this->state['arv_max']) ? new CheckMinValue($this->state['arv_max'], 'arv_max') : ''], 
             'arv_max' => ['nullable', 'numeric', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
 
-            'parking' => ['nullable','array', 'in:'.implode(',', array_keys($this->parkingValues))],
+            
+            'of_stories_min' => ['required','numeric','max:3', !empty($this->state['of_stories_max']) ? new CheckMinValue($this->state['of_stories_max'], 'of_stories_max') : ''], 
+
+            'of_stories_max' => ['required', 'numeric', 'max:3', !empty($this->state['of_stories_min']) ? new CheckMaxValue($this->state['of_stories_min'], 'of_stories_min') : ''],
+
+            
+            'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
+            'price_max' => ['required', 'numeric', !empty($this->state['price_min']) ? new CheckMaxValue($this->state['price_min'], 'price_min') : ''], 
+
+            'parking' => ['nullable','numeric','in:'.implode(',', array_keys($this->parkingValues))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys($this->propertyTypes))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys($this->propertyFlaws))],
-            'buyer_type' => ['required','array', 'in:'.implode(',', array_keys($this->buyerTypes))],
+            'buyer_type' => ['required','numeric', 'in:'.implode(',', array_keys($this->buyerTypes))],
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys($this->purchaseMethods))],
+
+            
+            'zoning' => [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
+            'utilities' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
+            'sewer' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
+            'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
+            'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
             
         ];
 
-        if(!empty($this->state['buyer_type']) && in_array(1, $this->state['buyer_type'])){
+        if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){
             $rules['max_down_payment_percentage'] = ['required','numeric','between:0,100'];
             $rules['max_interest_rate'] = ['required','numeric','between:0,100'];
             $rules['balloon_payment'] = ['required','numeric'];
         }
-        if(!empty($this->state['buyer_type']) && in_array(3, $this->state['buyer_type'])){
+        if(!empty($this->state['buyer_type']) && (3 == $this->state['buyer_type'])){
             $rules['unit_min'] = ['required', 'numeric', !empty($this->state['unit_max']) ? new CheckMinValue($this->state['unit_max'], 'unit_max') : ''];
             $rules['unit_max'] = ['required', 'numeric', !empty($this->state['unit_min']) ? new CheckMaxValue($this->state['unit_min'], 'unit_min') : ''];
             $rules['value_add'] = ['required'];
@@ -131,8 +154,9 @@ class Index extends Component
 
     public function updateProperty($data) {
         $this->state[$data['property']] = $data['pr_vals'];
-
         // $this->validatiionForm();
+        $this->initializePlugins();
+
     }
 
     private function validatiionForm(){
@@ -140,8 +164,10 @@ class Index extends Component
             Validator::make($this->state, $this->rules())->validate();
         } else {
             $rules = $this->rules();
+
             $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
             Validator::make($this->state, $rules)->validate();
+
         }
     }
 
@@ -171,6 +197,18 @@ class Index extends Component
             $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
         }
 
+        if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
+            $this->state['zoning'] = json_encode($this->state['zoning']);
+        }
+
+        if(isset($this->state['parking']) && !empty($this->state['parking'])){
+            $this->state['parking'] = (int)$this->state['parking'];
+        }
+
+        if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
+            $this->state['buyer_type'] = (int)$this->state['buyer_type'];
+        }
+    
         $createdBuyer = Buyer::create($this->state);
 
         $this->formMode = false;
@@ -232,6 +270,18 @@ class Index extends Component
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
             $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+        }
+
+        if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
+            $this->state['zoning'] = json_encode($this->state['zoning']);
+        }
+
+        if(isset($this->state['parking']) && !empty($this->state['parking'])){
+            $this->state['parking'] = (int)$this->state['parking'];
+        }
+
+        if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
+            $this->state['buyer_type'] = (int)$this->state['buyer_type'];
         }
 
         $buyer = Buyer::find($this->buyer_id);

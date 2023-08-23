@@ -69,7 +69,7 @@
             theme: "classic"
         });
 
-        $('.country, .state, .city').select2();
+        $('.country, .state, .city, .parking, .buyer_type').select2();
 
        
         // $('#build_year_min').datepicker({
@@ -119,14 +119,21 @@
         
         @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
         if(pr == 'buyer_type'){
-            @this.emit('changeBuyerType', $('.buyer_type').select2('val'));
+            // @this.emit('changeBuyerType', $('.buyer_type').select2('val'));
+            @this.emit('initializePlugins');
         } else if(pr == 'country'){
             @this.emit('getStates', $('.country').select2('val'));
         } else if(pr == 'state'){
             @this.emit('getCities', $('.state').select2('val'));
         } else if(pr == 'city'){
             @this.emit('initializePlugins');
-        } 
+        } else if(pr == 'zoning'){
+            @this.emit('initializePlugins');
+        } else if(pr == 'parking'){
+            @this.emit('initializePlugins');
+        }
+
+        
     });
 
     $(document).on('click', '.toggleSwitchMain', function(e){

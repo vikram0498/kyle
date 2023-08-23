@@ -45,6 +45,17 @@
             <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
             <td> {{ $details->zip_code ?? 'N/A' }}</td>
         </tr>
+
+        
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.market_preferance')}}</th>
+            <td> {{ (!is_null($details->market_preferance) && !empty($details->market_preferance)) ? $market_preferances[$details->market_preferance] : 'N/A' }}</td>
+        </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.contact_preferance')}}</th>
+            <td> {{ (!is_null($details->contact_preferance) && !empty($details->contact_preferance)) ? $contact_preferances[$details->contact_preferance] : 'N/A' }}</td>
+        </tr>
         
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.company_name')}}</th>
@@ -106,11 +117,33 @@
             <th width="25%">{{ __('cruds.buyer.fields.arv_max')}}</th>
             <td> {{ (!is_null($details->arv_max) && !empty($details->arv_max)) ? $details->arv_max : 'N/A' }}</td>
         </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.of_stories_min')}}</th>
+            <td> {{ (!is_null($details->of_stories_min) && !empty($details->of_stories_min)) ? $details->of_stories_min : 'N/A' }}</td>
+        </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.of_stories_max')}}</th>
+            <td> {{ (!is_null($details->of_stories_max) && !empty($details->of_stories_max)) ? $details->of_stories_max : 'N/A' }}</td>
+        </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.price_min')}}</th>
+            <td> {{ (!is_null($details->price_min) && !empty($details->price_min)) ? number_format($details->price_min,2) : 'N/A' }}</td>
+        </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.price_max')}}</th>
+            <td> {{ (!is_null($details->price_max) && !empty($details->price_max)) ? number_format($details->price_max,2) : 'N/A' }}</td>
+        </tr>
         
        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
-            <td> 
+            <td> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td>
+
+            {{-- <td> 
                 @if(!is_null($details->parking) && !empty($details->parking))
                     @foreach($details->parking as $parking)
                         <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
@@ -118,7 +151,7 @@
                 @else
                     N/A
                 @endif
-            </td>
+            </td> --}}
         </tr>
         
         <tr>
@@ -133,6 +166,36 @@
                 @endif
             </td>
         </tr>
+
+        @if(isset($details->property_type) && in_array(7,$details->property_type))
+
+        
+            <tr>
+                <th width="25%">{{ __('cruds.buyer.fields.zoning')}}</th>
+                <td> 
+                    @if(!is_null($details->zoning) && !empty($details->zoning))
+                        @foreach($details->zoning as $zoningVal)
+                            <span class="badge bg-primary text-white"> {{ $zonings[$zoningVal] }} </span>
+                        @endforeach
+                    @else
+                    N/A
+                    @endif
+                </td>
+            </tr>
+
+            
+            <tr>
+                <th width="25%">{{ __('cruds.buyer.fields.utilities')}}</th>
+                <td> {{ (!is_null($details->utilities) && !empty($details->utilities)) ? $utilities[$details->utilities] : 'N/A' }}</td>
+            </tr>
+
+            <tr>
+                <th width="25%">{{ __('cruds.buyer.fields.sewer')}}</th>
+                <td> {{ (!is_null($details->sewer) && !empty($details->sewer)) ? $sewers[$details->sewer] : 'N/A' }}</td>
+            </tr>
+
+        @endif
+
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.property_flaw')}}</th>
             <td> 
@@ -209,7 +272,9 @@
         
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.buyer_type')}}</th>
-            <td> 
+            <td> {{ (!is_null($details->buyer_type) && !empty($details->buyer_type)) ? $buyerTypes[$details->buyer_type] : 'N/A' }}</td>
+
+            {{-- <td> 
             @if(!is_null($details->buyer_type) && !empty($details->buyer_type))
                 @foreach($details->buyer_type as $buyerType)
                     <span class="badge bg-primary text-white"> {{ $buyerTypes[$buyerType] }} </span>
@@ -217,7 +282,7 @@
             @else
                 N/A
             @endif
-            </td>
+            </td> --}}
         </tr>
         <!-- creative Buyer -->
             <!-- <tr><td></td></tr> -->

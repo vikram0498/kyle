@@ -99,6 +99,32 @@
                     @error('company_name') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.market_preferance')}} <span class="text-danger">*</span></label>
+                    <select class="form-control" wire:model.defer="state.market_preferance">
+                        <option value="null">Select {{ __('cruds.buyer.fields.market_preferance')}}</option>
+                        @foreach ($market_preferances as $key=>$item)
+                            <option value="{{$key}}"> {{$item}}</option>
+                        @endforeach
+                    </select>
+                    @error('market_preferance') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.contact_preferance')}} <span class="text-danger">*</span></label>
+                    <select class="form-control" wire:model.defer="state.contact_preferance">
+                        <option value="null">Select {{ __('cruds.buyer.fields.contact_preferance')}}</option>
+                        @foreach ($contact_preferances as $key=>$item)
+                            <option value="{{$key}}"> {{$item}}</option>
+                        @endforeach
+                    </select>
+                    @error('contact_preferance') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
             
             <div class="col-md-4">
                 <div class="form-group">
@@ -202,13 +228,44 @@
                     @error('arv_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.of_stories_min')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.of_stories_min" placeholder="{{ __('cruds.buyer.fields.of_stories_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('of_stories_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.of_stories_max')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.of_stories_max" placeholder="{{ __('cruds.buyer.fields.of_stories_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('of_stories_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_min')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.price_min" placeholder="{{ __('cruds.buyer.fields.price_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 15">
+                    @error('price_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_max')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.price_max" placeholder="{{ __('cruds.buyer.fields.price_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('price_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}}</label>
                     <div wire:ignore>
-                        <select wire:model.defer="state.parking" class="form-control parking select2" data-property="parking" multiple data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}">
+                        <select wire:model.defer="state.parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}">
+                            <option value="">Select {{ __('cruds.buyer.fields.parking')}}</option>
                             @foreach($parkingValues as $key => $value)
                                 <option value="{{ $key }}"> {{ $value }}</option>
                             @endforeach
@@ -233,6 +290,50 @@
                 </div>
             </div>
         </div>
+        
+        @if(isset($state['property_type']) && in_array(7,$state['property_type']))
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}} </label>
+                    <select class="form-control zoning select2" wire:model.defer="state.zoning" data-property="zoning" multiple data-placeholder="Select {{ __('cruds.buyer.fields.zoning')}}">
+                        @foreach ($zonings as $key=>$item)
+                            <option value="{{$key}}"> {{$item}}</option>
+                        @endforeach
+                    </select>
+                    @error('zoning') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.utilities')}}</label>
+                    <select class="form-control" wire:model.defer="state.utilities">
+                        <option value="null">Select {{ __('cruds.buyer.fields.utilities')}}</option>
+                        @foreach ($utilities as $key=>$item)
+                            <option value="{{$key}}"> {{$item}}</option>
+                        @endforeach
+                    </select>
+                    @error('utilities') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.sewer')}}</label>
+                    <select class="form-control" wire:model.defer="state.sewer">
+                        <option value="null">Select {{ __('cruds.buyer.fields.sewer')}}</option>
+                        @foreach ($sewers as $key=>$item)
+                            <option value="{{$key}}"> {{$item}}</option>
+                        @endforeach
+                    </select>
+                    @error('sewer') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+        </div>
+        @endif
+        
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
@@ -271,7 +372,8 @@
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
                     <div wire:ignore>
-                        <select wire:model.defer="state.buyer_type"  class="form-control select2 buyer_type" data-property="buyer_type" data-placeholder="Select {{ __('cruds.buyer.fields.buyer_type')}}"  multiple>
+                        <select wire:model.defer="state.buyer_type"  class="form-control select2 buyer_type" data-property="buyer_type" data-placeholder="Select {{ __('cruds.buyer.fields.buyer_type')}}" >
+                            <option value="">Select {{ __('cruds.buyer.fields.buyer_type')}}</option>
                             @foreach($buyerTypes as $key => $value)
                                 <option value="{{ $key }}"> {{ $value }}</option>
                             @endforeach
