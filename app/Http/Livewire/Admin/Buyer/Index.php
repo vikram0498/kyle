@@ -229,6 +229,8 @@ class Index extends Component
         $this->buyer = $buyer;
         $this->state = $buyer->toArray();
 
+        $this->state['zoning'] = json_decode($this->state['zoning'],true);
+         
         $countryName = $buyer->country;
         $stateName = $buyer->state;
         $cityName = $buyer->city;

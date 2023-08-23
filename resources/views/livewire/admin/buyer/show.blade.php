@@ -167,14 +167,13 @@
             </td>
         </tr>
 
+       
         @if(isset($details->property_type) && in_array(7,$details->property_type))
-
-        
             <tr>
                 <th width="25%">{{ __('cruds.buyer.fields.zoning')}}</th>
                 <td> 
                     @if(!is_null($details->zoning) && !empty($details->zoning))
-                        @foreach($details->zoning as $zoningVal)
+                        @foreach(json_decode($details->zoning,true) as $zoningVal)
                             <span class="badge bg-primary text-white"> {{ $zonings[$zoningVal] }} </span>
                         @endforeach
                     @else

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('stripe_customer_id')->nullable()->after('id');
+            $table->integer('credit_limit')->default(0)->after('phone');
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('stripe_customer_id');
+            $table->dropColumn('credit_limit');
         });
     }
 };
