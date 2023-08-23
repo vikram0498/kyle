@@ -55,6 +55,7 @@ class PaymentController extends Controller
                     if(!empty($intents->data)){
                         $lastPaymentIntent = $intents->data[0];
                         if($lastPaymentIntent->status =='incomplete'){
+                            $createPaymentIntent = false;
                             $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
                                 'amount' => (float)$plan->price * 100,
                                 'currency' => config('constants.currency'),
@@ -64,7 +65,9 @@ class PaymentController extends Controller
                         }
                     }
 
-                }else{
+                }
+                
+                if($createPaymentIntent){
                     $paymentIntent = PaymentIntent::create([
                         'amount' =>(float)$plan->price * 100, // Amount in cents
                         'currency' => config('constants.currency'),
@@ -98,23 +101,52 @@ class PaymentController extends Controller
         ]);
         try {
             if($request->redirect_status == 'succeeded'){
-                
+
+               $paymentIntentObject =  $this->fetchPaymentIntent($request->payment_intent);
+
                 $authUser = auth()->user();
 
-                
-               
+                // Create or retrieve Stripe customer
+                if (!$authUser->stripe_customer_id) {
+                    $customer = Customer::create([
+                        'name'  => $authUser->name,
+                        'email' => $authUser->email,
+                        'payment_method' => $paymentIntentObject->payment_method,
+                    ]);
+                    $authUser->stripe_customer_id = $customer->id;
+                } else {
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
+                }
+
                 $authUser->level_type = 2;
                 $authUser->save();
 
-               $paymentIntentObject =  Stripe\PaymentIntent::retrieve($request->payment_intent);
+                $retrievPlan = Plan::where('plan_token',$paymentIntentObject->plan)->first();
 
+                if( $retrievPlan ){
+                    $subscription = \Stripe\Subscription::create([
+                        'customer' => $customer->id,
+                        'plan' => $retrievPlan->plan_token,
+                    ]);
+
+                    Subscription::create([
+                        'plan_id'                => $retrievPlan->id,
+                        'stripe_customer_id'     => $customer->id,
+                        'stripe_plan_id'         => $retrievPlan->plan_token,
+                        'stripe_subscription_id' => $subscription->id,
+                        'start_date'             => $subscription->start_date,
+                        'end_date'               => $subscription->end_date,
+                        'subscription_json'      => json_encode($subscription),
+                    ]);
+                }
+                
                 Transaction::create([
                     'user_id'  => $authUser->id,
-                    'amount'   => '', 
+                    'amount'   => (float)$paymentIntentObject->amount/100, 
                     'currency' => config('constants.currency'),
                     'status'   => $request->redirect_status,
-                    'payment_method'   => null,
-                    'payment_json'   => null,
+                    'payment_method'   => $paymentIntentObject->payment_method,
+                    'payment_json'   => json_encode($paymentIntentObject),
                 ]);
               
                 return response()->json(['status'=>true,'message' => 'Success']);
