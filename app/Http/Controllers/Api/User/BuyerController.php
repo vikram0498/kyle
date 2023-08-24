@@ -351,7 +351,7 @@ class BuyerController extends Controller
                 }elseif($request->activeTab == 'more_buyers'){
                     $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                         $query->where('user_id', '=',$userId);
-                    })->where('user_id', '=', 1);
+                    })->where('user_id', '=', 1)->whereRelation('seller','level_type','=',2);
                 }
             }
 

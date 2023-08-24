@@ -50,6 +50,20 @@ class PaymentController extends Controller
             $plan = Plan::where('plan_token',$request->plan)->first();
             if($plan){
 
+                $authUser = auth()->user();
+
+                // Create or retrieve Stripe customer
+                if (!$authUser->stripe_customer_id) {
+                    $customer = Customer::create([
+                        'name'  => $authUser->name,
+                        'email' => $authUser->email,
+                        // 'payment_method' => $paymentIntentObject['payment_method'],
+                    ]);
+                    $authUser->stripe_customer_id = $customer->id;
+                } else {
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
+                }
+
                 if($authUser->stripe_customer_id){
                    // Retrieve the last payment intent for the customer
                     $intents = PaymentIntent::all([
@@ -63,7 +77,7 @@ class PaymentController extends Controller
                             $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
                                 'amount' => (float)$plan->price * 100,
                                 'currency' => config('constants.currency'),
-                                'customer' => $authUser->stripe_customer_id,
+                                'customer' => $customer->id,
                                 'automatic_payment_methods' => ['enabled' => 'true'],
                             ]);
                         }
@@ -114,17 +128,21 @@ class PaymentController extends Controller
 
                 $authUser = auth()->user();
 
-                // Create or retrieve Stripe customer
-                if (!$authUser->stripe_customer_id) {
-                    $customer = Customer::create([
-                        'name'  => $authUser->name,
-                        'email' => $authUser->email,
-                        // 'payment_method' => $paymentIntentObject['payment_method'],
-                    ]);
-                    $authUser->stripe_customer_id = $customer->id;
-                } else {
-                    $customer = Customer::retrieve($authUser->stripe_customer_id);
-                }
+                // Customer::update($authUser->stripe_customer_id, [
+                //     'default_payment_method' => $paymentIntentObject['payment_method'],
+                // ]);
+
+                // // Create or retrieve Stripe customer
+                // if (!$authUser->stripe_customer_id) {
+                //     $customer = Customer::create([
+                //         'name'  => $authUser->name,
+                //         'email' => $authUser->email,
+                //         // 'payment_method' => $paymentIntentObject['payment_method'],
+                //     ]);
+                //     $authUser->stripe_customer_id = $customer->id;
+                // } else {
+                //     $customer = Customer::retrieve($authUser->stripe_customer_id);
+                // }
 
                 $authUser->level_type = 2;
                 $authUser->save();

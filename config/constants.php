@@ -207,5 +207,5 @@ return [
         ],
     ],
 
-    'currency' => 'INR',
+    'currency' => 'USD',
 ];

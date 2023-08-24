@@ -116,7 +116,7 @@ class SearchBuyersRequest extends FormRequest
             'utilities' => [],
             'sewer' => [],
             'market_preferance' => ['required','in:'.implode(',', array_keys(config('constants.market_preferances')))],
-            'contact_preferance' => ['required','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
+            // 'contact_preferance' => ['required','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 
         ];
 
