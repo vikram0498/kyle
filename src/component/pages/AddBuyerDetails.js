@@ -1172,47 +1172,6 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>ARV (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
-                                                        {
-                                                        ...register("arv_min", {
-                                                            required: "ARV (min) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
-
-                                                        {renderFieldError('arv_min') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>ARV (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
-                                                        ...register("arv_max", {
-                                                            required: "ARV (max) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
-
-                                                        {renderFieldError('arv_max') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Of stories (min)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="of_stories_min" className="form-control" placeholder="ARV (min)" 
@@ -1294,7 +1253,47 @@ function AddBuyerDetails (){
                                                         {renderFieldError('price_max') }
                                                     </div>
                                                 </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>ARV (min)<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                                        {
+                                                        ...register("arv_min", {
+                                                            required: "ARV (min) is required",
+                                                            validate: {
+                                                                matchPattern: (v) =>
+                                                                /^[0-9]\d*$/.test(v) ||
+                                                                "Please enter valid number",
+                                                                maxLength: (v) =>
+                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                            },
+                                                        })
+                                                        } />
+                                                         {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
 
+                                                        {renderFieldError('arv_min') }
+                                                    </div>
+                                                </div>
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <label>ARV (max)<span>*</span></label>
+                                                    <div className="form-group">
+                                                        <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                                        ...register("arv_max", {
+                                                            required: "ARV (max) is required",
+                                                            validate: {
+                                                                matchPattern: (v) =>
+                                                                /^[0-9]\d*$/.test(v) ||
+                                                                "Please enter valid number",
+                                                                maxLength: (v) =>
+                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                            },
+                                                        })
+                                                        } />
+                                                         {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+
+                                                        {renderFieldError('arv_max') }
+                                                    </div>
+                                                </div>            
                                                 <div className="col-6 col-lg-6">
                                                     <label>Parking<span>*</span></label>
                                                     <div className="form-group">

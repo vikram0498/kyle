@@ -517,7 +517,7 @@ const SellerForm = () =>{
 							<div className="col-12 col-lg-8">
 								<div className="card-box-inner">
 									<h3>Search Property Details</h3>
-									<p>Fill the below form OR send link to the buyer</p>
+									{/* <p>Fill the below form OR send link to the buyer</p> */}
 									<form method='post' onSubmit={submitSearchBuyerForm}>
 										<div className="card-box-blocks">
 											<div className="row">

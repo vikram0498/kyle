@@ -65,7 +65,7 @@ function Payment({clientSecret, setClientSecret}) {
         <div className="card-box mt-0">
           <h3>Please Complete Your Payment</h3>
           {clientSecret && stripePromise && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}       disableIframe={true}
+            <Elements stripe={stripePromise} options={{ clientSecret }} disableIframe={true}
             >
               <CheckoutForm setClientSecret={setClientSecret}/>
             </Elements>

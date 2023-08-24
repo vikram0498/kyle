@@ -87,14 +87,7 @@ import "react-datepicker/dist/react-datepicker.css";
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Price</label>
-                    <div className="form-group">
-                        <input type="number" name="price" className="form-control" placeholder="Enter Your Price" value={data.price}  onChange={ e=>data.setPrice(e.target.value) }/>
-                        {data.renderFieldError('price') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bedroom</label>
+                    <label>Bed</label>
                     <div className="form-group">
                         <input type="number" name="bedroom" className="form-control" placeholder="Bedroom"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
                         {data.renderFieldError('bedroom') }
@@ -141,19 +134,26 @@ import "react-datepicker/dist/react-datepicker.css";
                     </div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+					<label>Stories</label>
+					<div className="form-group">
+						<input type="number" name="of_stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
+						{data.renderFieldError('of_stories') }
+					</div>
+				</div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                    <label>Price</label>
+                    <div className="form-group">
+                        <input type="number" name="price" className="form-control" placeholder="Enter Your Price" value={data.price}  onChange={ e=>data.setPrice(e.target.value) }/>
+                        {data.renderFieldError('price') }
+                    </div>
+                </div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>ARV</label>
                     <div className="form-group">
                         <input type="number" name="arv" className="form-control" placeholder="ARV" value={data.arv}  onChange={ e=>data.setArv(e.target.value) }/>
                         {data.renderFieldError('arv') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Of Stories</label>
-					<div className="form-group">
-						<input type="number" name="of_stories" className="form-control" placeholder="Enter Of Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
-						{data.renderFieldError('of_stories') }
-					</div>
-				</div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>Parking</label>
                     <div className="form-group">
@@ -184,7 +184,7 @@ import "react-datepicker/dist/react-datepicker.css";
 					</div>
                 </div>
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <label>Market Preference<span>*</span></label>
+                    <label>MLS Status<span>*</span></label>
                     <div className="form-group">
 						<Select
                             name="market_preferance"
@@ -198,13 +198,13 @@ import "react-datepicker/dist/react-datepicker.css";
                             isLoading={false}
                             value={data.marketPreferance}
                             isRtl={false}
-                            placeholder= "Select Market Preferance"
+                            placeholder= "Select MLS Status"
                             closeMenuOnSelect={true}
                         />
                         {data.renderFieldError('market_preferance') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>Contact Preference<span>*</span></label>
                     <div className="form-group">
                         <Select
@@ -224,7 +224,7 @@ import "react-datepicker/dist/react-datepicker.css";
                         />
                         {data.renderFieldError('contact_preferance') }
                     </div>
-                </div>
+                </div> */}
             </div>
             { data.showCreativeFinancing && 
 				<div className="block-divide">

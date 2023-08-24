@@ -84,6 +84,26 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('zip_code') }
 					</div>
 				</div>
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+					<label>Lot Size Sq Ft</label>
+					<div className="form-group">
+						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
+					</div>
+				</div>
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+					<label>Stories</label>
+					<div className="form-group">
+						<input type="number" name="of_stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
+						{data.renderFieldError('of_stories') }
+					</div>
+				</div>
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+					<label>Price</label>
+					<div className="form-group">
+						<input type="number" name="price" className="form-control" placeholder="Enter Your Price" value={data.price}  onChange={ e=>data.setPrice(e.target.value) }/>
+						{data.renderFieldError('price') }
+					</div>
+				</div>
 				{landSelected && 
 					<div className="block-divide">
 						<div className="row">
@@ -129,26 +149,6 @@ const Development = ({data,landSelected})=>{
 						</div>
 					</div>
 				}
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-					<label>Price</label>
-					<div className="form-group">
-						<input type="number" name="price" className="form-control" placeholder="Enter Your Price" value={data.price}  onChange={ e=>data.setPrice(e.target.value) }/>
-						{data.renderFieldError('price') }
-					</div>
-				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-					<label>Lot Size Sq Ft</label>
-					<div className="form-group">
-						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
-					</div>
-				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-					<label>Of Stories</label>
-					<div className="form-group">
-						<input type="number" name="of_stories" className="form-control" placeholder="Enter Of Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
-						{data.renderFieldError('of_stories') }
-					</div>
-				</div>
 				<div className="col-12 col-lg-6">
 					<div className="form-group">
 						<label>Property Flaws</label>
@@ -182,7 +182,7 @@ const Development = ({data,landSelected})=>{
 					</div>
 				</div>
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <label>Market Preference<span>*</span></label>
+                    <label>MLS Status<span>*</span></label>
                     <div className="form-group">
 						<Select
                             name="market_preferance"
@@ -196,13 +196,13 @@ const Development = ({data,landSelected})=>{
                             isLoading={false}
                             value={data.marketPreferance}
                             isRtl={false}
-                            placeholder= "Select Market Preferance"
+                            placeholder= "Select MLS Status"
                             closeMenuOnSelect={true}
                         />
                         {data.renderFieldError('market_preferance') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>Contact Preference<span>*</span></label>
                     <div className="form-group">
                         <Select
@@ -222,7 +222,7 @@ const Development = ({data,landSelected})=>{
                         />
                         {data.renderFieldError('contact_preferance') }
                     </div>
-                </div>
+                </div> */}
 			</div>
 			{ data.showCreativeFinancing && 
 				<div className="block-divide">

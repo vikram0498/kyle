@@ -46,7 +46,9 @@ import axios from 'axios';
             const userData = {
                 'first_name':response.data.data.first_name,
                 'last_name':response.data.data.last_name,
-                'profile_image':response.data.data.profile_image
+                'profile_image':response.data.data.profile_image,
+                'level_type':response.data.data.level_type,
+                'total_buyer_uploaded':response.data.data.total_buyer_uploaded
             };
             localStorage.setItem('user_data', JSON.stringify(userData));
             const profileName = document.querySelector(".user-name-title");
@@ -69,7 +71,10 @@ import axios from 'axios';
             const userData = {
                 'first_name':response.data.data.first_name,
                 'last_name':response.data.data.last_name,
-                'profile_image':response.data.data.profile_image
+                'profile_image':response.data.data.profile_image,
+                'level_type':response.data.data.level_type,
+                'total_buyer_uploaded':response.data.data.total_buyer_uploaded
+
             };
             localStorage.setItem('user_data', JSON.stringify(userData));
         
