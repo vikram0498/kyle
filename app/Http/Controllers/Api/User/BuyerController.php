@@ -700,10 +700,16 @@ class BuyerController extends Controller
 
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
+                        $buyer->first_name  =  substr($buyer->first_name, 0, 1).str_repeat("X", strlen($buyer->first_name)-1);
+                        $buyer->last_name  =  substr($buyer->last_name, 0, 1).str_repeat("X", strlen($buyer->last_name)-1);
                         $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
                         $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
                         $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
-                        $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
+
+                        $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
+                        
+                        $buyer->contact_preferance = substr($contactPreference, 0, 1).str_repeat("X", strlen($contactPreference)-1);
+
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);

@@ -132,7 +132,11 @@ class PaymentController extends Controller
                $authUser->level_type = 2;
                $authUser->save();
 
-           
+                // Get the plan ID from the payment intent.
+                // $planId = $paymentIntentObject->metadata['plan_id'];
+
+            //    dd($paymentIntentObject);
+
                 // $retrievPlan = Plan::where('plan_token',$paymentIntentObject->plan)->first();
 
                 // if( $retrievPlan ){
