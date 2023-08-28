@@ -351,7 +351,11 @@ class BuyerController extends Controller
                 }elseif($request->activeTab == 'more_buyers'){
                     $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                         $query->where('user_id', '=',$userId);
-                    })->where('user_id', '=', 1)->whereRelation('seller','level_type','=',2);
+                    })->where('user_id', '=', 1);
+
+                    $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                        $query->where('user_id', '=',$userId);
+                    })->where('user_id', '=', 1);
                 }
             }
 
@@ -515,10 +519,10 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance);
             }
 
-            if($request->contact_preferance){
-                $buyers = $buyers->where('contact_preferance', $request->contact_preferance);
-                $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
-            }
+            // if($request->contact_preferance){
+            //     $buyers = $buyers->where('contact_preferance', $request->contact_preferance);
+            //     $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
+            // }
 
             /* if($request->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
