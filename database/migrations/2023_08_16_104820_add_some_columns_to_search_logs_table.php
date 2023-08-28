@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('search_logs', function (Blueprint $table) {
-            $table->tinyInteger('of_stories')->nullable()->after('purchase_method');
+            $table->tinyInteger('stories')->nullable()->after('purchase_method');
             $table->json('zoning')->nullable()->after('of_stories');
             $table->tinyInteger('utilities')->nullable()->after('zoning');
             $table->tinyInteger('sewer')->nullable()->after('utilities');
@@ -31,7 +31,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('search_logs', function (Blueprint $table) {
-            $table->dropColumn('of_stories');
+            $table->dropColumn('stories');
             $table->dropColumn('zoning');
             $table->dropColumn('utilities');
             $table->dropColumn('sewer');

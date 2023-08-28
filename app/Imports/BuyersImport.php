@@ -94,10 +94,10 @@ class BuyersImport implements ToModel, WithStartRow
 
                             $priceMin         = strtolower($this->modifiedString($row[51]));      $priceMax          = strtolower($this->modifiedString($row[52]));
 
-                            $of_stories_min         = strtolower($this->modifiedString($row[53]));      $of_stories_max          = strtolower($this->modifiedString($row[54]));
+                            $stories_min         = strtolower($this->modifiedString($row[53]));      $stories_max          = strtolower($this->modifiedString($row[54]));
 
-                            if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($of_stories_min) && !empty($of_stories_min)){
-                                if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($of_stories_min) && is_numeric($of_stories_max)){
+                            if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($stories_min) && !empty($stories_min)){
+                                if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($stories_min) && is_numeric($stories_max)){
 
                                     $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
                                     $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);
@@ -114,9 +114,9 @@ class BuyersImport implements ToModel, WithStartRow
                                     $priceMin         = (empty($priceMin) || $priceMin == 'blank') ? NULL : (!is_numeric($priceMin) ? NULL : $priceMin);
                                     $priceMax         = (empty($priceMax) || $priceMax == 'blank') ? NULL : (!is_numeric($priceMax) ? NULL : $priceMax);
 
-                                    $of_stories_min  = (empty($of_stories_min) || $of_stories_min == 'blank') ? NULL : (!is_numeric($of_stories_min) ? NULL : $of_stories_min);
+                                    $stories_min  = (empty($stories_min) || $stories_min == 'blank') ? NULL : (!is_numeric($stories_min) ? NULL : $stories_min);
 
-                                    $of_stories_max  = (empty($of_stories_max) || $of_stories_max == 'blank') ? NULL : (!is_numeric($of_stories_max) ? NULL : $of_stories_max);
+                                    $stories_max  = (empty($stories_max) || $stories_max == 'blank') ? NULL : (!is_numeric($stories_max) ? NULL : $stories_max);
 
                                     $buyerArr['bedroom_min']    = $bedroomMin;      $buyerArr['bedroom_max']    = $bedroomMax;
                                     $buyerArr['bath_min']       = $bathMin;         $buyerArr['bath_max']       = $bathMax;
@@ -127,8 +127,8 @@ class BuyersImport implements ToModel, WithStartRow
 
                                     $buyerArr['price_min']       = $priceMin;       $buyerArr['price_max']      = $priceMax;
 
-                                    $buyerArr['of_stories_min']      = $of_stories_min;       
-                                    $buyerArr['of_stories_max']      = $of_stories_max;
+                                    $buyerArr['stories_min']      = $stories_min;       
+                                    $buyerArr['stories_max']      = $stories_max;
 
                                     $propertyType = strtolower($this->modifiedString($row[25])); 
                                     if(!empty($propertyType) && $propertyType != 'blank'){

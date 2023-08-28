@@ -528,15 +528,15 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
             } */
 
-            if($request->of_stories && is_numeric($request->of_stories)){
-                $of_stories_value = $request->of_stories;
-                $buyers = $buyers->where(function ($query) use ($of_stories_value) {
-                    $query->where('of_stories_min', '<=', $of_stories_value)
-                          ->where('of_stories_max', '>=', $of_stories_value);
+            if($request->stories && is_numeric($request->stories)){
+                $stories_value = $request->stories;
+                $buyers = $buyers->where(function ($query) use ($stories_value) {
+                    $query->where('stories_min', '<=', $stories_value)
+                          ->where('stories_max', '>=', $stories_value);
                 });
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($of_stories_value) {
-                    $query->where('of_stories_min', '<=', $of_stories_value)
-                          ->where('of_stories_max', '>=', $of_stories_value);
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($stories_value) {
+                    $query->where('stories_min', '<=', $stories_value)
+                          ->where('stories_max', '>=', $stories_value);
                 });
             } 
 
@@ -1234,11 +1234,11 @@ class BuyerController extends Controller
             } */
 
 
-            if($lastSearchLog->of_stories && is_numeric($lastSearchLog->of_stories)){
-                $of_stories_value = $lastSearchLog->of_stories;
-                $buyers = $buyers->where(function ($query) use ($of_stories_value) {
-                    $query->where('of_stories_min', '<=', $of_stories_value)
-                          ->where('of_stories_max', '>=', $of_stories_value);
+            if($lastSearchLog->stories && is_numeric($lastSearchLog->stories)){
+                $stories_value = $lastSearchLog->stories;
+                $buyers = $buyers->where(function ($query) use ($stories_value) {
+                    $query->where('stories_min', '<=', $stories_value)
+                          ->where('stories_max', '>=', $stories_value);
                 });
             } 
 
@@ -1375,7 +1375,7 @@ class BuyerController extends Controller
     }
 
     public function lastSearchByUser(){
-        $searchLog = SearchLog::select('address','country','state','city','zip_code','price','bedroom','bath','size','lot_size','build_year','arv','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','purchase_method','of_stories','zoning','utilities','sewer','market_preferance','contact_preferance','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','total_units','unit_min','unit_max','building_class','value_add')->where('user_id',auth()->user()->id)->orderBy('id','desc')->first();
+        $searchLog = SearchLog::select('address','country','state','city','zip_code','price','bedroom','bath','size','lot_size','build_year','arv','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','purchase_method','stories','zoning','utilities','sewer','market_preferance','contact_preferance','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','total_units','unit_min','unit_max','building_class','value_add')->where('user_id',auth()->user()->id)->orderBy('id','desc')->first();
 
         //Success Response Send
          $responseData = [

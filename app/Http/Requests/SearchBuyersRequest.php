@@ -66,7 +66,7 @@ class SearchBuyersRequest extends FormRequest
             'lot_size'     => ['nullable','numeric'],
             'build_year'   => ['nullable','numeric'],
             'arv'          => ['nullable','numeric'],
-            'of_stories'   => ['nullable','numeric','max:3'],
+            'stories'   => ['nullable','numeric','max:3'],
 
 
             // 'bedroom_min' => [/*'required',*/ !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''],

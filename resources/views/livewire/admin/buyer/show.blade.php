@@ -119,13 +119,13 @@
         </tr>
 
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.of_stories_min')}}</th>
-            <td> {{ (!is_null($details->of_stories_min) && !empty($details->of_stories_min)) ? $details->of_stories_min : 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.buyer.fields.stories_min')}}</th>
+            <td> {{ (!is_null($details->stories_min) && !empty($details->stories_min)) ? $details->stories_min : 'N/A' }}</td>
         </tr>
 
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.of_stories_max')}}</th>
-            <td> {{ (!is_null($details->of_stories_max) && !empty($details->of_stories_max)) ? $details->of_stories_max : 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.buyer.fields.stories_max')}}</th>
+            <td> {{ (!is_null($details->stories_max) && !empty($details->stories_max)) ? $details->stories_max : 'N/A' }}</td>
         </tr>
 
         <tr>

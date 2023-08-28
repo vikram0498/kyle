@@ -106,9 +106,9 @@ class Index extends Component
             'arv_max' => ['nullable', 'numeric', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
 
             
-            'of_stories_min' => ['required','numeric','max:3', !empty($this->state['of_stories_max']) ? new CheckMinValue($this->state['of_stories_max'], 'of_stories_max') : ''], 
+            'stories_min' => ['required','numeric','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''], 
 
-            'of_stories_max' => ['required', 'numeric', 'max:3', !empty($this->state['of_stories_min']) ? new CheckMaxValue($this->state['of_stories_min'], 'of_stories_min') : ''],
+            'stories_max' => ['required', 'numeric', 'max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''],
 
             
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 

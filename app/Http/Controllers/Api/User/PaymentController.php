@@ -150,28 +150,20 @@ class PaymentController extends Controller
                 $retrievPlan = Plan::where('plan_stripe_id',$stripePlanId)->first();
 
                 if( $retrievPlan ){
-                 
-                    // // Create a new payment method
-                    // $paymentMethod = PaymentMethod::create([
-                    //     'type' => 'card',
-                    //     'card' => [
-                    //         'token' => 'your_card_token_here', // Token obtained from Stripe.js or Elements
-                    //     ],
-                    // ]);
-
-                    // // Attach the payment method to the customer
+                    // $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentIntentObject['payment_method']);
+                    
                     // $paymentMethod->attach([
-                    //     'customer' => $customerId,
+                    //     'customer' => $authUser->stripe_customer_id,
                     // ]);
-
-
 
                     // Update the payment method.
-                    // $customer = Customer::retrieve($authUser->stripe_customer_id);
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
                     // // Update the default payment method
-                    // $customer->invoice_settings->default_payment_method = $paymentIntentObject['payment_method'];
+                    // $customer['invoice_settings']->default_payment_method = $paymentMethod->id;
                     // $customer->save();
                   
+                    // dd($customer);
+                    
                     // $subscription = \Stripe\Subscription::create([
                     //     'customer' => $authUser->stripe_customer_id,
                     //     'plan' => $retrievPlan->plan_stripe_id,

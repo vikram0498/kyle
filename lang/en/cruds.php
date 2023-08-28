@@ -160,8 +160,8 @@ return [
             
             'price_min'                     => 'Price (Min)',
             'price_max'                     => 'Price (Max)',
-            'of_stories_min'                => 'Of Stories (Min)',
-            'of_stories_max'                => 'Of Stories (Max)',
+            'stories_min'                   => 'Stories (Min)',
+            'stories_max'                   => 'Stories (Max)',
             'zoning'                        => 'Zoning',
             'utilities'                     => 'Utilities',
             'sewer'                         => 'Sewer',

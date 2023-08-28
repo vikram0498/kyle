@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::table('buyers', function (Blueprint $table) {
             $table->double('price_max')->nullable()->after('price_min');
-            $table->tinyInteger('of_stories_min')->nullable()->after('purchase_method');
-            $table->tinyInteger('of_stories_max')->nullable()->after('of_stories_min');
+            $table->tinyInteger('stories_min')->nullable()->after('purchase_method');
+            $table->tinyInteger('stories_max')->nullable()->after('stories_min');
             $table->json('zoning')->nullable()->after('of_stories_max');
             $table->tinyInteger('utilities')->nullable()->after('zoning');
             $table->tinyInteger('sewer')->nullable()->after('utilities');
@@ -34,8 +34,8 @@ return new class extends Migration
     {
         Schema::table('buyers', function (Blueprint $table) {
             $table->dropColumn('price_max');
-            $table->dropColumn('of_stories_min');
-            $table->dropColumn('of_stories_max');
+            $table->dropColumn('stories_min');
+            $table->dropColumn('stories_max');
             $table->dropColumn('zoning');
             $table->dropColumn('utilities');
             $table->dropColumn('sewer');

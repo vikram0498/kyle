@@ -62,7 +62,7 @@ class SearchLog extends Model
         'unit_max',
         'building_class',
         'value_add',
-        'of_stories',
+        'stories',
         'zoning',
         'utilities',
         'sewer',

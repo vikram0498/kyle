@@ -231,16 +231,16 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.of_stories_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.of_stories_min" placeholder="{{ __('cruds.buyer.fields.of_stories_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('of_stories_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_min')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.stories_min" placeholder="{{ __('cruds.buyer.fields.stories_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('stories_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.of_stories_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.of_stories_max" placeholder="{{ __('cruds.buyer.fields.of_stories_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('of_stories_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_max')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.stories_max" placeholder="{{ __('cruds.buyer.fields.stories_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('stories_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
 
