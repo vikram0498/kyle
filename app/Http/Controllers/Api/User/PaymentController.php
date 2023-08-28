@@ -10,6 +10,8 @@ use Stripe\Customer;
 use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\DB; 
+
 
 class PaymentController extends Controller
 {
@@ -47,7 +49,7 @@ class PaymentController extends Controller
         try {
             $createPaymentIntent = true;
             $authUser = auth()->user();
-            $plan = Plan::where('plan_token',$request->plan)->first();
+            $plan = Plan::where('plan_stripe_id',$request->plan)->first();
             if($plan){
 
                 $authUser = auth()->user();
@@ -80,6 +82,10 @@ class PaymentController extends Controller
                                 'currency' =>  $this->default_currency,
                                 'customer' => $customer->id,
                                 'automatic_payment_methods' => ['enabled' => 'true'],
+                                'description' => 'Subscription to My Plan',
+                                'metadata' => [
+                                  'plan_id' => $plan->plan_stripe_id,
+                                ],
                             ]);
                         }
                     }
@@ -92,9 +98,14 @@ class PaymentController extends Controller
                         'currency' =>  $this->default_currency,
                         'customer' => $customer->id,
                         'automatic_payment_methods' => ['enabled' => 'true'],
+                        'description' => 'Subscription to My Plan',
+                        'metadata' => [
+                          'plan_id' => $plan->plan_stripe_id,
+                        ],
                     ]);
                 }
                 
+
                 $clientSecret = $paymentIntent ? $paymentIntent->client_secret : null;
                 return response()->json(['status'=>true,'client_secret'=>$clientSecret,'message'=>'Success'], 200);
             }else{
@@ -119,6 +130,7 @@ class PaymentController extends Controller
             'payment_intent' =>'required',
             'payment_intent_client_secret' =>'required',
         ]);
+        DB::beginTransaction();
         try {
             Stripe::setApiKey(config('app.stripe_secret_key'));
 
@@ -133,28 +145,48 @@ class PaymentController extends Controller
                $authUser->save();
 
                 // Get the plan ID from the payment intent.
-                // $planId = $paymentIntentObject->metadata['plan_id'];
+                $stripePlanId = $paymentIntentObject['metadata']['plan_id'];
 
-            //    dd($paymentIntentObject);
+                $retrievPlan = Plan::where('plan_stripe_id',$stripePlanId)->first();
 
-                // $retrievPlan = Plan::where('plan_token',$paymentIntentObject->plan)->first();
+                if( $retrievPlan ){
+                 
+                    // // Create a new payment method
+                    // $paymentMethod = PaymentMethod::create([
+                    //     'type' => 'card',
+                    //     'card' => [
+                    //         'token' => 'your_card_token_here', // Token obtained from Stripe.js or Elements
+                    //     ],
+                    // ]);
 
-                // if( $retrievPlan ){
-                //     $subscription = \Stripe\Subscription::create([
-                //         'customer' => $customer->id,
-                //         'plan' => $retrievPlan->plan_token,
-                //     ]);
+                    // // Attach the payment method to the customer
+                    // $paymentMethod->attach([
+                    //     'customer' => $customerId,
+                    // ]);
 
-                //     Subscription::create([
-                //         'plan_id'                => $retrievPlan->id,
-                //         'stripe_customer_id'     => $customer->id,
-                //         'stripe_plan_id'         => $retrievPlan->plan_token,
-                //         'stripe_subscription_id' => $subscription->id,
-                //         'start_date'             => $subscription->start_date,
-                //         'end_date'               => $subscription->end_date,
-                //         'subscription_json'      => json_encode($subscription),
-                //     ]);
-                // }
+
+
+                    // Update the payment method.
+                    // $customer = Customer::retrieve($authUser->stripe_customer_id);
+                    // // Update the default payment method
+                    // $customer->invoice_settings->default_payment_method = $paymentIntentObject['payment_method'];
+                    // $customer->save();
+                  
+                    // $subscription = \Stripe\Subscription::create([
+                    //     'customer' => $authUser->stripe_customer_id,
+                    //     'plan' => $retrievPlan->plan_stripe_id,
+                    // ]);
+
+                    // Subscription::create([
+                    //     'plan_id'                => $retrievPlan->id,
+                    //     'stripe_customer_id'     => $authUser->stripe_customer_id,
+                    //     'stripe_plan_id'         => $retrievPlan->plan_stripe_id,
+                    //     'stripe_subscription_id' => $subscription->id,
+                    //     'start_date'             => $subscription->start_date,
+                    //     'end_date'               => $subscription->end_date,
+                    //     'subscription_json'      => json_encode($subscription),
+                    // ]);
+                }
                 
                 // Transaction::create([
                 //     'user_id'  => $authUser->id,
@@ -165,9 +197,11 @@ class PaymentController extends Controller
                 //     'payment_json'   => json_encode($paymentIntentObject),
                 // ]);
               
+                DB::commit();
                 return response()->json(['status'=>true,'message' => 'Success']);
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => $e->getMessage()], 500);
         }

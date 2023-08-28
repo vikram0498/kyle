@@ -210,7 +210,7 @@ class BuyerController extends Controller
             $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucwords(strtolower($label)),
+                    'label' => $label,
                 ];
             })->values()->all();
 

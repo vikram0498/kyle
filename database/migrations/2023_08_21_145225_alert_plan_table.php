@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dropColumn('month_amount');
             $table->dropColumn('year_amount');
             $table->dropColumn('monthly_credit');
-            $table->string('plan_token')->nullable()->after('id');
+            $table->string('plan_stripe_id')->nullable()->after('id');
             $table->double('price')->nullable()->after('title');
             $table->enum('type', ['monthly', 'yearly'])->after('price');
             $table->integer('credits')->nullable()->after('type');
@@ -32,7 +32,7 @@ return new class extends Migration
      */
     public function down()
     {
-        $table->dropColumn('plan_token');
+        $table->dropColumn('plan_stripe_id');
         $table->dropColumn('price');
         $table->dropColumn('type');
         $table->dropColumn('credits');

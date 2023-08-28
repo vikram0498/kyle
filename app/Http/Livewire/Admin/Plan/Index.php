@@ -82,7 +82,7 @@ class Index extends Component
         ]);
 
         if($stripePlan){
-            $insertRecord['plan_token'] = $stripePlan->id;
+            $insertRecord['plan_stripe_id'] = $stripePlan->id;
             $insertRecord['plan_json']  = json_encode($stripePlan);
     
             $plan = Plan::create($insertRecord);
@@ -156,7 +156,7 @@ class Index extends Component
             Stripe::setApiKey(config('app.stripe_secret_key'));
 
             $stripePlan = StripPlan::update(
-                $plan->plan_token,
+                $plan->plan_stripe_id,
                 [ 
                     'nickname' => $this->title,
                 ]
@@ -188,7 +188,7 @@ class Index extends Component
         
         Stripe::setApiKey(config('app.stripe_secret_key'));
 
-        $stripePlan = StripPlan::retrieve($model->plan_token);
+        $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
         $stripePlan->delete();
         
         $model->delete();

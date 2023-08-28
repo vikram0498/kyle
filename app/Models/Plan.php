@@ -19,7 +19,7 @@ class Plan extends Model
     ];
 
     protected $fillable = [
-        'plan_token',
+        'plan_stripe_id',
         'title',
         'price',
         'type',
