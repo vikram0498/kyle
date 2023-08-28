@@ -1008,6 +1008,8 @@ class BuyerController extends Controller
             $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
             $fetchBuyer->redFlagShow = $fetchBuyer->buyersPurchasedByUser()->exists();
            
+            $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance]: '';
+
             DB::commit();
 
             //Success Response Send
