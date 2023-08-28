@@ -90,7 +90,7 @@ import Payment from './Payment';
                     <div className="back-block">
                         <div className="row">
                             <div className="col-12 col-lg-4">
-                                <Link to="/" className="back">
+                                <Link to="/sellers-form?search" className="back">
                                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -124,7 +124,7 @@ import Payment from './Payment';
                                                             <div className="radio-item-features">
                                                                 <div className="package-plan">{data.type}</div>
                                                                 <label className="features-items">
-                                                                    <input type="radio" name="radio" onChange={(e)=>setRadioValue(data.plan_token)}/>
+                                                                    <input type="radio" name="radio" onChange={(e)=>setRadioValue(data.plan_stripe_id)}/>
                                                                     <div className="feature-item-content">
                                                                         <div className="feature-item-title">{data.credits} Credit Plans<span className="small-text"> /{data.type}</span></div>
                                                                         <span className="price-pc">${data.price}</span>

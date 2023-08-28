@@ -10,7 +10,7 @@ function Completion(props) {
   const body = document.querySelector('body');
   body.classList.remove('bg-img');
   const navigate = useNavigate();
-  const {getTokenData} = useAuth();
+  const {getTokenData, getLocalStorageUserdata, setLocalStorageUserdata} = useAuth();
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const paramsObject = decodeURI(window.location.search)
@@ -30,9 +30,9 @@ function Completion(props) {
       }
       const response = await axios.post(`${apiUrl}subscribe`,paramsObject, { headers: headers });
       if(response.data.status){
-        const existingUser = JSON.parse(localStorage.getItem('user_data'));
+        let existingUser = getLocalStorageUserdata();
         existingUser.level_type = 2;
-        localStorage.setItem('user_data', JSON.stringify(existingUser));
+        setLocalStorageUserdata(existingUser);
         setTimeout(() => {
           navigate("/sellers-form?search")
         }, 2000);

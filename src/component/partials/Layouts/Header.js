@@ -5,7 +5,7 @@ import axios from 'axios';
 
 function Header() {
 	const [userDetails, setUserDetails] = useState(null);
-	const {setLogout, getTokenData} = useAuth();
+	const {setLogout, getTokenData, getLocalStorageUserdata} = useAuth();
 
 	const location = useLocation();
     const isNotSearchPage = location.pathname !== '/sellers-form';
@@ -24,9 +24,9 @@ function Header() {
 				"Accept": "application/json", 
 				'Authorization': 'Bearer ' + getTokenData().access_token,
 			} */
-			if(localStorage.getItem('user_data') !== null){
-				let userData = localStorage.getItem('user_data');   
-				setUserDetails(JSON.parse(userData));
+			let userData = getLocalStorageUserdata();
+			if(userData !== null){
+				setUserDetails(userData);
 			}
 		}
 		

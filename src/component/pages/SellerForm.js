@@ -456,8 +456,6 @@ const SellerForm = () =>{
 		sewerValue,
 		setSewerValue,
 	}
-	const user_data = JSON.parse(localStorage.getItem('user_data'));
-	//console.log(user_data,'user_data');
 	function buyBoxSearch(formObject){
 		axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
             setLoading(false);

@@ -420,25 +420,26 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <input type="text" name="email" className="form-control" placeholder="Email Address" {
                                                         ...register("email", {
-                                                            required: "Email is required",
+                                                            required: "Email address is required",
                                                             validate: {
                                                                 maxLength: (v) =>
-                                                                v.length <= 50 || "The email should have at most 50 characters",
+                                                                v.length <= 50 || "The Email address should have at most 50 characters",
                                                                 matchPattern: (v) =>
                                                                 /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
                                                                 "Email address must be a valid address",
                                                             },
                                                         })
                                                     } />
+                                                     {errors.email && <p className="error">{errors.email?.message}</p>}
                                                      {renderFieldError('email') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Phone Number<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="phone" className="form-control" placeholder="" {
+                                                        <input type="text" name="phone" className="form-control" placeholder="Phone Number" {
                                                         ...register("phone", {
-                                                            required: "Phone is required",
+                                                            required: "Phone Number is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||
@@ -617,12 +618,12 @@ function AddBuyerDetails (){
                                                         <Controller
                                                             control={control}
                                                             name="market_preferance"
-                                                            rules={{ required: 'Market Preferance is required' }}
+                                                            rules={{ required: 'Market Preference is required' }}
                                                             render={({ field: { value, onChange, name } }) => (
                                                             <Select
                                                                 options={marketPreferanceOption}
                                                                 name = {name}
-                                                                placeholder='Select Market Preferance'
+                                                                placeholder='Select Market Preference'
                                                                 isClearable={true}
                                                                 onChange={(e)=>{
                                                                     onChange(e)
@@ -642,12 +643,12 @@ function AddBuyerDetails (){
                                                     <Controller
                                                         control={control}
                                                         name="contact_preferance"
-                                                        rules={{ required: 'Contact Preferance is required' }}
+                                                        rules={{ required: 'Contact Preference is required' }}
                                                         render={({ field: { value, onChange, name } }) => (
                                                         <Select
                                                             options={contactPreferanceOption}
                                                             name = {name}
-                                                            placeholder='Select Contact Preferance'
+                                                            placeholder='Select Contact Preference'
                                                             isClearable={true}
                                                             onChange={(e)=>{
                                                                 onChange(e)
@@ -1068,7 +1069,7 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
                                                         ...register("lot_size_min", {
-                                                            required: "Lot Size Sq Ft (Min) is required",
+                                                            required: "Lot Size Sq Ft (min) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||
@@ -1109,7 +1110,7 @@ function AddBuyerDetails (){
                                                     <Controller
                                                             control={control}
                                                             name="build_year_min"
-                                                            rules={{ required: 'Year Built (Min) is required' }}
+                                                            rules={{ required: 'Year Built (min) is required' }}
                                                             render={({ field: { value, onChange, name } }) => (
                                                                 <DatePicker
                                                                     id="DatePicker"
@@ -1143,7 +1144,7 @@ function AddBuyerDetails (){
                                                         <Controller
                                                                 control={control}
                                                                 name="build_year_max"
-                                                                rules={{ required: 'Year Built (Max) is required' }}
+                                                                rules={{ required: 'Year Built (max) is required' }}
                                                                 render={({ field: { value, onChange, name } }) => (
                                                                     <DatePicker
                                                                         minDate={startDate}

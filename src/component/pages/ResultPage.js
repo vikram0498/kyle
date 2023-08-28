@@ -22,7 +22,7 @@ const ResultPage = ({setIsFiltered}) =>{
     const [filterType, setFilterType] = useState('search_page');
     const [buyerType, setBuyerType] = useState('');
     const [activeTab, setActiveTab] = useState('my_buyers');
-	const {getTokenData} = useAuth();
+	const {getTokenData, getLocalStorageUserdata} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [additionalBuyerCount,setAdditionalBuyerCount] = useState(0);
@@ -115,7 +115,8 @@ const ResultPage = ({setIsFiltered}) =>{
         setPageNumber(1)
         setBuyerType(11);
     }
-    const user_data = JSON.parse(localStorage.getItem('user_data'));
+    
+    const user_data = getLocalStorageUserdata();
     return(
         <>
             <section className="main-section position-relative pt-4 pb-120">

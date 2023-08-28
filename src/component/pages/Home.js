@@ -8,6 +8,7 @@ import Footer from "../partials/Layouts/Footer";
 import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
 import UploadMultipleBuyersOnChange from "../partials/UploadMultipleBuyersOnChange";
+import CryptoJS from "crypto-js";
 
 function Home ({userDetails}){
     const {authData} = useContext(AuthContext);
@@ -21,7 +22,6 @@ function Home ({userDetails}){
         getVideoUrl();
         
     },[])
-
     const getVideoUrl = () => {
         try{
             const apiUrl = process.env.REACT_APP_API_URL;

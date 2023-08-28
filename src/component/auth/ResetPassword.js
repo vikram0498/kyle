@@ -9,7 +9,7 @@ import {useForm} from "../../hooks/useForm";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import eyeIcon from './../../assets/images/eye.svg';
+//import eyeIcon from './../../assets/images/eye.svg';
 
 
 function ResetPassword (){
@@ -93,7 +93,7 @@ function ResetPassword (){
                                         placeholder="Enter Your Password"   
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
+                                    <span onClick={togglePasswordVisibility} className={`form-icon-password ${showPassoword ? 'eye-open' : 'eye-close'}`}><img src="/assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password') }
                             </div>
@@ -113,7 +113,7 @@ function ResetPassword (){
                                         placeholder="Enter Your Confirm Password"  
                                         disabled={ loading ? 'disabled' : ''}
                                     />
-                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? '' : 'eye-close'}`}><img src={eyeIcon} className="img-fluid" alt="" /></span>
+                                    <span onClick={toggleConfirmPasswordVisibility} className={`form-icon-password toggle-password ${showConfirmPassword ? 'eye-open' : 'eye-close'}`}><img src="/assets/images/eye.svg" className="img-fluid" alt="" /></span>
                                 </div>
                                 {renderFieldError('password_confirmation') }
                             </div>

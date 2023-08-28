@@ -29,15 +29,15 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
     const handleClickConfirmation = (id,index) => { 
         Swal.fire({
           icon: 'warning',
-          title: 'Do you want to save the changes?',
+          title: 'Do you want to view this record?',
           html:'<p class="popup-text-color">It will redeem one point from your account</p>',
           showCancelButton: true,
-          confirmButtonText: 'Save',
+          confirmButtonText: 'Yes',
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             unHideBuyer(id,index);
-            Swal.fire('Saved!', '', 'success')
+            Swal.fire('Success', '', 'success')
           } else if (result.isDenied) {
             Swal.fire('Changes are not saved', '', 'info')
           }
@@ -75,6 +75,10 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                     <li>
                         <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
                         <a href=${'mailto:'+data.email} className="name-dealer">${data.email}</a>
+                    </li>
+                    <li>
+                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/settings.svg" className="img-fluid" style="height:28px;"/></span>
+                        <span className="name-dealer">${data.contact_preferance}</span>
                     </li>
                 </ul>`;
                 childElements.innerHTML = html;
@@ -176,19 +180,19 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                         <ul className="list-unstyled mb-0">
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
-                                                <span className="name-dealer">{data.first_name+' '+ data.last_name}</span>
+                                                <span className="name-dealer">{data.name}</span>
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
-                                                <a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
+                                                <span className="name-dealer">{data.phone}</span>
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
-                                                <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+                                                <span className="name-dealer">{data.email}</span>
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>
-                                                <a className="name-dealer">{data.contact_preferance}</a>
+                                                <span className="name-dealer">{data.contact_preferance}</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -242,16 +246,5 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
         </div>
     </>
  )
- const styles = {
-    background: "#FFFFFF",
-    width: "38px",
-    height: "38px",
-    minWidth: "38px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "100%",
-    marginRight: "12px",
-  };
 }
 export default MyBuyersResult;

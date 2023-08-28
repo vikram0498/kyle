@@ -2,10 +2,11 @@ import {useContext, useState, useEffect} from "react";
 import {Cookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
 import AuthContext from "../context/authContext";
+import CryptoJS from "crypto-js";
 import axios from 'axios';
 
 export const useAuth = () => {
-
+    const secretPass = "XkhZG4fW2t2W";
     let navigate = useNavigate();
     const [userData, setUserData] = useState(getUserData());
     const [isLogin, setIsLogin] = useState(getTokenData());
@@ -34,9 +35,7 @@ export const useAuth = () => {
         /* token for login */
         const twoHoursLater = new Date(Date.now()  + 2 * 60 * 60 * 1000); // 2 hours in milliseconds
         cookie.set('_token', JSON.stringify({access_token: access_token}), {expires: twoHoursLater});
-
-        localStorage.setItem('user_data', JSON.stringify(userData));
-
+        setLocalStorageUserdata(userData);
         navigate('/');
     }
 
@@ -93,6 +92,28 @@ export const useAuth = () => {
         const cookie = new Cookies();
         return cookie.get('remember_me_user_data');
     }
+    const encryptData = (text) => {
+        const data = CryptoJS.AES.encrypt(
+          JSON.stringify(text),
+          secretPass
+        ).toString();
+        return data;
+    };
+    const decryptData = (text) => {
+        const bytes = CryptoJS.AES.decrypt(text, secretPass);
+        const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        return data
+    };
+    const getLocalStorageUserdata = () =>{
+        let data = localStorage.getItem('user_data');
+        let decryptDatas = decryptData(data);
+        return decryptDatas;
+    }
+    const setLocalStorageUserdata = (data) =>{
+        let encryptUserData = encryptData(data);
+        localStorage.setItem('user_data', encryptUserData);
+        return true;
+    }
     return {
         userData,
         isLogin,
@@ -100,6 +121,8 @@ export const useAuth = () => {
         setAsLogged,
         setLogout,
         getRememberMeData,
+        getLocalStorageUserdata,
+        setLocalStorageUserdata,
         loginUserOnStartup
     }
 };

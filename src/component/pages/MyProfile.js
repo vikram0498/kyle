@@ -11,7 +11,7 @@ import axios from 'axios';
 
  const MyProfile = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const {getTokenData} = useAuth();
+    const {getTokenData, setLocalStorageUserdata} = useAuth();
     const navigate = useNavigate();
     const [userData, setUserData] = useState('');
     const [oldPassword,setOldPassword] = useState('');
@@ -50,7 +50,7 @@ import axios from 'axios';
                 'level_type':response.data.data.level_type,
                 'total_buyer_uploaded':response.data.data.total_buyer_uploaded
             };
-            localStorage.setItem('user_data', JSON.stringify(userData));
+            setLocalStorageUserdata(userData);
             const profileName = document.querySelector(".user-name-title");
             const profilePic = document.querySelector(".user-profile");
             
@@ -76,8 +76,7 @@ import axios from 'axios';
                 'total_buyer_uploaded':response.data.data.total_buyer_uploaded
 
             };
-            localStorage.setItem('user_data', JSON.stringify(userData));
-        
+            setLocalStorageUserdata(userData);
             setLoader(false);
         }).catch(error => { 
             toast.error(error.message, {position: toast.POSITION.TOP_RIGHT});
