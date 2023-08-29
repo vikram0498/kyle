@@ -54,6 +54,10 @@ class PaymentController extends Controller
 
             $authUser = auth()->user();
 
+            $token = str_random(16);
+
+            $request->session()->put('token', $token);
+
             // Create or retrieve Stripe customer
             if (!$authUser->stripe_customer_id) {
                 $customer = Customer::create([
@@ -75,7 +79,7 @@ class PaymentController extends Controller
                     ],
                 ],
                 'mode' => 'subscription',
-                'success_url' => env('FRONTEND_URL').'completion', // Replace with the actual success URL
+                'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
                 'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
             ];
 
@@ -96,20 +100,18 @@ class PaymentController extends Controller
 
     public function checkoutSuccess(Request $request)
     {
-        // // Get data from the session or request
-        // $amount = $request->query('amount');
-        // $currency = $request->query('currency');
+        $sessionToken = session()->get('token');
+        $requestToken = $request->token;
 
-        // $session = $request->query('session');
-        
-        // // Store data in the transactions table
-        // Transaction::create([
-        //     'amount' => $amount,
-        //     'currency' => $currency,
-        //     'status' => 'payment_intent.succeeded',
-        //     'payment_json' => json_encode($paymentIntent),
-        // ]);
-
+        // Compare the two tokens.
+        if ($sessionToken === $requestToken) {
+            // The request is from the same session.
+            session()->forget('token');
+            return response()->json(['status'=>true], 200);
+        } else {
+            // The request is not from the same session.
+            return response()->json(['status'=>false], 500);
+        }
     }
 
    public function createPaymentIntent(Request $request){
@@ -305,6 +307,7 @@ class PaymentController extends Controller
                 $paymentIntent = $event->data->object;
                  // Save data to transactions table
                  Transaction::create([
+                    'user_id' => auth()->user()->id,
                     'status' => 'payment_intent.succeeded',
                     'payment_json' => json_encode($paymentIntent),
                 ]);
@@ -314,6 +317,7 @@ class PaymentController extends Controller
                 $paymentIntent = $event->data->object;
                  // Save data to transactions table
                  Transaction::create([
+                    'user_id' => auth()->user()->id,
                     'status' => 'payment_intent.payment_failed',
                     'payment_json' => json_encode($paymentIntent),
                 ]);
