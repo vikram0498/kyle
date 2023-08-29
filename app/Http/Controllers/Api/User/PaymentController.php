@@ -64,7 +64,6 @@ class PaymentController extends Controller
                 $customer = Customer::create([
                     'name'  => $authUser->name,
                     'email' => $authUser->email,
-                    // 'payment_method' => $paymentIntentObject['payment_method'],
                 ]);
                 $authUser->stripe_customer_id = $customer->id;
                 $authUser->save();
@@ -290,7 +289,7 @@ class PaymentController extends Controller
         $endpointSecret = env('STRIPE_WEBHOOK_SECRET_KEY'); // Replace with the actual signing secret
 
         try {
-            $event = \Stripe\Webhook;Webhook::constructEvent(
+            $event = \Stripe\Webhook::constructEvent(
                 $payload, $stripeSignatureHeader, $endpointSecret
             );
         } catch (\UnexpectedValueException $e) {
