@@ -12,6 +12,7 @@ use App\Models\Transaction;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\DB; 
 use Stripe\Checkout\Session as StripeSession;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
@@ -54,7 +55,7 @@ class PaymentController extends Controller
 
             $authUser = auth()->user();
 
-            $token = str_random(16);
+            $token = Str::random(32);
 
             $request->session()->put('token', $token);
 
