@@ -112,7 +112,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
-    Route::post('/checkout-success/{token}', [PaymentController::class, 'checkoutSuccess']);
+    Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
     Route::post('/subscribe', [PaymentController::class, 'createSubscription']);
 
