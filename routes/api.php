@@ -110,6 +110,10 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 
+    Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
+
+    // Route::post('/checkout-success/{amount}/{currency}', [PaymentController::class, 'checkoutSuccess'])->name('checkout.success');
+
     Route::post('/subscribe', [PaymentController::class, 'createSubscription']);
 
     Route::post('/stripe/webhook', [PaymentController::class, 'handleStripeWebhook']);

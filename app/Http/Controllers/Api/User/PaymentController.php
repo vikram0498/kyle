@@ -11,7 +11,7 @@ use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\DB; 
-
+use Stripe\Checkout\Session as StripeSession;
 
 class PaymentController extends Controller
 {
@@ -40,6 +40,78 @@ class PaymentController extends Controller
          }
     }
 
+    public function createCheckoutSession(Request $request)
+    {
+        $request->validate([
+            'plan' =>'required',
+        ]);
+
+        try {
+            // Set your Stripe secret key
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+
+            $planId = $request->plan; // Replace with the actual Price ID
+
+            $authUser = auth()->user();
+
+            // Create or retrieve Stripe customer
+            if (!$authUser->stripe_customer_id) {
+                $customer = Customer::create([
+                    'name'  => $authUser->name,
+                    'email' => $authUser->email,
+                    // 'payment_method' => $paymentIntentObject['payment_method'],
+                ]);
+                $authUser->stripe_customer_id = $customer->id;
+                $authUser->save();
+            } else {
+                $customer = Customer::retrieve($authUser->stripe_customer_id);
+            }
+
+            $sessionData = [
+                'payment_method_types' => ['card'],
+                'subscription_data' => [
+                    'items' => [
+                        ['plan' => $planId],
+                    ],
+                ],
+                'mode' => 'subscription',
+                'success_url' => env('FRONTEND_URL').'/completion', // Replace with the actual success URL
+                'cancel_url' => env('FRONTEND_URL').'/cancel',   // Replace with the actual cancel URL    
+            ];
+
+            // If customer ID is provided, set it in the session data
+            if ($customer) {
+                $sessionData['customer'] = $customer->id;
+            }
+
+            // Create a Checkout Session
+            $session = StripeSession::create($sessionData);
+
+            return response()->json(['session' => $session]);
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    public function checkoutSuccess(Request $request)
+    {
+        // // Get data from the session or request
+        // $amount = $request->query('amount');
+        // $currency = $request->query('currency');
+
+        // $session = $request->query('session');
+        
+        // // Store data in the transactions table
+        // Transaction::create([
+        //     'amount' => $amount,
+        //     'currency' => $currency,
+        //     'status' => 'payment_intent.succeeded',
+        //     'payment_json' => json_encode($paymentIntent),
+        // ]);
+
+    }
+
    public function createPaymentIntent(Request $request){
         Stripe::setApiKey(config('app.stripe_secret_key'));
         $request->validate([
@@ -54,49 +126,49 @@ class PaymentController extends Controller
 
                 $authUser = auth()->user();
 
-                // Create or retrieve Stripe customer
-                if (!$authUser->stripe_customer_id) {
-                    $customer = Customer::create([
-                        'name'  => $authUser->name,
-                        'email' => $authUser->email,
-                        // 'payment_method' => $paymentIntentObject['payment_method'],
-                    ]);
-                    $authUser->stripe_customer_id = $customer->id;
-                    $authUser->save();
-                } else {
-                    $customer = Customer::retrieve($authUser->stripe_customer_id);
-                }
+                // // Create or retrieve Stripe customer
+                // if (!$authUser->stripe_customer_id) {
+                //     $customer = Customer::create([
+                //         'name'  => $authUser->name,
+                //         'email' => $authUser->email,
+                //         // 'payment_method' => $paymentIntentObject['payment_method'],
+                //     ]);
+                //     $authUser->stripe_customer_id = $customer->id;
+                //     $authUser->save();
+                // } else {
+                //     $customer = Customer::retrieve($authUser->stripe_customer_id);
+                // }
 
-                if($authUser->stripe_customer_id){
-                   // Retrieve the last payment intent for the customer
-                    $intents = PaymentIntent::all([
-                        'customer' =>  $authUser->stripe_customer_id,
-                        'limit' => 1,
-                    ]);
-                    if(!empty($intents->data)){
-                        $lastPaymentIntent = $intents->data[0];
-                        if($lastPaymentIntent->status =='incomplete'){
-                            $createPaymentIntent = false;
-                            $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
-                                'amount' => (float)$plan->price * 100,
-                                'currency' =>  $this->default_currency,
-                                'customer' => $customer->id,
-                                'automatic_payment_methods' => ['enabled' => 'true'],
-                                'description' => 'Subscription to My Plan',
-                                'metadata' => [
-                                  'plan_id' => $plan->plan_stripe_id,
-                                ],
-                            ]);
-                        }
-                    }
+                // if($authUser->stripe_customer_id){
+                //    // Retrieve the last payment intent for the customer
+                //     $intents = PaymentIntent::all([
+                //         'customer' =>  $authUser->stripe_customer_id,
+                //         'limit' => 1,
+                //     ]);
+                //     if(!empty($intents->data)){
+                //         $lastPaymentIntent = $intents->data[0];
+                //         if($lastPaymentIntent->status =='incomplete'){
+                //             $createPaymentIntent = false;
+                //             $paymentIntent = PaymentIntent::update($lastPaymentIntent->id, [
+                //                 'amount' => (float)$plan->price * 100,
+                //                 'currency' =>  $this->default_currency,
+                //                 'customer' => $customer->id,
+                //                 'automatic_payment_methods' => ['enabled' => 'true'],
+                //                 'description' => 'Subscription to My Plan',
+                //                 'metadata' => [
+                //                   'plan_id' => $plan->plan_stripe_id,
+                //                 ],
+                //             ]);
+                //         }
+                //     }
 
-                }
+                // }
                 
                 if($createPaymentIntent){
                     $paymentIntent = PaymentIntent::create([
                         'amount' =>(float)$plan->price * 100, // Amount in cents
                         'currency' =>  $this->default_currency,
-                        'customer' => $customer->id,
+                        // 'customer' => $customer->id,
                         'automatic_payment_methods' => ['enabled' => 'true'],
                         'description' => 'Subscription to My Plan',
                         'metadata' => [
@@ -104,7 +176,6 @@ class PaymentController extends Controller
                         ],
                     ]);
                 }
-                
 
                 $clientSecret = $paymentIntent ? $paymentIntent->client_secret : null;
                 return response()->json(['status'=>true,'client_secret'=>$clientSecret,'message'=>'Success'], 200);
@@ -208,35 +279,50 @@ class PaymentController extends Controller
    }
 
    public function handleStripeWebhook(Request $request){
-        // Verify the webhook signature
-        $payload = @file_get_contents('php://input');
-        $event = Event::constructFrom(json_decode($payload, true));
 
-        // Handle different types of webhook events
-        if ($event->type === 'invoice.payment_succeeded') {
-            // Handle successful payment
-        } elseif ($event->type === 'invoice.payment_failed') {
-            // Handle failed payment
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+        $payload = $request->getContent();
+        $stripeSignatureHeader = $request->header('Stripe-Signature');
+
+        $endpointSecret = env('STRIPE_WEBHOOK_SECRET_KEY'); // Replace with the actual signing secret
+
+        try {
+            $event = \Stripe\Webhook;Webhook::constructEvent(
+                $payload, $stripeSignatureHeader, $endpointSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return response()->json(['error' => 'Invalid payload'], 400);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        // // Handle the event
-        // switch ($event->type) {
-        //     case 'payment_intent.succeeded':
-        //         $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
-        //         // Then define and call a method to handle the successful payment intent.
-        //         // handlePaymentIntentSucceeded($paymentIntent);
-        //         break;
-        //     case 'payment_method.attached':
-        //         $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
-        //         // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        //         // handlePaymentMethodAttached($paymentMethod);
-        //         break;
-        //     // ... handle other event types
-        //     default:
-        //         echo 'Received unknown event type ' . $event->type;
-        // }
+        // Handle the event based on its type
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                // Handle successful payment event
+                $paymentIntent = $event->data->object;
+                 // Save data to transactions table
+                 Transaction::create([
+                    'status' => 'payment_intent.succeeded',
+                    'payment_json' => json_encode($paymentIntent),
+                ]);
+                break;
+            case 'payment_intent.payment_failed':
+                // Handle subscription update event
+                $paymentIntent = $event->data->object;
+                 // Save data to transactions table
+                 Transaction::create([
+                    'status' => 'payment_intent.payment_failed',
+                    'payment_json' => json_encode($paymentIntent),
+                ]);
+                break;
+            // Add more cases for other event types
+        }
 
-        return response()->json(['status' => 'success']);
+        return response()->json(['success' => true]);
+       
    }
 
 }

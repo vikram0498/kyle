@@ -74,7 +74,7 @@ class Index extends Component
 
         $stripePlan = StripPlan::create([
             'amount' => (float)$this->price * 100,
-            'currency' => 'usd',
+            'currency' => config('constants.default_currency'),
             'interval' => $this->type == 'monthly' ? 'month' : 'year',
             'product' => [
                 'name' => $this->title,
