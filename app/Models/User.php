@@ -123,4 +123,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PurchasedBuyer::class);
     }
 
+    public function paymentToken(){
+        return $this->hasMany(PaymentToken::class);
+    }
+
 }

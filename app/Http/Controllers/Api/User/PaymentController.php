@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Session;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\Event;
@@ -10,6 +9,7 @@ use Stripe\Customer;
 use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\Subscription;
+use App\Models\UserToken;
 use Illuminate\Support\Facades\DB; 
 use Stripe\Checkout\Session as StripeSession;
 use Illuminate\Support\Str;
@@ -55,9 +55,20 @@ class PaymentController extends Controller
 
             $authUser = auth()->user();
 
+            //Start To Set Token
             $token = Str::random(32);
-
-            $request->session()->put('token', $token);
+            $userToken = UserToken::where('user_id',$authUser->id)->first();
+            if($userToken){
+                $userToken->token = $token;
+                $userToken->type = 'checkout_token';
+            }else{
+                UserToken::create([
+                    'user_id' => $authUser->id,
+                    'token'   => $token,
+                    'type'    => 'checkout_token',
+                ]);
+            }
+            //End To Set Token
 
             // Create or retrieve Stripe customer
             if (!$authUser->stripe_customer_id) {
@@ -100,16 +111,17 @@ class PaymentController extends Controller
 
     public function checkoutSuccess(Request $request)
     {
-        $sessionToken = session()->get('token');
         $requestToken = $request->token;
-
-        // Compare the two tokens.
-        if ($sessionToken === $requestToken) {
+        $authUser = auth()->user();
+        $userToken = UserToken::where('user_id',$authUser->id)->where('token', $requestToken)->first();
+        if($userToken){
             // The request is from the same session.
-            $authUser = auth()->user();
+            $userToken->token = null;
+            $userToken->save();
+
             $authUser->level_type = 2;
             $authUser->save();
-            session()->forget('token');
+    
             return response()->json(['status'=>true], 200);
         } else {
             // The request is not from the same session.
