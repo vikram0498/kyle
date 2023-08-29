@@ -106,6 +106,9 @@ class PaymentController extends Controller
         // Compare the two tokens.
         if ($sessionToken === $requestToken) {
             // The request is from the same session.
+            $authUser = auth()->user();
+            $authUser->level_type = 2;
+            $authUser->save();
             session()->forget('token');
             return response()->json(['status'=>true], 200);
         } else {
