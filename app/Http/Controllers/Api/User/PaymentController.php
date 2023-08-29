@@ -75,8 +75,8 @@ class PaymentController extends Controller
                     ],
                 ],
                 'mode' => 'subscription',
-                'success_url' => env('FRONTEND_URL').'/completion', // Replace with the actual success URL
-                'cancel_url' => env('FRONTEND_URL').'/cancel',   // Replace with the actual cancel URL    
+                'success_url' => env('FRONTEND_URL').'completion', // Replace with the actual success URL
+                'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
             ];
 
             // If customer ID is provided, set it in the session data
