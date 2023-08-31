@@ -139,7 +139,7 @@ class PaymentController extends Controller
         if($userToken){
             // The request is from the same session.
             $plan = Plan::where('plan_stripe_id',$userToken->plan_stripe_id)->first();
-            $addonPlan = Addon::where('product_stripe_id',$userToken->plan_stripe_id)->first();
+            $addonPlan = Addon::where('price_stripe_id',$userToken->plan_stripe_id)->first();
             
             if($plan){
                 $authUser->credit_limit = $plan->credits ?? 0;
