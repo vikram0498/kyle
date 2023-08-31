@@ -67,7 +67,7 @@ class PaymentController extends Controller
                 $userToken->type = 'checkout_token';
                 $userToken->save();
             }else{
-                UserToken::create([
+                $userToken = UserToken::create([
                     'user_id' => $authUser->id,
                     'plan_stripe_id'=>$planId,
                     'token'   => $token,
@@ -347,6 +347,12 @@ class PaymentController extends Controller
 
         // Handle the event based on its type
         switch ($event->type) {
+            case 'checkout.session.completed':
+                Log::info('Checkout session completed!');
+                // Handle session completion event
+                $session = $event->data->object;
+                // Perform necessary actions
+                break;
             case 'payment_intent.succeeded':
                 Log::info('Payment successfully!');
                 
@@ -355,6 +361,10 @@ class PaymentController extends Controller
                  // Save data to transactions table
                  Transaction::create([
                     'user_id' => auth()->user()->id,
+                    'payment_intent_id' => $paymentIntent->id,
+                    'amount' => (float)$paymentIntent->amount,
+                    'payment_method' => null,
+                    'payment_type'   => 'credit',
                     'status' => 'payment_intent.succeeded',
                     'payment_json' => json_encode($paymentIntent),
                 ]);
@@ -366,6 +376,10 @@ class PaymentController extends Controller
                  // Save data to transactions table
                  Transaction::create([
                     'user_id' => auth()->user()->id,
+                    'payment_intent_id' => $paymentIntent->id,
+                    'amount' => (float)$paymentIntent->amount,
+                    'payment_method' => null,
+                    'payment_type'   => 'credit',
                     'status' => 'payment_intent.payment_failed',
                     'payment_json' => json_encode($paymentIntent),
                 ]);

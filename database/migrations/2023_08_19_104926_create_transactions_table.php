@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // If you want to associate transactions with users
-            $table->double('amount', 11, 2);
-            $table->string('currency');
-            $table->string('status'); // 'pending', 'success', 'failure', etc.
-            $table->string('payment_method'); // Credit card, bank transfer, etc.
-            // Add more columns as needed
+            $table->string('payment_intent_id')->nullable();
+            $table->double('amount', 11, 2)->nullable();
+            $table->string('currency')->nullable();
+            $table->string('payment_intent_id')->nullable();
+            $table->string('payment_method')->nullable(); // Credit card, bank transfer, etc.
+            $table->enum('payment_type',['debit','credit'])->nullable(); 
             $table->json('payment_json')->nullable();
+            $table->string('status')->comment('1=>success ,2=>failed'); // 'pending', 'success', 'failure', etc.
+            // Add more columns as needed
             $table->timestamps();
             $table->softDeletes();
         });

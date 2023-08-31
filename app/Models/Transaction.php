@@ -10,7 +10,7 @@ class Transaction extends Model
     use SoftDeletes;
 
     public $table = 'transactions';
-    
+  
     protected $dates = [
         'created_at',
         'updated_at',
@@ -19,9 +19,11 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
+        'payment_intent_id',
         'amount',
         'currency',
         'status',
+        'payment_type',
         'payment_method',
         'payment_json',
         'created_at',
