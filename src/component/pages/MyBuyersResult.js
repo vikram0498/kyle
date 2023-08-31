@@ -13,7 +13,8 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
     const [editOpen, setEditOpen] = useState(false);
     const [sentOpen, setSentOpen] = useState(false);
     const [buyerId, setBuyerId]   = useState('');
-    const {getTokenData} = useAuth();
+    const {getTokenData, getLocalStorageUserdata, setLocalStorageUserdata} = useAuth();
+
     const ref = useRef(null);
 
     //console.log('buyerType',buyerType,"activeTab",activeTab,'pageNumber',pageNumber,'getFilterResult');
@@ -82,6 +83,13 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                     </li>
                 </ul>`;
                 childElements.innerHTML = html;
+                const totalCredit = response.data.data.credit_limit;
+                const creditLimit = document.querySelector(".credit_limit");
+                creditLimit.innerHTML = totalCredit;
+                let existingUser = getLocalStorageUserdata();
+                existingUser.level_type = 2;
+                existingUser.credit_limit = totalCredit;
+                setLocalStorageUserdata(existingUser);
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
 
             }

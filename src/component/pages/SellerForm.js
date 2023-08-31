@@ -145,6 +145,7 @@ const SellerForm = () =>{
 		const paramsObject = decodeURI(window.location.search)
 		.replace('?', '');
 		if(paramsObject === 'search'){
+			//setIsFiltered(true);
 			getLastSearch();
 		}
 		

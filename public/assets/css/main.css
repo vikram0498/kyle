@@ -1901,7 +1901,25 @@ form > * {
     border-radius: 100%;
     background-color: #60c878;
     border: 5px solid white;
-}  
+}
+.payment-card__danger {
+    
+    position: absolute;
+    top: -50px;
+    left: 145px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: red;
+    border: 5px solid white;
+}
+
+.payment-card__danger i {
+    color: #fff;
+    line-height: 88px;
+    font-size: 45px;
+}
+
 .payment-card__success i {
     color: #fff;
     line-height: 100px;

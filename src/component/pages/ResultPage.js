@@ -39,6 +39,7 @@ const ResultPage = ({setIsFiltered}) =>{
     }, [activeTab,buyerType,pageNumber]);	
     
     const getFilterResult = (page=pageNumber,active_tab=activeTab,buyer_type=buyerType) => {
+        console.log(activeTab,'activeTab');
         setShowLoader(true);
 		const apiUrl = process.env.REACT_APP_API_URL;
         let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));

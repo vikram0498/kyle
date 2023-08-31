@@ -31,6 +31,7 @@ function Header() {
 		}
 		
     }, []);
+	console.log(userDetails,'userDetails');
   return (
     <>
 		<header className="dashboard-header">
@@ -48,12 +49,12 @@ function Header() {
 							<div className="upload-buyer">
 								<span className="upload-buyer-icon">
 									<img src="./assets/images/folder.svg" className="img-fluid" /></span>
-								<p>uploaded Buyer Data : <b>0</b></p>
+								<p>uploaded Buyer Data : <b>{(userDetails != null) ? userDetails.total_buyer_uploaded : 0}</b></p>
 							</div>
 							{(userDetails !=null && userDetails.level_type !=1)?
 							<div className="upload-buyer">
 								<span className="upload-buyer-icon"><img src="./assets/images/wallet.svg" className="img-fluid" /></span>
-								<p>Credits Points : <b>40</b></p>
+								<p>Credits Points : <b className="credit_limit">{userDetails.credit_limit}</b></p>
 							</div>:''}
 							
 							<div className="dropdown user-dropdown">

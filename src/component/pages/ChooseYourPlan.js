@@ -40,12 +40,14 @@ import Payment from './Payment';
                 };
                 let data = {
                     plan:radioValue,
+                    type:'normal'
                 }
-                const response = await axios.post(apiUrl+"create-payment-intent",data,{headers: headers});
-                if(response.data.status){
-                    setClientSecret(response.data.client_secret);
+                //const response = await axios.post(apiUrl+"create-payment-intent",data,{headers: headers});
+                const response = await axios.post(apiUrl+"checkout-session",data,{headers: headers});
+                if(response.data.session){
+                    console.log("true");
+                    window.location.href = response.data.session.url;
                 }
-
             }
         }catch(error){
             if(error.response) {

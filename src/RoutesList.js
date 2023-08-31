@@ -31,6 +31,7 @@ import EditRequest from './component/partials/Modal/EditRequest';
 import SentRequest from './component/partials/Modal/SentRequest';
 import Payment from './component/pages/Payment';
 import Completion from './component/pages/Completion';
+import Cancel from './component/pages/Cancel';
 
 
 const RoutesList = () => {
@@ -72,10 +73,11 @@ const RoutesList = () => {
             <Route path="/support" element={<Support/>} />
             <Route path="/edit-modal" element={<EditRequest/>} />
             <Route path="/submit-modal" element={<SentRequest/>} />
-            <Route path="/completion" element={<Completion/>} />
+            <Route path="/completion/:token" element={<Completion/>} />
+            <Route path="/cancel" element={<Cancel/>} />
         </Routes>
       </AuthContext.Provider>
-      </GoogleOAuthProvider>
+    </GoogleOAuthProvider>
   );
 };
 

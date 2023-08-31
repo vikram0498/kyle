@@ -944,11 +944,11 @@ function AddBuyerDetails (){
                                                 }
 
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bedroom (min)<span>*</span></label>
+                                                    <label>Bed (min)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                             ...register("bedroom_min", {
-                                                                required: "Bedroom (min) is required",
+                                                                required: "Bed (min) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
                                                                     /^[0-9]\d*$/.test(v) ||
@@ -964,12 +964,12 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bedroom (max)<span>*</span></label>
+                                                    <label>Bed (max)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                          {
                                                         ...register("bedroom_max", {
-                                                            required: "Bedroom (max) is required",
+                                                            required: "Bed (max) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||
@@ -1173,12 +1173,12 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Of stories (min)<span>*</span></label>
+                                                    <label>Stories (min)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="of_stories_min" className="form-control" placeholder="ARV (min)" 
+                                                        <input type="text" name="stories_min" className="form-control" placeholder="Stories (min)" 
                                                         {
-                                                        ...register("of_stories_min", {
-                                                            required: "Of Stories (min) is required",
+                                                        ...register("stories_min", {
+                                                            required: "Stories (min) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||
@@ -1188,17 +1188,17 @@ function AddBuyerDetails (){
                                                             },
                                                         })
                                                         } />
-                                                         {errors.of_stories_min && <p className="error">{errors.of_stories_min?.message}</p>}
+                                                         {errors.stories_min && <p className="error">{errors.stories_min?.message}</p>}
 
-                                                        {renderFieldError('of_stories_min') }
+                                                        {renderFieldError('stories_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Of stories (max)<span>*</span></label>
+                                                    <label>Stories (max)<span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="text" name="of_stories_max" className="form-control" placeholder="Of stories (max)" {
-                                                        ...register("of_stories_max", {
-                                                            required: "Of Stories (max) is required",
+                                                        <input type="text" name="stories_max" className="form-control" placeholder="Stories (max)" {
+                                                        ...register("stories_max", {
+                                                            required: "Stories (max) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||
@@ -1208,9 +1208,9 @@ function AddBuyerDetails (){
                                                             },
                                                         })
                                                         } />
-                                                         {errors.of_stories_max && <p className="error">{errors.of_stories_max?.message}</p>}
+                                                         {errors.stories_max && <p className="error">{errors.stories_max?.message}</p>}
 
-                                                        {renderFieldError('of_stories_max') }
+                                                        {renderFieldError('stories_max') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
