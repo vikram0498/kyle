@@ -147,7 +147,7 @@ class PaymentController extends Controller
             $userToken->plan_stripe_id = null;
             $userToken->save();
 
-            return response()->json(['status'=>true], 200);
+            return response()->json(['status'=>true,'credit_limit'=>$authUser->credit_limit], 200);
         } else {
             // The request is not from the same session.
             return response()->json(['status'=>false], 404);
