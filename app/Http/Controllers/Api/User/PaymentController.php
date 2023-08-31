@@ -144,7 +144,7 @@ class PaymentController extends Controller
             if($plan){
                 $authUser->credit_limit = $plan->credits ?? 0;
             }else if($addonPlan){
-                $authUser->credit_limit = (int)$authUser->credit_limit + (int)$plan->credits;
+                $authUser->credit_limit = (int)$authUser->credit_limit + (int)$addonPlan->credit;
             }
 
             $authUser->level_type = 2;
