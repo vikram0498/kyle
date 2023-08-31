@@ -91,6 +91,12 @@ class PaymentController extends Controller
             if($request->type == 'addon'){
                 $sessionData = [
                     'payment_method_types' => ['card'],
+                    'line_items' => [
+                        [
+                            'price' => $planId,
+                            'quantity' => 1, // Adjust as needed
+                        ],
+                    ],
                     'mode' => 'payment',
                     'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
                     'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
