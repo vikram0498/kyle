@@ -87,19 +87,27 @@ class PaymentController extends Controller
                 $customer = Customer::retrieve($authUser->stripe_customer_id);
             }
 
-            $mode = ($type=='addon') ? 'payment' : 'subscription';
-
-            $sessionData = [
-                'payment_method_types' => ['card'],
-                'subscription_data' => [
-                    'items' => [
-                        ['plan' => $planId],
+            if($request->type == 'addon'){
+                $sessionData = [
+                    'payment_method_types' => ['card'],
+                    'mode' => 'payment',
+                    'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
+                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
+                ];
+            }else{
+                $sessionData = [
+                    'payment_method_types' => ['card'],
+                    'subscription_data' => [
+                        'items' => [
+                            ['plan' => $planId],
+                        ],
                     ],
-                ],
-                'mode' => $mode,
-                'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
-                'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
-            ];
+                    'mode' => 'subscription',
+                    'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
+                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
+                ];
+            }
+            
 
             // If customer ID is provided, set it in the session data
             if ($customer) {
@@ -124,7 +132,7 @@ class PaymentController extends Controller
         if($userToken){
             // The request is from the same session.
             $plan = Plan::where('plan_stripe_id',$userToken->plan_stripe_id)->first();
-            $addonPlan = Addon::where('plan_stripe_id',$userToken->plan_stripe_id)->first();
+            $addonPlan = Addon::where('product_stripe_id',$userToken->plan_stripe_id)->first();
             
             if($plan){
                 $authUser->credit_limit = $plan->credits ?? 0;

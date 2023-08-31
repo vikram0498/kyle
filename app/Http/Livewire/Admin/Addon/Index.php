@@ -5,7 +5,8 @@ namespace App\Http\Livewire\Admin\Addon;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Addon;
 use Stripe\Stripe;
-use Stripe\Plan as StripPlan;
+use Stripe\Product as StripProduct;
+use Stripe\Price as StripPrice;
 use Stripe\Subscription;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -65,19 +66,25 @@ class Index extends Component
 
         Stripe::setApiKey(config('app.stripe_secret_key'));
         // Get the customer's subscription.
-        $stripePlan = StripPlan::create([
-            'amount' => (float)$this->price * 100,
-            'currency' => config('constants.default_currency'),
-            // 'interval' => '',
-            'product' => [
-                'name' => $this->title,
-            ],
+        $stripProduct = StripProduct::create([
+            'name' => $this->title,
+            'description' =>'Additional Credits',
+            // 'price' => (float)$this->price * 100,
         ]);
 
-        if($stripePlan){
+        if($stripProduct){
 
-            $insertRecord['plan_stripe_id'] = $stripePlan->id;
-            $insertRecord['plan_json']  = json_encode($stripePlan);
+            $stripPrice = StripPrice::create([
+                'unit_amount' => (float)$this->price * 100, // Amount in cents
+                'currency' => config('constants.default_currency'),
+                'product' => $stripProduct->id, // ID of the custom product you created
+            ]);
+
+            $insertRecord['product_stripe_id'] = $stripProduct->id;
+            $insertRecord['product_json']  = json_encode($stripProduct);
+
+            $insertRecord['price_stripe_id'] = $stripPrice->id;
+            $insertRecord['price_json']  = json_encode($stripPrice);
     
             $addon = Addon::create($insertRecord);
         
@@ -129,15 +136,21 @@ class Index extends Component
 
             Stripe::setApiKey(config('app.stripe_secret_key'));
     
-            $stripePlan = StripPlan::update(
-                $addon->plan_stripe_id,
-                [ 
-                    'nickname' => $this->title,
-                ]
-            );
-    
-            $updateRecord['plan_json']  = json_encode($stripePlan);
-    
+
+            $product = StripProduct::retrieve($addon->product_stripe_id);
+
+            $product->name = $this->title;
+            $product->description = 'Updated Additional Credits';
+            $product->save();
+
+            $price = StripPrice::retrieve($addon->price_stripe_id);
+            $price->unit_amount = (float)$this->price * 100; // Updated amount in cents
+            $price->save();
+
+            $updateRecord['product_json']  = json_encode($product);
+
+            $updateRecord['price_json']  = json_encode($price);
+            
             $addon->update($updateRecord);
       
             $this->formMode = false;

@@ -14,8 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('addons', function (Blueprint $table) {
-            $table->string('plan_stripe_id')->nullable()->after('id');
-            $table->longtext('plan_json')->nullable()->after('credit');
+            $table->string('product_stripe_id')->nullable()->after('id');
+            $table->string('price_stripe_id')->nullable()->after('product_stripe_id');
+
+            $table->longtext('product_json')->nullable()->after('credit');
+            $table->longtext('price_json')->nullable()->after('product_json');
+
         });
     }
 
@@ -27,8 +31,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('addons', function (Blueprint $table) {
-            $table->dropColumn('plan_stripe_id');
-            $table->dropColumn('plan_json');
+            $table->dropColumn('product_stripe_id');
+            $table->dropColumn('price_stripe_id');
+            $table->dropColumn('product_json');
+            $table->dropColumn('price_json');
         });
 
     }
