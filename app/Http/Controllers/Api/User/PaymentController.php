@@ -47,6 +47,7 @@ class PaymentController extends Controller
     {
         $request->validate([
             'plan' =>'required',
+            'type' => 'required',
         ]);
 
         try {
@@ -86,6 +87,8 @@ class PaymentController extends Controller
                 $customer = Customer::retrieve($authUser->stripe_customer_id);
             }
 
+            $mode = ($type=='addon') ? 'payment' : 'subscription';
+
             $sessionData = [
                 'payment_method_types' => ['card'],
                 'subscription_data' => [
@@ -93,7 +96,7 @@ class PaymentController extends Controller
                         ['plan' => $planId],
                     ],
                 ],
-                'mode' => 'subscription',
+                'mode' => $mode,
                 'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
                 'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
             ];
