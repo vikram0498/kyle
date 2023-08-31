@@ -4,6 +4,9 @@ namespace App\Http\Livewire\Admin\Addon;
 
 use Illuminate\Support\Facades\Gate;
 use App\Models\Addon;
+use Stripe\Stripe;
+use Stripe\Plan as StripPlan;
+use Stripe\Subscription;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -60,15 +63,34 @@ class Index extends Component
 
         $insertRecord = $this->except(['search','formMode','updateMode','addon_id','image','originalImage','page','paginators']);
 
-        $addon = Addon::create($insertRecord);
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+        // Get the customer's subscription.
+        $stripePlan = StripPlan::create([
+            'amount' => (float)$this->price * 100,
+            'currency' => config('constants.default_currency'),
+            // 'interval' => '',
+            'product' => [
+                'name' => $this->title,
+            ],
+        ]);
+
+        if($stripePlan){
+
+            $insertRecord['plan_stripe_id'] = $stripePlan->id;
+            $insertRecord['plan_json']  = json_encode($stripePlan);
     
-        $this->formMode = false;
-
-        $this->resetInputFields();
-
-        $this->flash('success',trans('messages.add_success_message'));
+            $addon = Addon::create($insertRecord);
         
-        return redirect()->route('admin.addon');
+            $this->formMode = false;
+
+            $this->resetInputFields();
+
+            $this->flash('success',trans('messages.add_success_message'));
+            
+            return redirect()->route('admin.addon');
+        }else{
+            $this->alert('error',trans('messages.error_message'));
+        }
        
     }
 
@@ -102,17 +124,31 @@ class Index extends Component
 
         $addon = Addon::find($this->addon_id);
 
-        $updateRecord = $this->except(['search','formMode','updateMode','addon_id','image','originalImage','page','paginators']);
+        if($addon){
+            $updateRecord = $this->except(['search','formMode','updateMode','addon_id','image','originalImage','page','paginators']);
 
-        $addon->update($updateRecord);
-  
-        $this->formMode = false;
-        $this->updateMode = false;
-  
-        $this->flash('success',trans('messages.edit_success_message'));
-        $this->resetInputFields();
-        return redirect()->route('admin.addon');
-
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+    
+            $stripePlan = StripPlan::update(
+                $addon->plan_stripe_id,
+                [ 
+                    'nickname' => $this->title,
+                ]
+            );
+    
+            $updateRecord['plan_json']  = json_encode($stripePlan);
+    
+            $addon->update($updateRecord);
+      
+            $this->formMode = false;
+            $this->updateMode = false;
+      
+            $this->flash('success',trans('messages.edit_success_message'));
+            $this->resetInputFields();
+            return redirect()->route('admin.addon');
+        }else{
+            $this->alert('error',trans('messages.error_message'));
+        }
     }
 
     public function delete($id)

@@ -7,12 +7,14 @@ use Stripe\Stripe;
 use Stripe\Event;
 use Stripe\Customer;
 use App\Models\Plan;
+use App\Models\Addon;
 use App\Models\Transaction;
 use App\Models\Subscription;
 use App\Models\UserToken;
 use Illuminate\Support\Facades\DB; 
 use Stripe\Checkout\Session as StripeSession;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -59,11 +61,13 @@ class PaymentController extends Controller
             $token = Str::random(32);
             $userToken = UserToken::where('user_id',$authUser->id)->first();
             if($userToken){
+                $userToken->plan_stripe_id = $planId;
                 $userToken->token = $token;
                 $userToken->type = 'checkout_token';
             }else{
                 UserToken::create([
                     'user_id' => $authUser->id,
+                    'plan_stripe_id'=>$planId,
                     'token'   => $token,
                     'type'    => 'checkout_token',
                 ]);
@@ -116,16 +120,26 @@ class PaymentController extends Controller
         $userToken = UserToken::where('user_id',$authUser->id)->where('token', $requestToken)->first();
         if($userToken){
             // The request is from the same session.
-            $userToken->token = null;
-            $userToken->save();
+            $plan = Plan::where('plan_stripe_id',$userToken->plan_stripe_id)->first();
+            $addonPlan = Addon::where('plan_stripe_id',$userToken->plan_stripe_id)->first();
+            
+            if($plan){
+                $authUser->credit_limit = $plan->credits ?? 0;
+            }else if($addonPlan){
+                $authUser->credit_limit = (int)$authUser->credit_limit + (int)$plan->credits;
+            }
 
             $authUser->level_type = 2;
             $authUser->save();
-    
+
+            $userToken->token = null;
+            $userToken->plan_stripe_id = null;
+            $userToken->save();
+
             return response()->json(['status'=>true], 200);
         } else {
             // The request is not from the same session.
-            return response()->json(['status'=>false], 500);
+            return response()->json(['status'=>false], 404);
         }
     }
 
@@ -297,6 +311,8 @@ class PaymentController extends Controller
 
    public function handleStripeWebhook(Request $request){
 
+    Log::info('Start stripe webhook');
+
         Stripe::setApiKey(config('app.stripe_secret_key'));
         $payload = $request->getContent();
         $stripeSignatureHeader = $request->header('Stripe-Signature');
@@ -308,16 +324,20 @@ class PaymentController extends Controller
                 $payload, $stripeSignatureHeader, $endpointSecret
             );
         } catch (\UnexpectedValueException $e) {
+            Log::info('Invalid payload!');
             // Invalid payload
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             // Invalid signature
+            Log::info('Invalid signature!');
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
         // Handle the event based on its type
         switch ($event->type) {
             case 'payment_intent.succeeded':
+                Log::info('Payment successfully!');
+                
                 // Handle successful payment event
                 $paymentIntent = $event->data->object;
                  // Save data to transactions table
@@ -328,6 +348,7 @@ class PaymentController extends Controller
                 ]);
                 break;
             case 'payment_intent.payment_failed':
+                Log::info('Payment Failed!');
                 // Handle subscription update event
                 $paymentIntent = $event->data->object;
                  // Save data to transactions table
@@ -341,6 +362,8 @@ class PaymentController extends Controller
         }
 
         return response()->json(['success' => true]);
+
+    Log::info('End stripe webhook');
        
    }
 

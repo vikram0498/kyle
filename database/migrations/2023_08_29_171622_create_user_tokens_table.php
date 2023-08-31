@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('token')->nullable();
+            $table->string('plan_stripe_id')->nullable();
             $table->string('type'); // For example: 'api_token', 'password_reset_token',''
             $table->timestamps();
             

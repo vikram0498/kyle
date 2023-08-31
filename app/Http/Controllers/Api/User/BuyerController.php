@@ -996,6 +996,11 @@ class BuyerController extends Controller
         try {
             $fetchBuyer = Buyer::find($request->buyer_id);
             if(auth()->user()->is_seller){
+
+                $authUser = auth()->user();
+                $authUser->credit_limit = !empty($authUser->credit_limit) ? (int)$authUser->credit_limit-1 : 0;
+                $authUser->save();
+
                 //Purchased buyer
                 $syncData['buyer_id'] = $fetchBuyer->id;
                 $syncData['created_at'] = Carbon::now();
@@ -1015,7 +1020,7 @@ class BuyerController extends Controller
             //Success Response Send
             $responseData = [
                 'status'   => true,
-                'data'     => ['buyer' => $fetchBuyer]
+                'data'     => ['buyer' => $fetchBuyer,'credit_limit'=>auth()->user()->credit_limit]
             ];
             return response()->json($responseData, 200);
 

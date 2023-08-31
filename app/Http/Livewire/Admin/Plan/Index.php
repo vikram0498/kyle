@@ -162,7 +162,7 @@ class Index extends Component
                 ]
             );
 
-            $insertRecord['plan_json']  = json_encode($stripePlan);
+            $updateRecord['plan_json']  = json_encode($stripePlan);
     
             $plan->update($updateRecord);
       

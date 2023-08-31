@@ -16,6 +16,7 @@ class UserToken extends Model
     protected $fillable = [
         'user_id',
         'token',
+        'plan_stripe_id',
         'type',
         'created_at',
         'updated_at',

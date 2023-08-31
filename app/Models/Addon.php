@@ -19,9 +19,11 @@ class Addon extends Model
     ];
 
     protected $fillable = [
+        'plan_stripe_id',
         'title',
         'price',
         'credit',
+        'plan_json',
         'status',
         'created_by',
         'created_at',
