@@ -1020,7 +1020,8 @@ class BuyerController extends Controller
             //Success Response Send
             $responseData = [
                 'status'   => true,
-                'data'     => ['buyer' => $fetchBuyer,'credit_limit'=>auth()->user()->credit_limit]
+                'buyer' => $fetchBuyer,
+                'credit_limit'=>auth()->user()->credit_limit
             ];
             return response()->json($responseData, 200);
 

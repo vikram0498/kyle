@@ -29,6 +29,7 @@ class ProfileController extends Controller
             'level_type' => $user->level_type ?? null,
             'is_active'  => $user->is_active ?? 0,
             'is_block'   => $user->is_block ?? 0,
+            'credit_limit'   => $user->credit_limit ?? 0,
         ];
         // Return response
         $responseData = [

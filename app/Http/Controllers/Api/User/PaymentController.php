@@ -65,6 +65,7 @@ class PaymentController extends Controller
                 $userToken->plan_stripe_id = $planId;
                 $userToken->token = $token;
                 $userToken->type = 'checkout_token';
+                $userToken->save();
             }else{
                 UserToken::create([
                     'user_id' => $authUser->id,
