@@ -994,36 +994,49 @@ class BuyerController extends Controller
     public function unhideBuyer(Request $request){
         DB::beginTransaction();
         try {
-            $fetchBuyer = Buyer::find($request->buyer_id);
-            if(auth()->user()->is_seller){
+            $authUser = auth()->user();
+            if($authUser->credit_limit > 0 ){
 
-                $authUser = auth()->user();
-                $authUser->credit_limit = !empty($authUser->credit_limit) ? (int)$authUser->credit_limit-1 : 0;
-                $authUser->save();
+                $fetchBuyer = Buyer::find($request->buyer_id);
+                if(auth()->user()->is_seller){
+    
+                   
+                    $authUser->credit_limit = !empty($authUser->credit_limit) ? (int)$authUser->credit_limit-1 : 0;
+                    $authUser->save();
+    
+                    //Purchased buyer
+                    $syncData['buyer_id'] = $fetchBuyer->id;
+                    $syncData['created_at'] = Carbon::now();
+    
+                    auth()->user()->purchasedBuyers()->create($syncData);
+                }
+            
+                $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id',auth()->user()->id)->exists();
+                $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
+                $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
+                $fetchBuyer->redFlagShow = $fetchBuyer->buyersPurchasedByUser()->exists();
+               
+                $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance]: '';
+    
+                DB::commit();
+    
+                //Success Response Send
+                $responseData = [
+                    'status'   => true,
+                    'buyer' => $fetchBuyer,
+                    'credit_limit'=>auth()->user()->credit_limit
+                ];
+                return response()->json($responseData, 200);
 
-                //Purchased buyer
-                $syncData['buyer_id'] = $fetchBuyer->id;
-                $syncData['created_at'] = Carbon::now();
-
-                auth()->user()->purchasedBuyers()->create($syncData);
+            }else{
+                 //Success Response Send
+                 $responseData = [
+                    'status'   => false,
+                    'credit_limit'=>$authUser->credit_limit
+                ];
+                return response()->json($responseData, 200);
             }
-        
-            $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id',auth()->user()->id)->exists();
-            $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
-            $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
-            $fetchBuyer->redFlagShow = $fetchBuyer->buyersPurchasedByUser()->exists();
-           
-            $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance]: '';
 
-            DB::commit();
-
-            //Success Response Send
-            $responseData = [
-                'status'   => true,
-                'buyer' => $fetchBuyer,
-                'credit_limit'=>auth()->user()->credit_limit
-            ];
-            return response()->json($responseData, 200);
 
         }catch (\Exception $e) {
             DB::rollBack();

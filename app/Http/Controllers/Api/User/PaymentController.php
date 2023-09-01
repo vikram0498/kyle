@@ -91,6 +91,18 @@ class PaymentController extends Controller
             if($request->type == 'addon'){
                 $sessionData = [
                     'payment_method_types' => ['card'],
+
+                    // 'price_data' => [
+                    //     # The currency parameter determines which
+                    //     # payment methods are used in the Checkout Session.
+                    //     'currency' => 'eur',
+                    //     'product_data' => [
+                    //       'name' => 'T-shirt',
+                    //     ],
+                    //     'unit_amount' => 2000,
+                    //   ],
+                    //   'quantity' => 1,
+
                     'line_items' => [
                         [
                             'price' => $planId,
