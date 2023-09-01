@@ -116,7 +116,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('/subscribe', [PaymentController::class, 'createSubscription']);
 
-    Route::get('/get-current-limit', [PaymentController::class, 'getCurrentLimit']);
+    Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 
 });
 
