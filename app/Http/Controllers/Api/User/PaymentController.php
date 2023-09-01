@@ -8,6 +8,7 @@ use Stripe\Event;
 use Stripe\Customer;
 use App\Models\Plan;
 use App\Models\Addon;
+use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Subscription;
 use App\Models\UserToken;
@@ -365,50 +366,72 @@ class PaymentController extends Controller
 
         // Handle the event based on its type
         switch ($event->type) {
-            case 'checkout.session.completed':
-                Log::info('Checkout session completed!');
-                // Handle session completion event
-                $session = $event->data->object;
-                // Perform necessary actions
-                break;
+            // case 'checkout.session.completed':
+            //     Log::info('Checkout session completed!');
+            //     // Handle session completion event
+            //     $dataObject = $event->data->object;
+
+            //     Log::debug($dataObject->customer);
+                
+            //     // Perform necessary actions
+            //     break;
             case 'payment_intent.succeeded':
                 Log::info('Payment successfully!');
-                
+
                 // Handle successful payment event
                 $paymentIntent = $event->data->object;
-                 // Save data to transactions table
-                 Transaction::create([
-                    'user_id' => auth()->user()->id,
-                    'payment_intent_id' => $paymentIntent->id,
-                    'amount' => (float)$paymentIntent->amount,
-                    'payment_method' => null,
-                    'payment_type'   => 'credit',
-                    'status' => 'payment_intent.succeeded',
-                    'payment_json' => json_encode($paymentIntent),
-                ]);
+
+                $paymentMethodId = $event->data->object->payment_method;
+
+                $customer_stripe_id = $dataObject->customer;
+
+                $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
+                 
+                $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
+                if(!$transaction){
+                    // Save data to transactions table
+                    Transaction::create([
+                        'user_id' => $customerId,
+                        'payment_intent_id' => $paymentIntent->id,
+                        'amount' => (float)$paymentIntent->amount/100,
+                        'payment_method' => $paymentIntent->payment_method_types[0],
+                        'payment_type'   => 'credit',
+                        'status' => 'payment_intent.succeeded',
+                        'payment_json' => json_encode($event),
+                    ]);
+                }
+               
                 break;
             case 'payment_intent.payment_failed':
                 Log::info('Payment Failed!');
                 // Handle subscription update event
                 $paymentIntent = $event->data->object;
-                 // Save data to transactions table
-                 Transaction::create([
-                    'user_id' => auth()->user()->id,
-                    'payment_intent_id' => $paymentIntent->id,
-                    'amount' => (float)$paymentIntent->amount,
-                    'payment_method' => null,
-                    'payment_type'   => 'credit',
-                    'status' => 'payment_intent.payment_failed',
-                    'payment_json' => json_encode($paymentIntent),
-                ]);
+                
+                $customer_stripe_id = $dataObject->customer;
+
+                $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
+
+                $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
+                if(!$transaction){
+                    // Save data to transactions table
+                    Transaction::create([
+                        'user_id' => $customerId,
+                        'payment_intent_id' => $paymentIntent->id,
+                        'amount' => (float)$paymentIntent->amount/100,
+                        'payment_method' => $paymentIntent->payment_method_types[0],
+                        'payment_type'   => 'credit',
+                        'status' => 'payment_intent.payment_failed',
+                        'payment_json' => json_encode($paymentIntent),
+                    ]);
+                }
                 break;
             // Add more cases for other event types
         }
 
+        Log::info('End stripe webhook');
+
         return response()->json(['success' => true]);
 
-    Log::info('End stripe webhook');
-       
    }
 
 }

@@ -126,4 +126,15 @@ class ProfileController extends Controller
         }
 
     }
+
+    public function getCurrentLimit(){
+         // Return response
+         $responseData = [
+            'status' => true,
+            'total_buyer_uploaded'   => auth()->user()->purchasedBuyers()->count(),
+            'credit_limit'   => auth()->user()->credit_limit,
+
+        ];
+        return response()->json($responseData, 200);
+    }
 }
