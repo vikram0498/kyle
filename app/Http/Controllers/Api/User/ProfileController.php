@@ -131,7 +131,7 @@ class ProfileController extends Controller
          // Return response
          $responseData = [
             'status' => true,
-            'total_buyer_uploaded'   => auth()->user()->purchasedBuyers()->count(),
+            'total_buyer_uploaded'   => auth()->user()->buyers()->count(),
             'credit_limit'   => auth()->user()->credit_limit,
 
         ];

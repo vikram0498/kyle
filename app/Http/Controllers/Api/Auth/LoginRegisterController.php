@@ -124,7 +124,7 @@ class LoginRegisterController extends Controller
                         'profile_image'=> $user->profile_image_url ?? '',
                         'level_type'   => $user->level_type,
                         'credit_limit' => $user->credit_limit,
-                        'total_buyer_uploaded' => $user->purchasedBuyers()->count(),
+                        'total_buyer_uploaded' => $user->buyers()->count(),
                     ],
                     'remember_me_token' => $user->remember_token,
                     'access_token'      => $accessToken

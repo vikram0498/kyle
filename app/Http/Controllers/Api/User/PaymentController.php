@@ -369,9 +369,9 @@ class PaymentController extends Controller
             // case 'checkout.session.completed':
             //     Log::info('Checkout session completed!');
             //     // Handle session completion event
-            //     $dataObject = $event->data->object;
+            //     $paymentIntent = $event->data->object;
 
-            //     Log::debug($dataObject->customer);
+            //     Log::debug($paymentIntent->customer);
                 
             //     // Perform necessary actions
             //     break;
@@ -383,7 +383,7 @@ class PaymentController extends Controller
 
                 $paymentMethodId = $event->data->object->payment_method;
 
-                $customer_stripe_id = $dataObject->customer;
+                $customer_stripe_id = $paymentIntent->customer;
 
                 $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
                  
@@ -394,9 +394,10 @@ class PaymentController extends Controller
                         'user_id' => $customerId,
                         'payment_intent_id' => $paymentIntent->id,
                         'amount' => (float)$paymentIntent->amount/100,
+                        'currency' => $paymentIntent->currency,
                         'payment_method' => $paymentIntent->payment_method_types[0],
                         'payment_type'   => 'credit',
-                        'status' => 'payment_intent.succeeded',
+                        'status' => 'success',
                         'payment_json' => json_encode($event),
                     ]);
                 }
@@ -407,7 +408,7 @@ class PaymentController extends Controller
                 // Handle subscription update event
                 $paymentIntent = $event->data->object;
                 
-                $customer_stripe_id = $dataObject->customer;
+                $customer_stripe_id = $paymentIntent->customer;
 
                 $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
 
@@ -418,9 +419,10 @@ class PaymentController extends Controller
                         'user_id' => $customerId,
                         'payment_intent_id' => $paymentIntent->id,
                         'amount' => (float)$paymentIntent->amount/100,
+                        'currency' => $paymentIntent->currency,
                         'payment_method' => $paymentIntent->payment_method_types[0],
                         'payment_type'   => 'credit',
-                        'status' => 'payment_intent.payment_failed',
+                        'status' => 'failed',
                         'payment_json' => json_encode($paymentIntent),
                     ]);
                 }

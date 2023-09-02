@@ -27,7 +27,7 @@ class SocialMediaController extends Controller
                             'profile_image'=> $isUser->profile_image_url ?? '',
                             'level_type'   => $isUser->level_type,
                             'credit_limit' => $user->credit_limit,
-                            'total_buyer_uploaded' => $isUser->purchasedBuyers()->count(),
+                            'total_buyer_uploaded' => $isUser->buyers()->count(),
                         ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
@@ -68,7 +68,7 @@ class SocialMediaController extends Controller
                         'profile_image'=> $newUser->profile_image_url ?? '',
                         'level_type'   => $newUser->level_type,
                         'credit_limit' => $user->credit_limit,
-                        'total_buyer_uploaded' => $newUser->purchasedBuyers()->count(),
+                        'total_buyer_uploaded' => $newUser->buyers()->count(),
                     ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
@@ -104,7 +104,7 @@ class SocialMediaController extends Controller
                             'profile_image'=> $isUser->profile_image_url ?? '',
                             'level_type'   => $isUser->level_type,
                             'credit_limit' => $user->credit_limit,
-                            'total_buyer_uploaded' => $isUser->purchasedBuyers()->count(),
+                            'total_buyer_uploaded' => $isUser->buyers()->count(),
                         ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
@@ -146,7 +146,7 @@ class SocialMediaController extends Controller
                         'profile_image'=> $newUser->profile_image_url ?? '',
                         'level_type'   => $newUser->level_type,
                         'credit_limit' => $user->credit_limit,
-                        'total_buyer_uploaded' => $newUser->purchasedBuyers()->count(),
+                        'total_buyer_uploaded' => $newUser->buyers()->count(),
                     ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken

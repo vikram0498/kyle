@@ -695,7 +695,7 @@ class BuyerController extends Controller
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                         $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
 
                     }else if($request->activeTab == 'more_buyers'){
@@ -713,7 +713,7 @@ class BuyerController extends Controller
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                         $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
                     }
                 }
@@ -772,7 +772,7 @@ class BuyerController extends Controller
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
             }
 
@@ -1362,7 +1362,7 @@ class BuyerController extends Controller
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->exists();
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
             }
 

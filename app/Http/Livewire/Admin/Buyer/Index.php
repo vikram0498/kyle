@@ -216,8 +216,20 @@ class Index extends Component
         if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
             $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
         }
+
+        if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
+            $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
+        }
     
         $createdBuyer = Buyer::create($this->state);
+
+        if($createdBuyer){
+             //Purchased buyer
+             $syncData['buyer_id'] = $createdBuyer->id;
+             $syncData['created_at'] = \Carbon\Carbon::now();
+     
+             auth()->user()->purchasedBuyers()->create($syncData);
+        }
 
         $this->formMode = false;
 
