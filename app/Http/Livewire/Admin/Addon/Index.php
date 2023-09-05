@@ -143,9 +143,9 @@ class Index extends Component
             $product->description = 'Updated Additional Credits';
             $product->save();
 
-            $price = StripPrice::retrieve($addon->price_stripe_id);
-            $price->unit_amount = (float)$this->price * 100; // Updated amount in cents
-            $price->save();
+            // $price = StripPrice::retrieve($addon->price_stripe_id);
+            // $price->unit_amount = (float)$this->price * 100; // Updated amount in cents
+            // $price->save();
 
             $updateRecord['product_json']  = json_encode($product);
 
@@ -181,6 +181,28 @@ class Index extends Component
 
     public function deleteConfirm($id){
         $model = Addon::find($id);
+
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+        
+        $product = new StripProduct( $model->product_stripe_id);
+        $prices = StripProduct::retrieve($model->product_stripe_id)->prices;
+        // Set the product ID
+  
+        if($prices){
+            // Delete the prices
+            foreach ($prices as $price) {
+                try {
+                    Stripe::setApiKey(config('app.stripe_secret_key'));
+                    $price->delete();
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
+            }
+        }
+        
+        // Delete the product
+        $product->delete();
+
         $model->delete();
 
         $this->emit('refreshLivewireDatatable');
