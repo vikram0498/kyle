@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use Stripe\Stripe;
 use Stripe\Plan as StripPlan;
+use Stripe\Product as StripProduct;
+
 
 class Index extends Component
 {
@@ -179,23 +181,36 @@ class Index extends Component
     }
 
     public function deleteConfirm($id){
-        $model = Plan::find($id);
+        try{
+            $model = Plan::find($id);
         
-        $upload_id = $model->uploads()->first()->id;
-        if($upload_id &&  deleteFile($upload_id)){
-            $model->uploads()->delete();
+            if($model->uploads()->first()){
+                $upload_id = $model->uploads()->first()->id;
+                if($upload_id &&  deleteFile($upload_id)){
+                    $model->uploads()->delete();
+                }
+            }
+            
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+    
+            $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
+            
+            if($stripePlan->product){
+                $product = new StripProduct( $stripePlan->product); 
+                $product->delete();
+            }
+    
+            $stripePlan->delete();
+            
+            $model->delete();
+    
+            $this->emit('refreshLivewireDatatable');
+    
+            $this->alert('success', trans('messages.delete_success_message'));
+        }catch(\Exception $e){
+            $this->alert('error', $e->getMessage());
         }
-        
-        Stripe::setApiKey(config('app.stripe_secret_key'));
-
-        $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
-        $stripePlan->delete();
-        
-        $model->delete();
-
-        $this->emit('refreshLivewireDatatable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
+       
     }
 
     public function show($id){
