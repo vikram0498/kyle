@@ -158,7 +158,7 @@ const MyBuyer = () =>{
 						<div className="card-box-inner">
 							<h3 className="text-center">Property Criteria Match With {totalRecord} Buyers</h3>
 							<div className="property-critera">
-								<div className="row ">
+								<div className="row cust-row">
 									{ buyerData.map((data,index) => { 
 									return(<div className="col-12 col-lg-6" key={data.id}>
 										<div className="property-critera-block">
@@ -217,6 +217,7 @@ const MyBuyer = () =>{
 													''
 												}
 											</div>
+											<div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Purchased buyer':'Your buyer' }</div>
 										</div>
 									</div>)})}
 								</div>

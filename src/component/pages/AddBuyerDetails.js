@@ -151,6 +151,7 @@ function AddBuyerDetails (){
     }
     const getStates = (country_id) => {
         if(country_id == null){
+            console.log('case 1');
             setCountry([]); setState([]); setCity([]);
             setStateOptions([]); setCityOptions([]);
         } else {            
@@ -179,7 +180,7 @@ function AddBuyerDetails (){
             });
         }
     }
-    const submitSingleBuyerForm = (data, e) => {
+    const submitSingleBuyerForm = async (data, e) => {
         e.preventDefault();
 
         setErrors(null);
@@ -200,15 +201,22 @@ function AddBuyerDetails (){
         if (formObject.hasOwnProperty('zoning')) {
             formObject.zoning =  zoningValue;
         }
-        axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers}).then(response => {
-            setLoading(false);
-            if(response.data.status){
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                navigate('/my-buyers')
+        try{
+            let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});
+            if(response){
+                setLoading(false);
+                if(response.data.status){
+                    toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                    navigate('/my-buyers')
+                }
             }
-        }).catch(error => {
+        }catch(error){
             setLoading(false);
             if(error.response) {
+                if(error.response.status === 401){
+                    setLogout();
+                    navigate('/login');
+                }
                 if (error.response.data.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }
@@ -219,7 +227,7 @@ function AddBuyerDetails (){
                     toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
                 }
             }
-        });
+        }
     }
 
     // const handleChangeFirstName = (e) => {
@@ -248,34 +256,39 @@ function AddBuyerDetails (){
         navigator.clipboard.writeText(url);
         toast.success('Url Copied Successfully !', {position: toast.POSITION.TOP_RIGHT});
     }
-    const copyAddBuyerLink = () => {
+    const copyAddBuyerLink = async () => {
         setCopyLoading(true);
         setGeneratedUrl('');
         try{
-            axios.get(apiUrl+'copy-single-buyer-form-link', { headers: headers }).then(response => {
-                if(response.data.status){
-                    let token = response.data.data.copy_token;
-                    
-                    let copyUrl = baseURL+"/add-buyer/"+token;
-                    setGeneratedUrl(copyUrl);
-                    //console.log(copyUrl,'copyUrl');
-                    navigator.clipboard.writeText(copyUrl).then(() => {
-                        setCopySuccess(true);
-                        setCopyLoading(false);
-                        toast.success('Url Generated Successfully', {position: toast.POSITION.TOP_RIGHT});
-                        setTimeout(() => {
-                            setCopySuccess(false);
-                        }, 5000);
-                    })
-                    .catch((error) => {
-                        setCopyLoading(false);
-                        toast.error('Failed to copy URL', {position: toast.POSITION.TOP_RIGHT});
-                    });
-                }
-            })
-        }catch{
-            setLogout();
-            navigate('/login');
+            let response = await axios.get(apiUrl+'copy-single-buyer-form-link', { headers: headers });
+            if(response.data.status){
+                let token = response.data.data.copy_token;
+                let copyUrl = baseURL+"/add-buyer/"+token;
+                setGeneratedUrl(copyUrl);
+                navigator.clipboard.writeText(copyUrl).then(() => {
+                    setCopySuccess(true);
+                    setCopyLoading(false);
+                    toast.success('Url Generated Successfully', {position: toast.POSITION.TOP_RIGHT});
+                    setTimeout(() => {
+                        setCopySuccess(false);
+                    }, 5000);
+                })
+                .catch((error) => {
+                    setCopyLoading(false);
+                    toast.error('Failed to copy URL', {position: toast.POSITION.TOP_RIGHT});
+                });
+            }
+        }catch(error){
+            if(error.response.status === 401){
+                setLogout();
+                navigate('/login');
+            }
+            if (error.response.errors) {
+                setErrors(error.response.errors);
+            }
+            if (error.response.error) {
+                toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+            }
         }
     }
     const handleCustum = (e,name) => {
@@ -470,20 +483,6 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
-                                                    {/* <Select
-                                                        name="country"
-                                                        defaultValue=''
-                                                        options={countryOptions}
-                                                        onChange={(item) => getStates(item)}
-                                                        className="select"
-                                                        isClearable={true}
-                                                        isSearchable={true}
-                                                        isDisabled={false}
-                                                        isLoading={false}
-                                                        isRtl={false}
-                                                        placeholder= "Select Country"
-                                                        closeMenuOnSelect={true}
-                                                    /> */}
                                                     <Controller
                                                         control={control}
                                                         name="country"

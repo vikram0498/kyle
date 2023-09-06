@@ -1943,5 +1943,38 @@ font-weight: 400;
 margin-top: 0px;
 
 }
+.cust-row{
+    margin-bottom: 30px;
+}
+.purchase-buyer{
+    padding: 4px 5px;
+    background: #fe646f;
+    border-radius: 5px 5px 0 0;
+    color: #ffff;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: 'Barlow', sans-serif;
+    max-width: fit-content;
+    line-height: 11px;
+    text-transform: capitalize;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.your-buyer{
+    padding: 4px 5px;
+    background: #ffd064;
+    border-radius: 5px 5px 0 0;
+    color: #ffff;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: 'Barlow', sans-serif;
+    max-width: fit-content;
+    line-height: 11px;
+    text-transform: capitalize;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
  /* ---end--------*/
   
