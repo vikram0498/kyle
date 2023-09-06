@@ -13,7 +13,7 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
     setEditOpen(false);
     setLoading(false);
   };
-  const {getTokenData} = useAuth();
+  const {getTokenData,setLogout} = useAuth();
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -37,6 +37,9 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
             }
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.error) {
                     toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
                 }

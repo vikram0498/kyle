@@ -118,7 +118,7 @@ function AddBuyerDetails (){
         }
     }
 
-    const getVideoUrl = () => {
+    const getVideoUrl = async () => {
         try{
             const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
@@ -126,14 +126,17 @@ function AddBuyerDetails (){
                 'Authorization': 'Bearer ' + getTokenData().access_token,
                 'auth-token' : getTokenData().access_token,
             };
-            axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers }).then(response => {
-                //console.log(response.data.videoDetails.video.video_link,'response');
+            let response = await axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers });
+            if(response){
                 let videoLink = response.data.videoDetails.video.video_link;
                 setVideoUrl(videoLink);
-                setIsVideoloader(false)
-            })
+            }
+            setIsVideoloader(false)
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }
@@ -153,7 +156,6 @@ function AddBuyerDetails (){
         } else {            
             axios.post(apiUrl+'getStates', { country_id: country_id }, { headers: headers }).then(response => {
                 let result = response.data.options;
-
                 setCountry([]); setState([]); setCity([]);                
                 setCityOptions([]);
                 setCountry(country_id); setStateOptions(result);
@@ -944,11 +946,11 @@ function AddBuyerDetails (){
                                                 }
 
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bed (min)<span>*</span></label>
+                                                    <label>Bedroom (min)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                             ...register("bedroom_min", {
-                                                                required: "Bed (min) is required",
+                                                                required: "Bedroom (min) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
                                                                     /^[0-9]\d*$/.test(v) ||
@@ -964,12 +966,12 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bed (max)<span>*</span></label>
+                                                    <label>Bedroom (max)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                          {
                                                         ...register("bedroom_max", {
-                                                            required: "Bed (max) is required",
+                                                            required: "Bedroom (max) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
                                                                 /^[0-9]\d*$/.test(v) ||

@@ -861,11 +861,11 @@ function CopyAddBuyer (){
                                                             }
 
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Bed (min)<span>*</span></label>
+                                                                <label>Bedroom (min)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="bedroom_min" className="form-control" placeholder="Bed (min)"  {
+                                                                    <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                                         ...register("bedroom_min", {
-                                                                            required: "Bed (min) is required",
+                                                                            required: "Bedroom (min) is required",
                                                                             validate: {
                                                                                 matchPattern: (v) =>
                                                                                 /^[0-9]\d*$/.test(v) ||
@@ -881,12 +881,12 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Bed (max)<span>*</span></label>
+                                                                <label>Bedroom (max)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" name="bedroom_max" className="form-control" placeholder="Bed (max)" 
+                                                                    <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                                     {
                                                                     ...register("bedroom_max", {
-                                                                        required: "Bed (max) is required",
+                                                                        required: "Bedroom (max) is required",
                                                                         validate: {
                                                                             matchPattern: (v) =>
                                                                             /^[0-9]\d*$/.test(v) ||

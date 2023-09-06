@@ -15,7 +15,7 @@ import Payment from './Payment';
     const [loaderButton, setLoaderButton] = useState(false);
     const [radioValue, setRadioValue] = useState('');
     const [errorMsg,setErrorsMsg] = useState('');
-    const {getTokenData} = useAuth();
+    const {getTokenData, setLogout} = useAuth();
     const navigate = useNavigate();
     const { setErrors, renderFieldError } = useFormError();
 
@@ -51,6 +51,9 @@ import Payment from './Payment';
             }
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.errors) {
                     setErrors(error.response.errors);
                 }
@@ -75,6 +78,9 @@ import Payment from './Payment';
             setIsLoader(false);
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
                 }
@@ -113,7 +119,7 @@ import Payment from './Payment';
                                 <div className="card-box-inner">
                                     <div className="inner-page-title text-center">
                                         <h3 className="text-center">Choose Your Plan</h3>
-                                        <p className="mb-0">You can purchase it accordingly Monthly, yearly or require more data then here is another plan for you.</p>
+                                        <p className="mb-0">You can purchase it accordingly Monthly, Yearly or require more data then here is another plan for you.</p>
                                     </div>
                                     <div className="card-box-light">
                                         {(isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:

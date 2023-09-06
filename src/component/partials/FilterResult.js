@@ -6,12 +6,13 @@ import Pagination from './Layouts/Pagination';
 
 const FilterResult = ({setIsFiltered}) =>{
 	
-	const {getTokenData} = useAuth();
+	const {getTokenData,setLogout} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
 	
 	const [totalRecord,setTotalRecord] = useState(0);
 	const [currentRecord,setCurrentRecord] = useState(0);
+	const [currentPageNo,setCurrentPageNo] = useState(1);
 	const [fromRecord,setFromRecord] = useState(0);
 	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
@@ -28,24 +29,31 @@ const FilterResult = ({setIsFiltered}) =>{
 		}
     }, []);	
 
-	const getFilteredBuyers = (page='') => {
-		const apiUrl = process.env.REACT_APP_API_URL;
-		let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
-
-		searchFields.filterType = 'my_buyer'
-		searchFields.activeTab  = 'my_buyers';
-		let headers = { 
-			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token,
-			'auth-token' : getTokenData().access_token,
-		};
-		let url = apiUrl+'buy-box-search';
-		if(page>1){
-			url = apiUrl+'buy-box-search?page='+page;
+	const getFilteredBuyers = async (page='') => {
+		try{
+			const apiUrl = process.env.REACT_APP_API_URL;
+			let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
+	
+			searchFields.filterType = 'my_buyer'
+			searchFields.activeTab  = 'my_buyers';
+			let headers = { 
+				'Accept': 'application/json',
+				'Authorization': 'Bearer ' + getTokenData().access_token,
+				'auth-token' : getTokenData().access_token,
+			};
+			let url = apiUrl+'buy-box-search';
+			if(page>1){
+				url = apiUrl+'buy-box-search?page='+page;
+			}
+			let response = await axios.post(url, searchFields, { headers: headers });
+			if(response){
+				addBuyerDetails(response.data);
+			}
+		}catch(error){
+			if(error.response.status === 401){
+				setLogout();
+			}
 		}
-		axios.post(url, searchFields, { headers: headers }).then(response => {
-			addBuyerDetails(response.data);
-        })
 	}
 
 	const addBuyerDetails = (buyer_data) => {
@@ -54,7 +62,7 @@ const FilterResult = ({setIsFiltered}) =>{
 		setCurrentRecord(buyer_data.buyers.data.length);
 		setTotalRecord(buyer_data.total_records);
 		setTotalPage(buyer_data.buyers.last_page);
-
+		setCurrentPageNo(buyer_data.buyers.current_page);
 		setFromRecord(buyer_data.buyers.from);
 		setToRecord(buyer_data.buyers.to);
 		
@@ -103,7 +111,7 @@ const FilterResult = ({setIsFiltered}) =>{
 						</div>
 						<div className="col-12 col-sm-4 col-md-4 col-lg-4">
 							{/* <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(fromRecord == null) ? 0 : fromRecord} to {(toRecord == null) ? 0 : toRecord} Out of {totalRecord}</p> */}
-							<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord == null || toRecord=='') ? 0 : toRecord} out of {totalRecord}</p>
+							<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{currentPageNo } out of {totalPage}</p>
 						</div>
 					</div>
 				</div>

@@ -25,7 +25,7 @@ import ResultPage from "./ResultPage";
 const SellerForm = () =>{
 	
 	const {authData} = useContext(AuthContext);
-    const {getTokenData} = useAuth();
+    const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
 
@@ -198,6 +198,9 @@ const SellerForm = () =>{
             })
         }catch(error){
             if(error.response) {
+				if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }
@@ -457,10 +460,12 @@ const SellerForm = () =>{
 		sewerValue,
 		setSewerValue,
 	}
-	function buyBoxSearch(formObject){
-		axios.post(apiUrl+'buy-box-search', formObject, {headers: headers}).then(response => {
-            setLoading(false);
-            if(response.data.status){
+	async function buyBoxSearch(formObject){
+		try{
+		let response = await axios.post(apiUrl+'buy-box-search', formObject, {headers: headers});
+		if(response){
+			setLoading(false);
+			if(response.data.status){
                 localStorage.setItem('filter_buyer_fields', JSON.stringify(formObject));
                 localStorage.setItem('get_filtered_data', JSON.stringify(response.data));
                 // navigate('/my-buyers')
@@ -469,10 +474,13 @@ const SellerForm = () =>{
 				// setIsLoader(true);
 				setIsFiltered(true);
             }
-            
-        }).catch(error => {
+		}
+		}catch(error){
             setLoading(false);
-            if(error.response) {
+			if(error.response) {
+				if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     setErrors(error.response.data.errors);
                 }
@@ -480,7 +488,7 @@ const SellerForm = () =>{
                     toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
                 }
             }
-        });
+		}
 	}
 	const getLastSearch = () =>{
 		setIsLoader(true);

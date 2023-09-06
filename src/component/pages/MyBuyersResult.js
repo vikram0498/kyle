@@ -13,7 +13,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
     const [editOpen, setEditOpen] = useState(false);
     const [sentOpen, setSentOpen] = useState(false);
     const [buyerId, setBuyerId]   = useState('');
-    const {getTokenData, getLocalStorageUserdata, setLocalStorageUserdata} = useAuth();
+    const {getTokenData, getLocalStorageUserdata, setLocalStorageUserdata, setLogout} = useAuth();
 
     const ref = useRef(null);
 
@@ -28,21 +28,23 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
         }
     }
     const handleClickConfirmation = (id,index) => { 
-        Swal.fire({
-          icon: 'warning',
-          title: 'Do you want to view this record?',
-          html:'<p class="popup-text-color">It will redeem one point from your account</p>',
-          showCancelButton: true,
-          confirmButtonText: 'Yes',
-        }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-            unHideBuyer(id,index);
-            Swal.fire('Success', '', 'success')
-          } else if (result.isDenied) {
-            Swal.fire('Changes are not saved', '', 'info')
-          }
-        })
+        let existingUser = getLocalStorageUserdata();
+        let checkRemainingCredit = existingUser.credit_limit;
+            Swal.fire({
+                icon: 'warning',
+                title: 'Do you want to view this record?',
+                html:'<p class="popup-text-color">It will redeem one point from your account</p>',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    unHideBuyer(id,index);
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+        
       }
 
     async function unHideBuyer(id,index='') {
@@ -50,7 +52,9 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             // const addLoader = document.querySelector(`.property-section-${id}`);
             const addLoaderParent = document.querySelectorAll(`.property-critera-block`)[index];
             const addLoaderChild = addLoaderParent.querySelectorAll('.property-critera-details')[0];
-            addLoaderChild.innerHTML = '<div className="data-loader" style="width: 100%;text-align: center;"><img src="/assets/images/data-loader.svg" style="width: 100px;"/></div>';
+            const headerBlockSession = document.querySelector(".block-session");
+            const creditLimit = document.querySelector(".credit_limit");
+
             const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
                 'Accept': 'application/json',
@@ -59,8 +63,9 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             };
             const response = await axios.post(apiUrl+"unhide-buyer",{'buyer_id':id},{headers: headers});
             if(response.data.status){
+                addLoaderChild.innerHTML = '<div className="data-loader" style="width: 100%;text-align: center;"><img src="/assets/images/data-loader.svg" style="width: 100px;"/></div>';
                 //console.log('response',response.data );
-                let data = response.data.data.buyer;
+                let data = response.data.buyer;
                 const currentElement = document.querySelectorAll(`.property-critera-block`)[index];
                 const childElements = currentElement.querySelectorAll('.property-critera-details')[0];
                 currentElement.querySelectorAll('.cornor-block')[0].remove();
@@ -83,18 +88,40 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                     </li>
                 </ul>`;
                 childElements.innerHTML = html;
-                const totalCredit = response.data.data.credit_limit;
-                const creditLimit = document.querySelector(".credit_limit");
+                const totalCredit = response.data.credit_limit;
                 creditLimit.innerHTML = totalCredit;
                 let existingUser = getLocalStorageUserdata();
-                existingUser.level_type = 2;
                 existingUser.credit_limit = totalCredit;
+                // const anchorElement = document.createElement("a");
+                // anchorElement.href = "/additional-credits";
+                // anchorElement.innerHTML = `
+                //         <div className="upload-buyer bg-green">
+                //             <span className="upload-buyer-icon">
+                //                 <img src="./assets/images/coin.svg" className="img-fluid"/></span>
+                //             <p>More Credits</p>
+                //         </div>`;
+                // headerBlockSession.prepend(anchorElement);
+                
                 setLocalStorageUserdata(existingUser);
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-
+                Swal.fire('Success', '', 'success')
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sorry!',
+                    html: '<p class="popup-text-color">You Don`t have enough point to view this record</p><p class="popup-text-color">Please add more points</p>',
+                })
+                const totalCredit = response.data.credit_limit;
+                creditLimit.innerHTML = totalCredit;
+                let existingUser = getLocalStorageUserdata();
+                existingUser.credit_limit = totalCredit;
+                setLocalStorageUserdata(existingUser);
             }
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
                 }
@@ -129,6 +156,9 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             }
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
                 }
@@ -192,11 +222,19 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
-                                                <span className="name-dealer">{data.phone}</span>
+                                                {(activeTab =='more_buyers')? 
+                                                    <span className="name-dealer">{data.phone}</span>
+                                                    :
+                                                    <a href={data.phone} className="name-dealer">{data.phone}</a>
+                                                }
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
-                                                <span className="name-dealer">{data.email}</span>
+                                                {(activeTab =='more_buyers')? 
+                                                    <span className="name-dealer">{data.email}</span>
+                                                    :
+                                                    <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+                                                }
                                             </li>
                                             <li>
                                                 <span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>

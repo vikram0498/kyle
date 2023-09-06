@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import {useAuth} from "../../hooks/useAuth"; 
+import { useFormError } from '../../hooks/useFormError';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import axios from 'axios';
@@ -10,7 +11,10 @@ import axios from 'axios';
     const [plans,setPlans] = useState([]);
     const [isLoader, setIsLoader] = useState(true);
     const [radioValue, setRadioValue] = useState('');
-    const {getTokenData} = useAuth();
+    const [errorMsg,setErrorsMsg] = useState('');
+    const [loaderButton, setLoaderButton] = useState(false);    
+    const {getTokenData,setLogout} = useAuth();
+    const { setErrors, renderFieldError } = useFormError();
     const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
@@ -28,9 +32,13 @@ import axios from 'axios';
 
             let plans = await axios.get(`${apiUrl}getAddtionalCredits`, { headers: headers });
             setPlans(plans.data.data.additional_credits);
+
             setIsLoader(false);
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
                 }
@@ -39,6 +47,46 @@ import axios from 'axios';
                 }
             }
         }
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try{
+            console.log(radioValue,'radioValue');
+            if(radioValue ==''){
+                setErrorsMsg('Please choose any plan');
+            }else{
+                setLoaderButton(true);
+                const apiUrl = process.env.REACT_APP_API_URL;
+                let headers = { 
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + getTokenData().access_token,
+                    'auth-token' : getTokenData().access_token,
+                };
+                let data = {
+                    plan:radioValue,
+                    type:'addon'
+                }
+                //const response = await axios.post(apiUrl+"create-payment-intent",data,{headers: headers});
+                const response = await axios.post(apiUrl+"checkout-session",data,{headers: headers});
+                if(response.data.session){
+                    console.log("true");
+                    window.location.href = response.data.session.url;
+                }
+            }
+        }catch(error){
+            if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        }
+        setLoaderButton(false);
     }
     return(
         <>
@@ -68,17 +116,17 @@ import axios from 'axios';
                                 <div className="card-box-inner">
                                     <div className="inner-page-title text-center">
                                         <h3 className="text-center">Buy Additional Credits</h3>
-                                        <p className="mb-0">You can purchase it accordingly Monthly, yearly or require more data then here is another plan for you.</p>
+                                        <p className="mb-0">You can purchase it accordingly Monthly, Yearly or require more data then here is another plan for you.</p>
                                     </div>
                                     <div className="card-box-light">
-                                        <form>
+                                        <form method="post" onSubmit={handleSubmit}>
                                             <div className="row">
                                             {(isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>: plans.length>0 ?plans.map((data,index)=>{
                                                 return(
                                                     <div className="col-12 col-md-6 col-lg-6" key={index}>
                                                         <div className="radio-item-features">
                                                             <label className="features-items">
-                                                                <input type="radio" name="radio"/>
+                                                                <input type="radio" name="radio" onChange={(e)=>setRadioValue(data.price_stripe_id)}/>
                                                                 <div className="feature-item-content">
                                                                     <div className="feature-item-title">{data.credit} Credit Plans</div>
                                                                     <span className="price-pc">${data.price}</span>
@@ -91,7 +139,9 @@ import axios from 'axios';
 
                                                 <div className="col-12 col-lg-12">
                                                     <div className="buynow-btn">
-                                                        <a href="" className="btn btn-fill">Buy Now!</a>
+                                                        <button className="btn btn-fill">
+                                                        {(loaderButton)?'Processing ... ':'Buy Now!'} 
+                                                        </button>
                                                     </div>
                                                     <div className="note">Note : 1 Credit is 1 Buyer</div>
                                                 </div>

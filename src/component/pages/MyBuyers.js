@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import axios from 'axios';
 
 const MyBuyer = () =>{
-	const {getTokenData} = useAuth();
+	const {getTokenData,setLogout} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [isLoader, setIsLoader] = useState(true);
@@ -20,6 +20,7 @@ const MyBuyer = () =>{
 	const [fromRecord,setFromRecord] = useState(0);
 	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
+	const [currentPageNo,setCurrentPageNo] = useState(1);
 	const [editOpen, setEditOpen] = useState(false);
     const [sentOpen, setSentOpen] = useState(false);
     const [buyerId, setBuyerId]   = useState('');
@@ -28,29 +29,46 @@ const MyBuyer = () =>{
 			getBuyerLists();
     },[]);
 
-	const getBuyerLists = (page='') =>{
-		setIsLoader(true);
-		const apiUrl = process.env.REACT_APP_API_URL;
-		let headers = { 
-			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token,
-			'auth-token' : getTokenData().access_token,
-		};
-		let url = apiUrl+'last-search-buyer';
-		if(page>1){
-			url = apiUrl+'last-search-buyer?page='+page;
-		}
-		axios.post(url,{}, { headers: headers }).then(response => {
+	const getBuyerLists = async (page='') =>{
+		try{
+			setIsLoader(true);
+			const apiUrl = process.env.REACT_APP_API_URL;
+			let headers = { 
+				'Accept': 'application/json',
+				'Authorization': 'Bearer ' + getTokenData().access_token,
+				'auth-token' : getTokenData().access_token,
+			};
+			let url = apiUrl+'last-search-buyer';
+			if(page>1){
+				url = apiUrl+'last-search-buyer?page='+page;
+			}
+			let response  = await axios.post(url,{}, { headers: headers });
 			setIsLoader(false);
 			if(response.data.status){
 				setBuyerData(response.data.buyers.data)
 				setCurrentRecord(response.data.buyers.data.length);
 				setTotalRecord(response.data.buyers.total);
 				setTotalPage(response.data.buyers.last_page);
+				setCurrentPageNo(response.data.buyers.current_page);
 				setFromRecord(response.data.buyers.from);
 				setToRecord(response.data.buyers.to);
 			}
-        })
+		}catch(error){
+            if(error.response) {
+				if(error.response.status === 401){
+					setLogout();
+				}
+                if (error.response.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
+                }
+                if (error.response.errors) {
+                    setErrors(error.response.errors);
+                }
+                if (error.response.error) {
+                    toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        }
 	}
 
 
@@ -92,6 +110,9 @@ const MyBuyer = () =>{
             }
         }catch(error){
             if(error.response) {
+				if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
                 }
@@ -126,7 +147,7 @@ const MyBuyer = () =>{
 						<h6 className="center-head fs-3 text-center mb-0">My Buyers</h6>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord) ? toRecord : 0 } out of {totalRecord}</p>
+					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{currentPageNo} out of {totalPage}</p>
 					</div>
 				</div>
 			</div>

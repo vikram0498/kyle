@@ -1,10 +1,12 @@
 import React,{useEffect,useState}  from 'react'
 import {useAuth} from "../../../hooks/useAuth";
 import {Link , useLocation, useNavigate} from "react-router-dom";
+import MiniLoader from '../MiniLoader';
 import axios from 'axios';
 
 function Header() {
 	const [userDetails, setUserDetails] = useState(null);
+	const [creditLimit, setCreditLimit] = useState(null);
 	const {setLogout, getTokenData, getLocalStorageUserdata} = useAuth();
 
 	const location = useLocation();
@@ -15,9 +17,9 @@ function Header() {
 		localStorage.removeItem('get_filtered_data');
 	}
 
-
 	useEffect(() => {
 		let data = '';
+		getCurrentLimit();
 		const apiUrl = process.env.REACT_APP_API_URL;
 		if(getTokenData().access_token != null){
 			/* let headers = {
@@ -31,7 +33,27 @@ function Header() {
 		}
 		
     }, []);
-	console.log(userDetails,'userDetails');
+	const getCurrentLimit = async () =>{
+		try{
+			console.log(getTokenData().access_token,'tokeen');
+			const apiUrl = process.env.REACT_APP_API_URL;
+			let headers = { 
+				'Accept': 'application/json',
+				'Authorization': 'Bearer ' + getTokenData().access_token,
+				'auth-token' : getTokenData().access_token,
+			};
+			let url = apiUrl+'get-current-limit';
+			let response  = await axios.get(url, { headers: headers });
+			console.log(response,'response');
+			if(response.data.status){
+				setCreditLimit(response.data);
+			}
+		}catch(error){
+			if(error.response.status === 401){
+				setLogout();
+			}
+		}
+	}
   return (
     <>
 		<header className="dashboard-header">
@@ -46,15 +68,26 @@ function Header() {
 					</div>
 					<div className="col-6 col-sm-6 col-md-8 col-lg-9">
 						<div className="block-session">
+							{(userDetails !=null &&  userDetails.level_type !=1 &&userDetails.credit_limit < 5)?
+								<Link to='/additional-credits'>
+									<div className="upload-buyer bg-green">
+										<span className="upload-buyer-icon">
+											<img src="./assets/images/coin.svg" className="img-fluid"/></span>
+										<p>More Credits</p>
+									</div>
+								</Link>
+								:
+								''
+							}
 							<div className="upload-buyer">
 								<span className="upload-buyer-icon">
 									<img src="./assets/images/folder.svg" className="img-fluid" /></span>
-								<p>uploaded Buyer Data : <b>{(userDetails != null) ? userDetails.total_buyer_uploaded : 0}</b></p>
+								<p>uploaded Buyer Data : <b>{(creditLimit != null) ? creditLimit.total_buyer_uploaded : <MiniLoader/>}</b></p>
 							</div>
 							{(userDetails !=null && userDetails.level_type !=1)?
 							<div className="upload-buyer">
 								<span className="upload-buyer-icon"><img src="./assets/images/wallet.svg" className="img-fluid" /></span>
-								<p>Credits Points : <b className="credit_limit">{userDetails.credit_limit}</b></p>
+								<p>Credits Points : <b className="credit_limit">{(creditLimit != null) ? creditLimit.credit_limit : <MiniLoader/>}</b></p>
 							</div>:''}
 							
 							<div className="dropdown user-dropdown">

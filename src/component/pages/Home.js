@@ -22,7 +22,7 @@ function Home ({userDetails}){
         getVideoUrl();
         
     },[])
-    const getVideoUrl = () => {
+    const getVideoUrl = async () => {
         try{
             const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
@@ -30,15 +30,19 @@ function Home ({userDetails}){
                 'Authorization': 'Bearer ' + getTokenData().access_token,
                 'auth-token' : getTokenData().access_token,
             };
-            axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers }).then(response => {
-                //console.log(response.data.videoDetails.video.video_link,'response');
+
+            let response  =  await axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers });
+            if(response){
                 let videoLink = response.data.videoDetails.video.video_link;
                 setVideoUrl(videoLink);
                 setIsPlaying(true)
-                setIsloader(false)
-            })
+            }
+            setIsloader(false)
         }catch(error){
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }

@@ -11,7 +11,7 @@ import axios from 'axios';
 
  const MyProfile = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const {getTokenData, setLocalStorageUserdata} = useAuth();
+    const {getTokenData, setLogout,setLocalStorageUserdata} = useAuth();
     const navigate = useNavigate();
     const [userData, setUserData] = useState('');
     const [oldPassword,setOldPassword] = useState('');
@@ -31,56 +31,46 @@ import axios from 'axios';
     const { register, handleSubmit, watch, formState: { errors }  } = useForm();
 
     // toast.success("sssssssss",{ autoClose: 1500000000 }, {position: toast.POSITION.TOP_RIGHT});
-    // console.log('sdss',getTokenData().access_token);
     let headers = {
         "Accept": "application/json", 
         'Authorization': 'Bearer ' + getTokenData().access_token,
         'auth-token' : getTokenData().access_token,
     }
     useEffect(()=>{
-        axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
-            let { data } = response.data.data;
-            setUserData(response.data.data);
-            setFirstName(response.data.data.first_name);
-            setLastName(response.data.data.last_name);
-            const userData = {
-                'first_name':response.data.data.first_name,
-                'last_name':response.data.data.last_name,
-                'profile_image':response.data.data.profile_image,
-                'level_type':response.data.data.level_type,
-                'total_buyer_uploaded':response.data.data.total_buyer_uploaded
-            };
-            setLocalStorageUserdata(userData);
-            const profileName = document.querySelector(".user-name-title");
-            const profilePic = document.querySelector(".user-profile");
-            
-            profileName.innerHTML = response.data.data.first_name+" "+response.data.data.last_name;
-            if(response.data.data.profile_image !=''){
-                profilePic.src = response.data.data.profile_image;
-            }
-            setLoader(false);
-        }).catch(error => { 
-            toast.error(error.message, {position: toast.POSITION.TOP_RIGHT});
-        })
+        fetchUserData();
     },[isProfileUpdate])
 
-    const fetchUserData = () =>{
-        axios.get(apiUrl+'user-details', { headers: headers }).then(response => {
-            let { data } = response.data.data;
-            setUserData(response.data.data);
-            const userData = {
-                'first_name':response.data.data.first_name,
-                'last_name':response.data.data.last_name,
-                'profile_image':response.data.data.profile_image,
-                'level_type':response.data.data.level_type,
-                'total_buyer_uploaded':response.data.data.total_buyer_uploaded
-
-            };
-            setLocalStorageUserdata(userData);
+    const fetchUserData = async () =>{
+        try{
+            let response = await axios.get(apiUrl+'user-details', { headers: headers });
+            if(response){
+                console.log(response,'response');
+                let { data } = response.data.data;
+                setUserData(response.data.data);
+                setFirstName(response.data.data.first_name);
+                setLastName(response.data.data.last_name);
+                const userData = {
+                    'first_name':response.data.data.first_name,
+                    'last_name':response.data.data.last_name,
+                    'profile_image':response.data.data.profile_image,
+                    'level_type':response.data.data.level_type,
+                    'total_buyer_uploaded':response.data.data.total_buyer_uploaded
+                };
+                setLocalStorageUserdata(userData);
+                const profileName = document.querySelector(".user-name-title");
+                const profilePic = document.querySelector(".user-profile");
+                
+                profileName.innerHTML = response.data.data.first_name+" "+response.data.data.last_name;
+                if(response.data.data.profile_image !=''){
+                    profilePic.src = response.data.data.profile_image;
+                }
+            }
             setLoader(false);
-        }).catch(error => { 
+
+        }catch(error){
             toast.error(error.message, {position: toast.POSITION.TOP_RIGHT});
-        })
+
+        }
     }
     const handleFormSubmit = (data,e) => {
         e.preventDefault();
@@ -124,6 +114,9 @@ import axios from 'axios';
            }catch(error){
             setLoader(false);
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.data.errors) {
                     setErrors(error.response.data.errors);
                 }

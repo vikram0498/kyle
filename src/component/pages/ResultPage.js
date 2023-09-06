@@ -22,7 +22,7 @@ const ResultPage = ({setIsFiltered}) =>{
     const [filterType, setFilterType] = useState('search_page');
     const [buyerType, setBuyerType] = useState('');
     const [activeTab, setActiveTab] = useState('my_buyers');
-	const {getTokenData, getLocalStorageUserdata} = useAuth();
+	const {getTokenData, setLogout,getLocalStorageUserdata} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [additionalBuyerCount,setAdditionalBuyerCount] = useState(0);
@@ -31,6 +31,7 @@ const ResultPage = ({setIsFiltered}) =>{
 	const [fromRecord,setFromRecord] = useState(0);
 	const [toRecord,setToRecord] = useState(0);
 	const [totalPage,setTotalPage] = useState(1);
+	const [currentPageNo,setCurrentPageNo] = useState(1);
 	const [showLoader,setShowLoader] = useState(true);
     const { setErrors, renderFieldError } = useFormError();
 
@@ -38,28 +39,36 @@ const ResultPage = ({setIsFiltered}) =>{
 		getFilterResult();
     }, [activeTab,buyerType,pageNumber]);	
     
-    const getFilterResult = (page=pageNumber,active_tab=activeTab,buyer_type=buyerType) => {
+    const getFilterResult = async (page=pageNumber,active_tab=activeTab,buyer_type=buyerType) => {
         console.log(activeTab,'activeTab');
-        setShowLoader(true);
-		const apiUrl = process.env.REACT_APP_API_URL;
-        let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
-		searchFields.activeTab = (active_tab==null)?'my_buyers':activeTab;
-		searchFields.buyer_type = buyer_type;
-		searchFields.filterType = '';
-        let headers = { 
-			'Accept': 'application/json',
-			'Authorization': 'Bearer ' + getTokenData().access_token,
-			'auth-token' : getTokenData().access_token,
-		};
-        let url = apiUrl+'buy-box-search';
-		if(page>1){
-			url = apiUrl+'buy-box-search?page='+page;
-		}
-		axios.post(url, searchFields, { headers: headers }).then(response => {
-			addBuyerDetails(response.data);
-        }).catch(error => {
+        
+        try{
+            setShowLoader(true);
+            const apiUrl = process.env.REACT_APP_API_URL;
+            let searchFields = JSON.parse(localStorage.getItem('filter_buyer_fields'));
+            searchFields.activeTab = (active_tab==null)?'my_buyers':activeTab;
+            searchFields.buyer_type = buyer_type;
+            searchFields.filterType = '';
+            let headers = { 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + getTokenData().access_token,
+                'auth-token' : getTokenData().access_token,
+            };
+            let url = apiUrl+'buy-box-search';
+            if(page>1){
+                url = apiUrl+'buy-box-search?page='+page;
+            }
+            let response = await axios.post(url, searchFields, { headers: headers });
+            if(response){
+                addBuyerDetails(response.data);
+            }
+            setShowLoader(false);
+        }catch(error){
             setShowLoader(false);
             if(error.response) {
+                if(error.response.status === 401){
+					setLogout();
+				}
                 if (error.response.validation_errors) {
                     setErrors(error.response.data.validation_errors);
                 }
@@ -70,14 +79,15 @@ const ResultPage = ({setIsFiltered}) =>{
                     toast.error(error.response.error, {position: toast.POSITION.TOP_RIGHT});
                 }
             }
-        });
+        }
     }
     const addBuyerDetails = (buyer_data) => {
+        
 		setBuyerData(buyer_data.buyers.data)
-			
 		setCurrentRecord(buyer_data.buyers.data.length);
 		setTotalRecord(buyer_data.total_records);
 		setTotalPage(buyer_data.buyers.last_page);
+        setCurrentPageNo(buyer_data.buyers.current_page);
         setAdditionalBuyerCount(buyer_data.additional_buyers_count);
 		setFromRecord(buyer_data.buyers.from);
 		setToRecord(buyer_data.buyers.to);
@@ -137,7 +147,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                 <h6 className="center-head text-center mb-0">Result Page</h6>
                             </div>
                             <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{(toRecord)?toRecord:0} out of {totalRecord}</p>
+                                <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{currentPageNo} out of {totalPage}</p>
                             </div>
                         </div>
                     </div>
