@@ -915,3 +915,14 @@ body .datepicker.datepicker-dropdown{
 body .datepicker .datepicker-years .table-condensed{
     margin: auto;
 }
+
+/* 06-09-2023 */
+.stretch-card .form-group .note-frame.panel.panel-default {
+    background: #fff;
+}
+.stretch-card .form-group .note-frame.panel.panel-default .dropdown-toggle::after {
+    display: none;
+}
+.stretch-card .form-group .note-frame.panel.panel-default .panel-heading.note-toolbar {
+    border-bottom: solid 1px #ddd;
+}

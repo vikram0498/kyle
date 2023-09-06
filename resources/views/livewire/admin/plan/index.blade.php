@@ -53,7 +53,7 @@
         $('.dropify-errors-container').remove();
       
         $('textarea#summernote').summernote({
-            placeholder: 'Type somthing...',
+            placeholder: 'Type something...',
             tabsize: 2,
             height: 100,
             toolbar: [

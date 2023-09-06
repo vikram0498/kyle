@@ -137,5 +137,17 @@ class SearchBuyersRequest extends FormRequest
         return $rules;
     }
 
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'market_preferance.required' => 'The mls status field is required',
+        ];
+    }
+
 
 }

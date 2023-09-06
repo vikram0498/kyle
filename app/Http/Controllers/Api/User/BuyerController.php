@@ -40,7 +40,8 @@ class BuyerController extends Controller
    }
 
    public function getStates(Request $request){
-       $country_id = $request->country_id;
+    //    $country_id = $request->country_id;
+        $country_id = 233;
         //Return Success Response
         $states = DB::table('states')->where('country_id',$country_id)->orderBy('name','ASC')->pluck('name','id');
 
@@ -55,11 +56,12 @@ class BuyerController extends Controller
     }
 
     public function getCities(Request $request){
-        $country_id = $request->country_id;
+        // $country_id = $request->country_id;
+        $country_id = 233;
         $state_id   = $request->state_id;
 
         //Return Success Response
-        $cities = DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->orderBy('name','ASC')->pluck('name','id');
+        $cities = DB::table('cities')->where('country_id',$country_id)->whereIn('state_id',$state_id)->orderBy('name','ASC')->pluck('name','id');
 
         $options = $cities->map(function ($label, $value) {
             return [
@@ -178,13 +180,13 @@ class BuyerController extends Controller
                 }
             })->whereNotNull('value')->values()->all();
 
-            $countries = DB::table('countries')->orderBy('name','ASC')->pluck('name','id');
-            $elementValues['countries'] = $countries->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => ucwords(strtolower($label)),
-                ];
-            })->values()->all();
+            // $countries = DB::table('countries')->orderBy('name','ASC')->pluck('name','id');
+            // $elementValues['countries'] = $countries->map(function ($label, $value) {
+            //     return [
+            //         'value' => $value,
+            //         'label' => ucwords(strtolower($label)),
+            //     ];
+            // })->values()->all();
 
             $elementValues['zonings'] = collect(config('constants.zonings'))->map(function ($label, $value) {
                 return [
@@ -267,14 +269,14 @@ class BuyerController extends Controller
             }
             // End token functionality
 
-            $validatedData['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
+            $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
 
             if($request->state){
-                $validatedData['state']   =  DB::table('states')->where('id',$request->state)->value('name');
+                $validatedData['state']   =  DB::table('states')->whereIn('id',$request->state)->pluck('name')->toArray();
             }
 
             if($request->city){
-                $validatedData['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
+                $validatedData['city']    =  DB::table('cities')->whereIn('id',$request->city)->pluck('name')->toArray();
             }
 
           
@@ -660,9 +662,9 @@ class BuyerController extends Controller
             
             $authUserLevelType = auth()->user()->level_type;
 
-            $pagination = 10;
+            $pagination = 20;
             if($authUserLevelType == 2 && $request->activeTab == 'more_buyers'){
-                $pagination = 20;
+                $pagination = 50;
             }elseif($authUserLevelType == 3 && $request->activeTab == 'more_buyers'){
                 $pagination = 50;
             }

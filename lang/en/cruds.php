@@ -51,7 +51,7 @@ return [
         'title' => 'Plans',
         'title_singular' => 'Plan',
         'fields' => [
-            'title' => 'Plan name',
+            'title' => 'Plan Name',
             'price' => 'Price',
             'type'  => 'Type',
             'credits'  => 'Credits',
@@ -67,11 +67,11 @@ return [
     ],
 
     'addon' => [
-        'title' => 'Additional Credits',
-        'title_singular' => 'Additional Credit',
+        'title' => 'Additional Plans',
+        'title_singular' => 'Additional Plan',
         'fields' => [
             'title'         => 'Name',
-            'price'         => 'price',       
+            'price'         => 'Price',       
             'credit'        => 'Credit',       
             'status'        => 'Status', 
             'created_at'    => 'Created At',

@@ -65,7 +65,7 @@ class Index extends Component
                 'description' => ['required', 'without_spaces'],
                 'status'      => 'required',
                 'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
-            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'Credits']
+            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'credits']
         );
         
         $validatedData['status'] = $this->status;
@@ -89,10 +89,9 @@ class Index extends Component
     
             $plan = Plan::create($insertRecord);
         
-            uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
+            $uploadedImage = uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
     
             $this->formMode = false;
-    
             $this->resetInputFields();
     
             $this->flash('success',trans('messages.add_success_message'));
@@ -191,15 +190,10 @@ class Index extends Component
                 }
             }
             
-            Stripe::setApiKey(config('app.stripe_secret_key'));
+            $stripe = Stripe::setApiKey(config('app.stripe_secret_key'));
     
             $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
-            
-            if($stripePlan->product){
-                $product = new StripProduct( $stripePlan->product); 
-                $product->delete();
-            }
-    
+
             $stripePlan->delete();
             
             $model->delete();
