@@ -1428,15 +1428,10 @@ class BuyerController extends Controller
                 foreach($buyers as $key=>$buyer){
                     $labels[$key] = $buyer->address;
 
-                    $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name');
-                    $labels[$key] .= ','.$cityArray[0];
-
-                    $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name');
-                    $labels[$key] .= ','.$stateArray[0];
-
-                    $labels[$key] .= ','.$buyer->zip_code;
-
                     if($buyer->city){
+                        $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name');
+                        $labels[$key] .= ','.$cityArray[0];
+
                         $buyer->city = collect($buyer->city)->map(function ($id) {
                             $cityName = DB::table('cities')->where('id',$id)->value('name');
                             return [
@@ -1447,6 +1442,10 @@ class BuyerController extends Controller
                     }
 
                     if($buyer->state){
+                        
+                        $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name');
+                        $labels[$key] .= ','.$stateArray[0];
+
                         $buyer->state = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
                             return [
@@ -1455,6 +1454,9 @@ class BuyerController extends Controller
                             ];
                         })->values()->all();
                     }
+
+                    $labels[$key] .= ','.$buyer->zip_code;
+
                 }
                
                 //Return Error Response
