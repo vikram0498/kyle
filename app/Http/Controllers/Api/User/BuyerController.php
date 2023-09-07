@@ -1430,8 +1430,8 @@ class BuyerController extends Controller
                     $labels[$key] = $buyer->address;
 
                     if($buyer->city){
-                        $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name');
-                        $labels[$key] .= ','.$cityArray[0];
+                        $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
+                        $labels[$key] .= ','.implode(',',$cityArray);
 
                         $buyer->city = collect($buyer->city)->map(function ($id) {
                             $cityName = DB::table('cities')->where('id',$id)->value('name');
@@ -1444,8 +1444,8 @@ class BuyerController extends Controller
 
                     if($buyer->state){
                         
-                        $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name');
-                        $labels[$key] .= ','.$stateArray[0];
+                        $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
+                        $labels[$key] .= ','.implode(',',$stateArray);
 
                         $buyer->state = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
