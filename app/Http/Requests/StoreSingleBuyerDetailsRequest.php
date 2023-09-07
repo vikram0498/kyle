@@ -55,11 +55,10 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'last_name'   => ['required'], 
             'email'       => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone'       => ['required', 'numeric', /*'digits:10'*/'not_in:-'], 
-            'address'     => ['required'], 
+           
             // 'country'     => ['required'],
             'city'        => [/*'required'*/], 
             'state'       => [/*'required'*/], 
-            'zip_code'    => ['required','min:3','max:10'],
             // 'company_name'   => ['required'], 
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
@@ -117,6 +116,16 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             $rules['unit_max'] = ['required', 'numeric', !empty($this->unit_min) ? new CheckMaxValue($this->unit_min, 'unit_min') : ''];
             // $rules['value_add'] = ['required'];
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
+        }
+
+        if($this->formName == 'copy-form'){
+            $rules['address']     = [];
+            $rules['zip_code']    = []; 
+
+        }else{
+            $rules['address']     = ['required'];
+            $rules['zip_code']    = ['required','min:3','max:10']; 
+
         }
 
         return $rules;

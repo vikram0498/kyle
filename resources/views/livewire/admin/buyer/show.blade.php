@@ -35,11 +35,21 @@
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.state')}}</th>
-            <td> {{ $details->state ?? 'N/A' }}</td>
+            <td>
+                @php
+                  $AllStates = \DB::table('states')->whereIn('id', $details->state)->pluck('name')->toArray();
+                @endphp
+                 {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
+            </td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.city')}}</th>
-            <td> {{ $details->city ?? 'N/A' }}</td>
+            <td>
+                @php
+                    $AllCities = \DB::table('cities')->whereIn('id', $details->city)->pluck('name')->toArray();
+                @endphp
+                {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}
+            </td>
         </tr>        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>

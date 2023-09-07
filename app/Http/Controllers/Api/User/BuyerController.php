@@ -256,12 +256,24 @@ class BuyerController extends Controller
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request,$token = null){
         DB::beginTransaction();
         try {
-            $validatedData = $request->all();
+            $validatedData = $request->except('formName');
 
             // Start token functionality
             if($token){
-                $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
+                $checkToken = Token::where('token_value',$token)->first();
                 if($checkToken){
+                    if($checkToken->is_used === 1){
+                        //Return Error Response
+                        $responseData = [
+                            'status'        => false,
+                            'error_type'    => 'token_error',
+                            'error'         => 'Invalid Token!',
+                        ];
+                        return response()->json($responseData, 400);
+                    }else{
+                        $validatedData['user_id'] = Token::where('token_value',$token)->value('user_id');
+                    }
+                }else{
                      //Return Error Response
                      $responseData = [
                         'status'        => false,
@@ -269,8 +281,6 @@ class BuyerController extends Controller
                         'error'         => 'Invalid Token!',
                     ];
                     return response()->json($responseData, 400);
-                }else{
-                    $validatedData['user_id'] = Token::where('token_value',$token)->value('user_id');
                 }
                
             }else{
@@ -280,15 +290,6 @@ class BuyerController extends Controller
 
             $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
 
-            if($request->state){
-                $validatedData['state']   =  DB::table('states')->whereIn('id',$request->state)->pluck('name')->toArray();
-            }
-
-            if($request->city){
-                $validatedData['city']    =  DB::table('cities')->whereIn('id',$request->city)->pluck('name')->toArray();
-            }
-
-          
             if($request->parking){
                 $validatedData['parking'] = (int)$request->parking;
             }
@@ -336,7 +337,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // dd($e->getMessage().'->'.$e->getLine(),'->'.json_encode(array_keys(config('constants.zonings'))));
+             dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -385,22 +386,20 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
             }
 
-            if($request->country){
-                $country =  DB::table('countries')->where('id',$request->country)->value('name');
-                $buyers = $buyers->where('country', $country);
-                $additionalBuyers = $additionalBuyers->where('country', $country);
-            }
+            // if($request->country){
+            //     $country =  DB::table('countries')->where('id',$request->country)->value('name');
+            //     $buyers = $buyers->where('country', $country);
+            //     $additionalBuyers = $additionalBuyers->where('country', $country);
+            // }
 
             if($request->state){
-                $state   =  DB::table('states')->where('id',$request->state)->value('name');
-                $buyers = $buyers->whereJsonContains('state', $state);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $state);
+                $buyers = $buyers->whereJsonContains('state', intval($request->state));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('state', intval($request->state));
             }
 
             if($request->city){
-                $city    =  DB::table('cities')->where('id',$request->city)->value('name');
-                $buyers = $buyers->whereJsonContains('city', $city);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $city);
+                $buyers = $buyers->whereJsonContains('city', intval($request->city));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('city', intval($request->city));
             }
 
             if($request->zip_code){
@@ -1420,19 +1419,45 @@ class BuyerController extends Controller
         $search = $request->address;
         try {
             if($search){
-                $buyers = Buyer::query()->select('address','country','state','city');
+                $buyers = Buyer::query()->select('address','country','state','city','zip_code');
 
                 $buyers->whereNotNull('address')->where('address','like',$search.'%');
             
+                $buyers = $buyers->get();
+
+                foreach($buyers as $buyer){
+                    if($buyer->state){
+                        $buyer->state = collect($buyer->state)->map(function ($id) {
+                            $stateName = DB::table('states')->where('id',$id)->value('name');
+                            return [
+                                'value' => $id,
+                                'label' => ucfirst(strtolower($stateName)),
+                            ];
+                        })->values()->all();
+                    }
+                    
+
+                    if($buyer->city){
+                        $buyer->city = collect($buyer->city)->map(function ($id) {
+                            $cityName = DB::table('cities')->where('id',$id)->value('name');
+        
+                            return [
+                                'value' => $id,
+                                'label' => ucfirst(strtolower($cityName)),
+                            ];
+                        })->values()->all();
+                    }
+                }
+               
                 //Return Error Response
                 $responseData = [
                     'status'        => true,
-                    'address'       => $buyers->get(),
+                    'address'       => $buyers,
                 ];
                 return response()->json($responseData, 200);
             }
         }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [

@@ -195,11 +195,11 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('name', $this->state['country'])->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  DB::table('states')->where('id', $this->state['state'])->first()->name;
+            $this->state['state']   =  array_map('intval',[$this->state['state']]);
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+            $this->state['city']    =  array_map('intval',[$this->state['city']]);
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -257,20 +257,12 @@ class Index extends Component
         $this->state['zoning'] = json_decode($this->state['zoning'],true);
          
         $countryName = $buyer->country;
-        $stateName = $buyer->state;
-        $cityName = $buyer->city;
+        $stateId = $buyer->state;
+        $cityId = $buyer->city;
 
         // $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
 
         $countryId = 233;
-
-        if($stateName){
-            $stateId = DB::table('states')->where('country_id', $countryId)->where('name', $stateName)->first()->id;
-        }
-
-        if($cityName){
-            $cityId = DB::table('cities')->where('state_id', $stateId)->where('name', $cityName)->first()->id;
-        }
 
         $this->state['country'] = $buyer->country;
         $this->state['state'] = $stateId;
@@ -292,13 +284,13 @@ class Index extends Component
         $this->validatiionForm();
 
         $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
-        
+                
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+            $this->state['state']   =  array_map('intval',[$this->state['state']]);
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    = DB::table('cities')->where('id', $this->state['city'])->first()->name;
+            $this->state['city']    =  array_map('intval',[$this->state['city']]);
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
