@@ -1415,12 +1415,13 @@ class BuyerController extends Controller
     }
 
     public function searchAddress(Request $request){
-        $search = $request->search;
+        // $search = $request->search;
         try {
-            if($search){
+            // if($search){
                 $buyers = Buyer::query()->select('address','country','state','city','zip_code');
 
-                $buyers->whereNotNull('address')->where('address','like',$search.'%');
+                // $buyers->whereNotNull('address')->where('address','like',$search.'%');
+                $buyers->whereNotNull('address');
             
                 $buyers = $buyers->get();
 
@@ -1466,7 +1467,7 @@ class BuyerController extends Controller
                     'labels' => $labels,
                 ];
                 return response()->json($responseData, 200);
-            }
+            // }
         }catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
             
