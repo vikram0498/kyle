@@ -1980,5 +1980,10 @@ margin-top: 0px;
 .country-field {
     background: #ebebeb !important;
 }
+.autocom-box.form-select li {
+    list-style: none;
+    padding: 5px;
+    margin: 2px;
+}
  /* ---end--------*/
   

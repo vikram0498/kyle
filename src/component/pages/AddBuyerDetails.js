@@ -203,8 +203,8 @@ function AddBuyerDetails (){
             formObject.zoning =  zoningValue;
         }
         // change city state value string to array
-        formObject.state = [data.get('state')];
-        formObject.city = [data.get('city')];
+        formObject.city = (data.get('city') !='') ? [data.get('city')]:'';
+        formObject.state = (data.get('state') !='') ? [data.get('state')]:'';
 
         try{
             let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});

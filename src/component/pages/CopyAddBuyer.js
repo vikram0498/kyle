@@ -189,15 +189,19 @@ function CopyAddBuyer (){
         formObject.property_flaw    =  locationFlawsValue;
         // formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
+        formObject.formName         =  'copy-form';
         //console.log(formObject.hasOwnProperty('building_class'),'check');
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
         if (formObject.hasOwnProperty('state')) {
-            formObject.states =  stateValue;
+            //formObject.states =  stateValue;
+            formObject.states = (stateValue.length>0) ? stateValue:'';
         }
         if (formObject.hasOwnProperty('city')) {
-            formObject.city =  cityValue;
+            //formObject.city =  cityValue;
+            formObject.city = (cityValue.length>0) ? cityValue:'';
+
         }
         
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {

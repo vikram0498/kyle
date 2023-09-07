@@ -12,7 +12,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
         <>
             <div className="row">
                 <div className="col-12 col-lg-12">
-                   <AutoSuggestionAddress/>
+                   <AutoSuggestionAddress data={data}/>
                 </div>
                 {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Country</label>
