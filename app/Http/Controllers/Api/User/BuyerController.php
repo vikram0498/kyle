@@ -1425,13 +1425,13 @@ class BuyerController extends Controller
             
                 $buyers = $buyers->get();
 
-                $labels = [];
                 foreach($buyers as $key=>$buyer){
-                    $labels[$key] = $buyer->address;
+                    $labels = '';
+                    $labels = $buyer->address;
 
                     if($buyer->city){
                         $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
-                        $labels[$key] .= ','.implode(',',$cityArray);
+                        $labels .= ','.implode(',',$cityArray);
 
                         $buyer->city = collect($buyer->city)->map(function ($id) {
                             $cityName = DB::table('cities')->where('id',$id)->value('name');
@@ -1445,7 +1445,7 @@ class BuyerController extends Controller
                     if($buyer->state){
                         
                         $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                        $labels[$key] .= ','.implode(',',$stateArray);
+                        $labels .= ','.implode(',',$stateArray);
 
                         $buyer->state = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
@@ -1456,7 +1456,9 @@ class BuyerController extends Controller
                         })->values()->all();
                     }
 
-                    $labels[$key] .= ','.$buyer->zip_code;
+                    $labels .= ','.$buyer->zip_code;
+
+                    $buyer->labels = $labels;
 
                 }
                
@@ -1464,7 +1466,6 @@ class BuyerController extends Controller
                 $responseData = [
                     'status' => true,
                     'result' => $buyers,
-                    'labels' => $labels,
                 ];
                 return response()->json($responseData, 200);
             // }
