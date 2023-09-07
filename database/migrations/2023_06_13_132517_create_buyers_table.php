@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('company_name')->nullable();
             $table->string('address')->nullable();
             $table->string('country')->nullable();
-            $table->string('state')->nullable();
-            $table->string('city')->nullable();
+            $table->json('state')->nullable();
+            $table->json('city')->nullable();
             $table->string('zip_code')->nullable();
             $table->integer('bedroom_min')->nullable();
             $table->integer('bedroom_max')->nullable();

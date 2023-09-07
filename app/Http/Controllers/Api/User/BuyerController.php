@@ -223,6 +223,15 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
 
+            $states = DB::table('states')->where('country_id',233)->orderBy('name','ASC')->pluck('name','id');
+
+            $elementValues['states'] = $states->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucfirst(strtolower($label)),
+                ];
+            })->values()->all();
+
             //Return Error Response
             $responseData = [
                 'status'        => true,
