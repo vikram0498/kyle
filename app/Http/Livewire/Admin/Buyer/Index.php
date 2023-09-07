@@ -31,7 +31,7 @@ class Index extends Component
 
     public $state = [
         'status' => 1,
-        'buyer_type' => []
+        'buyer_type' => [],
     ];
 
     protected $listeners = [
@@ -61,7 +61,7 @@ class Index extends Component
         $this->purchaseMethods = config('constants.purchase_methods');
         $this->radioButtonFields = config('constants.radio_buttons_fields');
 
-        $this->countries = DB::table('countries')->pluck('name', 'id');
+        // $this->countries = DB::table('countries')->pluck('name', 'id');
 
         $this->zonings= config('constants.zonings');
         $this->utilities = config('constants.utilities');
@@ -72,6 +72,8 @@ class Index extends Component
         $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
         $this->buyerFormLink = $url.'add/buyer?token='.$encryptedId;
+
+        $this->states =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
     }
 
     private function rules (){
@@ -81,7 +83,7 @@ class Index extends Component
             'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone' => ['required', 'numeric', 'digits:10'], 
             'address' => ['required'], 
-            'country' => ['required', 'exists:countries,id'], 
+            'country' => ['required', 'exists:countries,name'], 
             // 'state' => [/*'required', 'exists:states,id'*/], 
             // 'city' => [/*'required', 'exists:cities,id'*/], 
             'zip_code' => ['required','min:6','max:10'],
@@ -179,6 +181,9 @@ class Index extends Component
         $this->resetInputFields();
         $this->resetValidation();
         $this->formMode = true;
+
+        $this->state['country'] = 'United States';
+
         $this->initializePlugins();
     }
 
@@ -187,10 +192,10 @@ class Index extends Component
         
         $this->state['user_id'] = auth()->user()->id;
 
-        $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
+        $this->state['country'] = DB::table('countries')->where('name', $this->state['country'])->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;
+            $this->state['state']   =  DB::table('states')->where('id', $this->state['state'])->first()->name;
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
@@ -255,8 +260,10 @@ class Index extends Component
         $stateName = $buyer->state;
         $cityName = $buyer->city;
 
-        $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
-        
+        // $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
+
+        $countryId = 233;
+
         if($stateName){
             $stateId = DB::table('states')->where('country_id', $countryId)->where('name', $stateName)->first()->id;
         }
@@ -265,7 +272,7 @@ class Index extends Component
             $cityId = DB::table('cities')->where('state_id', $stateId)->where('name', $cityName)->first()->id;
         }
 
-        $this->state['country'] = $countryId;
+        $this->state['country'] = $buyer->country;
         $this->state['state'] = $stateId;
         $this->state['city'] = $cityId;
 
@@ -284,7 +291,7 @@ class Index extends Component
     public function update() {
         $this->validatiionForm();
 
-        $this->state['country'] = DB::table('countries')->where('id', $this->state['country'])->first()->name;
+        $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
         
         if(isset($this->state['state']) && !empty($this->state['state'])){
             $this->state['state']   = DB::table('states')->where('id', $this->state['state'])->first()->name;

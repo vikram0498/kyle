@@ -98,6 +98,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
 
+    Route::post('search-address', [BuyerController::class, 'searchAddress']);
+
     Route::get('getPlans', [HomeController::class, 'getPlans']);
 
     Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);
@@ -117,6 +119,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('/subscribe', [PaymentController::class, 'createSubscription']);
 
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
+
 
 });
 

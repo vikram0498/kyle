@@ -44,14 +44,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="country" class="font-weight-bold">{{ __('cruds.buyer.fields.country')}} <span class="text-danger">*</span></label>
-                    <div wire:ignore>
-                        <select wire:model.defer="state.country" id="country" class="form-control country select2" id="country" data-property="country">
-                            <option value="">Select {{ __('cruds.buyer.fields.country')}}</option>
-                            @foreach($countries as $key => $country)
-                                <option value="{{$key}}"> {{$country}} </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <input type="text" class="form-control" wire:model.defer="state.country" disabled>
                     @error('country') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>

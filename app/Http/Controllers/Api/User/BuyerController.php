@@ -393,14 +393,14 @@ class BuyerController extends Controller
 
             if($request->state){
                 $state   =  DB::table('states')->where('id',$request->state)->value('name');
-                $buyers = $buyers->where('state', $state);
-                $additionalBuyers = $additionalBuyers->where('state', $state);
+                $buyers = $buyers->whereJsonContains('state', $state);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $state);
             }
 
             if($request->city){
                 $city    =  DB::table('cities')->where('id',$request->city)->value('name');
-                $buyers = $buyers->where('city', $city);
-                $additionalBuyers = $additionalBuyers->where('city', $city);
+                $buyers = $buyers->whereJsonContains('city', $city);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $city);
             }
 
             if($request->zip_code){
@@ -1416,4 +1416,31 @@ class BuyerController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function searchAddress(Request $request){
+        $search = $request->address;
+        try {
+            if($search){
+                $buyers = Buyer::query()->select('address','country','state','city');
+
+                $buyers->whereNotNull('address')->where('address','like',$search.'%');
+            
+                //Return Error Response
+                $responseData = [
+                    'status'        => true,
+                    'address'       => $buyers->get(),
+                ];
+                return response()->json($responseData, 200);
+            }
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+
+    }
 }
