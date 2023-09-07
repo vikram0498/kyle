@@ -98,7 +98,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
 
-    Route::post('search-address', [BuyerController::class, 'searchAddress']);
+    Route::get('search-address', [BuyerController::class, 'searchAddress']);
 
     Route::get('getPlans', [HomeController::class, 'getPlans']);
 

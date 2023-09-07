@@ -688,10 +688,9 @@ class BuyerController extends Controller
             $insertLogRecords['user_id'] = $userId;
 
             if(isset($request->filterType) && $request->filterType == 'search_page'){
-
-                $insertLogRecords['country'] =  DB::table('countries')->where('id',$request->country)->value('name');
-                $insertLogRecords['state']   =  DB::table('states')->where('id',$request->state)->value('name');
-                $insertLogRecords['city']    =  DB::table('cities')->where('id',$request->city)->value('name');
+                $insertLogRecords['country'] =  233;
+                $insertLogRecords['state']   =  $request->state;
+                $insertLogRecords['city']    =  $request->city;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
@@ -1149,16 +1148,16 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
             }
 
-            if($lastSearchLog->country){
-                $buyers = $buyers->where('country', $lastSearchLog->country);
-            }
+            // if($lastSearchLog->country){
+            //     $buyers = $buyers->where('country', $lastSearchLog->country);
+            // }
 
             if($lastSearchLog->state){
-                $buyers = $buyers->where('state', $lastSearchLog->state);
+                $buyers = $buyers->whereJsonContains('state', intval($lastSearchLog->state));
             }
 
             if($lastSearchLog->city){
-                $buyers = $buyers->where('city', $lastSearchLog->city);
+                $buyers = $buyers->whereJsonContains('city', intval($lastSearchLog->city));
             }
 
             if($lastSearchLog->zip_code){
@@ -1416,7 +1415,7 @@ class BuyerController extends Controller
     }
 
     public function searchAddress(Request $request){
-        $search = $request->address;
+        $search = $request->search;
         try {
             if($search){
                 $buyers = Buyer::query()->select('address','country','state','city','zip_code');
@@ -1425,7 +1424,28 @@ class BuyerController extends Controller
             
                 $buyers = $buyers->get();
 
-                foreach($buyers as $buyer){
+                $labels = [];
+                foreach($buyers as $key=>$buyer){
+                    $labels[$key] = $buyer->address;
+
+                    $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name');
+                    $labels[$key] .= ','.$cityArray[0];
+
+                    $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name');
+                    $labels[$key] .= ','.$stateArray[0];
+
+                    $labels[$key] .= ','.$buyer->zip_code;
+
+                    if($buyer->city){
+                        $buyer->city = collect($buyer->city)->map(function ($id) {
+                            $cityName = DB::table('cities')->where('id',$id)->value('name');
+                            return [
+                                'value' => $id,
+                                'label' => ucfirst(strtolower($cityName)),
+                            ];
+                        })->values()->all();
+                    }
+
                     if($buyer->state){
                         $buyer->state = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
@@ -1435,29 +1455,18 @@ class BuyerController extends Controller
                             ];
                         })->values()->all();
                     }
-                    
-
-                    if($buyer->city){
-                        $buyer->city = collect($buyer->city)->map(function ($id) {
-                            $cityName = DB::table('cities')->where('id',$id)->value('name');
-        
-                            return [
-                                'value' => $id,
-                                'label' => ucfirst(strtolower($cityName)),
-                            ];
-                        })->values()->all();
-                    }
                 }
                
                 //Return Error Response
                 $responseData = [
-                    'status'        => true,
-                    'address'       => $buyers,
+                    'status' => true,
+                    'result' => $buyers,
+                    'labels' => $labels,
                 ];
                 return response()->json($responseData, 200);
             }
         }catch (\Exception $e) {
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
