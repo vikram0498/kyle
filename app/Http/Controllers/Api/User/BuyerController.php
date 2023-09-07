@@ -677,6 +677,7 @@ class BuyerController extends Controller
                 $pagination = 50;
             }
 
+            $buyers = $buyers->orderBy('created_by','desc');
             $buyers = $buyers->paginate($pagination);
 
             // Get additional buyer
@@ -774,7 +775,7 @@ class BuyerController extends Controller
             $perPage = 10;
             $userId = auth()->user()->id;
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
-            $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->paginate($perPage);
+            $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->orderBy('created_by','desc')->paginate($perPage);
         
             foreach ($buyers as $buyer) {
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
@@ -1362,7 +1363,7 @@ class BuyerController extends Controller
                 $buyers = $buyers->whereJsonContains('buyer_type', intval($lastSearchLog->buyer_type));
             }
 
-            $buyers = $buyers->paginate(10);
+            $buyers = $buyers->orderBy('created_by','desc')->paginate(10);
 
             foreach ($buyers as $key=>$buyer){
                 $name = $buyer->first_name.' '.$buyer->last_name;
@@ -1425,6 +1426,7 @@ class BuyerController extends Controller
             
                 $buyers = $buyers->get();
 
+                $allBuyers = [];
                 foreach($buyers as $key=>$buyer){
                     $labels = '';
                     $labels = $buyer->address;
@@ -1432,8 +1434,19 @@ class BuyerController extends Controller
                     if($buyer->city){
                         $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
                         $labels .= ','.implode(',',$cityArray);
+                    }
 
-                        $buyer->city = collect($buyer->city)->map(function ($id) {
+                    if($buyer->state){
+                        $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
+                        $labels .= ','.implode(',',$stateArray);
+                    }
+
+                    $labels .= ','.$buyer->zip_code;
+
+                    $allBuyers[$labels]['address'] = $buyer->address;
+
+                    if($buyer->city){
+                        $allBuyers[$labels]['city'] = collect($buyer->city)->map(function ($id) {
                             $cityName = DB::table('cities')->where('id',$id)->value('name');
                             return [
                                 'value' => $id,
@@ -1443,11 +1456,7 @@ class BuyerController extends Controller
                     }
 
                     if($buyer->state){
-                        
-                        $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                        $labels .= ','.implode(',',$stateArray);
-
-                        $buyer->state = collect($buyer->state)->map(function ($id) {
+                        $allBuyers[$labels]['state'] = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
                             return [
                                 'value' => $id,
@@ -1456,16 +1465,13 @@ class BuyerController extends Controller
                         })->values()->all();
                     }
 
-                    $labels .= ','.$buyer->zip_code;
-
-                    $buyer->labels = $labels;
-
+                    $allBuyers[$labels]['zip_code'] = $buyer->zip_code;
                 }
                
                 //Return Error Response
                 $responseData = [
                     'status' => true,
-                    'result' => $buyers,
+                    'result' => $allBuyers,
                 ];
                 return response()->json($responseData, 200);
             // }
