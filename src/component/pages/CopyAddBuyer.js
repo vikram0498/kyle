@@ -60,6 +60,9 @@ function CopyAddBuyer (){
     const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
     const [contactPreferanceValue, setContactPreferanceValue] = useState([]);
     const [zoningValue, setZoningValue] = useState([]);
+    const [stateValue,setStatevalue] = useState([]);
+    const [cityValue,setCityvalue] = useState([]);
+
 
     const [isTokenExpire, setIsTokenExpire] = useState(false);
 
@@ -113,7 +116,8 @@ function CopyAddBuyer (){
                     setPropertyTypeOption(result.property_types);
                     setLocationFlawsOption(result.location_flaws);
                     setParkingOption(result.parking_values);
-                    setCountryOptions(result.countries);
+                    //setCountryOptions(result.countries);
+                    setStateOptions(result.states);
                     setbuyerTypeOption(result.buyer_types);
                     setMarketPreferanceOption(result.market_preferances);
                     setContactPreferanceOption(result.contact_preferances);
@@ -147,20 +151,26 @@ function CopyAddBuyer (){
         }
     }
 
-    const getCities = (state_id) => {
-        if(state_id == null){
-            setState([]); setCity([]);
-
-            setCityOptions([]);
-        } else { 
-            let country_id = {country};
-            axios.post(apiUrl+'getCities', { state_id: state_id, country_id: country_id }, { headers: headers }).then(response => {
-                let result = response.data.options;
-
+    const getCities = async (state_id) => {
+        try{
+            if(state_id == null){
                 setState([]); setCity([]);
-                
-                setState(state_id); setCityOptions(result);
-            });
+                setCityOptions([]);
+            }else { 
+                const selectedStates = state_id.map((item) => item.value);
+                setStatevalue(selectedStates);
+                let country_id = {country};
+                let response = await axios.post(apiUrl+'getCities', { state_id: selectedStates, country_id: 233 }, { headers: headers });
+                if(response){
+                    let result = response.data.options;
+                    //setState([]); 
+                    setCity([]);
+                    //setState(state_id); 
+                    setCityOptions(result);
+                }
+            }
+        }catch(error){
+
         }
     }
 
@@ -183,6 +193,13 @@ function CopyAddBuyer (){
         if (formObject.hasOwnProperty('building_class')) {
             formObject.building_class =  buildingClassNamesValue;
         }
+        if (formObject.hasOwnProperty('state')) {
+            formObject.states =  stateValue;
+        }
+        if (formObject.hasOwnProperty('city')) {
+            formObject.city =  cityValue;
+        }
+        
         //console.log(formObject,'formObject');
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {
             setLoading(false);
@@ -258,7 +275,7 @@ function CopyAddBuyer (){
             setState(e);
             getCities(e);
         }else if(name == 'city'){
-            setCity(e);
+            //setCity(e);
         }
         else if(name == 'building_class'){
             setBuildingClassNamesValue(selectedValues);
@@ -277,7 +294,11 @@ function CopyAddBuyer (){
         else if(name == 'zoning'){
             setZoningValue(selectedValues);
         }
-
+    }
+    const handleCityChange = (event) => {
+        let selectedValues = event.map((item) => item.value);
+        console.log("enter");
+        setCityvalue(selectedValues);
     }
     return (
         <>
@@ -375,155 +396,6 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Address<span>*</span></label>
-                                                                <div className="form-group">
-                                                                    <input type="text" name="address" className="form-control" placeholder="Enter Address" {
-                                                                    ...register("address", {
-                                                                        required: "Address is required",
-                                                                    })
-                                                                    } />
-                                                                    {errors.address && <p className="error">{errors.address?.message}</p>}
-                                                                    {renderFieldError('address') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Country<span>*</span></label>
-                                                                <div className="form-group">
-                                                                {/* <Select
-                                                                    name="country"
-                                                                    defaultValue=''
-                                                                    options={countryOptions}
-                                                                    onChange={(item) => getStates(item)}
-                                                                    className="select"
-                                                                    isClearable={true}
-                                                                    isSearchable={true}
-                                                                    isDisabled={false}
-                                                                    isLoading={false}
-                                                                    isRtl={false}
-                                                                    placeholder= "Select Country"
-                                                                    closeMenuOnSelect={true}
-                                                                /> */}
-                                                                <Controller
-                                                                    control={control}
-                                                                    name="country"
-                                                                    rules={{ required: 'Country is required' }}
-                                                                    render={({ field: { value, onChange, name } }) => (
-                                                                    <Select
-                                                                        options={countryOptions}
-                                                                        name = {name}
-                                                                        placeholder='Select Country'
-                                                                        isClearable={true}
-                                                                        onChange={(e)=>{
-                                                                            onChange(e)
-                                                                            handleCustum(e,'country')
-                                                                        }}
-                                                                    />
-                                                                    )}
-                                                                />
-                                                                    {errors.country && <p className="error">{errors.country?.message}</p>}    
-                                                                    {renderFieldError('country') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>State</label>
-                                                                <div className="form-group">
-                                                                    <Select
-                                                                        name="state"
-                                                                        defaultValue=''
-                                                                        options={stateOptions}
-                                                                        onChange={(item) => getCities(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        value={state}
-                                                                        isRtl={false}
-                                                                        placeholder="Select State"
-                                                                        closeMenuOnSelect={true}
-                                                                    />
-                                                                    {/* <Controller
-                                                                        control={control}
-                                                                        name="state"
-                                                                        rules={{ required: 'State is required' }}
-                                                                        render={({ field: { value, onChange, name } }) => (
-                                                                        <Select
-                                                                            options={stateOptions}
-                                                                            name = {name}
-                                                                            value={state}
-                                                                            isClearable={true}
-                                                                            className="select"
-                                                                            placeholder='Select State'
-                                                                            onChange={(e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'state')
-                                                                            }}
-                                                                        />
-                                                                        )}
-                                                                    />
-                                                                    {errors.state && <p className="error">{errors.state?.message}</p>}
-                                                                    {renderFieldError('state') } */}
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>City</label>
-                                                                <div className="form-group">
-                                                                    <Select
-                                                                        name="city"
-                                                                        defaultValue=''
-                                                                        options={cityOptions}
-                                                                        onChange={(item) => setCity(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        value={city}
-                                                                        isRtl={false}
-                                                                        placeholder="Select City"
-                                                                        closeMenuOnSelect={true}
-                                                                    />
-                                                                    {/* <Controller
-                                                                        control={control}
-                                                                        name="city"
-                                                                        rules={{ required: 'City is required' }}
-                                                                        render={({ field: { value, onChange, name } }) => (
-                                                                        <Select
-                                                                            options={cityOptions}
-                                                                            name = {name}
-                                                                            value={city}
-                                                                            isClearable={true}
-                                                                            className="select"
-                                                                            placeholder='Select City'
-                                                                            onChange={(e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'city')
-                                                                            }}
-                                                                        />
-                                                                        )}
-                                                                    />
-                                                                    {errors.city && <p className="error">{errors.city?.message}</p>} */}
-
-                                                                    {renderFieldError('city') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Zip<span>*</span></label>
-                                                                <div className="form-group">
-                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
-                                                                        ...register("zip_code", {
-                                                                            required: "Zip Code is required",
-                                                                            validate: {
-                                                                                maxLength: (v) =>
-                                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                                            },
-                                                                        })
-                                                                    } />
-                                                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
-                                                                    {renderFieldError('zip_code') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Company/LLC</label>
                                                                 <div className="form-group">
                                                                     <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
@@ -578,6 +450,153 @@ function CopyAddBuyer (){
                                                                 {renderFieldError('contact_preferance') }
                                                                 </div>
                                                             </div>
+                                                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Address<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="address" className="form-control" placeholder="Enter Address" {
+                                                                    ...register("address", {
+                                                                        required: "Address is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.address?.message}</p>}
+                                                                    {renderFieldError('address') }
+                                                                </div>
+                                                            </div> */}
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Country<span>*</span></label>
+                                                                <div className="form-group">
+                                                                <input type="text" className="form-control country-field" value="United States" readOnly/>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-lg-12">
+                                                                <label>State</label>
+                                                                <div className="form-group">
+                                                                <Select
+                                                                    name="state"
+                                                                    defaultValue=''
+                                                                    options={stateOptions}
+                                                                    onChange={(item) => getCities(item)}
+                                                                    className="select"
+                                                                    isClearable={true}
+                                                                    isSearchable={true}
+                                                                    placeholder="Select State"
+                                                                    closeMenuOnSelect={false}
+                                                                    isMulti
+                                                                />
+                                                                    {renderFieldError('state') }
+                                                                    {/* <Select
+                                                                        name="state"
+                                                                        defaultValue=''
+                                                                        options={stateOptions}
+                                                                        onChange={(item) => getCities(item)}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        value={state}
+                                                                        isRtl={false}
+                                                                        placeholder="Select State"
+                                                                        closeMenuOnSelect={true}
+                                                                    /> */}
+                                                                    {/* <Controller
+                                                                        control={control}
+                                                                        name="state"
+                                                                        rules={{ required: 'State is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={stateOptions}
+                                                                            name = {name}
+                                                                            value={state}
+                                                                            isClearable={true}
+                                                                            className="select"
+                                                                            placeholder='Select State'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'state')
+                                                                            }}
+                                                                        />
+                                                                        )}
+                                                                    />
+                                                                    {errors.state && <p className="error">{errors.state?.message}</p>}
+                                                                    {renderFieldError('state') } */}
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-lg-12">
+                                                                <label>City</label>
+                                                                <div className="form-group">
+                                                                <Select
+                                                                    name="city"
+                                                                    defaultValue=''
+                                                                    options={cityOptions}
+                                                                    className="select"
+                                                                    isClearable={true}
+                                                                    isSearchable={true}
+                                                                    isDisabled={false}
+                                                                    isLoading={false}
+                                                                    onChange={handleCityChange}
+                                                                    isRtl={false}
+                                                                    placeholder="Select City"
+                                                                    closeMenuOnSelect={false}
+                                                                    isMulti
+                                                                />
+                                                                    {renderFieldError('city') }
+                                                                    {/* <Select
+                                                                        name="city"
+                                                                        defaultValue=''
+                                                                        options={cityOptions}
+                                                                        onChange={(item) => setCity(item)}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        value={city}
+                                                                        isRtl={false}
+                                                                        placeholder="Select City"
+                                                                        closeMenuOnSelect={true}
+                                                                    /> */}
+                                                                    {/* <Controller
+                                                                        control={control}
+                                                                        name="city"
+                                                                        rules={{ required: 'City is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={cityOptions}
+                                                                            name = {name}
+                                                                            value={city}
+                                                                            isClearable={true}
+                                                                            className="select"
+                                                                            placeholder='Select City'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'city')
+                                                                            }}
+                                                                        />
+                                                                        )}
+                                                                    />
+                                                                    {errors.city && <p className="error">{errors.city?.message}</p>} */}
+
+                                                                    {renderFieldError('city') }
+                                                                </div>
+                                                            </div>
+                                                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Zip<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                                                        ...register("zip_code", {
+                                                                            required: "Zip Code is required",
+                                                                            validate: {
+                                                                                maxLength: (v) =>
+                                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                                            },
+                                                                        })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
+                                                                    {renderFieldError('zip_code') }
+                                                                </div>
+                                                            </div> */}
+                                                            
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
                                                                     <label>Property Type<span>*</span></label>

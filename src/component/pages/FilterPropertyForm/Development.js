@@ -14,9 +14,10 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('address') }
 					</div>
 				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+				{/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
 					<label>Country</label>
 					<div className="form-group">
+						<input type="text" className="form-control country-field" value="United States" readonly="readonly" />
 						<Select
 							name="country"
 							defaultValue=''
@@ -34,7 +35,7 @@ const Development = ({data,landSelected})=>{
 						/>
 						{data.renderFieldError('country') }
 					</div>
-				</div>
+				</div> */}
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
 					<label>State</label>
 					<div className="form-group">

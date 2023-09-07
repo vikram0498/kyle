@@ -354,7 +354,9 @@ const SellerForm = () =>{
 		if (formObject.hasOwnProperty('zoning')) {
             formObject.zoning =  zoning;
         }
-
+        formObject.state = [data.get('state')];
+        formObject.city = [data.get('city')];
+		
 		formObject.filterType = 'search_page';
 		formObject.activeTab  = 'my_buyers';
 		console.log(formObject,'formObject');

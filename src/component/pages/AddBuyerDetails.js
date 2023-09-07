@@ -102,7 +102,8 @@ function AddBuyerDetails (){
                     setPropertyTypeOption(result.property_types);
                     setLocationFlawsOption(result.location_flaws);
                     setParkingOption(result.parking_values);
-                    setCountryOptions(result.countries);
+                    //setCountryOptions(result.countries);
+                    setStateOptions(result.states);
                     setbuyerTypeOption(result.buyer_types);
                     setMarketPreferanceOption(result.market_preferances);
                     setContactPreferanceOption(result.contact_preferances);
@@ -201,6 +202,10 @@ function AddBuyerDetails (){
         if (formObject.hasOwnProperty('zoning')) {
             formObject.zoning =  zoningValue;
         }
+        // change city state value string to array
+        formObject.state = [data.get('state')];
+        formObject.city = [data.get('city')];
+
         try{
             let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});
             if(response){
@@ -389,7 +394,7 @@ function AddBuyerDetails (){
                                         </div>
                                     </div>
                                     {(copySuccess && generatedUrl !='') ? <div id="inviteCode" class="invite-page">
-                                        <input  id="link" value={generatedUrl} readonly/>
+                                        <input  id="link" value={generatedUrl} readOnly/>
                                         <div id="copy">
                                         <i class="fa-solid fa-copy" aria-hidden="true" data-copytarget="#link" onClick={() => handleCopyToClipBoard(generatedUrl)}></i>
                                         </div>
@@ -483,25 +488,7 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country<span>*</span></label>
                                                     <div className="form-group">
-                                                    <Controller
-                                                        control={control}
-                                                        name="country"
-                                                        rules={{ required: 'Country is required' }}
-                                                        render={({ field: { value, onChange, name } }) => (
-                                                        <Select
-                                                            options={countryOptions}
-                                                            name = {name}
-                                                            placeholder='Select Country'
-                                                            isClearable={true}
-                                                            onChange={(e)=>{
-                                                                onChange(e)
-                                                                handleCustum(e,'country')
-                                                            }}
-                                                        />
-                                                        )}
-                                                    />
-                                                        {errors.country && <p className="error">{errors.country?.message}</p>}    
-                                                        {renderFieldError('country') }
+                                                    <input type="text" className="form-control country-field" value="United States" readOnly />
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -515,10 +502,6 @@ function AddBuyerDetails (){
                                                             className="select"
                                                             isClearable={true}
                                                             isSearchable={true}
-                                                            isDisabled={false}
-                                                            isLoading={false}
-                                                            value={state}
-                                                            isRtl={false}
                                                             placeholder="Select State"
                                                             closeMenuOnSelect={true}
                                                         />
