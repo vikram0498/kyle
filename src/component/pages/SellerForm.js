@@ -168,7 +168,7 @@ const SellerForm = () =>{
 				setPurchaseMethodsOption(result.purchase_methods);
                 setLocationFlawsOption(result.location_flaws);
                 setParkingOption(result.parking_values);
-                setCountryOptions(result.countries);     
+                setStateOptions(result.states);     
                 setPropertyTypeOption(result.property_types);
 				setBuildingClassOption(result.building_class_values);
 				setMarketPreferanceOption(result.market_preferances);
@@ -176,7 +176,6 @@ const SellerForm = () =>{
 				setZoningOption(result.zonings);
 				setSewerOption(result.sewers);
 				setUtilitiesOption(result.utilities);
-
                 setIsLoader(false);
             }
         })
@@ -287,7 +286,7 @@ const SellerForm = () =>{
 		setPurchaseMethodsValue([]);
 
 		setCityOptions([]);
-		setStateOptions([]);
+		//setStateOptions([]);
 
 	}
 
@@ -359,10 +358,8 @@ const SellerForm = () =>{
 		
 		formObject.filterType = 'search_page';
 		formObject.activeTab  = 'my_buyers';
-		console.log(formObject,'formObject');
 		buyBoxSearch(formObject)
     }
-
 
 	const dataObj = {
 		address, setAddress,

@@ -200,7 +200,6 @@ function CopyAddBuyer (){
             formObject.city =  cityValue;
         }
         
-        //console.log(formObject,'formObject');
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
@@ -1181,7 +1180,7 @@ function CopyAddBuyer (){
                                                                         },
                                                                     })
                                                                     } />
-                                                                    {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+                                                                    {errors.price_max && <p className="error">{errors.price_max?.message}</p>}
 
                                                                     {renderFieldError('price_max') }
                                                                 </div>

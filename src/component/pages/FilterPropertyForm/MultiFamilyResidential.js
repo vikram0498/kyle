@@ -52,7 +52,7 @@ const MultiFamilyResidential = ({data}) =>{
                             isSearchable={true}
                             isDisabled={false}
                             isLoading={false}
-                            value={data.state}
+                            //value={data.state}
                             isRtl={false}
                             placeholder="Select State"
                             closeMenuOnSelect={true}

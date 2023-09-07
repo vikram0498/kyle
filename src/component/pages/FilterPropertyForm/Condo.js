@@ -4,17 +4,15 @@ import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import AutoSuggestionAddress from './AutoSuggestionAddress';
  const Condo = ( {data}) => {
     const [startDate, setStartDate] = useState('');
+     
     return(
         <>
             <div className="row">
                 <div className="col-12 col-lg-12">
-                    <label>Address</label>
-                    <div className="form-group">
-                        <input type="text" name="address" className="form-control" placeholder="Enter Address" value={data.address} onChange={e=>data.setAddress(e.target.value)} />
-                        {data.renderFieldError('address') }
-                    </div>
+                   <AutoSuggestionAddress/>
                 </div>
                 {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Country</label>
@@ -50,7 +48,7 @@ import "react-datepicker/dist/react-datepicker.css";
                             isSearchable={true}
                             isDisabled={false}
                             isLoading={false}
-                            value={data.state}
+                            //value={data.state}
                             isRtl={false}
                             placeholder="Select State"
                             closeMenuOnSelect={true}
