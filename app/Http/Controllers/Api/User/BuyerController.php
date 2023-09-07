@@ -1443,6 +1443,11 @@ class BuyerController extends Controller
 
                     $labels .= ','.$buyer->zip_code;
 
+                    $allBuyers[$labels]['address'] = '';
+                    $allBuyers[$labels]['city'] = '';
+                    $allBuyers[$labels]['state'] = '';
+                    $allBuyers[$labels]['zip_code'] = '';
+
                     $allBuyers[$labels]['address'] = $buyer->address;
 
                     if($buyer->city){
