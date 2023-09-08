@@ -690,8 +690,8 @@ class BuyerController extends Controller
 
             if(isset($request->filterType) && $request->filterType == 'search_page'){
                 $insertLogRecords['country'] =  233;
-                $insertLogRecords['state']   =  array_map('intval', $request->state);
-                $insertLogRecords['city']    =  array_map('intval', $request->city);
+                $insertLogRecords['state']   =  $request->state ? array_map('intval', $request->state) : null;
+                $insertLogRecords['city']    =  $request->city ? array_map('intval', $request->city) : null;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
