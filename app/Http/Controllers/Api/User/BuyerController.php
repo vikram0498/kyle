@@ -393,15 +393,13 @@ class BuyerController extends Controller
             // }
 
             if($request->state){
-                $searchState =  array_map('intval',$request->state);
-                $buyers = $buyers->whereJsonContains('state', $searchState);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $searchState);
+                $buyers = $buyers->whereJsonContains('state', $request->state);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $request->state);
             }
 
             if($request->city){
-                $searchCity =  array_map('intval',$request->city);
-                $buyers = $buyers->whereJsonContains('city', $searchCity);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $searchCity);
+                $buyers = $buyers->whereJsonContains('city', $request->city);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $request->city);
             }
 
             if($request->zip_code){
@@ -692,8 +690,8 @@ class BuyerController extends Controller
 
             if(isset($request->filterType) && $request->filterType == 'search_page'){
                 $insertLogRecords['country'] =  233;
-                $insertLogRecords['state']   =  $request->state ? array_map('intval', $request->state) : null;
-                $insertLogRecords['city']    =  $request->city ? array_map('intval', $request->city) : null;
+                $insertLogRecords['state']   =  $request->state ?? null;
+                $insertLogRecords['city']    =  $request->city ?? null;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
@@ -1156,7 +1154,6 @@ class BuyerController extends Controller
             // }
 
             if($lastSearchLog->state){
-
                 $buyers = $buyers->whereJsonContains('state', $lastSearchLog->state);
             }
 

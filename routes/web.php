@@ -59,5 +59,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('search-log', 'admin.search-log.index')->name('search-log');
 
         Route::view('search-buyer', 'admin.buyer.search-buyer')->name('search-buyer-form');
+
+        Route::view('transactions', 'admin.transactions.index')->name('transactions');        
+
     });
 });

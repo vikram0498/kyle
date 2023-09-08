@@ -26,8 +26,8 @@
             </li>
             
             {{-- @can('transaction_access')
-            <li class="nav-item {{ request()->is('admin/search-log') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.search-log') }}">
+            <li class="nav-item {{ request()->is('admin/transactions') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.transactions') }}">
                     <i class="icon-grid menu-icon fab fa-cc-stripe"></i>
                    
                     <span class="menu-title"> {{ __('cruds.transaction.title') }} </span>
