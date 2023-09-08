@@ -662,8 +662,8 @@ class BuyerController extends Controller
             }
 
             if($request->buyer_type){
-                $buyers = $buyers->whereJsonContains('buyer_type', intval($request->buyer_type));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('buyer_type', intval($request->buyer_type));
+                $buyers = $buyers->where('buyer_type', $request->buyer_type);
+                $additionalBuyers = $additionalBuyers->where('buyer_type', $request->buyer_type);
             }
            
             $totalRecord = $buyers->count();
@@ -1359,9 +1359,6 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('value_add', $lastSearchLog->value_add);
             }
 
-            if($lastSearchLog->buyer_type){
-                $buyers = $buyers->whereJsonContains('buyer_type', intval($lastSearchLog->buyer_type));
-            }
 
             $buyers = $buyers->orderBy('created_by','desc')->paginate(10);
 
