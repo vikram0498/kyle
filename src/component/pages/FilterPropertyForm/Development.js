@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import MultiSelect from "../../partials/Select2/MultiSelect";
+import AutoSuggestionAddress from './AutoSuggestionAddress';
 
 const Development = ({data,landSelected})=>{
 	
@@ -8,12 +9,8 @@ const Development = ({data,landSelected})=>{
 		<>
 			<div className="row">
 				<div className="col-12 col-lg-12">
-					<label>Address</label>
-					<div className="form-group">
-						<input type="text" name="address" className="form-control" placeholder="Enter Address" value={data.address} onChange={e=>data.setAddress(e.target.value)} />
-						{data.renderFieldError('address') }
-					</div>
-				</div>
+                   <AutoSuggestionAddress data={data}/>
+                </div>
 				{/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
 					<label>Country</label>
 					<div className="form-group">
@@ -36,7 +33,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('country') }
 					</div>
 				</div> */}
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>State</label>
 					<div className="form-group">
 						<Select
@@ -49,7 +46,7 @@ const Development = ({data,landSelected})=>{
 							isSearchable={true}
 							isDisabled={false}
 							isLoading={false}
-							//value={data.state}
+							value={data.state}
 							isRtl={false}
 							placeholder="Select State"
 							closeMenuOnSelect={true}
@@ -57,7 +54,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('state') }
 					</div>
 				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>City</label>
 					<div className="form-group">
 						<Select
@@ -78,7 +75,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('city') }
 					</div>
 				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>Zip Code</label>
 					<div className="form-group">
 						<input type="text" name="zip_code" className="form-control" placeholder="Zip Code" value={data.zipCode} onChange={ e=>data.setZipCode(e.target.value) } />

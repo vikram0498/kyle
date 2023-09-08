@@ -25,11 +25,13 @@ const AutoSuggestionAddress = ({data}) =>{
         let selectData = element.textContent;
         inputBox.value = buyerdata.address;
         suggBox.innerHTML = '';
+        suggBox.style.display = "none";
     };
 
     const handleSearchKeyup = (e) => {
         let userData = e.target.value;
         let emptyArray = [];
+        suggBox.style.display = "block";
         if(userData){
             let suggestions = allAddress.map(obj => Object.keys(obj));
             suggestions = suggestions[0];
@@ -41,18 +43,19 @@ const AutoSuggestionAddress = ({data}) =>{
 
             emptyArray = emptyArray.map((data)=>{
                 // passing return data inside li tag
-                return data = `<li data-value="y565" onclick="selectFunction(this)">${data}</li>`;
+                return data = `<li onclick="selectFunction(this)">${data}</li>`;
             });
             showSuggestions(emptyArray, userData);
         }else{
             suggBox.innerHTML = '';
+            suggBox.style.display = "none";
         }
     }
 
     function showSuggestions(list, userValue) {
         let listData;
         if(!list.length){
-            listData = `<li data-value="123rr" onclick="selectFunction(this)">${userValue}</li>`;
+            listData = `<li onclick="selectFunction(this)">${userValue}</li>`;
         }else{
         listData = list.join('');
         }
@@ -73,6 +76,13 @@ const AutoSuggestionAddress = ({data}) =>{
 
         }
     }
+    const handleResetSearchBox = () => {
+        suggBox.style.display = "none";
+        data.setState([]);
+        data.setCity([]);
+        data.setZipCode('');
+        inputBox.value = '';
+    }
     useEffect(()=>{
         getAddress();
     },[])
@@ -82,7 +92,8 @@ const AutoSuggestionAddress = ({data}) =>{
             <label>Address</label>
             <div className="form-group address-selectbox">
                 <input type="text" className="address-box form-control" placeholder="Type to search.." onKeyUp={handleSearchKeyup}/>
-                <div className="autocom-box">
+                <input type="reset" className="reset-button" value="X" alt="Clear the search form" onClick={handleResetSearchBox}/>
+                <div className="autocom-box" style={{display:'none'}}>
                 </div>
             </div>
         </>

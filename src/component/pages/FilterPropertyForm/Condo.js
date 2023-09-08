@@ -35,7 +35,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('country') }
                     </div>
                 </div> */}
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                     <label>State</label>
                     <div className="form-group">
                         <Select
@@ -56,7 +56,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('state') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                     <label>City</label>
                     <div className="form-group">
                         <Select
@@ -77,7 +77,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('city') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                     <label>Zip Code</label>
                     <div className="form-group">
                         <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" value={data.zipCode} onChange={ e=>data.setZipCode(e.target.value) } />
