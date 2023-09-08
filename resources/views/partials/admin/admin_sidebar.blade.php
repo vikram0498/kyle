@@ -25,6 +25,16 @@
                 </a>
             </li>
             
+            {{-- @can('transaction_access')
+            <li class="nav-item {{ request()->is('admin/search-log') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.search-log') }}">
+                    <i class="icon-grid menu-icon fab fa-cc-stripe"></i>
+                   
+                    <span class="menu-title"> {{ __('cruds.transaction.title') }} </span>
+                </a>
+            </li>
+            @endcan --}}
+
             @can('buyer_access')            
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
@@ -52,6 +62,10 @@
                 </div>
             </li> 
             @endcan
+
+            
+
+            {{-- Masters --}}
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#master-menu"  aria-expanded="false" aria-controls="master-menu">
                     <i class="icon-layout menu-icon"></i>
@@ -77,6 +91,8 @@
                     </ul>
                 </div>
             </li> 
+
+            {{-- Settings --}}
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setting-menu" aria-expanded="false" aria-controls="setting-menu">
                     <i class="icon-layout menu-icon"></i>
@@ -95,6 +111,7 @@
                     </ul>
                 </div>
             </li> 
+
         @endif
     </ul>
 </nav>

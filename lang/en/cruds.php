@@ -196,18 +196,12 @@ return [
             'city'                          => 'City',
             'state'                         => 'State',
             'zip_code'                      => 'Zip',
-            'bedroom_min'                   => 'Bedroom (min)',
-            'bedroom_max'                   => 'Bedroom (max)',
-            'bath_min'                      => 'Bath (min)',
-            'bath_max'                      => 'Bath (max)',
-            'size_min'                      => 'Sq Ft Min',
-            'size_max'                      => 'Sq Ft Max',
-            'lot_size_min'                  => 'Lot Size Sq Ft (min)',
-            'lot_size_max'                  => 'Lot Size Sq Ft (max)',
-            'build_year_min'                => 'Year Built (min)',
-            'build_year_max'                => 'Year Built (max)',
-            'arv_min'                       => 'ARV (min)',
-            'arv_max'                       => 'ARV (max)',
+            'bedroom'                       => 'Bedroom',
+            'bath'                          => 'Bath',
+            'size'                          => 'Size',
+            'lot_size'                      => 'Lot Size Sq Ft',
+            'build_year'                    => 'Year Built',
+            'arv'                           => 'ARV',
             'parking'                       => 'Parking',
             'property_type'                 => 'Property Type',
             'property_flaw'                 => 'Property Flaw',
@@ -234,5 +228,18 @@ return [
     'dashboard'  => [
         'total_buyer'  => 'Total Buyers',
         'total_seller'  => 'Total Sellers',
+    ],
+
+    'transaction' => [
+        'title'                 => 'Transactions',
+        'title_singular'        => 'Transaction',
+        'fields' => [
+            'user'   => 'User',
+            'amount' => 'Amount',
+            'currency' => 'Currency',
+            'payment_type'   => 'Payment Type',
+            'payment_method' => 'Payment Method',
+            'status'         => 'Status',
+        ],
     ]
 ];

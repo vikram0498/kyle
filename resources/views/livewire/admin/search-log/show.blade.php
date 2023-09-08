@@ -3,91 +3,78 @@
     {{__('global.show')}}
     {{ strtolower(__('cruds.search_log.title_singular'))}}</h4>
 
-    <table class="table table-borderless">        
+    <table class="table table-borderless">
+        <tr>
+            <th width="25%">{{ __('cruds.search_log.fields.user_id')}}</th>
+            <td> {{ $details->seller->name ?? 'N/A' }}</td>
+        </tr>        
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.address')}}</th>
-            <td> {{ $details->address }}</td>
+            <td> {{ $details->address ?? 'N/A' }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.city')}}</th>
-            <td> {{ $details->city }}</td>
+            <td> 
+                @php
+                    $AllCities = \DB::table('cities')->whereIn('id', json_decode($details->city,true))->pluck('name')->toArray();
+                @endphp
+                {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}
+            </td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.state')}}</th>
-            <td> {{ $details->state }}</td>
+            <td> 
+                @php
+                    $AllStates = \DB::table('states')->whereIn('id', json_decode($details->state,true))->pluck('name')->toArray();
+                @endphp
+                 {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
+            </td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.zip_code')}}</th>
-            <td> {{ $details->zip_code }}</td>
+            <td> {{ $details->zip_code ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bedroom_min')}}</th>
-            <td> {{ $details->bedroom_min }}</td>
+            <th width="25%">{{ __('cruds.search_log.fields.bedroom')}}</th>
+            <td> {{ $details->bedroom ?? 'N/A' }}</td>
         </tr>
+        @if(!is_null($details->bath) && !empty($details->bath))
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bedroom_max')}}</th>
-            <td> {{ $details->bedroom_max }}</td>
-        </tr>
-        @if(!is_null($details->bath_min) && !empty($details->bath_min))
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bath_min')}}</th>
-            <td> {{ $details->bath_min }}</td>
+            <th width="25%">{{ __('cruds.search_log.fields.bath')}}</th>
+            <td> {{ $details->bath ?? 'N/A' }}</td>
         </tr>
         @endif
-        @if(!is_null($details->bath_max) && !empty($details->bath_max))
+      
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bath_max')}}</th>
-            <td> {{ $details->bath_max }}</td>
+            <th width="25%">{{ __('cruds.search_log.fields.size')}}</th>
+            <td> {{ $details->size ?? 'N/A' }}</td>
+        </tr>
+        
+        @if(!is_null($details->lot_size) && !empty($details->lot_size))
+        <tr>
+            <th width="25%">{{ __('cruds.search_log.fields.lot_size')}}</th>
+            <td> {{ $details->lot_size ?? 'N/A' }}</td>
         </tr>
         @endif
+       
+        @if(!is_null($details->build_year) && !empty($details->build_year))
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.size_min')}}</th>
-            <td> {{ $details->size_min }}</td>
-        </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.size_max')}}</th>
-            <td> {{ $details->size_max }}</td>
-        </tr>
-        @if(!is_null($details->lot_size_min) && !empty($details->lot_size_min))
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.lot_size_min')}}</th>
-            <td> {{ $details->lot_size_min }}</td>
+            <th width="25%">{{ __('cruds.search_log.fields.build_year')}}</th>
+            <td> {{ $details->build_year ?? 'N/A' }}</td>
         </tr>
         @endif
-        @if(!is_null($details->lot_size_max) && !empty($details->lot_size_max))
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.lot_size_max')}}</th>
-            <td> {{ $details->lot_size_max }}</td>
-        </tr>
-        @endif
-        @if(!is_null($details->build_year_min) && !empty($details->build_year_min))
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.build_year_min')}}</th>
-            <td> {{ $details->build_year_min }}</td>
-        </tr>
-        @endif
-        @if(!is_null($details->build_year_max) && !empty($details->build_year_max))
-        <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.build_year_max')}}</th>
-            <td> {{ $details->build_year_max }}</td>
-        </tr>
-        @endif
-        @if(!is_null($details->arv_min) && !empty($details->arv_min))
+      
+        @if(!is_null($details->arv) && !empty($details->arv))
             <tr>
-                <th width="25%">{{ __('cruds.search_log.fields.arv_min')}}</th>
-                <td> {{ $details->arv_min }}</td>
+                <th width="25%">{{ __('cruds.search_log.fields.arv')}}</th>
+                <td> {{ $details->arv ?? 'N/A' }}</td>
             </tr>
         @endif
-        @if(!is_null($details->arv_max) && !empty($details->arv_max))
-            <tr>
-                <th width="25%">{{ __('cruds.search_log.fields.arv_max')}}</th>
-                <td> {{ $details->arv_max }}</td>
-            </tr>
-        @endif
+       
         @if(!is_null($details->parking) && !empty($details->parking))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.parking')}}</th>
-                <td> {{ $parkingValues[$details->parking] }} </td>
+                <td> {{ $parkingValues[$details->parking] ?? 'N/A' }} </td>
             </tr>
         @endif
         <tr>

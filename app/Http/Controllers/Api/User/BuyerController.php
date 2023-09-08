@@ -1433,25 +1433,25 @@ class BuyerController extends Controller
 
                     if($buyer->city){
                         $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
-                        $labels .= ','.implode(',',$cityArray);
+                        $labels .= ', '.implode(',',$cityArray);
                     }
 
                     if($buyer->state){
                         $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                        $labels .= ','.implode(',',$stateArray);
+                        $labels .= ', '.implode(', ',$stateArray);
                     }
 
-                    $labels .= ','.$buyer->zip_code;
+                    $labels .= ', '.$buyer->zip_code;
 
-                    $allBuyers[$labels]['address'] = '';
-                    $allBuyers[$labels]['city'] = '';
-                    $allBuyers[$labels]['state'] = '';
-                    $allBuyers[$labels]['zip_code'] = '';
+                    $allBuyers[0][$labels]['address'] = '';
+                    $allBuyers[0][$labels]['city'] = '';
+                    $allBuyers[0][$labels]['state'] = '';
+                    $allBuyers[0][$labels]['zip_code'] = '';
 
-                    $allBuyers[$labels]['address'] = $buyer->address;
+                    $allBuyers[0][$labels]['address'] = $buyer->address;
 
                     if($buyer->city){
-                        $allBuyers[$labels]['city'] = collect($buyer->city)->map(function ($id) {
+                        $allBuyers[0][$labels]['city'] = collect($buyer->city)->map(function ($id) {
                             $cityName = DB::table('cities')->where('id',$id)->value('name');
                             return [
                                 'value' => $id,
@@ -1461,7 +1461,7 @@ class BuyerController extends Controller
                     }
 
                     if($buyer->state){
-                        $allBuyers[$labels]['state'] = collect($buyer->state)->map(function ($id) {
+                        $allBuyers[0][$labels]['state'] = collect($buyer->state)->map(function ($id) {
                             $stateName = DB::table('states')->where('id',$id)->value('name');
                             return [
                                 'value' => $id,
@@ -1470,7 +1470,7 @@ class BuyerController extends Controller
                         })->values()->all();
                     }
 
-                    $allBuyers[$labels]['zip_code'] = $buyer->zip_code;
+                    $allBuyers[0][$labels]['zip_code'] = $buyer->zip_code;
                 }
                
                 //Return Error Response
