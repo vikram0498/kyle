@@ -1156,11 +1156,12 @@ class BuyerController extends Controller
             // }
 
             if($lastSearchLog->state){
-                $buyers = $buyers->whereJsonContains('state', intval($lastSearchLog->state));
+
+                $buyers = $buyers->whereJsonContains('state', $lastSearchLog->state);
             }
 
             if($lastSearchLog->city){
-                $buyers = $buyers->whereJsonContains('city', intval($lastSearchLog->city));
+                $buyers = $buyers->whereJsonContains('city', $lastSearchLog->city);
             }
 
             if($lastSearchLog->zip_code){
