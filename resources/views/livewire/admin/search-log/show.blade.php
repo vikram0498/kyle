@@ -16,7 +16,11 @@
             <th width="25%">{{ __('cruds.search_log.fields.city')}}</th>
             <td> 
                 @php
-                    $AllCities = \DB::table('cities')->whereIn('id', json_decode($details->city,true))->pluck('name')->toArray();
+                   $AllCities = [];
+                   if($details->city){
+                        $AllCities = \DB::table('cities')->whereIn('id', json_decode($details->city,true))->pluck('name')->toArray();
+                   }
+                    
                 @endphp
                 {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}
             </td>
@@ -25,7 +29,10 @@
             <th width="25%">{{ __('cruds.search_log.fields.state')}}</th>
             <td> 
                 @php
+                  $AllStates = [];
+                  if($details->state){
                     $AllStates = \DB::table('states')->whereIn('id', json_decode($details->state,true))->pluck('name')->toArray();
+                  }
                 @endphp
                  {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
             </td>
