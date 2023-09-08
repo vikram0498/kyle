@@ -37,9 +37,10 @@
             <th width="25%">{{ __('cruds.buyer.fields.state')}}</th>
             <td>
                 @php
+                
                   $AllStates = [];
                   if($details->state){
-                    $AllStates = \DB::table('states')->whereIn('id', json_decode($details->state,true))->pluck('name')->toArray();
+                    $AllStates = \DB::table('states')->whereIn('id', $details->state)->pluck('name')->toArray();
                   }
                 @endphp
                  {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
@@ -51,7 +52,7 @@
                 @php
                   $AllCities = [];
                   if($details->city){
-                    $AllCities = \DB::table('cities')->whereIn('id', json_decode($details->city,true))->pluck('name')->toArray();
+                    $AllCities = \DB::table('cities')->whereIn('id', $details->city)->pluck('name')->toArray();
                   }
                 @endphp
                 {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}

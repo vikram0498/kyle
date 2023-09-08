@@ -337,7 +337,7 @@ class BuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-             dd($e->getMessage().'->'.$e->getLine());
+            //  dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -690,8 +690,8 @@ class BuyerController extends Controller
 
             if(isset($request->filterType) && $request->filterType == 'search_page'){
                 $insertLogRecords['country'] =  233;
-                $insertLogRecords['state']   =  $request->state;
-                $insertLogRecords['city']    =  $request->city;
+                $insertLogRecords['state']   =  array_map('intval', $request->state);
+                $insertLogRecords['city']    =  array_map('intval', $request->city);
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
