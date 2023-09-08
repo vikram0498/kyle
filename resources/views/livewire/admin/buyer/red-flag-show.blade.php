@@ -10,8 +10,25 @@
         </tr>
         <tr>
             <td> <b>Buyer Address: </b> {{ $data->address }} </td>
-            <td> <b>Buyer City: </b> {{ $data->city }}</td>
-            <td> <b>Buyer State: </b> {{ $data->state }}</td>
+            <td> <b>Buyer City: </b> 
+                 @php
+                  $AllCities = [];
+                  if($data->city){
+                    $AllCities = \DB::table('cities')->whereIn('id', $data->city)->pluck('name')->toArray();
+                  }
+                @endphp
+                {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}
+            </td>
+            <td> <b>Buyer State: </b> 
+                @php
+                
+                  $AllStates = [];
+                  if($data->state){
+                    $AllStates = \DB::table('states')->whereIn('id', $data->state)->pluck('name')->toArray();
+                  }
+                @endphp
+                 {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
+            </td>
         </tr>
     </table>
 
