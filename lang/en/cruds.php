@@ -191,7 +191,7 @@ return [
         'title'                 => 'Seller Search Logs',
         'title_singular'        => 'Seller Search Log',
         'fields' => [
-            'user_id'                       => 'Seller',
+            'user_id'                       => 'User Name',
             'address'                       => 'Address',
             'city'                          => 'City',
             'state'                         => 'State',

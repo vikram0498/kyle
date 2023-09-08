@@ -393,13 +393,15 @@ class BuyerController extends Controller
             // }
 
             if($request->state){
-                $buyers = $buyers->whereJsonContains('state', intval($request->state));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('state', intval($request->state));
+                $searchState =  array_map('intval',$request->state);
+                $buyers = $buyers->whereJsonContains('state', $searchState);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $searchState);
             }
 
             if($request->city){
-                $buyers = $buyers->whereJsonContains('city', intval($request->city));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('city', intval($request->city));
+                $searchCity =  array_map('intval',$request->city);
+                $buyers = $buyers->whereJsonContains('city', $searchCity);
+                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $searchCity);
             }
 
             if($request->zip_code){
