@@ -268,8 +268,8 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                                     </button>
                                                 </div>:''
                                         }
-                                        
                                     </div>
+                                    <div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Purchased buyer':'Your buyer' }</div>
                                 </div>
                             </div>)
                         })}
