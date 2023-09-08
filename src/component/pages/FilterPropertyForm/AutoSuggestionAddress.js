@@ -15,7 +15,6 @@ const AutoSuggestionAddress = ({data}) =>{
     window.selectFunction = function(element) {
         let buyerdata = allAddress[0][`${element.textContent}`];
 
-        console.log(buyerdata,'shshshsh');
         data.setZipCode(buyerdata.zip_code);
         if(buyerdata.state !=''){
             data.setState(buyerdata.state);
@@ -34,7 +33,6 @@ const AutoSuggestionAddress = ({data}) =>{
         if(userData){
             let suggestions = allAddress.map(obj => Object.keys(obj));
             suggestions = suggestions[0];
-            console.log('case 1',suggestions);
 
             emptyArray = suggestions.filter((data)=>{
                 //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
@@ -45,10 +43,8 @@ const AutoSuggestionAddress = ({data}) =>{
                 // passing return data inside li tag
                 return data = `<li data-value="y565" onclick="selectFunction(this)">${data}</li>`;
             });
-            console.log(emptyArray,'emptyArray');
             showSuggestions(emptyArray, userData);
         }else{
-            console.log('case 1');
             suggBox.innerHTML = '';
         }
     }
@@ -60,8 +56,6 @@ const AutoSuggestionAddress = ({data}) =>{
         }else{
         listData = list.join('');
         }
-
-        console.log(listData,'listData');
         suggBox.innerHTML = listData;
     }
 
@@ -74,7 +68,6 @@ const AutoSuggestionAddress = ({data}) =>{
                 'auth-token' : getTokenData().access_token,
             };
             let response = await axios.get(apiUrl+'search-address', { headers: headers })
-            console.log(response.data.result,'response12');
             setAllAddress(response.data.result);
         }catch(error){
 
@@ -87,7 +80,7 @@ const AutoSuggestionAddress = ({data}) =>{
     return(
         <>
             <label>Address</label>
-            <div className="form-group">
+            <div className="form-group address-selectbox">
                 <input type="text" className="address-box form-control" placeholder="Type to search.." onKeyUp={handleSearchKeyup}/>
                 <div className="autocom-box">
                 </div>
