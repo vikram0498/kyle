@@ -949,12 +949,13 @@ class BuyerController extends Controller
 
     private function checkTokenValidate($token){
         $currentDateTime = Carbon::now();
-        $tokenExpired = true;
-        $checkToken = Token::where('token_value',$token)->where('is_used',0)->first();
+        $tokenExpired = false;
+         $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
         if($checkToken){
-            if($checkToken->token_expired_time > $currentDateTime) {
-                $tokenExpired = false;
-            }
+            $tokenExpired = true;
+            // if($checkToken->token_expired_time > $currentDateTime) {
+            //     $tokenExpired = false;
+            // }
         }
 
         return $tokenExpired;
