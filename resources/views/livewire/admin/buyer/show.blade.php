@@ -95,35 +95,35 @@
             <td> {{ $details->bedroom_max ?? 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bath_min')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.bath_min')}}</th>
             <td> {{ (!is_null($details->bath_min) && !empty($details->bath_min)) ? $details->bath_min : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.bath_max')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.bath_max')}}</th>
             <td> {{ (!is_null($details->bath_max) && !empty($details->bath_max)) ? $details->bath_max : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.size_min')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.size_min')}}</th>
             <td> {{ $details->size_min }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.size_max')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.size_max')}}</th>
             <td> {{ $details->size_max }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.lot_size_min')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.lot_size_min')}}</th>
             <td> {{ (!is_null($details->lot_size_min) && !empty($details->lot_size_min)) ? $details->lot_size_min : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.lot_size_max')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.lot_size_max')}}</th>
             <td> {{ (!is_null($details->lot_size_max) && !empty($details->lot_size_max)) ? $details->lot_size_max : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.build_year_min')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.build_year_min')}}</th>
             <td> {{ (!is_null($details->build_year_min) && !empty($details->build_year_min)) ? $details->build_year_min : 'N/A' }}</td>
         </tr>
         <tr>
-            <th width="25%">{{ __('cruds.search_log.fields.build_year_max')}}</th>
+            <th width="25%">{{ __('cruds.buyer.fields.build_year_max')}}</th>
             <td> {{ (!is_null($details->build_year_max) && !empty($details->build_year_max)) ? $details->build_year_max : 'N/A' }}</td>
         </tr>
         <tr>
