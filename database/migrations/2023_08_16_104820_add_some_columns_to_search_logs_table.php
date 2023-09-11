@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('search_logs', function (Blueprint $table) {
             $table->tinyInteger('stories')->nullable()->after('purchase_method');
-            $table->json('zoning')->nullable()->after('of_stories');
+            $table->json('zoning')->nullable()->after('stories');
             $table->tinyInteger('utilities')->nullable()->after('zoning');
             $table->tinyInteger('sewer')->nullable()->after('utilities');
             $table->tinyInteger('market_preferance')->nullable()->after('sewer');

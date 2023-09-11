@@ -29,6 +29,7 @@ return new class extends Migration
             $table->json('state')->nullable();
             $table->json('city')->nullable();
             $table->string('zip_code')->nullable();
+            $table->integer('price_min')->nullable();
             $table->integer('bedroom_min')->nullable();
             $table->integer('bedroom_max')->nullable();
             $table->integer('bath_min')->nullable();

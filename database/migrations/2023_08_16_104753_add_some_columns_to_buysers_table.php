@@ -17,7 +17,7 @@ return new class extends Migration
             $table->double('price_max')->nullable()->after('price_min');
             $table->tinyInteger('stories_min')->nullable()->after('purchase_method');
             $table->tinyInteger('stories_max')->nullable()->after('stories_min');
-            $table->json('zoning')->nullable()->after('of_stories_max');
+            $table->json('zoning')->nullable()->after('stories_max');
             $table->tinyInteger('utilities')->nullable()->after('zoning');
             $table->tinyInteger('sewer')->nullable()->after('utilities');
             $table->tinyInteger('market_preferance')->nullable()->after('sewer');

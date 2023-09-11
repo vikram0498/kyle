@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('payment_intent_id')->nullable();
             $table->double('amount', 11, 2)->nullable();
             $table->string('currency')->nullable();
-            $table->string('payment_intent_id')->nullable();
             $table->string('payment_method')->nullable(); // Credit card, bank transfer, etc.
             $table->enum('payment_type',['debit','credit'])->nullable(); 
             $table->json('payment_json')->nullable();
