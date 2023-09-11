@@ -165,8 +165,8 @@ return [
             'zoning'                        => 'Zoning',
             'utilities'                     => 'Utilities',
             'sewer'                         => 'Sewer',
-            'market_preferance'             => 'Market Preferance',
-            'contact_preferance'            => 'Contact Preferance',
+            'market_preferance'             => 'Market Preference',
+            'contact_preferance'            => 'Contact Preference',
 
             'like'                          => 'Like',
             'dislike'                       => 'Dislike',

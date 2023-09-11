@@ -41,6 +41,7 @@ class TransactionDatatable extends LivewireDatatable
             Column::index($this)->unsortable(),
 
             Column::callback(['user_id'], function ($user) {
+
                 return $user;
             })->label(trans('cruds.transaction.fields.user'))->sortable()->searchable(),
 

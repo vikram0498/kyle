@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
   
 class CheckMaxValue implements Rule
 {
-    protected $otherField, $otherFieldValue;
+    protected $otherField, $otherFieldValue,$attribute_name = '';
 
     public function __construct($otherFieldValue, $otherField)
     {
@@ -17,7 +17,6 @@ class CheckMaxValue implements Rule
     public function passes($attribute, $value)
     {
         // $otherFieldValue = $this->otherField;
-        
         return $value >= $this->otherFieldValue;
     }
 
@@ -30,6 +29,18 @@ class CheckMaxValue implements Rule
     public function message()
     {
         // return 'The :attribute is not match.';
-        return 'The :attribute must be greater than or equal ' . str_replace('_', ' ', $this->otherField);
+        if($this->otherField == 'sq ft max'){
+            return 'The sq ft min must be greater than or equal ' . str_replace('_', ' ', $this->otherField);
+        }
+        
+        if($this->otherField == 'sq ft min'){
+            return 'The sq ft max must be greater than or equal ' . str_replace('_', ' ', $this->otherField);
+        }
+
+        if($this->otherField != 'sq ft max' && $this->otherField != 'sq ft min')
+        {
+            return 'The :attribute must be greater than or equal ' . str_replace('_', ' ', $this->otherField);
+        }
+       
     }
 }

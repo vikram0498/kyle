@@ -94,8 +94,8 @@ class Index extends Component
             'bath_min' => ['nullable','numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
             'bath_max' => ['nullable','numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
 
-            'size_min' => ['required','numeric', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'size_max') : ''], 
-            'size_max' => ['required','numeric', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'size_min') : ''], 
+            'size_min' => ['required','numeric', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'sq ft max') : ''], 
+            'size_max' => ['required','numeric', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'sq ft min') : ''], 
 
             'lot_size_min' => ['nullable','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
             'lot_size_max' => ['nullable', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
@@ -163,12 +163,22 @@ class Index extends Component
 
     private function validatiionForm(){
         if(!$this->updateMode){
-            Validator::make($this->state, $this->rules())->validate();
+            Validator::make($this->state, $this->rules(),[
+                'size_min.required' => 'The sq ft min field is required',
+                'size_max.required' => 'The sq ft max field is required',
+                'market_preferance.required' => 'The market preference field is required',
+                'contact_preferances.required' => 'The contact preference field is required',
+            ])->validate();
         } else {
             $rules = $this->rules();
 
             $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
-            Validator::make($this->state, $rules)->validate();
+            Validator::make($this->state, $rules,[
+                'size_min.required' => 'The sq ft min field is required',
+                'size_max.required' => 'The sq ft max field is required',
+                'market_preferance.required' => 'The market preference field is required',
+                'contact_preferances.required' => 'The contact preference field is required',
+            ])->validate();
 
         }
     }
