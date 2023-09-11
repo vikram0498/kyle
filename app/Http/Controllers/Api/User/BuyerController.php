@@ -1430,15 +1430,15 @@ class BuyerController extends Controller
 
                     if($buyer->city){
                         $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
-                        $labels .= ', '.implode(',',$cityArray);
+                        $labels .= count($cityArray) > 0 ?  ', '.implode(',',$cityArray) : '';
                     }
 
                     if($buyer->state){
                         $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                        $labels .= ', '.implode(', ',$stateArray);
+                        $labels .= count($stateArray) > 0 ? ', '.implode(', ',$stateArray):'';
                     }
 
-                    $labels .= ', '.$buyer->zip_code;
+                    $labels .= $buyer->zip_code ? ', '.$buyer->zip_code : '';
 
                     $allBuyers[0][$labels]['address'] = '';
                     $allBuyers[0][$labels]['city'] = '';
