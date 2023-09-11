@@ -58,7 +58,7 @@ const UploadMultipleBuyers = () => {
                 if(response.data.status){
                     setCsvFile('');
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                    navigate('/my-buyers');
+                    navigate('/');
                 }else{
                     //console.log('false ',response.data.message);
                     toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});

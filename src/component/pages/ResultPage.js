@@ -222,11 +222,13 @@ const ResultPage = ({setIsFiltered}) =>{
                                 }                
                                 
                                 <div className="row justify-content-center">
+                                    {(totalPage>1)? 
                                     <Pagination
                                         totalPage={totalPage}
                                         currentPage={pageNumber}
                                         onPageChange={handlePagination}
                                     />
+                                    :''}
                                 </div>
                             </div>
                         </div>

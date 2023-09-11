@@ -24,7 +24,8 @@ const AutoSuggestionAddress = ({data}) =>{
             data.setCity(buyerdata.city);
         }
         let selectData = element.textContent;
-        inputBox.value = buyerdata.address;
+        //inputBox.value = buyerdata.address;
+        data.setAddress(buyerdata.address);
         suggBox.innerHTML = '';
         suggBox.style.display = "none";
         //resetButton.style.display="none";
@@ -32,24 +33,26 @@ const AutoSuggestionAddress = ({data}) =>{
 
     const handleSearchKeyup = (e) => {
         let userData = e.target.value;
+        data.setAddress(userData);
         let emptyArray = [];
         suggBox.style.display = "block";
         resetButton.style.display="block";
 
         if(userData){
-            let suggestions = allAddress.map(obj => Object.keys(obj));
-            suggestions = suggestions[0];
-
-            emptyArray = suggestions.filter((data)=>{
-                //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
-                return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
-            });
-
-            emptyArray = emptyArray.map((data)=>{
-                // passing return data inside li tag
-                return data = `<li onclick="selectFunction(this)">${data}</li>`;
-            });
-            showSuggestions(emptyArray, userData);
+            if(allAddress.length>0){
+                let suggestions = allAddress.map(obj => Object.keys(obj));
+                suggestions = suggestions[0];
+                emptyArray = suggestions.filter((data)=>{
+                    //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+                    return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+                });
+    
+                emptyArray = emptyArray.map((data)=>{
+                    // passing return data inside li tag
+                    return data = `<li onclick="selectFunction(this)">${data}</li>`;
+                });
+                showSuggestions(emptyArray, userData);
+            }
         }else{
             suggBox.innerHTML = '';
             suggBox.style.display = "none";
@@ -91,7 +94,8 @@ const AutoSuggestionAddress = ({data}) =>{
         data.setState([]);
         data.setCity([]);
         data.setZipCode('');
-        inputBox.value = '';
+        data.setAddress('');
+        //inputBox.value = '';
     }
     useEffect(()=>{
         getAddress();
@@ -101,7 +105,7 @@ const AutoSuggestionAddress = ({data}) =>{
         <>
             <label>Address</label>
             <div className="form-group address-selectbox">
-                <input type="text" className="address-box form-control" placeholder="Type to search.." name="address" onKeyUp={handleSearchKeyup}/>
+                <input type="text" className="address-box form-control" placeholder="Type to search.." name="address" value={data.address} onChange={handleSearchKeyup} autoComplete='off'/>
                 <input type="reset" className="reset-button" value="" alt="Clear the search form" onClick={handleResetSearchBox} style={{display:'none'}}/>
                 <div className="autocom-box" style={{display:'none'}}>
                 </div>

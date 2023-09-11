@@ -125,7 +125,6 @@ const MyBuyer = () =>{
             }
         }
     }
-
  return (
     <>
     <Header/>
@@ -224,13 +223,13 @@ const MyBuyer = () =>{
 								<div className="row justify-content-center">
 									{/* {(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
 									{(totalPage != pageNumber) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickNext}>Next</a></div>:''} */}
-									
+									{(totalPage>1)?
 									<Pagination
 										totalPage={totalPage}
 										currentPage={pageNumber}
 										onPageChange={handlePagination}
 									/>
-									
+									:''}	
 									{/* <div className="col-12 col-lg-12">
 										<div className="want-to-see">
 											<h3 className="text-center">Want to see more buyer!</h3>

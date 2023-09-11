@@ -51,7 +51,7 @@ const UploadMultipleBuyersOnChange = () => {
                 const response = await axios.post(apiUrl+"upload-multiple-buyers-csv",formData,{headers: headers});
                 if(response.data.status){
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                    navigate('/my-buyers');
+                    navigate('/');
                 }
             }catch{
                 toast.error("No rows inserted during the import process", {position: toast.POSITION.TOP_RIGHT});            

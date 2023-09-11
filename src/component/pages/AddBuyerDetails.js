@@ -203,8 +203,8 @@ function AddBuyerDetails (){
             formObject.zoning =  zoningValue;
         }
         // change city state value string to array
-        formObject.city = (data.get('city') !='') ? [data.get('city')]:'';
-        formObject.state = (data.get('state') !='') ? [data.get('state')]:'';
+        formObject.city = (data.get('city') !='') ? [Number(data.get('city'))]:'';
+        formObject.state = (data.get('state') !='') ? [Number(data.get('state'))]:'';
 
         try{
             let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});
@@ -212,7 +212,7 @@ function AddBuyerDetails (){
                 setLoading(false);
                 if(response.data.status){
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                    navigate('/my-buyers')
+                    navigate('/')
                 }
             }
         }catch(error){
@@ -486,7 +486,7 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Country<span>*</span></label>
+                                                    <label>Country</label>
                                                     <div className="form-group">
                                                     <input type="text" className="form-control country-field" value="United States" readOnly />
                                                     </div>

@@ -57,11 +57,13 @@ const { token } = useParams();
 
     return (
       <div className="payment-bg">
-        <div className="card payment-card">
-          <span className="payment-card__success"><i className="fa fa-check" aria-hidden="true"></i>
-          </span>
-          <h1 className="payment-card__msg">Payment Complete</h1>
-          <h2 className="payment-card__submsg">Thank you for your transfer</h2>
+        <div className="card payment-card border-0 p-5">
+          <div className="d-flex align-items-center justify-content-center mb-3">
+            <span className="payment-card__success"><i className="fa fa-check" aria-hidden="true"></i>
+            </span>
+          </div>
+          <h1 className="payment-card__msg fw-bold m-0">Payment Complete</h1>
+          <h2 className="payment-card__submsg m-0">Thank you for your transfer</h2>
           <div className="payment-card__tags">
               {/* <Link to="/">
                 <span className="payment-card__tag">Back to home</span>

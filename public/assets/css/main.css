@@ -1866,7 +1866,7 @@ form > * {
 
 .payment-bg {
   
-  background-color: #6C7BEE;
+  /* background-color: #6C7BEE; */
   width: 480px;
   overflow: hidden;
   margin: 0 auto;
@@ -1889,36 +1889,40 @@ form > * {
   padding: 80px 30px 25px 30px;
   text-align: center;
   position: relative;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+  /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) */
+  box-shadow: 0px 0px 20px 0px #00000026;
 }
 .payment-card__success {
     
-    position: absolute;
+    /* position: absolute;
     top: -50px;
-    left: 145px;
-    width: 100px;
-    height: 100px;
+    left: 145px; */
+    min-width: 100px;
+    min-height: 100px;
     border-radius: 100%;
     background-color: #60c878;
     border: 5px solid white;
 }
-.payment-card__danger {
-    
-    position: absolute;
-    top: -50px;
-    left: 145px;
+.payment-card__success.payment-card_danger{
+    background-color: red; 
+}
+/* .payment-card__danger {
+    box-sizing: border-box;
     width: 100px;
     height: 100px;
     border-radius: 100%;
     background-color: red;
     border: 5px solid white;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
 
-.payment-card__danger i {
+/* .payment-card__danger i {
     color: #fff;
-    line-height: 88px;
+    line-height: 60px;
     font-size: 45px;
-}
+} */
 
 .payment-card__success i {
     color: #fff;
@@ -1980,6 +1984,12 @@ margin-top: 0px;
 .country-field {
     background: #ebebeb !important;
 }
+.autocom-box {
+    max-height: 400px;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: auto;
+}
 .autocom-box.form-select li {
     list-style: none;
     padding: 5px;
@@ -2018,4 +2028,8 @@ margin-top: 0px;
     width: 20px;
     height: 20px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='20' width='20' viewBox='0 0 20 20' aria-hidden='true' focusable='false' class='css-8mmkcg'%3E%3Cpath fill='%23cccccc' d='M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z'%3E%3C/path%3E%3C/svg%3E");
+}
+.address-box {
+    color: #000000 !important;
+    font-size: 16px !important;
 }

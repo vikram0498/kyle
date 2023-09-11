@@ -88,7 +88,7 @@ const MultiFamilyResidential = ({data}) =>{
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Bed</label>
                     <div className="form-group">
-                        <input type="number" name="bedroom" className="form-control" placeholder="Bedroom"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
+                        <input type="number" name="bedroom" className="form-control" placeholder="Bed"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
                         {data.renderFieldError('bedroom') }
                     </div>
                 </div>

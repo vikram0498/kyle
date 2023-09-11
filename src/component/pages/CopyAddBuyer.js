@@ -196,7 +196,7 @@ function CopyAddBuyer (){
         }
         if (formObject.hasOwnProperty('state')) {
             //formObject.states =  stateValue;
-            formObject.states = (stateValue.length>0) ? stateValue:'';
+            formObject.state = (stateValue.length>0) ? stateValue:'';
         }
         if (formObject.hasOwnProperty('city')) {
             //formObject.city =  cityValue;
@@ -411,12 +411,12 @@ function CopyAddBuyer (){
                                                                     <Controller
                                                                         control={control}
                                                                         name="market_preferance"
-                                                                        rules={{ required: 'Market Preferance is required' }}
+                                                                        rules={{ required: 'Market Preference is required' }}
                                                                         render={({ field: { value, onChange, name } }) => (
                                                                         <Select
                                                                             options={marketPreferanceOption}
                                                                             name = {name}
-                                                                            placeholder='Select Market Preferance'
+                                                                            placeholder='Select Market Preference'
                                                                             isClearable={true}
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
@@ -435,12 +435,12 @@ function CopyAddBuyer (){
                                                                 <Controller
                                                                     control={control}
                                                                     name="contact_preferance"
-                                                                    rules={{ required: 'Contact Preferance is required' }}
+                                                                    rules={{ required: 'Contact Preference is required' }}
                                                                     render={({ field: { value, onChange, name } }) => (
                                                                     <Select
                                                                         options={contactPreferanceOption}
                                                                         name = {name}
-                                                                        placeholder='Select Contact Preferance'
+                                                                        placeholder='Select Contact Preference'
                                                                         isClearable={true}
                                                                         onChange={(e)=>{
                                                                             onChange(e)
@@ -466,7 +466,7 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div> */}
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Country<span>*</span></label>
+                                                                <label>Country</label>
                                                                 <div className="form-group">
                                                                 <input type="text" className="form-control country-field" value="United States" readOnly/>
                                                                 </div>
