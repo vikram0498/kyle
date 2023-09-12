@@ -124,6 +124,12 @@
                 <td> {{ $details->well == 1 ? __('global.yes') : __('global.no') }}</td>
             </tr>
         @endif
+        @if(!is_null($details->hoa))
+            <tr>
+                <th width="25%">{{ __('cruds.search_log.fields.hoa')}}</th>
+                <td> {{ $details->hoa == 1 ? __('global.yes') : __('global.no') }}</td>
+            </tr>
+        @endif
         @if(!is_null($details->age_restriction))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.age_restriction')}}</th>
@@ -136,18 +142,22 @@
                 <td> {{ $details->rental_restriction == 1 ? __('global.yes') : __('global.no') }}</td>
             </tr>
         @endif
-        @if(!is_null($details->hoa))
-            <tr>
-                <th width="25%">{{ __('cruds.search_log.fields.hoa')}}</th>
-                <td> {{ $details->hoa == 1 ? __('global.yes') : __('global.no') }}</td>
-            </tr>
-        @endif
+       
         @if(!is_null($details->tenant))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.tenant')}}</th>
                 <td> {{ $details->tenant == 1 ? __('global.yes') : __('global.no') }}</td>
             </tr>
         @endif
+        
+
+        @if(!is_null($details->squatters))
+            <tr>
+                <th width="25%">{{ __('cruds.search_log.fields.squatters')}}</th>
+                <td> {{ $details->squatters == 1 ? __('global.yes') : __('global.no') }}</td>
+            </tr>
+        @endif
+
         @if(!is_null($details->post_possession))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.post_possession')}}</th>
@@ -160,6 +170,14 @@
                 <td> {{ $details->building_required == 1 ? __('global.yes') : __('global.no') }}</td>
             </tr>
         @endif
+
+        @if(!is_null($details->rebuild))
+            <tr>
+                <th width="25%">{{ __('cruds.search_log.fields.rebuild')}}</th>
+                <td> {{ $details->rebuild == 1 ? __('global.yes') : __('global.no') }}</td>
+            </tr>
+        @endif
+
         @if(!is_null($details->foundation_issues))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.foundation_issues')}}</th>
@@ -178,13 +196,7 @@
                 <td> {{ $details->fire_damaged == 1 ? __('global.yes') : __('global.no') }}</td>
             </tr>
         @endif
-        @if(!is_null($details->rebuild))
-            <tr>
-                <th width="25%">{{ __('cruds.search_log.fields.rebuild')}}</th>
-                <td> {{ $details->rebuild == 1 ? __('global.yes') : __('global.no') }}</td>
-            </tr>
-        @endif
-
+     
         @if(!is_null($details->purchase_method) && !empty($details->purchase_method))
             <tr>
                 <th width="25%">{{ __('cruds.search_log.fields.purchase_method')}}</th>
