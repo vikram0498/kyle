@@ -164,20 +164,22 @@ class Index extends Component
     private function validatiionForm(){
         if(!$this->updateMode){
             Validator::make($this->state, $this->rules(),[
+                'phone.required' => 'The contact number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'market_preferance.required' => 'The market preference field is required',
-                'contact_preferances.required' => 'The contact preference field is required',
+                'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
         } else {
             $rules = $this->rules();
 
             $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
             Validator::make($this->state, $rules,[
+                'phone.required' => 'The contact number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'market_preferance.required' => 'The market preference field is required',
-                'contact_preferances.required' => 'The contact preference field is required',
+                'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
 
         }

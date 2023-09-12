@@ -30,7 +30,13 @@ class CheckMinValue implements Rule
      */
     public function message()
     {
+
+        if($this->otherField == 'sq ft max'){
+            return 'The sq ft min must be less than or equal ' . str_replace('_', ' ', $this->otherField);
+        }else{
+            return 'The :attribute must be less than or equal ' . str_replace('_', ' ', $this->otherField);
+        }
+
         // return 'The :attribute is not match.';
-        return 'The :attribute must be less than or equal ' . str_replace('_', ' ', $this->otherField);
     }
 }

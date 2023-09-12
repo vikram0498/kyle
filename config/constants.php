@@ -165,6 +165,10 @@ return [
             [ 'id' => 'well_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'well_no', 'value' => '0', 'label' => 'no' ],
         ],
+        'hoa' => [            
+            [ 'id' => 'hoa_yes', 'value' => '1', 'label' => 'yes' ],
+            [ 'id' => 'hoa_no', 'value' => '0', 'label' => 'no' ],
+        ],
         'age_restriction' => [
             [ 'id' => 'age_restriction_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'age_restriction_no', 'value' => '0', 'label' => 'no' ],
@@ -173,21 +177,27 @@ return [
             [ 'id' => 'rental_restriction_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'rental_restriction_no', 'value' => '0', 'label' => 'no' ],
         ],
-        'hoa' => [            
-            [ 'id' => 'hoa_yes', 'value' => '1', 'label' => 'yes' ],
-            [ 'id' => 'hoa_no', 'value' => '0', 'label' => 'no' ],
+        'post_possession' => [            
+            [ 'id' => 'post_possession_yes', 'value' => '1', 'label' => 'yes' ],
+            [ 'id' => 'post_possession_no', 'value' => '0', 'label' => 'no' ],
         ],
         'tenant' => [
             [ 'id' => 'tenant_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'tenant_no', 'value' => '0', 'label' => 'no' ],
         ],
-        'post_possession' => [            
-            [ 'id' => 'post_possession_yes', 'value' => '1', 'label' => 'yes' ],
-            [ 'id' => 'post_possession_no', 'value' => '0', 'label' => 'no' ],
+
+        'squatters' =>[
+            [ 'id' => 'squatters_yes', 'value' => '1', 'label' => 'yes' ],
+            [ 'id' => 'squatters_no', 'value' => '0', 'label' => 'no' ],
         ],
+       
         'building_required' => [            
             [ 'id' => 'building_required_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'building_required_no', 'value' => '0', 'label' => 'no' ],
+        ],
+        'rebuild' => [            
+            [ 'id' => 'rebuild_issues_yes', 'value' => '1', 'label' => 'yes' ],
+            [ 'id' => 'rebuild_issues_no', 'value' => '0', 'label' => 'no' ],
         ],
         'foundation_issues' => [            
             [ 'id' => 'foundation_issues_yes', 'value' => '1', 'label' => 'yes' ],
@@ -201,10 +211,7 @@ return [
             [ 'id' => 'fire_damaged_issues_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'fire_damaged_issues_no', 'value' => '0', 'label' => 'no' ],
         ],
-        'rebuild' => [            
-            [ 'id' => 'rebuild_issues_yes', 'value' => '1', 'label' => 'yes' ],
-            [ 'id' => 'rebuild_issues_no', 'value' => '0', 'label' => 'no' ],
-        ],
+        
     ],
 
     'default_currency' => 'USD',
