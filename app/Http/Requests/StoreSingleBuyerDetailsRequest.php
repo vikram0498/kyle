@@ -124,7 +124,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
 
         }else{
             $rules['address']     = ['required'];
-            $rules['zip_code']    = ['required','min:3','max:10']; 
+            $rules['zip_code']    = ['required','min:5','max:10']; 
 
         }
 

@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-body">
             <div class="top-box-set">
-                <h4>Profile</h4>
+                <h4>My Profile</h4>
             </div>
         </div>
     </div>

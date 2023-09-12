@@ -61,9 +61,27 @@
                            </tr>
                         </thead>
                         <tbody>
-                           <tr>
-                              <td colspan="2"> There's Nothing to show at the moment </td>
+                           @if($purchasedBuyers->count() > 0)
+                              @foreach($purchasedBuyers as $purchasedBuyer)
+                               
+                              <tr>
+                                 <td>
+                                    <div class="side-by-side-data">
+                                       <span>{{ $purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name}}</span>
+                                       <span class="purchased">
+                                          {{ \DB::table('purchased_buyers')->where('user_id','!=',1)->where('buyer_id',$purchasedBuyer->buyer_id)->groupBy('user_id')->count() }} sellers purchased
+                                       </span>
+                                    </div>
+                                    <td>{{ $purchasedBuyer->user->name }}</td>
+                                 </td>
+                              </tr>
+                              @endforeach
+                           @else
+                             <tr>
+                              <td colspan="2"> There's nothing to show at the moment </td>
                            </tr>
+                           @endif
+                           
                         </tbody>
                         <!-- <tbody>
                            <tr>

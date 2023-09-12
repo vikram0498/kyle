@@ -86,7 +86,7 @@ class Index extends Component
             'country' => ['required', 'exists:countries,name'], 
             // 'state' => [/*'required', 'exists:states,id'*/], 
             // 'city' => [/*'required', 'exists:cities,id'*/], 
-            'zip_code' => ['required','min:6','max:10'],
+            'zip_code' => ['required','min:5','max:10'],
 
             'bedroom_min' => ['required','numeric', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
             'bedroom_max' => ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 

@@ -80,7 +80,7 @@ class SocialMediaController extends Controller
             //  dd($e->getMessage());
             $responseData = [
                 'status'        => false,
-                'message'       => 'Something went wrong!',
+                'message'       => 'Something went wrong!->'.$e->getMessage(),
             ];
             return response()->json($responseData, 401);
         }

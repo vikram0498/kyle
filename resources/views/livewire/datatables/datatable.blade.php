@@ -204,7 +204,7 @@
             </div>
             @if($this->results->isEmpty())
                 <p class="p-3 text-lg text-center">
-                    {{ __("There's Nothing to show at the moment") }}
+                    {{ __("There's nothing to show at the moment") }}
                 </p>
             @endif
         </div>
