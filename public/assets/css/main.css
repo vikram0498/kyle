@@ -52,7 +52,9 @@ h3 {
     background: #F6F8FC !important;
     height: 50px;
     padding: 17px 0 17px 54px !important;
-    color: #464B70 !important;
+    /* color: #464B70 !important; */
+    color: #000 !important;
+
     font-family: 'Nunito Sans', sans-serif;
     font-size: 14px !important;
     font-weight: 400 !important;
@@ -682,6 +684,7 @@ section.main-section {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 .watch-video svg{
     margin-right: 8px;
@@ -965,6 +968,7 @@ section.main-section {
     padding-left: 15px !important;
     border: 1px solid #E1E3E7 !important;
     padding: 13px 15px 13px 15px !important;
+    color: #000;
 }
 .block-divide {
     margin-top: 10px;
@@ -1459,7 +1463,10 @@ section.main-section {
 .modal-form textarea::placeholder{
     color: #464B70;  
 }
-
+.modal-video-main .modal-content{
+    border-radius: 10px;
+    border: 0;
+}
 /*--------- Admin Request ---------*/
 .mx-block {
     max-width: 648px !important;
@@ -1884,27 +1891,35 @@ form > * {
   width: 100%;
   float: left;
   margin-top: 40px;
-  border-radius: 5px;
+  border-radius: 15px;
   box-sizing: border-box;
   padding: 80px 30px 25px 30px;
   text-align: center;
   position: relative;
   /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) */
-  box-shadow: 0px 0px 20px 0px #00000026;
+  /* box-shadow: 0px 0 30px #0000003b; */
 }
 .payment-card__success {
     
     /* position: absolute;
     top: -50px;
     left: 145px; */
-    min-width: 100px;
-    min-height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 100%;
-    background-color: #60c878;
-    border: 5px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #60c878; */
+    /* border: 5px solid white; */
+}
+.payment-card__success img {
+    width: 70%;
 }
 .payment-card__success.payment-card_danger{
-    background-color: red; 
+    background-color: #FFE2E2; 
+    border: 3px solid #e21b1b;
+    padding: 20px;
 }
 /* .payment-card__danger {
     box-sizing: border-box;
@@ -2033,3 +2048,87 @@ margin-top: 0px;
     color: #000000 !important;
     font-size: 16px !important;
 }
+
+/*expiry page css */
+.linkExpireSection {
+    margin: 0px;
+}
+.linkExpire {
+    overflow: hidden;
+    height: 100vh;
+    padding: 40px 6px
+}
+
+.linkExpire .heading {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: normal;
+    color: #302e2e
+}
+
+.linkExpire .subheading {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: normal
+}
+
+.linkExpire .cards {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)
+}
+
+.linkExpire .cards .cardBody{
+    gap: 45px;
+}
+
+@media screen and (max-width: 1199.98px) {
+    .linkExpire .heading {
+        font-size: 28px
+    }
+
+    .linkExpire .subheading {
+        font-size: 18px
+    }
+}
+
+@media screen and (max-width: 991.98px) {
+
+    .linkExpire .heading,
+    .linkExpire .subheading,
+    .linkExpire .goBtn {
+        text-align: center
+    }
+
+    .linkExpire .heading {
+        font-size: 27px
+    }
+
+    .linkExpire .subheading {
+        font-size: 16px
+    }
+    .linkExpire .cards .cardBody{
+        gap: 35px;
+    }
+}
+
+@media screen and (max-width: 767.98px) {
+    .linkExpire .heading {
+        font-size: 25px
+    }
+
+    .linkExpire .subheading {
+        font-size: 15px
+    }
+}
+
+@media screen and (max-width: 767.98px) {
+    .linkExpire .heading {
+        font-size: 22px
+    }
+
+    .linkExpire .subheading {
+        font-size: 14px
+    }
+}
+
+/*# sourceMappingURL=style.min.css.map */
+/* end*/

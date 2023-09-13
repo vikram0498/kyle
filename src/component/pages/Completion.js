@@ -57,9 +57,9 @@ const { token } = useParams();
 
     return (
       <div className="payment-bg">
-        <div className="card payment-card border-0 p-5">
+        <div className="card payment-card p-5">
           <div className="d-flex align-items-center justify-content-center mb-3">
-            <span className="payment-card__success"><i className="fa fa-check" aria-hidden="true"></i>
+            <span className="payment-card__success"><img src="/assets/images/done.svg" className="w-100" />
             </span>
           </div>
           <h1 className="payment-card__msg fw-bold m-0">Payment Complete</h1>

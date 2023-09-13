@@ -7,10 +7,10 @@ import {useForm, Controller  } from "react-hook-form";
 import axios from 'axios';
 import MiniLoader from "../partials/MiniLoader";
 import DatePicker from "react-datepicker";
+import Swal from 'sweetalert2';
 import "react-datepicker/dist/react-datepicker.css";
-
-
 import { toast } from "react-toastify";
+import LinkExpirePage from "./LinkExpirePage";
 
 function CopyAddBuyer (){
 
@@ -79,7 +79,6 @@ function CopyAddBuyer (){
     let headers = { 
         'Accept': 'application/json',
     };
-
     const checkTokenExpire = () =>{
         try{
             axios.get(`${apiUrl}check-token/${token}`, { headers: headers }).then(response => {
@@ -173,7 +172,6 @@ function CopyAddBuyer (){
 
         }
     }
-
     const submitSingleBuyerForm = (data,e) => {
         e.preventDefault();
 
@@ -207,8 +205,12 @@ function CopyAddBuyer (){
         axios.post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {headers: headers}).then(response => {
             setLoading(false);
             if(response.data.status){
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'success',
+                    text: 'Buyer data saved successfully',
+                })
+                // toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                 navigate('/add-buyer/'+token);
 
                 setIsTokenExpire(true);
@@ -300,7 +302,6 @@ function CopyAddBuyer (){
     }
     const handleCityChange = (event) => {
         let selectedValues = event.map((item) => item.value);
-        console.log("enter");
         setCityvalue(selectedValues);
     }
     return (
@@ -308,9 +309,7 @@ function CopyAddBuyer (){
            { (isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="/assets/images/loader.svg"/></div> :
                 isTokenExpire ? 
                     <div className="row">
-                        <div className="col-md-12 pt-4 text-center">
-                            <h3>Link is expired</h3>
-                        </div>
+                        <LinkExpirePage/>
                     </div> :
                     <section className="main-section position-relative pt-4 pb-120">
                             <div className="container position-relative">
@@ -1359,6 +1358,20 @@ function CopyAddBuyer (){
                                                                 </div>
                                                                 <div className="grid-template-col">
                                                                     <div className="radio-block-group">
+                                                                        <label>HOA</label>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="hoa" value="1" id="hoa_yes"/>
+                                                                            <label className="mb-0" htmlFor="hoa_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="hoa" value="0" id="hoa_no"/>
+                                                                            <label className="mb-0" htmlFor="hoa_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('hoa') }
+                                                                </div>
+                                                                <div className="grid-template-col">
+                                                                    <div className="radio-block-group">
                                                                         <label>Age restriction</label>
                                                                         <div className="label-container">
                                                                             <input type="radio" name="age_restriction" value="1" id="age_restriction_yes"/>
@@ -1385,34 +1398,7 @@ function CopyAddBuyer (){
                                                                     </div>
                                                                     {renderFieldError('rental_restriction') }
                                                                 </div>
-                                                                <div className="grid-template-col">
-                                                                    <div className="radio-block-group">
-                                                                        <label>HOA</label>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="hoa" value="1" id="hoa_yes"/>
-                                                                            <label className="mb-0" htmlFor="hoa_yes">Yes</label>
-                                                                        </div>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="hoa" value="0" id="hoa_no"/>
-                                                                            <label className="mb-0" htmlFor="hoa_no">No</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    {renderFieldError('hoa') }
-                                                                </div>
-                                                                <div className="grid-template-col">
-                                                                    <div className="radio-block-group">
-                                                                        <label>Tenant Conveys</label>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="tenant" value="1" id="tenant_yes"/>
-                                                                            <label className="mb-0" htmlFor="tenant_yes">Yes</label>
-                                                                        </div>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="tenant" value="0" id="tenant_no"/>
-                                                                            <label className="mb-0" htmlFor="tenant_no">No</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    {renderFieldError('tenant') }
-                                                                </div>
+                                                                
                                                                 <div className="grid-template-col">
                                                                     <div className="radio-block-group">
                                                                         <label>Post-Possession</label>
@@ -1427,6 +1413,37 @@ function CopyAddBuyer (){
                                                                     </div>
                                                                     {renderFieldError('post_possession') }
                                                                 </div>
+
+                                                                <div className="grid-template-col">
+                                                                    <div className="radio-block-group">
+                                                                        <label>Tenant Conveys</label>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="tenant" value="1" id="tenant_yes"/>
+                                                                            <label className="mb-0" htmlFor="tenant_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="tenant" value="0" id="tenant_no"/>
+                                                                            <label className="mb-0" htmlFor="tenant_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('tenant') }
+                                                                </div>
+                                                                
+                                                                <div className="grid-template-col">
+                                                                    <div className="radio-block-group">
+                                                                        <label>Squatters</label>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="squatters" value="1" id="squatters_yes"/>
+                                                                            <label className="mb-0" htmlFor="squatters_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="squatters" value="0" id="squatters_no"/>
+                                                                            <label className="mb-0" htmlFor="squatters_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('squatters') }
+                                                                </div> 
+
                                                                 <div className="grid-template-col">
                                                                     <div className="radio-block-group">
                                                                         <label>Building Required</label>
@@ -1441,6 +1458,22 @@ function CopyAddBuyer (){
                                                                     </div>
                                                                     {renderFieldError('building_required') }
                                                                 </div>
+                                                                
+                                                                <div className="grid-template-col">
+                                                                    <div className="radio-block-group">
+                                                                        <label>Rebuild</label>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="rebuild" value="1" id="rebuild_yes"/>
+                                                                            <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
+                                                                        </div>
+                                                                        <div className="label-container">
+                                                                            <input type="radio" name="rebuild" value="0" id="rebuild_no"/>
+                                                                            <label className="mb-0" htmlFor="rebuild_no">No</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {renderFieldError('rebuild') }
+                                                                </div> 
+
                                                                 <div className="grid-template-col">
                                                                     <div className="radio-block-group">
                                                                         <label>Foundation Issues</label>
@@ -1482,34 +1515,6 @@ function CopyAddBuyer (){
                                                                         </div>
                                                                     </div>
                                                                     {renderFieldError('fire_damaged') }
-                                                                </div>
-                                                                <div className="grid-template-col">
-                                                                    <div className="radio-block-group">
-                                                                        <label>Rebuild</label>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="rebuild" value="1" id="rebuild_yes"/>
-                                                                            <label className="mb-0" htmlFor="rebuild_yes">Yes</label>
-                                                                        </div>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="rebuild" value="0" id="rebuild_no"/>
-                                                                            <label className="mb-0" htmlFor="rebuild_no">No</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    {renderFieldError('rebuild') }
-                                                                </div>
-                                                                <div className="grid-template-col">
-                                                                    <div className="radio-block-group">
-                                                                        <label>Squatters</label>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="squatters" value="1" id="squatters_yes"/>
-                                                                            <label className="mb-0" htmlFor="squatters_yes">Yes</label>
-                                                                        </div>
-                                                                        <div className="label-container">
-                                                                            <input type="radio" name="squatters" value="0" id="squatters_no"/>
-                                                                            <label className="mb-0" htmlFor="squatters_no">No</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    {renderFieldError('squatters') }
                                                                 </div>
                                                             </div>
                                                         </div>

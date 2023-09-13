@@ -520,7 +520,7 @@ const SellerForm = () =>{
 					</div>
 					<div className="card-box">
 						<div className="row">
-							<div className="col-12 col-lg-8">
+							<div className="col-12 col-lg-12">
 								<div className="card-box-inner">
 									<h3>Search Property Details</h3>
 									{/* <p>Fill the below form OR send link to the buyer</p> */}
@@ -572,7 +572,7 @@ const SellerForm = () =>{
 									</form>
 								</div>
 							</div>
-							<div className="col-12 col-lg-4">
+							{/* <div className="col-12 col-lg-4">
 								<UploadMultipleBuyers/>
 								<div className="watch-video">
 									<p>Don’t Know How to Upload</p>
@@ -584,7 +584,7 @@ const SellerForm = () =>{
 										Watch The Video!
 									</a>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>

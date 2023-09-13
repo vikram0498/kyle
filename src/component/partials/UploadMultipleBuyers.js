@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useNavigate , Link} from "react-router-dom";
 import AuthContext from "../../context/authContext";
+import MiniLoader from "./MiniLoader";
 import {useAuth} from "../../hooks/useAuth";
 import {useForm} from "../../hooks/useForm";
 import { toast } from "react-toastify";
@@ -17,6 +18,7 @@ const UploadMultipleBuyers = () => {
     const [validCsv, setValidCsv] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
     const [filename, setFileName] = useState('Upload your .CSV file');
+    const [loading, setLoading] = useState(false);
     const formData = new FormData();
     if (csvFile){
         formData.append('csvFile', csvFile);
@@ -54,17 +56,21 @@ const UploadMultipleBuyers = () => {
         };
         async function fetchData() {
             try{
+                setLoading(true);
                 const response = await axios.post(apiUrl+"upload-multiple-buyers-csv",formData,{headers: headers});
                 if(response.data.status){
+                    setLoading(false);
                     setCsvFile('');
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                     navigate('/');
                 }else{
                     //console.log('false ',response.data.message);
+                    setLoading(false);
                     toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                     navigate('/');
                 }
             }catch{
+                setLoading(false);
                 toast.error("No rows inserted during the import process", {position: toast.POSITION.TOP_RIGHT});  
             }
         }
@@ -109,7 +115,7 @@ const UploadMultipleBuyers = () => {
                 </div>
             </div>
             {(validCsv) ?<div className="submit-btn my-30">
-                <button className="btn btn-fill">Submit Now!</button> 
+                <button className="btn btn-fill" disabled={ loading ? 'disabled' : ''}>Submit Now! { loading ? <MiniLoader/> : ''} </button> 
             </div>:<p style={{padding: '6px',textAlign: 'center',fontSize: '13px',color: 'red',fontWeight: '700'}}>{errorMsg}</p>}
         </form>
         </>

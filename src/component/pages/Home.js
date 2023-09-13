@@ -9,6 +9,7 @@ import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
 import UploadMultipleBuyersOnChange from "../partials/UploadMultipleBuyersOnChange";
 import CryptoJS from "crypto-js";
+import WatchVideo from "../partials/Modal/WatchVideo";
 
 function Home ({userDetails}){
     const {authData} = useContext(AuthContext);
@@ -17,6 +18,8 @@ function Home ({userDetails}){
     const [videoUrl, setVideoUrl] = useState('');
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoader, setIsloader] = useState(true);
+    const [openVideoModal,SetOpenVideoModal] = useState(false);
+
 
     useEffect(()=>{
         getVideoUrl();
@@ -55,6 +58,12 @@ function Home ({userDetails}){
             }
         }
     }
+    const handleOpenModal = () =>{
+        SetOpenVideoModal(true);
+    }
+    // video.currentTime = 0;
+    // video.play();
+    //video.pause();
     return (
         <>
             <Header/>
@@ -62,7 +71,8 @@ function Home ({userDetails}){
                 <div className="watch-video block-fix">
   
                     <p>Don’t Know How to Upload</p>
-                    <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" className="title">
+                    {/* <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" className="title"> */}
+                    <a onClick={handleOpenModal} className="title">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M10 8L16 12L10 16V8Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -107,7 +117,8 @@ function Home ({userDetails}){
             <Footer/>
 
             {/* modal box for video */}
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <WatchVideo isLoader={isLoader} videoUrl={videoUrl} SetOpenVideoModal={SetOpenVideoModal} openVideoModal={openVideoModal}/>
+            {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -124,7 +135,7 @@ function Home ({userDetails}){
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     )
 }

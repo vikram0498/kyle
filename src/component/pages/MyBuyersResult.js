@@ -19,6 +19,15 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
 
     //console.log('buyerType',buyerType,"activeTab",activeTab,'pageNumber',pageNumber,'getFilterResult');
 
+    window.handleCustumFunction = (data,id) => {
+        setBuyerId(id);
+        if(data){
+            setSentOpen(true);
+        }else{
+            setEditOpen(true);
+        }
+    }
+
     const handleClickEditFlag = (data,id) => {
         setBuyerId(id);
         if(data){
@@ -64,8 +73,8 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
             const response = await axios.post(apiUrl+"unhide-buyer",{'buyer_id':id},{headers: headers});
             if(response.data.status){
                 addLoaderChild.innerHTML = '<div className="data-loader" style="width: 100%;text-align: center;"><img src="/assets/images/data-loader.svg" style="width: 100px;"/></div>';
-                //console.log('response',response.data );
                 let data = response.data.buyer;
+                console.log('data',data )
                 const currentElement = document.querySelectorAll(`.property-critera-block`)[index];
                 const childElements = currentElement.querySelectorAll('.property-critera-details')[0];
                 currentElement.querySelectorAll('.cornor-block')[0].remove();
@@ -76,7 +85,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                     </li>
                     <li>
                         <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
-                        <a href=${data.phone} className="name-dealer">${data.phone}</a>
+                        <a href=${'tel:+'+data.phone} className="name-dealer">${data.phone}</a>
                     </li>
                     <li>
                         <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/gmail.svg" className="img-fluid" /></span>
@@ -88,6 +97,13 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                     </li>
                 </ul>`;
                 childElements.innerHTML = html;
+                const newParagraph = document.createElement("div");
+                newParagraph.className = "cornor-block";
+                newParagraph.innerHTML = `
+                <div class="red-flag" onclick="handleCustumFunction(${data.redFlag},${data.id})">
+                    <img src="/assets/images/red-flag.svg" class="img-fluid ${data.id}" />
+                </div>`;
+                childElements.append(newParagraph);
                 const totalCredit = response.data.credit_limit;
                 creditLimit.innerHTML = totalCredit;
                 let existingUser = getLocalStorageUserdata();
@@ -225,7 +241,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                                 {(activeTab =='more_buyers')? 
                                                     <span className="name-dealer">{data.phone}</span>
                                                     :
-                                                    <a href={data.phone} className="name-dealer">{data.phone}</a>
+                                                    <a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
                                                 }
                                             </li>
                                             <li>

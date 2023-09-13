@@ -150,12 +150,13 @@ const MyBuyer = () =>{
 					</div>
 				</div>
 			</div>
-			<div className="card-box bg-white-gradient">
+			<div className="card-box bg-white-gradient mt-0 pt-0">
 				<div className="row">
 					<div className="col-12 col-lg-12">
 					{ (totalRecord == 0)?<div className="card-box-inner"> <h5>No Data Found</h5> </div>: 
 						<div className="card-box-inner">
-							<h3 className="text-center">Property Criteria Match With {totalRecord} Buyers</h3>
+							{/* <h3 className="text-center">Property Criteria Match With {totalRecord} Buyers </h3> */}
+							{/* <h3 className="text-center">Your Purchased Buyer Details</h3> */}
 							<div className="property-critera">
 								<div className="row cust-row">
 									{ buyerData.map((data,index) => { 
@@ -200,7 +201,7 @@ const MyBuyer = () =>{
 													</li>
 													<li>
 														<span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>
-														<a className="name-dealer">{data.contact_preferance}</a>
+														<span className="name-dealer">{data.contact_preferance}</span>
 													</li>
 												</ul>
 											</div>
