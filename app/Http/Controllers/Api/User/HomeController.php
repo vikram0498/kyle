@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\User;
 use App\Models\Plan;
 use App\Models\Addon;
 use App\Models\Video;
+use App\Models\Support;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SupportRequest;
+use Illuminate\Support\Facades\DB; 
 
 class HomeController extends Controller
 {
@@ -51,5 +54,27 @@ class HomeController extends Controller
             return response()->json($responseData, 400);
         }
        
+    }
+    public function support(SupportRequest $request){
+        try{
+            DB::beginTransaction();
+            $validatedData['name'] = $request->name;
+            $validatedData['email'] = $request->email;
+            $validatedData['message'] = $request->message;
+            $createdBuyer = Support::create($validatedData);
+            $responseData = [
+                'status'        => true,
+                'success'       => "Request submitted successfully",
+            ];
+            DB::commit();
+            return response()->json($responseData, 200);
+        }catch(\Exception $e){
+            DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => $e->getMessage(),
+            ];
+            return response()->json($responseData, 400);
+        }
     }
 }
