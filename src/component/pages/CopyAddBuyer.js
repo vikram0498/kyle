@@ -319,7 +319,7 @@ function CopyAddBuyer (){
                                             <div className="card-box-inner">
                                                 <div className="row">
                                                     <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                                                        <h3>Upload Single Buyer Detail</h3>
+                                                        <h3>Buyer Form</h3>
                                                         <p>Fill the below form </p>
                                                     </div>
                                                 </div>
@@ -405,17 +405,17 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Market Preference<span>*</span></label>
+                                                                <label>MLS Status<span>*</span></label>
                                                                 <div className="form-group">
                                                                     <Controller
                                                                         control={control}
                                                                         name="market_preferance"
-                                                                        rules={{ required: 'Market Preference is required' }}
+                                                                        rules={{ required: 'mls Status is required' }}
                                                                         render={({ field: { value, onChange, name } }) => (
                                                                         <Select
                                                                             options={marketPreferanceOption}
                                                                             name = {name}
-                                                                            placeholder='Select Market Preference'
+                                                                            placeholder='Select MLS Status'
                                                                             isClearable={true}
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
@@ -464,12 +464,12 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('address') }
                                                                 </div>
                                                             </div> */}
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Country</label>
                                                                 <div className="form-group">
                                                                 <input type="text" className="form-control country-field" value="United States" readOnly/>
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                             <div className="col-12 col-lg-12">
                                                                 <label>State</label>
                                                                 <div className="form-group">

@@ -132,7 +132,7 @@ const MyBuyer = () =>{
 		{(isLoader)?<div className="loader" style={{textAlign:'center'}}><img src="assets/images/loader.svg"/></div>:
 		<div className="container position-relative">
 			<div className="back-block">
-				<div className="row">
+				<div className="row align-items-center">
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
                         <Link to="/" className="back">
 							<svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">

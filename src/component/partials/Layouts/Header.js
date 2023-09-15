@@ -71,7 +71,7 @@ function Header() {
 							{(userDetails !=null &&  userDetails.level_type !=1 &&userDetails.credit_limit < 5)?
 								<Link to='/additional-credits'>
 									<div className="upload-buyer bg-green">
-										<span className="upload-buyer-icon">
+										<span className="upload-buyer-icon d-flex">
 											<img src="./assets/images/coin.svg" className="img-fluid"/></span>
 										<p>More Credits</p>
 									</div>
@@ -80,13 +80,13 @@ function Header() {
 								''
 							}
 							<div className="upload-buyer">
-								<span className="upload-buyer-icon">
+								<span className="upload-buyer-icon d-flex">
 									<img src="./assets/images/folder.svg" className="img-fluid" /></span>
 								<p>uploaded Buyer Data : <b>{(creditLimit != null) ? creditLimit.total_buyer_uploaded : <MiniLoader/>}</b></p>
 							</div>
 							{(userDetails !=null && userDetails.level_type !=1)?
 							<div className="upload-buyer">
-								<span className="upload-buyer-icon"><img src="./assets/images/wallet.svg" className="img-fluid" /></span>
+								<span className="upload-buyer-icon d-flex"><img src="./assets/images/wallet.svg" className="img-fluid" /></span>
 								<p>Credits Points : <b className="credit_limit">{(creditLimit != null) ? creditLimit.credit_limit : <MiniLoader/>}</b></p>
 							</div>:''}
 							

@@ -2132,3 +2132,22 @@ margin-top: 0px;
 
 /*# sourceMappingURL=style.min.css.map */
 /* end*/
+
+/* Upload Documents css */
+.upload-multiple-data .uploadHeading{
+    line-height: normal !important;
+}
+
+/* * alert Css */
+@media only screen and (max-width: 480px){
+    .Toastify__toast-container--top-right{
+        top: 0px !important;
+        right: 0px !important;
+    }
+}
+
+@media (max-width: 360px){
+    .block-fix {
+        max-width: 280px;
+    }
+}

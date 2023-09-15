@@ -88,6 +88,7 @@ const Development = ({data,landSelected})=>{
 						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
 					</div>
 				</div>
+				{!landSelected && 
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>Stories</label>
 					<div className="form-group">
@@ -95,6 +96,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('of_stories') }
 					</div>
 				</div>
+				}
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>Price</label>
 					<div className="form-group">

@@ -265,7 +265,7 @@ import axios from 'axios';
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="form-title">
+                                        <div className="form-title mt-3">
                                             <h5>Change Password <span className="msg-passwrd">(Leave blank if you don’t want to update password)</span></h5>
                                         </div>
                                         <div className="row">
@@ -311,7 +311,7 @@ import axios from 'axios';
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="save-btn mt-3">
+                                        <div className="save-btn my-3">
                                             <button className="btn btn-fill">Update</button>
                                         </div>
                                     </div>

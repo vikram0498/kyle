@@ -60,6 +60,7 @@ const SellerForm = () =>{
     // const [arvMax, setArvMax] = useState('');
 
 	const [bedroom, setBedroom] = useState('');
+	const [room, setRoom] = useState('');
     const [bath, setBath] = useState('');
     const [size, setSize] = useState('');
     const [lotSize, setLotSize] = useState('');
@@ -67,6 +68,7 @@ const SellerForm = () =>{
     const [arv, setArv] = useState('');
 
     const [parking, setParking] = useState([]);
+    const [park, setPark] = useState([]);
     const [locationFlaw, setLocationFlaw] = useState([]);
     const [purchaseMethod, setPurchaseMethod] = useState([]);	
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -93,6 +95,7 @@ const SellerForm = () =>{
     const [foundationIssues, setFoundationIssues] = useState(null);
     const [mold, setMold] = useState(null);
     const [fireDamaged, setFireDamaged] = useState(null);
+    const [permanentlyAffixed, setPermanentlyAffixed] = useState(null);
     const [rebuild, setRebuild] = useState(null);
     const [squatters, setSquatters] = useState(null);
 
@@ -106,6 +109,7 @@ const SellerForm = () =>{
 
     const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([])
     const [parkingOption, setParkingOption] = useState([]);
+    const [parkOption, setParkOption] = useState([]);
     const [locationFlawsOption,setLocationFlawsOption] = useState([]);
 	const [propertyTypeOption, setPropertyTypeOption] = useState([]);
 	const [buildingClassOption, setBuildingClassOption] = useState([]);
@@ -119,12 +123,15 @@ const SellerForm = () =>{
     const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     
     const [conodoSelected,setConodoSelected] = useState(false);
+    const [manufactureSelected,setManufacturedSelected] = useState(false);
     const [landSelected,setLandSelected] = useState(false);
     const [developmentSelected,setDevelopmentSelected] = useState(false);
     const [multiFamilySelected,setMultiFamilySelected] = useState(false);
-
+    const [mobileHomeParkSelected,setMobileHomeParkSelected] = useState(false);
+    const [hotelMotelSelected,setHotelMotelSelected] = useState(false);
 
     const [parkingValue, setParkingValue] = useState([]);
+    const [parkValue, setParkValue] = useState([]);
     const [zoningValue, setZoningValue] = useState([]);
 	const [utilitiesValue, setUtilitiesValue] = useState([]);
 	const [sewerValue, setSewerValue] = useState([]);
@@ -162,12 +169,14 @@ const SellerForm = () =>{
 		'auth-token' : getTokenData().access_token,
     };
     const getOptionsValues = () =>{
-        axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
+        axios.get(apiUrl+'single-buyer-form-details/buy-box-search', { headers: headers }).then(response => {
             if(response.data.status){
                 let result = response.data.result;
+				console.log(result.property_types);
 				setPurchaseMethodsOption(result.purchase_methods);
                 setLocationFlawsOption(result.location_flaws);
                 setParkingOption(result.parking_values);
+                setParkOption(result.park_values);
                 setStateOptions(result.states);     
                 setPropertyTypeOption(result.property_types);
 				setBuildingClassOption(result.building_class_values);
@@ -258,13 +267,18 @@ const SellerForm = () =>{
 		// setYearBuildMin(''); 	setYearBuildMax('');
 		// setArvMin(''); 			setArvMax('');
 
-		setBedroom(''); 		
+		setBedroom(''); 	
+		setRoom('');	
 		setBath(''); 		 
 		setSize(''); 		
 		setLotSize(''); 		
 		setYearBuild(''); 	
 		setArv(''); 	
-		setParking([]); setTotalUnits(''); setBuildingClass(''); setValueAdd(null);
+		setParking([]);
+		setPark([]); 
+		setTotalUnits(''); 
+		setBuildingClass(''); 
+		setValueAdd(null);
 
 		setPurchaseMethod([]); 
 		
@@ -279,7 +293,7 @@ const SellerForm = () =>{
 
 		setSolar(null); setPool(null); setBalloonPayment(null); setWell(null); setAgeRestriction(null);
 		setRentalRestriction(null); setHoa(null); setTenant(null); setPostPossession(null); setBuildingRequired(null);
-		setFoundationIssues(null); setMold(null); setFireDamaged(null); setRebuild(null); setSquatters(null);
+		setFoundationIssues(null); setMold(null); setFireDamaged(null); setPermanentlyAffixed(null); setRebuild(null); setSquatters(null);
 
 		setLocationFlawsValue([]);
 
@@ -309,6 +323,11 @@ const SellerForm = () =>{
 
 			if (propertTypeCanDo.includes(propValue)) {
 				setConodoSelected(true);
+				if(propValue === 8){
+					setManufacturedSelected(true)
+				}else{
+					setManufacturedSelected(false)
+				}
 			} else {
 				setConodoSelected(false);
 			}
@@ -327,6 +346,16 @@ const SellerForm = () =>{
 
 			if (propertTypeMultiFamily.includes(propValue)) {
 				setMultiFamilySelected(true);
+				if(propValue == 14){
+					setMobileHomeParkSelected(true);
+				}else{
+					setMobileHomeParkSelected(false);
+				}
+				if(propValue == 15){
+					setHotelMotelSelected(true);
+				}else{
+					setHotelMotelSelected(false);
+				}
 			} else {
 				setMultiFamilySelected(false);
 			}
@@ -384,11 +413,13 @@ const SellerForm = () =>{
 		// arvMin, setArvMin,
 		// arvMax, setArvMax,
 		bedroom, setBedroom,
+		room, setRoom,
 		bath, setBath,
 	    size, setSize,
 		lotSize, setLotSize,
 		yearBuild, setYearBuild,
 		parking,  setParking,
+		park,  setPark,
 		totalUnits,  setTotalUnits,
 		buildingClass, setBuildingClass,
 		valueAdd, setValueAdd,
@@ -419,6 +450,7 @@ const SellerForm = () =>{
 		foundationIssues, setFoundationIssues,
 		mold, setMold,
 		fireDamaged, setFireDamaged,
+		permanentlyAffixed,setPermanentlyAffixed,
 		rebuild, setRebuild,
 		squatters,  setSquatters,
 
@@ -500,6 +532,7 @@ const SellerForm = () =>{
 			}
 		})
 	}
+
  return (
     <>
      	<Header/>
@@ -522,7 +555,7 @@ const SellerForm = () =>{
 						<div className="row">
 							<div className="col-12 col-lg-12">
 								<div className="card-box-inner">
-									<h3>Search Property Details</h3>
+									<h3>Buybox Search</h3>
 									{/* <p>Fill the below form OR send link to the buyer</p> */}
 									<form method='post' onSubmit={submitSearchBuyerForm}>
 										<div className="card-box-blocks">
@@ -552,7 +585,7 @@ const SellerForm = () =>{
 
 											{ conodoSelected 
 												&& 												
-												<CondoPropertySearch data = {dataObj} /> 
+												<CondoPropertySearch data = {dataObj} manufactureSelected={manufactureSelected} /> 
 											}
 
 											{ developmentSelected 
@@ -562,7 +595,8 @@ const SellerForm = () =>{
 
 											{ multiFamilySelected 
 												&& 
-												<MultiFamilyPropertySearch data = {dataObj} /> 
+												<MultiFamilyPropertySearch data = {dataObj} 
+												mobileHomeParkSelected={mobileHomeParkSelected} hotelMotelSelected={hotelMotelSelected}/> 
 											}
 
 											<div className="submit-btn">

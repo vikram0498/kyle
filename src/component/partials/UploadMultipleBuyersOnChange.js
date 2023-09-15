@@ -65,11 +65,11 @@ const UploadMultipleBuyersOnChange = () => {
     };
     return(
         <>
-         <form className="form-container upload-multiple-data" method='post' >
+         <form className="form-container upload-multiple-data d-flex align-items-center justify-content-center" method='post' >
             <div className="upload-files-container">
                 <div className="drag-file-area">
                     <span className="upload-icon"> </span>
-                    <h5>Upload Multiple Buyer Data</h5>
+                    <h5 className="uploadHeading">Upload Multiple Buyer Data</h5>
                     <p className="dynamic-message mb-0">Drag & Drop</p>
                     <button type="button" className="upload-button">
                         <img src="./assets/images/folder-big.svg" className="img-fluid" alt="" />

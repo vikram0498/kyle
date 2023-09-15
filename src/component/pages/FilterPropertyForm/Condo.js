@@ -5,7 +5,7 @@ import SingleSelect from "../../partials/Select2/SingleSelect";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AutoSuggestionAddress from './AutoSuggestionAddress';
- const Condo = ( {data}) => {
+ const Condo = ( {data, manufactureSelected}) => {
     const [startDate, setStartDate] = useState('');
      
     return(
@@ -498,7 +498,22 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                     </div>
                     {data.renderFieldError('fire_damaged') }
                 </div>
-            
+                {manufactureSelected &&
+                    <div className="grid-template-col">
+                        <div className="radio-block-group">
+                            <label>Permanently affixed </label>
+                            <div className="label-container">
+                                <input type="radio" name="permanently_affixed" value="1" id="permanently_affixed_yes" checked={data.permanentlyAffixed == 1 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
+                                <label className="mb-0" htmlFor="permanently_affixed_yes">Yes</label>
+                            </div>
+                            <div className="label-container">
+                                <input type="radio" name="permanently_affixed" value="0" id="permanently_affixed_no" checked={data.permanentlyAffixed == 0 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
+                                <label className="mb-0" htmlFor="permanently_affixed_no">No</label>
+                            </div>
+                        </div>
+                        {data.renderFieldError('permanently_affixed') }
+                    </div>
+                }
             </div>
         </>
     )

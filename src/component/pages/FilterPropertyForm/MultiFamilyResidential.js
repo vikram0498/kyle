@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import AutoSuggestionAddress from './AutoSuggestionAddress';
 import "react-datepicker/dist/react-datepicker.css";
 
-const MultiFamilyResidential = ({data}) =>{ 
+const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelected}) =>{ 
     const [startDate, setStartDate] = useState('');
 
     return (
@@ -85,60 +85,82 @@ const MultiFamilyResidential = ({data}) =>{
                         {data.renderFieldError('zip_code') }
                     </div>
                 </div>
+                
+                {(!mobileHomeParkSelected && !hotelMotelSelected) &&
+                    <>
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <label>Bed</label>
+                            <div className="form-group">
+                                <input type="number" name="bedroom" className="form-control" placeholder="Bed"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
+                                {data.renderFieldError('bedroom') }
+                            </div>
+                        </div>
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <label>Bath</label>
+                            <div className="form-group">
+                                <input type="number" name="bath" className="form-control" placeholder="Bath"  value={data.bath}  onChange={ e=>data.setBath(e.target.value) }/>
+                                {data.renderFieldError('bath') }
+                            </div>
+                        </div>
+                    </>
+                }
+                {hotelMotelSelected &&
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bed</label>
+                    <label>Rooms</label>
                     <div className="form-group">
-                        <input type="number" name="bedroom" className="form-control" placeholder="Bed"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
-                        {data.renderFieldError('bedroom') }
+                        <input type="number" name="room" className="form-control" placeholder="Room"  value={data.room}  onChange={ e=>data.setRoom(e.target.value) }/>
+                        {data.renderFieldError('room') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Bath</label>
-                    <div className="form-group">
-                        <input type="number" name="bath" className="form-control" placeholder="Bath"  value={data.bath}  onChange={ e=>data.setBath(e.target.value) }/>
-                        {data.renderFieldError('bath') }
+                }
+                {!mobileHomeParkSelected &&
+                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                        <label>Sq Ft</label>
+                        <div className="form-group">
+                            <input type="number" name="size" className="form-control" placeholder="Sq Ft" value={data.size}  onChange={ e=>data.setSize(e.target.value) } />
+                            {data.renderFieldError('size') }
+                        </div>
                     </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Sq Ft</label>
-                    <div className="form-group">
-                        <input type="number" name="size" className="form-control" placeholder="Sq Ft" value={data.size}  onChange={ e=>data.setSize(e.target.value) } />
-                        {data.renderFieldError('size') }
-                    </div>
-                </div>
+                }
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
 					<label>Lot Size Sq Ft</label>
 					<div className="form-group">
 						<input type="number" name="lot_size" className="form-control" placeholder="Lot Size Sq Ft" value={data.lotSize}  onChange={ e=>data.setLotSize(e.target.value) }/>
 					</div>
 				</div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Year Built</label>
-                    <div className="form-group">
-                    <DatePicker
-                        id="DatePicker"
-                        type="string"
-                        maxDate={new Date()}
-                        className="text-primary text-center form-control"
-                        selected={startDate} 
-                        name="build_year"
-                        autoComplete="off"
-                        showYearPicker
-                        dateFormat="yyyy"
-                        yearItemNumber={9}
-                        placeholderText='Year Built'
-                        onChange={(e)=>{setStartDate(e)}}
-                    />    
-                        {data.renderFieldError('build_year') }
-                    </div>
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-					<label>Stories</label>
-					<div className="form-group">
-						<input type="number" name="of_stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
-						{data.renderFieldError('of_stories') }
-					</div>
-				</div>
+                {!mobileHomeParkSelected &&
+                    <>
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <label>Year Built</label>
+                            <div className="form-group">
+                            <DatePicker
+                                id="DatePicker"
+                                type="string"
+                                maxDate={new Date()}
+                                className="text-primary text-center form-control"
+                                selected={startDate} 
+                                name="build_year"
+                                autoComplete="off"
+                                showYearPicker
+                                dateFormat="yyyy"
+                                yearItemNumber={9}
+                                placeholderText='Year Built'
+                                onChange={(e)=>{setStartDate(e)}}
+                            />    
+                                {data.renderFieldError('build_year') }
+                            </div>
+                        </div>
+                    
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <label>Stories</label>
+                            <div className="form-group">
+                                <input type="number" name="of_stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
+                                {data.renderFieldError('of_stories') }
+                            </div>
+                        </div>
+                    </>
+                }
+                
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Price</label>
                     <div className="form-group">
@@ -146,6 +168,7 @@ const MultiFamilyResidential = ({data}) =>{
                         {data.renderFieldError('price') }
                     </div>
                 </div>
+                {!mobileHomeParkSelected &&
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>ARV</label>
                     <div className="form-group">
@@ -153,6 +176,7 @@ const MultiFamilyResidential = ({data}) =>{
                         {data.renderFieldError('arv') }
                     </div>
                 </div>
+                }
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Parking</label>
                     <div className="form-group">
@@ -201,6 +225,21 @@ const MultiFamilyResidential = ({data}) =>{
                         {data.renderFieldError('value_add') }
                     </div>
                 </div>
+                { mobileHomeParkSelected && 
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                    <label>Park </label>
+                    <div className="form-group">
+                        <SingleSelect
+                            name="park"
+                            options={data.parkOption}
+                            placeholder='Select Park'
+                            setValue={data.setPark}
+                            value={data.park}
+                        />
+                        {data.renderFieldError('parking') }
+                    </div>
+                </div>
+                }
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>MLS Status<span>*</span></label>
                     <div className="form-group">

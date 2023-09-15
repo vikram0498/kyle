@@ -212,7 +212,7 @@
 	.img-user .user-profile{
 		height: 100%;
 		width: 100%;
-		object-fit: cover;
+		object-fit: contain;
 	}
 	.link-pass{
 	    justify-content: left;
@@ -266,9 +266,11 @@
 		display: block;
 	}
 	.cornor-block {
-	    position: unset;
+	    /* position: unset; */
 	    margin: 20px 0;
 	    justify-content: center;
+		bottom: 0;
+		top: 70px;
 	}
 	.account-in {
 	    max-width: 100%;
