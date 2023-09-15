@@ -55,7 +55,7 @@ Route::get('getParkings', [BuyerController::class, 'getParkings']);
 
 Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
 
-Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFormElementValues']);
+Route::get('single-buyer-form-details/{formType?}', [BuyerController::class, 'singleBuyerFormElementValues']);
 
 Route::get('getCountries', [BuyerController::class, 'getCountries']);
 

@@ -133,15 +133,42 @@ class BuyerController extends Controller
         return response()->json(['options'=>$options], 200);
     }
    
-    public function singleBuyerFormElementValues(){
+    public function singleBuyerFormElementValues($formType = null){
         $elementValues = [];
         try{
-            $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => $label,
-                ];
-            })->values()->all();
+            
+            
+            if($formType == 'buy-box-search'){
+                // for search buyer form
+                $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => $label,
+                    ];
+                })->values()->forget(2)->all();
+
+                $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => $label,
+                    ];
+                })->values()->all();
+
+            }else{
+                $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => $label,
+                    ];
+                })->values()->all();
+
+                $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => $label,
+                    ];
+                })->values()->all();
+            }
 
             $elementValues['building_class_values'] = collect(config('constants.building_class_values'))->map(function ($label, $value) {
                 return [
@@ -206,13 +233,6 @@ class BuyerController extends Controller
                 return [
                     'value' => $value,
                     'label' => ucwords(strtolower($label)),
-                ];
-            })->values()->all();
-
-            $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => $label,
                 ];
             })->values()->all();
 
