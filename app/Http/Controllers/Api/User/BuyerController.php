@@ -381,8 +381,9 @@ class BuyerController extends Controller
         $radioValues = [0,1];
         DB::beginTransaction();
         try {
+           
             $userId = auth()->user()->id;
-            dd($request->all());
+            
             $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','contact_preferance','created_by');
             $additionalBuyers = Buyer::query();
 
@@ -480,28 +481,22 @@ class BuyerController extends Controller
                 });
             }
 
-            if($request->rooms && is_numeric($request->rooms)){
-                $roomsValue = $request->rooms;
-                $buyers = $buyers->where(function ($query) use ($roomsValue) {
-                    $query->where('rooms', '<=', $roomsValue)
-                          ->where('rooms', '>=', $roomsValue);
-                });
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($roomsValue) {
-                    $query->where('rooms', '<=', $roomsValue)
-                          ->where('rooms', '>=', $roomsValue);
-                });
-            } 
+            // if($request->rooms && is_numeric($request->rooms)){
+            //     $roomsValue = $request->rooms;
+            //     $buyers = $buyers->where(function ($query) use ($roomsValue) {
+            //         $query->where('rooms', '<=', $roomsValue)
+            //               ->where('rooms', '>=', $roomsValue);
+            //     });
+            //     $additionalBuyers = $additionalBuyers->where(function ($query) use ($roomsValue) {
+            //         $query->where('rooms', '<=', $roomsValue)
+            //               ->where('rooms', '>=', $roomsValue);
+            //     });
+            // } 
 
             if($request->permanent_affix && is_numeric($request->permanent_affix)){
-                $permanent_affixValue = $request->permanent_affix;
-                $buyers = $buyers->where(function ($query) use ($permanent_affixValue) {
-                    $query->where('permanent_affix', '<=', $permanent_affixValue)
-                          ->where('permanent_affix', '>=', $permanent_affixValue);
-                });
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($permanent_affixValue) {
-                    $query->where('permanent_affix', '<=', $permanent_affixValue)
-                          ->where('permanent_affix', '>=', $permanent_affixValue);
-                });
+                $permanent_affixValue = (int)$request->permanent_affix;
+                $buyers = $buyers->where('permanent_affix',$permanent_affixValue);
+                $additionalBuyers = $additionalBuyers->where('permanent_affix',$permanent_affixValue);
             }
 
             if($request->size && is_numeric($request->size)){
@@ -615,6 +610,11 @@ class BuyerController extends Controller
             if(!is_null($request->solar) && in_array($request->solar, $radioValues)){
                 $buyers = $buyers->where('solar', $request->solar);
                 $additionalBuyers = $additionalBuyers->where('solar', $request->solar);
+            }
+            
+            if(!is_null($request->permanent_affix) && in_array($request->permanent_affix, $radioValues)){
+                $buyers = $buyers->where('permanent_affix', $request->permanent_affix);
+                $additionalBuyers = $additionalBuyers->where('permanent_affix', $request->permanent_affix);
             }
 
             if(!is_null($request->pool) && in_array($request->pool, $radioValues)){
@@ -753,6 +753,9 @@ class BuyerController extends Controller
                 $insertLogRecords['country'] =  233;
                 $insertLogRecords['state']   =  $request->state ?? null;
                 $insertLogRecords['city']    =  $request->city ?? null;
+                $insertLogRecords['permanent_affix'] =  (!is_null($request->permanent_affix))?$request->permanent_affix : 0;
+                $insertLogRecords['park']    =  $request->park;
+                $insertLogRecords['rooms']    =  $request->rooms;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 SearchLog::create($insertLogRecords);
             }
