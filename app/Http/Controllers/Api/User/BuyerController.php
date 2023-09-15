@@ -146,13 +146,22 @@ class BuyerController extends Controller
                         'label' => $label,
                     ];
                 })->values()->forget(2)->all();
-
+               
+               
                 $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
                     return [
                         'value' => $value,
                         'label' => $label,
                     ];
+                })->values()->forget([0,1,4,5,8])->values()->all();
+
+                $elementValues['park'] = collect(config('constants.park'))->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => $label,
+                    ];
                 })->values()->all();
+               
 
             }else{
                 $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
@@ -373,7 +382,7 @@ class BuyerController extends Controller
         DB::beginTransaction();
         try {
             $userId = auth()->user()->id;
-
+            dd($request->all());
             $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','contact_preferance','created_by');
             $additionalBuyers = Buyer::query();
 
@@ -399,6 +408,14 @@ class BuyerController extends Controller
                 // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
                 $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
                 $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
+            }
+
+            if($request->park){
+                $parkType = $request->park;
+                // $buyers = $buyers->whereJsonContains('property_type', $propertyType);
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
+                $buyers = $buyers->whereJsonContains('park', intval($parkType));
+                $additionalBuyers = $additionalBuyers->whereJsonContains('park', intval($parkType));
             }
 
             if($request->address){
@@ -461,7 +478,31 @@ class BuyerController extends Controller
                     $query->where('bath_min', '<=', $bathValue)
                           ->where('bath_max', '>=', $bathValue);
                 });
+            }
+
+            if($request->rooms && is_numeric($request->rooms)){
+                $roomsValue = $request->rooms;
+                $buyers = $buyers->where(function ($query) use ($roomsValue) {
+                    $query->where('rooms', '<=', $roomsValue)
+                          ->where('rooms', '>=', $roomsValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($roomsValue) {
+                    $query->where('rooms', '<=', $roomsValue)
+                          ->where('rooms', '>=', $roomsValue);
+                });
             } 
+
+            if($request->permanent_affix && is_numeric($request->permanent_affix)){
+                $permanent_affixValue = $request->permanent_affix;
+                $buyers = $buyers->where(function ($query) use ($permanent_affixValue) {
+                    $query->where('permanent_affix', '<=', $permanent_affixValue)
+                          ->where('permanent_affix', '>=', $permanent_affixValue);
+                });
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($permanent_affixValue) {
+                    $query->where('permanent_affix', '<=', $permanent_affixValue)
+                          ->where('permanent_affix', '>=', $permanent_affixValue);
+                });
+            }
 
             if($request->size && is_numeric($request->size)){
                 $sizeValue = $request->size;
@@ -987,6 +1028,7 @@ class BuyerController extends Controller
           
             $authUserId = auth()->user()->id;
             $redFlagRecord[$authUserId]['reason'] = $request->reason;
+            $redFlagRecord[$authUserId]['incorrect_info'] = $request->incorrect_info;
             $buyer = Buyer::find($request->buyer_id);
            
             if(!$buyer->redFlagedData()->exists()){
@@ -1192,7 +1234,7 @@ class BuyerController extends Controller
                     $query->where('price_min', '<=', $priceValue)
                           ->where('price_max', '>=', $priceValue);
                 });
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($priceValue) {
+                $additionalBuyers = $buyers->where(function ($query) use ($priceValue) {
                     $query->where('price_min', '<=', $priceValue)
                           ->where('price_max', '>=', $priceValue);
                 });

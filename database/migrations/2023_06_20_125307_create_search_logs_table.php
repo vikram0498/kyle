@@ -65,7 +65,9 @@ return new class extends Migration
             $table->integer('unit_max')->nullable();
             $table->integer('building_class')->nullable();
             $table->tinyInteger('value_add')->nullable();
-
+            $table->tinyInteger('permanent_affix')->default(0)->comment('1=>Yes, 0=>No');
+            $table->integer('park')->nullable();
+            $table->integer('rooms')->nullable();
             $table->boolean('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

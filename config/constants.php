@@ -83,6 +83,11 @@ return [
         3 => 'Boarders Non-residential',
     ],
 
+    'park' => [
+        1 => 'Park Owned',
+        2 => 'Tenant Owned',        
+    ],
+
     'buyer_types' => [
         // 1 => 'Creative',
         // 2 => 'Single Family Buyer',
@@ -94,7 +99,7 @@ return [
         // 8 => 'Wholesaler',
         // 9 => 'Portfolio',
         // 10 => 'Builder',
-        11 => 'Investors',
+        11 => 'Investor',
     ],
 
     'building_class_values' => [

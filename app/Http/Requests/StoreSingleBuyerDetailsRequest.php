@@ -82,8 +82,8 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'build_year_max' => ['required', 'numeric', !empty($this->build_year_min) ? new CheckMaxValue($this->build_year_min, 'build_year_min') : ''], 
 
             
-            'arv_min' => ['required', 'numeric', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
-            'arv_max' => ['required', 'numeric', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
+            'arv_min' => ['numeric', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
+            'arv_max' => ['numeric', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
 
             'parking' => ['required', 'numeric'],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_types')))],

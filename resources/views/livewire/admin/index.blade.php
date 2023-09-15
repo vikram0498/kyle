@@ -81,53 +81,7 @@
                               <td colspan="2"> There's nothing to show at the moment </td>
                            </tr>
                            @endif
-                           
                         </tbody>
-                        <!-- <tbody>
-                           <tr>
-                              <td>
-                                 <div class="side-by-side-data">
-                                    <span>Haword Johnson</span>
-                                    <span class="purchased">20 sellers purchased</span>
-                                 </div>
-                                 <td>Cameron Williamson</td>
-                              </td>
-                           </tr>
-                           <tr>
-                              
-                              <td>
-                                 <div class="side-by-side-data">
-                                    <span>Haword Johnson</span>
-                                    <span class="purchased">20 sellers purchased</span>
-                                 </div>
-                              </td>
-                              <td>Cameron Williamson</td>
-                           </tr>
-                           <tr>
-                              
-                              <td>
-                                 <div class="side-by-side-data">
-                                    <span>Haword Johnson</span>
-                                    <span class="purchased">20 sellers purchased</span>
-                                 </div>
-                              </td>
-                              <td>Cameron Williamson</td>
-                           </tr>
-                           <tr>
-                              
-                              <td>
-                                 <span>Haword Johnson</span>
-                              </td>
-                              <td>Cameron Williamson</td>
-                           </tr>
-                           <tr>
-                              
-                              <td>
-                                 <span>Haword Johnson</span>
-                              </td>
-                              <td>Cameron Williamson</td>
-                           </tr>
-                        </tbody> -->
                      </table>
                   </div>
                </div>
