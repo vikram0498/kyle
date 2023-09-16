@@ -119,6 +119,7 @@ class LoginRegisterController extends Controller
                     'status'            => true,
                     'message'           => 'You have logged in successfully!',
                     'userData'          => [
+                        'id'           => $user->id,
                         'first_name'   => $user->first_name ?? '',
                         'last_name'    => $user->last_name ?? '',
                         'profile_image'=> $user->profile_image_url ?? '',

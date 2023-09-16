@@ -67,7 +67,10 @@ class Index extends Component
         $this->utilities = config('constants.utilities');
         $this->sewers = config('constants.sewers');
         $this->market_preferances = config('constants.market_preferances');
+       
+        // $this->market_preferances = array_values($this->market_preferances);
         $this->contact_preferances = config('constants.contact_preferances');
+        // $this->park = config('constants.park');
 
         $url = env('FRONTEND_URL');
         $encryptedId = encrypt(auth()->user()->id);
@@ -82,8 +85,8 @@ class Index extends Component
             'last_name' => ['required'], 
             'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone' => ['required', 'numeric', 'digits:10'], 
-            'address' => ['required'], 
-            'country' => ['required', 'exists:countries,name'], 
+            // 'address' => ['required'], 
+            // 'country' => ['required', 'exists:countries,name'], 
             // 'state' => [/*'required', 'exists:states,id'*/], 
             // 'city' => [/*'required', 'exists:cities,id'*/], 
             'zip_code' => ['required','min:5','max:10'],
@@ -108,9 +111,9 @@ class Index extends Component
             'arv_max' => ['nullable', 'numeric', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
 
             
-            'stories_min' => ['required','numeric','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''], 
+            'stories_min' => ['numeric','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''], 
 
-            'stories_max' => ['required', 'numeric', 'max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''],
+            'stories_max' => ['numeric', 'max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''],
 
             
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
@@ -200,6 +203,7 @@ class Index extends Component
     }
 
     public function store() {  
+        //dd($this->all());
         $this->validatiionForm();
         
         $this->state['user_id'] = auth()->user()->id;
@@ -207,11 +211,11 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('name', $this->state['country'])->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  array_map('intval',[$this->state['state']]);
+            $this->state['state']   =  array_map('intval',$this->state['state']);
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    =  array_map('intval',[$this->state['city']]);
+            $this->state['city']    =  array_map('intval',$this->state['city']);
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -225,6 +229,7 @@ class Index extends Component
         if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
             $this->state['buyer_type'] = (int)$this->state['buyer_type'];
         }
+        
 
         if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
             $this->state['property_type'] = array_map('intval', $this->state['property_type']);
@@ -416,8 +421,9 @@ class Index extends Component
     }
 
     public function getCities($stateId){
+        
         if($stateId){
-            $cityData = DB::table('cities')->where('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
+            $cityData = DB::table('cities')->whereIn('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
             if($cityData->count() > 0){
                 $this->cities = $cityData;
             } else {

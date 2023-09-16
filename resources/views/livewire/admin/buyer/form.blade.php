@@ -48,27 +48,27 @@
                     @error('country') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} 
                         </label>
                     <!-- <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" > -->
-                    <!-- <div wire:ignore> -->
-                        <select wire:model.defer="state.state" id="state" class="form-control state select2" data-property="state">
+                   <div wire:ignore> 
+                        <select wire:model.defer="state.state" id="state" class="form-control state select2"  data-property="state" multiple data-placeholder="Select {{ __('cruds.buyer.fields.state')}}">
                             <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
                             @foreach($states as $key => $stateName)
                                 <option value="{{$key}}"> {{$stateName}} </option>
                             @endforeach
                         </select>
-                    <!-- </div> -->
+                    </div> 
                     @error('state') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} </label>
                     <!-- <div wire:ignore> -->
-                    <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city">
+                    <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city" multiple data-placeholder="Select {{ __('cruds.buyer.fields.city')}}">
                         <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>
                         @foreach($cities as $key => $cityName)
                             <option value="{{$key}}"> {{$cityName}} </option>
@@ -77,7 +77,8 @@
                     <!-- </div> -->
                     @error('city') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
-            </div>            
+            </div>
+                        
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.zip_code')}} <span class="text-danger">*</span></label>
@@ -104,7 +105,7 @@
                     </select>
                     @error('market_preferance') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
-            </div>
+            </div>            
 
             <div class="col-md-4">
                 <div class="form-group">

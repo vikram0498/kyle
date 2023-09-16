@@ -138,7 +138,7 @@ class BuyerController extends Controller
         try{
             
             
-            if($formType == 'buy-box-search'){
+         
                 // for search buyer form
                 $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
                     return [
@@ -161,23 +161,6 @@ class BuyerController extends Controller
                         'label' => $label,
                     ];
                 })->values()->all();
-               
-
-            }else{
-                $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
-                    return [
-                        'value' => $value,
-                        'label' => $label,
-                    ];
-                })->values()->all();
-
-                $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
-                    return [
-                        'value' => $value,
-                        'label' => $label,
-                    ];
-                })->values()->all();
-            }
 
             $elementValues['building_class_values'] = collect(config('constants.building_class_values'))->map(function ($label, $value) {
                 return [
@@ -329,8 +312,17 @@ class BuyerController extends Controller
 
             if($request->zoning){
                 $validatedData['zoning'] = json_encode($request->zoning);
-            }
+            }           
            
+            if($request->permanent_affix){
+                $validatedData['permanent_affix'] = (int)$request->permanent_affix;
+            } 
+            if($request->park){
+                $validatedData['park'] = (int)$request->park;
+            }  
+            if($request->rooms){
+                $validatedData['rooms'] = (int)$request->rooms;
+            }  
             $createdBuyer = Buyer::create($validatedData);
             
             if($token){
@@ -1161,14 +1153,86 @@ class BuyerController extends Controller
                 DB::commit();
     
                 if($flag){
+                    try{
+                        $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->first();
+                        $liked=$getrecentaction->liked == 1 ? true : false;
+                        $disliked=$getrecentaction->disliked == 1 ? true : false;
+                    }
+                    catch(\Exception $e){
+                        $liked=false;
+                        $disliked=false;
+                    }    
+                                                          
                     $responseData['totalBuyerLikes'] = totalLikes($fetchBuyer->id);
                     $responseData['totalBuyerUnlikes'] = totalUnlikes($fetchBuyer->id);
-
+                    $responseData['liked']=$liked;
+                    $responseData['disliked']=$disliked;
                     //Success Response Send
                     $responseData = [
                         'status'   => true,
                         'data'     => $responseData,
                         'message'  => 'Updated Successfully!'
+                    ];
+                    return response()->json($responseData, 200);
+
+                }else{
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => trans('messages.error_message'),
+                    ];
+                    return response()->json($responseData, 400);
+                }
+               
+            }
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    public function deleteBuyerLikeOrUnlike(Request $request, $user_id, $buyer_id)
+    {
+        $validator = Validator::make([
+            'user_id' => $user_id,
+            'buyer_id' => $buyer_id,
+        ], [
+            'buyer_id' => ['required', 'numeric'],
+            'user_id' => ['required', 'numeric'],
+        ]);
+
+       
+        DB::beginTransaction();
+        try {
+            $fetchBuyer = Buyer::find($request->buyer_id);
+            if($fetchBuyer){            
+                
+                $flag = false;
+                $entryExists = UserBuyerLikes::where('user_id',$user_id)->where('buyer_id',$buyer_id)->exists();               
+                if($entryExists){                   
+                    UserBuyerLikes::where('user_id',$user_id)->where('buyer_id',$buyer_id)->delete();
+                    $flag = true;
+                }else{                   
+                    $flag = false;
+                }
+                DB::commit();
+    
+                if($flag){
+                    $responseData['totalBuyerLikes']=UserBuyerLikes::where('buyer_id',$buyer_id)->where('liked',1)->count();
+                    $responseData['totalBuyerUnlikes']=UserBuyerLikes::where('buyer_id',$buyer_id)->where('disliked',1)->count();
+
+                    //Success Response Send
+                    $responseData = [
+                        'status'   => true,
+                        'data'     => $responseData,
+                        'message'  => 'Updated Successully!'
                     ];
                     return response()->json($responseData, 200);
 
@@ -1429,16 +1493,28 @@ class BuyerController extends Controller
             $buyers = $buyers->orderBy('created_by','desc')->paginate(10);
 
             foreach ($buyers as $key=>$buyer){
+                try{
+                    $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',$userId)->where('buyer_id',$buyer->id)->first();
+                    $liked=$getrecentaction->liked == 1 ? true : false;
+                    $disliked=$getrecentaction->disliked == 1 ? true : false;
+                }
+                catch(\Exception $e){
+                    $liked=false;
+                    $disliked=false;
+                }               
+                
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyer->name =  $name;
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                $buyer->liked= $liked;
+                $buyer->disliked= $disliked;                
                 $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
             }
-
+            
             //Return Success Response
             $responseData = [
                 'status' => true,

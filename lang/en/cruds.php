@@ -165,7 +165,10 @@ return [
             'zoning'                        => 'Zoning',
             'utilities'                     => 'Utilities',
             'sewer'                         => 'Sewer',
-            'market_preferance'             => 'Market Preference',
+            'market_preferance'             => 'MLS Status',
+            'park'                          => 'Park',
+            'rooms'                         => 'Rooms',
+            'permanent_affix'               => 'Permanently Affixed',
             'contact_preferance'            => 'Contact Preference',
 
             'like'                          => 'Like',

@@ -92,9 +92,9 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('unhide-buyer', [BuyerController::class, 'unhideBuyer']);
 
-    Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);
+    Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);  
 
-    Route::post('like-unlike-buyer', [BuyerController::class, 'storeBuyerLikeOrUnlike']);
+    Route::delete('del-like-unlike-buyer/{user_id}/{buyer_id}', [BuyerController::class, 'deleteBuyerLikeOrUnlike']);
 
     Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
 
