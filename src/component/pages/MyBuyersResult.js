@@ -92,7 +92,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                         <a href=${'mailto:'+data.email} className="name-dealer">${data.email}</a>
                     </li>
                     <li>
-                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/settings.svg" className="img-fluid" style="height:28px;"/></span>
+                        <span className="detail-icon" style="background: #FFFFFF;width: 38px;height: 38px;min-width: 38px;display: inline-flex;align-items: center;justify-content: center;border-radius: 100%;margin-right: 12px;"><img src="/assets/images/contact-preferance.svg" className="img-fluid" style="height:28px;"/></span>
                         <span className="name-dealer">${data.contact_preferance}</span>
                     </li>
                 </ul>`;
@@ -153,6 +153,7 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
     
     async function likeUnlikeBuyer(id,like,unlike,index) {
         try{
+
             const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
                 'Accept': 'application/json',
@@ -253,7 +254,9 @@ const MyBuyersResult = ({buyerData,buyerType,activeTab,pageNumber,getFilterResul
                                                 }
                                             </li>
                                             <li>
-                                                <span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>
+                                                <span className="detail-icon">
+                                                    <img src="./assets/images/contact-preferance.svg" className="img-fluid" />
+                                                </span>
                                                 <span className="name-dealer">{data.contact_preferance}</span>
                                             </li>
                                         </ul>

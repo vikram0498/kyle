@@ -503,15 +503,15 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         <div className="radio-block-group">
                             <label>Permanently affixed </label>
                             <div className="label-container">
-                                <input type="radio" name="permanently_affixed" value="1" id="permanently_affixed_yes" checked={data.permanentlyAffixed == 1 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
-                                <label className="mb-0" htmlFor="permanently_affixed_yes">Yes</label>
+                                <input type="radio" name="permanent_affix" value="1" id="permanent_affix_yes" checked={data.permanentlyAffixed == 1 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
+                                <label className="mb-0" htmlFor="permanent_affix_yes">Yes</label>
                             </div>
                             <div className="label-container">
-                                <input type="radio" name="permanently_affixed" value="0" id="permanently_affixed_no" checked={data.permanentlyAffixed == 0 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
-                                <label className="mb-0" htmlFor="permanently_affixed_no">No</label>
+                                <input type="radio" name="permanent_affix" value="0" id="permanent_affix_no" checked={data.permanentlyAffixed == 0 ? 'checked' : ''} onChange={ e=>data.setPermanentlyAffixed(e.target.value) } />
+                                <label className="mb-0" htmlFor="permanent_affix_no">No</label>
                             </div>
                         </div>
-                        {data.renderFieldError('permanently_affixed') }
+                        {data.renderFieldError('permanent_affix') }
                     </div>
                 }
             </div>

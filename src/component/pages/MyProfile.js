@@ -180,7 +180,7 @@ import axios from 'axios';
                                 <div className="col-12 col-lg-8">
                                     <div className="card-box-inner">
                                         <h3>My Profile</h3>
-                                        <p>Fill the below form OR send link to the buyer</p>
+                                        {/* <p>Fill the below form OR send link to the buyer</p> */}
                                         <div className="row">
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
@@ -316,9 +316,9 @@ import axios from 'axios';
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-12 col-lg-4">
+                                <div className="col-12 col-lg-4 mt-lg-0 mt-sm-3 mt-2 pt-lg-0 pt-1">
                                     <div className="outer-heading text-center">
-                                        <h3>Edit Profile Picture </h3>
+                                        <h3 className='editprofilePic'>Edit Profile Picture </h3>
                                         <p>Lorem Ipsum is simply dummy text of the printing.</p>
                                     </div>
                                     <div className="upload-photo" style={{border:border}}>

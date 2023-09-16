@@ -302,6 +302,7 @@ function CopyAddBuyer (){
     }
     const handleCityChange = (event) => {
         let selectedValues = event.map((item) => item.value);
+        console.log(selectedValues,'selectedValues');
         setCityvalue(selectedValues);
     }
     return (

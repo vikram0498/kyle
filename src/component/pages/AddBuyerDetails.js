@@ -71,6 +71,8 @@ function AddBuyerDetails (){
     const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
     const [contactPreferanceValue, setContactPreferanceValue] = useState([]);
     const [zoningValue, setZoningValue] = useState([]);
+    const [stateValue,setStatevalue] = useState([]);
+    const [cityValue,setCityvalue] = useState([]);
 
     const [copySuccess, setCopySuccess] = useState(false);
 
@@ -95,7 +97,7 @@ function AddBuyerDetails (){
     };
     const getOptionsValues = () =>{
         try{
-            axios.get(apiUrl+'single-buyer-form-details', { headers: headers }).then(response => {
+            axios.get(apiUrl+'single-buyer-form-details/add-single-buyer-details', { headers: headers }).then(response => {
                 if(response.data.status){
                     let result = response.data.result;
                     setPurchaseMethodsOption(result.purchase_methods);
@@ -173,7 +175,10 @@ function AddBuyerDetails (){
             setCityOptions([]);
         } else { 
             let country_id = {country};
-            axios.post(apiUrl+'getCities', { state_id: state_id, country_id: country_id }, { headers: headers }).then(response => {
+            const selectedStates = state_id.map((item) => item.value);
+            setStatevalue(selectedStates);
+            console.log(selectedStates,'selectedStates');
+            axios.post(apiUrl+'getCities', { state_id: selectedStates, country_id: 233 }, { headers: headers }).then(response => {
                 let result = response.data.options;
 
                 setState([]); setCity([]);
@@ -204,8 +209,15 @@ function AddBuyerDetails (){
             formObject.zoning =  zoningValue;
         }
         // change city state value string to array
-        formObject.city = (data.get('city') !='') ? [Number(data.get('city'))]:'';
-        formObject.state = (data.get('state') !='') ? [Number(data.get('state'))]:'';
+        if (formObject.hasOwnProperty('state')) {
+            //formObject.states =  stateValue;
+            formObject.state = (stateValue.length>0) ? stateValue:'';
+        }
+        if (formObject.hasOwnProperty('city')) {
+            //formObject.city =  cityValue;
+            formObject.city = (cityValue.length>0) ? cityValue:'';
+
+        }
 
         try{
             let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});
@@ -213,7 +225,7 @@ function AddBuyerDetails (){
                 setLoading(false);
                 if(response.data.status){
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                    navigate('/')
+                    //navigate('/')
                 }
             }
         }catch(error){
@@ -353,6 +365,12 @@ function AddBuyerDetails (){
     const handleOpenModal = () =>{
         SetOpenVideoModal(true);
     }
+
+    const handleCityChange = (event) => {
+        let selectedValues = event.map((item) => item.value);
+        console.log(selectedValues,'selectedValues');
+        setCityvalue(selectedValues);
+    }
     return (
         <>
            <Header/>
@@ -477,7 +495,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('phone') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                <div className="col-12 col-lg-12">
                                                     <label>Address<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="address" className="form-control" placeholder="Enter Address" {
@@ -495,7 +513,7 @@ function AddBuyerDetails (){
                                                     <input type="text" className="form-control country-field" value="United States" readOnly />
                                                     </div>
                                                 </div> */}
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                <div className="col-12 col-lg-12">
                                                     <label>State</label>
                                                     <div className="form-group">
                                                         <Select
@@ -507,7 +525,8 @@ function AddBuyerDetails (){
                                                             isClearable={true}
                                                             isSearchable={true}
                                                             placeholder="Select State"
-                                                            closeMenuOnSelect={true}
+                                                            closeMenuOnSelect={false}
+                                                            isMulti
                                                         />
                                                         {/* <Controller
                                                             control={control}
@@ -532,23 +551,23 @@ function AddBuyerDetails (){
                                                         {renderFieldError('state') } */}
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                <div className="col-12 col-lg-12">
                                                     <label>City</label>
                                                     <div className="form-group">
                                                         <Select
                                                             name="city"
                                                             defaultValue=''
                                                             options={cityOptions}
-                                                            onChange={(item) => setCity(item)}
+                                                            onChange={handleCityChange}
                                                             className="select"
                                                             isClearable={true}
                                                             isSearchable={true}
                                                             isDisabled={false}
                                                             isLoading={false}
-                                                            value={city}
                                                             isRtl={false}
                                                             placeholder="Select City"
-                                                            closeMenuOnSelect={true}
+                                                            closeMenuOnSelect={false}
+                                                            isMulti
                                                         />
                                                         {/* <Controller
                                                             control={control}
@@ -1219,7 +1238,7 @@ function AddBuyerDetails (){
                                                         } />
                                                          {errors.price_min && <p className="error">{errors.price_min?.message}</p>}
 
-                                                        {renderFieldError('arv_min') }
+                                                        {renderFieldError('price_min') }
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -1242,7 +1261,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('price_max') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>ARV (min)<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
@@ -1282,7 +1301,7 @@ function AddBuyerDetails (){
 
                                                         {renderFieldError('arv_max') }
                                                     </div>
-                                                </div>            
+                                                </div>*/}
                                                 <div className="col-6 col-lg-6">
                                                     <label>Parking<span>*</span></label>
                                                     <div className="form-group">

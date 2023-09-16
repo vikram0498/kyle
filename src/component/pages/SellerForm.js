@@ -176,7 +176,7 @@ const SellerForm = () =>{
 				setPurchaseMethodsOption(result.purchase_methods);
                 setLocationFlawsOption(result.location_flaws);
                 setParkingOption(result.parking_values);
-                setParkOption(result.park_values);
+                setParkOption(result.park);
                 setStateOptions(result.states);     
                 setPropertyTypeOption(result.property_types);
 				setBuildingClassOption(result.building_class_values);
@@ -466,6 +466,7 @@ const SellerForm = () =>{
 		locationFlawsOption,
 		purchaseMethodsOption,
 		parkingOption,
+		parkOption,
 		buildingClassOption,
 		marketPreferanceOption,
 		contactPreferanceOption,

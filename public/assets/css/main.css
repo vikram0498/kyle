@@ -1062,7 +1062,7 @@ section.main-section {
     font-weight: 600;
     color: #0A2540;
     font-family: 'Barlow', sans-serif;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
 }
 .center-head {
     font-size: 18px;
@@ -1953,7 +1953,9 @@ font-weight: 500;
 margin-bottom: 5px;
 
 }
-  
+.react-datepicker-wrapper{
+    width: 100%;
+}
 .payment-card__submsg {
 
 color: #959a9e;
@@ -2127,6 +2129,9 @@ margin-top: 0px;
 
     .linkExpire .subheading {
         font-size: 14px
+    }
+    .upload-buyer{
+        background: none;
     }
 }
 

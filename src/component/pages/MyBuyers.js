@@ -125,6 +125,9 @@ const MyBuyer = () =>{
             }
         }
     }
+
+	const handleDoubleClick = () => {
+	}
  return (
     <>
     <Header/>
@@ -170,12 +173,12 @@ const MyBuyer = () =>{
 													<ul className="like-unlike mb-0 list-unstyled">
 														<li>
 															<span className="numb like-span">{data.totalBuyerLikes}</span>
-															
 															<span className="ico-no ml-min" onClick={()=>{likeUnlikeBuyer(data.id,1,0,index)}}>
-															<img src="/assets/images/like.svg" className="img-fluid" /></span>
+															{/* <span className="ico-no ml-min" onDoubleClick={handleDoubleClick}> */}
+															<img src={(data.totalBuyerLikes == 0) ? "/assets/images/like.svg" : "/assets/images/liked.svg"} className="img-fluid" /></span>
 														</li>
 														<li>
-															<span className="ico-no mr-min" onClick={()=>{likeUnlikeBuyer(data.id,0,1,index)}}><img src="/assets/images/unlike.svg" className="img-fluid" /></span>
+															<span className="ico-no mr-min" onClick={()=>{likeUnlikeBuyer(data.id,0,1,index)}}><img src={(data.totalBuyerUnlikes == 0) ? "/assets/images/unlike.svg":"/assets/images/unliked.svg"} className="img-fluid" /></span>
 															<span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
 														</li>
 													</ul>
@@ -200,7 +203,9 @@ const MyBuyer = () =>{
 														<a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
 													</li>
 													<li>
-														<span className="detail-icon"><i className="fa fa-cog contact-preferance" aria-hidden="true"></i></span>
+														<span className="detail-icon">
+															<img src="./assets/images/contact-preferance.svg" className="img-fluid" />
+														</span>
 														<span className="name-dealer">{data.contact_preferance}</span>
 													</li>
 												</ul>

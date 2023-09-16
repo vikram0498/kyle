@@ -18,6 +18,16 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
     e.preventDefault();
     setLoading(true);
     var formData = new FormData(e.target);
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let Obj = {'name':false,'email':false,'phone':false,'other':false};
+    for (const checkbox of checkboxes) {
+        formData.delete(checkbox.name);
+        if (checkbox.checked) {
+            console.log(checkbox.name,'typee');
+          Obj[checkbox.name] = true;
+        }
+    }
+    formData.append('incorrect_info', JSON.stringify(Obj));
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = { 
         'Accept': 'application/json',
@@ -69,6 +79,35 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
                 </div>
                 <form className="modal-form" method="post" onSubmit={handleSubmit}>
                     <div className="row">
+                        <div className="col-12 col-lg-12 mb-4">
+                            <div className="row">
+                                <label>What Information is incorrect</label>
+                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" name="name" value="1" id="flexCheckChecked"/>
+                                        <label className="form-check-label" for="flexCheckChecked"> Name </label>
+                                    </div>
+                                 </div>
+                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" name="email" value="1" id="flexCheckChecked"/>
+                                        <label className="form-check-label" for="flexCheckChecked"> Email </label>
+                                    </div>
+                                 </div>
+                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" name="phone" value="1" id="flexCheckChecked"/>
+                                        <label className="form-check-label" for="flexCheckChecked">Phone</label>
+                                    </div>
+                                 </div>
+                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" name="other" value="1" id="flexCheckChecked"/>
+                                        <label className="form-check-label" for="flexCheckChecked">Other</label>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
                         <div className="col-12 col-lg-12">
                             <input type="hidden" value={buyerId} name="buyer_id"/>
                             <div className="form-group">

@@ -108,8 +108,8 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Rooms</label>
                     <div className="form-group">
-                        <input type="number" name="room" className="form-control" placeholder="Room"  value={data.room}  onChange={ e=>data.setRoom(e.target.value) }/>
-                        {data.renderFieldError('room') }
+                        <input type="number" name="rooms" className="form-control" placeholder="Rooms"  value={data.room} onChange={ e=>data.setRoom(e.target.value) }/>
+                        {data.renderFieldError('rooms') }
                     </div>
                 </div>
                 }
