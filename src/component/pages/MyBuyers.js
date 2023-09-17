@@ -9,9 +9,10 @@ import SentRequest from '../partials/Modal/SentRequest';
 import { useFormError } from '../../hooks/useFormError';
 import { toast } from "react-toastify";
 import axios from 'axios';
+import BuyerCard from './BuyerCard';
 
 const MyBuyer = () =>{
-	const {getTokenData,setLogout} = useAuth();
+	const {getTokenData,setLogout,getLocalStorageUserdata} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [isLoader, setIsLoader] = useState(true);
@@ -25,6 +26,9 @@ const MyBuyer = () =>{
     const [sentOpen, setSentOpen] = useState(false);
     const [buyerId, setBuyerId]   = useState('');
 	const { setErrors, renderFieldError } = useFormError();
+
+	const [likeCount, setLikeCount] = useState(50);
+  
 	useEffect(() => {
 			getBuyerLists();
     },[]);
@@ -126,7 +130,86 @@ const MyBuyer = () =>{
         }
     }
 
-	const handleDoubleClick = () => {
+	const handleLikeClick = (id,ind) => {
+		let index = ind;
+		let CurrentBuyer = buyerData.filter((data)=> {
+			return data.id === id;
+		});
+
+		if(!CurrentBuyer[0].liked){
+			CurrentBuyer[0].totalBuyerLikes = CurrentBuyer[0].totalBuyerLikes+1;
+			CurrentBuyer[0].liked = true;
+			if(CurrentBuyer[0].disliked){
+				CurrentBuyer[0].totalBuyerUnlikes = CurrentBuyer[0].totalBuyerUnlikes-1;
+				CurrentBuyer[0].disliked = false;
+			}
+			likeUnlikeBuyer(id,1,0,index);
+		}else{
+			CurrentBuyer[0].totalBuyerLikes = CurrentBuyer[0].totalBuyerLikes-1;
+			CurrentBuyer[0].liked = false;
+			handleDoubleClick(id);
+		}
+		let newBuyerData = buyerData;
+		newBuyerData[index] = CurrentBuyer[0];
+		setBuyerData(newBuyerData);
+		setLikeCount(likeCount + 1);
+	};
+
+	const handleDisikeClick = (id,ind) => {
+		let index = ind;
+		let CurrentBuyer = buyerData.filter((data)=> {
+			return data.id === id;
+		});
+
+		if(!CurrentBuyer[0].disliked){
+			CurrentBuyer[0].totalBuyerUnlikes = CurrentBuyer[0].totalBuyerUnlikes+1;
+			CurrentBuyer[0].disliked = true;
+			if(CurrentBuyer[0].liked){
+				CurrentBuyer[0].totalBuyerLikes = CurrentBuyer[0].totalBuyerLikes-1;
+				CurrentBuyer[0].liked = false;
+			}
+			likeUnlikeBuyer(id,0,1,index)
+		}else{
+			CurrentBuyer[0].totalBuyerUnlikes = CurrentBuyer[0].totalBuyerUnlikes-1;
+			CurrentBuyer[0].disliked = false;
+			handleDoubleClick(id)
+		}
+		let newBuyerData = buyerData;
+		newBuyerData[index] = CurrentBuyer[0];
+		setBuyerData(newBuyerData);
+		setLikeCount(likeCount + 1);
+	};
+
+	const handleDoubleClick = async (buyerid) => {
+		try{
+			let userId = getLocalStorageUserdata().id;
+			const apiUrl = process.env.REACT_APP_API_URL;
+            let headers = { 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + getTokenData().access_token,
+                'auth-token' : getTokenData().access_token,
+            };
+            const response = await axios.delete(apiUrl+`del-like-unlike-buyer/${userId}/${buyerid}`,{headers: headers});
+            if(response.data.status){
+                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+            }
+
+        }catch(error){
+            if(error.response) {
+				if(error.response.status === 401){
+					setLogout();
+				}
+                if (error.response.data.errors) {
+                    toast.error(error.response.data.errors, {position: toast.POSITION.TOP_RIGHT});
+                }
+                if (error.response.data.validation_errors) {
+                    setErrors(error.response.data.validation_errors);
+                }
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
+                }
+            }
+        }
 	}
  return (
     <>
@@ -163,68 +246,15 @@ const MyBuyer = () =>{
 							<div className="property-critera">
 								<div className="row cust-row">
 									{ buyerData.map((data,index) => { 
-									return(<div className="col-12 col-lg-6" key={data.id}>
-										<div className="property-critera-block">
-											<div className="critera-card">
-												<div className="center-align">
-													<span className="price-img">
-                                                        <img src="./assets/images/price.svg" className="img-fluid" /></span>
-													<p>Buyer</p>
-													<ul className="like-unlike mb-0 list-unstyled">
-														<li>
-															<span className="numb like-span">{data.totalBuyerLikes}</span>
-															<span className="ico-no ml-min" onClick={()=>{likeUnlikeBuyer(data.id,1,0,index)}}>
-															{/* <span className="ico-no ml-min" onDoubleClick={handleDoubleClick}> */}
-															<img src={(data.totalBuyerLikes == 0) ? "/assets/images/like.svg" : "/assets/images/liked.svg"} className="img-fluid" /></span>
-														</li>
-														<li>
-															<span className="ico-no mr-min" onClick={()=>{likeUnlikeBuyer(data.id,0,1,index)}}><img src={(data.totalBuyerUnlikes == 0) ? "/assets/images/unlike.svg":"/assets/images/unliked.svg"} className="img-fluid" /></span>
-															<span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
-														</li>
-													</ul>
-												</div>
-											</div>
-											<div className="property-critera-details">
-												<ul className="list-unstyled mb-0">
-													<li>
-														<span className="detail-icon">
-                                                            <img src="./assets/images/user-gradient.svg" className="img-fluid" />
-														</span>
-														<span className="name-dealer">{data.first_name} {data.last_name}</span>
-													</li>
-													<li>
-														<span className="detail-icon">
-                                                            <img src="./assets/images/phone-gradient.svg" className="img-fluid" /></span>
-														<a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
-													</li>
-													<li>
-														<span className="detail-icon">
-                                                            <img src="./assets/images/gmail.svg" className="img-fluid"/></span>
-														<a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
-													</li>
-													<li>
-														<span className="detail-icon">
-															<img src="./assets/images/contact-preferance.svg" className="img-fluid" />
-														</span>
-														<span className="name-dealer">{data.contact_preferance}</span>
-													</li>
-												</ul>
-											</div>
-											<div className="cornor-block">
-												{
-													(data.createdByAdmin) ? 
-														(data.redFlagShow) ? <>	
-															<div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}><img src="./assets/images/red-flag.svg" className="img-fluid" /></div>
-															</> 
-														:
-														''
-													:
-													''
-												}
-											</div>
-											<div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Purchased buyer':'Your buyer' }</div>
-										</div>
-									</div>)})}
+									return(
+										<BuyerCard 
+											data={data} 
+											key={data.id} 
+											handleLikeClick={handleLikeClick} 
+											handleDisikeClick={handleDisikeClick}
+											handleClickEditFlag={handleClickEditFlag}
+											index = {index} 
+									/> )})}
 								</div>
 								<div className="row justify-content-center">
 									{/* {(pageNumber >1) ? <div className='col-md-2'><a className="btn btn-fill" onClick={handleClickPrev}>Prev</a></div>: ''}
