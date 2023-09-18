@@ -113,10 +113,9 @@ const ResultPage = ({setIsFiltered}) =>{
         //console.log(activeTab,'activeTab1',pageNumber);
     }
     const handleClickMoreBuyers = () => {
+        setActiveTab('more_buyers');
         setPageNumber(1);
         setBuyerType('');
-        setActiveTab('more_buyers');
-        //console.log(activeTab,'activeTab33',pageNumber);
     }
     const handleClickHedgeFund = () => {
         setPageNumber(1);
@@ -195,6 +194,7 @@ const ResultPage = ({setIsFiltered}) =>{
                                         {!showLoader && (
                                             <div>
                                                 <MyBuyersResult 
+                                                    setBuyerData={setBuyerData}
                                                     buyerData={buyerData}
                                                     getFilterResult={getFilterResult}
                                                     pageNumber={pageNumber}

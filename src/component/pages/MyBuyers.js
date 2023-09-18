@@ -7,9 +7,9 @@ import Pagination from '../partials/Layouts/Pagination';
 import EditRequest from '../partials/Modal/EditRequest';
 import SentRequest from '../partials/Modal/SentRequest';
 import { useFormError } from '../../hooks/useFormError';
-import { toast } from "react-toastify";
+import { toast,dismiss  } from "react-toastify";
 import axios from 'axios';
-import BuyerCard from './BuyerCard';
+import BuyerCard from './Section/BuyerCard';
 
 const MyBuyer = () =>{
 	const {getTokenData,setLogout,getLocalStorageUserdata} = useAuth();
@@ -25,6 +25,7 @@ const MyBuyer = () =>{
 	const [editOpen, setEditOpen] = useState(false);
     const [sentOpen, setSentOpen] = useState(false);
     const [buyerId, setBuyerId]   = useState('');
+
 	const { setErrors, renderFieldError } = useFormError();
 
 	const [likeCount, setLikeCount] = useState(50);
@@ -110,7 +111,7 @@ const MyBuyer = () =>{
                 const unLikeCount = addLoaderParent.querySelectorAll('.unlike-span')[0];
                 likeCount.innerHTML = response.data.data.totalBuyerLikes;
                 unLikeCount.innerHTML = response.data.data.totalBuyerUnlikes;
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+				toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
             }
         }catch(error){
             if(error.response) {
@@ -278,12 +279,12 @@ const MyBuyer = () =>{
 					}
 					</div>
 					<EditRequest 
-                        setEditOpen={setEditOpen} 
-                        editOpen={editOpen} 
-                        buyerId={buyerId}
-                        pageNumber={pageNumber}
-						getFilterResult={getBuyerLists}
-                    />
+						setEditOpen={setEditOpen}
+						setBuyerData={setBuyerData}
+						editOpen={editOpen} 
+						buyerId={buyerId}
+						buyerData={buyerData}
+					/>
                     <SentRequest setSentOpen={setSentOpen} sentOpen={sentOpen} buyerId={buyerId}/>
 				</div>
 			</div>

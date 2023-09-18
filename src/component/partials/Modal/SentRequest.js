@@ -19,7 +19,7 @@ const SentRequest = ({setSentOpen,sentOpen}) =>{
                 <div className="popup-heading-block text-center">
                     <span className="popup-icon-check">
                         <svg width="41" height="40" viewBox="0 0 41 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M34.3161 10L15.9827 28.3333L7.64941 20" stroke="#00AC47" strokeOpacity="0.18" stroke-width="6" strokeLinecap="round" strokeLinejoin="round"></path>
+                            <path d="M34.3161 10L15.9827 28.3333L7.64941 20" stroke="#00AC47" strokeOpacity="0.18" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"></path>
                         </svg>
                     </span>
                     <h3>Your Edit Request has been sent to the admin</h3>

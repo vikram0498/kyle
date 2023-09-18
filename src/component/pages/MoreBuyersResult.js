@@ -32,7 +32,7 @@ const MoreBuyersResult = ({buyerData}) => {
                                     </li>
                                     <li>
                                         <span className="detail-icon">
-                                            <img src="./assets/images/gmail.svg" className="img-fluid"/></span>
+                                            <img src="./assets/images/email.svg" className="img-fluid"/></span>
                                         <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
                                     </li>
                                 </ul>

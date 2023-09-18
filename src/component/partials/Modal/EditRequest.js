@@ -6,8 +6,9 @@ import ButtonLoader from '../MiniLoader';
 import { toast } from "react-toastify";
 import axios from 'axios';
 
-const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumber,getFilterResult}) => {
+const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,pageNumber,getFilterResult,buyerData,setBuyerData}) => {
     const [loading, setLoading] = useState(false);
+    const [checkboxError, setCheckboxError] = useState(false);
 
   const handleClose = () => {
     setEditOpen(false);
@@ -16,31 +17,43 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
   const {getTokenData,setLogout} = useAuth();
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
     var formData = new FormData(e.target);
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     let Obj = {'name':false,'email':false,'phone':false,'other':false};
+    let flag =true;
     for (const checkbox of checkboxes) {
         formData.delete(checkbox.name);
         if (checkbox.checked) {
-            console.log(checkbox.name,'typee');
           Obj[checkbox.name] = true;
+          flag = false;
         }
     }
+    if(flag){
+        setCheckboxError(true);
+        return false;
+    }
     formData.append('incorrect_info', JSON.stringify(Obj));
+    let buyerUserId = formData.get('buyer_id');
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = { 
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + getTokenData().access_token,
         'auth-token' : getTokenData().access_token,
     };
+    setLoading(true);
+    setCheckboxError(false);
     async function fetchData() {
         try{
             const response = await axios.post(apiUrl+"red-flag-buyer",formData,{headers: headers});
             if(response.data.status){
                 toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
                 handleClose();
-                getFilterResult(pageNumber,activeTab,buyerType,);
+                const obj = buyerData.find(obj => obj.id == buyerUserId);
+                if (obj) {
+                    obj.redFlag = true;
+                }
+                setBuyerData(buyerData);
+                //getFilterResult(pageNumber,activeTab,buyerType,);
             }else{
                 //console.log('false ',response.data.message);
                 toast.error(response.data.message, {position: toast.POSITION.TOP_RIGHT});
@@ -81,32 +94,33 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,activeTab,pageNumbe
                     <div className="row">
                         <div className="col-12 col-lg-12 mb-4">
                             <div className="row">
-                                <label>What Information is incorrect</label>
+                                <label>What Information is incorrect<span className='error'> *</span></label>
                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="name" value="1" id="flexCheckChecked"/>
-                                        <label className="form-check-label" for="flexCheckChecked"> Name </label>
+                                        <label className="form-check-label" htmlFor="flexCheckChecked"> Name </label>
                                     </div>
                                  </div>
                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="email" value="1" id="flexCheckChecked"/>
-                                        <label className="form-check-label" for="flexCheckChecked"> Email </label>
+                                        <label className="form-check-label" htmlFor="flexCheckChecked"> Email </label>
                                     </div>
                                  </div>
                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="phone" value="1" id="flexCheckChecked"/>
-                                        <label className="form-check-label" for="flexCheckChecked">Phone</label>
+                                        <label className="form-check-label" htmlFor="flexCheckChecked">Phone</label>
                                     </div>
                                  </div>
                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="other" value="1" id="flexCheckChecked"/>
-                                        <label className="form-check-label" for="flexCheckChecked">Other</label>
+                                        <label className="form-check-label" htmlFor="flexCheckChecked">Other</label>
                                     </div>
                                  </div>
                             </div>
+                            {(checkboxError)?<p className="error">This field is required </p>:''}
                         </div>
                         <div className="col-12 col-lg-12">
                             <input type="hidden" value={buyerId} name="buyer_id"/>

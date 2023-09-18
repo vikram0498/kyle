@@ -56,13 +56,18 @@ function AddBuyerDetails (){
     const [countryOptions,setCountryOptions] = useState([]);
     const [stateOptions,setStateOptions] = useState([]);
     const [cityOptions,setCityOptions] = useState([]);
-    
+    const [parkOption, setParkOption] = useState([]);
+
     const [showCreativeFinancing,setShowCreativeFinancing] = useState(false);
     const [multiFamilyBuyerSelected,setMultiFamilyBuyerSelected] = useState(false);
     const [isLandSelected,setIsLandSelected] = useState(false);
+    const [manufactureSelected,setManufacturedSelected] = useState(false);
+    const [mobileHomeParkSelected,setMobileHomeParkSelected] = useState(false);
+    const [hotelMotelSelected,setHotelMotelSelected] = useState(false);
 
 
     const [parkingValue, setParkingValue] = useState([]);
+    const [parkValue, setParkValue] = useState([]);
     const [propertyTypeValue, setPropertyTypeValue] = useState([]);
     const [locationFlawsValue,setLocationFlawsValue] = useState([]);
     const [buyerTypeValue,setBuyerTypeValue] = useState([]);
@@ -106,6 +111,7 @@ function AddBuyerDetails (){
                     setLocationFlawsOption(result.location_flaws);
                     setParkingOption(result.parking_values);
                     //setCountryOptions(result.countries);
+                    setParkOption(result.park);
                     setStateOptions(result.states);
                     setbuyerTypeOption(result.buyer_types);
                     setMarketPreferanceOption(result.market_preferances);
@@ -323,6 +329,21 @@ function AddBuyerDetails (){
           }else {
             setIsLandSelected(false);
           }
+          if(selectedValues.includes(8)){
+            setManufacturedSelected(true);
+          }else{
+            setManufacturedSelected(false);
+          }
+          if(selectedValues.includes(14)){
+            setMobileHomeParkSelected(true);
+          }else{
+            setMobileHomeParkSelected(false);
+          }
+        if(selectedValues.includes(15)){
+            setHotelMotelSelected(true);
+        }else{
+            setHotelMotelSelected(false);
+        }
           setPropertyTypeValue(selectedValues);
         }else if(name == 'purchase_method'){
             if (selectedValues.includes(5)) {
@@ -371,6 +392,7 @@ function AddBuyerDetails (){
         console.log(selectedValues,'selectedValues');
         setCityvalue(selectedValues);
     }
+    console.log(isLandSelected,'isLandSelected');
     return (
         <>
            <Header/>
@@ -949,13 +971,35 @@ function AddBuyerDetails (){
                                                         </div>
                                                     </div>
                                                 }
+                                                {(!mobileHomeParkSelected && !hotelMotelSelected) && 
+                                                <>
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Bedroom (min)<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
+                                                                ...register("bedroom_min", {
+                                                                    required: "Bedroom (min) is required",
+                                                                    validate: {
+                                                                        matchPattern: (v) =>
+                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                        "Please enter valid number",
+                                                                        maxLength: (v) =>
+                                                                        v.length <= 10 || "The digit should be less than equal 10",
+                                                                    },
+                                                                })
+                                                                } />
+                                                                {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
 
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bedroom (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
-                                                            ...register("bedroom_min", {
-                                                                required: "Bedroom (min) is required",
+                                                            {renderFieldError('bedroom_min') }
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Bedroom (max)<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
+                                                            {
+                                                            ...register("bedroom_max", {
+                                                                required: "Bedroom (max) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
                                                                     /^[0-9]\d*$/.test(v) ||
@@ -965,112 +1009,106 @@ function AddBuyerDetails (){
                                                                 },
                                                             })
                                                             } />
-                                                            {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
+                                                            {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
 
-                                                        {renderFieldError('bedroom_min') }
+                                                            {renderFieldError('bedroom_max') }
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bedroom (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
-                                                         {
-                                                        ...register("bedroom_max", {
-                                                            required: "Bedroom (max) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                        {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Bath (min)<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)"
+                                                            {
+                                                            ...register("bath_min", {
+                                                                required: "Bath (min) is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid number",
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                },
+                                                            })
+                                                            } />
+                                                            {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
+                                                            {renderFieldError('bath_min') }
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Bath (max)<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" {
+                                                            ...register("bath_max", {
+                                                                required: "Bath (max) is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid number",
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                },
+                                                            })
+                                                            } />
+                                                            {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
+                                                            
+                                                            {renderFieldError('bath_max') }
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                }
+                                                {!mobileHomeParkSelected && 
+                                                <>    
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Sq Ft Min<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
+                                                            ...register("size_min", {
+                                                                required: "Sq Ft Min is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid number",
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                },
+                                                            })
+                                                            } />
+                                                            {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
 
-                                                        {renderFieldError('bedroom_max') }
+                                                            {renderFieldError('size_min') }
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bath (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)"
-                                                        {
-                                                        ...register("bath_min", {
-                                                            required: "Bath (min) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                        {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
-                                                        {renderFieldError('bath_min') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Bath (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" {
-                                                        ...register("bath_max", {
-                                                            required: "Bath (max) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                        {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
-                                                        
-                                                        {renderFieldError('bath_max') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Sq Ft Min<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
-                                                        ...register("size_min", {
-                                                            required: "Sq Ft Min is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                        {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                        <label>Sq Ft Max<span>*</span></label>
+                                                        <div className="form-group">
+                                                            <input type="text" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
+                                                            ...register("size_max", {
+                                                                required: "Sq Ft Max is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid number",
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                },
+                                                            })
+                                                            } />
+                                                            {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
 
-                                                        {renderFieldError('size_min') }
+                                                            {renderFieldError('size_max') }
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </>
+                                                }
+                                                {hotelMotelSelected &&
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Sq Ft Max<span>*</span></label>
+                                                    <label>Rooms</label>
                                                     <div className="form-group">
-                                                        <input type="text" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
-                                                        ...register("size_max", {
-                                                            required: "Sq Ft Max is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                        {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
-
-                                                        {renderFieldError('size_max') }
+                                                        <input type="number" name="rooms" className="form-control" placeholder="Rooms" />
+                                                        {renderFieldError('rooms') }
                                                     </div>
                                                 </div>
+                                                }
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Lot Size Sq Ft (min)<span>*</span></label>
                                                     <div className="form-group">
@@ -1111,115 +1149,123 @@ function AddBuyerDetails (){
                                                         {renderFieldError('lot_size_max') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Year Built (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                    <Controller
-                                                            control={control}
-                                                            name="build_year_min"
-                                                            rules={{ required: 'Year Built (min) is required' }}
-                                                            render={({ field: { value, onChange, name } }) => (
-                                                                <DatePicker
-                                                                    id="DatePicker"
-                                                                    type="string"
-                                                                    maxDate={new Date()}
-                                                                    className="text-primary text-center form-control"
-                                                                    selected={startDate} 
-                                                                    placeholderText="Year Built (Min)"
+                                                {!mobileHomeParkSelected &&
+                                                    <>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>Year Built (min)<span>*</span></label>
+                                                            <div className="form-group">
+                                                            <Controller
+                                                                    control={control}
                                                                     name="build_year_min"
-                                                                    autoComplete="off"
-                                                                    onChange={
-                                                                        (e)=>{
-                                                                            onChange(e)
-                                                                            handleCustum(e,'start_date')
-                                                                        }
-                                                                    }
-                                                                    showYearPicker
-                                                                    dateFormat="yyyy"
-                                                                    yearItemNumber={9}
-                                                                />
-                                                            )}
-                                                    />
-                                                         {errors.build_year_min && <p className="error">{errors.build_year_min?.message}</p>}
-
-                                                        {renderFieldError('build_year_min') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Year Built (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <Controller
-                                                                control={control}
-                                                                name="build_year_max"
-                                                                rules={{ required: 'Year Built (max) is required' }}
-                                                                render={({ field: { value, onChange, name } }) => (
-                                                                    <DatePicker
-                                                                        minDate={startDate}
-                                                                        maxDate={new Date()}
-                                                                        id="DatePicker"
-                                                                        type="string"
-                                                                        className="text-primary text-center form-control"
-                                                                        selected={endDate}
-                                                                        name="build_year_max"
-                                                                        placeholderText="Year Built (Max)" 
-                                                                        autoComplete="off"
-                                                                        onChange={
-                                                                            (e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'end_date')
+                                                                    rules={{ required: 'Year Built (min) is required' }}
+                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                        <DatePicker
+                                                                            id="DatePicker"
+                                                                            type="string"
+                                                                            maxDate={new Date()}
+                                                                            className="text-primary text-center form-control"
+                                                                            selected={startDate} 
+                                                                            placeholderText="Year Built (Min)"
+                                                                            name="build_year_min"
+                                                                            autoComplete="off"
+                                                                            onChange={
+                                                                                (e)=>{
+                                                                                    onChange(e)
+                                                                                    handleCustum(e,'start_date')
+                                                                                }
                                                                             }
-                                                                        }
-                                                                        showYearPicker
-                                                                        dateFormat="yyyy"
-                                                                        yearItemNumber={9}
-                                                                    />
-                                                                )}
-                                                        />
-                                                        {errors.build_year_max && <p className="error">{errors.build_year_max?.message}</p>}
-                                                        {renderFieldError('build_year_max') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Stories (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="stories_min" className="form-control" placeholder="Stories (min)" 
-                                                        {
-                                                        ...register("stories_min", {
-                                                            required: "Stories (min) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.stories_min && <p className="error">{errors.stories_min?.message}</p>}
+                                                                            showYearPicker
+                                                                            dateFormat="yyyy"
+                                                                            yearItemNumber={9}
+                                                                        />
+                                                                    )}
+                                                            />
+                                                                {errors.build_year_min && <p className="error">{errors.build_year_min?.message}</p>}
 
-                                                        {renderFieldError('stories_min') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Stories (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="stories_max" className="form-control" placeholder="Stories (max)" {
-                                                        ...register("stories_max", {
-                                                            required: "Stories (max) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.stories_max && <p className="error">{errors.stories_max?.message}</p>}
+                                                                {renderFieldError('build_year_min') }
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>Year Built (max)<span>*</span></label>
+                                                            <div className="form-group">
+                                                                <Controller
+                                                                        control={control}
+                                                                        name="build_year_max"
+                                                                        rules={{ required: 'Year Built (max) is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                            <DatePicker
+                                                                                minDate={startDate}
+                                                                                maxDate={new Date()}
+                                                                                id="DatePicker"
+                                                                                type="string"
+                                                                                className="text-primary text-center form-control"
+                                                                                selected={endDate}
+                                                                                name="build_year_max"
+                                                                                placeholderText="Year Built (Max)" 
+                                                                                autoComplete="off"
+                                                                                onChange={
+                                                                                    (e)=>{
+                                                                                        onChange(e)
+                                                                                        handleCustum(e,'end_date')
+                                                                                    }
+                                                                                }
+                                                                                showYearPicker
+                                                                                dateFormat="yyyy"
+                                                                                yearItemNumber={9}
+                                                                            />
+                                                                        )}
+                                                                />
+                                                                {errors.build_year_max && <p className="error">{errors.build_year_max?.message}</p>}
+                                                                {renderFieldError('build_year_max') }
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
+                                                {(!isLandSelected && !mobileHomeParkSelected)&& 
+                                                    <>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>Stories (min)<span>*</span></label>
+                                                            <div className="form-group">
+                                                                <input type="text" name="stories_min" className="form-control" placeholder="Stories (min)" 
+                                                                {
+                                                                ...register("stories_min", {
+                                                                    required: "Stories (min) is required",
+                                                                    validate: {
+                                                                        matchPattern: (v) =>
+                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                        "Please enter valid number",
+                                                                        maxLength: (v) =>
+                                                                        v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                    },
+                                                                })
+                                                                } />
+                                                                {errors.stories_min && <p className="error">{errors.stories_min?.message}</p>}
 
-                                                        {renderFieldError('stories_max') }
-                                                    </div>
-                                                </div>
+                                                                {renderFieldError('stories_min') }
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>Stories (max)<span>*</span></label>
+                                                            <div className="form-group">
+                                                                <input type="text" name="stories_max" className="form-control" placeholder="Stories (max)" {
+                                                                ...register("stories_max", {
+                                                                    required: "Stories (max) is required",
+                                                                    validate: {
+                                                                        matchPattern: (v) =>
+                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                        "Please enter valid number",
+                                                                        maxLength: (v) =>
+                                                                        v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                    },
+                                                                })
+                                                                } />
+                                                                {errors.stories_max && <p className="error">{errors.stories_max?.message}</p>}
+
+                                                                {renderFieldError('stories_max') }
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Price (min)<span>*</span></label>
                                                     <div className="form-group">
@@ -1256,52 +1302,56 @@ function AddBuyerDetails (){
                                                             },
                                                         })
                                                         } />
-                                                         {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+                                                         {errors.price_max && <p className="error">{errors.price_max?.message}</p>}
 
                                                         {renderFieldError('price_max') }
                                                     </div>
                                                 </div>
-                                                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>ARV (min)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
-                                                        {
-                                                        ...register("arv_min", {
-                                                            required: "ARV (min) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
+                                                {!mobileHomeParkSelected &&
+                                                    <>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>ARV (min)<span>*</span></label>
+                                                            <div className="form-group">
+                                                                <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                                                {
+                                                                ...register("arv_min", {
+                                                                    required: "ARV (min) is required",
+                                                                    validate: {
+                                                                        matchPattern: (v) =>
+                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                        "Please enter valid number",
+                                                                        maxLength: (v) =>
+                                                                        v.length <= 10 || "The digit should be less than equal 10",
+                                                                    },
+                                                                })
+                                                                } />
+                                                                {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
 
-                                                        {renderFieldError('arv_min') }
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>ARV (max)<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
-                                                        ...register("arv_max", {
-                                                            required: "ARV (max) is required",
-                                                            validate: {
-                                                                matchPattern: (v) =>
-                                                                /^[0-9]\d*$/.test(v) ||
-                                                                "Please enter valid number",
-                                                                maxLength: (v) =>
-                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                            },
-                                                        })
-                                                        } />
-                                                         {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+                                                                {renderFieldError('arv_min') }
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                            <label>ARV (max)<span>*</span></label>
+                                                            <div className="form-group">
+                                                                <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                                                ...register("arv_max", {
+                                                                    required: "ARV (max) is required",
+                                                                    validate: {
+                                                                        matchPattern: (v) =>
+                                                                        /^[0-9]\d*$/.test(v) ||
+                                                                        "Please enter valid number",
+                                                                        maxLength: (v) =>
+                                                                        v.length <= 10 || "The digit should be less than equal 10",
+                                                                    },
+                                                                })
+                                                                } />
+                                                                {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
 
-                                                        {renderFieldError('arv_max') }
-                                                    </div>
-                                                </div>*/}
+                                                                {renderFieldError('arv_max') }
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
                                                 <div className="col-6 col-lg-6">
                                                     <label>Parking<span>*</span></label>
                                                     <div className="form-group">
@@ -1358,6 +1408,20 @@ function AddBuyerDetails (){
                                                         {renderFieldError('buyer_type') }
                                                     </div>
                                                 </div>
+                                                { mobileHomeParkSelected && 
+                                                    <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                        <label>Park </label>
+                                                        <div className="form-group">
+                                                            <Select
+                                                                name="park"
+                                                                options={parkOption}
+                                                                placeholder='Select Park'
+                                                                isClearable={true}
+                                                            />
+                                                            {renderFieldError('parking') }
+                                                        </div>
+                                                    </div>
+                                                }
                                                 <div className="col-12 col-lg-12">
                                                     <div className="form-group">
                                                         <label>Property Flaws</label>
@@ -1583,6 +1647,22 @@ function AddBuyerDetails (){
                                                         </div>
                                                         {renderFieldError('fire_damaged') }
                                                     </div>
+                                                    {manufactureSelected &&
+                                                        <div className="grid-template-col">
+                                                            <div className="radio-block-group">
+                                                                <label>Permanently affixed </label>
+                                                                <div className="label-container">
+                                                                    <input type="radio" name="permanent_affix" value="1" id="permanent_affix_yes" />
+                                                                    <label className="mb-0" htmlFor="permanent_affix_yes">Yes</label>
+                                                                </div>
+                                                                <div className="label-container">
+                                                                    <input type="radio" name="permanent_affix" value="0" id="permanent_affix_no" />
+                                                                    <label className="mb-0" htmlFor="permanent_affix_no">No</label>
+                                                                </div>
+                                                            </div>
+                                                            {renderFieldError('permanent_affix') }
+                                                        </div>
+                                                    }
                                                 </div>
                                             </div>
                                             
