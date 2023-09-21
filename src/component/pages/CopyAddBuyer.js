@@ -423,61 +423,6 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('phone') }
                                                                 </div>
                                                             </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                                <label>Company/LLC</label>
-                                                                <div className="form-group">
-                                                                    <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
-                                                                    {renderFieldError('company_name') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                                <label>MLS Status<span>*</span></label>
-                                                                <div className="form-group">
-                                                                    <Controller
-                                                                        control={control}
-                                                                        name="market_preferance"
-                                                                        rules={{ required: 'mls Status is required' }}
-                                                                        render={({ field: { value, onChange, name } }) => (
-                                                                        <Select
-                                                                            options={marketPreferanceOption}
-                                                                            name = {name}
-                                                                            placeholder='Select MLS Status'
-                                                                            isClearable={true}
-                                                                            onChange={(e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'market_preferance')
-                                                                            }}
-                                                                        />
-                                                                        )}
-                                                                    />
-                                                                    {errors.market_preferance && <p className="error">{errors.market_preferance?.message}</p>}
-                                                                    {renderFieldError('market_preferance') }
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                                <label>Contact Preference<span>*</span></label>
-                                                                <div className="form-group">
-                                                                <Controller
-                                                                    control={control}
-                                                                    name="contact_preferance"
-                                                                    rules={{ required: 'Contact Preference is required' }}
-                                                                    render={({ field: { value, onChange, name } }) => (
-                                                                    <Select
-                                                                        options={contactPreferanceOption}
-                                                                        name = {name}
-                                                                        placeholder='Select Contact Preference'
-                                                                        isClearable={true}
-                                                                        onChange={(e)=>{
-                                                                            onChange(e)
-                                                                            handleCustum(e,'contact_preferance')
-                                                                        }}
-                                                                    />
-                                                                    )}
-                                                                />
-                                                                {errors.contact_preferance && <p className="error">{errors.contact_preferance?.message}</p>}
-                                                                {renderFieldError('contact_preferance') }
-                                                                </div>
-                                                            </div>
                                                             {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Address<span>*</span></label>
                                                                 <div className="form-group">
@@ -606,6 +551,61 @@ function CopyAddBuyer (){
                                                                     {errors.city && <p className="error">{errors.city?.message}</p>} */}
 
                                                                     {renderFieldError('city') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                <label>Company/LLC</label>
+                                                                <div className="form-group">
+                                                                    <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
+                                                                    {renderFieldError('company_name') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                <label>MLS Status<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="market_preferance"
+                                                                        rules={{ required: 'mls Status is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={marketPreferanceOption}
+                                                                            name = {name}
+                                                                            placeholder='Select MLS Status'
+                                                                            isClearable={true}
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'market_preferance')
+                                                                            }}
+                                                                        />
+                                                                        )}
+                                                                    />
+                                                                    {errors.market_preferance && <p className="error">{errors.market_preferance?.message}</p>}
+                                                                    {renderFieldError('market_preferance') }
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                                                <label>Contact Preference<span>*</span></label>
+                                                                <div className="form-group">
+                                                                <Controller
+                                                                    control={control}
+                                                                    name="contact_preferance"
+                                                                    rules={{ required: 'Contact Preference is required' }}
+                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                    <Select
+                                                                        options={contactPreferanceOption}
+                                                                        name = {name}
+                                                                        placeholder='Select Contact Preference'
+                                                                        isClearable={true}
+                                                                        onChange={(e)=>{
+                                                                            onChange(e)
+                                                                            handleCustum(e,'contact_preferance')
+                                                                        }}
+                                                                    />
+                                                                    )}
+                                                                />
+                                                                {errors.contact_preferance && <p className="error">{errors.contact_preferance?.message}</p>}
+                                                                {renderFieldError('contact_preferance') }
                                                                 </div>
                                                             </div>
                                                             {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -1283,20 +1283,6 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('parking') }
                                                                 </div>
                                                             </div>
-                                                            { mobileHomeParkSelected && 
-                                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                                    <label>Park </label>
-                                                                    <div className="form-group">
-                                                                        <Select
-                                                                            name="park"
-                                                                            options={parkOption}
-                                                                            placeholder='Select Park'
-                                                                            isClearable={true}
-                                                                        />
-                                                                        {renderFieldError('parking') }
-                                                                    </div>
-                                                                </div>
-                                                            }
                                                             <div className="col-6 col-lg-6">
                                                                 <label>Buyer Type<span>*</span></label>
                                                                 <div className="form-group">
@@ -1322,6 +1308,21 @@ function CopyAddBuyer (){
                                                                     {renderFieldError('buyer_type') }
                                                                 </div>
                                                             </div>
+                                                            { mobileHomeParkSelected && 
+                                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                                                    <label>Park </label>
+                                                                    <div className="form-group">
+                                                                        <Select
+                                                                            name="park"
+                                                                            options={parkOption}
+                                                                            placeholder='Select Park'
+                                                                            isClearable={true}
+                                                                        />
+                                                                        {renderFieldError('parking') }
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                    
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
                                                                     <label>Property Flaws</label>

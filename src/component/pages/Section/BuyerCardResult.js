@@ -102,7 +102,7 @@ const BuyerCardResult = (props) => {
                         </div>:''
                 }
             </div>
-            <div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Purchased buyer':'Your buyer' }</div>
+            <div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Premium buyer':'Your buyer' }</div>
         </div>
     </div>
   )

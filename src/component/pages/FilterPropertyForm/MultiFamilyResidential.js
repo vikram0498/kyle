@@ -53,7 +53,6 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                             isRtl={false}
                             placeholder="Select State"
                             closeMenuOnSelect={true}
-                            isMulti
                         />
                         {data.renderFieldError('state') }
                     </div>
@@ -75,7 +74,6 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                             isRtl={false}
                             placeholder="Select City"
                             closeMenuOnSelect={true}
-                            isMulti
                         />
                         {data.renderFieldError('city') }
                     </div>

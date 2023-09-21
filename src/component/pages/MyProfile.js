@@ -179,7 +179,7 @@ import axios from 'axios';
                             <div className="row">
                                 <div className="col-12 col-lg-8">
                                     <div className="card-box-inner">
-                                        <h3>My Profile</h3>
+                                        <h3 className="my-profile-title">My Profile</h3>
                                         {/* <p>Fill the below form OR send link to the buyer</p> */}
                                         <div className="row">
                                             <div className="col-12 col-md-6 col-lg-6">
@@ -245,7 +245,7 @@ import axios from 'axios';
                                             <div className="col-12 col-md-6 col-lg-6">
                                                 <div className="form-group">
                                                     <label>Phone Number <span className="error">*</span></label>
-                                                    <input type="number" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone} autoComplete="no-phone"
+                                                    <input type="text" name="phone" className="form-control-form" placeholder="Phone Number" defaultValue={userData.phone} autoComplete="no-phone"
                                                     {
                                                         ...register("phone", {
                                                             required: "Phone is required",

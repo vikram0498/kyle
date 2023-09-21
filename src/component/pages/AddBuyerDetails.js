@@ -518,7 +518,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('phone') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-lg-12">
+                                                {/* <div className="col-12 col-lg-12">
                                                     <label>Address<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="address" className="form-control" placeholder="Enter Address" {
@@ -529,7 +529,7 @@ function AddBuyerDetails (){
                                                          {errors.address && <p className="error">{errors.address?.message}</p>}
                                                         {renderFieldError('address') }
                                                     </div>
-                                                </div>
+                                                </div> */}
                                                 {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Country</label>
                                                     <div className="form-group">
@@ -616,7 +616,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('city') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Zip<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
@@ -634,15 +634,15 @@ function AddBuyerDetails (){
                                                          {errors.zip_code && <p className="error">{errors.zip_code?.message}</p>}
                                                         {renderFieldError('zip_code') }
                                                     </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                </div> */}
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                     <label>Company/LLC</label>
                                                     <div className="form-group">
                                                         <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
                                                         {renderFieldError('company_name') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                     <label>MLS Status<span>*</span></label>
                                                     <div className="form-group">
                                                         <Controller
@@ -667,7 +667,7 @@ function AddBuyerDetails (){
                                                         {renderFieldError('market_preferance') }
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                     <label>Contact Preference<span>*</span></label>
                                                     <div className="form-group">
                                                     <Controller
