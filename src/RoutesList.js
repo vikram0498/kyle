@@ -67,10 +67,10 @@ const RoutesList = () => {
             <Route path="/admin-request" element={<Protected Component={AdminRequest}/>} />
             <Route path="/my-profile" element={<Protected Component={MyProfile}/>} />
             {/* <Route path="/result-page" element={<Protected Component={ResultPage} type={'result'}/>} /> */}
-            <Route path="/payment" element={<Payment/>} />
+            <Route path="/payment" element={<Protected Component={Payment}/>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
-            <Route path="/support" element={<Support/>} />
+            <Route path="/support" element={<Protected Component={Support}/>} />
             <Route path="/edit-modal" element={<EditRequest/>} />
             <Route path="/submit-modal" element={<SentRequest/>} />
             <Route path="/completion/:token" element={<Completion/>} />

@@ -1215,6 +1215,9 @@ section.main-section {
 .custom-divide > .column-6{
     width: 40%;
 }
+.custom-divide > .column-6 p {
+    color: #c14900;
+}
 .like-unlike{
     display: flex;
     align-items: center;

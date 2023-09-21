@@ -193,6 +193,7 @@ function AddBuyerDetails (){
             });
         }
     }
+    console.log(errors,'error');
     const submitSingleBuyerForm = async (data, e) => {
         e.preventDefault();
 
@@ -212,8 +213,9 @@ function AddBuyerDetails (){
             formObject.building_class =  buildingClassNamesValue;
         }
         if (formObject.hasOwnProperty('zoning')) {
-            formObject.zoning =  zoningValue;
+            formObject.zoning =  (zoningValue.length>0)? zoningValue : "";
         }
+        
         // change city state value string to array
         if (formObject.hasOwnProperty('state')) {
             //formObject.states =  stateValue;
@@ -222,16 +224,15 @@ function AddBuyerDetails (){
         if (formObject.hasOwnProperty('city')) {
             //formObject.city =  cityValue;
             formObject.city = (cityValue.length>0) ? cityValue:'';
-
         }
-
+        console.log(formObject,'formObject');
         try{
             let response  = await axios.post(apiUrl+'upload-single-buyer-details', formObject, {headers: headers});
             if(response){
                 setLoading(false);
                 if(response.data.status){
                     toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-                    //navigate('/')
+                    navigate('/')
                 }
             }
         }catch(error){
@@ -319,26 +320,26 @@ function AddBuyerDetails (){
         const selectedValues = Array.isArray(e) ? e.map(x => x.value) : [];
         //console.log(selectedValues,'selectedValues',name);
         if(name == 'property_type'){
-          if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
-            setMultiFamilyBuyerSelected(true);
-          } else {
+        if (selectedValues.includes(2) || selectedValues.includes(10) || selectedValues.includes(11) || selectedValues.includes(14) || selectedValues.includes(15)) {
+        setMultiFamilyBuyerSelected(true);
+        } else {
             setMultiFamilyBuyerSelected(false);
-          }
-          if(selectedValues.includes(7)){
+        }
+        if(selectedValues.includes(7)){
             setIsLandSelected(true);
-          }else {
+        }else {
             setIsLandSelected(false);
-          }
-          if(selectedValues.includes(8)){
+        }
+        if(selectedValues.includes(8)){
             setManufacturedSelected(true);
-          }else{
+        }else{
             setManufacturedSelected(false);
-          }
-          if(selectedValues.includes(14)){
+        }
+        if(selectedValues.includes(14)){
             setMobileHomeParkSelected(true);
-          }else{
+        }else{
             setMobileHomeParkSelected(false);
-          }
+        }
         if(selectedValues.includes(15)){
             setHotelMotelSelected(true);
         }else{
@@ -623,10 +624,10 @@ function AddBuyerDetails (){
                                                                 required: "Zip Code is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
-                                                                    /^[^+-]+$/.test(v) ||
-                                                                    "Please enter valid phone number",
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "The zip code format is invalid",
                                                                     maxLength: (v) =>
-                                                                    v.length <= 10 || "The digit should be less than equal 10",
+                                                                    v.length < 10 || "The digit should be less than 10",
                                                                 },
                                                             })
                                                         } />
@@ -726,47 +727,25 @@ function AddBuyerDetails (){
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                             <label>Zoning</label>
                                                             <div className="form-group">
-                                                            <Controller
-                                                            control={control}
-                                                            name="zoning"
-                                                            rules={{ required: 'Zoning Type is required' }}
-                                                            render={({ field: { value, onChange, name } }) => (
-                                                            <Select
-                                                                options={zoningOption}
-                                                                name = {name}
-                                                                placeholder='Select Zoning Type'
-                                                                onChange={(e)=>{
-                                                                    onChange(e)
-                                                                    handleCustum(e,'zoning')
-                                                                }}
-                                                                isMulti
-                                                                closeMenuOnSelect={false}
+                                                            <MultiSelect 
+                                                                name="zoning"
+                                                                options={zoningOption} 
+                                                                placeholder='Select Property Flaws'
+                                                                setMultiselectOption = {setZoningValue}
                                                             />
-                                                            )}
-                                                            />
-                                                                {renderFieldError('zoning') }
+                                                            {renderFieldError('zoning') }
                                                             </div>
                                                         </div>
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                             <label>Utilities</label>
                                                             <div className="form-group">
-
-                                                            <Controller
-                                                                control={control}
-                                                                name="utilities"
-                                                                rules={{ required: 'Utilities Type is required' }}
-                                                                    render={({ field: { value, onChange, name } }) => (
-                                                                        <Select
-                                                                            options={utilitiesOption}
-                                                                            name = {name}
-                                                                            placeholder='Select Utilities Type'
-                                                                            onChange={(e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'utilities')
-                                                                            }}
-                                                                            closeMenuOnSelect={true}
-                                                                        />
-                                                                    )}
+                                                            <Select
+                                                                options={utilitiesOption}
+                                                                name = 'utilities'
+                                                                placeholder='Select Utilities Type'
+                                                                closeMenuOnSelect={true}
+                                                                isClearable={true}
+                                                                isSearchable={true}
                                                             />
                                                                 {renderFieldError('utilities') }
                                                             </div>
@@ -774,22 +753,13 @@ function AddBuyerDetails (){
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                                             <label>Sewer</label>
                                                             <div className="form-group">
-                                                                <Controller
-                                                                control={control}
-                                                                name="sewer"
-                                                                rules={{ required: 'Sewer Type is required' }}
-                                                                    render={({ field: { value, onChange, name } }) => (
-                                                                        <Select
-                                                                            options={sewerOption}
-                                                                            name = {name}
-                                                                            placeholder='Select Sewer Type'
-                                                                            onChange={(e)=>{
-                                                                                onChange(e)
-                                                                                handleCustum(e,'sewer')
-                                                                            }}
-                                                                            closeMenuOnSelect={true}
-                                                                        />
-                                                                    )}
+                                                                <Select
+                                                                    options={sewerOption}
+                                                                    name = 'sewer'
+                                                                    placeholder='Select Sewer Type'
+                                                                    closeMenuOnSelect={true}
+                                                                    isClearable={true}
+                                                                    isSearchable={true}
                                                                 />
                                                                 {renderFieldError('sewer') }
                                                             </div>
@@ -1308,8 +1278,9 @@ function AddBuyerDetails (){
                                                     </div>
                                                 </div>
                                                 {!mobileHomeParkSelected &&
-                                                    <>
-                                                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                    <>  
+                                                    {/* remove from all form Single Buyer Form Notes*/}
+                                                        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                             <label>ARV (min)<span>*</span></label>
                                                             <div className="form-group">
                                                                 <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
@@ -1349,7 +1320,7 @@ function AddBuyerDetails (){
 
                                                                 {renderFieldError('arv_max') }
                                                             </div>
-                                                        </div>
+                                                        </div> */}
                                                     </>
                                                 }
                                                 <div className="col-6 col-lg-6">

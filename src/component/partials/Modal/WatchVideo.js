@@ -22,7 +22,7 @@ const WatchVideo = ({isLoader,videoUrl,SetOpenVideoModal,openVideoModal}) =>{
             <Modal.Body>
                 {(isLoader)?<div className="video-loader"> <img src="/assets/images/data-loader.svg"/></div>:
                     <div className="video">
-                        <video width="460" id="myVideo" height="240" src={videoUrl} loop autoPlay muted controls/>
+                        <video width="460" id="" height="240" src={videoUrl} loop autoPlay controls/>
                     </div>
                 }
             </Modal.Body>

@@ -36,7 +36,7 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                         {data.renderFieldError('country') }
                     </div>
                 </div> */}
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                <div className="col-12 col-lg-12">
                     <label>State</label>
                     <div className="form-group">
                         <Select
@@ -53,11 +53,12 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                             isRtl={false}
                             placeholder="Select State"
                             closeMenuOnSelect={true}
+                            isMulti
                         />
                         {data.renderFieldError('state') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                <div className="col-12 col-lg-12">
                     <label>City</label>
                     <div className="form-group">
                         <Select
@@ -74,6 +75,7 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                             isRtl={false}
                             placeholder="Select City"
                             closeMenuOnSelect={true}
+                            isMulti
                         />
                         {data.renderFieldError('city') }
                     </div>
@@ -88,14 +90,14 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                 
                 {(!mobileHomeParkSelected && !hotelMotelSelected) &&
                     <>
-                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                             <label>Bed</label>
                             <div className="form-group">
                                 <input type="number" name="bedroom" className="form-control" placeholder="Bed"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
                                 {data.renderFieldError('bedroom') }
                             </div>
                         </div>
-                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                             <label>Bath</label>
                             <div className="form-group">
                                 <input type="number" name="bath" className="form-control" placeholder="Bath"  value={data.bath}  onChange={ e=>data.setBath(e.target.value) }/>
@@ -168,7 +170,7 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                         {data.renderFieldError('price') }
                     </div>
                 </div>
-                {!mobileHomeParkSelected &&
+                {/* {!mobileHomeParkSelected &&
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>ARV</label>
                     <div className="form-group">
@@ -176,7 +178,7 @@ const MultiFamilyResidential = ({data ,mobileHomeParkSelected, hotelMotelSelecte
                         {data.renderFieldError('arv') }
                     </div>
                 </div>
-                }
+                } */}
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>Parking</label>
                     <div className="form-group">

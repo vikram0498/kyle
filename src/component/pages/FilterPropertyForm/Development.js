@@ -33,7 +33,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('country') }
 					</div>
 				</div> */}
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+				<div className="col-12 col-lg-12">
 					<label>State</label>
 					<div className="form-group">
 						<Select
@@ -50,11 +50,12 @@ const Development = ({data,landSelected})=>{
 							isRtl={false}
 							placeholder="Select State"
 							closeMenuOnSelect={true}
+							isMulti
 						/>
 						{data.renderFieldError('state') }
 					</div>
 				</div>
-				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+				<div className="col-12 col-lg-12">
 					<label>City</label>
 					<div className="form-group">
 						<Select
@@ -71,6 +72,7 @@ const Development = ({data,landSelected})=>{
 							isRtl={false}
 							placeholder="Select City"
 							closeMenuOnSelect={true}
+							isMulti
 						/>
 						{data.renderFieldError('city') }
 					</div>

@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AutoSuggestionAddress from './AutoSuggestionAddress';
  const Condo = ( {data, manufactureSelected}) => {
     const [startDate, setStartDate] = useState('');
-     
+        console.log(data.state,'state');
     return(
         <>
             <div className="row">
@@ -35,7 +35,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('country') }
                     </div>
                 </div> */}
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                <div className="col-12 col-lg-12">
                     <label>State</label>
                     <div className="form-group">
                         <Select
@@ -52,11 +52,12 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                             isRtl={false}
                             placeholder="Select State"
                             closeMenuOnSelect={true}
+                            isMulti
                         />
                         {data.renderFieldError('state') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                <div className="col-12 col-lg-12">
                     <label>City</label>
                     <div className="form-group">
                         <Select
@@ -73,6 +74,7 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                             isRtl={false}
                             placeholder="Select City"
                             closeMenuOnSelect={true}
+                            isMulti
                         />
                         {data.renderFieldError('city') }
                     </div>
@@ -84,14 +86,14 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('zip_code') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                     <label>Bed</label>
                     <div className="form-group">
                         <input type="number" name="bedroom" className="form-control" placeholder="Bed"  value={data.bedroom}  onChange={ e=>data.setBedroom(e.target.value) }/>
                         {data.renderFieldError('bedroom') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                     <label>Bath</label>
                     <div className="form-group">
                         <input type="number" name="bath" className="form-control" placeholder="Bath"  value={data.bath}  onChange={ e=>data.setBath(e.target.value) }/>
@@ -145,13 +147,13 @@ import AutoSuggestionAddress from './AutoSuggestionAddress';
                         {data.renderFieldError('price') }
                     </div>
                 </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                     <label>ARV</label>
                     <div className="form-group">
                         <input type="number" name="arv" className="form-control" placeholder="ARV" value={data.arv}  onChange={ e=>data.setArv(e.target.value) }/>
                         {data.renderFieldError('arv') }
                     </div>
-                </div>
+                </div> */}
                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                     <label>Parking</label>
                     <div className="form-group">

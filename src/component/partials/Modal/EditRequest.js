@@ -9,10 +9,14 @@ import axios from 'axios';
 const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,pageNumber,getFilterResult,buyerData,setBuyerData}) => {
     const [loading, setLoading] = useState(false);
     const [checkboxError, setCheckboxError] = useState(false);
+    const [checkMessage, setCheckMessage] = useState('');
+    const [checkMessageError, setCheckMessageError] = useState(false);
 
   const handleClose = () => {
     setEditOpen(false);
     setLoading(false);
+    setCheckboxError(false);
+    setCheckMessageError(false);
   };
   const {getTokenData,setLogout} = useAuth();
   const handleSubmit = (e) => {
@@ -28,8 +32,19 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,pageNumber,getFilte
           flag = false;
         }
     }
-    if(flag){
+    if(flag ){
         setCheckboxError(true);
+        if(checkMessage.trim() === ''){
+            setCheckMessageError(true);
+        }else{
+            setCheckMessageError(false);
+        }
+        return false;
+    }else{
+        setCheckboxError(false);
+    }
+    if(checkMessage == ''){
+        setCheckMessageError(true);
         return false;
     }
     formData.append('incorrect_info', JSON.stringify(Obj));
@@ -71,7 +86,9 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,pageNumber,getFilte
     }
     fetchData();
   }
-
+  const handleMessage = (e) => {
+    setCheckMessage(e.target.value.trim());
+  }
   return (
     <div>
       <Modal show={editOpen} onHide={handleClose} className="modal-form-main">
@@ -125,15 +142,17 @@ const EditRequest = ({editOpen,setEditOpen,buyerId,buyerType,pageNumber,getFilte
                         <div className="col-12 col-lg-12">
                             <input type="hidden" value={buyerId} name="buyer_id"/>
                             <div className="form-group">
-                                <label>message Type here</label>
-                                <textarea placeholder="Enter Your Message" name="reason"></textarea>
+                                <label>message Type here <span className='error'> *</span></label>
+                                <textarea placeholder="Enter Your Message" name="reason" onChange={handleMessage}></textarea>
                             </div>
+                            {(checkMessageError)?<p className="error">This field is required </p>:''}
                         </div>
                         <div className="col-12 col-lg-12">
                             <div className="form-group mb-0">
                                 <div className="submit-btn">
                                     <button type="submit" className="btn btn-fill" disabled={ loading ? 'disabled' : ''}>Submit { loading ? <ButtonLoader/> : ''} </button>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
