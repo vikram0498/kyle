@@ -76,7 +76,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.zip_code')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.zip_code" placeholder="{{ __('cruds.buyer.fields.zip_code')}}" autocomplete="off"  min="0" max="9" onkeydown="return (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.code) ? true : (!isNaN(Number(event.key))) && event.code !== 'Space' && this.value.length < 9)">
+                    <input type="number" class="form-control" wire:model.defer="state.zip_code" placeholder="{{ __('cruds.buyer.fields.zip_code')}}" autocomplete="off"  onkeydown="return (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.code) ? true : (!isNaN(Number(event.key))) && event.code !== 'Space' && this.value.length < 9)">
                     @error('zip_code') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -399,6 +399,7 @@
             </div>
         </div>
         <div class="row">
+           
             @php
             if (isset($state['property_type']) && in_array(8, $state['property_type'])) {                     
                 if (!array_key_exists('permanent_affix', $radioButtonFields)) {                    
@@ -407,8 +408,9 @@
             }else{
                 unset($radioButtonFields['permanent_affix']);                
             }           
-            @endphp
-            @foreach($radioButtonFields as $fieldName => $fieldData)               
+            @endphp 
+            @foreach($radioButtonFields as $fieldName => $fieldData)          
+               
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                     <div class="form-group">
                         <div class="radio-block-group">
@@ -423,7 +425,9 @@
                         </div>
                     </div>
                 </div>
+            
             @endforeach
+
         </div>
        
         @if($creativeBuyer)
