@@ -173,10 +173,12 @@
         
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.property_type')}}</th>
+            
             <td> 
                 @if(!is_null($details->property_type) && !empty($details->property_type))
+                
                     @foreach($details->property_type as $propertyType)
-                        <span class="badge bg-primary text-white"> {{ $propertyTypes[$propertyType] }} </span>
+                        <span class="badge bg-primary text-white"> {{ isset($propertyTypes[$propertyType]) ? $details->property_type : '' }} </span>
                     @endforeach
                 @else
                 N/A

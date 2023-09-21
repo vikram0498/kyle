@@ -60,15 +60,15 @@ return [
     ],
 
     'property_types' => [
-        1 => 'Attached',
-        2 => 'Apartment Buildings',
+        // 1 => 'Attached',
+        // 2 => 'Apartment Buildings',
         3 => 'Commercial - Retail',
         4 => 'Condo',
-        5 => 'Detached',
-        6 => 'Development',
+        // 5 => 'Detached',
+        // 6 => 'Development',
         7 => 'Land',
         8 => 'Manufactured',
-        9 => 'Mobile Home',
+        // 9 => 'Mobile Home',
         10 => 'Multi-Family - Commercial',
         11 => 'Multi-Family - Residential',
         12 => 'Single Family',
@@ -152,8 +152,14 @@ return [
         4 => 'No Preference',
     ],
 
+    
+
 
     'radio_buttons_fields' => [
+        'permanent_affix' => [
+            [ 'id' => 'permanent_affix_yes', 'value' => '1', 'label' => 'yes' ],
+            [ 'id' => 'permanent_affix_no', 'value' => '0', 'label' => 'no' ],
+        ],
         'solar' => [
             [ 'id' => 'solar_yes', 'value' => '1', 'label' => 'yes' ],
             [ 'id' => 'solar_no', 'value' => '0', 'label' => 'no' ],
@@ -220,4 +226,5 @@ return [
     ],
 
     'default_currency' => 'USD',
+    'default_country' => 233,
 ];

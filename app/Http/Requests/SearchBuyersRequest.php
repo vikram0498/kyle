@@ -57,7 +57,7 @@ class SearchBuyersRequest extends FormRequest
             'country'     => [],
             'city'        => [], 
             'state'       => [], 
-            'zip_code'    => [],
+            'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             'price'       => ['nullable','numeric'],
 
             'bedroom'      => ['nullable','numeric'],
@@ -146,6 +146,7 @@ class SearchBuyersRequest extends FormRequest
     {
         return [
             'market_preferance.required' => 'The mls status field is required',
+            'zip_code.max' => 'The digit should be less than 10.',
         ];
     }
 

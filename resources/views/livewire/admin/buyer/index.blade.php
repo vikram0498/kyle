@@ -116,6 +116,8 @@
         var pr = $(this).data('property');
         var pr_vals = $(this).val();
         // @this.set('state.'+pr, pr_vals);
+
+       // console.log(pr,pr_vals);
         
         @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
         if(pr == 'buyer_type'){
@@ -126,6 +128,7 @@
         } else if(pr == 'state'){
             @this.emit('getCities', $('.state').select2('val'));
         } else if(pr == 'city'){
+            console.log(pr);
             @this.emit('initializePlugins');
         } else if(pr == 'zoning'){
             @this.emit('initializePlugins');
@@ -220,5 +223,10 @@
             }
         })
     })
+
+   
+    
+       
+    
 </script>
 @endpush

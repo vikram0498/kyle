@@ -47,6 +47,7 @@
         <thead>
             <th style="width: 25%;">Seller Name</th>
             <th style="width: 60%;">Reason</th>
+            <th style="width: 60%;">Incorrect Information</th>
             <th style="width: 15%;">Action</th>
         </thead>
         <tbody>
@@ -60,6 +61,19 @@
                     </td>
                     <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
                         {!! $flagData->pivot->reason !!}
+                    </td>
+                    <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
+                     @php
+                       $view = '';
+                       foreach(json_decode($flagData->pivot->incorrect_info,true) as $name=>$value){
+                        if($value){
+                            $view .= $name.' ';
+                        }
+                       }
+                       
+                     @endphp
+
+                     {{ $view }}
                     </td>
                     <td>
                         <div class="d-flex mb-2">

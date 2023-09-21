@@ -5,9 +5,7 @@
 @stop
 
 @section('content')
-
     @livewire('admin.buyer.index')
-
 @stop
 
 @section('script')

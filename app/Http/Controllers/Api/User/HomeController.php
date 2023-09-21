@@ -57,6 +57,7 @@ class HomeController extends Controller
     }
     public function support(SupportRequest $request){
         try{
+            
             DB::beginTransaction();
             $validatedData['name'] = $request->name;
             $validatedData['email'] = $request->email;
@@ -69,6 +70,7 @@ class HomeController extends Controller
             DB::commit();
             return response()->json($responseData, 200);
         }catch(\Exception $e){
+            
             DB::rollBack();
             $responseData = [
                 'status'        => false,

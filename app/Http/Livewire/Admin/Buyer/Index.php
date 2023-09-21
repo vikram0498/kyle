@@ -67,6 +67,7 @@ class Index extends Component
         $this->utilities = config('constants.utilities');
         $this->sewers = config('constants.sewers');
         $this->market_preferances = config('constants.market_preferances');
+        $this->park = config('constants.park');
        
         // $this->market_preferances = array_values($this->market_preferances);
         $this->contact_preferances = config('constants.contact_preferances');
@@ -89,32 +90,10 @@ class Index extends Component
             // 'country' => ['required', 'exists:countries,name'], 
             // 'state' => [/*'required', 'exists:states,id'*/], 
             // 'city' => [/*'required', 'exists:cities,id'*/], 
-            'zip_code' => ['required','min:5','max:10'],
-
-            'bedroom_min' => ['required','numeric', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''], 
-            'bedroom_max' => ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''], 
-
-            'bath_min' => ['nullable','numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''], 
-            'bath_max' => ['nullable','numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''], 
-
-            'size_min' => ['required','numeric', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'sq ft max') : ''], 
-            'size_max' => ['required','numeric', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'sq ft min') : ''], 
-
+            
+            'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             'lot_size_min' => ['nullable','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
             'lot_size_max' => ['nullable', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
-
-            'build_year_min' => ['nullable', 'numeric', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''], 
-            'build_year_max' => ['nullable', 'numeric', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''], 
-
-            
-            'arv_min' => ['nullable', 'numeric', !empty($this->state['arv_max']) ? new CheckMinValue($this->state['arv_max'], 'arv_max') : ''], 
-            'arv_max' => ['nullable', 'numeric', !empty($this->state['arv_min']) ? new CheckMaxValue($this->state['arv_min'], 'arv_min') : ''], 
-
-            
-            'stories_min' => ['numeric','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''], 
-
-            'stories_max' => ['numeric', 'max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''],
-
             
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->state['price_min']) ? new CheckMaxValue($this->state['price_min'], 'price_min') : ''], 
@@ -125,7 +104,6 @@ class Index extends Component
             'buyer_type' => ['required','numeric', 'in:'.implode(',', array_keys($this->buyerTypes))],
             'purchase_method' => ['required','array', 'in:'.implode(',', array_keys($this->purchaseMethods))],
 
-            
             'zoning' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.zonings')))],
             'utilities' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.utilities')))],
             'sewer' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
@@ -133,6 +111,27 @@ class Index extends Component
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
             
         ];
+       
+        if(!empty($this->state['property_type']) && !array_intersect([14], $this->state['property_type'])){
+            if(!empty($this->state['property_type']) && !array_intersect([15], $this->state['property_type'])){                
+                $rules['bedroom_min'] = ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMinValue($this->state['bedroom_min'], 'bedroom_min') : ''];
+                $rules['bedroom_max'] = ['required', 'numeric', !empty($this->state['bedroom_max']) ? new CheckMaxValue($this->state['bedroom_max'], 'bedroom_max') : ''];
+                $rules['bath_max'] = ['required', 'numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''];
+                $rules['bath_min'] = ['required', 'numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''];
+            }
+            
+                $rules['size_min'] = ['required', 'numeric', !empty($this->state['size_min']) ? new CheckMinValue($this->state['size_min'], 'size_min') : ''];
+                $rules['size_max'] = ['required', 'numeric', !empty($this->state['size_max']) ? new CheckMaxValue($this->state['size_max'], 'size_max') : ''];
+                $rules['build_year_min'] = ['required', 'numeric', !empty($this->state['build_year_min']) ? new CheckMinValue($this->state['build_year_min'], 'build_year_min') : ''];
+                $rules['build_year_max'] = ['required', 'numeric', !empty($this->state['build_year_max']) ? new CheckMaxValue($this->state['build_year_max'], 'build_year_max') : ''];
+                // $rules['arv_min'] = ['required', 'numeric', !empty($this->state['arv_min']) ? new CheckMinValue($this->state['arv_min'], 'arv_min') : ''];
+                // $rules['arv_max'] = ['required', 'numeric', !empty($this->state['arv_max']) ? new CheckMaxValue($this->state['arv_max'], 'arv_max') : ''];
+
+        }
+        if(!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type'])){            
+            $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMinValue($this->state['stories_min'], 'stories_min') : ''];
+            $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMaxValue($this->state['stories_max'], 'stories_max') : ''];
+        }
 
         if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){
             $rules['max_down_payment_percentage'] = ['required','numeric','between:0,100'];
@@ -157,9 +156,19 @@ class Index extends Component
         return $rules;
     }
 
-    public function updateProperty($data) {
-        $this->state[$data['property']] = $data['pr_vals'];
+    public function updateProperty($data) {  
+       
         // $this->validatiionForm();
+        if(isset($data['property'])){
+            $this->state[$data['property']] = $data['pr_vals'];
+            if($data['property'] == 'property_type'){
+                if(in_array(10, $data['pr_vals']) || in_array(11, $data['pr_vals']) || in_array(2, $data['pr_vals']) || in_array(14, $data['pr_vals']) || in_array(15, $data['pr_vals'])){
+                    $this->multiFamilyBuyer = true;
+                } else {
+                    $this->state = Arr::except($this->state,['unit_min', 'unit_max', 'value_add', 'building_class']);
+                }
+            }
+        }
         $this->initializePlugins();
 
     }
@@ -168,8 +177,8 @@ class Index extends Component
         if(!$this->updateMode){
             Validator::make($this->state, $this->rules(),[
                 'phone.required' => 'The contact number field is required',
-                'size_min.required' => 'The sq ft min field is required',
-                'size_max.required' => 'The sq ft max field is required',
+                // 'size_min.required' => 'The sq ft min field is required',
+                // 'size_max.required' => 'The sq ft max field is required',
                 'market_preferance.required' => 'The market preference field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
@@ -179,8 +188,8 @@ class Index extends Component
             $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
             Validator::make($this->state, $rules,[
                 'phone.required' => 'The contact number field is required',
-                'size_min.required' => 'The sq ft min field is required',
-                'size_max.required' => 'The sq ft max field is required',
+                // 'size_min.required' => 'The sq ft min field is required',
+                // 'size_max.required' => 'The sq ft max field is required',
                 'market_preferance.required' => 'The market preference field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
@@ -204,11 +213,12 @@ class Index extends Component
 
     public function store() {  
         //dd($this->all());
-        $this->validatiionForm();
+        $this->initializePlugins();   
+        $this->validatiionForm();   
         
         $this->state['user_id'] = auth()->user()->id;
-
-        $this->state['country'] = DB::table('countries')->where('name', $this->state['country'])->first()->name;
+        $countryId= config('constants.default_country');
+        $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
             $this->state['state']   =  array_map('intval',$this->state['state']);
@@ -229,8 +239,8 @@ class Index extends Component
         if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
             $this->state['buyer_type'] = (int)$this->state['buyer_type'];
         }
+              
         
-
         if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
             $this->state['property_type'] = array_map('intval', $this->state['property_type']);
         }
@@ -394,11 +404,12 @@ class Index extends Component
         } else {
             $this->state = Arr::except($this->state,['max_down_payment_percentage', 'max_interest_rate', 'balloon_payment', 'max_down_payment_money']);
         }
-        if(in_array(3, $values)){
-            $this->multiFamilyBuyer = true;
-        } else {
-            $this->state = Arr::except($this->state,['unit_min', 'unit_max', 'value_add', 'building_class']);
-        }
+
+        // if(in_array(3, $values)){
+        //     $this->multiFamilyBuyer = true;
+        // } else {
+        //     $this->state = Arr::except($this->state,['unit_min', 'unit_max', 'value_add', 'building_class']);
+        // }
         $this->initializePlugins();
     } 
 

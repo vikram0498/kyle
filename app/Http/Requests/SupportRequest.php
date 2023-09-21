@@ -52,7 +52,7 @@ class SupportRequest extends FormRequest
     {
         $rules = [
             'name'  => ['required'], 
-            'email'       => ['required', 'email', 'deleted_at,NULL'],
+            'email'       => ['required', 'email:dns'],
             'message'       => ['required'], 
         ];
         return $rules;

@@ -108,7 +108,7 @@ class Buyer extends Model
     }
 
     public function redFlagedData(){
-        return $this->belongsToMany(User::class)->withPivot('reason', 'status');
+        return $this->belongsToMany(User::class)->withPivot('reason', 'incorrect_info', 'status');
     }
 
     public function buyersPurchasedByUser()

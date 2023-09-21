@@ -63,7 +63,7 @@
                         <tbody>
                            @if($purchasedBuyers->count() > 0)
                               @foreach($purchasedBuyers as $purchasedBuyer)
-                               
+                               @if($purchasedBuyer->buyer)
                               <tr>
                                  <td>
                                     <div class="side-by-side-data">
@@ -74,6 +74,7 @@
                                     </div>
                                     <td>{{ $purchasedBuyer->user->name }}</td>
                                  </td>
+                                 @endif
                               </tr>
                               @endforeach
                            @else
