@@ -24,11 +24,11 @@
                                         {{__('global.add')}}
                                 </button>
                                 <a href="{{ route('admin.import-buyers') }}" class="btn btn-sm btn-primary mr-2 btn-icon-text btn-header">
-                                    <i class="fa fa-download"></i>                                                
+                                    <i class="fa fa-upload"></i>                                                
                                         {{__('cruds.buyer.fields.buyer_csv_import')}}
                                 </a>
                                 <a href="{{ asset('default/sample_template_import_buyer.csv') }}" download="{{ asset('default/sample_template_import_buyer.csv') }}" class="btn btn-sm btn-info mr-2 btn-icon-text btn-header">
-                                    <i class="fa fa-upload"></i>                                                
+                                    <i class="fa fa-download"></i>                                                
                                     {{__('cruds.buyer.fields.buyer_csv_template')}}
                                 </a>
                             </div>

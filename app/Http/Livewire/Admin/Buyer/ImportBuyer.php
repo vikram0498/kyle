@@ -37,6 +37,7 @@ Class ImportBuyer extends Component {
         ])->validate();
 
         $import = new BuyersImport;
+        
         Excel::import($import, $this->state['csv_file']->store('temp'));
 
         $totalCount         = $import->totalRowCount();

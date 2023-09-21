@@ -21,7 +21,7 @@ class BuyersImport implements ToModel, WithStartRow
 
     public function model(array $row)
     {
-       
+      
         $buyerArr = [];
         $fName = $this->modifiedString($row[0]); $lName = $this->modifiedString($row[1]);
         if(!empty($fName) && !empty($lName)){
