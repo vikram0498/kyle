@@ -57,7 +57,8 @@
                         <thead>
                            <tr>
                               <th scope="col">Buyer Name</th>
-                              <th scope="col">Recent Purchased</th>
+                              <th scope="col">Total Seller</th>
+                              <th scope="col">Recent Purchased Seller</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -66,12 +67,16 @@
                                @if($purchasedBuyer->buyer)
                               <tr>
                                  <td>
-                                    <div class="side-by-side-data">
+                                    
                                        <span>{{ $purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name}}</span>
-                                       <span class="purchased">
-                                          {{ \DB::table('purchased_buyers')->where('user_id','!=',1)->where('buyer_id',$purchasedBuyer->buyer_id)->groupBy('user_id')->count() }} Total Seller
-                                       </span>
-                                    </div>
+                                    
+                                    <td>
+                                       
+                                          <span class="purchased">
+                                             {{ \DB::table('purchased_buyers')->where('user_id','!=',1)->where('buyer_id',$purchasedBuyer->buyer_id)->groupBy('user_id')->count() }} Seller Purchased
+                                          </span>
+                                       
+                                    </td>
                                     <td>{{ $purchasedBuyer->user->name }}</td>
                                  </td>
                                  @endif

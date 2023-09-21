@@ -16,7 +16,7 @@ class BuyerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(0, 'desc');
+        $this->sort(5, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
