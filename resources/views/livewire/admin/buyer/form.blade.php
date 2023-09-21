@@ -324,6 +324,21 @@
                     @error('parking') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+            
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_flaw')}}</label>
+                    <div wire:ignore>
+                        <select wire:model.defer="state.property_flaw" class="form-control property_flaw select2" data-property="property_flaw" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_flaw')}}">
+                            @foreach($propertyFlaws as $key => $value)
+                                <option value="{{ $key }}"> {{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('property_flaw') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
@@ -383,34 +398,20 @@
         </div>
         @endif
         
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_flaw')}}</label>
-                    <div wire:ignore>
-                        <select wire:model.defer="state.property_flaw" class="form-control property_flaw select2" data-property="property_flaw" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_flaw')}}">
-                            @foreach($propertyFlaws as $key => $value)
-                                <option value="{{ $key }}"> {{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('property_flaw') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-        </div>
-        <div class="row">
-           
+        
+        <div class="row">           
             @php
-            if (isset($state['property_type']) && in_array(8, $state['property_type'])) {                     
-                if (!array_key_exists('permanent_affix', $radioButtonFields)) {                    
-                    array_push($radioButtonFields['permanent_affix']);                   
-                }
-            }else{
-                unset($radioButtonFields['permanent_affix']);                
-            }           
-            @endphp 
-            @foreach($radioButtonFields as $fieldName => $fieldData)          
-               
+            $property=$state['property_type']??null;
+            @endphp
+
+            @foreach($radioButtonFields as $fieldName => $fieldData)
+                    
+                @if (!isset($property) || isset($property) && !in_array(8, $property))
+                    
+                    @if($fieldName == 'permanent_affix')
+                            @continue;
+                    @endif                
+                @endif
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                     <div class="form-group">
                         <div class="radio-block-group">
@@ -424,8 +425,7 @@
                             @error($fieldName) <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                </div>
-            
+                </div>            
             @endforeach
 
         </div>
