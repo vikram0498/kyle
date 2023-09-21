@@ -77,7 +77,7 @@
                                           </span>
                                        
                                     </td>
-                                    <td>{{ $purchasedBuyer->user->name }}</td>
+                                    <td>{{ $purchasedBuyer->user->name ?? '' }}</td>
                                  </td>
                                  @endif
                               </tr>
