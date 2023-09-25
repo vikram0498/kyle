@@ -136,31 +136,39 @@ class BuyerController extends Controller
     public function singleBuyerFormElementValues($formType = null){
         $elementValues = [];
         try{
-            
-            
-         
+
+            if($formType == 'buy-box-search'){
                 // for search buyer form
                 $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
                     return [
                         'value' => $value,
                         'label' => $label,
                     ];
-                })->values()->all();
+                })->values()->forget(2)->all();
                
                
-                $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
+            }else{
+                $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
                     return [
                         'value' => $value,
                         'label' => $label,
                     ];
-                })->values()->all();
+                })->values()->all();               
+            }
+                
+            $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
 
-                $elementValues['park'] = collect(config('constants.park'))->map(function ($label, $value) {
-                    return [
-                        'value' => $value,
-                        'label' => $label,
-                    ];
-                })->values()->all();
+            $elementValues['park'] = collect(config('constants.park'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
 
             $elementValues['building_class_values'] = collect(config('constants.building_class_values'))->map(function ($label, $value) {
                 return [
@@ -583,10 +591,10 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('sewer', $request->sewer);
                 $additionalBuyers = $additionalBuyers->where('sewer', $request->sewer);
             }
-
+            
             if($request->market_preferance){
-                $buyers = $buyers->where('market_preferance', $request->market_preferance);
-                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance);
+                $buyers = $buyers->where('market_preferance', $request->market_preferance)->orWhere('market_preferance',3);
+                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance)->orWhere('market_preferance',3);
             }
 
             // if($request->contact_preferance){

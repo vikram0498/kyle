@@ -91,7 +91,7 @@ class Index extends Component
             // 'state' => [/*'required', 'exists:states,id'*/], 
             // 'city' => [/*'required', 'exists:cities,id'*/], 
             
-            'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
+            // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
             'lot_size_min' => ['nullable','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
             'lot_size_max' => ['nullable', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
             
@@ -112,25 +112,27 @@ class Index extends Component
             
         ];
        
-        if(!empty($this->state['property_type']) && !array_intersect([14], $this->state['property_type'])){
-            if(!empty($this->state['property_type']) && !array_intersect([15], $this->state['property_type'])){                
-                $rules['bedroom_min'] = ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMinValue($this->state['bedroom_min'], 'bedroom_min') : ''];
-                $rules['bedroom_max'] = ['required', 'numeric', !empty($this->state['bedroom_max']) ? new CheckMaxValue($this->state['bedroom_max'], 'bedroom_max') : ''];
-                $rules['bath_max'] = ['required', 'numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''];
-                $rules['bath_min'] = ['required', 'numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''];
+        if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([14], $this->state['property_type']))){
+            if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([15], $this->state['property_type']))){                
+                $rules['bedroom_min'] = ['required', 'numeric', !empty($this->state['bedroom_max']) ? new CheckMinValue($this->state['bedroom_max'], 'bedroom_max') : ''];
+                $rules['bedroom_max'] = ['required', 'numeric', !empty($this->state['bedroom_min']) ? new CheckMaxValue($this->state['bedroom_min'], 'bedroom_min') : ''];
+                
+                $rules['bath_min'] = ['required', 'numeric', !empty($this->state['bath_max']) ? new CheckMinValue($this->state['bath_max'], 'bath_max') : ''];
+                $rules['bath_max'] = ['required', 'numeric', !empty($this->state['bath_min']) ? new CheckMaxValue($this->state['bath_min'], 'bath_min') : ''];
+                
             }
             
-                $rules['size_min'] = ['required', 'numeric', !empty($this->state['size_min']) ? new CheckMinValue($this->state['size_min'], 'size_min') : ''];
-                $rules['size_max'] = ['required', 'numeric', !empty($this->state['size_max']) ? new CheckMaxValue($this->state['size_max'], 'size_max') : ''];
-                $rules['build_year_min'] = ['required', 'numeric', !empty($this->state['build_year_min']) ? new CheckMinValue($this->state['build_year_min'], 'build_year_min') : ''];
-                $rules['build_year_max'] = ['required', 'numeric', !empty($this->state['build_year_max']) ? new CheckMaxValue($this->state['build_year_max'], 'build_year_max') : ''];
+                $rules['size_min'] = ['required', 'numeric', !empty($this->state['size_max']) ? new CheckMinValue($this->state['size_max'], 'size_max') : ''];
+                $rules['size_max'] = ['required', 'numeric', !empty($this->state['size_min']) ? new CheckMaxValue($this->state['size_min'], 'size_min') : ''];
+                $rules['build_year_min'] = ['required', !empty($this->state['build_year_max']) ? new CheckMinValue($this->state['build_year_max'], 'build_year_max') : ''];
+                $rules['build_year_max'] = ['required', !empty($this->state['build_year_min']) ? new CheckMaxValue($this->state['build_year_min'], 'build_year_min') : ''];
                 // $rules['arv_min'] = ['required', 'numeric', !empty($this->state['arv_min']) ? new CheckMinValue($this->state['arv_min'], 'arv_min') : ''];
                 // $rules['arv_max'] = ['required', 'numeric', !empty($this->state['arv_max']) ? new CheckMaxValue($this->state['arv_max'], 'arv_max') : ''];
 
         }
-        if(!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type'])){            
-            $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMinValue($this->state['stories_min'], 'stories_min') : ''];
-            $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMaxValue($this->state['stories_max'], 'stories_max') : ''];
+        if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){            
+            $rules['stories_min'] = ['required', 'numeric','min:1','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
+            $rules['stories_max'] = ['required', 'numeric','min:1','max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
         }
 
         if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){

@@ -24,29 +24,45 @@ class BuyersImport implements ToModel, WithStartRow
       
         $buyerArr = [];
         $fName = $this->modifiedString($row[0]); $lName = $this->modifiedString($row[1]);
+        
         if(!empty($fName) && !empty($lName)){
             $buyerArr['user_id'] = 20;
             $buyerArr['first_name'] = $fName;
             $buyerArr['last_name'] = $lName;
             $buyerArr['name'] = $fName.' '.$lName;
             $email = $this->modifiedString($row[2]);
+            
             if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+                
                 // $buyerExists = Buyer::where('email', $email)->exists();
                 // if(!$buyerExists){
                     $buyerArr['email'] = $email;
                     $phone = $this->modifiedString($row[3]);
                     if(!empty($phone) && is_numeric($phone)){
+                        
                         $buyerArr['phone'] = $phone;
                         $address = $this->modifiedString($row[4]); 
                         
                         // $country = $this->modifiedString($row[5]); 
+                        // $cities = $this->modifiedString($row[5]); 
+                        // $states = $this->modifiedString($row[6]);                                                                            
+                        // $citynames = explode(',', $cities);
+                        // $statenames = explode(',', $states); 
                         $city = $this->modifiedString($row[5]); 
-                        $state = $this->modifiedString($row[6]); 
-
+                        $state = $this->modifiedString($row[6]);                                                  
+                                              
                         $stateId = 0;
                         $cityId = 0;
-                        
                         $countryId = 233;
+                        // $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', $statenames)->pluck('id')->toArray();                    
+
+                        // if(!empty($stateData)){    
+                        //     $stateId = count($stateData);                                                    
+                        //     $cityData = DB::table('cities')->whereIn('state_id', $stateData)->whereIn('name', $citynames)->pluck('id')->toArray();                            
+                        //     if(!empty($cityData)){                               
+                        //         $cityId = count($cityData);
+                        //     }
+                        // }       
                         $stateData = DB::table('states')->where('country_id', $countryId)->where('name', $state)->first();
                         if(!empty($stateData)){
                             $stateId = $stateData->id;
@@ -55,13 +71,13 @@ class BuyersImport implements ToModel, WithStartRow
                             if(!empty($cityData)){
                                 $cityId = $cityData->id;
                             }
-                        }
-                                                 
+                        }                               
 
                         $zipCode = $this->modifiedString($row[7]);
 
                         // if(!empty($address) && !empty($country) && !empty($city) && !empty($state) && !empty($zipCode) && $countryId > 0 && $stateId > 0 && $cityId > 0){
                         if(!empty($address) && !empty($zipCode) && $countryId > 0){
+                            
                             $buyerArr['address'] = $address;
                             $buyerArr['country'] = $countryId;
                             $buyerArr['city'] = $cityId > 0 ? [$cityId] : NULL;
@@ -96,7 +112,7 @@ class BuyersImport implements ToModel, WithStartRow
                                 if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($stories_min) && is_numeric($stories_max)){
 
                                     $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
-                                    $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);
+                                    $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);                                    
 
                                     $lotSizeMin     = (empty($lotSizeMin) || $lotSizeMin == 'blank') ? NULL : (!is_numeric($lotSizeMin) ? NULL : $lotSizeMin);
                                     $lotSizeMax     = (empty($lotSizeMax) || $lotSizeMax == 'blank') ? NULL : (!is_numeric($lotSizeMax) ? NULL : $lotSizeMax);
@@ -111,7 +127,6 @@ class BuyersImport implements ToModel, WithStartRow
                                     $priceMax         = (empty($priceMax) || $priceMax == 'blank') ? NULL : (!is_numeric($priceMax) ? NULL : $priceMax);
 
                                     $stories_min  = (empty($stories_min) || $stories_min == 'blank') ? NULL : (!is_numeric($stories_min) ? NULL : $stories_min);
-
                                     $stories_max  = (empty($stories_max) || $stories_max == 'blank') ? NULL : (!is_numeric($stories_max) ? NULL : $stories_max);
 
                                     $buyerArr['bedroom_min']    = $bedroomMin;      $buyerArr['bedroom_max']    = $bedroomMax;
@@ -135,10 +150,8 @@ class BuyersImport implements ToModel, WithStartRow
                                             if(in_array(7,$buyerArr['property_type'])){
                                                 // set zoning value 
                                                 $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
-
                                                 // set utilities value 
                                                 $buyerArr = $this->setSingleSelectValues($row[55], 'utilities', $buyerArr);
-
                                                 // set sewer value 
                                                 $buyerArr = $this->setSingleSelectValues($row[56], 'sewer', $buyerArr);
                                             }
@@ -157,9 +170,18 @@ class BuyersImport implements ToModel, WithStartRow
                                             // // set contact_preferance value 
                                             $buyerArr = $this->setSingleSelectValues($row[58], 'contact_preferance', $buyerArr);
 
+                                            // // set park value
+                                            $buyerArr = $this->setSingleSelectValues($row[60], 'park', $buyerArr);
+                                           
+
+                                            // set rooms value
+                                            $rooms        = strtolower($this->modifiedString($row[61])); 
+                                            $rooms        = (empty($rooms) || $rooms == 'blank') ? NULL : (!is_numeric($rooms) ? NULL : $rooms);
+                                            $buyerArr['rooms']       = $rooms;                                           
+
                                             // set all radio button values
                                             $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
-
+                                           
                                             $buyerType = strtolower($this->modifiedString($row[40])); 
                                             if(!empty($buyerType) && $buyerType != 'blank'){
                                                 $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
@@ -246,6 +268,18 @@ class BuyersImport implements ToModel, WithStartRow
             $buyerArr['parking'] = $valueId;
             return $buyerArr;
         }
+        else if($type == 'park'){
+            $parkValues = config('constants.park');
+            $parkValues = array_map('strtolower',$parkValues);
+            $value = strtolower($this->modifiedString($value));
+            $valueId = null;
+            if(in_array($value, $parkValues)){
+                $valueId = array_search ($value, $parkValues);
+            }
+            $buyerArr['park'] = $valueId;
+            return $buyerArr;
+        }
+        
 
         
     }
@@ -354,6 +388,11 @@ class BuyersImport implements ToModel, WithStartRow
     }
 
     private function setRadioButtonValues($row, $buyerArr){
+
+        $permanent_affix = strtolower($this->modifiedString($row[59])); 
+        $permanent_affix = (($permanent_affix == 'yes') ? 1 : (($permanent_affix == 'no') ? 0 : 0));
+        $buyerArr['permanent_affix'] = $permanent_affix;
+
         $solar = strtolower($this->modifiedString($row[26])); 
         $solar = (($solar == 'yes') ? 1 : (($solar == 'no') ? 0 : NULL));
         $buyerArr['solar'] = $solar;

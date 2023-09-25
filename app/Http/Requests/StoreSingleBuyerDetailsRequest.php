@@ -55,7 +55,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             'last_name'   => ['required'], 
             'email'       => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             'phone'       => ['required', 'numeric', /*'digits:10'*/'not_in:-'], 
-            'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
+            // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
             'city'        => [/*'required'*/], 
             'state'       => [/*'required'*/], 
@@ -114,19 +114,19 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
 
         }
         if(!empty($this->property_type) && !array_intersect([7,14], $this->property_type)){
-            $rules['stories_min'] = ['required', 'numeric', !empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
-            $rules['stories_max'] = ['required', 'numeric', !empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
+            $rules['stories_min'] = ['required', 'numeric','min:1','max:3',!empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
+            $rules['stories_max'] = ['required', 'numeric','min:1','max:3', !empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
         }
 
-        if($this->formName == 'copy-form'){
-            $rules['address']     = [];
-            $rules['zip_code']    = []; 
+        // if($this->formName == 'copy-form'){
+        //     $rules['address']     = ['nullable'];
+        //     $rules['zip_code']    = ['nullable']; 
 
-        }else{
-            $rules['address']     = ['required'];
-            $rules['zip_code']    = ['required','min:5','max:10']; 
+        // }else{
+        //     $rules['address']     = ['nullable'];
+        //     $rules['zip_code']    = ['nullable','min:5','max:10']; 
 
-        }
+        // }
 
         return $rules;
     }

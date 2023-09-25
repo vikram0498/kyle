@@ -72,15 +72,27 @@
         $('.country, .parking, .buyer_type').select2();
 
        
-        // $('#build_year_min').datepicker({
-        //     format: "yyyy",
-        //     viewMode: "years", 
-        //     minViewMode: "years",
-        //     autoclose:true,
-        // });
+        $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'yyyy',
+            viewMode: 'years',
+            minViewMode: 'years',
+            autoclose: true
+        });
+        });
         
     });
 
+    $(document).on('change','.datepicker', function(e){
+        var pr = $(this).data('property');
+        var pr_vals = $(this).val();
+        if(pr == 'build_year_min'){
+            @this.set('state.build_year_min', pr_vals);           
+        } else if(pr == 'build_year_max'){
+            @this.set('state.build_year_max', pr_vals);        
+        }
+        console.log(pr_vals);
+    });
     // $(document).on('change','#build_year_min', function (e) {
     //     console.log($(this).val());
     // });

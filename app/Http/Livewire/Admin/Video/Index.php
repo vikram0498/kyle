@@ -92,6 +92,7 @@ class Index extends Component
     }
 
     public function update(){
+        //dd($this->all());
         $validatedData = $this->validate([
             'title' => 'required',
             'description' => 'required|without_spaces',
@@ -99,7 +100,15 @@ class Index extends Component
         ], ['without_spaces' => 'The :attribute field is required']);
 
         if($this->video){
-            $validatedData['video'] = 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv|max:'.config('constants.video_max_size');
+            $extension = $this->video->getClientOriginalExtension();
+            $allowedExtensions = ['mp4', 'webm', 'ogg'];
+            //dd($extension);
+            if (!in_array($extension, $allowedExtensions)) {
+                
+                $this->addError('video', 'Please use the video format mp4 only');
+                return;
+            }
+            $validatedData['video'] = 'required|mimes:mp4,webm,ogg|max:'.config('constants.video_max_size');
         }
   
         $validatedData['status'] = $this->status;

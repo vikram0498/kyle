@@ -16,7 +16,7 @@ return [
     'default' => [
         'logo' => 'images/logo.png',
         'favicon' => 'images/favicon.png',
-        'admin_favicon' => 'images/favicon.png',
+        'admin_favicon' => 'images/fav-icon.svg',
         'short_logo' => 'images/favicon.png',
         'admin_logo' => 'images/logo.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
@@ -142,7 +142,7 @@ return [
     'market_preferances' => [
         1 => 'On-Market',
         2 => 'Off-Market',
-        // 3 => 'No Preference',
+        3 => 'No Preference',
     ],
 
     'contact_preferances' => [

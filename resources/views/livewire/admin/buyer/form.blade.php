@@ -35,13 +35,13 @@
                 </div>
             </div>
             
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.address')}} <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" wire:model.defer="state.address" placeholder="{{ __('cruds.buyer.fields.address')}}" autocomplete="off" >
                     @error('address') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
-            </div>
+            </div> -->
            
             <div class="col-md-12">
                 <div class="form-group">
@@ -73,13 +73,13 @@
                     @error('city') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>       
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.zip_code')}} <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" wire:model.defer="state.zip_code" placeholder="{{ __('cruds.buyer.fields.zip_code')}}" autocomplete="off"  onkeydown="return (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.code) ? true : (!isNaN(Number(event.key))) && event.code !== 'Space' && this.value.length < 9)">
                     @error('zip_code') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
-            </div>
+            </div> -->
             <!--<div class="col-md-4">
                 <div class="form-group">
                     <label for="country" class="font-weight-bold">{{ __('cruds.buyer.fields.country')}} <span class="text-danger">*</span></label>
@@ -88,7 +88,7 @@
                 </div>
             </div> -->                       
             
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.company_name')}} </label>
                     <input type="text" class="form-control" wire:model.defer="state.company_name" placeholder="{{ __('cruds.buyer.fields.company_name')}}" autocomplete="off" >
@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.market_preferance')}} <span class="text-danger">*</span></label>
                     <select class="form-control" wire:model.defer="state.market_preferance">
@@ -109,7 +109,7 @@
                 </div>
             </div>            
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.contact_preferance')}} <span class="text-danger">*</span></label>
                     <select class="form-control" wire:model.defer="state.contact_preferance">
@@ -229,7 +229,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.size_max" placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    <input type="number" class="form-control" wire:model.defer="state.size_max"  placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('size_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
@@ -237,14 +237,16 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.build_year_min" placeholder="{{ __('cruds.buyer.fields.build_year_min')}}" autocomplete="off"  min="0">
+                    <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_min" data-property="build_year_min" placeholder="{{ __('cruds.buyer.fields.build_year_min')}}" id="build_year_min" autocomplete="off"  min="0" data-provide="datepicker" data-date-format="yyyy">
                     @error('build_year_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+
+            
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.build_year_max" placeholder="{{ __('cruds.buyer.fields.build_year_max')}}" autocomplete="off"  min="0">
+                    <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_max" data-property="build_year_max" placeholder="{{ __('cruds.buyer.fields.build_year_max')}}" id="build_year_max" autocomplete="off"  min="0">
                     @error('build_year_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
