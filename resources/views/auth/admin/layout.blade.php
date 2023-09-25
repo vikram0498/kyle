@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}} | @yield('title')</title>
 
-    <link rel="icon" type="image/png" href="{{asset(config('constants.default.favicon'))}}">
+    <link rel="icon" type="image/png" href="{{asset(config('constants.default.admin_favicon'))}}">
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- <link href="{{ asset('css/style.css') }}" rel="stylesheet"> -->
