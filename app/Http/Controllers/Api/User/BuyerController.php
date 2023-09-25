@@ -48,7 +48,7 @@ class BuyerController extends Controller
         $options = $states->map(function ($label, $value) {
             return [
                 'value' => $value,
-                'label' => ucfirst(strtolower($label)),
+                'label' => ucwords(strtolower($label)),
             ];
         })->values()->all();
     
@@ -66,7 +66,7 @@ class BuyerController extends Controller
         $options = $cities->map(function ($label, $value) {
             return [
                 'value' => $value,
-                'label' => ucfirst(strtolower($label)),
+                'label' => ucwords(strtolower($label)),
             ];
         })->values()->all();
     
@@ -248,7 +248,7 @@ class BuyerController extends Controller
             $elementValues['states'] = $states->map(function ($label, $value) {
                 return [
                     'value' => $value,
-                    'label' => ucfirst(strtolower($label)),
+                    'label' => ucwords(strtolower($label)),
                 ];
             })->values()->all();
 

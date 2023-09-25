@@ -49,9 +49,9 @@
                         </label>
                     <!-- <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" > -->
                    <div wire:ignore> 
-                        <select wire:model.defer="state.state" id="state" class="form-control state select2"  data-property="state" multiple data-placeholder="Select {{ __('cruds.buyer.fields.state')}}">
+                        <select wire:model.defer="state.state" id="state" class="form-control state select2"  data-property="state" data-placeholder="Select {{ __('cruds.buyer.fields.state')}}">
                             <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
-                            @foreach($states as $key => $stateName)
+                            @foreach($allStates as $key => $stateName)
                                 <option value="{{$key}}"> {{$stateName}} </option>
                             @endforeach
                         </select>
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} </label>
                     <!-- <div wire:ignore> -->
-                    <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city" multiple data-placeholder="Select {{ __('cruds.buyer.fields.city')}}">
+                    <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city" data-placeholder="Select {{ __('cruds.buyer.fields.city')}}">
                         <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>
                         @foreach($cities as $key => $cityName)
                             <option value="{{$key}}"> {{$cityName}} </option>

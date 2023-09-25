@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\Response;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Carbon\Carbon;
+use App\Models\PurchasedBuyer;
 
 class Index extends Component
 {
@@ -92,11 +93,17 @@ class Index extends Component
 
     public function deleteConfirm($id){
         $model = User::find($id);
-        $model->delete();
         
-        $this->emit('refreshLivewireDatatable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
+        if($model){
+            PurchasedBuyer::where('user_id',$model->id)->delete();
+            
+            $model->delete();
+            
+            $this->emit('refreshLivewireDatatable');
+    
+            $this->alert('success', trans('messages.delete_success_message'));
+        }
+        
     }
 
     public function show($id){

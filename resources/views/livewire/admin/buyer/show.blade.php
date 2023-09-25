@@ -178,7 +178,7 @@
                 @if(!is_null($details->property_type) && !empty($details->property_type))
                 
                     @foreach($details->property_type as $propertyType)
-                        <span class="badge bg-primary text-white"> {{ isset($propertyTypes[$propertyType]) ? $details->property_type : '' }} </span>
+                        <span class="badge bg-primary text-white"> {{ isset($propertyTypes[$propertyType]) ? $propertyTypes[$propertyType] : '' }} </span>
                     @endforeach
                 @else
                 N/A

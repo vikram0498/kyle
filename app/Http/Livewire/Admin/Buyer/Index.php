@@ -77,7 +77,8 @@ class Index extends Component
         $encryptedId = encrypt(auth()->user()->id);
         $this->buyerFormLink = $url.'add/buyer?token='.$encryptedId;
 
-        $this->states =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
+        // $this->states =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
+        
     }
 
     private function rules (){
@@ -200,7 +201,8 @@ class Index extends Component
     }
 
     public function render() {
-        return view('livewire.admin.buyer.index');
+        $allStates =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
+        return view('livewire.admin.buyer.index',compact('allStates'));
     }
 
     public function create(){
@@ -223,11 +225,13 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  array_map('intval',$this->state['state']);
+            // $this->state['state']   =  array_map('intval',$this->state['state']);
+            $this->state['state'] = [(int)$this->state['state']];
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    =  array_map('intval',$this->state['city']);
+            // $this->state['city']    =  array_map('intval',$this->state['city']);
+            $this->state['city']       = [(int)$this->state['city']];
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -315,11 +319,14 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
                 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  array_map('intval',[$this->state['state']]);
+            // $this->state['state']   =  array_map('intval',[$this->state['state']]);
+            $this->state['state']   =  [(int)$this->state['state']];
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    =  array_map('intval',[$this->state['city']]);
+            // $this->state['city']    =  array_map('intval',[$this->state['city']]);
+            
+            $this->state['city']    =  [(int)$this->state['city']];
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -434,9 +441,8 @@ class Index extends Component
     }
 
     public function getCities($stateId){
-        
         if($stateId){
-            $cityData = DB::table('cities')->whereIn('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
+            $cityData = DB::table('cities')->where('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
             if($cityData->count() > 0){
                 $this->cities = $cityData;
             } else {

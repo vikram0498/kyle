@@ -67,13 +67,14 @@
                        $view = '';
                        foreach(json_decode($flagData->pivot->incorrect_info,true) as $name=>$value){
                         if($value){
-                            $view .= $name.' ';
+                            $view .= $name.', ';
                         }
                        }
                        
+                       $modifiedString = rtrim($view, ', ');
                      @endphp
 
-                     {{ $view }}
+                     {{ $modifiedString }}
                     </td>
                     <td>
                         <div class="d-flex mb-2">

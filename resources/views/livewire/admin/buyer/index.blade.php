@@ -69,16 +69,20 @@
             theme: "classic"
         });
 
-        $('.country, .parking, .buyer_type').select2();
+        $('.country, .parking, .state,.city,.buyer_type').select2();
 
        
         $(document).ready(function () {
-        $('.datepicker').datepicker({
-            format: 'yyyy',
-            viewMode: 'years',
-            minViewMode: 'years',
-            autoclose: true
-        });
+            // Get the current year
+            var currentYear = new Date().getFullYear();
+            
+            $('.datepicker').datepicker({
+                format: 'yyyy',
+                viewMode: 'years',
+                minViewMode: 'years',
+                autoclose: true,
+                endDate: currentYear.toString(),
+            });
         });
         
     });

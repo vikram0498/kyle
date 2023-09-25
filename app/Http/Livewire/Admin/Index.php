@@ -18,7 +18,10 @@ class Index extends Component
         })->count();
         $buyerCount = Buyer::count();
 
-        $purchasedBuyers = PurchasedBuyer::select('user_id','buyer_id', \DB::raw('MAX(created_at) as max_created_at'))->with(['user','buyer'])->where('user_id','!=',1)->groupBy('buyer_id')->orderBy('max_created_at', 'desc')->get();
+        $purchasedBuyers = PurchasedBuyer::select('user_id','buyer_id', \DB::raw('MAX(created_at) as max_created_at'))->with(['user','buyer'])
+        ->where('user_id','!=',1)->groupBy('buyer_id')->orderBy('max_created_at', 'desc')->get();
+        
+        // dd($purchasedBuyers);
 
         return view('livewire.admin.index', compact('buyerCount', 'sellerCount','purchasedBuyers'));
     }
