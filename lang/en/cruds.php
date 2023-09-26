@@ -10,8 +10,8 @@ return [
         'title_singular' => 'Setting',
     ],
     'user'           => [
-        'title'          => 'Sellers',
-        'title_singular' => 'Seller',
+        'title'          => 'Users',
+        'title_singular' => 'User',
         'fields'         => [
             'id'                       => 'ID',
             'first_name'               => 'First Name',
@@ -98,7 +98,7 @@ return [
         'creative_buyer'        => 'Creative Buyer',
         'multi_family_buyer'    => 'Multi Family Buyer',
         'fields' => [
-            'user_id'                       => 'Seller',
+            'user_id'                       => 'User',
             'name'                          => 'Name',
             'first_name'                    => 'First Name',
             'last_name'                     => 'Last Name',
@@ -191,8 +191,8 @@ return [
     ],
 
     'search_log' => [
-        'title'                 => 'Seller Search Logs',
-        'title_singular'        => 'Seller Search Log',
+        'title'                 => 'User Search Logs',
+        'title_singular'        => 'User Search Log',
         'fields' => [
             'user_id'                       => 'User Name',
             'address'                       => 'Address',

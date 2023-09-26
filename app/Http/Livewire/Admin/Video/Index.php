@@ -53,7 +53,7 @@ class Index extends Component
             'title'  => 'required',
             'description' => 'required|without_spaces',
             'status' => 'required',
-            'video' => 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv|max:'.config('constants.video_max_size'),
+            'video' => 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv',
         ], ['without_spaces' => 'The :attribute field is required']);
         
         $validatedData['status'] = $this->status;
@@ -108,7 +108,9 @@ class Index extends Component
                 $this->addError('video', 'Please use the video format mp4 only');
                 return;
             }
-            $validatedData['video'] = 'required|mimes:mp4,webm,ogg|max:'.config('constants.video_max_size');
+            // $validatedData['video'] = 'required|mimes:mp4,webm,ogg|max:'.config('constants.video_max_size');
+            $validatedData['video'] = 'required|mimes:mp4,webm,ogg';
+
         }
   
         $validatedData['status'] = $this->status;

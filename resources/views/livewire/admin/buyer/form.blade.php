@@ -65,7 +65,7 @@
                     <!-- <div wire:ignore> -->
                     <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" data-property="city" data-placeholder="Select {{ __('cruds.buyer.fields.city')}}">
                         <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>
-                        @foreach($cities as $key => $cityName)
+                        @foreach($allCities as $key => $cityName)
                             <option value="{{$key}}"> {{$cityName}} </option>
                         @endforeach
                     </select>

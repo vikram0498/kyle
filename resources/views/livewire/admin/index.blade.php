@@ -57,14 +57,15 @@
                         <thead>
                            <tr>
                               <th scope="col">Buyer Name</th>
-                              <th scope="col">Total Seller</th>
-                              <th scope="col">Recent Purchased Seller</th>
+                              <th scope="col">Total User</th>
+                              <th scope="col">Recent Purchased User</th>
                            </tr>
                         </thead>
                         <tbody>
                            @if($purchasedBuyers->count() > 0)
-                              @foreach($purchasedBuyers as $purchasedBuyer)
+                              @foreach($purchasedBuyers as $key=>$purchasedBuyer)
                                @if($purchasedBuyer->buyer)
+                             
                               <tr>
                                  <td>
                                     
@@ -79,8 +80,9 @@
                                     </td>
                                     <td>{{ $purchasedBuyer->user->name ?? '' }}</td>
                                  </td>
-                                 @endif
                               </tr>
+                     
+                              @endif
                               @endforeach
                            @else
                              <tr>
