@@ -16,14 +16,14 @@ class BuyerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(5, 'desc');
+        $this->sort(6, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
 
     public function builder()
     {
-        return Buyer::query();
+        return Buyer::query()->orderBy('created_at','desc');
     }
   
     /**

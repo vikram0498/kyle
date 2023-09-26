@@ -114,8 +114,8 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
 
         }
         if(!empty($this->property_type) && !array_intersect([7,14], $this->property_type)){
-            $rules['stories_min'] = ['required', 'numeric','min:1','max:3',!empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
-            $rules['stories_max'] = ['required', 'numeric','min:1','max:3', !empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
+            $rules['stories_min'] = ['required', 'numeric',!empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
+            $rules['stories_max'] = ['required', 'numeric',!empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
         }
 
         // if($this->formName == 'copy-form'){

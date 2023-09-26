@@ -173,7 +173,7 @@
             </div>
             @endif
 
-        {{--
+         {{--
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.occupation')}} </label>
@@ -258,7 +258,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} </label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('lot_size_min') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -266,7 +266,7 @@
             
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} </label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                     @error('lot_size_max') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -344,7 +344,9 @@
                     @error('property_flaw') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            
+        </div>       
+        
+        <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
@@ -359,7 +361,7 @@
                     @error('buyer_type') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-        </div>        
+        </div>
                 
         @if(isset($state['property_type']) && in_array(7,$state['property_type']))
         <div class="row">
@@ -476,6 +478,7 @@
                 </div>
             </div>
         @endif
+
         @if($multiFamilyBuyer)
             <!-- Multi Family Buyer -->
             <div class="" id="multi_family_buyer_main">

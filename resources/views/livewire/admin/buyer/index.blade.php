@@ -137,7 +137,7 @@
         
         @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
         if(pr == 'buyer_type'){
-            // @this.emit('changeBuyerType', $('.buyer_type').select2('val'));
+           
             @this.emit('initializePlugins');
         } else if(pr == 'country'){
             @this.emit('getStates', $('.country').select2('val'));

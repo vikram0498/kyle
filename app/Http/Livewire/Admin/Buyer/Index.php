@@ -93,8 +93,8 @@ class Index extends Component
             // 'city' => [/*'required', 'exists:cities,id'*/], 
             
             // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
-            'lot_size_min' => ['nullable','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
-            'lot_size_max' => ['nullable', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
+            'lot_size_min' => ['required','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
+            'lot_size_max' => ['required', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
             
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->state['price_min']) ? new CheckMaxValue($this->state['price_min'], 'price_min') : ''], 
@@ -132,8 +132,8 @@ class Index extends Component
 
         }
         if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){            
-            $rules['stories_min'] = ['required', 'numeric','min:1','max:3', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
-            $rules['stories_max'] = ['required', 'numeric','min:1','max:3', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
+            $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
+            $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
         }
 
         if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){
@@ -180,8 +180,10 @@ class Index extends Component
         if(!$this->updateMode){
             Validator::make($this->state, $this->rules(),[
                 'phone.required' => 'The contact number field is required',
-                // 'size_min.required' => 'The sq ft min field is required',
-                // 'size_max.required' => 'The sq ft max field is required',
+                'size_min.required' => 'The sq ft min field is required',
+                'size_max.required' => 'The sq ft max field is required',
+                'lot_size_min.required' => 'The lot size sq ft (min) field is required',
+                'lot_size_max.required' => 'The lot size sq ft (max) field is required',
                 'market_preferance.required' => 'The market preference field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
@@ -191,8 +193,10 @@ class Index extends Component
             $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
             Validator::make($this->state, $rules,[
                 'phone.required' => 'The contact number field is required',
-                // 'size_min.required' => 'The sq ft min field is required',
-                // 'size_max.required' => 'The sq ft max field is required',
+                'size_min.required' => 'The sq ft min field is required',
+                'size_max.required' => 'The sq ft max field is required',
+                'lot_size_min.required' => 'The lot size sq ft (min) field is required',
+                'lot_size_max.required' => 'The lot size sq ft (max) field is required',
                 'market_preferance.required' => 'The market preference field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
             ])->validate();
