@@ -231,7 +231,7 @@ return [
 
     'dashboard'  => [
         'total_buyer'  => 'Total Buyers',
-        'total_seller'  => 'Total Sellers',
+        'total_seller'  => 'Total Users',
     ],
 
     'transaction' => [
