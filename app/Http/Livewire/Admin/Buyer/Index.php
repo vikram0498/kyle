@@ -202,7 +202,8 @@ class Index extends Component
 
     public function render() {
         $allStates =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
-        return view('livewire.admin.buyer.index',compact('allStates'));
+        $cities = $this->cities;
+        return view('livewire.admin.buyer.index',compact('allStates','cities'));
     }
 
     public function create(){
@@ -441,6 +442,7 @@ class Index extends Component
     }
 
     public function getCities($stateId){
+     
         if($stateId){
             $cityData = DB::table('cities')->where('state_id', $stateId)->orderBy('name', 'asc')->pluck('name', 'id');
             if($cityData->count() > 0){

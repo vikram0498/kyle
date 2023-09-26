@@ -173,6 +173,7 @@
             </div>
             @endif
 
+        {{--
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.occupation')}} </label>
@@ -187,6 +188,9 @@
                     @error('replacing_occupation') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+            
+            --}}
+            
             @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(14, $state['property_type']))
                 @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(15, $state['property_type']))
             <div class="col-md-4">
