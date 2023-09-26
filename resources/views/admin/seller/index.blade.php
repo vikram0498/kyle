@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Seller')
+@section('title','Users')
 
 @section('styles')
 @stop
