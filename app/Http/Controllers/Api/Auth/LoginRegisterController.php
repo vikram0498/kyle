@@ -96,9 +96,19 @@ class LoginRegisterController extends Controller
                 'password' => $request->password,
             ]; 
 
+            $checkUserStatus = User::where('email',$request->email)->where('is_active',0)->exists();
+            if($checkUserStatus){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account has been blocked!',
+                ];
+                return response()->json($responseData, 401);
+            }
 
             if(Auth::attempt($credentialsOnly, $remember_me)){
                 $user = User::find(Auth::id());
+
                 if(is_null($user->email_verified_at)){
                     $user->NotificationSendToVerifyEmail();
 

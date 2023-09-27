@@ -593,8 +593,13 @@ class BuyerController extends Controller
             }
             
             if($request->market_preferance){
-                $buyers = $buyers->where('market_preferance', $request->market_preferance)->orWhere('market_preferance',3);
-                $additionalBuyers = $additionalBuyers->where('market_preferance', $request->market_preferance)->orWhere('market_preferance',3);
+                $marketPref = $request->market_preferance;
+                $buyers = $buyers->where(function($query) use($marketPref){
+                    $query->where('market_preferance', $marketPref)->orWhere('market_preferance',3);
+                });
+                $additionalBuyers = $additionalBuyers->where(function($query) use($marketPref){
+                    $query->where('market_preferance', $marketPref)->orWhere('market_preferance',3);
+                });
             }
 
             // if($request->contact_preferance){

@@ -15,6 +15,15 @@ class SocialMediaController extends Controller
             $social_id = 'google_'.$request->sub;
             $isUser = User::where('email', $request->email)->first();
             if($isUser){
+                if(!$isUser->is_active){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been blocked!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
                 $userAuthenticated = Auth::loginUsingId($isUser->id);
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
@@ -92,6 +101,15 @@ class SocialMediaController extends Controller
             $isUser = User::where('social_id', $social_id)->orWhere('email',$request->email)->first();
     
             if($isUser){
+                if(!$isUser->is_active){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been blocked!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+                
                 $userAuthenticated = Auth::loginUsingId($isUser->id);
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;

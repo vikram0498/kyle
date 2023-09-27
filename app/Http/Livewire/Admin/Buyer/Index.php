@@ -168,6 +168,7 @@ class Index extends Component
                 if(in_array(10, $data['pr_vals']) || in_array(11, $data['pr_vals']) || in_array(2, $data['pr_vals']) || in_array(14, $data['pr_vals']) || in_array(15, $data['pr_vals'])){
                     $this->multiFamilyBuyer = true;
                 } else {
+                    $this->multiFamilyBuyer = false;
                     $this->state = Arr::except($this->state,['unit_min', 'unit_max', 'value_add', 'building_class']);
                 }
             }
