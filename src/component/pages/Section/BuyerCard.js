@@ -1,7 +1,16 @@
 import React from 'react'
 
 export default function BuyerCard({data, handleLikeClick,handleDisikeClick,handleClickEditFlag,index}) {
-    console.log('re render');
+    let PreferenceIcons = './assets/images/contact-preferance.svg';
+    if(data.contact_preferance === 'Email'){
+        PreferenceIcons = './assets/images/Email-Preference.svg';
+    }else if(data.contact_preferance === 'Text'){
+        PreferenceIcons = './assets/images/Text-Preference.svg';
+    }else if(data.contact_preferance === 'Call'){
+        PreferenceIcons = './assets/images/Call-Preference.svg';
+    }else if(data.contact_preferance === 'No Preference'){
+        PreferenceIcons = './assets/images/1.svg';
+    }
   return (
     <div className="col-12 col-lg-6" >
         <div className="property-critera-block">
@@ -47,7 +56,7 @@ export default function BuyerCard({data, handleLikeClick,handleDisikeClick,handl
                     </li>
                     <li>
                         <span className="detail-icon">
-                            <img src="./assets/images/contact-preferance.svg" className="img-fluid" />
+                            <img src={PreferenceIcons} className="img-fluid" />
                         </span>
                         <span className="name-dealer">{data.contact_preferance}</span>
                     </li>

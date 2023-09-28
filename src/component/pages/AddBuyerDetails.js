@@ -21,7 +21,7 @@ import WatchVideo from "../partials/Modal/WatchVideo";
 
 function AddBuyerDetails (){
     const {authData} = useContext(AuthContext);
-    const { register, handleSubmit, control , formState: { errors }  } = useForm();
+    const { register, handleSubmit, control , formState: { errors },clearErrors  } = useForm();
     const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
@@ -79,6 +79,24 @@ function AddBuyerDetails (){
     const [stateValue,setStatevalue] = useState([]);
     const [cityValue,setCityvalue] = useState([]);
 
+
+    /* min max value states start */
+    const [bedRoomMin, setBedRoomMin] = useState('');
+    const [bedRoomMax, setBedRoomMax] = useState('');
+    const [bathMin, setBathMin] = useState('');
+    const [bathMax, setBathMax] = useState('');
+    const [sqFtMin, setSqFtMin] = useState('');
+    const [sqFtMax, setSqFtMax] = useState('');
+    const [lotSizesqFtMin, setlotSizesqFtMin] = useState('');
+    const [lotSizesqFtMax, setlotSizesqFtMax] = useState('');
+    const [yearBuildMin, setYearBuildMin] = useState('');
+    const [yearBuildMax, setYearBuildMax] = useState('');
+    const [storiesMin, setStoriesMin] = useState('');
+    const [storiesMax, setStoriesMax] = useState('');
+    const [priceMin, setPriceMin] = useState('');
+    const [priceMax, setPriceMax] = useState('');
+    /* min max value states end */
+
     const [copySuccess, setCopySuccess] = useState(false);
 
     const [loading, setLoading] = useState(false);
@@ -91,7 +109,6 @@ function AddBuyerDetails (){
         getOptionsValues();
         getVideoUrl();
     }, [navigate, /*authData*/]);
-    
     
     const apiUrl = process.env.REACT_APP_API_URL;
     
@@ -160,8 +177,8 @@ function AddBuyerDetails (){
         }
     }
     const getStates = (country_id) => {
+        setCityOptions([]);
         if(country_id == null){
-            console.log('case 1');
             setCountry([]); setState([]); setCity([]);
             setStateOptions([]); setCityOptions([]);
         } else {            
@@ -183,7 +200,6 @@ function AddBuyerDetails (){
             let country_id = {country};
             const selectedStates = state_id.map((item) => item.value);
             setStatevalue(selectedStates);
-            console.log(selectedStates,'selectedStates');
             axios.post(apiUrl+'getCities', { state_id: selectedStates, country_id: 233 }, { headers: headers }).then(response => {
                 let result = response.data.options;
 
@@ -390,10 +406,38 @@ function AddBuyerDetails (){
 
     const handleCityChange = (event) => {
         let selectedValues = event.map((item) => item.value);
-        console.log(selectedValues,'selectedValues');
         setCityvalue(selectedValues);
+        setCity(event)
     }
-    console.log(isLandSelected,'isLandSelected');
+    const handleChangeErrorMessage = (field_name) => {
+        if(field_name === 'bedroom'){
+            if(parseInt(bedRoomMax) >= parseInt(bedRoomMin)){
+                clearErrors(["bedroom_min", "bedroom_max"]);
+            }
+        }else if(field_name === 'bath'){
+            if(parseInt(bathMax) >= parseInt(bathMin)){
+                clearErrors(["bath_min", "bath_max"]);
+            }
+        }else if(field_name === 'sqft'){
+            if(parseInt(sqFtMax) >= parseInt(sqFtMin)){
+                clearErrors(["size_min", "size_max"]);
+            }
+        }else if(field_name === 'lotsizesqft'){
+            if(parseInt(lotSizesqFtMax) >= parseInt(lotSizesqFtMin)){
+                clearErrors(["lot_size_min", "lot_size_max"]);
+            }
+        }else if(field_name === 'stories'){
+            if(parseInt(storiesMax) >= parseInt(storiesMin)){
+                clearErrors(["stories_min", "stories_max"]);
+            }
+        }else if(field_name === 'price'){
+            if(parseInt(priceMax) >= parseInt(priceMin)){
+                clearErrors(["price_min", "price_max"]);
+            }
+        }
+        
+    }
+    
     return (
         <>
            <Header/>
@@ -577,7 +621,7 @@ function AddBuyerDetails (){
                                                 <div className="col-12 col-lg-12">
                                                     <label>City</label>
                                                     <div className="form-group">
-                                                        <Select
+                                                    <Select
                                                             name="city"
                                                             defaultValue=''
                                                             options={cityOptions}
@@ -587,6 +631,7 @@ function AddBuyerDetails (){
                                                             isSearchable={true}
                                                             isDisabled={false}
                                                             isLoading={false}
+                                                            value={city}
                                                             isRtl={false}
                                                             placeholder="Select City"
                                                             closeMenuOnSelect={false}
@@ -948,6 +993,7 @@ function AddBuyerDetails (){
                                                         <div className="form-group">
                                                             <input type="text" name="bedroom_min" className="form-control" placeholder="Bedroom (min)"  {
                                                                 ...register("bedroom_min", {
+                                                                    onChange:(e)=>{setBedRoomMin(e.target.value)},
                                                                     required: "Bedroom (min) is required",
                                                                     validate: {
                                                                         matchPattern: (v) =>
@@ -955,9 +1001,11 @@ function AddBuyerDetails (){
                                                                         "Please enter valid number",
                                                                         maxLength: (v) =>
                                                                         v.length <= 10 || "The digit should be less than equal 10",
+                                                                        positiveNumber: (v) => parseFloat(v) <= bedRoomMax || "The Bedroom (min) should be less than or equal Bedroom (max)",
+                                                                            
                                                                     },
                                                                 })
-                                                                } />
+                                                                } onKeyUp={()=>{handleChangeErrorMessage('bedroom')}}/>
                                                                 {errors.bedroom_min && <p className="error">{errors.bedroom_min?.message}</p>}
 
                                                             {renderFieldError('bedroom_min') }
@@ -969,6 +1017,7 @@ function AddBuyerDetails (){
                                                             <input type="text" name="bedroom_max" className="form-control" placeholder="Bedroom (max)" 
                                                             {
                                                             ...register("bedroom_max", {
+                                                                onChange:(e)=>{setBedRoomMax(e.target.value)},
                                                                 required: "Bedroom (max) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
@@ -976,9 +1025,11 @@ function AddBuyerDetails (){
                                                                     "Please enter valid number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
+                                                                    positiveNumber: (v) => parseFloat(v) >= bedRoomMin || "The Bedroom (max) should be greater than or equal Bedroom (min)",
                                                                 },
                                                             })
-                                                            } />
+                                                            } onKeyUp={()=>{handleChangeErrorMessage('bedroom')}}
+                                                            />
                                                             {errors.bedroom_max && <p className="error">{errors.bedroom_max?.message}</p>}
 
                                                             {renderFieldError('bedroom_max') }
@@ -990,6 +1041,7 @@ function AddBuyerDetails (){
                                                             <input type="text" name="bath_min" className="form-control" placeholder="Bath (min)"
                                                             {
                                                             ...register("bath_min", {
+                                                                onChange:(e)=>{setBathMin(e.target.value)},
                                                                 required: "Bath (min) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
@@ -997,9 +1049,12 @@ function AddBuyerDetails (){
                                                                     "Please enter valid number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
+                                                                    positiveNumber: (v) => parseFloat(v) <= bathMax || "The Bath (min) should be less than or equal Bath (max)",
                                                                 },
                                                             })
-                                                            } />
+                                                            } 
+                                                            onKeyUp={()=>{handleChangeErrorMessage('bath')}}
+                                                            />
                                                             {errors.bath_min && <p className="error">{errors.bath_min?.message}</p>}
                                                             {renderFieldError('bath_min') }
                                                         </div>
@@ -1009,6 +1064,7 @@ function AddBuyerDetails (){
                                                         <div className="form-group">
                                                             <input type="text" name="bath_max" className="form-control" placeholder="Bath (max)" {
                                                             ...register("bath_max", {
+                                                                onChange:(e)=>{setBathMax(e.target.value)},
                                                                 required: "Bath (max) is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
@@ -1016,9 +1072,11 @@ function AddBuyerDetails (){
                                                                     "Please enter valid number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
+                                                                    positiveNumber: (v) => parseFloat(v) >= bathMin || "The Bath (max) should be greater than or equal Bath (min)",
+                                                                    
                                                                 },
                                                             })
-                                                            } />
+                                                            } onKeyUp={()=>{handleChangeErrorMessage('bath')}}/>
                                                             {errors.bath_max && <p className="error">{errors.bath_max?.message}</p>}
                                                             
                                                             {renderFieldError('bath_max') }
@@ -1033,6 +1091,7 @@ function AddBuyerDetails (){
                                                         <div className="form-group">
                                                             <input type="text" name="size_min" className="form-control" placeholder="Sq Ft Min"   {
                                                             ...register("size_min", {
+                                                                onChange:(e)=>{setSqFtMin(e.target.value)},
                                                                 required: "Sq Ft Min is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
@@ -1040,9 +1099,10 @@ function AddBuyerDetails (){
                                                                     "Please enter valid number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
+                                                                    positiveNumber: (v) => parseFloat(v) <= sqFtMin || "The Sq Ft (min) should be less than or equal Sq Ft (max)",
                                                                 },
                                                             })
-                                                            } />
+                                                            } onKeyUp={()=>{handleChangeErrorMessage('sqft')}} />
                                                             {errors.size_min && <p className="error">{errors.size_min?.message}</p>}
 
                                                             {renderFieldError('size_min') }
@@ -1053,6 +1113,7 @@ function AddBuyerDetails (){
                                                         <div className="form-group">
                                                             <input type="text" name="size_max" className="form-control" placeholder="Sq Ft Max"   {
                                                             ...register("size_max", {
+                                                                onChange:(e)=>{setSqFtMax(e.target.value)},
                                                                 required: "Sq Ft Max is required",
                                                                 validate: {
                                                                     matchPattern: (v) =>
@@ -1060,9 +1121,12 @@ function AddBuyerDetails (){
                                                                     "Please enter valid number",
                                                                     maxLength: (v) =>
                                                                     v.length <= 10 || "The digit should be less than equal 10",
+                                                                    positiveNumber: (v) => parseFloat(v) >= sqFtMin || "The Sq Ft (max) should be greater than or equal Sq Ft (min)",
                                                                 },
                                                             })
-                                                            } />
+                                                            } 
+                                                            onKeyUp={()=>{handleChangeErrorMessage('sqft')}} 
+                                                            />
                                                             {errors.size_max && <p className="error">{errors.size_max?.message}</p>}
 
                                                             {renderFieldError('size_max') }
@@ -1084,6 +1148,7 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <input type="text" name="lot_size_min" className="form-control" placeholder="Lot Size Sq Ft (min)"   {
                                                         ...register("lot_size_min", {
+                                                            onChange:(e)=>{setlotSizesqFtMin(e.target.value)},
                                                             required: "Lot Size Sq Ft (min) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
@@ -1091,9 +1156,10 @@ function AddBuyerDetails (){
                                                                 "Please enter valid number",
                                                                 maxLength: (v) =>
                                                                 v.length <= 10 || "The digit should be less than equal 10",
+                                                                positiveNumber: (v) => parseFloat(v) <= lotSizesqFtMax || "The Lot Size Sq Ft (min) should be less than or equal Lot Size Sq Ft (max)",
                                                             },
                                                         })
-                                                        } />
+                                                        } onKeyUp={()=>{handleChangeErrorMessage('lotsizesqft')}} />
                                                         {errors.lot_size_min && <p className="error">{errors.lot_size_min?.message}</p>}
 
                                                         {renderFieldError('lot_size_min') }
@@ -1104,6 +1170,7 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <input type="text" name="lot_size_max" className="form-control" placeholder="Lot Size Sq Ft (max)"    {
                                                         ...register("lot_size_max", {
+                                                            onChange:(e)=>{setlotSizesqFtMax(e.target.value)},
                                                             required: "Lot Size Sq Ft (max) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
@@ -1111,9 +1178,10 @@ function AddBuyerDetails (){
                                                                 "Please enter valid number",
                                                                 maxLength: (v) =>
                                                                 v.length <= 10 || "The digit should be less than equal 10",
+                                                                positiveNumber: (v) => parseFloat(v) >= lotSizesqFtMin || "The Lot Size Sq Ft (max) should be greater than or equal Lot Size Sq Ft (min)"
                                                             },
                                                         })
-                                                        } />
+                                                        } onKeyUp={()=>{handleChangeErrorMessage('lotsizesqft')}} />
                                                         {errors.lot_size_max && <p className="error">{errors.lot_size_max?.message}</p>}
 
                                                         {renderFieldError('lot_size_max') }
@@ -1199,16 +1267,16 @@ function AddBuyerDetails (){
                                                                 <input type="text" name="stories_min" className="form-control" placeholder="Stories (min)" 
                                                                 {
                                                                 ...register("stories_min", {
+                                                                    onChange:(e)=>{setStoriesMin(e.target.value)},
                                                                     required: "Stories (min) is required",
                                                                     validate: {
                                                                         matchPattern: (v) =>
                                                                         /^[0-9]\d*$/.test(v) ||
                                                                         "Please enter valid number",
-                                                                        maxLength: (v) =>
-                                                                        v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                        positiveNumber: (v) => parseFloat(v) <= storiesMax || "The Stories (min) should be less than or equal Stories (max)"
                                                                     },
                                                                 })
-                                                                } />
+                                                                } onKeyUp={()=>{handleChangeErrorMessage('stories')}} />
                                                                 {errors.stories_min && <p className="error">{errors.stories_min?.message}</p>}
 
                                                                 {renderFieldError('stories_min') }
@@ -1219,16 +1287,16 @@ function AddBuyerDetails (){
                                                             <div className="form-group">
                                                                 <input type="text" name="stories_max" className="form-control" placeholder="Stories (max)" {
                                                                 ...register("stories_max", {
+                                                                    onChange:(e)=>{setStoriesMax(e.target.value)},
                                                                     required: "Stories (max) is required",
                                                                     validate: {
                                                                         matchPattern: (v) =>
                                                                         /^[0-9]\d*$/.test(v) ||
                                                                         "Please enter valid number",
-                                                                        maxLength: (v) =>
-                                                                        v > 0 && v < 4 || "The digit should be greater than equal to 1 and less than equal to 3",
+                                                                        positiveNumber: (v) => parseFloat(v) >= storiesMin || "The Stories (max) should be greater than or equal Stories (min)"
                                                                     },
                                                                 })
-                                                                } />
+                                                                } onKeyUp={()=>{handleChangeErrorMessage('stories')}} />
                                                                 {errors.stories_max && <p className="error">{errors.stories_max?.message}</p>}
 
                                                                 {renderFieldError('stories_max') }
@@ -1242,6 +1310,7 @@ function AddBuyerDetails (){
                                                         <input type="text" name="price_min" className="form-control" placeholder="Price (min)" 
                                                         {
                                                         ...register("price_min", {
+                                                            onChange:(e)=>{setPriceMin(e.target.value)},
                                                             required: "Price (min) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
@@ -1249,9 +1318,10 @@ function AddBuyerDetails (){
                                                                 "Please enter valid number",
                                                                 maxLength: (v) =>
                                                                 v.length <= 10 || "The digit should be less than equal 10",
+                                                                positiveNumber: (v) => parseFloat(v) <= priceMax || "The Price (min) should be less than or equal Price (max)"
                                                             },
                                                         })
-                                                        } />
+                                                        } onKeyUp={()=>{handleChangeErrorMessage('price')}} />
                                                          {errors.price_min && <p className="error">{errors.price_min?.message}</p>}
 
                                                         {renderFieldError('price_min') }
@@ -1262,6 +1332,7 @@ function AddBuyerDetails (){
                                                     <div className="form-group">
                                                         <input type="text" name="price_max" className="form-control" placeholder="Price (max)" {
                                                         ...register("price_max", {
+                                                            onChange:(e)=>{setPriceMax(e.target.value)},
                                                             required: "Price (max) is required",
                                                             validate: {
                                                                 matchPattern: (v) =>
@@ -1269,9 +1340,10 @@ function AddBuyerDetails (){
                                                                 "Please enter valid number",
                                                                 maxLength: (v) =>
                                                                 v.length <= 10 || "The digit should be less than equal 10",
+                                                                positiveNumber: (v) => parseFloat(v) >= priceMin || "The Price (max) should be greater than or equal Price (min)"
                                                             },
                                                         })
-                                                        } />
+                                                        } onKeyUp={()=>{handleChangeErrorMessage('price')}} />
                                                          {errors.price_max && <p className="error">{errors.price_max?.message}</p>}
 
                                                         {renderFieldError('price_max') }

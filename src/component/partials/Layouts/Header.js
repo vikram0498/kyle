@@ -120,8 +120,9 @@ function Header() {
 											</Link>
 										</li>
 										<li>
-											<a className="dropdown-item" href="/support"><img src="./assets/images/messages.svg" className="img-fluid" />Support
-											</a>
+											<Link className="dropdown-item" to="/support">
+												<img src="./assets/images/messages.svg" className="img-fluid" />My Support
+											</Link>
 										</li>
 										<li>
 											<a className="dropdown-item" style={{ cursor: "pointer" }} onClick={setLogout}>

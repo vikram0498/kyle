@@ -105,7 +105,7 @@ const AutoSuggestionAddress = ({data}) =>{
         <>
             <label>Address</label>
             <div className="form-group address-selectbox">
-                <input type="text" className="address-box form-control" placeholder="Type to search.." name="address" value={data.address} onChange={handleSearchKeyup} autoComplete='off'/>
+                <input type="text" className="address-box form-control" placeholder="Enter Address" name="address" value={data.address} onChange={handleSearchKeyup} autoComplete='off'/>
                 <input type="reset" className="reset-button" value="" alt="Clear the search form" onClick={handleResetSearchBox} style={{display:'none'}}/>
                 <div className="autocom-box" style={{display:'none'}}>
                 </div>

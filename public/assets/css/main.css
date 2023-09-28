@@ -2063,6 +2063,9 @@ margin-top: 0px;
     height: 100vh;
     padding: 40px 6px
 }
+.linkExpire.successfull .expireImg{
+    max-width: 200px;
+}
 
 .linkExpire .heading {
     font-size: 30px;
@@ -2078,7 +2081,8 @@ margin-top: 0px;
 }
 
 .linkExpire .cards {
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)
+    /* box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) */
+    box-shadow: 0 0rem 1rem rgba(0, 0, 0, .15)
 }
 
 .linkExpire .cards .cardBody{

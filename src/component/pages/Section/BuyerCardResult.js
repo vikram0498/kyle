@@ -5,7 +5,16 @@ import SentRequest from '../../partials/Modal/SentRequest';
 const BuyerCardResult = (props) => {
     console.log('re render 22');
     const {data,index,activeTab,handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag} = props;
-
+    let PreferenceIcons = './assets/images/contact-preferance.svg';
+    if(data.contact_preferance === 'Email'){
+        PreferenceIcons = './assets/images/Email-Preference.svg';
+    }else if(data.contact_preferance === 'Text'){
+        PreferenceIcons = './assets/images/Text-Preference.svg';
+    }else if(data.contact_preferance === 'Call'){
+        PreferenceIcons = './assets/images/Call-Preference.svg';
+    }else if(data.contact_preferance === 'No Preference'){
+        PreferenceIcons = './assets/images/1.svg';
+    }
   return (
     <div className="col-12 col-lg-6" >
         <div className={"property-critera-block property-section-"+data.id}>
@@ -69,7 +78,7 @@ const BuyerCardResult = (props) => {
                     </li>
                     <li>
                         <span className="detail-icon">
-                            <img src="./assets/images/contact-preferance.svg" className="img-fluid" />
+                            <img src={PreferenceIcons} className="img-fluid" />
                         </span>
                         <span className="name-dealer">{data.contact_preferance}</span>
                     </li>
