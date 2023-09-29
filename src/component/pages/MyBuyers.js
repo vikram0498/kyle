@@ -111,7 +111,7 @@ const MyBuyer = () =>{
                 const unLikeCount = addLoaderParent.querySelectorAll('.unlike-span')[0];
                 likeCount.innerHTML = response.data.data.totalBuyerLikes;
                 unLikeCount.innerHTML = response.data.data.totalBuyerUnlikes;
-				toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+				//toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
             }
         }catch(error){
             if(error.response) {
@@ -183,6 +183,7 @@ const MyBuyer = () =>{
 
 	const handleDoubleClick = async (buyerid) => {
 		try{
+			
 			let userId = getLocalStorageUserdata().id;
 			const apiUrl = process.env.REACT_APP_API_URL;
             let headers = { 
@@ -192,7 +193,7 @@ const MyBuyer = () =>{
             };
             const response = await axios.delete(apiUrl+`del-like-unlike-buyer/${userId}/${buyerid}`,{headers: headers});
             if(response.data.status){
-                toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+                //toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
             }
 
         }catch(error){

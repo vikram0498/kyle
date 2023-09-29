@@ -2,13 +2,13 @@ import React from 'react'
 
 export default function BuyerCard({data, handleLikeClick,handleDisikeClick,handleClickEditFlag,index}) {
     let PreferenceIcons = './assets/images/contact-preferance.svg';
-    if(data.contact_preferance === 'Email'){
+    if(data.contact_preferance_id === 1){
         PreferenceIcons = './assets/images/Email-Preference.svg';
-    }else if(data.contact_preferance === 'Text'){
+    }else if(data.contact_preferance_id === 2){
         PreferenceIcons = './assets/images/Text-Preference.svg';
-    }else if(data.contact_preferance === 'Call'){
+    }else if(data.contact_preferance_id === 3){
         PreferenceIcons = './assets/images/Call-Preference.svg';
-    }else if(data.contact_preferance === 'No Preference'){
+    }else if(data.contact_preferance_id === 4){
         PreferenceIcons = './assets/images/1.svg';
     }
   return (

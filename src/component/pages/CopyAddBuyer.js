@@ -471,9 +471,9 @@ function CopyAddBuyer (){
                                                                 </div>
                                                             </div> */}
                                                             <div className="col-12 col-lg-12">
-                                                                <label>State</label>
+                                                                <label>State<span>*</span></label>
                                                                 <div className="form-group">
-                                                                <Select
+                                                                {/* <Select
                                                                     name="state"
                                                                     defaultValue=''
                                                                     options={stateOptions}
@@ -485,7 +485,7 @@ function CopyAddBuyer (){
                                                                     closeMenuOnSelect={false}
                                                                     isMulti
                                                                 />
-                                                                    {renderFieldError('state') }
+                                                                    {renderFieldError('state') } */}
                                                                     {/* <Select
                                                                         name="state"
                                                                         defaultValue=''
@@ -501,7 +501,7 @@ function CopyAddBuyer (){
                                                                         placeholder="Select State"
                                                                         closeMenuOnSelect={true}
                                                                     /> */}
-                                                                    {/* <Controller
+                                                                    <Controller
                                                                         control={control}
                                                                         name="state"
                                                                         rules={{ required: 'State is required' }}
@@ -517,33 +517,34 @@ function CopyAddBuyer (){
                                                                                 onChange(e)
                                                                                 handleCustum(e,'state')
                                                                             }}
+                                                                            isMulti
                                                                         />
                                                                         )}
                                                                     />
                                                                     {errors.state && <p className="error">{errors.state?.message}</p>}
-                                                                    {renderFieldError('state') } */}
+                                                                    {renderFieldError('state') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-lg-12">
-                                                                <label>City</label>
+                                                                <label>City<span>*</span></label>
                                                                 <div className="form-group">
-                                                                <Select
-                                                                    name="city"
-                                                                    defaultValue=''
-                                                                    options={cityOptions}
-                                                                    className="select"
-                                                                    isClearable={true}
-                                                                    isSearchable={true}
-                                                                    isDisabled={false}
-                                                                    isLoading={false}
-                                                                    onChange={handleCityChange}
-                                                                    isRtl={false}
-                                                                    value={city}
-                                                                    placeholder="Select City"
-                                                                    closeMenuOnSelect={false}
-                                                                    isMulti
-                                                                />
-                                                                    {renderFieldError('city') }
+                                                                    {/* <Select
+                                                                        name="city"
+                                                                        defaultValue=''
+                                                                        options={cityOptions}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        onChange={handleCityChange}
+                                                                        isRtl={false}
+                                                                        value={city}
+                                                                        placeholder="Select City"
+                                                                        closeMenuOnSelect={false}
+                                                                        isMulti
+                                                                    />
+                                                                    {renderFieldError('city') } */}
                                                                     {/* <Select
                                                                         name="city"
                                                                         defaultValue=''
@@ -559,7 +560,7 @@ function CopyAddBuyer (){
                                                                         placeholder="Select City"
                                                                         closeMenuOnSelect={true}
                                                                     /> */}
-                                                                    {/* <Controller
+                                                                    <Controller
                                                                         control={control}
                                                                         name="city"
                                                                         rules={{ required: 'City is required' }}
@@ -573,21 +574,26 @@ function CopyAddBuyer (){
                                                                             placeholder='Select City'
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
-                                                                                handleCustum(e,'city')
+                                                                                handleCityChange(e)
                                                                             }}
+                                                                            isMulti
                                                                         />
                                                                         )}
                                                                     />
-                                                                    {errors.city && <p className="error">{errors.city?.message}</p>} */}
+                                                                    {errors.city && <p className="error">{errors.city?.message}</p>}
 
                                                                     {renderFieldError('city') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                                <label>Company/LLC</label>
+                                                                <label>Company/LLC<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="text" className="form-control" name="company_name" placeholder="Company LLC" />
-                                                                    {renderFieldError('company_name') }
+                                                                    <input type="text" className="form-control" name="company_name" placeholder="Company LLC" {...register("company_name", { required: 'Company/LLC is required' , validate: {
+                                                                    maxLength: (v) =>
+                                                                    v.length <= 50 || "The Company/LLC should have at most 50 characters",
+                                                                } })}/>
+                                                                {errors.company_name && <p className="error">{errors.company_name?.message}</p>}
+                                                                {renderFieldError('company_name') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
@@ -715,12 +721,12 @@ function CopyAddBuyer (){
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                                            <label>Sewer</label>
+                                                                            <label>Sewage</label>
                                                                             <div className="form-group">
                                                                                 <Select
                                                                                     options={sewerOption}
                                                                                     name = 'sewer'
-                                                                                    placeholder='Select Sewer Type'
+                                                                                    placeholder='Select Sewage Type'
                                                                                     closeMenuOnSelect={true}
                                                                                     isClearable={true}
                                                                                     isSearchable={true}
@@ -1385,30 +1391,30 @@ function CopyAddBuyer (){
                                                             </div>
                                                             { mobileHomeParkSelected && 
                                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                                    <label>Park </label>
+                                                                    <label>Park Owned/Tenant Owned </label>
                                                                     <div className="form-group">
                                                                         <Select
                                                                             name="park"
                                                                             options={parkOption}
-                                                                            placeholder='Select Park'
+                                                                            placeholder='Select Park Owned/Tenant Owned'
                                                                             isClearable={true}
                                                                         />
-                                                                        {renderFieldError('parking') }
+                                                                        {renderFieldError('park') }
                                                                     </div>
                                                                 </div>
                                                             }
                                                     
                                                             <div className="col-12 col-lg-12">
                                                                 <div className="form-group">
-                                                                    <label>Property Flaws</label>
+                                                                    <label>Location Flaws</label>
                                                                     <div className="form-group">
                                                                         <MultiSelect 
-                                                                            name="property_flaw"
+                                                                            name="location_flaw"
                                                                             options={locationFlawsOption} 
-                                                                            placeholder='Select Property Flaws'
+                                                                            placeholder='Select Location Flaws'
                                                                             setMultiselectOption = {setLocationFlawsValue}
                                                                         />
-                                                                        {renderFieldError('property_flaw') }
+                                                                        {renderFieldError('location_flaw') }
                                                                     </div>
                                                                 </div>
                                                             </div>
