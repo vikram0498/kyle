@@ -57,6 +57,8 @@ Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
 
 Route::get('single-buyer-form-details/{formType?}', [BuyerController::class, 'singleBuyerFormElementValues']);
 
+Route::get('get-contact-preferance', [HomeController::class, 'getContactPreferance']);
+
 Route::get('getCountries', [BuyerController::class, 'getCountries']);
 
 Route::post('getStates', [BuyerController::class, 'getStates']);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class support extends Model
+class Support extends Model
 {
     use SoftDeletes;
 
@@ -21,8 +21,10 @@ class support extends Model
     protected $fillable = [
         'name',
         'email',
-        'title',
+        'phone_number',
+        'contact_preferance',
         'message',
+        'created_by',
     ];
 
     protected static function boot () 

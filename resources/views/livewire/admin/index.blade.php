@@ -69,7 +69,7 @@
                               <tr>
                                  <td>
                                     
-                                       <span>{{ $purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name}}</span>
+                                       <span>{{ ucwords($purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name)}}</span>
                                     
                                     <td>
                                        

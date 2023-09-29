@@ -120,7 +120,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function purchasedBuyers()
     {
-        return $this->hasMany(PurchasedBuyer::class);
+        return $this->hasMany(PurchasedBuyer::class,'user_id','id');
     }
 
     public function paymentToken(){

@@ -55,17 +55,36 @@ class HomeController extends Controller
         }
        
     }
+
+    public function getContactPreferance(){
+        $elementValues['contact_preferances'] = collect(config('constants.contact_preferances'))->map(function ($label, $value) {
+            return [
+                'value' => $value,
+                'label' => ucwords(strtolower($label)),
+            ];
+        })->values()->all();
+
+        //Return Error Response
+        $responseData = [
+            'status'        => true,
+            'result'        => $elementValues,
+        ];
+        return response()->json($responseData, 200);
+    }
+
     public function support(SupportRequest $request){
         try{
             
             DB::beginTransaction();
             $validatedData['name'] = $request->name;
             $validatedData['email'] = $request->email;
+            $validatedData['phone_number'] = $request->phone_number;
+            $validatedData['contact_preferance'] = $request->contact_preferance;
             $validatedData['message'] = $request->message;
             $createdBuyer = Support::create($validatedData);
             $responseData = [
                 'status'        => true,
-                'success'       => "Request submitted successfully",
+                'message'       => "Request submitted successfully",
             ];
             DB::commit();
             return response()->json($responseData, 200);

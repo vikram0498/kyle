@@ -10,10 +10,17 @@
         @if(auth()->user()->is_admin)            
 
             @can('user_access')
-            <li class="nav-item {{ request()->is('admin/seller') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.seller') }}">
                     <i class="icon-grid menu-icon fa-solid fa-users"></i>
                     <span class="menu-title"> {{ __('cruds.user.title') }} </span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ request()->is('admin/deleted') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.deleted-users') }}">
+                    <i class="icon-grid menu-icon fas fa-users-slash"></i>
+                    <span class="menu-title"> {{__('global.deleted')}} {{ __('cruds.user.title') }} </span>
                 </a>
             </li>
             @endcan
@@ -25,7 +32,7 @@
                 </a>
             </li>
             
-            {{-- @can('transaction_access')
+            @can('transaction_access')
             <li class="nav-item {{ request()->is('admin/transactions') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.transactions') }}">
                     <i class="icon-grid menu-icon fab fa-cc-stripe"></i>
@@ -33,7 +40,7 @@
                     <span class="menu-title"> {{ __('cruds.transaction.title') }} </span>
                 </a>
             </li>
-            @endcan --}}
+            @endcan
 
             @can('buyer_access')            
             <li class="nav-item">
@@ -111,6 +118,16 @@
                     </ul>
                 </div>
             </li> 
+
+
+            @can('support_access')
+            <li class="nav-item {{ request()->is('admin/supports') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.supports') }}">
+                    <i class="icon-grid menu-icon fas fa-headset"></i>
+                    <span class="menu-title"> {{ __('cruds.support.title') }} </span>
+                </a>
+            </li>
+            @endcan
 
         @endif
     </ul>

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->tinyInteger('contact_preferance')->nullable();
             $table->longText('message')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('created_by')->default(null)->nullable();

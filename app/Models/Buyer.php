@@ -115,4 +115,14 @@ class Buyer extends Model
     {
         return $this->hasMany(PurchasedBuyer::class, 'buyer_id');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(UserBuyerLikes::class, 'buyer_id')->where('liked',1);
+    }
+
+    public function unlikes()
+    {
+        return $this->hasMany(UserBuyerLikes::class, 'buyer_id')->where('disliked',1);
+    }
 }

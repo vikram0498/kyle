@@ -791,6 +791,7 @@ class BuyerController extends Controller
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers'){
                         $buyer->name =  $name;
+                        $buyer->contact_preferance_id = $buyer->contact_preferance;
                         $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
@@ -810,6 +811,8 @@ class BuyerController extends Controller
 
                         $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         
+                        $buyer->contact_preferance_id = $buyer->contact_preferance;
+
                         $buyer->contact_preferance = substr($contactPreference, 0, 1).str_repeat("X", strlen($contactPreference)-1);
 
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
@@ -1070,7 +1073,7 @@ class BuyerController extends Controller
             // Check if validation fails
             if ($validator->fails()) {
                 //Error Response Send
-             $responseData = [
+            $responseData = [
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
@@ -1086,6 +1089,9 @@ class BuyerController extends Controller
                 // $buyer->redFlagedData()->sync($redFlagRecord);
                 $buyer->redFlagedData()->attach($redFlagRecord);
 
+                $buyer->updated_at = \Carbon\Carbon::now();
+
+                $buyer->save();
                 DB::commit();
                 //Return Success Response
                 $responseData = [
@@ -1206,6 +1212,10 @@ class BuyerController extends Controller
                     $flag = true;
                 }
 
+                $fetchBuyer->updated_at = \Carbon\Carbon::now();
+
+                $fetchBuyer->save();
+
                 DB::commit();
     
                 if($flag){
@@ -1268,6 +1278,10 @@ class BuyerController extends Controller
         try {
             $fetchBuyer = Buyer::find($request->buyer_id);
             if($fetchBuyer){            
+                
+                $fetchBuyer->updated_at = \Carbon\Carbon::now();
+
+                $fetchBuyer->save();
                 
                 $flag = false;
                 $entryExists = UserBuyerLikes::where('user_id',$user_id)->where('buyer_id',$buyer_id)->exists();               
@@ -1559,6 +1573,9 @@ class BuyerController extends Controller
                 
                 $name = $buyer->first_name.' '.$buyer->last_name;
                 $buyer->name =  $name;
+
+                $buyer->contact_preferance_id = $buyer->contact_preferance;
+
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);

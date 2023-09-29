@@ -99,7 +99,7 @@ class Index extends Component
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->state['price_min']) ? new CheckMaxValue($this->state['price_min'], 'price_min') : ''], 
 
-            'parking' => ['nullable','numeric','in:'.implode(',', array_keys($this->parkingValues))],
+            'parking' => ['required','numeric','in:'.implode(',', array_keys($this->parkingValues))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys($this->propertyTypes))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys($this->propertyFlaws))],
             'buyer_type' => ['required','numeric', 'in:'.implode(',', array_keys($this->buyerTypes))],

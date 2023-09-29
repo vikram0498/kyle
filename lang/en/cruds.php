@@ -126,7 +126,7 @@ return [
             'arv_max'                       => 'ARV (max)',
             'parking'                       => 'Parking',
             'property_type'                 => 'Property Type',
-            'property_flaw'                 => 'Property Flaw',
+            'property_flaw'                 => 'Property Flaws',
             'solar'                         => 'Solar ',
             'pool'                          => 'Pool',
             'septic'                        => 'Septic',
@@ -245,5 +245,19 @@ return [
             'payment_method' => 'Payment Method',
             'status'         => 'Status',
         ],
+    ],
+
+    'support'=>[
+        'title'=>'Supports',
+        'title_singular'=>'Support',
+        'fields'=>[
+            'name'  => 'Name',
+            'email' => 'Email',
+            'phone_number' => 'Phone Number',
+            'contact_preferance' => 'Contact Preferance',
+            'message' => 'Message',
+            'created_at' => 'Created At',
+        ]
+
     ]
 ];

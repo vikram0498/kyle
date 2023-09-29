@@ -23,7 +23,7 @@ class BuyerDatatable extends LivewireDatatable
 
     public function builder()
     {
-        return Buyer::query()->orderBy('created_at','desc');
+        return Buyer::query()->orderBy('updated_at','desc');
     }
   
     /**
@@ -50,11 +50,15 @@ class BuyerDatatable extends LivewireDatatable
             })->label(trans('cruds.buyer.fields.status'))->sortable(),
 
             Column::callback(['id', 'size_min'], function ($id) {
-                return 0;
+                $buyer = Buyer::find($id);
+
+                return $buyer->likes()->count();
             })->label(trans('cruds.buyer.fields.like'))->unsortable(),
 
-            Column::callback(['id', 'size_max'], function () {
-                return 0;
+            Column::callback(['id', 'size_max'], function ($id) {
+                $buyer = Buyer::find($id);
+
+                return $buyer->unlikes()->count();
             })->label(trans('cruds.buyer.fields.dislike'))->unsortable(),
 
             Column::callback(['id', 'is_ban'], function ($id, $isBan) {

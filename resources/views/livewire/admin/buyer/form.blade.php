@@ -35,19 +35,9 @@
                 </div>
             </div>
             
-            <!-- <div class="col-md-12">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.address')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.address" placeholder="{{ __('cruds.buyer.fields.address')}}" autocomplete="off" >
-                    @error('address') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div> -->
-           
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} 
-                        </label>
-                    <!-- <input type="text" class="form-control" wire:model.defer="state.state" placeholder="{{ __('cruds.buyer.fields.state')}}" > -->
+                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} </label>
                    <div wire:ignore> 
                         <select wire:model.defer="state.state" id="state" class="form-control state select2"  data-property="state" data-placeholder="Select {{ __('cruds.buyer.fields.state')}}">
                             <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
@@ -72,21 +62,7 @@
                     <!-- </div> -->
                     @error('city') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
-            </div>       
-            <!-- <div class="col-md-3">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.zip_code')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.zip_code" placeholder="{{ __('cruds.buyer.fields.zip_code')}}" autocomplete="off"  onkeydown="return (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.code) ? true : (!isNaN(Number(event.key))) && event.code !== 'Space' && this.value.length < 9)">
-                    @error('zip_code') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div> -->
-            <!--<div class="col-md-4">
-                <div class="form-group">
-                    <label for="country" class="font-weight-bold">{{ __('cruds.buyer.fields.country')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.country" disabled>
-                    @error('country') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div> -->                       
+            </div>                        
             
             <div class="col-md-4">
                 <div class="form-group">
@@ -135,6 +111,46 @@
                     @error('property_type') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
+
+            @if(isset($state['property_type']) && in_array(7,$state['property_type']))
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}} </label>
+                        <select class="form-control zoning select2" wire:model.defer="state.zoning" data-property="zoning" multiple data-placeholder="Select {{ __('cruds.buyer.fields.zoning')}}">
+                            @foreach ($zonings as $key=>$item)
+                                <option value="{{$key}}"> {{$item}}</option>
+                            @endforeach
+                        </select>
+                        @error('zoning') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.utilities')}}</label>
+                        <select class="form-control" wire:model.defer="state.utilities">
+                            <option value="null">Select {{ __('cruds.buyer.fields.utilities')}}</option>
+                            @foreach ($utilities as $key=>$item)
+                                <option value="{{$key}}"> {{$item}}</option>
+                            @endforeach
+                        </select>
+                        @error('utilities') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.sewer')}}</label>
+                        <select class="form-control" wire:model.defer="state.sewer">
+                            <option value="null">Select {{ __('cruds.buyer.fields.sewer')}}</option>
+                            @foreach ($sewers as $key=>$item)
+                                <option value="{{$key}}"> {{$item}}</option>
+                            @endforeach
+                        </select>
+                        @error('sewer') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+            @endif
 
             @if($multiFamilyBuyer)
             <!-- Multi Family Buyer -->
@@ -195,8 +211,170 @@
                     @error('purchase_method') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>            
             </div>
+            
+            
+            @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(14, $state['property_type']))
+
+                @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(15, $state['property_type']))
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_min')}} <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" wire:model.defer="state.bedroom_min" placeholder="{{ __('cruds.buyer.fields.bedroom_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                            @error('bedroom_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_max')}} <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" wire:model.defer="state.bedroom_max" placeholder="{{ __('cruds.buyer.fields.bedroom_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                            @error('bedroom_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_min')}} <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" wire:model.defer="state.bath_min" placeholder="{{ __('cruds.buyer.fields.bath_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                            @error('bath_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_max')}} <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" wire:model.defer="state.bath_max" placeholder="{{ __('cruds.buyer.fields.bath_max')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                            @error('bath_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                @endif
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_min')}} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" wire:model.defer="state.size_min" placeholder="{{ __('cruds.buyer.fields.size_min')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                        @error('size_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_max')}} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" wire:model.defer="state.size_max"  placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                        @error('size_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+
+                @if(isset($state['property_type']) && in_array(15,$state['property_type']))
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.rooms')}} </label>
+                        <input type="number" class="form-control" wire:model.defer="state.rooms" placeholder="{{ __('cruds.buyer.fields.rooms')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                        @error('rooms') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                @endif
+            
+            @endif
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                        @error('lot_size_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                        @error('lot_size_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+
+            @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(14, $state['property_type']))
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_min')}} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_min" data-property="build_year_min" placeholder="{{ __('cruds.buyer.fields.build_year_min')}}" id="build_year_min" autocomplete="off"  min="0" data-provide="datepicker" data-date-format="yyyy">
+                        @error('build_year_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+
+            
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_max')}} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_max" data-property="build_year_max" placeholder="{{ __('cruds.buyer.fields.build_year_max')}}" id="build_year_max" autocomplete="off"  min="0">
+                        @error('build_year_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+            @endif
+           
+
+           
+
+            @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(7, $state['property_type']) && !in_array(14, $state['property_type']))
+            <div class="col-md-3">
+                <div class="form-group" id="stories_min">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_min')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.stories_min" placeholder="{{ __('cruds.buyer.fields.stories_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('stories_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group" id="stories_max">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_max')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.stories_max" placeholder="{{ __('cruds.buyer.fields.stories_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('stories_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            @endif
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_min')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.price_min" placeholder="{{ __('cruds.buyer.fields.price_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 15">
+                    @error('price_min') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_max')}} <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" wire:model.defer="state.price_max" placeholder="{{ __('cruds.buyer.fields.price_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
+                    @error('price_max') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}}<span class="text-danger">*</span></label>
+                    <div wire:ignore>
+                        <select wire:model.defer="state.parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}">
+                            <option value="">Select {{ __('cruds.buyer.fields.parking')}}</option>
+                            @foreach($parkingValues as $key => $value)
+                                <option value="{{ $key }}"> {{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('parking') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+       
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
+                    <div wire:ignore>
+                        <select wire:model.defer="state.buyer_type"  class="form-control select2 buyer_type" data-property="buyer_type" data-placeholder="Select {{ __('cruds.buyer.fields.buyer_type')}}" >
+                            <option value="">Select {{ __('cruds.buyer.fields.buyer_type')}}</option>
+                            @foreach($buyerTypes as $key => $value)
+                                <option value="{{ $key }}"> {{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('buyer_type') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+            </div>
+            
             @if(isset($state['property_type']) && in_array(14,$state['property_type']))
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.park')}} </label>
                     <select class="form-control" wire:model.defer="state.park">
@@ -209,174 +387,6 @@
                 </div>
             </div>
             @endif
-
-            @if(isset($state['property_type']) && in_array(15,$state['property_type']))
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.rooms')}} </label>
-                    <input type="number" class="form-control" wire:model.defer="state.rooms" placeholder="{{ __('cruds.buyer.fields.rooms')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('rooms') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            @endif
-
-         {{--
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.occupation')}} </label>
-                    <input type="text" class="form-control" wire:model.defer="state.occupation" placeholder="{{ __('cruds.buyer.fields.occupation')}}" >
-                    @error('occupation') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.replacing_occupation')}}</label>
-                    <input type="text" class="form-control" wire:model.defer="state.replacing_occupation" placeholder="{{ __('cruds.buyer.fields.replacing_occupation')}}" autocomplete="off" >
-                    @error('replacing_occupation') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            
-            --}}
-            
-            @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(14, $state['property_type']))
-                @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(15, $state['property_type']))
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bedroom_min" placeholder="{{ __('cruds.buyer.fields.bedroom_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('bedroom_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bedroom_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bedroom_max" placeholder="{{ __('cruds.buyer.fields.bedroom_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('bedroom_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bath_min" placeholder="{{ __('cruds.buyer.fields.bath_min')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('bath_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.bath_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.bath_max" placeholder="{{ __('cruds.buyer.fields.bath_max')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('bath_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-                @endif
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.size_min" placeholder="{{ __('cruds.buyer.fields.size_min')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('size_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.size_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.size_max"  placeholder="{{ __('cruds.buyer.fields.size_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('size_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_min')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_min" data-property="build_year_min" placeholder="{{ __('cruds.buyer.fields.build_year_min')}}" id="build_year_min" autocomplete="off"  min="0" data-provide="datepicker" data-date-format="yyyy">
-                    @error('build_year_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-
-            
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.build_year_max')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control datepicker" wire:model.defer="state.build_year_max" data-property="build_year_max" placeholder="{{ __('cruds.buyer.fields.build_year_max')}}" id="build_year_max" autocomplete="off"  min="0">
-                    @error('build_year_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            @endif
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.lot_size_min" placeholder="{{ __('cruds.buyer.fields.lot_size_min')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('lot_size_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.lot_size_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.lot_size_max" placeholder="{{ __('cruds.buyer.fields.lot_size_max')}}"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('lot_size_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <!-- <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.arv_min')}}</label>
-                    <input type="number" class="form-control" wire:model.defer="state.arv_min" placeholder="{{ __('cruds.buyer.fields.arv_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('arv_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.arv_max')}}</label>
-                    <input type="number" class="form-control" wire:model.defer="state.arv_max" placeholder="{{ __('cruds.buyer.fields.arv_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('arv_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div> -->
-
-            @if(!isset($state['property_type']) || isset($state['property_type']) && !in_array(7, $state['property_type']) && !in_array(14, $state['property_type']))
-            <div class="col-md-4">
-                <div class="form-group" id="stories_min">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.stories_min" placeholder="{{ __('cruds.buyer.fields.stories_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('stories_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group" id="stories_max">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.stories_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.stories_max" placeholder="{{ __('cruds.buyer.fields.stories_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('stories_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            @endif
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_min')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.price_min" placeholder="{{ __('cruds.buyer.fields.price_min')}}" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 15">
-                    @error('price_min') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.price_max')}} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" wire:model.defer="state.price_max" placeholder="{{ __('cruds.buyer.fields.price_max')}}" autocomplete="off" min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
-                    @error('price_max') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}}</label>
-                    <div wire:ignore>
-                        <select wire:model.defer="state.parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}">
-                            <option value="">Select {{ __('cruds.buyer.fields.parking')}}</option>
-                            @foreach($parkingValues as $key => $value)
-                                <option value="{{ $key }}"> {{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('parking') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
             
             <div class="col-md-12">
                 <div class="form-group">
@@ -392,67 +402,6 @@
                 </div>
             </div>
         </div>       
-        
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
-                    <div wire:ignore>
-                        <select wire:model.defer="state.buyer_type"  class="form-control select2 buyer_type" data-property="buyer_type" data-placeholder="Select {{ __('cruds.buyer.fields.buyer_type')}}" >
-                            <option value="">Select {{ __('cruds.buyer.fields.buyer_type')}}</option>
-                            @foreach($buyerTypes as $key => $value)
-                                <option value="{{ $key }}"> {{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @error('buyer_type') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-        </div>
-                
-        @if(isset($state['property_type']) && in_array(7,$state['property_type']))
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}} </label>
-                    <select class="form-control zoning select2" wire:model.defer="state.zoning" data-property="zoning" multiple data-placeholder="Select {{ __('cruds.buyer.fields.zoning')}}">
-                        @foreach ($zonings as $key=>$item)
-                            <option value="{{$key}}"> {{$item}}</option>
-                        @endforeach
-                    </select>
-                    @error('zoning') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.utilities')}}</label>
-                    <select class="form-control" wire:model.defer="state.utilities">
-                        <option value="null">Select {{ __('cruds.buyer.fields.utilities')}}</option>
-                        @foreach ($utilities as $key=>$item)
-                            <option value="{{$key}}"> {{$item}}</option>
-                        @endforeach
-                    </select>
-                    @error('utilities') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.sewer')}}</label>
-                    <select class="form-control" wire:model.defer="state.sewer">
-                        <option value="null">Select {{ __('cruds.buyer.fields.sewer')}}</option>
-                        @foreach ($sewers as $key=>$item)
-                            <option value="{{$key}}"> {{$item}}</option>
-                        @endforeach
-                    </select>
-                    @error('sewer') <span class="error text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
-
-        </div>
-        @endif
-        
         
         <div class="row">           
             @php

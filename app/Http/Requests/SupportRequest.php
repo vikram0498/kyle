@@ -52,8 +52,10 @@ class SupportRequest extends FormRequest
     {
         $rules = [
             'name'  => ['required'], 
-            'email'       => ['required', 'email:dns'],
-            'message'       => ['required'], 
+            'email'         => ['required', 'email:dns'],
+            'phone_number'  => ['required','numeric','not_in:-'],
+            'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
+            'message'            => ['required'], 
         ];
         return $rules;
     }

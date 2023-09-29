@@ -11,6 +11,7 @@ return [
     'create'                               => 'Create',
     'dashboard'                            => 'Dashboard',
     'delete'                               => 'Delete',
+    'deleted'                              => 'Deleted',
     'downloadFile'                         => 'Download file',
     'edit'                                 => 'Edit',
     'emailVerificationSuccess'             => 'User email verified successfully',

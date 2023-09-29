@@ -1,7 +1,8 @@
-
+<div>
+    
 <h4 class="card-title">
     {{__('global.show')}}
-    {{ strtolower(__('cruds.user.title_singular'))}}</h4>
+    {{__('global.deleted')}} {{ strtolower(__('cruds.user.title_singular'))}}</h4>
 
     <table class="table table-design mb-4">
         <tr>
@@ -32,13 +33,17 @@
             <th width="25%">{{ __('cruds.user.fields.level_type')}}</th>
             <td> Level {{  $seller->level_type }}</td>
         </tr>
-        <tr>
+        <!-- <tr>
             <th width="25%">{{ __('cruds.user.fields.status')}}</th>
             <td> {{ ($seller->is_active ? 'Active' : 'Block') }}</td>
-        </tr>
+        </tr> -->
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
             <td> {{ $seller->created_at->format(config('constants.datetime_format')) }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('global.deleted_at')}}</th>
+            <td> {{ $seller->deleted_at->format(config('constants.datetime_format')) }}</td>
         </tr>
 
     </table>
@@ -53,3 +58,4 @@
    </div>
 
                
+</div>
