@@ -89,9 +89,10 @@ class Index extends Component
             'phone' => ['required', 'numeric', 'digits:10'], 
             // 'address' => ['required'], 
             // 'country' => ['required', 'exists:countries,name'], 
-            // 'state' => [/*'required', 'exists:states,id'*/], 
-            // 'city' => [/*'required', 'exists:cities,id'*/], 
-            
+            'state' => ['required', 'exists:states,id'], 
+            'city' => ['required', 'exists:cities,id'], 
+            'company_name' => ['required'], 
+
             // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
             'lot_size_min' => ['required','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
             'lot_size_max' => ['required', 'numeric', !empty($this->state['lot_size_min']) ? new CheckMaxValue($this->state['lot_size_min'], 'lot_size_min') : ''], 
@@ -148,13 +149,13 @@ class Index extends Component
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys($this->buildingClassValue))];
         }
 
-        if(isset($this->state['state']) && !empty($this->state['state'])){
-            $rules['state'] = ['exists:states,id'];
-        }
+        // if(isset($this->state['state']) && !empty($this->state['state'])){
+        //     $rules['state'] = ['exists:states,id'];
+        // }
 
-        if(isset($this->state['city']) && !empty($this->state['city'])){
-            $rules['city'] = ['exists:cities,id'];
-        }
+        // if(isset($this->state['city']) && !empty($this->state['city'])){
+        //     $rules['city'] = ['exists:cities,id'];
+        // }
 
         return $rules;
     }
@@ -185,8 +186,9 @@ class Index extends Component
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
                 'lot_size_max.required' => 'The lot size sq ft (max) field is required',
-                'market_preferance.required' => 'The market preference field is required',
+                'market_preferance.required' => 'The mls status field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
+                'company_name.required' => 'The company/llc field is required',
             ])->validate();
         } else {
             $rules = $this->rules();
@@ -198,15 +200,16 @@ class Index extends Component
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
                 'lot_size_max.required' => 'The lot size sq ft (max) field is required',
-                'market_preferance.required' => 'The market preference field is required',
+                'market_preferance.required' => 'The mls status field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
+                'company_name.required' => 'The company/llc field is required',
             ])->validate();
 
         }
     }
 
     public function render() {
-        $allStates =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->pluck('name', 'id');
+        $allStates =  DB::table('states')->where('country_id', 233)->orderBy('name', 'asc')->where('flag',1)->pluck('name', 'id');
         $allCities = $this->cities;
         return view('livewire.admin.buyer.index',compact('allStates','allCities'));
     }
@@ -222,7 +225,7 @@ class Index extends Component
     }
 
     public function store() {  
-        //dd($this->all());
+        // dd($this->all());
         $this->initializePlugins();   
         $this->validatiionForm();   
         
@@ -231,13 +234,13 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            // $this->state['state']   =  array_map('intval',$this->state['state']);
-            $this->state['state'] = [(int)$this->state['state']];
+            $this->state['state']   =  array_map('intval',$this->state['state']);
+            // $this->state['state'] = [(int)$this->state['state']];
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            // $this->state['city']    =  array_map('intval',$this->state['city']);
-            $this->state['city']       = [(int)$this->state['city']];
+            $this->state['city']    =  array_map('intval',$this->state['city']);
+            // $this->state['city']       = [(int)$this->state['city']];
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -265,6 +268,7 @@ class Index extends Component
             $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
         }
     
+        // dd($this->state);
         $createdBuyer = Buyer::create($this->state);
 
         if($createdBuyer){
@@ -325,14 +329,14 @@ class Index extends Component
         $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
                 
         if(isset($this->state['state']) && !empty($this->state['state'])){
-            // $this->state['state']   =  array_map('intval',[$this->state['state']]);
-            $this->state['state']   =  [(int)$this->state['state']];
+            $this->state['state']   =  array_map('intval',[$this->state['state']]);
+            // $this->state['state']   =  [(int)$this->state['state']];
         }
 
         if(isset($this->state['city']) && !empty($this->state['city'])){
-            // $this->state['city']    =  array_map('intval',[$this->state['city']]);
+            $this->state['city']    =  array_map('intval',[$this->state['city']]);
             
-            $this->state['city']    =  [(int)$this->state['city']];
+            // $this->state['city']    =  [(int)$this->state['city']];
         }
 
         if(isset($this->state['zoning']) && !empty($this->state['zoning'])){

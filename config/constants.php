@@ -136,7 +136,8 @@ return [
 
     'sewers' => [
         1 => 'Septic',
-        2 => 'None',
+        2 => 'Sewer',
+        3 => 'None',
     ],
 
     'market_preferances' => [

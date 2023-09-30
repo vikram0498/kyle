@@ -69,7 +69,7 @@
             theme: "classic"
         });
 
-        $('.country, .parking, .state,.city,.buyer_type').select2();
+        $('.country, .parking, .buyer_type').select2();
 
        
         $(document).ready(function () {

@@ -78,8 +78,8 @@ class BuyersImport implements ToModel, WithStartRow
                             
                             $buyerArr['country'] = $countryId;
 
-                            $buyerArr['city'] = $cityId  ? $cityId : NULL;
-                            $buyerArr['state'] = $stateId ? $stateId : NULL;
+                            $buyerArr['city'] = $cityId  ? $cityId->toArray() : NULL;
+                            $buyerArr['state'] = $stateId ? $stateId->toArray() : NULL;
                                                          
                             $companyName = strtolower($this->modifiedString($row[6]));
                             $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
@@ -96,8 +96,11 @@ class BuyersImport implements ToModel, WithStartRow
 
                             $stories_min         = strtolower($this->modifiedString($row[47]));      $stories_max          = strtolower($this->modifiedString($row[48]));
 
+
                             if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($stories_min) && !empty($stories_min)){
+
                                 if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($stories_min) && is_numeric($stories_max)){
+
 
                                     $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
                                     $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);                                    
@@ -125,6 +128,7 @@ class BuyersImport implements ToModel, WithStartRow
 
                                     $buyerArr['stories_min']      = $stories_min;       
                                     $buyerArr['stories_max']      = $stories_max;
+
 
                                     $propertyType = strtolower($this->modifiedString($row[18])); 
                                     if(!empty($propertyType) && $propertyType != 'blank'){
@@ -168,6 +172,7 @@ class BuyersImport implements ToModel, WithStartRow
                                             $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
                                            
                                             $buyerType = strtolower($this->modifiedString($row[34])); 
+
                                             if(!empty($buyerType) && $buyerType != 'blank'){
                                                 $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
                                                 

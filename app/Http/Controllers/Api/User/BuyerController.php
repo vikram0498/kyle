@@ -43,7 +43,7 @@ class BuyerController extends Controller
     //    $country_id = $request->country_id;
         $country_id = 233;
         //Return Success Response
-        $states = DB::table('states')->where('country_id',$country_id)->orderBy('name','ASC')->pluck('name','id');
+        $states = DB::table('states')->where('country_id',$country_id)->orderBy('name','ASC')->where('flag',1)->pluck('name','id');
 
         $options = $states->map(function ($label, $value) {
             return [

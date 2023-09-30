@@ -16,13 +16,15 @@ class BuyerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(6, 'desc');
+        // $this->sort(6, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
 
     public function builder()
     {
+        // dd($this->sort);
+        // return Buyer::query();
         return Buyer::query()->orderBy('updated_at','desc');
     }
   
@@ -36,7 +38,7 @@ class BuyerDatatable extends LivewireDatatable
         return [
             Column::callback(['id'], function ($id) {
                 return $id;
-            })->sortable()->defaultSort('desc')->hide(),
+            })->sortable()/*->defaultSort('desc')*/->hide(),
             
             Column::index($this)->unsortable(),
             // Column::name('first_name')->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
@@ -45,9 +47,9 @@ class BuyerDatatable extends LivewireDatatable
                 return ucfirst($firstName).' '. ucfirst($lastName);
             })->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
 
-            Column::callback(['id', 'status'], function ($id, $status) {
+            NumberColumn::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Block']);
-            })->label(trans('cruds.buyer.fields.status'))->sortable(),
+            })->label(trans('cruds.buyer.fields.status'))->unsortable(),
 
             Column::callback(['id', 'size_min'], function ($id) {
                 $buyer = Buyer::find($id);
@@ -69,7 +71,8 @@ class BuyerDatatable extends LivewireDatatable
                 
             })->label(trans('cruds.buyer.fields.flag_mark'))->unsortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()->defaultSort('desc'),
+            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()/*->defaultSort('desc')*/,
+
             Column::callback(['id', 'user_id'], function ($id, $user_id) {
                 $array = ['show', 'edit', 'delete'];
                 $buyer = Buyer::find($id);
