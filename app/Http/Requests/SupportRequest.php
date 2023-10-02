@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckMaxValue;
-use App\Rules\CheckMinValue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -17,10 +15,10 @@ class SupportRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
-        return true;
-    }
+    // public function authorize()
+    // {
+    //     return true;
+    // }
 
     /**
      * Handle a failed validation attempt.

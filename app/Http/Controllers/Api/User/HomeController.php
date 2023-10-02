@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\User;
 use App\Models\Plan;
 use App\Models\Addon;
 use App\Models\Video;
-use App\Models\Support;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupportRequest;
@@ -56,46 +55,6 @@ class HomeController extends Controller
        
     }
 
-    public function getContactPreferance(){
-        $elementValues['contact_preferances'] = collect(config('constants.contact_preferances'))->map(function ($label, $value) {
-            return [
-                'value' => $value,
-                'label' => ucwords(strtolower($label)),
-            ];
-        })->values()->all();
+    
 
-        //Return Error Response
-        $responseData = [
-            'status'        => true,
-            'result'        => $elementValues,
-        ];
-        return response()->json($responseData, 200);
-    }
-
-    public function support(SupportRequest $request){
-        try{
-            
-            DB::beginTransaction();
-            $validatedData['name'] = $request->name;
-            $validatedData['email'] = $request->email;
-            $validatedData['phone_number'] = $request->phone_number;
-            $validatedData['contact_preferance'] = $request->contact_preferance;
-            $validatedData['message'] = $request->message;
-            $createdBuyer = Support::create($validatedData);
-            $responseData = [
-                'status'        => true,
-                'message'       => "Request submitted successfully",
-            ];
-            DB::commit();
-            return response()->json($responseData, 200);
-        }catch(\Exception $e){
-            
-            DB::rollBack();
-            $responseData = [
-                'status'        => false,
-                'error'         => $e->getMessage(),
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
 }

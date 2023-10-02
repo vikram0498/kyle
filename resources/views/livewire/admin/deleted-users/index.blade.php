@@ -30,5 +30,22 @@
 @endpush
 
 @push('scripts')
-
+<script type="text/javascript">
+    $(document).on('click', '.resetUserBtn', function(e){
+        var _this = $(this);
+        var id = _this.attr('data-id');
+       
+        Swal.fire({
+            title: 'Are you sure you want to reset user it?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes, change it',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('resetUserBack', id);
+            }
+        })
+    })
+</script>
 @endpush

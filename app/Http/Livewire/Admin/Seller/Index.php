@@ -95,7 +95,8 @@ class Index extends Component
         $model = User::find($id);
         
         if($model){
-            PurchasedBuyer::where('user_id',$model->id)->delete();
+            $model->buyers()->delete();
+            PurchasedBuyer::where('user_id',$id)->delete();
             
             $model->delete();
             
@@ -132,5 +133,6 @@ class Index extends Component
     /* public function changeStatus($statusVal){
         $this->is_active = (!$statusVal) ? 1 : 0;
     } */
+
     
 }

@@ -40,10 +40,28 @@ class TransactionDatatable extends LivewireDatatable
 
             Column::index($this)->unsortable(),
 
-            Column::callback(['user_id'], function ($user) {
+            Column::name('payment_intent_id')->label('Payment Intent Id')->sortable()->searchable(),
 
-                return $user;
+            Column::callback(['user.name'], function ($name) {
+                return ucwords($name);
             })->label(trans('cruds.transaction.fields.user'))->sortable()->searchable(),
+
+            
+            Column::callback(['amount'], function ($amount) {
+                return "<i class='fa fa-dollar'></i>".number_format($amount,2);
+            })->label(trans('cruds.transaction.fields.amount'))->sortable()->searchable(),
+
+            Column::callback(['currency'],function($currency){
+                return strtoupper($currency);
+            })->label(trans('cruds.transaction.fields.currency'))->sortable()->searchable(),
+
+            Column::callback(['payment_method'],function($payment_method){
+                return ucwords($payment_method);
+            })->label(trans('cruds.transaction.fields.payment_method'))->sortable()->searchable(),
+
+            Column::callback(['status'],function($status){
+                return ucwords($status);
+            })->label(trans('cruds.transaction.fields.status'))->sortable()->searchable(),
 
         ];
     }

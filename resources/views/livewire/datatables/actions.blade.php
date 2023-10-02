@@ -20,4 +20,9 @@
         </button>
         <span class="badge badge-dark badge-counter">{{ $buyerFlagCount }}</span>
     @endif
+    @if(isset($events) && in_array('reset_user_btn', $events))
+        <button style="cursor:pointer;" data-id="{{$id}}" class="btn btn-success btn-rounded btn-icon resetUserBtn">
+            <i class="fas fa-user-plus"></i>
+        </button>
+    @endif
 </div>

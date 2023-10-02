@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\BuyerController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\PaymentController;
+use App\Http\Controllers\Api\User\SupportController;
 
 
 /*
@@ -57,8 +58,6 @@ Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
 
 Route::get('single-buyer-form-details/{formType?}', [BuyerController::class, 'singleBuyerFormElementValues']);
 
-Route::get('get-contact-preferance', [HomeController::class, 'getContactPreferance']);
-
 Route::get('getCountries', [BuyerController::class, 'getCountries']);
 
 Route::post('getStates', [BuyerController::class, 'getStates']);
@@ -68,6 +67,10 @@ Route::post('getCities', [BuyerController::class, 'getCities']);
 Route::post('store-single-buyer-details/{token}', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
 Route::get('check-token/{token}', [BuyerController::class, 'isValidateToken']);
+
+Route::get('get-contact-preferance', [SupportController::class, 'getContactPreferance']);
+
+Route::post('/support', [SupportController::class, 'support']);
 
 Route::group(['middleware' => ['api','auth:sanctum']],function () { 
 
@@ -108,7 +111,6 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
 
-    Route::post('/support', [HomeController::class, 'support']);
 
     Route::get('config', [PaymentController::class, 'config']);
 

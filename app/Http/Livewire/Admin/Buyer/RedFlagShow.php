@@ -3,7 +3,11 @@
 namespace App\Http\Livewire\Admin\Buyer;
 
 use App\Models\Buyer;
+use App\Models\User;
 use Livewire\Component;
+use App\Mail\FlagRejectMail;
+use App\Mail\FlagResolvedMail;
+use Illuminate\Support\Facades\Mail;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class RedFlagShow extends Component
@@ -12,14 +16,42 @@ class RedFlagShow extends Component
 
     protected $layout = null;
     
-    public $data;
+    public $data,$buyerId,$userId;
+
+    public $first_name,$last_name,$email,$phone,$message;
+
+    public $isNameUpdate = false, $isEmailUpdate = false, $isPhoneUpdate =false;
 
     protected $listeners = [
-        'resolveAllFlag','resolveFlag', 'rejectFlag',
-     ];
+        'resolveAllFlag', 'rejectFlag','setIsNameUpdate','setIsEmailUpdate','setIsPhoneUpdate','setUserId',
+    ];
 
     public function mount($buyer_id){
+        $this->buyerId = $buyer_id;
         $this->data = Buyer::find($buyer_id);
+
+        $this->first_name = $this->data->first_name;
+        $this->last_name = $this->data->last_name;
+        $this->email = $this->data->email;
+        $this->phone = $this->data->phone;
+    }
+
+    public function setUserId($id){
+        $this->userId = $id;
+    }
+
+    public function setIsNameUpdate($isUpdate){
+        $this->isNameUpdate = $isUpdate;
+    }
+
+    
+    public function setIsEmailUpdate($isUpdate){
+        $this->isEmailUpdate = $isUpdate;
+    }
+
+    
+    public function setIsPhoneUpdate($isUpdate){
+        $this->isPhoneUpdate = $isUpdate;
     }
 
     public function render()
@@ -28,47 +60,100 @@ class RedFlagShow extends Component
     }
 
     public function cancel(){
+        $this->dispatchBrowserEvent('closed-modal');
         $this->emitUp('cancel');
     }
 
-    public function resolveAllFlag($id){
-        $buyer = Buyer::find($id);
-        
-        $buyer->redFlagedData()->wherePivot('buyer_id', $id)->update(['status' => 1]);
-        // $buyer->redFlagedData()->updateExistingPivot(['status' => 1]);
+    public function resolveAllFlag(){
+        $rules = [
+            'message' => 'required|string',
+        ];
 
-        $this->alert('success', trans("Buyer's all flag is resolved"));
+        if($this->isNameUpdate){
+            $rules['first_name'] = 'required|string';
+            $rules['last_name'] = 'required|string';
+        }
 
-        $this->cancel();
-    }
+        if($this->isEmailUpdate){
+            $rules['email'] = 'required|email:dns';
+        }
 
-    public function resolveFlag($data){
-        $buyer = Buyer::find($data['buyer_id']);
-        
-        // $buyer->redFlagedData()->wherePivot('buyer_id', $id)->update(['status' => 1]);
-        $buyer->redFlagedData()->updateExistingPivot($data['seller_id'], ['status' => 1]);        
+        if($this->isPhoneUpdate){
+            $rules['phone'] = 'required|numeric|digits:10';
+        }
 
-        $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
+        $validatedData = $this->validate($rules);
 
-        $this->alert('success', trans("Flag is resolved"));
+        try{
 
-        if($buyerFlagCount == 0){
+            $buyer = Buyer::find($this->buyerId);
+
+            if($this->isNameUpdate){
+                $buyer->first_name = ucwords($this->first_name);
+                $buyer->last_name = ucwords($this->last_name);
+            }
+
+            if($this->isEmailUpdate){
+                $buyer->email = $this->email;
+            }
+
+            if($this->isPhoneUpdate){
+                $buyer->phone = $this->phone;
+            }
+
+            $buyer->save();
+
+            $buyer->redFlagedData()->wherePivot('buyer_id', $this->buyerId)->wherePivot('user_id',$this->userId)->update(['status' => 1]);
+
+            
+            $getUserDetail = User::find($this->userId);
+            $email_id = $getUserDetail->email;
+            $name = $getUserDetail->name ?? null;
+            if($email_id && $name){
+                $subject = 'Resolved Issue';
+                Mail::to($email_id)->queue(new FlagResolvedMail($subject, $name,$this->message));
+            }
+
+            $this->reset(['buyerId','userId','first_name','last_name','email','phone','isNameUpdate','isEmailUpdate','isPhoneUpdate']);
+            $this->alert('success', trans("Buyer's all flag is resolved"));
+
             $this->cancel();
+    
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            $this->alert('error', 'Something went wrong!');
         }
     }
 
-    public function rejectFlag($data){
-        $buyer = Buyer::find($data['buyer_id']);
-        
-        // $buyer->redFlagedData()->wherePivot('buyer_id', $id)->update(['status' => 1]);
-        $buyer->redFlagedData()->updateExistingPivot($data['seller_id'], ['status' => 2]);
 
-        $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
+    public function rejectFlag(){
+        $rules = [
+            'message' => 'required|string',
+        ];
+
+        $validatedData = $this->validate($rules);
+
+        $buyer = Buyer::find($this->buyerId);
+
+        // $buyer->redFlagedData()->updateExistingPivot($data['seller_id'], ['status' => 2]);
+        $buyer->redFlagedData()->wherePivot('buyer_id', $this->buyerId)->wherePivot('user_id',$this->userId)->update(['status' => 2]);
+
+        // $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
+
+        $getUserDetail = User::find($this->userId);
+        $email_id = $getUserDetail->email;
+        $name = $getUserDetail->name ?? null;
+        if($email_id && $name){
+            $subject = 'Rejected Issue';
+            Mail::to($email_id)->queue(new FlagRejectMail($subject, $name,$this->message));
+        }
+
+        $this->reset(['buyerId','userId','first_name','last_name','email','phone','isNameUpdate','isEmailUpdate','isPhoneUpdate']);
 
         $this->alert('success', trans("Flag is rejected"));
 
-        if($buyerFlagCount == 0){
+        // if($buyerFlagCount == 0){
             $this->cancel();
-        }
+        // }
     }
 }

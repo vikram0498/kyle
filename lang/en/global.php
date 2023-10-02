@@ -123,6 +123,7 @@ return [
     'create_new_notification'              => 'Create new Notification',
     'create_new_report'                    => 'Create new report',
     'created_at'                           => 'Created At',
+    'created'                              => 'Created',
     'created_by'                           => 'Created by',
     'crud_date_field'                      => 'Crud date field',
     'crud_event_field'                     => 'Event label field',

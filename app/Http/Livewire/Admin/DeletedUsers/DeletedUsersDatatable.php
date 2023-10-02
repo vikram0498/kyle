@@ -44,7 +44,9 @@ class DeletedUsersDatatable extends LivewireDatatable
             })->sortable()->defaultSort('desc')->hide(),
             
             Column::index($this)->unsortable(),
-            Column::name('name')->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
+            Column::callback(['name'],function($name){
+                return  ucwords($name);
+            })->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
 
             // Column::callback(['id', 'is_active'], function ($id, $is_active) {
             //     return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $is_active, 'type' => 'is_active', 'onLable' => 'Active', 'offLable' => 'Block']);
@@ -59,12 +61,12 @@ class DeletedUsersDatatable extends LivewireDatatable
 
             NumberColumn::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->alignCenter()->sortable()->searchable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
 
-            DateColumn::name('deleted_at')->label(trans('global.deleted_at'))->sortable()->searchable(),
+            DateColumn::name('deleted_at')->label(trans('global.deleted'))->format(config('constants.date_format'))->sortable()->searchable(),
 
             Column::callback(['id', 'phone'], function ($id, $phone) {
-                $array = ['show'];
+                $array = ['show','reset_user_btn'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
             })->label(trans('global.action'))->unsortable(),
         ];

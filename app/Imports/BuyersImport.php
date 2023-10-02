@@ -92,9 +92,9 @@ class BuyersImport implements ToModel, WithStartRow
                             $lotSizeMin     = strtolower($this->modifiedString($row[13]));      $lotSizeMax      = strtolower($this->modifiedString($row[14]));
                             $buildYearMin   = strtolower($this->modifiedString($row[15]));      $buildYearMax    = strtolower($this->modifiedString($row[16]));
                           
-                            $priceMin         = strtolower($this->modifiedString($row[45]));      $priceMax          = strtolower($this->modifiedString($row[46]));
+                            $priceMin         = strtolower($this->modifiedString($row[44]));      $priceMax          = strtolower($this->modifiedString($row[45]));
 
-                            $stories_min         = strtolower($this->modifiedString($row[47]));      $stories_max          = strtolower($this->modifiedString($row[48]));
+                            $stories_min         = strtolower($this->modifiedString($row[46]));      $stories_max    = strtolower($this->modifiedString($row[47]));
 
 
                             if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($stories_min) && !empty($stories_min)){
@@ -140,9 +140,9 @@ class BuyersImport implements ToModel, WithStartRow
                                                 // set zoning value 
                                                 $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
                                                 // set utilities value 
-                                                $buyerArr = $this->setSingleSelectValues($row[50], 'utilities', $buyerArr);
+                                                $buyerArr = $this->setSingleSelectValues($row[49], 'utilities', $buyerArr);
                                                 // set sewer value 
-                                                $buyerArr = $this->setSingleSelectValues($row[51], 'sewer', $buyerArr);
+                                                $buyerArr = $this->setSingleSelectValues($row[50], 'sewer', $buyerArr);
                                             }
 
                                             // set parking value 
@@ -154,17 +154,17 @@ class BuyersImport implements ToModel, WithStartRow
                                             $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
 
                                             // // set market_preferance value 
-                                            $buyerArr = $this->setSingleSelectValues($row[52], 'market_preferance', $buyerArr);
+                                            $buyerArr = $this->setSingleSelectValues($row[51], 'market_preferance', $buyerArr);
 
                                             // // set contact_preferance value 
-                                            $buyerArr = $this->setSingleSelectValues($row[53], 'contact_preferance', $buyerArr);
+                                            $buyerArr = $this->setSingleSelectValues($row[52], 'contact_preferance', $buyerArr);
 
                                             // // set park value
-                                            $buyerArr = $this->setSingleSelectValues($row[55], 'park', $buyerArr);
+                                            $buyerArr = $this->setSingleSelectValues($row[54], 'park', $buyerArr);
                                            
 
                                             // set rooms value
-                                            $rooms        = strtolower($this->modifiedString($row[54])); 
+                                            $rooms        = strtolower($this->modifiedString($row[53])); 
                                             $rooms        = (empty($rooms) || $rooms == 'blank') ? NULL : (!is_numeric($rooms) ? NULL : $rooms);
                                             $buyerArr['rooms']       = $rooms;                                           
 
@@ -338,7 +338,7 @@ class BuyersImport implements ToModel, WithStartRow
                 return $buyerArr;
             }
         }else if($type == 'zoning'){
-            $zoning = strtolower($this->modifiedString($value[49]));
+            $zoning = strtolower($this->modifiedString($value[48]));
             if(empty($value) || $value == 'blank'){
                 $zoning = NULL;
             } else {
@@ -379,11 +379,11 @@ class BuyersImport implements ToModel, WithStartRow
 
     private function setRadioButtonValues($row, $buyerArr){
 
-        $squatters = strtolower($this->modifiedString($row[56]));
+        $squatters = strtolower($this->modifiedString($row[55]));
         $squatters = (($squatters == 'yes') ? 1 : (($squatters == 'no') ? 0 : NULL));
         $buyerArr['squatters'] = $squatters;
 
-        $permanent_affix = strtolower($this->modifiedString($row[57])); 
+        $permanent_affix = strtolower($this->modifiedString($row[56])); 
         $permanent_affix = (($permanent_affix == 'yes') ? 1 : (($permanent_affix == 'no') ? 0 : 0));
         $buyerArr['permanent_affix'] = $permanent_affix;
 

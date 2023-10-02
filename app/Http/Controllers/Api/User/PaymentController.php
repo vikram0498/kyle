@@ -89,6 +89,10 @@ class PaymentController extends Controller
                 $customer = Customer::retrieve($authUser->stripe_customer_id);
             }
 
+            $metadata = [
+                'plan'=>$planId,
+            ];
+
             if($request->type == 'addon'){
                 $sessionData = [
                     'payment_method_types' => ['card'],
@@ -112,7 +116,8 @@ class PaymentController extends Controller
                     ],
                     'mode' => 'payment',
                     'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
-                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
+                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL 
+                    'metadata'=>$metadata,
                 ];
             }else{
                 $sessionData = [
@@ -124,7 +129,8 @@ class PaymentController extends Controller
                     ],
                     'mode' => 'subscription',
                     'success_url' => env('FRONTEND_URL').'completion/'.$token, // Replace with the actual success URL
-                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL    
+                    'cancel_url' => env('FRONTEND_URL').'cancel',   // Replace with the actual cancel URL  
+                    'metadata'=>$metadata,
                 ];
             }
             
@@ -361,7 +367,10 @@ class PaymentController extends Controller
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             // Invalid signature
             Log::info('Invalid signature!');
-            return response()->json(['error' => 'Invalid signature'], 400);
+            $data = [
+                'error_message'=>$e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json(['error' => 'Invalid signature','data'=>$data], 400);
         }
 
         // Handle the event based on its type

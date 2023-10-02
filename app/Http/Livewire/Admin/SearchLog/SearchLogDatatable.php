@@ -42,9 +42,11 @@ class SearchLogDatatable extends LivewireDatatable
 
             Column::index($this)->unsortable(),
             
-            Column::name('users.name')->label(trans('cruds.search_log.fields.user_id'))->sortable()->searchable(),
+            Column::callback(['users.name'],function($name){
+                return ucwords($name);
+            })->label(trans('cruds.search_log.fields.user_id'))->sortable()->searchable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
             Column::callback(['id', 'deleted_at'], function ($id) {
                 $arr = ['show'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $arr]);

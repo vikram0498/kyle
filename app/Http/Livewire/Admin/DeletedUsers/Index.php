@@ -24,7 +24,7 @@ class Index extends Component
     protected $deletedUsers = null;
 
     protected $listeners = [
-        'show','cancel'
+        'show','cancel','resetUserBack'
     ];
 
     public function mount(){
@@ -43,6 +43,24 @@ class Index extends Component
 
     public function cancel(){
         $this->reset(['user_id','viewMode']);
+    }
+    
+    public function resetUserBack($id){
+       
+        $model = User::where('id',$id)->onlyTrashed()->first();
+        if($model){
+            $model->buyers()->onlyTrashed()->where('user_id',$id)->update(['deleted_at'=>null]);
+            PurchasedBuyer::where('user_id',$id)->onlyTrashed()->update(['deleted_at'=>null]);
+            
+            $model->deleted_at = null;
+            $model->save();
+            
+            $this->emit('refreshLivewireDatatable');
+    
+            $this->alert('success', 'User reset successfully!');
+        }else{
+            $this->alert('error', 'Something went wrong!');
+        }
     }
     
     

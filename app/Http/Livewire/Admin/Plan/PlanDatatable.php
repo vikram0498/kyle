@@ -57,7 +57,7 @@ class PlanDatatable extends LivewireDatatable
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Inactive']);
             })->label(trans('cruds.plan.fields.status'))->sortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
             Column::callback(['id', 'deleted_at'], function ($id) {
                 $array = ['show', 'delete'];
                 return view('livewire.datatables.actions', ['id' => $id,'events' => $array]);

@@ -22,9 +22,12 @@ return [
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user-man.png',
     ],
+
+    'owner_email' => 'amitpandey.his@gmail.com',
+    // 'owner_email' => 'rohithelpfullinsight@gmail.com',
     
-    'date_format' => 'd-m-Y',
-    'datetime_format' => 'd-m-Y h:i:s A',
+    'date_format' => 'm/d/Y',
+    'datetime_format' => 'm/d/Y h:i:s A',
     'set_timezone' => 'Asia/kolkata', // set timezone
     
     'logo_min_width' => '250', // logo min width

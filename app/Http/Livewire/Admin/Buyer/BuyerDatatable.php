@@ -71,7 +71,7 @@ class BuyerDatatable extends LivewireDatatable
                 
             })->label(trans('cruds.buyer.fields.flag_mark'))->unsortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable()/*->defaultSort('desc')*/,
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable()/*->defaultSort('desc')*/,
 
             Column::callback(['id', 'user_id'], function ($id, $user_id) {
                 $array = ['show', 'edit', 'delete'];

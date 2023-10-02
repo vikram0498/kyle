@@ -30,8 +30,8 @@ class Support extends Model
     protected static function boot () 
     {
         parent::boot();
-        static::creating(function(support $model) {
-            $model->created_by = auth()->user()->id;
-        });               
+        // static::creating(function(support $model) {
+        //     $model->created_by = auth()->user()->id;
+        // });               
     } 
 }

@@ -87,6 +87,11 @@
         
     });
 
+    document.addEventListener('closed-modal', function (event) {
+        $(document).find('#flagResolveModal').modal('hide');
+        $(document).find('#flagRejectModal').modal('hide');
+    });
+
     $(document).on('change','.datepicker', function(e){
         var pr = $(this).data('property');
         var pr_vals = $(this).val();
@@ -204,10 +209,6 @@
 
     $(document).on('click', '.resolve_flag', function(e){
         var _this = $(this);
-        var buyer_id = _this.data('buyer_id');
-        var seller_id = _this.data('seller_id');
-       
-        var data = { buyer_id: buyer_id, seller_id: seller_id }
         Swal.fire({
             title: 'Are you sure you want to resolve this flag?',
             showDenyButton: true,
@@ -216,33 +217,48 @@
             denyButtonText: `No, cancel!`,
         }).then((result) => {
             if (result.isConfirmed) {
-                @this.emit('resolveFlag', data);
+                // console.log('resolve issue');
+                
+                var editColumns = _this.attr('data-edit-column');
+                editColumns = editColumns.split(',');
+                editColumns = editColumns.map(function(column) {
+                    return column.toLowerCase().trim();
+                });
+                
+                @this.emit('updateRedFlagVaribale', editColumns);
+
+                var user = _this.attr('data-user');
+                @this.emit('updateUser',user);
+                $(document).find('#flagResolveModal').modal('show');
+
             }
         })
     })
 
     $(document).on('click', '.reject_flag', function(e){
         var _this = $(this);
-        var buyer_id = _this.data('buyer_id');
-        var seller_id = _this.data('seller_id');
-       
-        var data = { buyer_id: buyer_id, seller_id: seller_id }
         Swal.fire({
-            title: 'Are you sure you want to resolve this flag?',
+            title: 'Are you sure you want to reject this flag?',
             showDenyButton: true,
             icon: 'warning',
             confirmButtonText: 'Yes',
             denyButtonText: `No, cancel!`,
         }).then((result) => {
             if (result.isConfirmed) {
-                @this.emit('rejectFlag', data);
+                console.log('rejected');
+                
+                var user = _this.attr('data-user');
+                @this.emit('updateUser',user);
+                $(document).find('#flagRejectModal').modal('show');
             }
         })
-    })
+    });
 
-   
-    
-       
-    
+    $(document).on('click','.close-modal',function(){
+        // console.log('closed');
+        $(document).find('#flagResolveModal').modal('hide');
+        $(document).find('#flagRejectModal').modal('hide');
+    });
+
 </script>
 @endpush

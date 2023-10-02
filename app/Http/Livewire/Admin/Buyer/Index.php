@@ -35,7 +35,7 @@ class Index extends Component
     ];
 
     protected $listeners = [
-       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView', 'getStates', 'getCities','initializePlugins'
+       'cancel','show', 'edit', 'confirmedToggleAction','deleteConfirm', 'changeBuyerType', 'banConfirmedToggleAction', 'updateProperty', 'redFlagView', 'getStates', 'getCities','initializePlugins','updateRedFlagVaribale','updateUser'
        
     ];
 
@@ -89,8 +89,8 @@ class Index extends Component
             'phone' => ['required', 'numeric', 'digits:10'], 
             // 'address' => ['required'], 
             // 'country' => ['required', 'exists:countries,name'], 
-            'state' => ['required', 'exists:states,id'], 
-            'city' => ['required', 'exists:cities,id'], 
+            'state' => ['required', /*'exists:states,id'*/], 
+            'city' => ['required', /*'exists:cities,id'*/], 
             'company_name' => ['required'], 
 
             // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
@@ -474,5 +474,27 @@ class Index extends Component
 
     public function initializePlugins(){
         $this->dispatchBrowserEvent('loadPlugins');
+    }
+
+    public function updateRedFlagVaribale($columns)
+    {
+        foreach($columns as $columnName){
+            if($columnName == 'name'){
+                $this->emit('setIsNameUpdate', true);
+            }
+
+            if($columnName == 'email'){
+                $this->emit('setIsEmailUpdate', true);
+            }
+
+            if($columnName == 'phone'){
+                $this->emit('setIsPhoneUpdate', true); 
+            }
+        }
+    }
+
+    public function updateUser($userId)
+    {
+        $this->emit('setUserId', $userId); 
     }
 }

@@ -30,10 +30,12 @@ class SupportDatatable extends LivewireDatatable
     {
         return [
             Column::index($this)->unsortable(),
-            Column::name('name')->label(trans('cruds.support.fields.name'))->sortable()->searchable(),
+            Column::callback(['name'],function($name){
+                return ucwords($name);
+            })->label(trans('cruds.support.fields.name'))->sortable()->searchable(),
             Column::name('email')->label(trans('cruds.support.fields.email'))->sortable()->searchable(),
             Column::name('phone_number')->label(trans('cruds.support.fields.phone_number'))->sortable()->searchable(),
-            DateColumn::name('created_at')->label(trans('global.created_at'))->sortable()->searchable(),
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
             Column::callback(['id'], function ($id) {
                 $array = ['show'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
