@@ -134,12 +134,12 @@ const Development = ({data,landSelected})=>{
 								</div>
 							</div>
 							<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-								<label>Sewer</label>
+								<label>Sewage</label>
 								<div className="form-group">
 									<Select
 										name="sewer"
 										options={data.sewerOption}
-										placeholder='Select Sewer'
+										placeholder='Select Sewage'
 										setMultiselectOption = {data.setSewerValue}
 										isClearable={true}
 									/>

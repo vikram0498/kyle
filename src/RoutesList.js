@@ -32,6 +32,7 @@ import SentRequest from './component/partials/Modal/SentRequest';
 import Payment from './component/pages/Payment';
 import Completion from './component/pages/Completion';
 import Cancel from './component/pages/Cancel';
+import LastSearchData from './component/pages/LastSearchData';
 
 
 const RoutesList = () => {
@@ -47,7 +48,7 @@ const RoutesList = () => {
             <Route path="/forget-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token/:hash" element={<ResetPassword />} />
             <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
-
+            <Route path="/support" element={<Support/>} />
             {/* add buyer link */}
             <Route path="/add-buyer/:token" element={<CopyAddBuyer />} />
 
@@ -57,6 +58,7 @@ const RoutesList = () => {
             <Route path="/" element={<Protected Component={Home} />} />
             <Route path="/add-buyer-details" element={<Protected Component={AddBuyerDetails}/>} />
             <Route path="/my-buyers" element={<Protected Component={MyBuyer}/>} />
+            <Route path="/last-search-data" element={<Protected Component={LastSearchData}/>} />
             <Route path="/sellers-form" element={<Protected Component={SellerForm}/>} />
             {/* <Route path="/condo" element={<Protected Component={Condo}/>} /> */}
             {/* <Route path="/development" element={<Protected Component={Development}/>} /> */}
@@ -70,7 +72,7 @@ const RoutesList = () => {
             <Route path="/payment" element={<Protected Component={Payment}/>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
             <Route path="/terms-and-condition" element={<TermCondition/>} />
-            <Route path="/support" element={<Protected Component={Support}/>} />
+            
             <Route path="/edit-modal" element={<EditRequest/>} />
             <Route path="/submit-modal" element={<SentRequest/>} />
             <Route path="/completion/:token" element={<Completion/>} />

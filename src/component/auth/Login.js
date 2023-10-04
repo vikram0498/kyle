@@ -104,7 +104,7 @@ function Login (props){
                                         type="email" 
                                         id="email"
                                         name="email" 
-                                        className="form-control"                         autoComplete="no-email"                
+                                        className="form-control" autoComplete="no-email"                
                                         placeholder="Enter Your Email" 
                                         value={email} 
                                         onChange={e => setEmail(e.target.value)} 
@@ -166,7 +166,7 @@ function Login (props){
                             <p className="account-now"><span style={{marginRight:'2px'}}>Don’t Have an account? </span>    
                                 <Link to="/register"> Sign up now!</Link>
                             </p>
-
+                            
                             <div className="or"><span>OR</span></div>
                             <ul className="account-with-social social-login-link list-unstyled mb-0">
                                 {/* <li>
@@ -194,6 +194,7 @@ function Login (props){
                         </div>
                     </div>
                 </form>
+                <p className="account-now mt-4 pt-2">want to Contact us <Link to="/support" style={{color:'#0d6efd'}}>click here</Link></p>
             </div>
         </Layout>                           
     );

@@ -11,7 +11,7 @@ import { toast,dismiss  } from "react-toastify";
 import axios from 'axios';
 import BuyerCard from './Section/BuyerCard';
 
-const MyBuyer = () =>{
+const LastSearchData = () =>{
 	const {getTokenData,setLogout,getLocalStorageUserdata} = useAuth();
 	const [buyerData, setBuyerData] = useState([]);
 	const [pageNumber, setPageNumber] = useState(1);
@@ -43,9 +43,9 @@ const MyBuyer = () =>{
 				'Authorization': 'Bearer ' + getTokenData().access_token,
 				'auth-token' : getTokenData().access_token,
 			};
-			let url = apiUrl+'my-buyers';
+			let url = apiUrl+'last-search-buyer';
 			if(page>1){
-				url = apiUrl+'my-buyers?page='+page;
+				url = apiUrl+'last-search-buyer?page='+page;
 			}
 			let response  = await axios.post(url,{}, { headers: headers });
 			setIsLoader(false);
@@ -231,7 +231,7 @@ const MyBuyer = () =>{
 						</Link>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
-						<h6 className="center-head fs-3 text-center mb-0">My Buyers</h6>
+						<h6 className="center-head fs-3 text-center mb-0">My Recent Search</h6>
 					</div>
 					<div className="col-12 col-sm-4 col-md-4 col-lg-4">
 					<p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">{currentPageNo} out of {totalPage}</p>
@@ -296,4 +296,4 @@ const MyBuyer = () =>{
     </>
  )
 }
-export default MyBuyer;
+export default LastSearchData;

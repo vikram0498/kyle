@@ -120,6 +120,11 @@ function Header() {
 											</Link>
 										</li>
 										<li>
+											<Link className="dropdown-item" to="/last-search-data">
+												<img src="./assets/images/search-log.svg" className="img-fluid" />Last Searched Data
+											</Link>
+										</li>
+										<li>
 											<Link className="dropdown-item" to="/support">
 												<img src="./assets/images/messages.svg" className="img-fluid" />My Support
 											</Link>

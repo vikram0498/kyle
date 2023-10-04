@@ -513,6 +513,7 @@ function CopyAddBuyer (){
                                                                             isClearable={true}
                                                                             className="select"
                                                                             placeholder='Select State'
+                                                                            closeMenuOnSelect={false}
                                                                             onChange={(e)=>{
                                                                                 onChange(e)
                                                                                 handleCustum(e,'state')
@@ -570,6 +571,7 @@ function CopyAddBuyer (){
                                                                             name = {name}
                                                                             value={city}
                                                                             isClearable={true}
+                                                                            closeMenuOnSelect={false}
                                                                             className="select"
                                                                             placeholder='Select City'
                                                                             onChange={(e)=>{

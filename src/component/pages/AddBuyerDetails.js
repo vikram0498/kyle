@@ -604,6 +604,7 @@ function AddBuyerDetails (){
                                                                 options={stateOptions}
                                                                 name = {name}
                                                                 value={state}
+                                                                closeMenuOnSelect={false}
                                                                 isClearable={true}
                                                                 className="select"
                                                                 placeholder='Select State'
@@ -648,6 +649,7 @@ function AddBuyerDetails (){
                                                                 name = {name}
                                                                 value={city}
                                                                 isClearable={true}
+                                                                closeMenuOnSelect={false}
                                                                 className="select"
                                                                 placeholder='Select City'
                                                                 onChange={(e)=>{

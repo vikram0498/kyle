@@ -91,7 +91,7 @@ const Support = () =>{
     },[]);
     return (
        <>
-           <Header/>
+           
            <section className="main-section position-relative pt-4 pb-0">
                 <div className="back-block">
                     <div className="row align-items-center">
@@ -155,7 +155,7 @@ const Support = () =>{
                                             <div className="form-group">
                                                 <label>Phone Number<span>*</span></label>
                                                 <div className="form-group">
-                                                    <input type="text" name="phone_number" className="form-control" placeholder="Phone Number" {
+                                                    <input type="text" name="phone_number" className="form-control" placeholder="Enter Contact Number" {
                                                     ...register("phone_number", {
                                                         required: "Phone Number is required",
                                                         validate: {
