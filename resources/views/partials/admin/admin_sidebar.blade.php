@@ -35,8 +35,7 @@
             @can('transaction_access')
             <li class="nav-item {{ request()->is('admin/transactions') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.transactions') }}">
-                    <i class="icon-grid menu-icon fab fa-cc-stripe"></i>
-                   
+                    <i class="icon-grid menu-icon fas fa-wallet"></i>
                     <span class="menu-title"> {{ __('cruds.transaction.title') }} </span>
                 </a>
             </li>
@@ -45,7 +44,7 @@
             @can('buyer_access')            
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
-                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
+                    <i class="icon-grid menu-icon fas fa-house-user"></i>
                     <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
                     <i class="menu-arrow"></i>
                 </a>
@@ -75,8 +74,8 @@
             {{-- Masters --}}
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#master-menu"  aria-expanded="false" aria-controls="master-menu">
-                    <i class="icon-layout menu-icon"></i>
-                    <span class="menu-title">Master</span>
+                    <i class="menu-icon fas fa-money-check-alt"></i>
+                    <span class="menu-title">Subscription Plans</span>
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="master-menu">
@@ -102,7 +101,7 @@
             {{-- Settings --}}
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setting-menu" aria-expanded="false" aria-controls="setting-menu">
-                    <i class="icon-layout menu-icon"></i>
+                    <i class="menu-icon fas fa-cog"></i>
                     <span class="menu-title"> {{ __('cruds.setting.title') }} </span>
                     <i class="menu-arrow"></i>
                 </a>

@@ -10,7 +10,7 @@ return [
     | Here you may specify which of the request type list 
     |
     */ 
-    'app_name' => 'Kyle',
+    'app_name' => env('APP_NAME'),
     'front_end_url' => env('FRONTEND_URL'),
     'app_mode' => env('APP_MODE','staging'),
     'default' => [

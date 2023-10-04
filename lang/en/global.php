@@ -134,7 +134,7 @@ return [
     'custom_controller_index'              => 'Custom controller index.',
     'customer'                             => 'Customer',
     'customers'                            => 'Customers',
-    'deleted_at'                           => 'Deleted at',
+    'deleted_at'                           => 'Deleted At',
     'description'                          => 'Description',
     'deselect_all'                         => 'Deselect all',
     'discount_amount'                      => 'Discount amount',

@@ -114,19 +114,14 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
 
     Route::get('config', [PaymentController::class, 'config']);
-
-    Route::get('fetch-payment-intent/{paymentIntentId}', [PaymentController::class, 'fetchPaymentIntent']);
-
-    Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-
+ 
     Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
-    Route::post('/subscribe', [PaymentController::class, 'createSubscription']);
+    Route::post('/payment-history', [PaymentController::class, 'paymentHistory']);
 
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
-
 
 
 });

@@ -17,6 +17,10 @@
             <td> {{$support->phone_number ?? 'N/A'}}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.support.fields.contact_preferance')}}</th>
+            <td> {{ config('constants.contact_preferances')[$support->contact_preferance] }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.support.fields.message')}}</th>
             <td> {{ $support->message ?? 'N/A' }}</td>
         </tr>

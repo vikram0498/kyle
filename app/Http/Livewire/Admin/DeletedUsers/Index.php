@@ -57,7 +57,7 @@ class Index extends Component
             
             $this->emit('refreshLivewireDatatable');
     
-            $this->alert('success', 'User reset successfully!');
+            $this->alert('success', 'User restored successfully!');
         }else{
             $this->alert('error', 'Something went wrong!');
         }

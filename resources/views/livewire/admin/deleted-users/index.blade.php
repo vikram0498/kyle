@@ -36,7 +36,7 @@
         var id = _this.attr('data-id');
        
         Swal.fire({
-            title: 'Are you sure you want to reset user it?',
+            title: 'Are you sure you want to restore this user?',
             showDenyButton: true,
             icon: 'warning',
             confirmButtonText: 'Yes, change it',
