@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Admin\Transactions;
 
+use App\Models\Plan;
+use App\Models\Addon;
 use App\Models\Transaction;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\NumberColumn;
@@ -16,14 +18,20 @@ class TransactionDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(0, 'desc');
+        $this->sort(7, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
 
     public function builder()
     {
-        return Transaction::query();
+        $transactions = Transaction::query()
+        ->leftJoin('users', 'users.id', 'transactions.user_id')
+        ->leftJoin('plans', 'plans.id', 'transactions.plan_id')
+        ->leftJoin('addons', 'addons.id', 'transactions.plan_id');
+
+        return $transactions;
+
     }
 
     /**
@@ -40,12 +48,19 @@ class TransactionDatatable extends LivewireDatatable
 
             Column::index($this)->unsortable(),
 
-            Column::name('payment_intent_id')->label('Payment Intent Id')->sortable()->searchable(),
-
-            Column::callback(['user.name'], function ($name) {
-                return ucwords($name);
+            Column::callback(['users.name'], function ($name) {
+                return $name;
             })->label(trans('cruds.transaction.fields.user'))->sortable()->searchable(),
 
+            Column::callback(['plan_id','is_addon'],function($plan_id,$is_addon){
+                $planTitle = '';
+                if($is_addon){
+                    $planTitle =  Addon::where('id',$plan_id)->value('title');
+                }else{
+                    $planTitle = Plan::where('id',$plan_id)->value('title');
+                }
+                return $planTitle;
+            })->label('Plan')->sortable()->searchable(),
             
             Column::callback(['amount'], function ($amount) {
                 return "<i class='fa fa-dollar'></i>".number_format($amount,2);
@@ -55,14 +70,21 @@ class TransactionDatatable extends LivewireDatatable
                 return strtoupper($currency);
             })->label(trans('cruds.transaction.fields.currency'))->sortable()->searchable(),
 
-            Column::callback(['payment_method'],function($payment_method){
-                return ucwords($payment_method);
-            })->label(trans('cruds.transaction.fields.payment_method'))->sortable()->searchable(),
+            // Column::callback(['payment_method'],function($payment_method){
+            //     return ucwords($payment_method);
+            // })->label(trans('cruds.transaction.fields.payment_method'))->sortable()->searchable(),
 
             Column::callback(['status'],function($status){
                 return ucwords($status);
             })->label(trans('cruds.transaction.fields.status'))->sortable()->searchable(),
 
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable()->defaultSort('desc'),
+
+
+            Column::callback(['id', 'user_id'], function ($id, $user_id) {
+                $array = ['show'];
+                return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
+            })->label(trans('global.action'))->unsortable(),
         ];
     }
 

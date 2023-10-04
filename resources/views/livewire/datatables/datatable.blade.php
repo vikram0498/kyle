@@ -164,6 +164,7 @@
                             @endif
                         @endforeach
                     </div>
+            
                     @foreach($this->results as $row)
                         <div class="table-row p-1 {{ $this->rowClasses($row, $loop) }}">
                             @foreach($this->columns as $column)

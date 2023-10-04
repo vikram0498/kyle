@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Seller;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\NumberColumn;
 use Mediconesystems\LivewireDatatables\DateColumn;
@@ -17,16 +18,32 @@ class SellerDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        // $this->sort(0, 'desc');
+        $this->sort(7, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
 
     public function builder()
     {
+        $statusSearch = null;
+        $searchValue = $this->search;
+        if (Str::contains('active', strtolower($searchValue))) {
+            $statusSearch = 1;
+        } else if (Str::contains('block', strtolower($searchValue))) {
+            $statusSearch = 0;
+        }
+        
         return User::query()->with(['buyers','purchasedBuyers'])
         ->whereHas('roles',function($query){
             $query->whereIn('id',[2]);
+        })->where(function ($query) use ($searchValue, $statusSearch) {
+                
+        	$query->where('name', 'like', '%' . $searchValue . '%')
+                                
+            ->orWhere('is_active', $statusSearch)
+                                
+            ->orWhereRaw("date_format(created_at, '" . config('constants.search_date_format') . "') like ?", ['%' . $searchValue . '%']);
+                    
         });
     }
   
@@ -46,9 +63,23 @@ class SellerDatatable extends LivewireDatatable
             Column::name('name')->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
 
             Column::callback(['id', 'is_active'], function ($id, $is_active) {
+                
+                // if(strtolower($this->search) == 'active'){
+                //     $is_active = 1;
+                // }elseif(strtolower($this->search) == 'block'){
+                //     $is_active = 0;
+                // }
+                
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $is_active, 'type' => 'is_active', 'onLable' => 'Active', 'offLable' => 'Block']);
               
-            })->label(trans('cruds.user.fields.status'))->unsortable(),
+            })->label(trans('cruds.user.fields.status'))->unsortable()->searchable(function($query,$searchValue){
+                if(strtolower($searchValue) == 'active'){
+                    $query->where('is_active',1);
+                }elseif(strtolower($searchValue) == 'block'){
+                    $query->where('is_active',0);
+                }
+                
+            }),
 
             NumberColumn::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->alignCenter()->sortable()->searchable(),
         
@@ -59,7 +90,7 @@ class SellerDatatable extends LivewireDatatable
             NumberColumn::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->alignCenter()->sortable()->searchable(),
 
             DateColumn::name('created_at')->label(trans('cruds.user.fields.created_at'))->format('m/d/Y')->sortable()->searchable(),
-            
+
             Column::callback(['id', 'phone'], function ($id, $phone) {
                 $array = ['show', 'delete'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);

@@ -16,14 +16,14 @@ class SupportDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(0, 'desc');
+        $this->sort(5, 'desc');
         $this->search = null;
         $this->setPage(1);
     }
 
     public function builder()
     {
-        return CutomerSupport::query()->orderBy('created_at','desc');
+        return CutomerSupport::query();
     }
 
     public function columns()

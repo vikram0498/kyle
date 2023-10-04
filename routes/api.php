@@ -102,6 +102,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::delete('del-like-unlike-buyer/{user_id}/{buyer_id}', [BuyerController::class, 'deleteBuyerLikeOrUnlike']);
 
     Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
+    
+    Route::post('my-buyers', [BuyerController::class, 'myBuyersList']);
 
     Route::get('search-address', [BuyerController::class, 'searchAddress']);
 
@@ -110,7 +112,6 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);
 
     Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
-
 
     Route::get('config', [PaymentController::class, 'config']);
 

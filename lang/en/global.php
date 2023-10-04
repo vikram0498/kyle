@@ -244,6 +244,7 @@ return [
     'trash'                                => 'Trash',
     'update'                               => 'Update',
     'updated_at'                           => 'Updated at',
+    'updated'                              => 'Updated',
     'upgrade_to_premium'                   => 'Upgrade to Premium',
     'user_actions'                         => 'User actions',
     'valid_from'                           => 'Valid from',

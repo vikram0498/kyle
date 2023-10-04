@@ -28,6 +28,8 @@ return [
     
     'date_format' => 'm/d/Y',
     'datetime_format' => 'm/d/Y h:i:s A',
+    'search_datetime_format' => '%m/%d/%Y %H:%i',
+    'search_date_format' => '%m/%d/%Y',
     'set_timezone' => 'Asia/kolkata', // set timezone
     
     'logo_min_width' => '250', // logo min width

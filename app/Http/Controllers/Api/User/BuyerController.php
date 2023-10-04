@@ -431,10 +431,10 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->whereJsonContains('park', intval($parkType));
             }
 
-            if($request->address){
-                $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
-                $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            }
+            // if($request->address){
+            //     $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
+            //     $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
+            // }
 
             // if($request->country){
             //     $country =  DB::table('countries')->where('id',$request->country)->value('name');
@@ -452,10 +452,10 @@ class BuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->whereJsonContains('city', $request->city);
             }
 
-            if($request->zip_code){
-                $buyers = $buyers->where('zip_code', $request->zip_code);
-                $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
-            }
+            // if($request->zip_code){
+            //     $buyers = $buyers->where('zip_code', $request->zip_code);
+            //     $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
+            // }
 
             if($request->price){
                 $priceValue = $request->price;
@@ -1332,89 +1332,89 @@ class BuyerController extends Controller
         try {
             $radioValues = [0,1];
             $userId = auth()->user()->id;
-            // $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
+            $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             
-            // if($lastSearchLog){
+            if($lastSearchLog){
 
             $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
-            // if($lastSearchLog->property_type){
-            //     $propertyType = $lastSearchLog->property_type;
-            //     $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
-            // }
+            if($lastSearchLog->property_type){
+                $propertyType = $lastSearchLog->property_type;
+                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+            }
 
-            // if($lastSearchLog->address){
-            //     $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            // }
+            if($lastSearchLog->address){
+                $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
+            }
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
             // }
 
-            // if($lastSearchLog->state){
-            //     $buyers = $buyers->whereJsonContains('state', $lastSearchLog->state);
-            // }
+            if($lastSearchLog->state){
+                $buyers = $buyers->whereJsonContains('state', $lastSearchLog->state);
+            }
 
-            // if($lastSearchLog->city){
-            //     $buyers = $buyers->whereJsonContains('city', $lastSearchLog->city);
-            // }
+            if($lastSearchLog->city){
+                $buyers = $buyers->whereJsonContains('city', $lastSearchLog->city);
+            }
 
             // if($lastSearchLog->zip_code){
             //     $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
             // }
 
-            // if($lastSearchLog->price){
-            //     $priceValue = $lastSearchLog->price;
-            //     $buyers = $buyers->where(function ($query) use ($priceValue) {
-            //         $query->where('price_min', '<=', $priceValue)
-            //               ->where('price_max', '>=', $priceValue);
-            //     });
-            //     $additionalBuyers = $buyers->where(function ($query) use ($priceValue) {
-            //         $query->where('price_min', '<=', $priceValue)
-            //               ->where('price_max', '>=', $priceValue);
-            //     });
-            // } 
+            if($lastSearchLog->price){
+                $priceValue = $lastSearchLog->price;
+                $buyers = $buyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+                $additionalBuyers = $buyers->where(function ($query) use ($priceValue) {
+                    $query->where('price_min', '<=', $priceValue)
+                          ->where('price_max', '>=', $priceValue);
+                });
+            } 
 
-            // if($lastSearchLog->bedroom && is_numeric($lastSearchLog->bedroom)){
-            //     $bedroomValue = $lastSearchLog->bedroom;
-            //     $buyers = $buyers->where(function ($query) use ($bedroomValue) {
-            //         $query->where('bedroom_min', '<=', $bedroomValue)
-            //               ->where('bedroom_max', '>=', $bedroomValue);
-            //     });
-            // } 
+            if($lastSearchLog->bedroom && is_numeric($lastSearchLog->bedroom)){
+                $bedroomValue = $lastSearchLog->bedroom;
+                $buyers = $buyers->where(function ($query) use ($bedroomValue) {
+                    $query->where('bedroom_min', '<=', $bedroomValue)
+                          ->where('bedroom_max', '>=', $bedroomValue);
+                });
+            } 
 
-            // if($lastSearchLog->bath && is_numeric($lastSearchLog->bath)){
-            //     $bathValue = $lastSearchLog->bath;
-            //     $buyers = $buyers->where(function ($query) use ($bathValue) {
-            //         $query->where('bath_min', '<=', $bathValue)
-            //               ->where('bath_max', '>=', $bathValue);
-            //     });
-            // } 
+            if($lastSearchLog->bath && is_numeric($lastSearchLog->bath)){
+                $bathValue = $lastSearchLog->bath;
+                $buyers = $buyers->where(function ($query) use ($bathValue) {
+                    $query->where('bath_min', '<=', $bathValue)
+                          ->where('bath_max', '>=', $bathValue);
+                });
+            } 
 
-            // if($lastSearchLog->size && is_numeric($lastSearchLog->size)){
-            //     $sizeValue = $lastSearchLog->size;
-            //     $buyers = $buyers->where(function ($query) use ($sizeValue) {
-            //         $query->where('size_min', '<=', $sizeValue)
-            //               ->where('size_max', '>=', $sizeValue);
-            //     });
-            // } 
+            if($lastSearchLog->size && is_numeric($lastSearchLog->size)){
+                $sizeValue = $lastSearchLog->size;
+                $buyers = $buyers->where(function ($query) use ($sizeValue) {
+                    $query->where('size_min', '<=', $sizeValue)
+                          ->where('size_max', '>=', $sizeValue);
+                });
+            } 
 
-            // if($lastSearchLog->lot_size && is_numeric($lastSearchLog->lot_size)){
-            //     $lotSizeValue = $lastSearchLog->lot_size;
-            //     $buyers = $buyers->where(function ($query) use ($lotSizeValue) {
-            //         $query->where('lot_size_min', '<=', $lotSizeValue)
-            //               ->where('lot_size_max', '>=', $lotSizeValue);
-            //     });
-            // } 
+            if($lastSearchLog->lot_size && is_numeric($lastSearchLog->lot_size)){
+                $lotSizeValue = $lastSearchLog->lot_size;
+                $buyers = $buyers->where(function ($query) use ($lotSizeValue) {
+                    $query->where('lot_size_min', '<=', $lotSizeValue)
+                          ->where('lot_size_max', '>=', $lotSizeValue);
+                });
+            } 
             
-            // if($lastSearchLog->build_year && is_numeric($lastSearchLog->build_year)){
-            //     $buildYearValue = $lastSearchLog->build_year;
-            //     $buyers = $buyers->where(function ($query) use ($buildYearValue) {
-            //         $query->where('build_year_min', '<=', $buildYearValue)
-            //               ->where('build_year_max', '>=', $buildYearValue);
-            //     });
-            // }
+            if($lastSearchLog->build_year && is_numeric($lastSearchLog->build_year)){
+                $buildYearValue = $lastSearchLog->build_year;
+                $buyers = $buyers->where(function ($query) use ($buildYearValue) {
+                    $query->where('build_year_min', '<=', $buildYearValue)
+                          ->where('build_year_max', '>=', $buildYearValue);
+                });
+            }
 
             // if($lastSearchLog->arv && is_numeric($lastSearchLog->arv)){
             //     $arvValue = $lastSearchLog->arv;
@@ -1422,141 +1422,148 @@ class BuyerController extends Controller
             //         $query->where('arv_min', '<=', $arvValue)
             //               ->where('arv_max', '>=', $arvValue);
             //     });
-                
             // }
 
-            // if($lastSearchLog->parking){
-            //     $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
-            // }
+            if($lastSearchLog->parking){
+                $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
+            }
 
-            // if($lastSearchLog->property_flaw){
-            //     $buyers = $buyers->whereJsonContains('property_flaw', $lastSearchLog->property_flaw);
-            // }
+            if($lastSearchLog->property_flaw){
+                $buyers = $buyers->whereJsonContains('property_flaw', $lastSearchLog->property_flaw);
+            }
 
-            // if($lastSearchLog->purchase_method){
-            //     $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
-            // }
+            if($lastSearchLog->purchase_method){
+                $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
+            }
 
-            // if($lastSearchLog->zoning){
-            //     $buyers = $buyers->whereJsonContains('zoning', $lastSearchLog->zoning);
-            // }
+            if($lastSearchLog->zoning){
+                $buyers = $buyers->whereJsonContains('zoning', $lastSearchLog->zoning);
+            }
 
-            // if($lastSearchLog->utilities){
-            //     $buyers = $buyers->where('utilities', $lastSearchLog->utilities);
-            // }
+            if($lastSearchLog->utilities){
+                $buyers = $buyers->where('utilities', $lastSearchLog->utilities);
+            }
 
-            // if($lastSearchLog->sewer){
-            //     $buyers = $buyers->where('sewer', $lastSearchLog->sewer);
-            // }
+            if($lastSearchLog->sewer){
+                $buyers = $buyers->where('sewer', $lastSearchLog->sewer);
+            }
 
-            // if($lastSearchLog->market_preferance){
-            //     $buyers = $buyers->where('market_preferance', $lastSearchLog->market_preferance);
-            // }
+            if($lastSearchLog->market_preferance){
+                $marketPref = $lastSearchLog->market_preferance;
+                $buyers = $buyers->where(function($query) use($marketPref){
+                    $query->where('market_preferance', $marketPref)->orWhere('market_preferance',3);
+                });
+            }
 
-            // if($lastSearchLog->contact_preferance){
-            //     $buyers = $buyers->where('contact_preferance',$lastSearchLog->contact_preferance);
-            // }
+            if($lastSearchLog->contact_preferance){
+                $buyers = $buyers->where('contact_preferance',$lastSearchLog->contact_preferance);
+            }
 
             /* if($lastSearchLog->building_class){
                 $buyers = $buyers->whereJsonContains('building_class', $lastSearchLog->building_class);
             } */
 
 
-            // if($lastSearchLog->stories && is_numeric($lastSearchLog->stories)){
-            //     $stories_value = $lastSearchLog->stories;
-            //     $buyers = $buyers->where(function ($query) use ($stories_value) {
-            //         $query->where('stories_min', '<=', $stories_value)
-            //               ->where('stories_max', '>=', $stories_value);
-            //     });
-            // } 
+            if($lastSearchLog->stories && is_numeric($lastSearchLog->stories)){
+                $stories_value = $lastSearchLog->stories;
+                $buyers = $buyers->where(function ($query) use ($stories_value) {
+                    $query->where('stories_min', '<=', $stories_value)
+                          ->where('stories_max', '>=', $stories_value);
+                });
+            } 
 
-            // if(!is_null($lastSearchLog->solar) && in_array($lastSearchLog->solar, $radioValues)){
-            //     $buyers = $buyers->where('solar', $lastSearchLog->solar);
-            // }
+            if(!is_null($lastSearchLog->solar) && in_array($lastSearchLog->solar, $radioValues)){
+                $buyers = $buyers->where('solar', $lastSearchLog->solar);
+            }
 
-            // if(!is_null($lastSearchLog->pool) && in_array($lastSearchLog->pool, $radioValues)){
-            //     $buyers = $buyers->where('pool', $lastSearchLog->pool);
-            // }
+            if(!is_null($lastSearchLog->pool) && in_array($lastSearchLog->pool, $radioValues)){
+                $buyers = $buyers->where('pool', $lastSearchLog->pool);
+            }
 
-            // if(!is_null($lastSearchLog->septic) && in_array($lastSearchLog->septic, $radioValues)){
-            //     $buyers = $buyers->where('septic', $lastSearchLog->septic);
-            // }
+            if(!is_null($lastSearchLog->septic) && in_array($lastSearchLog->septic, $radioValues)){
+                $buyers = $buyers->where('septic', $lastSearchLog->septic);
+            }
 
-            // if(!is_null($lastSearchLog->well) && in_array($lastSearchLog->well, $radioValues)){
-            //     $buyers = $buyers->where('well', $lastSearchLog->well);
-            // }
+            if(!is_null($lastSearchLog->well) && in_array($lastSearchLog->well, $radioValues)){
+                $buyers = $buyers->where('well', $lastSearchLog->well);
+            }
 
-            // if(!is_null($lastSearchLog->age_restriction) && in_array($lastSearchLog->age_restriction, $radioValues)){
-            //     $buyers = $buyers->where('age_restriction', $lastSearchLog->age_restriction);
-            // }
+            if(!is_null($lastSearchLog->age_restriction) && in_array($lastSearchLog->age_restriction, $radioValues)){
+                $buyers = $buyers->where('age_restriction', $lastSearchLog->age_restriction);
+            }
 
-            // if(!is_null($lastSearchLog->rental_restriction) && in_array($lastSearchLog->rental_restriction, $radioValues)){
-            //     $buyers = $buyers->where('rental_restriction', $lastSearchLog->rental_restriction);
-            // }
+            if(!is_null($lastSearchLog->rental_restriction) && in_array($lastSearchLog->rental_restriction, $radioValues)){
+                $buyers = $buyers->where('rental_restriction', $lastSearchLog->rental_restriction);
+            }
 
-            // if(!is_null($lastSearchLog->hoa) && in_array($lastSearchLog->hoa, $radioValues)){
-            //     $buyers = $buyers->where('hoa', $lastSearchLog->hoa);
-            // }
+            if(!is_null($lastSearchLog->hoa) && in_array($lastSearchLog->hoa, $radioValues)){
+                $buyers = $buyers->where('hoa', $lastSearchLog->hoa);
+            }
 
-            // if(!is_null($lastSearchLog->tenant) && in_array($lastSearchLog->tenant, $radioValues)){
-            //     $buyers = $buyers->where('tenant', $lastSearchLog->tenant);
-            // }
+            if(!is_null($lastSearchLog->tenant) && in_array($lastSearchLog->tenant, $radioValues)){
+                $buyers = $buyers->where('tenant', $lastSearchLog->tenant);
+            }
 
-            // if(!is_null($lastSearchLog->post_possession) && in_array($lastSearchLog->post_possession, $radioValues)){
-            //     $buyers = $buyers->where('post_possession', $lastSearchLog->post_possession);
-            // }
+            if(!is_null($lastSearchLog->post_possession) && in_array($lastSearchLog->post_possession, $radioValues)){
+                $buyers = $buyers->where('post_possession', $lastSearchLog->post_possession);
+            }
 
-            // if(!is_null($lastSearchLog->building_required) && in_array($lastSearchLog->building_required, $radioValues)){
-            //     $buyers = $buyers->where('building_required', $lastSearchLog->building_required);
-            // }
+            if(!is_null($lastSearchLog->building_required) && in_array($lastSearchLog->building_required, $radioValues)){
+                $buyers = $buyers->where('building_required', $lastSearchLog->building_required);
+            }
 
-            // if(!is_null($lastSearchLog->foundation_issues) && in_array($lastSearchLog->foundation_issues, $radioValues)){
-            //     $buyers = $buyers->where('foundation_issues', $lastSearchLog->foundation_issues);
-            // }
+            if(!is_null($lastSearchLog->foundation_issues) && in_array($lastSearchLog->foundation_issues, $radioValues)){
+                $buyers = $buyers->where('foundation_issues', $lastSearchLog->foundation_issues);
+            }
 
-            // if(!is_null($lastSearchLog->mold) && in_array($lastSearchLog->mold, $radioValues)){
-            //     $buyers = $buyers->where('mold', $lastSearchLog->mold);
-            // }
+            if(!is_null($lastSearchLog->mold) && in_array($lastSearchLog->mold, $radioValues)){
+                $buyers = $buyers->where('mold', $lastSearchLog->mold);
+            }
 
-            // if(!is_null($lastSearchLog->fire_damaged) && in_array($lastSearchLog->fire_damaged, $radioValues)){
-            //     $buyers = $buyers->where('fire_damaged', $lastSearchLog->fire_damaged);
-            // }
+            if(!is_null($lastSearchLog->fire_damaged) && in_array($lastSearchLog->fire_damaged, $radioValues)){
+                $buyers = $buyers->where('fire_damaged', $lastSearchLog->fire_damaged);
+            }
 
-            // if(!is_null($lastSearchLog->rebuild) && in_array($lastSearchLog->rebuild, $radioValues)){
-            //     $buyers = $buyers->where('rebuild', $lastSearchLog->rebuild);
-            // }
+            if(!is_null($lastSearchLog->rebuild) && in_array($lastSearchLog->rebuild, $radioValues)){
+                $buyers = $buyers->where('rebuild', $lastSearchLog->rebuild);
+            }
 
-            // if(!is_null($lastSearchLog->squatters) && in_array($lastSearchLog->squatters, $radioValues)){
-            //     $buyers = $buyers->where('squatters', $lastSearchLog->squatters);
-            // }
+            if(!is_null($lastSearchLog->squatters) && in_array($lastSearchLog->squatters, $radioValues)){
+                $buyers = $buyers->where('squatters', $lastSearchLog->squatters);
+            }
+             
+            if($lastSearchLog->total_units){
+                $buyers = $buyers->where('unit_min', '<=', $lastSearchLog->total_units)->where('unit_max' ,'>=',$lastSearchLog->total_units);
+            }
+
+            if($lastSearchLog->max_down_payment_percentage){
+                $buyers = $buyers->where('max_down_payment_percentage', $lastSearchLog->max_down_payment_percentage);
+            }
+
+            if($lastSearchLog->max_down_payment_money){
+                $buyers = $buyers->where('max_down_payment_money', $lastSearchLog->max_down_payment_money);
+            }
+
+            if($lastSearchLog->max_interest_rate){
+                $buyers = $buyers->where('max_interest_rate', $lastSearchLog->max_interest_rate);
+            }
+
+            if(!is_null($lastSearchLog->balloon_payment) && in_array($lastSearchLog->balloon_payment, $radioValues)){
+                $buyers = $buyers->where('balloon_payment', $lastSearchLog->balloon_payment);
+            }
+
+            if($lastSearchLog->building_class){
+                $buyers = $buyers->whereJsonContains('building_class', intval($lastSearchLog->building_class));
+            }
+
+            if(!is_null($lastSearchLog->value_add) && in_array($lastSearchLog->value_add, $radioValues)){
+                $buyers = $buyers->where('value_add', $lastSearchLog->value_add);
+            }
             
-            // if($lastSearchLog->total_units){
-            //     $buyers = $buyers->where('unit_min', '<=', $lastSearchLog->total_units)->where('unit_max' ,'>=',$lastSearchLog->total_units);
-            // }
-
-            // if($lastSearchLog->max_down_payment_percentage){
-            //     $buyers = $buyers->where('max_down_payment_percentage', $lastSearchLog->max_down_payment_percentage);
-            // }
-
-            // if($lastSearchLog->max_down_payment_money){
-            //     $buyers = $buyers->where('max_down_payment_money', $lastSearchLog->max_down_payment_money);
-            // }
-
-            // if($lastSearchLog->max_interest_rate){
-            //     $buyers = $buyers->where('max_interest_rate', $lastSearchLog->max_interest_rate);
-            // }
-
-            // if(!is_null($lastSearchLog->balloon_payment) && in_array($lastSearchLog->balloon_payment, $radioValues)){
-            //     $buyers = $buyers->where('balloon_payment', $lastSearchLog->balloon_payment);
-            // }
-
-            // if($lastSearchLog->building_class){
-            //     $buyers = $buyers->whereJsonContains('building_class', intval($lastSearchLog->building_class));
-            // }
-
-            // if(!is_null($lastSearchLog->value_add) && in_array($lastSearchLog->value_add, $radioValues)){
-            //     $buyers = $buyers->where('value_add', $lastSearchLog->value_add);
-            // }
+            if($lastSearchLog->permanent_affix && is_numeric($lastSearchLog->permanent_affix)){
+                $permanent_affixValue = (int)$lastSearchLog->permanent_affix;
+                $buyers = $buyers->where('permanent_affix',$permanent_affixValue);
+            }
 
 
             $buyers = $buyers->orderBy('created_by','desc')->paginate(20);
@@ -1593,14 +1600,67 @@ class BuyerController extends Controller
             ];
 
             return response()->json($responseData, 200);
-        //  }else{
-        //         //Return Error Response
-        //         $responseData = [
-        //             'status'        => false,
-        //             'error'         => 'No Record Found!',
-        //         ];
-        //         return response()->json($responseData, 200);
-        //  }
+         }else{
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'No Record Found!',
+                ];
+                return response()->json($responseData, 200);
+         }
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+    
+    public function myBuyersList(){
+        try {
+            $radioValues = [0,1];
+            $userId = auth()->user()->id;
+            
+            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+
+            $buyers = $buyers->orderBy('created_by','desc')->paginate(20);
+
+            foreach ($buyers as $key=>$buyer){
+                $liked=false;
+                $disliked=false;
+                
+                $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',$userId)->where('buyer_id',$buyer->id)->first();
+                if($getrecentaction){
+                    $liked=$getrecentaction->liked == 1 ? true : false;
+                    $disliked=$getrecentaction->disliked == 1 ? true : false;
+                }
+                
+                $name = $buyer->first_name.' '.$buyer->last_name;
+                $buyer->name =  $name;
+
+                $buyer->contact_preferance_id = $buyer->contact_preferance;
+
+                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
+                $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                $buyer->liked= $liked;
+                $buyer->disliked= $disliked;                
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
+                $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+            }
+            
+            //Return Success Response
+            $responseData = [
+                'status' => true,
+                'buyers' => $buyers,
+            ];
+
+            return response()->json($responseData, 200);
         }catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
             

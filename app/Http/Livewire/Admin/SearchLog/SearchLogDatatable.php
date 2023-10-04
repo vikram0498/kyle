@@ -17,7 +17,7 @@ class SearchLogDatatable extends LivewireDatatable
 
         // $this->resetTable();
         $this->perPage = config('livewire-datatables.default_per_page', 10);
-        $this->sort(0, 'desc');
+        $this->sort(3, 'desc');
         $this->search = null;
         $this->setPage(1);
     }

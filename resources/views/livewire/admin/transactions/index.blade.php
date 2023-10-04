@@ -6,7 +6,7 @@
     
                     @if($viewMode)
     
-                        {{-- @livewire('admin.plan.show', ['plan_id' => $plan_id]) --}}
+                       @livewire('admin.transactions.show', ['transaction_id' => $transaction_id])
     
                     @else
                         <div wire:loading wire:target="create" class="loader"></div>

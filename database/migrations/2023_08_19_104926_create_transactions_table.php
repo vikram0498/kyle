@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // If you want to associate transactions with users
+            $table->unsignedBigInteger('plan_id'); // If you want to associate transactions with plans
+            $table->tinyInteger('is_addon')->default(0)->comment('0=>No, 1=Yes');
             $table->string('payment_intent_id')->nullable();
             $table->double('amount', 11, 2)->nullable();
             $table->string('currency')->nullable();
