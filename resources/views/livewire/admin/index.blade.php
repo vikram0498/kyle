@@ -74,7 +74,7 @@
                                     <td>
                                        
                                           <span class="purchased">
-                                             {{ \DB::table('purchased_buyers')->where('user_id','!=',1)->where('buyer_id',$purchasedBuyer->buyer_id)->groupBy('user_id')->count() }} Seller Purchased
+                                             {{ \DB::table('purchased_buyers')->where('user_id','!=',1)->where('buyer_id',$purchasedBuyer->buyer_id)->groupBy('user_id')->count() }} User Purchased
                                           </span>
                                        
                                     </td>

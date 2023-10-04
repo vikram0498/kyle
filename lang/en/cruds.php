@@ -254,7 +254,7 @@ return [
             'name'  => 'Name',
             'email' => 'Email',
             'phone_number' => 'Phone Number',
-            'contact_preferance' => 'Contact Preferance',
+            'contact_preferance' => 'Contact Preference',
             'message' => 'Message',
             'created_at' => 'Created At',
         ]

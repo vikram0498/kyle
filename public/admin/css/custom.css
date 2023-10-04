@@ -933,3 +933,7 @@ body .datepicker .datepicker-years .table-condensed{
     border-bottom: solid 1px #ddd;
 }
 
+.warning-alert{
+    display: flex;
+    align-items: baseline;
+}

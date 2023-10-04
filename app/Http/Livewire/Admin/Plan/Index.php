@@ -182,19 +182,19 @@ class Index extends Component
     public function deleteConfirm($id){
         try{
             $model = Plan::find($id);
-        
-            if($model->uploads()->first()){
-                $upload_id = $model->uploads()->first()->id;
-                if($upload_id &&  deleteFile($upload_id)){
-                    $model->uploads()->delete();
-                }
-            }
             
             $stripe = Stripe::setApiKey(config('app.stripe_secret_key'));
     
             $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
 
             $stripePlan->delete();
+
+            if($model->uploads()->first()){
+                $upload_id = $model->uploads()->first()->id;
+                if($upload_id &&  deleteFile($upload_id)){
+                    $model->uploads()->delete();
+                }
+            }
             
             $model->delete();
     

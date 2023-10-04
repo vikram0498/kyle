@@ -34,7 +34,7 @@ class HomeController extends Controller
 
     public function getVideo($key){
         try{
-            $video = Video::where('video_key',$key)->where('status',1)->first();
+            $video = Video::where('video_key','upload_buyer_video')->where('status',1)->first();
             $video->video_link = $video->video_url;
             //Success Response Send
             $responseData = [

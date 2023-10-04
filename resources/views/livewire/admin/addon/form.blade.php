@@ -3,6 +3,9 @@
     {{ $updateMode ? __('global.edit') : __('global.create') }} 
     {{ strtolower(__('cruds.addon.title_singular'))}}</h4>
 
+<div class="alert alert-warning alert-dismissible warning-alert" role="alert">
+    <i class="fas fa-exclamation-triangle mr-2"></i><b>Additional plan can't be edited. Please recheck before submitting the details.</b>
+</div>
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
     <div class="row">
         <div class="col-md-4">

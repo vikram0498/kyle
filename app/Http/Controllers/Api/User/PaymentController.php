@@ -249,7 +249,7 @@ class PaymentController extends Controller
                 break;
                 
                 case 'checkout.session.completed':
-                    Log::info('Payment successfully!');
+                    Log::info('Payment successfully of additional plan!');
     
                     // Handle successful payment event
                     $paymentIntent = $event->data->object;
@@ -280,44 +280,6 @@ class PaymentController extends Controller
                     }
                 break;
                 
-                // case 'invoice.paid':
-                    
-                //     Log::info('Payment successfully!');
-
-                //     // Handle successful payment event
-                //     $paymentIntent = $event->data->object;
-
-
-                //     $customer_stripe_id = $paymentIntent->customer;
-
-                //     $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
-                
-                //     $isAddon= false;
-                //     $planId = Plan::where('plan_stripe_id',$paymentIntent->lines->data[0]->plan->id)->value('id');
-                //     if(!$planId){
-                //         $planId = Addon::where('product_stripe_id',$paymentIntent->lines->data[0]->plan->id)->value('id');
-                //         $isAddon = true;
-                //     }
-
-                //     $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
-                //     if(!$transaction){
-                //         // Save data to transactions table
-                //         Transaction::create([
-                //             'user_id' => $customerId,
-                //             'plan_id' => $planId, 
-                //             'is_addon' => $isAddon, 
-                //             'payment_intent_id' => $paymentIntent->payment_intent,
-                //             'amount' => (float)$paymentIntent->lines->data[0]->amount/100,
-                //             'currency' => $paymentIntent->lines->data[0]->currency,
-                //             'payment_method' => null,
-                //             'payment_type'   => 'credit',
-                //             'status' => $paymentIntent->status,
-                //             'payment_json' => json_encode($event),
-                //         ]);
-                //     }
-                
-                // break;
-                
                 case 'payment_intent.payment_failed':
                     Log::info('Payment Failed!');
                     // Handle subscription update event
@@ -325,9 +287,9 @@ class PaymentController extends Controller
                     
                     $customer_stripe_id = $paymentIntent->customer;
 
-                    $customerId = User::where('stripe_customer_id',$customer_stripe_id)->value('id');
+                    $customer = User::where('stripe_customer_id',$customer_stripe_id)->first();
 
-                    $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
+                    $transaction = Transaction::where('user_id',$customer->id)->where('payment_intent_id',$paymentIntent->id)->exists(); 
                     if(!$transaction){
                         // Save data to transactions table
                         Transaction::create([
@@ -340,9 +302,14 @@ class PaymentController extends Controller
                             'status' => 'failed',
                             'payment_json' => json_encode($paymentIntent),
                         ]);
+
+                        $customer->level_type = 1;
+                        $customer->save();
                     }
-                    break;
-                // Add more cases for other event types
+                break;
+                default:
+                 Log::info('Invalid Event fired!');
+               
             }
         } catch (\Exception $e) {
            
