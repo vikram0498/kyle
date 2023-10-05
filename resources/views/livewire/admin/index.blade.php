@@ -67,10 +67,9 @@
                                @if($purchasedBuyer->buyer)
                              
                               <tr>
-                                 <td>
-                                    
+                                    <td>
                                        <span>{{ ucwords($purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name)}}</span>
-                                    
+                                    </td>
                                     <td>
                                        
                                           <span class="purchased">
@@ -79,7 +78,7 @@
                                        
                                     </td>
                                     <td>{{ $purchasedBuyer->user->name ?? '' }}</td>
-                                 </td>
+                                 
                               </tr>
                      
                               @endif

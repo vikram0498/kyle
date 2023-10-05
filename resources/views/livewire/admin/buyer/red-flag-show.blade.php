@@ -36,7 +36,7 @@
     <div class="card-title top-box-set mt-2">
         <h4 class="card-title"> {{ strtolower(__('cruds.buyer.red_flag_view.heading')) }}</h4>
         <div class="card-top-box-item">
-        <button type="button" id="resolveAllFlag" data-buyer_id="{{ $data->id }}" class="btn btn-sm btn-success btn-icon-text btn-header"> {{ __('cruds.buyer.red_flag_view.resolve_all_btn') }}</button>
+        {{--<button type="button" id="resolveAllFlag" data-buyer_id="{{ $data->id }}" class="btn btn-sm btn-success btn-icon-text btn-header"> {{ __('cruds.buyer.red_flag_view.resolve_all_btn') }}</button>--}}
         </div>
     </div>
     
@@ -46,8 +46,8 @@
 
     <table class="table">
         <thead>
-            <th style="width: 25%;">Seller Name</th>
-            <th style="width: 60%;">Reason</th>
+            <th style="width: 25%;">User Name</th>
+            <th style="width: 60%;">Message</th>
             <th style="width: 60%;">Incorrect Information</th>
             <th style="width: 15%;">Action</th>
         </thead>

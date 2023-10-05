@@ -21,7 +21,7 @@ class Index extends Component
         $purchasedBuyers = PurchasedBuyer::select('user_id','buyer_id', \DB::raw('MAX(created_at) as max_created_at'))->with(['user','buyer'=>function($query){
             $query->where('user_id',1);
         }])
-        ->where('user_id','!=',1)->groupBy('buyer_id')->orderBy('max_created_at', 'desc')->limit(5)->get();
+        ->where('user_id','!=',1)->groupBy('buyer_id')->orderBy('max_created_at', 'desc')->limit(10)->get();
         
         // dd($purchasedBuyers);
 
