@@ -75,7 +75,7 @@
                        $modifiedString = rtrim($view, ', ');
                      @endphp
 
-                     {{ $modifiedString }}
+                     {{ ucwords($modifiedString) }}
                     </td>
                     <td>
                         <div class="d-flex mb-2">

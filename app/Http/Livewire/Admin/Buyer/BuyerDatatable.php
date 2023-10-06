@@ -68,7 +68,7 @@ class BuyerDatatable extends LivewireDatatable
 
             NumberColumn::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Block']);
-            })->label(trans('cruds.buyer.fields.status'))->sortable()->searchable(),
+            })->label(trans('cruds.buyer.fields.status'))->sortable()->searchable()->alignCenter(),
 
             Column::callback(['id', 'size_min'], function ($id) {
                 $buyer = Buyer::find($id);

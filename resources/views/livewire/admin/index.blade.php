@@ -64,11 +64,10 @@
                         <tbody>
                            @if($purchasedBuyers->count() > 0)
                               @foreach($purchasedBuyers as $key=>$purchasedBuyer)
-                               @if($purchasedBuyer->buyer)
                              
                               <tr>
                                     <td>
-                                       <span>{{ ucwords($purchasedBuyer->buyer->first_name.' '.$purchasedBuyer->buyer->last_name)}}</span>
+                                       <span>{{ ucwords($purchasedBuyer->buyer_first_name.' '.$purchasedBuyer->buyer_last_name)}}</span>
                                     </td>
                                     <td>
                                        
@@ -77,11 +76,10 @@
                                           </span>
                                        
                                     </td>
-                                    <td>{{ $purchasedBuyer->user->name ?? '' }}</td>
+                                    <td>{{ ucwords($purchasedBuyer->user_first_name.' '.$purchasedBuyer->user_last_name) }}</td>
                                  
                               </tr>
                      
-                              @endif
                               @endforeach
                            @else
                              <tr>

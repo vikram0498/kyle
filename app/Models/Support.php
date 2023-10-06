@@ -24,6 +24,8 @@ class Support extends Model
         'phone_number',
         'contact_preferance',
         'message',
+        'reply',
+        'is_draft',
         'created_by',
     ];
 

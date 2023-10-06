@@ -62,7 +62,7 @@ class SellerDatatable extends LivewireDatatable
             Column::index($this)->unsortable(),
             Column::name('name')->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
 
-            Column::callback(['id', 'is_active'], function ($id, $is_active) {
+            NumberColumn::callback(['id', 'is_active'], function ($id, $is_active) {
                 
                 // if(strtolower($this->search) == 'active'){
                 //     $is_active = 1;
@@ -72,14 +72,14 @@ class SellerDatatable extends LivewireDatatable
                 
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $is_active, 'type' => 'is_active', 'onLable' => 'Active', 'offLable' => 'Block']);
               
-            })->label(trans('cruds.user.fields.status'))->unsortable()->searchable(function($query,$searchValue){
+            })->label(trans('cruds.user.fields.status'))->sortable()->searchable(function($query,$searchValue){
                 if(strtolower($searchValue) == 'active'){
                     $query->where('is_active',1);
                 }elseif(strtolower($searchValue) == 'block'){
                     $query->where('is_active',0);
                 }
                 
-            }),
+            })->alignCenter(),
 
             NumberColumn::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->alignCenter()->sortable()->searchable(),
         

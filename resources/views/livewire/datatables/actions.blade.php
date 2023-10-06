@@ -25,4 +25,10 @@
             <i class="fas fa-user-plus"></i>
         </button>
     @endif
+
+    @if(isset($events) && in_array('support_reply_btn', $events))
+        <button style="cursor:pointer;" wire:click="$emitUp('reply', {{$id}})" class="btn btn-success btn-rounded btn-icon support-reply-btn">
+            <i class="fa-solid fa-reply"></i>
+        </button>
+    @endif
 </div>

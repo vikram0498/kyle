@@ -37,7 +37,7 @@ class SupportDatatable extends LivewireDatatable
             Column::name('phone_number')->label(trans('cruds.support.fields.phone_number'))->sortable()->searchable(),
             DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
             Column::callback(['id'], function ($id) {
-                $array = ['show'];
+                $array = ['show','support_reply_btn'];
                 return view('livewire.datatables.actions', ['id' => $id, 'events' => $array]);
             })->label(trans('global.action'))->unsortable(),
         ];

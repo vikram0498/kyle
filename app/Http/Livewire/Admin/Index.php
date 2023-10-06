@@ -6,6 +6,7 @@ use App\Models\Buyer;
 use App\Models\PurchasedBuyer;
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
 
 class Index extends Component
 {
@@ -18,10 +19,27 @@ class Index extends Component
         })->count();
         $buyerCount = Buyer::count();
 
-        $purchasedBuyers = PurchasedBuyer::select('user_id','buyer_id', \DB::raw('MAX(created_at) as max_created_at'))->with(['user','buyer'=>function($query){
-            $query->where('user_id',1);
-        }])
-        ->where('user_id','!=',1)->groupBy('buyer_id')->orderBy('max_created_at', 'desc')->limit(10)->get();
+        $purchasedBuyers = DB::table('purchased_buyers')
+        ->join('buyers', function ($join) {
+            $join->on('purchased_buyers.buyer_id', '=', 'buyers.id')
+                 ->where('buyers.user_id', '=', 1);
+        })
+        ->join('users', 'purchased_buyers.user_id', '=', 'users.id')
+        ->where('purchased_buyers.user_id', '!=', 1)
+        ->groupBy('purchased_buyers.buyer_id')
+        ->select(
+            'purchased_buyers.buyer_id',
+            'purchased_buyers.user_id',
+            'users.first_name AS user_first_name',
+            'users.last_name AS user_last_name',
+            'buyers.first_name AS buyer_first_name',
+            'buyers.last_name AS buyer_last_name',
+            DB::raw('MAX(purchased_buyers.created_at) AS max_created_at')
+        )
+        ->orderByDesc('max_created_at')
+        ->limit(5)
+        ->get();
+    
         
         // dd($purchasedBuyers);
 
