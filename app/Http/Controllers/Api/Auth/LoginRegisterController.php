@@ -19,10 +19,10 @@ class LoginRegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name'                => 'required',
             'last_name'                 => 'required',
-            'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
-            'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
-            // 'email'                     => 'required|email|unique:users,email,NULL,id',
-            // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
+            // 'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
+            // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
+            'email'                     => 'required|email|unique:users,email,NULL,id',
+            'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             // 'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
@@ -98,8 +98,18 @@ class LoginRegisterController extends Controller
                 'password' => $request->password,
             ]; 
 
-            $checkUserStatus = User::where('email',$request->email)->where('is_active',0)->exists();
-            if($checkUserStatus){
+            $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
+
+            if(!is_null($checkUserStatus->deleted_at)){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account has been deactivated!',
+                ];
+                return response()->json($responseData, 401);
+            }
+
+            if(!$checkUserStatus->is_active){
                 //Error Response Send
                 $responseData = [
                     'status'        => false,

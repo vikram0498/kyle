@@ -13,8 +13,17 @@ class SocialMediaController extends Controller
     public function handleGoogle(Request $request){
         try {
             $social_id = 'google_'.$request->sub;
-            $isUser = User::where('email', $request->email)->first();
+            $isUser = User::where('email', $request->email)->withTrashed()->first();
             if($isUser){
+                if(!is_null($isUser->deleted_at)){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been deactivated!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
                 if(!$isUser->is_active){
                     //Error Response Send
                     $responseData = [
@@ -98,9 +107,18 @@ class SocialMediaController extends Controller
     public function handleFacebook(Request $request){
         try {
             $social_id = 'facebook_'.$request->id;
-            $isUser = User::where('social_id', $social_id)->orWhere('email',$request->email)->first();
+            $isUser = User::where('social_id', $social_id)->orWhere('email',$request->email)->withTrashed()->first();
     
             if($isUser){
+                if(!is_null($isUser->deleted_at)){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been deactivated!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
                 if(!$isUser->is_active){
                     //Error Response Send
                     $responseData = [
