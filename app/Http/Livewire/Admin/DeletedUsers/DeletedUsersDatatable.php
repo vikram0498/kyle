@@ -53,13 +53,13 @@ class DeletedUsersDatatable extends LivewireDatatable
               
             // })->label(trans('cruds.user.fields.status'))->unsortable(),
 
-            NumberColumn::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->alignCenter()->sortable()->searchable(),
+            Column::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->sortable()->searchable(),
         
             Column::callback(['level_type'], function ($level_type) {
                 return 'Level '.$level_type;
-            })->label(trans('cruds.user.fields.level_type'))->alignCenter()->sortable(),
+            })->label(trans('cruds.user.fields.level_type'))->sortable(),
 
-            NumberColumn::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->alignCenter()->sortable()->searchable(),
+            Column::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->sortable()->searchable(),
 
             DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
 

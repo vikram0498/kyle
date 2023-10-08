@@ -66,9 +66,9 @@ class BuyerDatatable extends LivewireDatatable
                 return ucfirst($firstName).' '. ucfirst($lastName);
             })->label(trans('cruds.buyer.fields.name'))->sortable()->searchable(),
 
-            NumberColumn::callback(['id', 'status'], function ($id, $status) {
+            Column::callback(['id', 'status'], function ($id, $status) {
                 return view('livewire.datatables.toggle-switch', ['id' => $id, 'status' => $status, 'onLable' => 'Active', 'offLable' => 'Block']);
-            })->label(trans('cruds.buyer.fields.status'))->sortable()->searchable()->alignCenter(),
+            })->label(trans('cruds.buyer.fields.status'))->sortable()->searchable(),
 
             Column::callback(['id', 'size_min'], function ($id) {
                 $buyer = Buyer::find($id);
@@ -90,7 +90,7 @@ class BuyerDatatable extends LivewireDatatable
                 
             })->label(trans('cruds.buyer.fields.flag_mark'))->unsortable(),
 
-            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable()/*->defaultSort('desc')*/,
+            DateColumn::name('created_at')->label(trans('global.created'))->format(config('constants.date_format'))->sortable()->searchable(),
 
             DateColumn::name('updated_at')->label(trans('global.updated'))->format(config('constants.date_format'))->sortable()->searchable(),
 

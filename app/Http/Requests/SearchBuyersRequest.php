@@ -150,5 +150,13 @@ class SearchBuyersRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            'market_preferance' => 'mls status',
+            'property_flaw' => 'location flaws',
+        ];
+    }
+
 
 }

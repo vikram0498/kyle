@@ -62,7 +62,7 @@ class SellerDatatable extends LivewireDatatable
             Column::index($this)->unsortable(),
             Column::name('name')->label(trans('cruds.user.fields.name'))->sortable()->searchable(),
 
-            NumberColumn::callback(['id', 'is_active'], function ($id, $is_active) {
+            Column::callback(['id', 'is_active'], function ($id, $is_active) {
                 
                 // if(strtolower($this->search) == 'active'){
                 //     $is_active = 1;
@@ -79,15 +79,15 @@ class SellerDatatable extends LivewireDatatable
                     $query->where('is_active',0);
                 }
                 
-            })->alignCenter(),
+            }),
 
-            NumberColumn::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->alignCenter()->sortable()->searchable(),
+            Column::name('buyers.user_id:count')->label(trans('cruds.user.fields.buyer_count'))->sortable()->searchable(),
         
             Column::callback(['level_type'], function ($level_type) {
                 return 'Level '.$level_type;
-            })->label(trans('cruds.user.fields.level_type'))->alignCenter()->sortable()->searchable(),
+            })->label(trans('cruds.user.fields.level_type'))->sortable()->searchable(),
 
-            NumberColumn::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->alignCenter()->sortable()->searchable(),
+            Column::name('purchasedBuyers.user_id:count')->label(trans('cruds.user.fields.purchased_buyer'))->sortable()->searchable(),
 
             DateColumn::name('created_at')->label(trans('cruds.user.fields.created_at'))->format('m/d/Y')->sortable()->searchable(),
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('buyer_id');
             $table->unsignedBigInteger('user_id');
             $table->longText('reason')->nullable();
-            $table->json('incorrect_info')->nullable();
+            $table->longText('incorrect_info')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0 => Not resolved, 1 => Resolved, 2 => Rejcted');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(Null)->nullable();

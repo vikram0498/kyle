@@ -4,7 +4,7 @@
 <tr>
 	<td>
 		<p class="mail-title">
-			<b>Hello {{ $name ?? "" }} </b>,
+			<b>Hello {{ ucwords($name) }} </b>,
 		</p>
 		<div class="mail-desc">
             <p>{!! $replyMessage ?? '' !!}</p>

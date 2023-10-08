@@ -937,3 +937,7 @@ body .datepicker .datepicker-years .table-condensed{
     display: flex;
     align-items: baseline;
 }
+
+.swal2-modal .swal2-title {
+    font-size: 21.5px !important;
+}

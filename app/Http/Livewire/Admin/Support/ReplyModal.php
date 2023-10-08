@@ -18,7 +18,7 @@ class ReplyModal extends Component
 
     public $isSent = false, $reply_message='';
 
-    public $isDraftBtn = false, $isSendBtn = false;
+    public $name, $email;
 
     protected $listeners = [
         'storeReply','setReplyMessage',
@@ -29,6 +29,9 @@ class ReplyModal extends Component
 
         $supportReply = CutomerSupport::where('id',$this->support_id)->first();
         if($supportReply){
+            $this->name = $supportReply->name;
+            $this->email = $supportReply->email;
+
             if(is_null($supportReply->reply) || $supportReply->is_draft == 1){
                 $this->isSent = false;
             }else if($supportReply->is_draft == 0){
@@ -74,11 +77,12 @@ class ReplyModal extends Component
                 $customer = CutomerSupport::where('id',$this->support_id)->first();
 
                 Mail::to($customer->email)->queue(new ReplySupportMail($subject, $customer->name,$this->reply_message));
-                $this->alert('success','Replied successfully!');
+
+                $this->flash('success','Replied successfully!');
+
+                return redirect()->route('admin.supports');
             }
 
-            // $this->reset(['reply_message']);
-            $this->dispatchBrowserEvent('closed-modal');
         }else{
             $this->alert('error',trans('messages.error_message'));
         }

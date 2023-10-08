@@ -324,6 +324,8 @@ class Index extends Component
     }
 
     public function update() {
+        
+        $this->initializePlugins();   
         $this->validatiionForm();
 
         $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;

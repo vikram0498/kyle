@@ -61,7 +61,7 @@
                         </div>
                     </td>
                     <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
-                        {!! $flagData->pivot->reason !!}
+                        {!! nl2br($flagData->pivot->reason) !!}
                     </td>
                     <td style="text-wrap: wrap;line-height: 23px;font-size: 17px;">
                      @php
