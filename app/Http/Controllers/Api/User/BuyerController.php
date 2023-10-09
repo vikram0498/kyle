@@ -568,18 +568,52 @@ class BuyerController extends Controller
             }
 
             if($request->property_flaw){
-                $buyers = $buyers->whereJsonContains('property_flaw', $request->property_flaw);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('property_flaw', $request->property_flaw);
+                $selectedValues = $request->property_flaw;
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_flaw", $value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_flaw", $value);
+                    }
+                });
             }
 
             if($request->purchase_method){
-                $buyers = $buyers->whereJsonContains('purchase_method', $request->purchase_method);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('purchase_method', $request->purchase_method);
+                $selectedValues = $request->purchase_method;
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("purchase_method", $value);
+                    }
+                });
+                
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("purchase_method", $value);
+                    }
+                });
+              
             }
 
             if($request->zoning){
-                $buyers = $buyers->whereJsonContains('zoning', $request->zoning);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('zoning', $request->zoning);
+                $selectedValues = $request->zoning;
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("zoning", $value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("zoning", $value);
+                    }
+                });
             }
 
             if($request->utilities){
@@ -1429,15 +1463,33 @@ class BuyerController extends Controller
             }
 
             if($lastSearchLog->property_flaw){
-                $buyers = $buyers->whereJsonContains('property_flaw', $lastSearchLog->property_flaw);
+                $selectedValues = $lastSearchLog->property_flaw;
+                
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_flaw", $value);
+                    }
+                });
             }
 
             if($lastSearchLog->purchase_method){
-                $buyers = $buyers->whereJsonContains('purchase_method', $lastSearchLog->purchase_method);
+                $selectedValues = $lastSearchLog->purchase_method;
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("purchase_method", $value);
+                    }
+                });
             }
 
             if($lastSearchLog->zoning){
-                $buyers = $buyers->whereJsonContains('zoning', $lastSearchLog->zoning);
+                $selectedValues = $lastSearchLog->zoning;
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("zoning", $value);
+                    }
+                });
             }
 
             if($lastSearchLog->utilities){
