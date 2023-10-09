@@ -231,11 +231,13 @@ const ResultPage = ({ setIsFiltered }) => {
                     <div className="column-6">
                       <div className="inner-page-title text-center">
                         <h3 className="text-center">
-                          Property Criteria Match With {totalRecord} Buyers
+                          Property Criteria Match With {totalRecord}{" "}
+                          {totalRecord > 1 ? "Buyers" : "Buyer"}
                         </h3>
                         <p className="mb-0">
-                          {additionalBuyerCount} Additional Buyer interested in
-                          similar property
+                          {additionalBuyerCount} Additional{" "}
+                          {additionalBuyerCount > 1 ? "Buyers" : "Buyer"}{" "}
+                          interested in similar property
                         </p>
                       </div>
                     </div>
