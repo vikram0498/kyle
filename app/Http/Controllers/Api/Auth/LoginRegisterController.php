@@ -194,16 +194,30 @@ class LoginRegisterController extends Controller
         try {
             $token = Str::random(64);
             $email_id = $request->email;
-            $user = User::where('email', $email_id)->first();
+            $user = User::where('email', $email_id)->withTrashed()->first();
+
+            if(!is_null($user->deleted_at)){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account has been deactivated!',
+                ];
+                return response()->json($responseData, 401);
+            }
+
+            if(!$user->is_active){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account has been blocked!',
+                ];
+                return response()->json($responseData, 401);
+            }
 
             $userDetails = array();
             $userDetails['name'] = ucwords($user->first_name.' '.$user->last_name);
 
             $userDetails['reset_password_url'] = env('FRONTEND_URL').'reset-password/'.$token.'/'.encrypt($email_id);
-
-            // $userDetails['reset_password_url'] = 'https://kyle-react.hipl-staging3.com/reset-password/'.$token.'/'.encrypt($email_id);
-
-        
             
             DB::table('password_resets')->insert([
                 'email'         => $email_id, 
@@ -284,7 +298,7 @@ class LoginRegisterController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
