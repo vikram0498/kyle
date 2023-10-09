@@ -416,19 +416,29 @@ class BuyerController extends Controller
             $buyers = $buyers->where('status', 1);
         
             if($request->property_type){
-                $propertyType = $request->property_type;
-                // $buyers = $buyers->whereJsonContains('property_type', $propertyType);
-                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
-                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
+                // $propertyType = $request->property_type;
+                // $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', intval($propertyType));
+
+                $selectedValues = [$request->property_type];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_type", (int)$value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_type", (int)$value);
+                    }
+                });
             }
 
             if($request->park){
-                $parkType = $request->park;
-                // $buyers = $buyers->whereJsonContains('property_type', $propertyType);
-                // $additionalBuyers = $additionalBuyers->whereJsonContains('property_type', $propertyType);
-                $buyers = $buyers->whereJsonContains('park', intval($parkType));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('park', intval($parkType));
+                $parkType = (int)$request->park;
+                $buyers = $buyers->where('park', $parkType);
+                $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
 
             // if($request->address){
@@ -443,13 +453,36 @@ class BuyerController extends Controller
             // }
 
             if($request->state){
-                $buyers = $buyers->whereJsonContains('state', $request->state);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('state', $request->state);
+                $selectedValues = $request->state;
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("state", $value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("state", $value);
+                    }
+                });
             }
 
             if($request->city){
-                $buyers = $buyers->whereJsonContains('city', $request->city);
-                $additionalBuyers = $additionalBuyers->whereJsonContains('city', $request->city);
+                $selectedValues = $request->city;
+                // $buyers = $buyers->whereJsonContains('city', $request->city);
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('city', $request->city);
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("city", $value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("city", $value);
+                    }
+                });
             }
 
             // if($request->zip_code){
@@ -764,8 +797,21 @@ class BuyerController extends Controller
             }
 
             if($request->building_class){
-                $buyers = $buyers->whereJsonContains('building_class', intval($request->building_class));
-                $additionalBuyers = $additionalBuyers->whereJsonContains('building_class', intval($request->building_class));
+                // $buyers = $buyers->whereJsonContains('building_class', intval($request->building_class));
+                // $additionalBuyers = $additionalBuyers->whereJsonContains('building_class', intval($request->building_class));
+
+                $selectedValues = [$request->building_class];
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("building_class", (int)$value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("building_class", (int)$value);
+                    }
+                });
             }
 
             if(!is_null($request->value_add) && in_array($request->value_add, $radioValues)){
@@ -881,7 +927,7 @@ class BuyerController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
+                'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 400);
         }
@@ -1374,24 +1420,43 @@ class BuyerController extends Controller
 
             
             if($lastSearchLog->property_type){
-                $propertyType = $lastSearchLog->property_type;
-                $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+                // $propertyType = $lastSearchLog->property_type;
+                // $buyers = $buyers->whereJsonContains('property_type', intval($propertyType));
+
+                $selectedValues = [$lastSearchLog->property_type];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("property_type", (int)$value);
+                    }
+                });
+
             }
 
-            if($lastSearchLog->address){
-                $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            }
+            // if($lastSearchLog->address){
+            //     $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
+            // }
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
             // }
 
             if($lastSearchLog->state){
-                $buyers = $buyers->whereJsonContains('state', $lastSearchLog->state);
+                $selectedValues = $lastSearchLog->state;
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("state", $value);
+                    }
+                });
             }
 
             if($lastSearchLog->city){
-                $buyers = $buyers->whereJsonContains('city', $lastSearchLog->city);
+                $selectedValues = $lastSearchLog->city;
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("city", $value);
+                    }
+                });
             }
 
             // if($lastSearchLog->zip_code){
@@ -1511,9 +1576,17 @@ class BuyerController extends Controller
                 $buyers = $buyers->where('contact_preferance',$lastSearchLog->contact_preferance);
             }
 
-            /* if($lastSearchLog->building_class){
-                $buyers = $buyers->whereJsonContains('building_class', $lastSearchLog->building_class);
-            } */
+            if($lastSearchLog->building_class){
+                // $buyers = $buyers->whereJsonContains('building_class', $lastSearchLog->building_class);
+
+                $selectedValues = [$lastSearchLog->building_class];
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("building_class", (int)$value);
+                    }
+                });
+
+            } 
 
 
             if($lastSearchLog->stories && is_numeric($lastSearchLog->stories)){

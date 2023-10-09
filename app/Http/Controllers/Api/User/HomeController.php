@@ -35,13 +35,23 @@ class HomeController extends Controller
     public function getVideo($key){
         try{
             $video = Video::where('video_key','upload_buyer_video')->where('status',1)->first();
-            $video->video_link = $video->video_url;
-            //Success Response Send
-            $responseData = [
-                'status'          => true,
-                'videoDetails'    => ['video' => $video]
-            ];
-            return response()->json($responseData, 200);
+            if( $video ){
+                $video->video_link = $video->video_url;
+                //Success Response Send
+                $responseData = [
+                    'status'          => true,
+                    'videoDetails'    => ['video' => $video]
+                ];
+                return response()->json($responseData, 200);
+            }else{
+                //Success Response Send
+                $responseData = [
+                    'status'          => true,
+                    'videoDetails'    => ['video' => '']
+                ];
+                return response()->json($responseData, 200);
+            }
+            
         }catch (\Exception $e) {
             //  dd($e->getMessage().'->'.$e->getLine());
             

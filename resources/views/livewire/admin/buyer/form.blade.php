@@ -115,7 +115,7 @@
             @if(isset($state['property_type']) && in_array(7,$state['property_type']))
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}} </label>
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}}<span class="text-danger">*</span></label>
                         <select class="form-control zoning select2" wire:model.defer="state.zoning" data-property="zoning" multiple data-placeholder="Select {{ __('cruds.buyer.fields.zoning')}}">
                             @foreach ($zonings as $key=>$item)
                                 <option value="{{$key}}"> {{$item}}</option>
@@ -127,7 +127,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.utilities')}}</label>
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.utilities')}}<span class="text-danger">*</span></label>
                         <select class="form-control" wire:model.defer="state.utilities">
                             <option value="null">Select {{ __('cruds.buyer.fields.utilities')}}</option>
                             @foreach ($utilities as $key=>$item)
@@ -140,7 +140,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.sewer')}}</label>
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.sewer')}}<span class="text-danger">*</span></label>
                         <select class="form-control" wire:model.defer="state.sewer">
                             <option value="null">Select {{ __('cruds.buyer.fields.sewer')}}</option>
                             @foreach ($sewers as $key=>$item)
@@ -186,12 +186,12 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.value_add')}} <span class="text-danger">*</span></label>
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.value_add')}}<span class="text-danger">*</span></label>
                             <div class="form-group">
-                                <input type="radio" name="value_add" wire:model.defer="state.value_add" id="yes_value_add" value="1" > <label for="yes_value_add"> {{ __('global.yes') }}</label>
-                                <input type="radio" name="value_add" wire:model.defer="state.value_add" id="no_value_add" value="0" > <label for="no_value_add"> {{ __('global.no') }}</label>
+                                <input type="radio"  wire:model.defer="state.value_add" id="yes_value_add" value="1" > <label for="yes_value_add"> {{ __('global.yes') }}</label>
+                                <input type="radio"  wire:model.defer="state.value_add" id="no_value_add" value="0" > <label for="no_value_add"> {{ __('global.no') }}</label>
                             </div>
-                            @error('balloon_payment') <span class="error text-danger">{{ $message }}</span>@enderror
+                            @error('value_add') <span class="error text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -265,7 +265,7 @@
                 @if(isset($state['property_type']) && in_array(15,$state['property_type']))
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.rooms')}} </label>
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.rooms')}}<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" wire:model.defer="state.rooms" placeholder="{{ __('cruds.buyer.fields.rooms')}}" autocomplete="off"  min="0" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length <= 9">
                         @error('rooms') <span class="error text-danger">{{ $message }}</span>@enderror
                     </div>
@@ -360,7 +360,7 @@
        
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}} <span class="text-danger">*</span> </label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.buyer_type')}}<span class="text-danger">*</span> </label>
                     <div wire:ignore>
                         <select wire:model.defer="state.buyer_type"  class="form-control select2 buyer_type" data-property="buyer_type" data-placeholder="Select {{ __('cruds.buyer.fields.buyer_type')}}" >
                             <option value="">Select {{ __('cruds.buyer.fields.buyer_type')}}</option>
@@ -376,7 +376,7 @@
             @if(isset($state['property_type']) && in_array(14,$state['property_type']))
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.park')}} </label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.park')}}<span class="text-danger">*</span> </label>
                     <select class="form-control" wire:model.defer="state.park">
                         <option value="null">Select {{ __('cruds.buyer.fields.park')}}</option>
                         @foreach ($park as $key=>$item)

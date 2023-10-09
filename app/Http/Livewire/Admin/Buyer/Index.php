@@ -135,6 +135,8 @@ class Index extends Component
         if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){            
             $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
             $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
+
+            $rules['balloon_payment'] = ['required','numeric'];
         }
 
         if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){
@@ -142,11 +144,29 @@ class Index extends Component
             $rules['max_interest_rate'] = ['required','numeric','between:0,100'];
             $rules['balloon_payment'] = ['required','numeric'];
         }
-        if(!empty($this->state['buyer_type']) && (3 == $this->state['buyer_type'])){
+
+        if(!empty($this->state['property_type']) && array_intersect([7], $this->state['property_type'])){
+           
+            $rules['zoning'] = ['required','array', 'in:'.implode(',', array_keys($this->zonings))];
+            $rules['utilities'] = ['required', 'in:'.implode(',', array_keys($this->utilities))];
+            $rules['sewer'] = ['required','in:'.implode(',', array_keys($this->sewers))];
+
+        }
+
+        if(!empty($this->state['property_type']) && array_intersect([10,11,14,15], $this->state['property_type'])){
+           
             $rules['unit_min'] = ['required', 'numeric', !empty($this->state['unit_max']) ? new CheckMinValue($this->state['unit_max'], 'unit_max') : ''];
             $rules['unit_max'] = ['required', 'numeric', !empty($this->state['unit_min']) ? new CheckMaxValue($this->state['unit_min'], 'unit_min') : ''];
+            
             $rules['value_add'] = ['required'];
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys($this->buildingClassValue))];
+
+            $rules['rooms'] = ['required'];
+
+        }
+
+        if(!empty($this->state['property_type']) && array_intersect([14], $this->state['property_type'])){
+            $rules['park'] = ['required','in:'.implode(',', array_keys($this->park))];
         }
 
         // if(isset($this->state['state']) && !empty($this->state['state'])){
@@ -189,6 +209,10 @@ class Index extends Component
                 'market_preferance.required' => 'The mls status field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
                 'company_name.required' => 'The company/llc field is required',
+            ],[
+                'unit_min'=>'minimum units',
+                'unit_max'=>'maximum units',
+                'park'=>'park owned/tenant owned',
             ])->validate();
         } else {
             $rules = $this->rules();
@@ -203,6 +227,10 @@ class Index extends Component
                 'market_preferance.required' => 'The mls status field is required',
                 'contact_preferance.required' => 'The contact preference field is required',
                 'company_name.required' => 'The company/llc field is required',
+            ],[
+                'unit_min'=>'minimum units',
+                'unit_max'=>'maximum units',
+                'park'=>'park owned/tenant owned',
             ])->validate();
 
         }
