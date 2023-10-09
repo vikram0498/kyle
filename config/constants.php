@@ -44,6 +44,8 @@ return [
 
     'token_expired_time'=>60,
 
+    'datatable_entries' => [10, 25, 50, 100],
+
     'number_of_rows' => [
         10 => '10',
         25 => '25',

@@ -26,14 +26,14 @@ class TransactionTable extends Component
             $statusSearch = 0;
         }
 
-        $transaction = Transaction::query()->where(function ($query) use($searchValue,$statusSearch) {
+        $transactions = Transaction::query()->with(['user','plan','addonPlan'])->where(function ($query) use($searchValue,$statusSearch) {
             $query->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->paginationLength);
 
 
-        return view('livewire.admin.transactions.transaction-table');
+        return view('livewire.admin.transactions.transaction-table',compact('transactions'));
     }
     
     public function updatedSearch()

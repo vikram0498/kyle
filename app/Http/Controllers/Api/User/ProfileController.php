@@ -133,7 +133,7 @@ class ProfileController extends Controller
             'status' => true,
             'total_buyer_uploaded'   => auth()->user()->buyers()->count(),
             'credit_limit'   => auth()->user()->credit_limit,
-
+            'is_active' => auth()->user()->is_active ? true : false,
         ];
         return response()->json($responseData, 200);
     }

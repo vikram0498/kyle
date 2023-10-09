@@ -239,6 +239,7 @@ return [
         'title_singular'        => 'Transaction',
         'fields' => [
             'user'   => 'User',
+            'plan'   => 'Plan',
             'amount' => 'Amount',
             'currency' => 'Currency',
             'payment_type'   => 'Payment Type',
