@@ -151,12 +151,12 @@ const Development = ({data,landSelected})=>{
 				}
 				<div className="col-12 col-lg-6">
 					<div className="form-group">
-						<label>Property Flaws</label>
+						<label>Location Flaws</label>
 						<div className="form-group">
 							<MultiSelect 
 								name="property_flaw"
 								options={data.locationFlawsOption} 
-								placeholder='Select Property Flaws'
+								placeholder='Select Location Flaws'
 								setMultiselectOption = {data.setLocationFlaw}
 								selectValue = {data.locationFlawsValue}
 								setSelectValues = {data.setLocationFlawsValue}
@@ -254,11 +254,11 @@ const Development = ({data,landSelected})=>{
 							<div className="form-group">
 								<div className="radio-block">
 									<div className="label-container">
-										<input type="radio" name="balloon_payment" value="1" id="balloon_payment_yes" checked={data.balloonPayment == 1 ? 'checked' : ''} onChange={ e=>data.setBalloonPayment(e.target.value) }/>
+										<input type="radio" name="balloon_payment" value="1" id="balloon_payment_yes" checked={data.balloonPayment === 1 ? 'checked' : ''} onChange={ e=>data.setBalloonPayment(e.target.value) }/>
 										<label className="mb-0" htmlFor="balloon_payment_yes">Yes</label>
 									</div>
 									<div className="label-container">
-										<input type="radio" name="balloon_payment" value="0" id="balloon_payment_no" checked={data.balloonPayment == 0 ? 'checked' : ''} onChange={ e=>data.setBalloonPayment(e.target.value) }/>
+										<input type="radio" name="balloon_payment" value="0" id="balloon_payment_no" checked={data.balloonPayment === 0 ? 'checked' : ''} onChange={ e=>data.setBalloonPayment(e.target.value) }/>
 										<label className="mb-0" htmlFor="balloon_payment_no">No</label>
 									</div>
 								</div>

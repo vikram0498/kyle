@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate , Link} from "react-router-dom";
-import AuthContext from "../../context/authContext";
+//import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 // import SingleSelect from "../partials/Select2/SingleSelect";
@@ -20,19 +20,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import WatchVideo from "../partials/Modal/WatchVideo";
 
 function AddBuyerDetails (){
-    const {authData} = useContext(AuthContext);
+    //const {authData} = useContext(AuthContext);
     const { register, handleSubmit, control , formState: { errors },clearErrors  } = useForm();
     const {getTokenData,setLogout} = useAuth();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [generatedUrl, setGeneratedUrl] = useState('');
     const [openVideoModal,SetOpenVideoModal] = useState(false);
     const { setErrors, renderFieldError } = useFormError();
 
-    const [isVideoLoader, setIsVideoloader] = useState(true);
     const [videoUrl, setVideoUrl] = useState('');
+    const [videoTitle, setVideoTitle] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
@@ -53,7 +51,7 @@ function AddBuyerDetails (){
     const [sewerOption, setSewerOption] = useState([]);
     const [utilitiesOption, setUtilitiesOption] = useState([]);
 
-    const [countryOptions,setCountryOptions] = useState([]);
+    //const [countryOptions,setCountryOptions] = useState([]);
     const [stateOptions,setStateOptions] = useState([]);
     const [cityOptions,setCityOptions] = useState([]);
     const [parkOption, setParkOption] = useState([]);
@@ -156,9 +154,10 @@ function AddBuyerDetails (){
             let response = await axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers });
             if(response){
                 let videoLink = response.data.videoDetails.video.video_link;
+                let videoText = response.data.videoDetails.video.title;
                 setVideoUrl(videoLink);
+                setVideoTitle(videoText);
             }
-            setIsVideoloader(false)
         }catch(error){
             if(error.response) {
                 if(error.response.status === 401){
@@ -222,7 +221,7 @@ function AddBuyerDetails (){
 
         //formObject.parking          =  parkingValue;        
         formObject.property_type    =  propertyTypeValue;
-        formObject.location_flaw    =  locationFlawsValue;
+        formObject.property_flaw    =  locationFlawsValue;
         //formObject.buyer_type       =  buyerTypeValue;
         formObject.purchase_method  =  purchaseMethodsValue;
         if (formObject.hasOwnProperty('building_class')) {
@@ -271,26 +270,6 @@ function AddBuyerDetails (){
         }
     }
 
-    // const handleChangeFirstName = (e) => {
-    //     const regex = /^[a-zA-Z\s]+$/;
-    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-    //     if (regex.test(new_value)) {
-    //         setFirstName(new_value);
-    //     }
-    //     if(new_value ==''){
-    //         setFirstName('');
-    //     }
-    // }
-    // const handleChangeLastName = (e) => {
-    //     const regex = /^[a-zA-Z\s]+$/;
-    //     const new_value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
-    //     if (regex.test(new_value)) {
-    //         setLastName(new_value);
-    //     }
-    //     if(new_value ==''){
-    //         setLastName('');
-    //     }
-    // }
 
     const handleCopyToClipBoard = (url) => {
         //console.log(url,'url');
@@ -778,42 +757,91 @@ function AddBuyerDetails (){
                                                 <div className="block-divide">
                                                     <div className="row">
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                            <label>Zoning</label>
-                                                            <div className="form-group">
-                                                            <MultiSelect 
-                                                                name="zoning"
-                                                                options={zoningOption} 
-                                                                placeholder='Select Property Flaws'
-                                                                setMultiselectOption = {setZoningValue}
-                                                            />
-                                                            {renderFieldError('zoning') }
-                                                            </div>
+                                                            <label>Zoning <span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <Controller
+                                                                        control={control}
+                                                                        name="zoning"
+                                                                        rules={{ required: 'Zoning is required' }}
+                                                                        render={({ field: { value, onChange, name } }) => (
+                                                                        <Select
+                                                                            options={zoningOption}
+                                                                            name = {name}
+                                                                            placeholder='Select zoning'
+                                                                            onChange={(e)=>{
+                                                                                onChange(e)
+                                                                                handleCustum(e,'zoning')
+                                                                            }}
+                                                                            closeMenuOnSelect={false}
+                                                                            isMulti
+                                                                            />
+                                                                        )}
+                                                                    />
+                                                                    {errors.zoning && <p className="error">{errors.zoning?.message}</p>}
+                                                                    {renderFieldError('zoning') }
+                                                                </div>
                                                         </div>
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                            <label>Utilities</label>
+                                                            <label>Utilities <span>*</span></label>
                                                             <div className="form-group">
-                                                            <Select
+                                                            {/* <Select
                                                                 options={utilitiesOption}
                                                                 name = 'utilities'
                                                                 placeholder='Select Utilities Type'
                                                                 closeMenuOnSelect={true}
                                                                 isClearable={true}
                                                                 isSearchable={true}
+                                                            /> */}
+                                                            <Controller
+                                                                control={control}
+                                                                name="utilities"
+                                                                rules={{ required: 'Utilities is required' }}
+                                                                render={({ field: { value, onChange, name } }) => (
+                                                                <Select
+                                                                    options={utilitiesOption}
+                                                                    name = {name}
+                                                                    placeholder='Select Utilities'
+                                                                    onChange={(e)=>{
+                                                                        onChange(e)
+                                                                        handleCustum(e,'utilities')
+                                                                    }}
+                                                                    closeMenuOnSelect={false}
+                                                                    />
+                                                                )}
                                                             />
-                                                                {renderFieldError('utilities') }
+                                                            {errors.utilities && <p className="error">{errors.utilities?.message}</p>}
+                                                            {renderFieldError('utilities') }
                                                             </div>
                                                         </div>
                                                         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                                            <label>Sewage</label>
+                                                            <label>Sewage <span>*</span></label>
                                                             <div className="form-group">
-                                                                <Select
+                                                                {/* <Select
                                                                     options={sewerOption}
                                                                     name = 'sewer'
                                                                     placeholder='Select Sewage Type'
                                                                     closeMenuOnSelect={true}
                                                                     isClearable={true}
                                                                     isSearchable={true}
+                                                                /> */}
+                                                                <Controller
+                                                                    control={control}
+                                                                    name="sewer"
+                                                                    rules={{ required: 'Sewage is required' }}
+                                                                    render={({ field: { value, onChange, name } }) => (
+                                                                    <Select
+                                                                        options={sewerOption}
+                                                                        name = {name}
+                                                                        placeholder='Select Sewage'
+                                                                        onChange={(e)=>{
+                                                                            onChange(e)
+                                                                            handleCustum(e,'sewer')
+                                                                        }}
+                                                                        closeMenuOnSelect={false}
+                                                                    />
+                                                                    )}
                                                                 />
+                                                                {errors.sewer && <p className="error">{errors.sewer?.message}</p>}
                                                                 {renderFieldError('sewer') }
                                                             </div>
                                                         </div>
@@ -895,18 +923,27 @@ function AddBuyerDetails (){
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-md-12 col-lg-3">
-                                                                <label>Value Add</label>
+                                                                <label>Value Add<span>*</span></label>
                                                                 <div className="form-group">
                                                                     <div className="radio-block">
                                                                         <div className="label-container">
-                                                                            <input type="radio" name="value_add" value="0" id="value_add_yes"/>
+                                                                            <input type="radio" name="value_add" value="0" id="value_add_yes" {
+                                                                                ...register("value_add", {
+                                                                                    required: "Value Add is required",
+                                                                                })
+                                                                            } />
                                                                             <label className="mb-0" htmlFor="value_add_yes">Yes</label>
                                                                         </div>
                                                                         <div className="label-container">
-                                                                            <input type="radio" name="value_add" value="1" id="value_add_no"/>
+                                                                            <input type="radio" name="value_add" value="1" id="value_add_no" {
+                                                                                ...register("value_add", {
+                                                                                    required: "Value Add is required",
+                                                                                })
+                                                                            } />
                                                                             <label className="mb-0" htmlFor="value_add_no">No</label>
                                                                         </div>
                                                                     </div>
+                                                                    {errors.value_add && <p className="error">{errors.value_add?.message}</p>}
                                                                     {renderFieldError('value_add') }
                                                                 </div>
                                                             </div>
@@ -955,39 +992,84 @@ function AddBuyerDetails (){
                                                         <h5>Creative Financing</h5>
                                                         <div className="row">
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Down Payment (%)</label>
+                                                                <label>Down Payment (%) <span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="max_down_payment_percentage" className="form-control" placeholder="Down Payment (%)" />
-                                                                    {renderFieldError('max_down_payment_percentage') }
+                                                                    <input type="text" name="max_down_payment_percentage" className="form-control" placeholder="Down Payment (%)" {
+                                                                    ...register("max_down_payment_percentage", {
+                                                                        required: "Down Payment (%) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid Down Payment (%)",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 15 && v.length >= 1 || "The Down Payment (%) should be more than 1 digit and less than equal 15",
+                                                                        },
+                                                                    })
+                                                                } />
+                                                                {errors.max_down_payment_percentage && <p className="error">{errors.max_down_payment_percentage?.message}</p>}
+                                                                {renderFieldError('max_down_payment_percentage') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Down Payment ($)</label>
+                                                                <label>Down Payment ($)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="max_down_payment_money" className="form-control" placeholder="Down Payment ($)" />
-                                                                    {renderFieldError('max_down_payment_money') }
+                                                                    <input type="text" name="max_down_payment_money" className="form-control" placeholder="Down Payment ($)" {
+                                                                    ...register("max_down_payment_money", {
+                                                                        required: "Down Payment ($) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid Down Payment ($)",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 15 && v.length >= 1 || "The Down Payment ($) should be more than 1 digit and less than equal 15",
+                                                                        },
+                                                                    })
+                                                                } />
+                                                                {errors.max_down_payment_money && <p className="error">{errors.max_down_payment_money?.message}</p>}
+                                                                {renderFieldError('max_down_payment_money') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Interest Rate (%)</label>
+                                                                <label>Interest Rate (%)<span>*</span></label>
                                                                 <div className="form-group">
-                                                                    <input type="number" name="max_interest_rate" className="form-control" placeholder="Interest Rate (%)"  />
-                                                                    {renderFieldError('max_interest_rate') }
+                                                                    <input type="number" name="max_interest_rate" className="form-control" placeholder="Interest Rate (%)" {
+                                                                    ...register("max_interest_rate", {
+                                                                        required: "Interest Rate (%) is required",
+                                                                        validate: {
+                                                                            matchPattern: (v) =>
+                                                                            /^[0-9]\d*$/.test(v) ||
+                                                                            "Please enter valid Interest Rate (%)",
+                                                                            maxLength: (v) =>
+                                                                            v.length <= 15 && v.length >= 1 || "The Interest Rate (%) should be more than 1 digit and less than equal 15",
+                                                                        },
+                                                                    })
+                                                                } />
+                                                                {errors.max_interest_rate && <p className="error">{errors.max_interest_rate?.message}</p>}
+                                                                {renderFieldError('max_interest_rate') }
                                                                 </div>
                                                             </div>
                                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Balloon Payment </label>
+                                                                <label>Balloon Payment <span>*</span></label>
                                                                 <div className="form-group">
                                                                     <div className="radio-block">
                                                                         <div className="label-container">
-                                                                            <input type="radio" name="balloon_payment" value="1" id="balloon_payment_yes"/>
+                                                                            <input type="radio" name="balloon_payment" value="1" id="balloon_payment_yes" {
+                                                                            ...register("balloon_payment", {
+                                                                                required: "Balloon Payment is required",
+                                                                            })
+                                                                        }/>
                                                                             <label className="mb-0" htmlFor="balloon_payment_yes">Yes</label>
                                                                         </div>
                                                                         <div className="label-container">
-                                                                            <input type="radio" name="balloon_payment" value="0" id="balloon_payment_no"/>
+                                                                            <input type="radio" name="balloon_payment" value="0" id="balloon_payment_no" {
+                                                                            ...register("balloon_payment", {
+                                                                                required: "Balloon Payment is required",
+                                                                            })
+                                                                        }/>
                                                                             <label className="mb-0" htmlFor="balloon_payment_no">No</label>
                                                                         </div>
                                                                     </div>
+                                                                    {errors.balloon_payment && <p className="error">{errors.balloon_payment?.message}</p>}
                                                                     {renderFieldError('balloon_payment') }
                                                                 </div>
                                                             </div>
@@ -1144,9 +1226,21 @@ function AddBuyerDetails (){
                                                 }
                                                 {hotelMotelSelected &&
                                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Rooms</label>
+                                                    <label>Rooms <span>*</span></label>
                                                     <div className="form-group">
-                                                        <input type="number" name="rooms" className="form-control" placeholder="Rooms" />
+                                                        <input type="text" name="rooms" className="form-control"    placeholder="Rooms"  {
+                                                            ...register("rooms", {
+                                                                onChange:(e)=>{setlotSizesqFtMin(e.target.value)},
+                                                                required: "Rooms is required",
+                                                                validate: {
+                                                                    matchPattern: (v) =>
+                                                                    /^[0-9]\d*$/.test(v) ||
+                                                                    "Please enter valid number",
+                                                                },
+                                                            })
+                                                            }
+                                                        />
+                                                         {errors.rooms && <p className="error">{errors.rooms?.message}</p>}
                                                         {renderFieldError('rooms') }
                                                     </div>
                                                 </div>
@@ -1167,7 +1261,8 @@ function AddBuyerDetails (){
                                                                 positiveNumber: (v) => parseFloat(v) <= lotSizesqFtMax || "The Lot Size Sq Ft (min) should be less than or equal Lot Size Sq Ft (max)",
                                                             },
                                                         })
-                                                        } onKeyUp={()=>{handleChangeErrorMessage('lotsizesqft')}} />
+                                                        } 
+                                                        onKeyUp={()=>{handleChangeErrorMessage('lotsizesqft')}} />
                                                         {errors.lot_size_min && <p className="error">{errors.lot_size_min?.message}</p>}
 
                                                         {renderFieldError('lot_size_min') }
@@ -1461,14 +1556,26 @@ function AddBuyerDetails (){
                                                 </div>
                                                 { mobileHomeParkSelected && 
                                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                                        <label>Park Owned/Tenant Owned </label>
+                                                        <label>Park Owned/Tenant Owned <span>*</span></label>
                                                         <div className="form-group">
-                                                            <Select
+                                                            <Controller
+                                                                control={control}
                                                                 name="park"
+                                                                rules={{ required: 'Park Owned/Tenant Owned is required' }}
+                                                                render={({ field: { value, onChange, name } }) => (
+                                                                <Select
                                                                 options={parkOption}
-                                                                placeholder='Select Park Owned/Tenant Owned'
-                                                                isClearable={true}
+                                                                name = {name}
+                                                                    placeholder='Select Park Owned/Tenant Owned'
+                                                                    setMultiselectOption = {setBuyerTypeValue}
+                                                                    onChange={(e)=>{
+                                                                        onChange(e)
+                                                                        handleCustum(e,'park')
+                                                                    }}
+                                                                    />
+                                                                )}
                                                             />
+                                                            {errors.park && <p className="error">{errors.park?.message}</p>}
                                                             {renderFieldError('park') }
                                                         </div>
                                                     </div>
@@ -1478,12 +1585,12 @@ function AddBuyerDetails (){
                                                         <label>Location Flaws</label>
                                                         <div className="form-group">
                                                             <MultiSelect 
-                                                                name="location_flaw"
+                                                                name="property_flaw"
                                                                 options={locationFlawsOption} 
                                                                 placeholder='Select Location Flaws'
                                                                 setMultiselectOption = {setLocationFlawsValue}
                                                             />
-                                                            {renderFieldError('location_flaw') }
+                                                            {renderFieldError('property_flaw') }
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1727,7 +1834,7 @@ function AddBuyerDetails (){
                             <div className="col-12 col-lg-4 w-30">
                                 <UploadMultipleBuyers/>
                                 <div className="watch-video">
-                                    <p>Don’t Know How to Upload</p>
+                                    <p>Don’t Know How to Upload ?</p>
                                     <a onClick={handleOpenModal} className="title">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#121639" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1741,7 +1848,7 @@ function AddBuyerDetails (){
                     </div>
                 </div>
 
-                <WatchVideo isLoader={isLoader} videoUrl={videoUrl} SetOpenVideoModal={SetOpenVideoModal} openVideoModal={openVideoModal}/>
+                <WatchVideo isLoader={isLoader} videoUrl={videoUrl} videoTitle={videoTitle} SetOpenVideoModal={SetOpenVideoModal} openVideoModal={openVideoModal}/>
 
                 {/* modal box for video */}
                 {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

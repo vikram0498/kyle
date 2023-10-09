@@ -194,7 +194,7 @@ function Login (props){
                         </div>
                     </div>
                 </form>
-                <p className="account-now mt-4 pt-2">want to Contact us <Link to="/support" style={{color:'#0d6efd'}}>click here</Link></p>
+                <p className="account-now mt-4 pt-2">Want to get in touch? We'd love to hear from you. <Link to="/support" style={{color:'#0d6efd'}}>click here</Link></p>
             </div>
         </Layout>                           
     );

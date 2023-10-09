@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
+import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 const SentRequest = ({setSentOpen,sentOpen}) =>{
@@ -23,7 +22,7 @@ const SentRequest = ({setSentOpen,sentOpen}) =>{
                         </svg>
                     </span>
                     <h3>Your Edit Request has been sent to the admin</h3>
-                    <p className="mb-0">Kindly wait for admin approval for edit the detail</p>
+                    <p className="mb-0">Kindly wait for admin approval to edit the details</p>
                 </div>
             </div>
             </Modal.Body>

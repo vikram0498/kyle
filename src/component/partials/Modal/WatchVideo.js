@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const WatchVideo = ({isLoader,videoUrl,SetOpenVideoModal,openVideoModal}) =>{
+const WatchVideo = ({isLoader,videoUrl,videoTitle,SetOpenVideoModal,openVideoModal}) =>{
     const handleClose = () => {
         //const video = document.getElementById("myVideo");
         // video.currentTime = 0;
@@ -17,7 +17,7 @@ const WatchVideo = ({isLoader,videoUrl,SetOpenVideoModal,openVideoModal}) =>{
                 <i className='fa fa-times fa-lg'></i>
             </button> */}
             <Modal.Header closeButton>
-                <h5 class="modal-title" id="exampleModalLabel">Watch The Video</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{(videoTitle)? videoTitle :'Watch The Video'}</h5>
             </Modal.Header>
             <Modal.Body>
                 {(isLoader)?<div className="video-loader"> <img src="/assets/images/data-loader.svg"/></div>:

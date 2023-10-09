@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const BuyerCardResult = (props) => {
@@ -24,18 +24,20 @@ const BuyerCardResult = (props) => {
         <div className={"property-critera-block property-section-"+data.id}>
             <div className="critera-card">
                 <div className="center-align">
-                    <span className="price-img"><img src="/assets/images/price.svg" className="img-fluid" /></span>
+                    <span className="price-img">
+                        <img alt="price" src="/assets/images/price.svg" className="img-fluid" /></span>
                     <p>Buyer </p>
-                    {(activeTab =='more_buyers')?
+                    {(activeTab ==='more_buyers')?
                     <ul className="like-unlike mb-0 list-unstyled">
                         <li>
                             <span className="numb like-span ">{data.totalBuyerLikes}</span>
                             
                             <span className="ico-no ml-min like-btn-disabled">
-                            <img src="/assets/images/like.svg" className="img-fluid" /></span>
+                            <img src="/assets/images/like.svg" className="img-fluid" alt="like" /></span>
                         </li>
                         <li>
-                            <span className="ico-no mr-min like-btn-disabled"><img src="/assets/images/unlike.svg" className="img-fluid" /></span>
+                            <span className="ico-no mr-min like-btn-disabled">
+                                <img src="/assets/images/unlike.svg" className="img-fluid" alt="unlike"/></span>
                             <span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
                         </li>
                     </ul>
@@ -46,11 +48,11 @@ const BuyerCardResult = (props) => {
                                 <span className="numb like-span">{data.totalBuyerLikes}</span>
                                 <span className="ico-no ml-min" onClick={()=>{handleLikeClick(data.id, index)}}>
                                 {/* <span className="ico-no ml-min" onDoubleClick={handleDoubleClick}> */}
-                                <img src={(!data.liked) ? "/assets/images/like.svg" : "/assets/images/liked.svg"} className="img-fluid" /></span>
+                                <img alt="like" src={(!data.liked) ? "/assets/images/like.svg" : "/assets/images/liked.svg"} className="img-fluid" /></span>
                             </li>
                             <li>
                                 <span className="ico-no mr-min" onClick={()=>{handleDisikeClick(data.id, index)}}>
-                                    <img src={(!data.disliked) ? "/assets/images/unlike.svg":"/assets/images/unliked.svg"} className="img-fluid" /></span>
+                                    <img alt="dislike" src={(!data.disliked) ? "/assets/images/unlike.svg":"/assets/images/unliked.svg"} className="img-fluid" /></span>
                                 <span className="numb text-end unlike-span">{data.totalBuyerUnlikes}</span>
                             </li>
                         </ul>:
@@ -61,20 +63,20 @@ const BuyerCardResult = (props) => {
             <div className={"property-critera-details unhide-"+index}>
                 <ul className="list-unstyled mb-0">
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
+                        <span className="detail-icon"><img alt="user-gradient" src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
                         <span className="name-dealer">{data.name}</span>
                     </li>
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
-                        {(activeTab =='more_buyers')? 
+                        <span className="detail-icon"><img alt="phone-gradient" src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
+                        {(activeTab ==='more_buyers')? 
                             <span className="name-dealer">{data.phone}</span>
                             :
                             <a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
                         }
                     </li>
                     <li>
-                        <span className="detail-icon"><img src="/assets/images/email.svg" className="img-fluid" /></span>
-                        {(activeTab =='more_buyers')? 
+                        <span className="detail-icon"><img alt="email" src="/assets/images/email.svg" className="img-fluid" /></span>
+                        {(activeTab ==='more_buyers')? 
                             <span className="name-dealer">{data.email}</span>
                             :
                             <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
@@ -82,7 +84,7 @@ const BuyerCardResult = (props) => {
                     </li>
                     <li>
                         <span className="detail-icon">
-                            <img src={PreferenceIcons} className="img-fluid" />
+                            <img alt="preference" src={PreferenceIcons} className="img-fluid" />
                         </span>
                         <span className="name-dealer">{data.contact_preferance}</span>
                     </li>
@@ -93,14 +95,14 @@ const BuyerCardResult = (props) => {
                     (data.createdByAdmin)?
                         (data.redFlagShow) ? <>
                             <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
-                                <img src="/assets/images/red-flag.svg" className="img-fluid" />
+                                <img alt="flag" src="/assets/images/red-flag.svg" className="img-fluid" />
                             </div>
                         </>:
                         <div className="show-hide-data">
-                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details for this buyer</Tooltip>} >
+                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
                                 <button type="button" className="unhide-btn" onClick={()=>{handleClickConfirmation(data.id,index)}}>
                                     <span className="icon-unhide" >
-                                        <img src="/assets/images/unhide-icon.svg" className="img-fluid" />
+                                        <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" />
                                     </span>
                                 </button>
                             </OverlayTrigger>

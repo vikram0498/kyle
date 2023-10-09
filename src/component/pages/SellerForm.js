@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from "react";
-import {useNavigate , Link} from "react-router-dom";
-import AuthContext from "../../context/authContext";
+import React, {useEffect, useState} from "react";
+import { Link} from "react-router-dom";
+//import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 // import SingleSelect from "../partials/Select2/SingleSelect";
-import MultiSelect from "../partials/Select2/MultiSelect";
+//import MultiSelect from "../partials/Select2/MultiSelect";
 // import { City, Country, State } from "country-state-city";
 import {useAuth} from "../../hooks/useAuth";
 import Select from "react-select";
@@ -16,20 +16,20 @@ import { toast } from "react-toastify";
 import CondoPropertySearch from './FilterPropertyForm/Condo';
 import DevelopmentPropertySearch from './FilterPropertyForm/Development';
 import MultiFamilyPropertySearch from './FilterPropertyForm/MultiFamilyResidential';
-import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
-import FilterResult from "../partials/FilterResult";
+// import UploadMultipleBuyers from "../partials/UploadMultipleBuyers";
+// import FilterResult from "../partials/FilterResult";
 import ResultPage from "./ResultPage";
 
 
 
 const SellerForm = () =>{
 	
-	const {authData} = useContext(AuthContext);
+	//const {authData} = useContext(AuthContext);
     const {getTokenData,setLogout} = useAuth();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(true);
 
-    const [isVideoLoader, setIsVideoloader] = useState(true);
+    //const [isVideoLoader, setIsVideoloader] = useState(true);
     const [videoUrl, setVideoUrl] = useState('');
 
 	const [isFiltered,setIsFiltered] = useState(false);
@@ -202,7 +202,7 @@ const SellerForm = () =>{
                 //console.log(response.data.videoDetails.video.video_link,'response');
                 let videoLink = response.data.videoDetails.video.video_link;
                 setVideoUrl(videoLink);
-                setIsVideoloader(false)
+                //setIsVideoloader(false)
             })
         }catch(error){
             if(error.response) {
@@ -223,7 +223,7 @@ const SellerForm = () =>{
     }
 	
 	const getStates = (country_id) => {
-        if(country_id == null){
+        if(country_id === null){
             setCountry([]); setState([]); setCity([]);
             setStateOptions([]); setCityOptions([]);
         } else {            
@@ -238,7 +238,7 @@ const SellerForm = () =>{
     }
 
     const getCities = (state_id) => {
-        if(state_id == null){
+        if(state_id === null){
             setState([]); setCity([]);
 
             setCityOptions([]);
@@ -307,7 +307,7 @@ const SellerForm = () =>{
 	const handlePropertyTypeChange = (value) => {
 		makeStateBlank();
 		setErrors(null);
-		if(value == null){
+		if(value === null){
 			setConodoSelected(false);
 			setLandSelected(false);
 			setDevelopmentSelected(false);
@@ -346,12 +346,12 @@ const SellerForm = () =>{
 
 			if (propertTypeMultiFamily.includes(propValue)) {
 				setMultiFamilySelected(true);
-				if(propValue == 14){
+				if(propValue === 14){
 					setMobileHomeParkSelected(true);
 				}else{
 					setMobileHomeParkSelected(false);
 				}
-				if(propValue == 15){
+				if(propValue === 15){
 					setHotelMotelSelected(true);
 				}else{
 					setHotelMotelSelected(false);
@@ -382,8 +382,8 @@ const SellerForm = () =>{
 		if (formObject.hasOwnProperty('zoning')) {
             formObject.zoning =  zoning;
         }
-        formObject.city = (data.get('city') !='') ? [Number(data.get('city'))]:'';
-        formObject.state = (data.get('state') !='') ? [Number(data.get('state'))]:'';
+        formObject.city = (data.get('city') !=='') ? [Number(data.get('city'))]:'';
+        formObject.state = (data.get('state') !=='') ? [Number(data.get('state'))]:'';
 		
 		formObject.filterType = 'search_page';
 		formObject.activeTab  = 'my_buyers';

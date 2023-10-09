@@ -1,6 +1,5 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Link , useNavigate} from "react-router-dom";
-import AuthContext from "../../context/authContext";
+import React, {useEffect, useState} from "react";
+import {Link } from "react-router-dom";
 import { useFormError } from '../../hooks/useFormError';
 import { toast } from "react-toastify";
 import Header from "../partials/Layouts/Header";
@@ -8,15 +7,15 @@ import Footer from "../partials/Layouts/Footer";
 import {useAuth} from "../../hooks/useAuth";
 import axios from 'axios';
 import UploadMultipleBuyersOnChange from "../partials/UploadMultipleBuyersOnChange";
-import CryptoJS from "crypto-js";
 import WatchVideo from "../partials/Modal/WatchVideo";
 
 function Home ({userDetails}){
-    const {authData} = useContext(AuthContext);
+    //const {authData} = useContext(AuthContext);
     const {getTokenData,setLogout} = useAuth();
-    const { setErrors, renderFieldError } = useFormError();
+    const { setErrors } = useFormError();
     const [videoUrl, setVideoUrl] = useState('');
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [videoTitle, setVideoTitle] = useState('');
+    //const [isPlaying, setIsPlaying] = useState(false);
     const [isLoader, setIsloader] = useState(true);
     const [openVideoModal,SetOpenVideoModal] = useState(false);
 
@@ -37,8 +36,10 @@ function Home ({userDetails}){
             let response  =  await axios.get(apiUrl+'getVideo/upload_buyer_video', { headers: headers });
             if(response){
                 let videoLink = response.data.videoDetails.video.video_link;
+                let videoText = response.data.videoDetails.video.title;
                 setVideoUrl(videoLink);
-                setIsPlaying(true)
+                setVideoTitle(videoText);
+                //setIsPlaying(true)
             }
             setIsloader(false)
         }catch(error){
@@ -70,7 +71,7 @@ function Home ({userDetails}){
             <section className="main-section pt-120 pb-5 position-relative">
                 <div className="watch-video block-fix">
   
-                    <p>Don’t Know How to Upload</p>
+                    <p>Don’t Know How to Upload ?</p>
                     {/* <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" className="title"> */}
                     <a onClick={handleOpenModal} className="title">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,7 +118,7 @@ function Home ({userDetails}){
             <Footer/>
 
             {/* modal box for video */}
-            <WatchVideo isLoader={isLoader} videoUrl={videoUrl} SetOpenVideoModal={SetOpenVideoModal} openVideoModal={openVideoModal}/>
+            <WatchVideo isLoader={isLoader} videoUrl={videoUrl} videoTitle={videoTitle} SetOpenVideoModal={SetOpenVideoModal} openVideoModal={openVideoModal}/>
             {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
