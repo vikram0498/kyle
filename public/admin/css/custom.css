@@ -848,6 +848,15 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+.form-group.radioform.radio-block-group {
+    align-items: center;
+    height: 50px;
+    margin-bottom: 0;
+}
+.radioform.radio-block-group > label {
+    flex: auto;
+    margin: 0;
+}
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{

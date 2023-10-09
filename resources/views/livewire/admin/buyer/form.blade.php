@@ -155,7 +155,6 @@
             @if($multiFamilyBuyer)
             <!-- Multi Family Buyer -->
             <div class="col-md-12" id="multi_family_buyer_main">
-                <h4> {{ __('cruds.buyer.multi_family_buyer') }} </h4>
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
@@ -187,7 +186,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('cruds.buyer.fields.value_add')}}<span class="text-danger">*</span></label>
-                            <div class="form-group">
+                            <div class="form-group radioform radio-block-group">
                                 <input type="radio"  wire:model.defer="state.value_add" id="yes_value_add" value="1" > <label for="yes_value_add"> {{ __('global.yes') }}</label>
                                 <input type="radio"  wire:model.defer="state.value_add" id="no_value_add" value="0" > <label for="no_value_add"> {{ __('global.no') }}</label>
                             </div>
