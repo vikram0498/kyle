@@ -21,11 +21,14 @@ class SearchLogTable extends Component
     public function render()
     {
         $searchValue = $this->search;
+
         $searchLogs = SearchLog::query()
+        ->join('users', 'search_logs.user_id', '=', 'users.id')
         ->where(function ($query) use ($searchValue) {
             $query->whereRelation('seller','name','like','%'.$searchValue.'%')
-            ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
+            ->orWhereRaw("date_format(search_logs.created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })->orderBy($this->sortColumnName, $this->sortDirection)
+        ->select('search_logs.*')
         ->paginate($this->perPage);
 
         return view('livewire.admin.search-log.search-log-table',compact('searchLogs'));

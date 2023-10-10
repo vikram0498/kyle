@@ -71,7 +71,7 @@ class ReplyModal extends Component
 
         if($updated){
             if($isDraft){
-                $this->alert('success','Saved Successfully!');
+                $this->alert('success','Draft Saved Successfully!');
             }else{
                 $subject = 'Reply';
                 $customer = CutomerSupport::where('id',$this->support_id)->first();

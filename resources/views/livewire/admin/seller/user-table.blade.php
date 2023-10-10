@@ -49,14 +49,14 @@
                         {{ __('cruds.user.fields.name')}}
                          <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.user.fields.status')}}
                         <span wire:click="sortBy('is_active')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'is_active' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'is_active' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'is_active' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.user.fields.buyer_count')}}</th>
@@ -64,14 +64,14 @@
                         {{ __('cruds.user.fields.level_type')}}
                         <span wire:click="sortBy('level_type')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'level_type' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'level_type' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'level_type' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.user.fields.purchased_buyer') }}</th>
                     <th class="text-gray-500 text-xs">{{ __('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.action') }}</th>

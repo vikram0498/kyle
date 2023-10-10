@@ -47,16 +47,16 @@
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.name')}}
-                        {{-- <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                        <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
-                        </span> --}}
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
                     </th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.status')}}
                         <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
@@ -73,13 +73,13 @@
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.updated') }}
                         <span wire:click="sortBy('updated_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'updated_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'updated_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'updated_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.action') }}</th>

@@ -45,13 +45,25 @@
             <thead>
                 <tr>
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.support.fields.name')}}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.support.fields.email')}}</th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.support.fields.name')}}
+                        <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.support.fields.email')}}
+                        <span wire:click="sortBy('email')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.support.fields.phone_number')}}</th>
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.action') }}</th>

@@ -30,6 +30,7 @@ class BuyerTable extends Component
         }
 
         $buyers = Buyer::query()
+        ->selectRaw('*, CONCAT(first_name, " ", last_name) as name')
         ->where(function ($query) use ($searchValue,$statusSearch) {
             $query->whereRaw("concat(first_name, ' ', last_name) like ?", ["%{$searchValue}%"])
             ->orWhere('status',$statusSearch)

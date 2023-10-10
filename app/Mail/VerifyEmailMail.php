@@ -20,7 +20,7 @@ class VerifyEmailMail extends Mailable
      */
     public function __construct($name,$url,$subject)
     {
-        $this->name = $name;
+        $this->name = ucwords($name);
         $this->url = $url;
         $this->subject = $subject;
 
