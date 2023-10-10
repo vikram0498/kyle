@@ -5,33 +5,59 @@ namespace App\Http\Livewire\Admin\Transactions;
 use Illuminate\Support\Str;
 use App\Models\Transaction;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TransactionTable extends Component
 {
-    public $search = '';
+    use WithPagination;
+
+    public $search = null;
     
-    public $sortColumnName = 'created_at', $sortDirection = 'desc', $paginationLength = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
-        'updatePaginationLength',
+        
     ];
     
     public function render()
     {
-        $statusSearch = null;
+        // $statusSearch = null;
         $searchValue = $this->search;
-        if(Str::contains('active', strtolower($searchValue))){
-            $statusSearch = 1;
-        }else if(Str::contains('inactive', strtolower($searchValue))){
-            $statusSearch = 0;
-        }
+        // if(Str::contains('active', strtolower($searchValue))){
+        //     $statusSearch = 1;
+        // }else if(Str::contains('inactive', strtolower($searchValue))){
+        //     $statusSearch = 0;
+        // }
 
-        $transactions = Transaction::query()->with(['user','plan','addonPlan'])->where(function ($query) use($searchValue,$statusSearch) {
-            $query->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
+        $transactions = Transaction::query()
+        ->select('transactions.*', 'plans.title as plan_title', 'addons.title as addon_title')
+        ->leftJoin('users', 'transactions.user_id', '=', 'users.id')
+        ->leftJoin('plans', function ($join) {
+            $join->on('transactions.plan_id', '=', 'plans.id')
+                ->where('transactions.is_addon', '=', 0);
         })
-        ->orderBy($this->sortColumnName, $this->sortDirection)
-        ->paginate($this->paginationLength);
+        ->leftJoin('addons', function ($join) {
+            $join->on('transactions.plan_id', '=', 'addons.id')
+                ->where('transactions.is_addon', '=', 1);
+        })
+        ->where(function ($query) use ($searchValue) {
+            $query->where('users.name', 'like', '%' . $searchValue . '%')
+                ->orWhere(function ($query) use ($searchValue) {
+                    $query->where('plans.title', 'like', '%' . $searchValue . '%')
+                        ->where('transactions.is_addon', '=', 0);
+                })
+                ->orWhere(function ($query) use ($searchValue) {
+                    $query->where('addons.title', 'like', '%' . $searchValue . '%')
+                        ->where('transactions.is_addon', '=', 1);
+                })
+                
+                ->orWhere('transactions.amount',str_replace(',','',$searchValue))
+                ->orWhere('transactions.currency','like',$searchValue.'%')
+                ->orWhere('transactions.status','like',$searchValue.'%')
+                ->orWhereRaw("date_format(transactions.created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
 
+        })->orderBy($this->sortColumnName, $this->sortDirection)
+        ->paginate($this->perPage);
 
         return view('livewire.admin.transactions.transaction-table',compact('transactions'));
     }

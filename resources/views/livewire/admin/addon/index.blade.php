@@ -24,7 +24,10 @@
                         </div>
                     </div>                
                     <div class="table-responsive search-table-data">
-                        @livewire('admin.addon.addon-datatable')                       
+                        {{-- @livewire('admin.addon.addon-datatable')  --}}
+                        
+                        @livewire('admin.addon.addon-table')                       
+                        
                     </div>
 
                 @endif

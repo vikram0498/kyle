@@ -83,6 +83,7 @@ return [
         'title_singular'    => 'Video',
         'fields' => [
             'title'         => 'Title',
+            'sub_title'     => 'Sub Title',
             'description'   => 'Description',       
             'video'         => 'Video',       
             'status'        => 'Status', 

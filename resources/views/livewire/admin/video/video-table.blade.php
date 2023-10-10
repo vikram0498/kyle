@@ -45,16 +45,20 @@
             <thead>
                 <tr>
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.user')}}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.plan')}}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.amount')}}
-                        <span wire:click="sortBy('amount')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'amount' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down {{ $sortColumnName === 'amount' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.video.fields.title')}}
+                        <span wire:click="sortBy('title')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.currency')}}</th>
-                    <th class="text-gray-500 text-xs">{{ trans('cruds.transaction.fields.status') }}</th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.video.fields.status')}}
+                        <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -65,28 +69,26 @@
                 </tr>
             </thead>
             <tbody>
-                @if($transactions->count() > 0)
-                    @foreach($transactions as $serialNo => $transaction)
+                @if($videos->count() > 0)
+                    @foreach($videos as $serialNo => $video)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ $transaction->user ? ucwords($transaction->user->name) : '' }}</td>
+                        <td>{{ ucwords($video->title) }}</td>
                         <td>
-                            @if($transaction->is_addon)
-                            {{ $transaction->addon_title ? ucwords($transaction->addon_title) : '' }}
-                            @else
-                            {{ $transaction->plan_title ? ucwords($transaction->plan_title) : '' }}
-                            @endif
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$video->id}}"  {{ $video->status == 1 ? 'checked' : '' }}>
+                                <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
+                            </label>
                         </td>
-
-                        <td><i class='fa fa-dollar'></i>{{ number_format($transaction->amount,2) }}</td>
-                        <td>{{ strtoupper($transaction->currency) }}</td>
-                        <td>{{ ucfirst($transaction->status) }}</td>
-
-                        <td>{{ convertDateTimeFormat($transaction->created_at,'date') }}</td>
+                     
+                        <td>{{ convertDateTimeFormat($video->created_at,'date') }}</td>
 
                         <td>
-                            <button type="button" wire:click="$emitUp('show', {{$transaction->id}})" class="btn btn-primary btn-rounded btn-icon">
+                            <button type="button" wire:click="$emitUp('show', {{$video->id}})" class="btn btn-primary btn-rounded btn-icon">
                                 <i class="ti-eye"></i>
+                            </button>
+                            <button type="button" wire:click="$emitUp('edit', {{$video->id}})" class="btn btn-info btn-rounded btn-icon">
+                                <i class="ti-pencil-alt"></i>
                             </button>
                         </td>
 
@@ -94,7 +96,7 @@
                     @endforeach
                 @else
                 <tr>
-                    <td class="text-center" colspan="8">{{ __('messages.no_record_found')}}</td>
+                    <td class="text-center" colspan="5">{{ __('messages.no_record_found')}}</td>
                 </tr>
                 @endif
             
@@ -102,7 +104,7 @@
             </table>
         </div>
 
-        {{ $transactions->links('vendor.pagination.custom-pagination') }}
+        {{ $videos->links('vendor.pagination.custom-pagination') }}
     </div>
 
 </div>

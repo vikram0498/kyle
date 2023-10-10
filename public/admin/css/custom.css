@@ -857,6 +857,20 @@ input::-webkit-inner-spin-button {
     flex: auto;
     margin: 0;
 }
+
+.search-container > span {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.search-container {
+    position: relative;
+    float: right;
+}
+.dataTables_length {
+    float: left;
+}
 /*--------- Media Query ----------*/
 @media (max-width:991px){
      .card .card-title h4{

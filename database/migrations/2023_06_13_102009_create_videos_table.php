@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('video_key')->nullable();
             $table->string('title')->nullable();
+            $table->string('sub_title')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');

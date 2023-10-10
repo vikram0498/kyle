@@ -18,7 +18,9 @@
                         <h4 class="card-title-heading">{{__('cruds.support.title')}} {{ __('global.list') }}</h4>
                     </div>
                     <div class="table-responsive search-table-data">
-                        @livewire('admin.support.support-datatable') 
+                        {{-- @livewire('admin.support.support-datatable') --}}
+
+                        @livewire('admin.support.support-table')
                     </div>
 
                 @endif

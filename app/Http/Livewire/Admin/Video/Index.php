@@ -22,7 +22,7 @@ class Index extends Component
 
     protected $videos = null;
 
-    public  $title, $status = 1, $description='', $video=null,$viewMode = false;
+    public  $title, $sub_title, $status = 1, $description='', $video=null,$viewMode = false;
 
     public $video_id =null;
 
@@ -51,6 +51,7 @@ class Index extends Component
     {
         $validatedData = $this->validate([
             'title'  => 'required',
+            'sub_title'=>'required',
             'description' => 'required|without_spaces',
             'status' => 'required',
             'video' => 'required|mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv',
@@ -81,6 +82,7 @@ class Index extends Component
 
         $this->video_id = $id;
         $this->title  = $video->title;
+        $this->sub_title  = $video->sub_title;
         $this->description = $video->description;
         $this->status = $video->status;
 
@@ -94,7 +96,8 @@ class Index extends Component
     public function update(){
         //dd($this->all());
         $validatedData = $this->validate([
-            'title' => 'required',
+            'title' => 'required|string|max:'.config('constants.video_title_limit'),
+            'sub_title'=>'required|string|max:'.config('constants.video_title_limit'),
             'description' => 'required|without_spaces',
             'status' => 'required',
         ], ['without_spaces' => 'The :attribute field is required']);
@@ -179,6 +182,7 @@ class Index extends Component
 
     private function resetInputFields(){
         $this->title = '';
+        $this->sub_title = '';
         $this->description = '';
         $this->status = 1;
         // $this->video_image =null;

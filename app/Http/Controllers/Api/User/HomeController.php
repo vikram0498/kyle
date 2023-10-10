@@ -40,14 +40,14 @@ class HomeController extends Controller
                 //Success Response Send
                 $responseData = [
                     'status'          => true,
-                    'videoDetails'    => ['video' => $video]
+                    'videoDetails'    => ['is_active'=> true,'video' => $video]
                 ];
                 return response()->json($responseData, 200);
             }else{
                 //Success Response Send
                 $responseData = [
                     'status'          => true,
-                    'videoDetails'    => ['video' => '']
+                    'videoDetails'    => ['is_active'=> false,'video' => '']
                 ];
                 return response()->json($responseData, 200);
             }

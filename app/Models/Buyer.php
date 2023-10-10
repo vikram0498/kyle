@@ -94,6 +94,11 @@ class Buyer extends Model
         'deleted_at',
     ];
 
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+    
     protected static function boot () 
     {
         parent::boot();

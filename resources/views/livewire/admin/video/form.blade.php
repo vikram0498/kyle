@@ -14,6 +14,15 @@
         </div>
     </div>    
     <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.video.fields.sub_title')}} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" wire:model.defer="sub_title" placeholder="{{ __('cruds.video.fields.sub_title')}}">
+                @error('sub_title') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+    </div>    
+    <div class="row">
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
                 <label class="font-weight-bold">{{ __('cruds.video.fields.description')}} <span class="text-danger">*</span></label>

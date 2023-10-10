@@ -18,6 +18,10 @@
             <td>{{ $details->title ?? 'N/A' }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.video.fields.sub_title')}}</th>
+            <td>{{ $details->sub_title ?? 'N/A' }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.video.fields.description')}}</th>
             <td>{!! $details->description !!}</td>
         </tr>

@@ -22,7 +22,10 @@
                         </button></div> --}}
                     </div>
                     <div class="table-responsive search-table-data">
-                        @livewire('admin.seller.seller-datatable') 
+                        {{-- @livewire('admin.seller.seller-datatable')  --}}
+
+                        @livewire('admin.seller.user-table') 
+
                     </div>
 
                 @endif

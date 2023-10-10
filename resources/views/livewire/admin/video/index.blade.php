@@ -24,7 +24,9 @@
                         </div>
                     </div>                
                     <div class="table-responsive search-table-data">
-                        @livewire('admin.video.video-datatable') 
+                       {{--  @livewire('admin.video.video-datatable') --}}
+
+                       @livewire('admin.video.video-table') 
                        
                     </div>
 
