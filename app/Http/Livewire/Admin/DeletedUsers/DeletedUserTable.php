@@ -16,7 +16,7 @@ class DeletedUserTable extends Component
     public $sortColumnName = 'deleted_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
-        
+        'refreshTable' =>'render'
     ];
 
     public function render()

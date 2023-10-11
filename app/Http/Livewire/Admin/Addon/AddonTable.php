@@ -16,7 +16,7 @@ class AddonTable extends Component
     public $sortColumnName = 'created_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
-        
+        'refreshTable' =>'render'
     ];
 
     public function render()

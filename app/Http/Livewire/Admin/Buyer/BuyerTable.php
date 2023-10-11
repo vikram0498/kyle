@@ -16,7 +16,7 @@ class BuyerTable extends Component
     public $sortColumnName = 'updated_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
-        
+        'refreshTable' =>'render'
     ];
 
     public function render()

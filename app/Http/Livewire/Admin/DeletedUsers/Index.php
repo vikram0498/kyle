@@ -55,6 +55,8 @@ class Index extends Component
             $model->deleted_at = null;
             $model->save();
             
+            $this->emit('refreshTable');
+            
             $this->emit('refreshLivewireDatatable');
     
             $this->alert('success', 'User restored successfully!');

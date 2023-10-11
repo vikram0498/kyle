@@ -420,6 +420,8 @@ class Index extends Component
         $model = Buyer::find($id);
         $model->delete();
         
+        $this->emit('refreshTable');
+        
         $this->emit('refreshLivewireDatatable');
 
         $this->alert('success', trans('messages.delete_success_message'));
