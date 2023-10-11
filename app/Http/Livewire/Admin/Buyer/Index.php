@@ -135,8 +135,6 @@ class Index extends Component
         if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){            
             $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
             $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
-
-            $rules['balloon_payment'] = ['required','numeric'];
         }
 
         if(!empty($this->state['buyer_type']) && (1 == $this->state['buyer_type'])){
@@ -254,66 +252,72 @@ class Index extends Component
 
     public function store() {  
         // dd($this->all());
-        $this->initializePlugins();   
-        $this->validatiionForm();   
+        // try {
+            $this->initializePlugins();   
+            $this->validatiionForm();   
+            
+            $this->state['user_id'] = auth()->user()->id;
+            $countryId= config('constants.default_country');
+            $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
+
+            if(isset($this->state['state']) && !empty($this->state['state'])){
+                $this->state['state']   =  array_map('intval',$this->state['state']);
+                // $this->state['state'] = [(int)$this->state['state']];
+            }
+
+            if(isset($this->state['city']) && !empty($this->state['city'])){
+                $this->state['city']    =  array_map('intval',$this->state['city']);
+                // $this->state['city']       = [(int)$this->state['city']];
+            }
+
+            if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
+                $this->state['zoning'] = json_encode($this->state['zoning']);
+            }
+
+            if(isset($this->state['parking']) && !empty($this->state['parking'])){
+                $this->state['parking'] = (int)$this->state['parking'];
+            }
+
+            if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
+                $this->state['buyer_type'] = (int)$this->state['buyer_type'];
+            }
+                
+            
+            if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
+                $this->state['property_type'] = array_map('intval', $this->state['property_type']);
+            }
+
+            if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
+                $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
+            }
+
+            if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
+                $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
+            }
         
-        $this->state['user_id'] = auth()->user()->id;
-        $countryId= config('constants.default_country');
-        $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
+            // dd($this->state);
+            $createdBuyer = Buyer::create($this->state);
 
-        if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  array_map('intval',$this->state['state']);
-            // $this->state['state'] = [(int)$this->state['state']];
-        }
-
-        if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    =  array_map('intval',$this->state['city']);
-            // $this->state['city']       = [(int)$this->state['city']];
-        }
-
-        if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-            $this->state['zoning'] = json_encode($this->state['zoning']);
-        }
-
-        if(isset($this->state['parking']) && !empty($this->state['parking'])){
-            $this->state['parking'] = (int)$this->state['parking'];
-        }
-
-        if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
-            $this->state['buyer_type'] = (int)$this->state['buyer_type'];
-        }
-              
+            if($createdBuyer){
+                //Purchased buyer
+                $syncData['buyer_id'] = $createdBuyer->id;
+                $syncData['created_at'] = \Carbon\Carbon::now();
         
-        if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
-            $this->state['property_type'] = array_map('intval', $this->state['property_type']);
-        }
+                auth()->user()->purchasedBuyers()->create($syncData);
+            }
 
-        if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
-            $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
-        }
+            $this->formMode = false;
 
-        if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
-            $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
-        }
-    
-        // dd($this->state);
-        $createdBuyer = Buyer::create($this->state);
+            $this->resetInputFields();
 
-        if($createdBuyer){
-             //Purchased buyer
-             $syncData['buyer_id'] = $createdBuyer->id;
-             $syncData['created_at'] = \Carbon\Carbon::now();
-     
-             auth()->user()->purchasedBuyers()->create($syncData);
-        }
-
-        $this->formMode = false;
-
-        $this->resetInputFields();
-
-        $this->flash('success',trans('messages.add_success_message'));
-        
-        return redirect()->route('admin.buyer');
+            $this->flash('success',trans('messages.add_success_message'));
+            
+            return redirect()->route('admin.buyer');
+        // }catch (\Exception $e) {
+        //      dd($e->getMessage().'->'.$e->getLine());
+            
+        //     $this->alert('error',trans('messages.error_message'));
+        // }
        
     }
 
