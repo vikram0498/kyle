@@ -56,8 +56,17 @@ class TransactionTable extends Component
                 ->orWhere('transactions.status','like',$searchValue.'%')
                 ->orWhereRaw("date_format(transactions.created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
 
-        })->orderBy($this->sortColumnName, $this->sortDirection)
-        ->paginate($this->perPage);
+        });
+        
+        if($this->sortColumnName == 'plan-title'){
+           $transactions = $transactions->orderBy('plan_title', $this->sortDirection)
+           ->orderBy('addon_title', $this->sortDirection);
+
+        }else{
+            $transactions->orderBy($this->sortColumnName, $this->sortDirection);
+        }
+
+        $transactions = $transactions->paginate($this->perPage);
 
         return view('livewire.admin.transactions.transaction-table',compact('transactions'));
     }

@@ -21,6 +21,7 @@ return [
         'admin_logo' => 'images/logo.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
         'profile_image' => 'default/default-user-man.png',
+        'email_logo' => 'images/email-logo.png',
     ],
 
     'owner_email' => 'amitpandey.his@gmail.com',

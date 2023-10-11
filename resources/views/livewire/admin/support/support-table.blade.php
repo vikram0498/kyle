@@ -93,7 +93,7 @@
                     @endforeach
                 @else
                 <tr>
-                    <td class="text-center" colspan="6">{{ __('No queries received yet')}}</td>
+                    <td class="text-center" colspan="6">{{ __('No Queries Received Yet')}}</td>
                 </tr>
                 @endif
             

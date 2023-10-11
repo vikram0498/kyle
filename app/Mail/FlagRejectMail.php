@@ -23,7 +23,7 @@ class FlagRejectMail extends Mailable
     public function __construct($subject,$name,$message)
     {
         $this->subject = $subject;
-        $this->name = $name;
+        $this->name = ucwords($name);
         $this->message = $message;
     }
 

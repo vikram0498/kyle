@@ -23,7 +23,7 @@
 				<table role="presentation" style="width: 100%; max-width:602px;border-collapse:collapse;border-spacing:0;text-align:left;">
 					<tr>
 						<td align="center" style="padding:20px 0;">
-							<img src="{{ asset(config('constants.default.admin_logo')) }}" alt="" width="300" style="height:auto;display:block;" />
+							<img src="{{ asset(config('constants.default.email_logo')) }}" alt="" width="300" style="height:auto;display:block;" />
 						</td>
 					</tr>
 					<tr>

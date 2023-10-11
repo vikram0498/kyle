@@ -45,8 +45,20 @@
             <thead>
                 <tr>
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.user')}}</th>
-                    <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.plan')}}</th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.transaction.fields.user')}}
+                        <span wire:click="sortBy('users.name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'users.name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'users.name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.transaction.fields.plan')}}
+                        <span wire:click="sortBy('plan-title')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'plan-title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'plan-title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.amount')}}
                         <span wire:click="sortBy('amount')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'amount' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -54,7 +66,13 @@
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.transaction.fields.currency')}}</th>
-                    <th class="text-gray-500 text-xs">{{ trans('cruds.transaction.fields.status') }}</th>
+                    <th class="text-gray-500 text-xs">
+                        {{ trans('cruds.transaction.fields.status') }}
+                        <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>

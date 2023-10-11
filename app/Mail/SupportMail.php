@@ -34,7 +34,7 @@ class SupportMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.auth.support-mail', [
-            'logoUrl'=>asset(config('constants.default.admin_logo')),
+            'logoUrl'=>asset(config('constants.default.email_logo')),
             'name' => $this->userRequestDetails['name'],
             'email' => $this->userRequestDetails['email'],
             'phone_number' => $this->userRequestDetails['phone_number'],

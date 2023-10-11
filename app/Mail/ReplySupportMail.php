@@ -23,7 +23,7 @@ class ReplySupportMail extends Mailable
     public function __construct($subject,$name,$replyMessage)
     {
         $this->subject = $subject;
-        $this->name = $name;
+        $this->name = ucwords($name);
         $this->replyMessage = $replyMessage;
     }
 
