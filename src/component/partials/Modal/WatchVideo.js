@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 const WatchVideo = ({
   isLoader,
   videoUrl,
-  videoTitle,
+  videoSubTitle,
   SetOpenVideoModal,
   openVideoModal,
 }) => {
@@ -28,7 +27,7 @@ const WatchVideo = ({
             </button> */}
         <Modal.Header closeButton>
           <h5 className="modal-title" id="exampleModalLabel">
-            {videoTitle ? videoTitle : "Watch The Video"}
+            {videoSubTitle ? videoSubTitle : "Watch The Video"}
           </h5>
         </Modal.Header>
         <Modal.Body>

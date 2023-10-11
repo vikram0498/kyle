@@ -37,6 +37,8 @@ function AddBuyerDetails() {
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
+  const [videoSubTitle, setVideoSubTitle] = useState("");
+  const [isActiveVideo, setIsActiveVideo] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -165,6 +167,8 @@ function AddBuyerDetails() {
       if (response) {
         let videoLink = response.data.videoDetails.video.video_link;
         let videoText = response.data.videoDetails.video.title;
+        setIsActiveVideo(response.data.videoDetails.is_active);
+        setVideoSubTitle(response.data.videoDetails.video.sub_title);
         setVideoUrl(videoLink);
         setVideoTitle(videoText);
       }
@@ -2750,9 +2754,9 @@ function AddBuyerDetails() {
                 </div>
                 <div className="col-12 col-lg-4 w-30">
                   <UploadMultipleBuyers />
-                  {videoUrl ? (
+                  {isActiveVideo ? (
                     <div className="watch-video">
-                      <p>Don’t Know How to Upload ?</p>
+                      <p>{videoTitle}</p>
                       <a onClick={handleOpenModal} className="title">
                         <svg
                           width="24"
@@ -2790,7 +2794,7 @@ function AddBuyerDetails() {
           <WatchVideo
             isLoader={isLoader}
             videoUrl={videoUrl}
-            videoTitle={videoTitle}
+            videoSubTitle={videoSubTitle}
             SetOpenVideoModal={SetOpenVideoModal}
             openVideoModal={openVideoModal}
           />

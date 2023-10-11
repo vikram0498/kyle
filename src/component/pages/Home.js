@@ -15,7 +15,8 @@ function Home({ userDetails }) {
   const { setErrors } = useFormError();
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
-  //const [isPlaying, setIsPlaying] = useState(false);
+  const [videoSubTitle, setVideoSubTitle] = useState("");
+  const [isActiveVideo, setIsActiveVideo] = useState("");
   const [isLoader, setIsloader] = useState(true);
   const [openVideoModal, SetOpenVideoModal] = useState(false);
 
@@ -39,6 +40,8 @@ function Home({ userDetails }) {
         let videoText = response.data.videoDetails.video.title;
         setVideoUrl(videoLink);
         setVideoTitle(videoText);
+        setVideoSubTitle(response.data.videoDetails.video.sub_title);
+        setIsActiveVideo(response.data.videoDetails.is_active);
         //setIsPlaying(true)
       }
       setIsloader(false);
@@ -71,35 +74,39 @@ function Home({ userDetails }) {
     <>
       <Header />
       <section className="main-section pt-120 pb-5 position-relative">
-        <div className="watch-video block-fix">
-          <p>Don’t Know How to Upload ?</p>
-          {/* <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" className="title"> */}
-          <a onClick={handleOpenModal} className="title">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                stroke="#121639"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M10 8L16 12L10 16V8Z"
-                stroke="#121639"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Watch The Video!
-          </a>
-        </div>
+        {isActiveVideo ? (
+          <div className="watch-video block-fix">
+            <p>{videoTitle}</p>
+            {/* <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" className="title"> */}
+            <a onClick={handleOpenModal} className="title">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="#121639"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M10 8L16 12L10 16V8Z"
+                  stroke="#121639"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Watch The Video!
+            </a>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="container position-relative">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-8">
@@ -161,7 +168,7 @@ function Home({ userDetails }) {
       <WatchVideo
         isLoader={isLoader}
         videoUrl={videoUrl}
-        videoTitle={videoTitle}
+        videoSubTitle={videoSubTitle}
         SetOpenVideoModal={SetOpenVideoModal}
         openVideoModal={openVideoModal}
       />
