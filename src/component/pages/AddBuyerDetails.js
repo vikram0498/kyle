@@ -355,15 +355,12 @@ function AddBuyerDetails() {
           });
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         setLogout();
         navigate("/login");
-      }
-      if (error.response.errors) {
-        setErrors(error.response.errors);
-      }
-      if (error.response.error) {
-        toast.error(error.response.error, {
+      } else {
+        console.log(error);
+        toast.error("An error occurred", {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
