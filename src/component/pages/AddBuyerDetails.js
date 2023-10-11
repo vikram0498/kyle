@@ -329,6 +329,7 @@ function AddBuyerDetails() {
       let response = await axios.get(apiUrl + "copy-single-buyer-form-link", {
         headers: headers,
       });
+      console.log(response.data);
       if (response.data.status) {
         let token = response.data.data.copy_token;
         let copyUrl = baseURL + "/add-buyer/" + token;
@@ -336,6 +337,7 @@ function AddBuyerDetails() {
         navigator.clipboard
           .writeText(copyUrl)
           .then(() => {
+            console.log("case 1");
             setCopySuccess(true);
             setCopyLoading(false);
             toast.success("Url Generated Successfully", {
@@ -565,11 +567,11 @@ function AddBuyerDetails() {
                       </div>
                     </div>
                     {copySuccess && generatedUrl != "" ? (
-                      <div id="inviteCode" class="invite-page">
+                      <div id="inviteCode" className="invite-page">
                         <input id="link" value={generatedUrl} readOnly />
                         <div id="copy">
                           <i
-                            class="fa-solid fa-copy"
+                            className="fa-solid fa-copy"
                             aria-hidden="true"
                             data-copytarget="#link"
                             onClick={() => handleCopyToClipBoard(generatedUrl)}
