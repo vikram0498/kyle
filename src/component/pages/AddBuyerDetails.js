@@ -332,7 +332,8 @@ function AddBuyerDetails() {
       console.log(response.data);
       if (response.data.status) {
         let token = response.data.data.copy_token;
-        let copyUrl = baseURL + "/add-buyer/" + token;
+        let copyUrl =
+          "https://kyle-dev-react.hipl-staging3.com/add-buyer/plcYuVlShJZdeBsNOV19N4BxkXXLGqUX";
         console.log(copyUrl, "copyUrl");
         setGeneratedUrl(copyUrl);
         navigator.clipboard
