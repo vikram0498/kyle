@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Support as CutomerSupport;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB; 
 
 
 class ReplyModal extends Component
@@ -63,27 +64,38 @@ class ReplyModal extends Component
           ]
         );
 
-        if($isDraft){
-            $updated = CutomerSupport::where('id',$this->support_id)->update(['reply'=>$this->reply_message,'is_draft'=>1]);
-        }else{
-            $updated = CutomerSupport::where('id',$this->support_id)->update(['reply'=>$this->reply_message,'is_draft'=>0]);
-        }
-
-        if($updated){
+        try{
+            DB::beginTransaction();
             if($isDraft){
-                $this->alert('success','Draft Saved Successfully!');
+                $updated = CutomerSupport::where('id',$this->support_id)->update(['reply'=>$this->reply_message,'is_draft'=>1]);
             }else{
-                $subject = 'Reply';
-                $customer = CutomerSupport::where('id',$this->support_id)->first();
-
-                Mail::to($customer->email)->queue(new ReplySupportMail($subject, $customer->name,$this->reply_message));
-
-                $this->flash('success','Replied successfully!');
-
-                return redirect()->route('admin.supports');
+                $updated = CutomerSupport::where('id',$this->support_id)->update(['reply'=>$this->reply_message,'is_draft'=>0]);
             }
 
-        }else{
+            if($updated){
+                if($isDraft){
+                    DB::commit();
+                    $this->alert('success','Draft Saved Successfully!');
+                }else{
+                    $subject = 'Reply';
+                    $customer = CutomerSupport::where('id',$this->support_id)->first();
+
+                    Mail::to($customer->email)->queue(new ReplySupportMail($subject, $customer->name,$this->reply_message));
+
+                    DB::commit();
+                    $this->flash('success','Replied successfully!');
+
+                    return redirect()->route('admin.supports');
+                }
+
+            }else{
+                $this->alert('error',trans('messages.error_message'));
+            }
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+                
             $this->alert('error',trans('messages.error_message'));
         }
     }

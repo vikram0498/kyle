@@ -24,7 +24,9 @@ return [
         'email_logo' => 'images/email-logo.png',
     ],
 
-    'owner_email' => 'amitpandey.his@gmail.com',
+    'owner_email' => env('OWNER_MAIL'),
+
+    // 'owner_email' => 'amitpandey.his@gmail.com',
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
     
     'date_format' => 'm/d/Y',
