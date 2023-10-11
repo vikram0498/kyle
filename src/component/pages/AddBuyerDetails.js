@@ -333,6 +333,7 @@ function AddBuyerDetails() {
       if (response.data.status) {
         let token = response.data.data.copy_token;
         let copyUrl = baseURL + "/add-buyer/" + token;
+        console.log(copyUrl, "copyUrl");
         setGeneratedUrl(copyUrl);
         navigator.clipboard
           .writeText(copyUrl)
