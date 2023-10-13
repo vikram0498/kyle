@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/authContext";
 import CryptoJS from "crypto-js";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 export const useAuth = () => {
   const secretPass = "XkhZG4fW2t2W";
   let navigate = useNavigate();
@@ -78,38 +78,70 @@ export const useAuth = () => {
     var deft = { signedIn: false, access_token: null };
     return deft;
   }
-  function setLogout() {
-    const apiUrl = process.env.REACT_APP_API_URL;
-    let headers = {
-      Accept: "application/json",
-      Authorization: "Bearer " + getTokenData().access_token,
-      "auth-token": getTokenData().access_token,
-    };
-    axios
-      .post(apiUrl + "logout", {}, { headers: headers })
-      .then((response) => {});
+  // function setLogout() {
+  //   const apiUrl = process.env.REACT_APP_API_URL;
+  //   let headers = {
+  //     Accept: "application/json",
+  //     Authorization: "Bearer " + getTokenData().access_token,
+  //     "auth-token": getTokenData().access_token,
+  //   };
+  //   axios
+  //     .post(apiUrl + "logout", {}, { headers: headers })
+  //     .then((response) => {});
 
-    const cookie = new Cookies();
-    cookie.remove("is_auth", {
-      path: "/",
-      expires: getAuthCookieExpiration(),
-      sameSite: "lax",
-      httpOnly: false,
-    });
-    cookie.remove("remember_me_token", {
-      path: "/",
-      expires: getAuthCookieExpiration(),
-      sameSite: "lax",
-      httpOnly: false,
-    });
-    setIsLogin({ signedIn: false, access_token: null });
-    cookie.remove("_token");
+  //   const cookie = new Cookies();
+  //   cookie.remove("is_auth", {
+  //     path: "/",
+  //     expires: getAuthCookieExpiration(),
+  //     sameSite: "lax",
+  //     httpOnly: false,
+  //   });
+  //   cookie.remove("remember_me_token", {
+  //     path: "/",
+  //     expires: getAuthCookieExpiration(),
+  //     sameSite: "lax",
+  //     httpOnly: false,
+  //   });
+  //   setIsLogin({ signedIn: false, access_token: null });
+  //   cookie.remove("_token");
 
-    localStorage.removeItem("user_data");
-    localStorage.removeItem("filter_buyer_fields");
-    navigate("/");
+  //   localStorage.removeItem("user_data");
+  //   localStorage.removeItem("filter_buyer_fields");
+  //   navigate("/");
+  // }
+  async function setLogout() {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      let headers = {
+        Accept: "application/json",
+        Authorization: "Bearer " + getTokenData().access_token,
+        "auth-token": getTokenData().access_token,
+      };
+      let url = apiUrl + "logout";
+      let response = await axios.post(url, {}, { headers: headers });
+      if (response.data.status) {
+        const cookie = new Cookies();
+        cookie.remove("_token");
+        cookie.remove("remember_me_token");
+        localStorage.removeItem("user_data");
+        localStorage.removeItem("filter_buyer_fields");
+        navigate("/login");
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        const cookie = new Cookies();
+        cookie.remove("_token");
+        cookie.remove("remember_me_token");
+        localStorage.removeItem("user_data");
+        localStorage.removeItem("filter_buyer_fields");
+        navigate("/login");
+      } else {
+        toast.error("Something went Wrong! ", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    }
   }
-
   function loginUserOnStartup() {
     const cookie = new Cookies();
     if (cookie.get("is_auth")) {
