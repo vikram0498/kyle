@@ -231,19 +231,65 @@ class PaymentController extends Controller
 
                     $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
                     if(!$transaction){
-                        // Save data to transactions table
-                        Transaction::create([
-                            'user_id' => $customerId,
-                            'plan_id' => $planId, 
-                            'is_addon' => $isAddon, 
-                            'payment_intent_id' => $paymentIntent->payment_intent,
-                            'amount' => (float)$paymentIntent->lines->data[0]->amount/100,
-                            'currency' => $paymentIntent->lines->data[0]->currency,
-                            'payment_method' => null,
-                            'payment_type'   => 'credit',
-                            'status' => 'success',
-                            'payment_json' => json_encode($event),
-                        ]);
+                        if(!is_null($customerId) && !is_null($planId)){
+                            // Save data to transactions table
+                            Transaction::create([
+                                'user_id' => $customerId,
+                                'plan_id' => $planId, 
+                                'is_addon' => $isAddon, 
+                                'payment_intent_id' => $paymentIntent->payment_intent,
+                                'amount' => (float)$paymentIntent->lines->data[0]->amount/100,
+                                'currency' => $paymentIntent->lines->data[0]->currency,
+                                'payment_method' => null,
+                                'payment_type'   => 'credit',
+                                'status' => 'success',
+                                'payment_json' => json_encode($event),
+                            ]);
+                        }
+                    }
+                
+                break;
+                
+                case 'invoice.payment_failed':
+                    
+                    Log::info('Payment failed successfully!');
+
+                    // Handle successful payment event
+                    $paymentIntent = $event->data->object;
+
+
+                    $customer_stripe_id = $paymentIntent->customer;
+
+                    $customer = User::where('stripe_customer_id',$customer_stripe_id)->first();
+                    $customerId = $customer->id ?? null;
+
+                    $isAddon= false;
+                    $planId = Plan::where('plan_stripe_id',$paymentIntent->lines->data[0]->plan->id)->value('id');
+                    if(!$planId){
+                        $planId = Addon::where('product_stripe_id',$paymentIntent->lines->data[0]->plan->id)->value('id');
+                        $isAddon = true;
+                    }
+
+                    $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
+                    if(!$transaction){
+                        if(!is_null($customerId) && !is_null($planId)){
+                            // Save data to transactions table
+                            Transaction::create([
+                                'user_id' => $customerId,
+                                'plan_id' => $planId, 
+                                'is_addon' => $isAddon, 
+                                'payment_intent_id' => $paymentIntent->payment_intent,
+                                'amount' => (float)$paymentIntent->lines->data[0]->amount/100,
+                                'currency' => $paymentIntent->lines->data[0]->currency,
+                                'payment_method' => null,
+                                'payment_type'   => 'credit',
+                                'status' => 'failed',
+                                'payment_json' => json_encode($event),
+                            ]);
+
+                            $customer->level_type = 1;
+                            $customer->save();
+                        }
                     }
                 
                 break;
@@ -263,50 +309,26 @@ class PaymentController extends Controller
                          
                         $transaction = Transaction::where('user_id',$customerId)->where('payment_intent_id',$paymentIntent->id)->exists(); 
                         if(!$transaction){
-                            // Save data to transactions table
-                            Transaction::create([
-                                'user_id' => $customerId,
-                                'plan_id' => $planId, 
-                                'is_addon' => true, 
-                                'payment_intent_id' => $paymentIntent->payment_intent,
-                                'amount' => (float)$paymentIntent->amount_total/100,
-                                'currency' => $paymentIntent->currency,
-                                'payment_method' => $paymentIntent->payment_method_types[0],
-                                'payment_type'   => 'credit',
-                                'status' => 'success',
-                                'payment_json' => json_encode($event),
-                            ]);
+                            if(!is_null($customerId) && !is_null($planId)){
+                                 // Save data to transactions table
+                                Transaction::create([
+                                    'user_id' => $customerId,
+                                    'plan_id' => $planId, 
+                                    'is_addon' => true, 
+                                    'payment_intent_id' => $paymentIntent->payment_intent,
+                                    'amount' => (float)$paymentIntent->amount_total/100,
+                                    'currency' => $paymentIntent->currency,
+                                    'payment_method' => $paymentIntent->payment_method_types[0],
+                                    'payment_type'   => 'credit',
+                                    'status' => 'success',
+                                    'payment_json' => json_encode($event),
+                                ]);
+                            }
                         }
                     }
                 break;
+
                 
-                case 'payment_intent.payment_failed':
-                    Log::info('Payment Failed!');
-                    // Handle subscription update event
-                    $paymentIntent = $event->data->object;
-                    
-                    $customer_stripe_id = $paymentIntent->customer;
-
-                    $customer = User::where('stripe_customer_id',$customer_stripe_id)->first();
-
-                    $transaction = Transaction::where('user_id',$customer->id)->where('payment_intent_id',$paymentIntent->id)->exists(); 
-                    if(!$transaction){
-                        // Save data to transactions table
-                        Transaction::create([
-                            'user_id' => $customerId,
-                            'payment_intent_id' => $paymentIntent->id,
-                            'amount' => (float)$paymentIntent->amount/100,
-                            'currency' => $paymentIntent->currency,
-                            'payment_method' => $paymentIntent->payment_method_types[0],
-                            'payment_type'   => 'credit',
-                            'status' => 'failed',
-                            'payment_json' => json_encode($paymentIntent),
-                        ]);
-
-                        $customer->level_type = 1;
-                        $customer->save();
-                    }
-                break;
                 default:
                  Log::info('Invalid Event fired!');
                
