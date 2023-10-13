@@ -58,9 +58,10 @@ class ReplyModal extends Component
 
     public function storeReply($isDraft){
         $this->validate([
-            'reply_message'=>'required|string|without_spaces'
+            'reply_message'=>'required|string|without_spaces|content_limit:'.config('constants.support_reply_content_limit')
         ],[
-            'without_spaces' => 'The :attribute field is required'
+            'without_spaces' => 'The :attribute field is required',
+            'content_limit'  => 'The :attribute must not exceed '.config('constants.support_reply_content_limit').' characters'
           ]
         );
 
@@ -114,4 +115,20 @@ Validator::extend('without_spaces', function ($attribute, $value, $parameters, $
         return false;
     }
     return true;
+});
+
+Validator::extend('content_limit', function ($attribute, $value, $parameters, $validator) {
+    $cleanValue = trim(strip_tags($value));
+    $replacedVal = trim(str_replace(['&nbsp;', '&ensp;', '&emsp;'], ['','',''], $cleanValue));
+    
+    if (empty($replacedVal)) {
+        return false;
+    }
+
+    if(count($parameters) > 0){
+       return strlen($cleanValue) <= $parameters[0];
+    }else{
+      return strlen($cleanValue) > 0;
+    }
+    
 });

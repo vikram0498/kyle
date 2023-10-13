@@ -238,6 +238,8 @@ return [
 
     'default_currency' => 'USD',
     'default_country' => 233,
+
     'video_title_limit' => 50,
+    'support_reply_content_limit' => 500,
 
 ];
