@@ -32,7 +32,7 @@ Route::get('/cache-clear', function() {
     return '<h1>All Cache cleared</h1>';
 });
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 
 Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])->name('verification.verify');
 

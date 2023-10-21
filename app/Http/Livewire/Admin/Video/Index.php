@@ -10,6 +10,7 @@ use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Index extends Component
 {
@@ -24,7 +25,7 @@ class Index extends Component
 
     public  $title, $sub_title, $status = 1, $description='', $video=null,$viewMode = false;
 
-    public $video_id =null;
+    public $video_id =null, $video_link = null, $videoExtension = null;
 
     protected $listeners = [
         'show', 'edit', 'confirmedToggleAction','deleteConfirm'
@@ -34,10 +35,12 @@ class Index extends Component
         abort_if(Gate::denies('video_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
+    
     public function render()
     {
         return view('livewire.admin.video.index');
     }
+
 
     public function create()
     {
@@ -85,7 +88,9 @@ class Index extends Component
         $this->sub_title  = $video->sub_title;
         $this->description = $video->description;
         $this->status = $video->status;
-
+        $this->video_link = $video->video_url ?? '';
+        $this->videoExtension = $video->uploadedVideo ? $video->uploadedVideo->extension : '';
+        
         $this->formMode = true;
         $this->updateMode = true;
 
@@ -95,12 +100,13 @@ class Index extends Component
 
     public function update(){
         //dd($this->all());
-        $validatedData = $this->validate([
+
+        $rules = [
             'title' => 'required|string|max:'.config('constants.video_title_limit'),
             'sub_title'=>'required|string|max:'.config('constants.video_title_limit'),
             'description' => 'required|without_spaces',
             'status' => 'required',
-        ], ['without_spaces' => 'The :attribute field is required']);
+        ];
 
         if($this->video){
             $extension = $this->video->getClientOriginalExtension();
@@ -112,35 +118,44 @@ class Index extends Component
                 return;
             }
             // $validatedData['video'] = 'required|mimes:mp4,webm,ogg|max:'.config('constants.video_max_size');
-            $validatedData['video'] = 'required|mimes:mp4,webm,ogg';
+            $rules['video'] = 'required|mimes:mp4,webm,ogg';
 
         }
+
+        $validatedData = $this->validate($rules, ['without_spaces' => 'The :attribute field is required']);
   
         $validatedData['status'] = $this->status;
 
-        $video = Video::find($this->video_id);
+        try{
+            $video = Video::find($this->video_id);
 
-        // Check if the photo has been changed
-        $uploadId = null;
-        if ($this->video) {
-            if($video->uploadedVideo){
-                $uploadId = $video->uploadedVideo->id;
-                uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'update', $uploadId);
-            }else{
-                uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'save', $uploadId);
+            // Check if the photo has been changed
+            $uploadId = null;
+            if ($this->video) {
+                if($video->uploadedVideo){
+                    $uploadId = $video->uploadedVideo->id;
+                    uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'update', $uploadId);
+                }else{
+                    uploadImage($video, $this->video, 'video_management/video/',"video", 'original', 'save', $uploadId);
+                }
             }
+            
+            $updateRecord = $this->except(['search','formMode','updateMode','video_id','video','page','paginators']);
+    
+            $video->update($updateRecord);
+      
+            $this->formMode = false;
+            $this->updateMode = false;
+      
+            $this->flash('success',trans('messages.edit_success_message'));
+            $this->resetInputFields();
+            return redirect()->route('admin.video');
+        }catch (\Exception $e) {
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            $this->alert('success',trans('messages.error_message'));
         }
-        
-        $updateRecord = $this->except(['search','formMode','updateMode','video_id','video','page','paginators']);
-
-        $video->update($updateRecord);
-  
-        $this->formMode = false;
-        $this->updateMode = false;
-  
-        $this->flash('success',trans('messages.edit_success_message'));
-        $this->resetInputFields();
-        return redirect()->route('admin.video');
+       
 
     }
 
@@ -187,6 +202,8 @@ class Index extends Component
         $this->sub_title = '';
         $this->description = '';
         $this->status = 1;
+        $this->video_link = null;
+        $this->videoExtension = null;
         // $this->video_image =null;
     }
 

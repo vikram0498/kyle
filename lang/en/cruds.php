@@ -28,6 +28,7 @@ return [
             'purchased_buyer'          => 'Purchased Buyers',
             'package'                  => 'Package',
             'level_type'               => 'Level Type',
+            'company_name'             => 'Company Name',
             'confirm_password'         => 'Password Confirm',
             'role'                     => 'User Level',
             'created_at'               => 'Created',

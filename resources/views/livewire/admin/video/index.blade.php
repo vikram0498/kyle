@@ -50,7 +50,6 @@
 <script type="text/javascript">
 
     document.addEventListener('loadPlugins', function (event) {
-      
         $('.dropify').dropify();
         $('.dropify-errors-container').remove();
       
@@ -75,7 +74,6 @@
                 }
             }
         });
-      
     });
     
     $(document).on('click', '.toggleSwitchMain', function(e){

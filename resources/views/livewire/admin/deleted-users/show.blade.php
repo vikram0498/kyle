@@ -22,6 +22,10 @@
             <td> {{ $seller->phone ?? 'N/A' }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.user.fields.company_name')}}</th>
+            <td> {{ $seller->company_name ?? 'N/A' }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.user.fields.buyer_count')}}</th>
             <td> {{ $selfBuyerCount ?? 'N/A' }}</td>
         </tr>
