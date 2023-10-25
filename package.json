@@ -1,0 +1,58 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://kyle-react.hipl-staging3.com",
+  "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.15.8",
+    "@react-oauth/google": "^0.11.0",
+    "@stripe/react-stripe-js": "^2.1.2",
+    "@stripe/stripe-js": "^2.1.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.4.0",
+    "country-state-city": "^3.1.4",
+    "crypto-js": "^4.1.1",
+    "jwt-decode": "^3.1.2",
+    "react": "^18.0.0",
+    "react-bootstrap": "^2.8.0",
+    "react-cookie": "^4.1.1",
+    "react-datepicker": "^4.16.0",
+    "react-dom": "^18.2.0",
+    "react-facebook-login": "^4.1.1",
+    "react-google-recaptcha": "^3.1.0",
+    "react-hook-form": "^7.45.3",
+    "react-router-dom": "^6.14.1",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.7.4",
+    "react-select2": "^4.0.3",
+    "react-toastify": "^9.1.3",
+    "sweetalert2": "^11.7.20",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
