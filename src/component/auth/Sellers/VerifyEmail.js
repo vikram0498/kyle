@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useForm } from "../../../hooks/useForm";
+import { useFormError } from "../../../hooks/useFormError";
 import { useParams } from "react-router-dom";
 
 function VerifyEmail({ match }) {
   const { id, hash } = useParams();
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { navigate } = useForm();
+  const { navigate } = useFormError();
 
   useEffect(() => {
     const emailVerifyFun = async () => {

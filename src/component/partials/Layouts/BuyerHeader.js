@@ -31,7 +31,7 @@ function BuyerHeader() {
                 <div className="modetype">
                   <DarkMode />
                 </div>
-                <a href="" className="upload-buyer">
+                <Link to="/boost-your-profile" className="upload-buyer">
                   <span className="upload-buyer-icon">
                     <img
                       src="/assets/images/rocket.svg"
@@ -39,7 +39,7 @@ function BuyerHeader() {
                     />
                   </span>
                   <p>boost your profile</p>
-                </a>
+                </Link>
                 <div className="dropdown user-dropdown">
                   <button
                     className="btn dropdown-toggle ms-auto"

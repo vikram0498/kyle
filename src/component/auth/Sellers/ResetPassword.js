@@ -4,7 +4,7 @@ import Layout from "../Layout";
 import { useParams } from "react-router-dom";
 
 import ButtonLoader from "../../partials/MiniLoader";
-import { useForm } from "../../../hooks/useForm";
+import { useFormError } from "../../../hooks/useFormError";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -28,7 +28,7 @@ function ResetPassword() {
 
   const [loading, setLoading] = useState("");
 
-  const { setErrors, renderFieldError, setMessage, navigate } = useForm();
+  const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
 
   const submitResetPasswordForm = (e) => {
     e.preventDefault();

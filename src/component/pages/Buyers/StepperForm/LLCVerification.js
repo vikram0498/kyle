@@ -19,9 +19,9 @@ const LLCVerification = ({ register, errors }) => {
     }
   };
   const validateFileSize = (file) => {
-    let extension = ["image/png", "image/jpg", "image/jpeg"];
+    let extension = ["image/jpg", "image/jpeg"];
     if (!extension.includes(file[0].type)) {
-      return "Please add valid file (jpg,jpeg,png)";
+      return "Please add valid file (jpg,jpeg)";
     } else if (file[0].size > 2097152) {
       return "File size is too large. Please upload a file that is less than 2MB.";
     }

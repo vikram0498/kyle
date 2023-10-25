@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DriverLicense = ({ register, errors }) => {
+const DriverLicense = ({ register, errors, renderFieldError }) => {
   const [previewFrontUrl, setPreviewFrontUrl] = useState("");
   const [previewBackUrl, setPreviewBackUrl] = useState("");
   const [border, setBorder] = useState("1px dashed #677AAB");
@@ -22,7 +22,7 @@ const DriverLicense = ({ register, errors }) => {
     let extension = ["image/jpg", "image/jpeg"];
     if (!extension.includes(file[0].type)) {
       setBorder("1px dashed #ff0000");
-      return "Please add valid file (jpg,jpeg,png)";
+      return "Please add valid file (jpg,jpeg)";
     } else if (file[0].size > 2097152) {
       setBorder("1px dashed #ff0000");
       return "File size is too large. Please upload a file that is less than 2MB.";
@@ -79,6 +79,7 @@ const DriverLicense = ({ register, errors }) => {
                     {errors.driver_license_front_image?.message}
                   </p>
                 )}
+                {renderFieldError("driver_license_front_image")}
               </div>
             </div>
             <div className="col-12 col-lg-6">
@@ -122,6 +123,7 @@ const DriverLicense = ({ register, errors }) => {
                     </p>
                   )}
                 </div>
+                {renderFieldError("driver_license_back_image")}
               </div>
             </div>
             <div className="col-12 col-lg-12">

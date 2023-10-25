@@ -91,6 +91,7 @@ const HorizontalLinearStepper = () => {
       await stepperForm(formObject);
     } catch (error) {
       if (error.response) {
+        console.log(error.response, "response");
         if (error.response.status === 401) {
           setLogout();
         }
@@ -266,13 +267,25 @@ const HorizontalLinearStepper = () => {
                 />
               )}
               {activeStep === 1 && (
-                <DriverLicense register={register} errors={errors} />
+                <DriverLicense
+                  register={register}
+                  errors={errors}
+                  renderFieldError={renderFieldError}
+                />
               )}
               {activeStep === 2 && (
-                <ProofOfFund register={register} errors={errors} />
+                <ProofOfFund
+                  register={register}
+                  errors={errors}
+                  renderFieldError={renderFieldError}
+                />
               )}
               {activeStep === 3 && (
-                <LLCVerification register={register} errors={errors} />
+                <LLCVerification
+                  register={register}
+                  errors={errors}
+                  renderFieldError={renderFieldError}
+                />
               )}
               {activeStep === 4 && <ApplicationProcess />}
             </div>

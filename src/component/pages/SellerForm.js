@@ -4,7 +4,7 @@ import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
 import { useAuth } from "../../hooks/useAuth";
 import Select from "react-select";
-import { useForm } from "../../hooks/useForm";
+import { useFormError } from "../../hooks/useFormError";
 import axios from "axios";
 import MiniLoader from "../partials/MiniLoader";
 import { toast } from "react-toastify";
@@ -31,7 +31,7 @@ const SellerForm = () => {
 
   const [isSearchForm, setIsSearchForm] = useState("");
 
-  const { setErrors, renderFieldError } = useForm();
+  const { setErrors, renderFieldError } = useFormError();
 
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");

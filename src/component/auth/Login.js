@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import { Link } from "react-router-dom";
-import { useForm } from "../../hooks/useForm";
+import { useFormError } from "../../hooks/useFormError";
 import { useAuth } from "../../hooks/useAuth";
 import AuthContext from "../../context/authContext";
 
@@ -16,7 +16,7 @@ import Layout from "./Layout";
 function Login(props) {
   const { setAsLogged, getRememberMeData, getTokenData } = useAuth();
   const { authData } = useContext(AuthContext);
-  const { setErrors, renderFieldError, setMessage, navigate } = useForm();
+  const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

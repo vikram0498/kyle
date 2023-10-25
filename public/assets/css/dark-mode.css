@@ -10,13 +10,13 @@ body.dark h3,
 body.dark h4,
 body.dark h5,
 body.dark h6 {
-  color: #fff;
+  color: #fff !important;
 }
+
 body.dark .dashboard-header {
   background: #1f1f1f;
   border-bottom: 1px solid #2f2f2f !important;
 }
-
 body.dark .footer-main {
   background: #1f1f1f;
   border-top: 1px solid #2f2f2f !important;
@@ -37,16 +37,12 @@ body.dark .contact-detail,
 body.dark .contact-desc-box {
   background: #2f2f2f;
 }
+
 body.dark .personal-information h3 {
   color: #fff;
 }
-body.dark .personal-information p,
-body.dark .contact-desc-box,
-body.dark .contact-desc-box p,
-body.dark .welcome,
-body.dark .profile-data-content p,
-body.dark .application-process p,
-body.dark .card-box-inner p {
+
+body.dark p {
   color: #cacaca;
 }
 body.dark .contact-update .contact-update-item a,
@@ -67,10 +63,10 @@ body.dark .profile-data-content h3 {
 body.dark .darkmode-none {
   display: none;
 }
-
 body.dark .lightmode-none {
   display: block;
 }
+
 body.dark .active-inactive button,
 body.dark .field-box button,
 body.dark .otp-digit .otpnumb,
@@ -79,6 +75,7 @@ body.dark .card-box-blocks .form-control {
   border-color: rgb(255 255 255 / 20%) !important;
   color: #fff !important;
 }
+
 body.dark .active-inactive button .userimg,
 body.dark .field-box button .commentic {
   border-color: rgb(255 255 255 / 20%);
@@ -88,9 +85,11 @@ body.dark .dropdown-arr svg path,
 body.dark .user-dropdown .arrow-icon svg path {
   stroke: #fff;
 }
+
 body.dark .account-check button {
   background: rgba(25, 180, 0, 0.15);
 }
+
 body.dark .component-group .dropdown-menu,
 body.dark .component-group .dropdown-menu:before,
 body.dark .user-dropdown .dropdown-menu,
@@ -98,30 +97,36 @@ body.dark .user-dropdown .dropdown-menu:before {
   background: #2f2f2f;
   box-shadow: 2.01px -0.934153px 18.6831px rgba(4, 12, 30, 0.2);
 }
+
 body.dark .component-group .dropdown-menu li .dropdown-item,
 body.dark .user-dropdown .dropdown-menu li .dropdown-item {
   border-color: rgb(255 255 255 / 20%);
   color: #fff;
 }
+
 body.dark .component-group .dropdown-menu li:hover:before,
 body.dark .component-group .dropdown-menu li.active:before,
 body.dark .user-dropdown .dropdown-menu li:hover:before,
 body.dark .user-dropdown .dropdown-menu li.active:before {
   background: #fff;
 }
-body.dark .user-dropdown .dropdown-menu li .dropdown-item img {
+
+body.dark .user-dropdown .dropdown-menu li .dropdown-item img,
+body.dark .form-icon img,
+body.dark .form-icon-password img,
+body.dark .center-content img,
+body.dark .header-logo img {
   filter: invert(100%) sepia(91%) saturate(32%) hue-rotate(199deg)
     brightness(140%) contrast(109%);
   mix-blend-mode: luminosity;
 }
-
 body.dark .profile-varification {
   background: #444;
 }
-
 body.dark .card-box-blocks {
-  background: #1f1f1f;
+  background: #1f1f1f !important;
 }
+
 body.dark .card-box-blocks label,
 body.dark .otp-digit .otpnumb,
 body.dark .card-box-blocks .form-control::placeholder,
@@ -135,6 +140,7 @@ body.dark .radio-block-group {
   background: rgb(255 255 255 / 10%) !important;
   border-color: rgb(255 255 255 / 20%) !important;
 }
+
 body.dark .profile-varification .nav-item .nav-link {
   background: #1f1f1f;
   color: #fff !important;
@@ -148,11 +154,9 @@ body.dark .application-process {
 body.dark .label-container span {
   color: #fff;
 }
-
 body.dark .change-password-form {
   border-top-color: rgb(255 255 255 / 20%) !important;
 }
-
 body.dark .back {
   color: #fff;
 }
@@ -174,9 +178,87 @@ body.dark .select2-container--default .select2-selection--multiple {
   background: rgb(255 255 255 / 10%) !important;
   border-color: rgb(255 255 255 / 20%) !important;
 }
+
 body.dark
   .select2-container--default
   .select2-selection--single
   .select2-selection__rendered {
   color: #fff !important;
+}
+
+/************ LOGIN ****************/
+body.dark .account-in,
+body.dark .grid-block-view {
+  background: #1f1f1f;
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+
+body.dark .form-control,
+body.dark .form-control-form {
+  background: rgb(255 255 255 / 10%) !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+  color: #fff !important;
+}
+body.dark .form-control::placeholder,
+body.dark .form-control-form::placeholder {
+  color: #fff !important;
+}
+body.dark .btn-fill:hover {
+  border-color: #fff;
+  color: #fff;
+}
+body.dark .form-icon {
+  border-color: #fff;
+}
+
+body.dark .slider,
+body.dark .css-13cymwt-control,
+body.dark .css-13cymwt-control,
+body.dark .css-t3ipsp-control {
+  background-color: #363636 !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .account-in label,
+body.dark .toggle-heading,
+body.dark .link-pass,
+body.dark .account-now,
+body.dark .account-now a,
+body.dark .upload-file,
+body.dark .upload-buyer p b,
+body.dark .welcome,
+body.dark .watch-video .title,
+body.dark .copy-link,
+body.dark .upload-single-data .drag-file-area label .browse-files-text,
+body.dark .back-block .page-out,
+body.dark .property-critera-details li a,
+body.dark .name-dealer,
+body.dark .modal-form-main .btn-close,
+body.dark .profile-account label,
+body.dark .modal-form label,
+body.dark .msg-passwrd {
+  color: #fff !important;
+}
+body.dark input[type="radio"]:checked:before,
+body.dark .form-icon-password:before {
+  background: #fff;
+}
+body.dark .upload-multiple-data,
+body.dark .upload-single-data {
+  background: #1f1f1f;
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .upload-single-data .drag-file-area label .browse-files-text {
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .watch-video,
+body.dark .property-critera-block,
+body.dark .modal-content {
+  background: #1f1f1f;
+}
+body.dark .watch-video svg path {
+  stroke: #fff;
+}
+
+body.dark .critera-card {
+  background: rgb(255 255 255 / 20%) !important;
 }

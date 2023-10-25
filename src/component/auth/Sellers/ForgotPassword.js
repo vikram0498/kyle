@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Layout from "../Layout";
 
 import ButtonLoader from "../../partials/MiniLoader";
-import { useForm } from "../../../hooks/useForm";
+import { useFormError } from "../../../hooks/useFormError";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -11,7 +11,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState("");
 
-  const { setErrors, renderFieldError, setMessage, navigate } = useForm();
+  const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
 
   const submitForgotPasswordForm = async (e) => {
     e.preventDefault();

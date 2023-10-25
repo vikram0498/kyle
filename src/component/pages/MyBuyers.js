@@ -259,7 +259,7 @@ const MyBuyer = () => {
                 </div>
               </div>
             </div>
-            <div className="card-box bg-white-gradient mt-0 pt-0">
+            <div className="card-box bg-white-gradient pt-0">
               <div className="row">
                 <div className="col-12 col-lg-12">
                   {totalRecord === 0 ? (

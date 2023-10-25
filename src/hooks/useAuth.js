@@ -59,7 +59,15 @@ export const useAuth = () => {
       expires: twoHoursLater,
     });
     setLocalStorageUserdata(userData);
-    navigate("/");
+    if (userData.role === 3) {
+      if (userData.is_verified) {
+        navigate("/buyer-profile");
+      } else {
+        navigate("/profile-verification");
+      }
+    } else {
+      navigate("/");
+    }
   }
 
   function getUserData() {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useForm } from "../../../hooks/useForm";
+import { useFormError } from "../../../hooks/useFormError";
 import ButtonLoader from "../../partials/MiniLoader";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +12,7 @@ const VerifyAndSetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setErrors, renderFieldError, setMessage, navigate } = useForm();
+  const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
   const [showPassoword, setshowPassoword] = useState(false);
   const togglePasswordVisibility = () => {
     setshowPassoword(!showPassoword);

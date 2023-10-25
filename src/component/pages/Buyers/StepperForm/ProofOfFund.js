@@ -1,18 +1,11 @@
 import React, { useState } from "react";
 
-const ProofOfFund = ({ register, errors }) => {
+const ProofOfFund = ({ register, errors, renderFieldError }) => {
   const [previewBankUrl, setPreviewBankUrl] = useState("");
-
+  const [documentName, setDocumentName] = useState("");
   const previewImage = (e, type) => {
-    setPreviewBankUrl("");
     if (e.target.files[0]) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        if (type === "bank_statement_pdf") {
-          setPreviewBankUrl(reader.result);
-        }
-      });
-      reader.readAsDataURL(e.target.files[0]);
+      setDocumentName(e.target.files[0].name);
     }
   };
   const validateFileSize = (file) => {
@@ -36,20 +29,9 @@ const ProofOfFund = ({ register, errors }) => {
                   <div className="upload-photo">
                     <div className="containers">
                       <div className="imageWrapper">
-                        <div className="imageWrapper">
-                          {previewBankUrl == "" ? (
-                            <img
-                              className="image"
-                              src="./assets/images/front-licenses.svg"
-                            />
-                          ) : (
-                            <img
-                              className="image upload-img"
-                              src={previewBankUrl}
-                            />
-                          )}
-                        </div>
+                        <img className="image" src="./assets/images/pdf.png" />
                       </div>
+                      <p>{documentName}</p>
                     </div>
                     <button className="file-upload">
                       <input
@@ -74,6 +56,7 @@ const ProofOfFund = ({ register, errors }) => {
                       {errors.bank_statement_pdf?.message}
                     </p>
                   )}
+                  {renderFieldError("bank_statement_pdf")}
                 </div>
               </div>
             </div>
@@ -82,9 +65,9 @@ const ProofOfFund = ({ register, errors }) => {
                 <label>Other Proof of fund</label>
                 <div className="form-group other-prooff">
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
-                    placeholder="example@gmail.com"
+                    placeholder="Enter other proof of fund"
                     name="other_proof_of_fund"
                     {...register("other_proof_of_fund", {
                       required: "This Field is required",
@@ -92,10 +75,10 @@ const ProofOfFund = ({ register, errors }) => {
                         maxLength: (v) =>
                           v.length <= 50 ||
                           "The field should have at most 50 characters",
-                        matchPattern: (v) =>
-                          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
-                            v
-                          ) || "Email address must be a valid address",
+                        // matchPattern: (v) =>
+                        //   /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                        //     v
+                        //   ) || "Email address must be a valid address",
                       },
                     })}
                   />
@@ -104,6 +87,7 @@ const ProofOfFund = ({ register, errors }) => {
                       {errors.other_proof_of_fund?.message}
                     </p>
                   )}
+                  {renderFieldError("other_proof_of_fund")}
                 </div>
 
                 <div className="upload-btn">

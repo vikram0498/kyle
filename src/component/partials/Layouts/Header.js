@@ -4,6 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import MiniLoader from "../MiniLoader";
 import axios from "axios";
 import { toast } from "react-toastify";
+import DarkMode from "./DarkMode";
+
 function Header() {
   const [userDetails, setUserDetails] = useState(null);
   const [creditLimit, setCreditLimit] = useState(null);
@@ -72,6 +74,9 @@ function Header() {
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">
               <div className="block-session">
+                <div className="modetype">
+                  <DarkMode />
+                </div>
                 {userDetails !== null &&
                 userDetails.level_type !== 1 &&
                 userDetails.credit_limit < 5 ? (
