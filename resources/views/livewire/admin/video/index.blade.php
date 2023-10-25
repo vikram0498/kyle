@@ -76,6 +76,7 @@
         });
     });
     
+
     $(document).on('click', '.toggleSwitchMain', function(e){
         var _this = $(this);
         var id = _this.data('id');
@@ -101,6 +102,7 @@
             }
         })
     })
+
     $(document).on('click', '.deleteBtn', function(e){
         var _this = $(this);
         var id = _this.attr('data-id');
@@ -117,7 +119,6 @@
             }
         })
     })
-   
 
 </script>
 @endpush

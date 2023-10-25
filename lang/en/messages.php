@@ -15,4 +15,19 @@ return [
        
 
     ],
+
+    'auth'=>[
+        'buyer'=>[
+            'register_success_alert'=>'Buyer register successfully! We\'ve sent an email with a verification link.',
+        ],
+        'verification'=>[
+            'invalid_otp'         => 'Invalid OTP Number!',
+            'otp_send_success'    => 'OTP has been sent!',
+            'phone_verify_success'=> 'Phone Verified Successfully!',
+            'driver_license_success'=> 'Driver License Verified Successfully!',
+            'proof_of_funds_success'=> 'Proof Of Funds Verified Successfully!',
+            'llc_verification_success'=> 'LLC Verified Successfully!',
+            'application_process_success'=> 'Application Payment Successfully!',
+        ]
+    ],
 ];

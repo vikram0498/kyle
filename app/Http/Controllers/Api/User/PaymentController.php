@@ -149,7 +149,7 @@ class PaymentController extends Controller
         }
     }
 
-   public function checkoutSuccess(Request $request)
+    public function checkoutSuccess(Request $request)
     {
         $requestToken = $request->token;
         $authUser = auth()->user();
@@ -182,7 +182,7 @@ class PaymentController extends Controller
 
    public function handleStripeWebhook(Request $request){
 
-    Log::info('Start stripe webhook');
+        Log::info('Start stripe webhook');
 
         Stripe::setApiKey(config('app.stripe_secret_key'));
         $payload = $request->getContent();
@@ -252,7 +252,7 @@ class PaymentController extends Controller
                 
                 case 'invoice.payment_failed':
                     
-                    Log::info('Payment failed successfully!');
+                    Log::info('Payment failed!');
 
                     // Handle successful payment event
                     $paymentIntent = $event->data->object;
@@ -328,7 +328,37 @@ class PaymentController extends Controller
                     }
                 break;
 
+                case 'payment_intent.payment_failed':
+                    Log::info('Payment failed!');
+                     // Handle successful payment event
+                    $paymentIntent = $event->data->object;
+
+                    $customer_stripe_id = $paymentIntent->customer;
+     
+                    if(isset($paymentIntent->metadata->type)){
+
+                        if($paymentIntent->metadata->type == 'buyer-payment'){
+
+                        }
+
+                    }
+                break;
                 
+                case 'payment_intent.succeeded':
+                    Log::info('Payment successfully!');
+                    $paymentIntent = $event->data->object;
+
+                    $customer_stripe_id = $paymentIntent->customer;
+     
+                    if(isset($paymentIntent->metadata->type)){
+
+                        if($paymentIntent->metadata->type == 'buyer-payment'){
+                            
+                        }
+
+                    }
+                break;
+
                 default:
                  Log::info('Invalid Event fired!');
                
@@ -373,6 +403,59 @@ class PaymentController extends Controller
 
    }
 
+
+   public function createBuyerPaymentIntent(Request $request){
+
+    $request->validate([
+        'amount' =>['required','numeric','not_in:-'],
+    ]);
+
+    try {
+
+        // Set your Stripe secret key
+        Stripe::setApiKey(config('app.stripe_secret_key'));
+
+        $authUser = auth()->user();
+
+        // Create or retrieve Stripe customer
+        if (!$authUser->stripe_customer_id) {
+            $customer = Customer::create([
+                'name'  => $authUser->name,
+                'email' => $authUser->email,
+            ]);
+            $authUser->stripe_customer_id = $customer->id;
+            $authUser->save();
+        } else {
+            $customer = Customer::retrieve($authUser->stripe_customer_id);
+        }
+
+        // Create a Payment Intent
+        $extraData = [
+            'type'=>'buyer-payment',
+        ];
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => (float)$request->amount * 100, // Amount in cents
+            'currency' => config('constants.default_currency'), // Currency
+            'customer' => $customer ? $customer->id : null, // Customer ID
+            'metadata' => $extraData, // Attach custom data
+        ]);
+
+        return  response()->json(['status'=>true,'client_secret' => $paymentIntent->client_secret],200);
+
+    }catch (\Exception $e) {
+        // dd($e->getMessage().'->'.$e->getLine());
+        // return response()->json(['error' => $e->getMessage().'->'.$e->getLine()], 400);
+
+        //Return Error Response
+        $responseData = [
+            'status'        => false,
+            'error'         => trans('messages.error_message'),
+        ];
+        return response()->json($responseData, 400);
+    }
+    
+   }
 
 }
 ?>

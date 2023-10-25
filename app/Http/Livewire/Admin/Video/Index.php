@@ -100,7 +100,6 @@ class Index extends Component
 
     public function update(){
         //dd($this->all());
-
         $rules = [
             'title' => 'required|string|max:'.config('constants.video_title_limit'),
             'sub_title'=>'required|string|max:'.config('constants.video_title_limit'),
@@ -119,11 +118,10 @@ class Index extends Component
             }
             // $validatedData['video'] = 'required|mimes:mp4,webm,ogg|max:'.config('constants.video_max_size');
             $rules['video'] = 'required|mimes:mp4,webm,ogg';
-
         }
 
         $validatedData = $this->validate($rules, ['without_spaces' => 'The :attribute field is required']);
-  
+
         $validatedData['status'] = $this->status;
 
         try{

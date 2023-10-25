@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
-class StoreSingleBuyerDetailsRequest extends FormRequest
+class StoreCopyBuyerDetailsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -53,8 +53,10 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
         $rules = [
             'first_name'  => ['required'], 
             'last_name'   => ['required'], 
+            // 'email'       => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
+            // 'phone'       => ['required', 'numeric', /*'digits:10'*/'not_in:-'], 
             'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
-            'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'], 
+            'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 
@@ -109,11 +111,13 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             $rules['build_year_min'] = ['required', 'numeric', !empty($this->build_year_min) ? new CheckMinValue($this->build_year_min, 'build_year_min') : ''];
             $rules['build_year_max'] = ['required', 'numeric', !empty($this->build_year_max) ? new CheckMaxValue($this->build_year_max, 'build_year_max') : ''];
 
+
         }
         if(!empty($this->property_type) && !array_intersect([7,14], $this->property_type)){
             $rules['stories_min'] = ['required', 'numeric',!empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
             $rules['stories_max'] = ['required', 'numeric',!empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
         }
+
 
         return $rules;
     }

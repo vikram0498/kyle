@@ -100,7 +100,7 @@ class LoginRegisterController extends Controller
 
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
-            if(!is_null($checkUserStatus->deleted_at)){
+            if(!is_null($checkUserStatus->deleted_at) && $checkUserStatus->roles()->first()->id == 2){
                 //Error Response Send
                 $responseData = [
                     'status'        => false,
@@ -117,6 +117,19 @@ class LoginRegisterController extends Controller
                 ];
                 return response()->json($responseData, 401);
             }
+
+            if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
+
+                $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Your account is not verified! Please check your mail',
+                ];
+                return response()->json($responseData, 401);
+            }
+
 
             if(Auth::attempt($credentialsOnly, $remember_me)){
                 $user = User::find(Auth::id());
@@ -145,8 +158,10 @@ class LoginRegisterController extends Controller
                         'first_name'   => $user->first_name ?? '',
                         'last_name'    => $user->last_name ?? '',
                         'profile_image'=> $user->profile_image_url ?? '',
+                        'role'=> $user->roles()->first()->id ?? '',
                         'level_type'   => $user->level_type,
                         'credit_limit' => $user->credit_limit,
+                        'is_verified'  => $user->is_buyer_verified ?? false,
                         'total_buyer_uploaded' => $user->buyers()->count(),
                     ],
                     'remember_me_token' => $user->remember_token,
@@ -261,7 +276,7 @@ class LoginRegisterController extends Controller
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
-            return response()->json($responseData, 401);
+            return response()->json($responseData, 422);
         }
 
         DB::beginTransaction();
@@ -326,7 +341,7 @@ class LoginRegisterController extends Controller
             //Success Response Send
             $responseData = [
                 'status'  => true,
-                'message' => 'Email Verified successfully!',
+                'message' => 'Email verified successfully!',
             ];
             return response()->json($responseData, 200);
         }
@@ -337,5 +352,73 @@ class LoginRegisterController extends Controller
             'error'   => 'Mail verification failed!',
         ];
         return response()->json($responseData, 401);
+    }
+
+   
+    public function verifyBuyerEmailAndSetPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id'                        => 'required|numeric',
+            'hash'                      => 'required',
+            'password'                  => 'required|min:8',
+            'password_confirmation'     => 'required|same:password',
+        ]);
+
+        if($validator->fails()){
+            //Error Response Send
+            $responseData = [
+                'status'        => false,
+                'validation_errors' => $validator->errors(),
+            ];
+            return response()->json($responseData, 422);
+        }
+
+        $user = User::find($request->id);
+        
+        if(!is_null($user->email_verified_at)){
+            
+            $responseData = [
+                'status'  => true,
+                'message' => 'Email is aleready verifed!',
+            ];
+            return response()->json($responseData, 200);
+        }
+
+        if ($user && $request->hash === sha1($user->email)) {
+            $user->update(['password' => bcrypt($request->password),'email_verified_at' => date('Y-m-d H:i:s')]);
+
+            //Success Response Send
+            $responseData = [
+                'status'  => true,
+                'message' => 'Email verified and password set successfully!',
+            ];
+            return response()->json($responseData, 200);
+        }
+
+        // Error Response Send
+        $responseData = [
+            'status'  => false,
+            'error'   => 'Mail verification failed!',
+        ];
+        return response()->json($responseData, 401);
+    }
+
+    public function getEmail($userId){
+        $user = User::find($userId);
+        if($user){
+            $responseData = [
+                'status'  => true,
+                'message' => 'Here your email',
+                'data'    => $user->email ?? '',
+            ];
+            return response()->json($responseData, 200);
+        }{
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 401);
+        }
+        
     }
 }

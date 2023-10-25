@@ -22,6 +22,7 @@ class Buyer extends Model
 
     protected $fillable = [
         'user_id',
+        'buyer_user_id',
         'first_name',
         'last_name',
         'email',
@@ -110,6 +111,11 @@ class Buyer extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function userDetail()
+    {
+        return $this->belongsTo(User::class, 'buyer_user_id', 'id');
     }
 
     public function redFlagedData(){

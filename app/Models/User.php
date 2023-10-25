@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmailMail;
+use App\Mail\VerifyBuyerEmailMail;
+
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -32,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'phone',
         'company_name',
+        'otp',
         'register_type',
         'social_id',
         'social_json',
@@ -42,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_active',
         'is_block',
         'email_verified_at',
+        'phone_verified_at',
     ];
 
     /**
@@ -59,6 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_at',
         'deleted_at',
         'email_verified_at',
+        'phone_verified_at',
     ];
 
 
@@ -81,6 +86,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Buyer::class, 'user_id', 'id');
     }
 
+    public function buyerDetail()
+    {
+        return $this->hasOne(Buyer::class, 'buyer_user_id', 'id');
+    }
+
+    public function buyerVerification()
+    {
+        return $this->hasOne(ProfileVerification::class, 'user_id', 'id');
+    }
+
     public function getIsAdminAttribute()
     {
         return $this->roles()->where('id', 1)->exists();
@@ -89,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsSellerAttribute()
     {
         return $this->roles()->where('id', 2)->exists();
+    }
+
+    public function getIsBuyerAttribute()
+    {
+        return $this->roles()->where('id', 3)->exists();
     }
 
     public function profileImage()
@@ -103,6 +123,89 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return "";
     }
+
+    /** Start Buyer Profile Verification files */
+
+    public function getIsBuyerVerifiedAttribute()
+    {
+        return $this->buyerVerification()->where('is_phone_verification', 1)
+        ->where('is_proof_of_funds', 1)->where('is_llc_verification',1)
+        ->where('is_application_process',1)->exists();
+    }
+
+    // Start Driver License Images
+    public function driverLicenseFrontImage()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','driver-license-front');
+    }
+
+    public function getDriverLicenseFrontImageUrlAttribute()
+    {
+        if($this->driverLicenseFrontImage){
+            return $this->driverLicenseFrontImage->file_url;
+        }
+        return "";
+    }
+
+    public function driverLicenseBackImage()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','driver-license-back');
+    }
+
+    public function getDriverLicenseBackImageUrlAttribute()
+    {
+        if($this->driverLicenseBackImage){
+            return $this->driverLicenseBackImage->file_url;
+        }
+        return "";
+    }
+    // End Driver License Images
+
+    //Start Bank Statement Pdf
+    public function bankStatementPdf()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','bank-statement-pdf');
+    }
+
+    public function getBankStatementPdfUrlAttribute()
+    {
+        if($this->bankStatementPdf){
+            return $this->bankStatementPdf->file_url;
+        }
+        return "";
+    }
+    //End Bank Statement Pdf
+
+    // Start LLC Front Images
+    public function llcFrontImage()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','llc-front-image');
+    }
+
+    public function getLlcFrontImageUrlAttribute()
+    {
+        if($this->llcFrontImage){
+            return $this->llcFrontImage->file_url;
+        }
+        return "";
+    }
+
+    public function llcBackImage()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','llc-back-image');
+    }
+
+    public function getLlcBackImageUrlAttribute()
+    {
+        if($this->llcBackImage){
+            return $this->llcBackImage->file_url;
+        }
+        return "";
+    }
+    // End LLC Back Images
+
+    /** End Buyer Profile Verification files */
+
    
     public function NotificationSendToVerifyEmail (){
         $user = $this;
@@ -113,6 +216,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
         Mail::to($user->email)->queue(new VerifyEmailMail($user->name, $url, $subject));
     }
+
+    public function NotificationSendToBuyerVerifyEmail(){
+        $user = $this;
+        
+        $url = config('constants.front_end_url').'verify-and-setpassword/'.$user->id.'/'.sha1($user->email);
+
+        $subject = 'Verify Email Address And Set Password';
+
+        Mail::to($user->email)->queue(new VerifyBuyerEmailMail($user->name, $url, $subject));
+    }
+
 
     public function copyTokens()
     {

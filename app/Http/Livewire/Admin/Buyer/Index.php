@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Buyer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use App\Models\Buyer;
+use App\Models\User;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -48,7 +49,7 @@ class Index extends Component
 
     public $countries = [], $states = [], $cities = [];
 
-    public $buyer_id =null;
+    public $buyer_id =null, $buyer_user_id = null;
 
     public function mount(){
         abort_if(Gate::denies('buyer_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -85,8 +86,10 @@ class Index extends Component
         $rules = [
             'first_name' => ['required'], 
             'last_name' => ['required'], 
-            'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
-            'phone' => ['required', 'numeric', 'digits:10'], 
+            // 'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
+            // 'phone' => ['required', 'numeric', 'digits:10'], 
+            'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
+            'phone'       => ['required', 'numeric','digits:10','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'], 
             // 'address' => ['required'], 
             // 'country' => ['required', 'exists:countries,name'], 
             'state' => ['required', /*'exists:states,id'*/], 
@@ -215,7 +218,10 @@ class Index extends Component
         } else {
             $rules = $this->rules();
 
-            $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
+            // $rules['email'] = ['required', 'email', 'unique:buyers,email,'. $this->buyer_id.',id,deleted_at,NULL'];
+            $rules['email'] = ['required', 'email', 'unique:users,email,'. $this->buyer_user_id.',id,deleted_at,NULL'];
+            $rules['phone'] = ['required', 'numeric','digits:10','not_in:-','unique:users,phone,'. $this->buyer_user_id.',id,deleted_at,NULL'];
+
             Validator::make($this->state, $rules,[
                 'phone.required' => 'The contact number field is required',
                 'size_min.required' => 'The sq ft min field is required',
@@ -252,73 +258,98 @@ class Index extends Component
 
     public function store() {  
         // dd($this->all());
-        // try {
-            $this->initializePlugins();   
-            $this->validatiionForm();   
+        $this->initializePlugins();   
+        $this->validatiionForm();   
+
+        try {
+            // Start create users table
+            $userDetails =  [
+                'first_name'     => $this->state['first_name'],
+                'last_name'      => $this->state['last_name'],
+                'name'           => $this->state['first_name'].' '.$this->state['last_name'],
+                'email'          => $this->state['email'], 
+                'phone'          => $this->state['phone'], 
+            ];
+            $createUser = User::create($userDetails);
+            // End create users table
             
-            $this->state['user_id'] = auth()->user()->id;
-            $countryId= config('constants.default_country');
-            $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
+            if($createUser){
+                //Assign buyer role
+                $createUser->roles()->sync(3);
 
-            if(isset($this->state['state']) && !empty($this->state['state'])){
-                $this->state['state']   =  array_map('intval',$this->state['state']);
-                // $this->state['state'] = [(int)$this->state['state']];
-            }
+                $this->state['user_id'] = auth()->user()->id;
 
-            if(isset($this->state['city']) && !empty($this->state['city'])){
-                $this->state['city']    =  array_map('intval',$this->state['city']);
-                // $this->state['city']       = [(int)$this->state['city']];
-            }
+                $this->state['buyer_user_id'] = $createUser->id;
 
-            if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = json_encode($this->state['zoning']);
-            }
+                $countryId= config('constants.default_country');
+                $this->state['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
-            if(isset($this->state['parking']) && !empty($this->state['parking'])){
-                $this->state['parking'] = (int)$this->state['parking'];
-            }
+                if(isset($this->state['state']) && !empty($this->state['state'])){
+                    $this->state['state']   =  array_map('intval',$this->state['state']);
+                    // $this->state['state'] = [(int)$this->state['state']];
+                }
 
-            if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
-                $this->state['buyer_type'] = (int)$this->state['buyer_type'];
-            }
+                if(isset($this->state['city']) && !empty($this->state['city'])){
+                    $this->state['city']    =  array_map('intval',$this->state['city']);
+                    // $this->state['city']       = [(int)$this->state['city']];
+                }
+
+                if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
+                    $this->state['zoning'] = json_encode($this->state['zoning']);
+                }
+
+                if(isset($this->state['parking']) && !empty($this->state['parking'])){
+                    $this->state['parking'] = (int)$this->state['parking'];
+                }
+
+                if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
+                    $this->state['buyer_type'] = (int)$this->state['buyer_type'];
+                }
+                    
                 
+                if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
+                    $this->state['property_type'] = array_map('intval', $this->state['property_type']);
+                }
+
+                if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
+                    $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
+                }
+
+                if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
+                    $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
+                }
             
-            if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
-                $this->state['property_type'] = array_map('intval', $this->state['property_type']);
-            }
+                // dd($this->state);
+                // $createdBuyer = Buyer::create($this->state);
 
-            if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
-                $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
-            }
+                $createUser->buyerDetail()->create($this->state);
 
-            if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
-                $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
-            }
-        
-            // dd($this->state);
-            $createdBuyer = Buyer::create($this->state);
-
-            if($createdBuyer){
-                //Purchased buyer
-                $syncData['buyer_id'] = $createdBuyer->id;
-                $syncData['created_at'] = \Carbon\Carbon::now();
-        
-                auth()->user()->purchasedBuyers()->create($syncData);
-            }
-
-            $this->formMode = false;
-
-            $this->resetInputFields();
-
-            $this->flash('success',trans('messages.add_success_message'));
+                if($createUser->buyerDetail){
+                    //Purchased buyer
+                    $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                    $syncData['created_at'] = \Carbon\Carbon::now();
             
-            return redirect()->route('admin.buyer');
-        // }catch (\Exception $e) {
-        //      dd($e->getMessage().'->'.$e->getLine());
+                    auth()->user()->purchasedBuyers()->create($syncData);
+                }
+
+               
+                //Verification mail sent
+                $createUser->NotificationSendToBuyerVerifyEmail();
+
+                $this->formMode = false;
+
+                $this->resetInputFields();
+
+                $this->flash('success',trans('messages.auth.buyer.register_success_alert'));
+                
+                return redirect()->route('admin.buyer');
+            }
+        }catch (\Exception $e) {
+            //  dd($e->getMessage().'->'.$e->getLine());
             
-        //     $this->alert('error',trans('messages.error_message'));
-        // }
-       
+            $this->alert('error',trans('messages.error_message'));
+        }
+
     }
 
     public function edit($id) {
@@ -347,6 +378,7 @@ class Index extends Component
         $this->cities = DB::table('cities')->where('state_id', $stateId)->pluck('name', 'id');
 
         $this->buyer_id = $id;
+        $this->buyer_user_id = $buyer->buyer_user_id;
 
         $this->formMode = true;
         $this->updateMode = true;
@@ -360,49 +392,66 @@ class Index extends Component
         $this->initializePlugins();   
         $this->validatiionForm();
 
-        $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
+        try {
+            // Start create users table
+            $userDetails =  [
+                'first_name'     => $this->state['first_name'],
+                'last_name'      => $this->state['last_name'],
+                'name'           => $this->state['first_name'].' '.$this->state['last_name'],
+                // 'email'          => $this->state['email'], 
+                // 'phone'          => $this->state['phone'], 
+            ];
+            $updateUser = User::where('id',$this->buyer_user_id)->update($userDetails);
+            // End create users table
+
+            $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
+                    
+            if(isset($this->state['state']) && !empty($this->state['state'])){
+                $this->state['state']   =  array_map('intval',[$this->state['state']]);
+                // $this->state['state']   =  [(int)$this->state['state']];
+            }
+
+            if(isset($this->state['city']) && !empty($this->state['city'])){
+                $this->state['city']    =  array_map('intval',[$this->state['city']]);
                 
-        if(isset($this->state['state']) && !empty($this->state['state'])){
-            $this->state['state']   =  array_map('intval',[$this->state['state']]);
-            // $this->state['state']   =  [(int)$this->state['state']];
-        }
+                // $this->state['city']    =  [(int)$this->state['city']];
+            }
 
-        if(isset($this->state['city']) && !empty($this->state['city'])){
-            $this->state['city']    =  array_map('intval',[$this->state['city']]);
+            if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
+                $this->state['zoning'] = json_encode($this->state['zoning']);
+            }
+
+            if(isset($this->state['parking']) && !empty($this->state['parking'])){
+                $this->state['parking'] = (int)$this->state['parking'];
+            }
+
+            if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
+                $this->state['buyer_type'] = (int)$this->state['buyer_type'];
+            }
+
+            if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
+                $this->state['property_type'] = array_map('intval', $this->state['property_type']);
+            }
+
+            if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
+                $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
+            }
+
+
+            $buyer = Buyer::find($this->buyer_id);
+            $buyer->update($this->state);
+    
+            $this->formMode = false;
+            $this->updateMode = false;
+    
+            $this->flash('success',trans('messages.edit_success_message'));
+            $this->resetInputFields();
+            return redirect()->route('admin.buyer');
+        }catch (\Exception $e) {
+            //  dd($e->getMessage().'->'.$e->getLine());
             
-            // $this->state['city']    =  [(int)$this->state['city']];
+            $this->alert('error',trans('messages.error_message'));
         }
-
-        if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-            $this->state['zoning'] = json_encode($this->state['zoning']);
-        }
-
-        if(isset($this->state['parking']) && !empty($this->state['parking'])){
-            $this->state['parking'] = (int)$this->state['parking'];
-        }
-
-        if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
-            $this->state['buyer_type'] = (int)$this->state['buyer_type'];
-        }
-
-        if(isset($this->state['property_type']) && !empty($this->state['property_type'])){
-            $this->state['property_type'] = array_map('intval', $this->state['property_type']);
-        }
-
-        if(isset($this->state['purchase_method']) && !empty($this->state['purchase_method'])){
-            $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
-        }
-
-
-        $buyer = Buyer::find($this->buyer_id);
-        $buyer->update($this->state);
-  
-        $this->formMode = false;
-        $this->updateMode = false;
-  
-        $this->flash('success',trans('messages.edit_success_message'));
-        $this->resetInputFields();
-        return redirect()->route('admin.buyer');
     }
 
     public function show($id) {
@@ -439,6 +488,7 @@ class Index extends Component
         $this->resetInputFields();
         $this->resetValidation();
     }
+
     public function confirmedToggleAction($data){
         $id = $data['id'];
         $type = $data['type'];
@@ -448,9 +498,11 @@ class Index extends Component
         $model->update([$type => !$model->$type]);
         $this->alert('success', trans('messages.change_status_success_message'));
     }
+
     public function changeStatus($statusVal){
         $this->state['status'] = (!$statusVal) ? 1 : 0;
     }
+
     public function changeBuyerType($values){
         $this->creativeBuyer = false;
         $this->multiFamilyBuyer = false;

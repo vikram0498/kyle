@@ -25,6 +25,7 @@ return [
     ],
 
     'owner_email' => env('OWNER_MAIL'),
+    'twilio_country_code'=>env('TWILIO_COUNTRY_CODE'),
 
     // 'owner_email' => 'amitpandey.his@gmail.com',
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
@@ -236,7 +237,7 @@ return [
         
     ],
 
-    'default_currency' => 'USD',
+    'default_currency' => env('DEFAULT_CURRENCY','usd'),
     'default_country' => 233,
     'video_title_limit' => 50,
 

@@ -1,76 +1,20 @@
-<!DOCTYPE html>
-    <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="x-apple-disable-message-reformatting">
-        <title></title>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap" rel="stylesheet">
-        <style>
-            body{
-                font-family: 'Nunito', sans-serif;
-                font-weight: 600;
-            }
-            table, td, div, h1, p {font-family: 'Nunito', sans-serif;}
-        </style>
-    </head>
+@extends('emails.layouts.admin')
+
+@section('email-content')
+
+    <h4 style="font-family: 'Barlow', sans-serif; color: #464B70; font-weight: 700; font-size: 24px;margin-top: 0;">Dear Support</h4>
+
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">Please click the button below to verify your email address.</p>
+
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">A user seeking help. Below his details:</p>
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">Name :- {{ ucwords($name) }}</p>
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">Email :- {{$email ?? ''}}</p>
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">Phone Number :- {{$phone_number ?? ''}}</p>
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">Contact Preferance :- {{ $contact_preferance ? config('constants.contact_preferances')[$contact_preferance] : ''}}</p>
+
+    <p style="font-size: 24px; line-height: 39.5px; font-weight: 600; font-family: 'Nunito Sans', sans-serif; color: #464B70; margin-bottom: 36px;">{!! nl2br($message) !!}</p>
     
-    <body style="margin:0;padding:0;">
-	<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;">
-		<tr>
-			<td align="center" style="padding:0;">
-				<table role="presentation" style="width: 100%; max-width:602px;border-collapse:collapse;border-spacing:0;text-align:left;">
-					<tr>
-						<td align="center" style="padding:20px 0;">
-							<img src="{{ $logoUrl }}" alt="" width="300" style="height:auto;display:block;" />
-						</td>
-					</tr>
-					<tr>
-						<td style="padding:36px 30px 42px 30px;">
-                            <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+@endsection
 
-                                <tr>
-                                    <td>
-                                        <p class="mail-title">
-                                            <b>Dear Support </b>,
-                                        </p>
-                                        <div class="mail-desc">
-                                            <p>A user seeking help. Below his details:</p>
-                                            <p>Name :- {{ ucwords($name) }}</p>
-                                            <p>Email :- {{$email ?? ''}}</p>
-                                            <p>Phone Number :- {{$phone_number ?? ''}}</p>
-                                            <p>Contact Preferance :- {{ $contact_preferance ? config('constants.contact_preferances')[$contact_preferance] : ''}}</p>
-                                
-                                            <p>{{$message ?? ''}}</p>
-                                        </div>
-                                    </td>
-                                   
-                                </tr>
-                                <tr>
-                                    <td style="color:#153643;"><p style="margin:0 0 12px 0;"></p></td>
-                                </tr>
-
-                            </table>
-						</td>
-					</tr>
-					<tr>
-						<td style="padding:30px;">
-							<table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;">
-								<tr>
-									<td style="padding:0;width:50%;" align="center">
-										<p style="margin:0;font-size:14px;line-height:16px;color:#666363; text-align:center;">
-											© {{ date('Y') }} {{config('app.name')}}. All Rights Reserved.
-										</p>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-</body>
-</html>
 
 

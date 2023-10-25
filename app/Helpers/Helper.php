@@ -203,3 +203,9 @@ if (!function_exists('totalUnlikes')) {
 		return $total_likes;
 	}
 }
+
+if (!function_exists('generateOTP')) {
+	function generateOTP() {
+		return rand(1000, 9999);
+	}
+}

@@ -11,6 +11,13 @@ use App\Http\Controllers\Api\User\BuyerController;
 use App\Http\Controllers\Api\User\ProfileController;
 use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\SupportController;
+use App\Http\Controllers\Api\User\CommanController;
+use App\Http\Controllers\Api\User\SearchBuyerController;
+use App\Http\Controllers\Api\User\CopyBuyerController;
+use App\Http\Controllers\Api\User\TwilioController;
+use App\Http\Controllers\Api\User\BuyerVerificationController;
+
+
 
 
 /*
@@ -36,6 +43,10 @@ Route::controller(LoginRegisterController::class)->group(function(){
 
     Route::get('/email/verify/{id}/{hash}', 'verifyEmail');
 
+    Route::post('verify-set-password', 'verifyBuyerEmailAndSetPassword');
+
+    Route::get('get-email/{id}', 'getEmail');
+    
 });
 
 Route::controller(SocialMediaController::class)->group(function(){
@@ -46,27 +57,19 @@ Route::controller(SocialMediaController::class)->group(function(){
 
 });
 
-Route::get('getPropertyTypes', [BuyerController::class, 'getPropertyTypes']);
+// Start Comman API
+Route::post('getCities', [CommanController::class, 'getCities']);
+// End Comman API
 
-Route::get('getBuildingClassNames', [BuyerController::class, 'getBuildingClassNames']);
+Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFormElementValues']);
 
-Route::get('getPurchaseMethods', [BuyerController::class, 'getPurchaseMethods']);
+Route::get('search-buyer-form-details', [SearchBuyerController::class, 'searchBuyerFormElementValues']);
 
-Route::get('getParkings', [BuyerController::class, 'getParkings']);
+Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);
 
-Route::get('getLocationFlaws', [BuyerController::class, 'getLocationFlaws']);
+Route::post('copy-single-buyer-details/{token}', [CopyBuyerController::class, 'uploadCopyBuyerDetails']);
 
-Route::get('single-buyer-form-details/{formType?}', [BuyerController::class, 'singleBuyerFormElementValues']);
-
-Route::get('getCountries', [BuyerController::class, 'getCountries']);
-
-Route::post('getStates', [BuyerController::class, 'getStates']);
-
-Route::post('getCities', [BuyerController::class, 'getCities']);
-
-Route::post('store-single-buyer-details/{token}', [BuyerController::class, 'uploadSingleBuyerDetails']);
-
-Route::get('check-token/{token}', [BuyerController::class, 'isValidateToken']);
+Route::get('check-token/{token}', [CopyBuyerController::class, 'isValidateToken']);
 
 Route::get('get-contact-preferance', [SupportController::class, 'getContactPreferance']);
 
@@ -80,18 +83,24 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
-    
-    Route::get('get-last-search', [BuyerController::class, 'lastSearchByUser']);
-    
+    Route::get('last-form-step', [BuyerVerificationController::class, 'getLastVerificationForm']);
+
+    Route::post('buyer-profile-verification', [BuyerVerificationController::class, 'index']);
+   
+    Route::post('send-sms', [TwilioController::class, 'sendSms']);
+
+    Route::post('buy-box-search/{page?}', [SearchBuyerController::class, 'buyBoxSearch']);
+    Route::get('get-last-search', [SearchBuyerController::class, 'lastSearchByUser']);
+    Route::post('last-search-buyer', [SearchBuyerController::class, 'lastSearchBuyers']);
+
+    Route::get('copy-single-buyer-form-link', [CopyBuyerController::class, 'copySingleBuyerFormLink']);
+
     Route::post('upload-single-buyer-details', [BuyerController::class, 'uploadSingleBuyerDetails']);
 
     Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);
 
-    Route::post('buy-box-search/{page?}', [BuyerController::class, 'buyBoxSearch']);
-
     Route::get('fetch-buyers/{page?}', [BuyerController::class, 'fetchBuyers']);
 
-    Route::get('copy-single-buyer-form-link', [BuyerController::class, 'copySingleBuyerFormLink']);
 
     Route::post('red-flag-buyer', [BuyerController::class, 'redFlagBuyer']);
 
@@ -101,7 +110,6 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::delete('del-like-unlike-buyer/{user_id}/{buyer_id}', [BuyerController::class, 'deleteBuyerLikeOrUnlike']);
 
-    Route::post('last-search-buyer', [BuyerController::class, 'lastSearchBuyers']);
     
     Route::post('my-buyers', [BuyerController::class, 'myBuyersList']);
 
@@ -116,6 +124,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('config', [PaymentController::class, 'config']);
  
     Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
+
+    Route::post('/buyer-make-payment', [PaymentController::class, 'createBuyerPaymentIntent']);
 
     Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
