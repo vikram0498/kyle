@@ -266,7 +266,7 @@ class Index extends Component
             $userDetails =  [
                 'first_name'     => $this->state['first_name'],
                 'last_name'      => $this->state['last_name'],
-                'name'           => $this->state['first_name'].' '.$this->state['last_name'],
+                'name'           => ucwords($this->state['first_name'].' '.$this->state['last_name']),
                 'email'          => $this->state['email'], 
                 'phone'          => $this->state['phone'], 
             ];
@@ -322,6 +322,8 @@ class Index extends Component
                 // dd($this->state);
                 // $createdBuyer = Buyer::create($this->state);
 
+                $this->state = collect($this->state)->except(['first_name', 'last_name','email','phone'])->all();
+                
                 $createUser->buyerDetail()->create($this->state);
 
                 if($createUser->buyerDetail){

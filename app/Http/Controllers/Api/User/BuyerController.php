@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
+use App\Http\Requests\UpdateSingleBuyerDetailsRequest;
 
 
 class BuyerController extends Controller
@@ -155,7 +156,7 @@ class BuyerController extends Controller
         }
     }
 
-    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request,$token = null){
+    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
         DB::beginTransaction();
         try {
             
@@ -166,7 +167,7 @@ class BuyerController extends Controller
             $userDetails =  [
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
-                'name'           => $validatedData['first_name'].' '.$validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
                 'email'          => $validatedData['email'], 
                 'phone'          => $validatedData['phone'], 
             ];
@@ -217,6 +218,9 @@ class BuyerController extends Controller
                 // $createdBuyer = Buyer::create($validatedData);
 
                 $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+
                 $createUser->buyerDetail()->create($validatedData);
 
                 if($createUser->buyerDetail && auth()->user()->is_seller){
@@ -248,6 +252,133 @@ class BuyerController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response   
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    public function edit(){
+        try{
+            $userId = auth()->user()->id;
+            $buyer = User::with('buyerDetail')->where('id',$userId)->first();
+
+            $buyer->profile_image_url = $buyer->profile_image_url;
+
+            $buyer_details = [
+                'first_name' => $buyer->first_name ?? null,
+                'last_name'  => $buyer->last_name ?? null,
+                'name'       => $buyer->name ?? null,
+                'email'      => $buyer->email ?? null,
+                'phone'      => $buyer->phone ?? null,
+                'profile_image' => $buyer->profile_image_url ?? null,
+                'is_active'  => $buyer->is_active ?? 0,
+            ];
+
+            $buyer_details = collect($buyer_details);
+            $other_details = $buyer->buyerDetail()->select('occupation','replacing_occupation','company_name','address','country','state','city','zip_code','price_min','price_max','bedroom_min','bedroom_max','bath_min','bath_max','size_min','size_max','lot_size_min','lot_size_max','build_year_min','build_year_max','arv_min','arv_max','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','buyer_type','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','unit_min','unit_max','building_class','value_add','purchase_method','stories_min','stories_max','zoning','utilities','sewer','market_preferance','contact_preferance','is_ban','permanent_affix','park','rooms')->first();
+
+            $mergedBuyerDetails = $buyer_details->merge($other_details);
+
+            //Return Success Response
+            $responseData = [
+                'status'       => true,
+                'buyer'        => $mergedBuyerDetails,
+            ];
+            return response()->json($responseData, 200);
+
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+
+        }
+    }
+
+    public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request){
+    
+        DB::beginTransaction();
+        try {
+            
+            $authUserId = auth()->user()->id;
+
+            $validatedData = $request->all();
+
+            // Start create users table
+            $userDetails =  [
+                'first_name'     => $validatedData['first_name'],
+                'last_name'      => $validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
+            ];
+        
+            $updateUser = User::where('id',$authUserId)->update($userDetails);
+            // End create users table
+
+            if($updateUser){
+                
+                $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
+    
+                // if($request->state){
+                //      $validatedData['state'] = json_encode($request->state);
+                // }
+                
+                //  if($request->city){
+                //      $validatedData['city'] = json_encode($request->city);
+                // }
+                
+                if($request->parking){
+                    $validatedData['parking'] = (int)$request->parking;
+                }
+              
+                if($request->buyer_type){
+                    $validatedData['buyer_type'] = (int)$request->buyer_type;
+                }
+    
+               
+                if($request->zoning){
+                    $validatedData['zoning'] = json_encode($request->zoning);
+                }           
+               
+                if($request->permanent_affix){
+                    $validatedData['permanent_affix'] = (int)$request->permanent_affix;
+                } 
+                if($request->park){
+                    $validatedData['park'] = (int)$request->park;
+                }  
+                if($request->rooms){
+                    $validatedData['rooms'] = (int)$request->rooms;
+                }
+                
+                // $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+
+                auth()->user()->buyerDetail()->update($validatedData);
+
+            }
+            
+
+            DB::commit();
+            
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.edit_success_message'),
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+             dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response   
             $responseData = [

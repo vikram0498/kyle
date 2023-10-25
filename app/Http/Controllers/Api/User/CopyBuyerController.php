@@ -246,7 +246,7 @@ class CopyBuyerController extends Controller
             $userDetails =  [
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
-                'name'           => $validatedData['first_name'].' '.$validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
                 'email'          => $validatedData['email'], 
                 'phone'          => $validatedData['phone'], 
             ];
@@ -296,6 +296,9 @@ class CopyBuyerController extends Controller
                 // $createdBuyer = Buyer::create($validatedData);
 
                 $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+                
                 $createUser->buyerDetail()->create($validatedData);
                 
                 if($token){

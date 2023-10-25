@@ -32,8 +32,6 @@ class Index extends Component
             'purchased_buyers.user_id',
             'users.first_name AS user_first_name',
             'users.last_name AS user_last_name',
-            'buyers.first_name AS buyer_first_name',
-            'buyers.last_name AS buyer_last_name',
             DB::raw('MAX(purchased_buyers.created_at) AS max_created_at')
         )
         ->orderByDesc('max_created_at')
