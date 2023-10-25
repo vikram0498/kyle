@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
 
-const MultiFamilyResidential = ({ data }) => {
+const MultiFamilyCommercial = ({ data }) => {
   const [startDate, setStartDate] = useState("");
 
   return (
@@ -744,4 +744,4 @@ const MultiFamilyResidential = ({ data }) => {
     </>
   );
 };
-export default MultiFamilyResidential;
+export default MultiFamilyCommercial;

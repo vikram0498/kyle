@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import Select from "react-select";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
-import DatePicker from "react-datepicker";
 import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
-const MultiFamilyResidential = ({ data }) => {
+const HotelMotel = ({ data }) => {
   const [startDate, setStartDate] = useState("");
 
   return (
@@ -57,7 +57,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("city")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Zip Code</label>
           <div className="form-group">
             <input
@@ -71,36 +71,20 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("zip_code")}
           </div>
         </div>
-
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bed</label>
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+          <label>Rooms</label>
           <div className="form-group">
             <input
               type="number"
-              name="bedroom"
+              name="rooms"
               className="form-control"
-              placeholder="Bed"
-              value={data.bedroom}
-              onChange={(e) => data.setBedroom(e.target.value)}
+              placeholder="Rooms"
+              value={data.room}
+              onChange={(e) => data.setRoom(e.target.value)}
             />
-            {data.renderFieldError("bedroom")}
+            {data.renderFieldError("rooms")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bath</label>
-          <div className="form-group">
-            <input
-              type="number"
-              name="bath"
-              className="form-control"
-              placeholder="Bath"
-              value={data.bath}
-              onChange={(e) => data.setBath(e.target.value)}
-            />
-            {data.renderFieldError("bath")}
-          </div>
-        </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Sq Ft</label>
           <div className="form-group">
@@ -115,7 +99,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("size")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Lot Size Sq Ft</label>
           <div className="form-group">
@@ -129,7 +112,6 @@ const MultiFamilyResidential = ({ data }) => {
             />
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Year Built</label>
           <div className="form-group">
@@ -182,6 +164,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("price")}
           </div>
         </div>
+
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Parking</label>
           <div className="form-group">
@@ -195,7 +178,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("parking")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Total Units</label>
           <div className="form-group">
             <input
@@ -208,7 +191,7 @@ const MultiFamilyResidential = ({ data }) => {
             />
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Building class</label>
           <div className="form-group">
             <SingleSelect
@@ -221,7 +204,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("building_class")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Value Add</label>
           <div className="form-group">
             <div className="radio-block">
@@ -255,6 +238,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("value_add")}
           </div>
         </div>
+
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>
             MLS Status<span>*</span>
@@ -278,6 +262,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("market_preferance")}
           </div>
         </div>
+
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>
             Purchase Method <span>*</span>
@@ -744,4 +729,4 @@ const MultiFamilyResidential = ({ data }) => {
     </>
   );
 };
-export default MultiFamilyResidential;
+export default HotelMotel;

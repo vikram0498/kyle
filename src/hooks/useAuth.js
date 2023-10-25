@@ -5,6 +5,7 @@ import AuthContext from "../context/authContext";
 import CryptoJS from "crypto-js";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 export const useAuth = () => {
   const secretPass = "XkhZG4fW2t2W";
   let navigate = useNavigate();
@@ -85,30 +86,84 @@ export const useAuth = () => {
   //     Authorization: "Bearer " + getTokenData().access_token,
   //     "auth-token": getTokenData().access_token,
   //   };
-  //   axios
-  //     .post(apiUrl + "logout", {}, { headers: headers })
-  //     .then((response) => {});
+  // axios
+  //   .post(apiUrl + "logout", {}, { headers: headers })
+  //   .then((response) => {});
 
-  //   const cookie = new Cookies();
-  //   cookie.remove("is_auth", {
-  //     path: "/",
-  //     expires: getAuthCookieExpiration(),
-  //     sameSite: "lax",
-  //     httpOnly: false,
-  //   });
-  //   cookie.remove("remember_me_token", {
-  //     path: "/",
-  //     expires: getAuthCookieExpiration(),
-  //     sameSite: "lax",
-  //     httpOnly: false,
-  //   });
-  //   setIsLogin({ signedIn: false, access_token: null });
-  //   cookie.remove("_token");
+  // const cookie = new Cookies();
+  // cookie.remove("is_auth", {
+  //   path: "/",
+  //   expires: getAuthCookieExpiration(),
+  //   sameSite: "lax",
+  //   httpOnly: false,
+  // });
+  // cookie.remove("remember_me_token", {
+  //   path: "/",
+  //   expires: getAuthCookieExpiration(),
+  //   sameSite: "lax",
+  //   httpOnly: false,
+  // });
+  // setIsLogin({ signedIn: false, access_token: null });
+  // cookie.remove("_token");
 
-  //   localStorage.removeItem("user_data");
-  //   localStorage.removeItem("filter_buyer_fields");
-  //   navigate("/");
+  // localStorage.removeItem("user_data");
+  // localStorage.removeItem("filter_buyer_fields");
+  // navigate("/");
+
+  //   try {
+  //     console.log("Hello 1");
+
+  //     axios
+  //       .post(
+  //         apiUrl + "logout",
+  //         {},
+  //         {
+  //           headers: headers,
+  //         }
+  //       )
+  //       .then((response) => {
+  //         console.log("Hello 2");
+
+  //         console.log(response, "response");
+  //         const cookie = new Cookies();
+  //         cookie.remove("is_auth", {
+  //           path: "/",
+  //           expires: getAuthCookieExpiration(),
+  //           sameSite: "lax",
+  //           httpOnly: false,
+  //         });
+  //         cookie.remove("remember_me_token", {
+  //           path: "/",
+  //           expires: getAuthCookieExpiration(),
+  //           sameSite: "lax",
+  //           httpOnly: false,
+  //         });
+  //         setIsLogin({ signedIn: false, access_token: null });
+  //         cookie.remove("_token");
+
+  //         localStorage.removeItem("user_data");
+  //         localStorage.removeItem("filter_buyer_fields");
+  //         navigate("/");
+  //       });
+  //   } catch (error) {
+  //     console.log('case 3');
+  //     if (error.response.status === 401) {
+  //       console.log("enter!!");
+  //       cookie.remove("_token");
+  //       const cookie = new Cookies();
+  //       cookie.remove("_token");
+  //       cookie.remove("remember_me_token");
+  //       localStorage.removeItem("user_data");
+  //       localStorage.removeItem("filter_buyer_fields");
+  //       navigate("/");
+  //     } else {
+  //       toast.error("Something went Wrong! ", {
+  //         position: toast.POSITION.TOP_RIGHT,
+  //       });
+  //     }
+  //   }
   // }
+
   async function setLogout() {
     try {
       const apiUrl = process.env.REACT_APP_API_URL;

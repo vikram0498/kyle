@@ -14,27 +14,6 @@ const Condo = ({ data, manufactureSelected }) => {
         <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div>
-        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>Country</label>
-                    <div className="form-group">
-                        <Select
-                            name="country"
-                            defaultValue=''
-                            options={data.countryOptions}
-                            onChange={(item) => data.getStates(item)}
-                            className="select"
-                            isClearable={true}
-                            isSearchable={true}
-                            isDisabled={false}
-                            isLoading={false}
-                            value={data.country}
-                            isRtl={false}
-                            placeholder= "Select Country"
-                            closeMenuOnSelect={true}
-                        />
-                        {data.renderFieldError('country') }
-                    </div>
-                </div> */}
         <div className="col-12 col-lg-12">
           <label>State</label>
           <div className="form-group">
@@ -196,13 +175,6 @@ const Condo = ({ data, manufactureSelected }) => {
             {data.renderFieldError("price")}
           </div>
         </div>
-        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                    <label>ARV</label>
-                    <div className="form-group">
-                        <input type="number" name="arv" className="form-control" placeholder="ARV" value={data.arv}  onChange={ e=>data.setArv(e.target.value) }/>
-                        {data.renderFieldError('arv') }
-                    </div>
-                </div> */}
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>Parking</label>
           <div className="form-group">
@@ -256,27 +228,6 @@ const Condo = ({ data, manufactureSelected }) => {
             {data.renderFieldError("market_preferance")}
           </div>
         </div>
-        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <label>Contact Preference<span>*</span></label>
-                    <div className="form-group">
-                        <Select
-                            name="contact_preferance"
-                            defaultValue=''
-							onChange={(item) => data.setContactPreferance(item)}
-                            options={data.contactPreferanceOption}
-                            className="select"
-                            isClearable={true}
-                            isSearchable={true}
-                            isDisabled={false}
-                            isLoading={false}
-                            value={data.contactPreferance}
-                            isRtl={false}
-                            placeholder= "Select Contact Preferance"
-                            closeMenuOnSelect={true}
-                        />
-                        {data.renderFieldError('contact_preferance') }
-                    </div>
-                </div> */}
       </div>
       {data.showCreativeFinancing && (
         <div className="block-divide">
@@ -722,36 +673,6 @@ const Condo = ({ data, manufactureSelected }) => {
           </div>
           {data.renderFieldError("fire_damaged")}
         </div>
-        {manufactureSelected && (
-          <div className="grid-template-col">
-            <div className="radio-block-group">
-              <label>Permanently affixed </label>
-              <div className="label-container">
-                <input
-                  type="radio"
-                  name="permanent_affix"
-                  value="1"
-                  id="permanent_affix_yes"
-                />
-                <label className="mb-0" htmlFor="permanent_affix_yes">
-                  Yes
-                </label>
-              </div>
-              <div className="label-container">
-                <input
-                  type="radio"
-                  name="permanent_affix"
-                  value="0"
-                  id="permanent_affix_no"
-                />
-                <label className="mb-0" htmlFor="permanent_affix_no">
-                  No
-                </label>
-              </div>
-            </div>
-            {data.renderFieldError("permanent_affix")}
-          </div>
-        )}
       </div>
     </>
   );

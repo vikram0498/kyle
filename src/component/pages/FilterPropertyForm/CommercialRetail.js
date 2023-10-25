@@ -6,7 +6,11 @@ import DatePicker from "react-datepicker";
 import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
 
-const MultiFamilyResidential = ({ data }) => {
+const CommercialRetail = ({
+  data,
+  mobileHomeParkSelected,
+  hotelMotelSelected,
+}) => {
   const [startDate, setStartDate] = useState("");
 
   return (
@@ -71,7 +75,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("zip_code")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Bed</label>
           <div className="form-group">
@@ -100,7 +103,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("bath")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Sq Ft</label>
           <div className="form-group">
@@ -115,7 +117,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("size")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Lot Size Sq Ft</label>
           <div className="form-group">
@@ -129,7 +130,6 @@ const MultiFamilyResidential = ({ data }) => {
             />
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Year Built</label>
           <div className="form-group">
@@ -152,7 +152,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("build_year")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Stories</label>
           <div className="form-group">
@@ -167,7 +166,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("of_stories")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Price</label>
           <div className="form-group">
@@ -744,4 +742,4 @@ const MultiFamilyResidential = ({ data }) => {
     </>
   );
 };
-export default MultiFamilyResidential;
+export default CommercialRetail;

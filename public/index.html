@@ -16,8 +16,17 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet"/>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"
+      rel="stylesheet"
+    />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -28,24 +37,50 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <!-- FONT FAMILY -->
-	  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-   	<!-- BOOTSTRAP CSS -->
-	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/bootstrap.min.css">
-	
-  <!-- Select-2 CSS -->
-	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/select2.min.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-	<!-- MAIN CSS -->
-	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/main.css">
+    <!-- BOOTSTRAP CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/assets/css/bootstrap.min.css"
+    />
 
-	<!-- RESPONSIVE CSS -->
-	<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/assets/css/responsive.css">
+    <!-- Select-2 CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/assets/css/select2.min.css"
+    />
 
-  
-	<!-- FONT FAMILY -->
-	<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+    <!-- MAIN CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/assets/css/main.css"
+    />
+    <!-- DARK MODE CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/assets/css/dark-mode.css"
+    />
+    <!-- RESPONSIVE CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="%PUBLIC_URL%/assets/css/responsive.css"
+    />
+
+    <!-- FONT FAMILY -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <title>BuyboxBot</title>
   </head>
   <body class="bg-img position-relative">
@@ -61,32 +96,51 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-<!-- SCRIPTS -->
-	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/jquery.min.js"></script>
-	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/popper.min.js"></script>
-	<script type="text/javascript" src="%PUBLIC_URL%/assets/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="%PUBLIC_URL%/assets/js/select2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <!-- SCRIPTS -->
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/assets/js/jquery.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/assets/js/popper.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/assets/js/bootstrap.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/assets/js/select2.min.js"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
-	<!-- <script type="text/javascript" src="%PUBLIC_URL%/assets/js/custom.js"></script> -->
-  <script type="text/javascript">
-		$(document).ready(function(){
-          var dp= $("#datepicker").datepicker({
-            format: "yyyy",
-            viewMode: "years", 
-            minViewMode: "years",
-            autoclose:true
-          });   
-          //changeYear event trigger's
-          dp.on('changeYear', function (e) {    
-            //do something here
-            alert("Year changed ");
-          });
-		})
+    <!-- <script type="text/javascript" src="%PUBLIC_URL%/assets/js/custom.js"></script> -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var dp = $("#datepicker").datepicker({
+          format: "yyyy",
+          viewMode: "years",
+          minViewMode: "years",
+          autoclose: true,
+        });
+        //changeYear event trigger's
+        dp.on("changeYear", function (e) {
+          //do something here
+          alert("Year changed ");
+        });
+      });
 
-    
-	</script>
+      // const myValue = localStorage.getItem("darkMode");
+      // console.log(myValue, "myValue");
+      // if (myValue) {
+      //   console.log("case 1");
+      //   $("body").addClass("dark");
+      // } else {
+      //   console.log("case 2");
 
+      //   $("body").removeClass("dark");
+      // }
+    </script>
   </body>
- 
 </html>

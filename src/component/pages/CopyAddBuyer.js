@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import LinkExpirePage from "./LinkExpirePage";
 import SuccessfullySubmiitedPage from "./SuccessfullySubmiitedPage";
+import { useAuth } from "../../hooks/useAuth";
 
 function CopyAddBuyer() {
   const { token } = useParams();
@@ -19,10 +20,9 @@ function CopyAddBuyer() {
   const navigate = useNavigate();
   const [isLoader, setIsLoader] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const { getTokenData, setLogout } = useAuth();
 
   const { setErrors, renderFieldError } = useFormError();
   const {
@@ -44,7 +44,6 @@ function CopyAddBuyer() {
   const [locationFlawsOption, setLocationFlawsOption] = useState([]);
   const [buyerTypeOption, setbuyerTypeOption] = useState([]);
 
-  const [countryOptions, setCountryOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [parkOption, setParkOption] = useState([]);
@@ -64,14 +63,12 @@ function CopyAddBuyer() {
   const [utilitiesOption, setUtilitiesOption] = useState([]);
 
   const [parkingValue, setParkingValue] = useState([]);
-  const [parkValue, setParkValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [locationFlawsValue, setLocationFlawsValue] = useState([]);
   const [buyerTypeValue, setBuyerTypeValue] = useState([]);
   const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
   const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
   const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
-  const [contactPreferanceValue, setContactPreferanceValue] = useState([]);
   const [zoningValue, setZoningValue] = useState([]);
   const [stateValue, setStatevalue] = useState([]);
   const [cityValue, setCityvalue] = useState([]);
@@ -85,8 +82,6 @@ function CopyAddBuyer() {
   const [sqFtMax, setSqFtMax] = useState("");
   const [lotSizesqFtMin, setlotSizesqFtMin] = useState("");
   const [lotSizesqFtMax, setlotSizesqFtMax] = useState("");
-  const [yearBuildMin, setYearBuildMin] = useState("");
-  const [yearBuildMax, setYearBuildMax] = useState("");
   const [storiesMin, setStoriesMin] = useState("");
   const [storiesMax, setStoriesMax] = useState("");
   const [priceMin, setPriceMin] = useState("");
@@ -128,16 +123,27 @@ function CopyAddBuyer() {
             }
           }
         });
-    } catch {
-      // setLogout();
-      // navigate('/login');
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          setLogout();
+        }
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        }
+        if (error.response.data.error) {
+          toast.error(error.response.data.error, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      }
     }
   };
 
   const getOptionsValues = () => {
     try {
       axios
-        .get(apiUrl + "single-buyer-form-details", { headers: headers })
+        .get(apiUrl + "copy-buyer-form-details", { headers: headers })
         .then((response) => {
           if (response.data.status) {
             let result = response.data.result;
@@ -160,9 +166,20 @@ function CopyAddBuyer() {
             setIsLoader(false);
           }
         });
-    } catch {
-      // setLogout();
-      // navigate('/login');
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          setLogout();
+        }
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        }
+        if (error.response.data.error) {
+          toast.error(error.response.data.error, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      }
     }
   };
 
@@ -233,8 +250,6 @@ function CopyAddBuyer() {
     formObject.property_flaw = locationFlawsValue;
     // formObject.buyer_type       =  buyerTypeValue;
     formObject.purchase_method = purchaseMethodsValue;
-    formObject.formName = "copy-form";
-    //console.log(formObject.hasOwnProperty('building_class'),'check');
     if (formObject.hasOwnProperty("building_class")) {
       formObject.building_class = buildingClassNamesValue;
     }
@@ -251,7 +266,7 @@ function CopyAddBuyer() {
     }
 
     axios
-      .post(`${apiUrl}store-single-buyer-details/${token}`, formObject, {
+      .post(`${apiUrl}copy-single-buyer-details/${token}`, formObject, {
         headers: headers,
       })
       .then((response) => {

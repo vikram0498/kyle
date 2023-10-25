@@ -3,12 +3,11 @@ import Select from "react-select";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
 import DatePicker from "react-datepicker";
-import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
-
-const MultiFamilyResidential = ({ data }) => {
+import AutoSuggestionAddress from "./AutoSuggestionAddress";
+const SingleFamily = ({ data }) => {
   const [startDate, setStartDate] = useState("");
-
+  console.log(data.state, "state");
   return (
     <>
       <div className="row">
@@ -71,7 +70,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("zip_code")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Bed</label>
           <div className="form-group">
@@ -100,7 +98,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("bath")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Sq Ft</label>
           <div className="form-group">
@@ -115,7 +112,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("size")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Lot Size Sq Ft</label>
           <div className="form-group">
@@ -129,7 +125,6 @@ const MultiFamilyResidential = ({ data }) => {
             />
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Year Built</label>
           <div className="form-group">
@@ -152,7 +147,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("build_year")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Stories</label>
           <div className="form-group">
@@ -167,7 +161,6 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("of_stories")}
           </div>
         </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Price</label>
           <div className="form-group">
@@ -182,7 +175,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("price")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>Parking</label>
           <div className="form-group">
             <SingleSelect
@@ -195,64 +188,21 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("parking")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Total Units</label>
+        <div className="col-12 col-lg-6">
+          <label>
+            Purchase Method <span>*</span>
+          </label>
           <div className="form-group">
-            <input
-              type="number"
-              name="total_units"
-              className="form-control"
-              placeholder="Total Units"
-              value={data.totalUnits}
-              onChange={(e) => data.setTotalUnits(e.target.value)}
+            <MultiSelect
+              name="purchase_method"
+              options={data.purchaseMethodsOption}
+              placeholder="Select Purchase Method"
+              setMultiselectOption={data.setPurchaseMethod}
+              showCreative={data.setShowCreativeFinancing}
+              selectValue={data.purchaseMethodsValue}
+              setSelectValues={data.setPurchaseMethodsValue}
             />
-          </div>
-        </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Building class</label>
-          <div className="form-group">
-            <SingleSelect
-              name="building_class"
-              options={data.buildingClassOption}
-              placeholder="Select Option"
-              setValue={data.setBuildingClass}
-              value={data.buildingClass}
-            />
-            {data.renderFieldError("building_class")}
-          </div>
-        </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Value Add</label>
-          <div className="form-group">
-            <div className="radio-block">
-              <div className="label-container">
-                <input
-                  type="radio"
-                  name="value_add"
-                  value="1"
-                  id="value_add_yes"
-                  checked={data.valueAdd === 1 ? "checked" : ""}
-                  onChange={(e) => data.setValueAdd(e.target.value)}
-                />
-                <label className="mb-0" htmlFor="value_add_yes">
-                  Yes
-                </label>
-              </div>
-              <div className="label-container">
-                <input
-                  type="radio"
-                  name="value_add"
-                  value="0"
-                  id="value_add_no"
-                  checked={data.valueAdd === 0 ? "checked" : ""}
-                  onChange={(e) => data.setValueAdd(e.target.value)}
-                />
-                <label className="mb-0" htmlFor="value_add_no">
-                  No
-                </label>
-              </div>
-            </div>
-            {data.renderFieldError("value_add")}
+            {data.renderFieldError("purchase_method")}
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
@@ -276,23 +226,6 @@ const MultiFamilyResidential = ({ data }) => {
               closeMenuOnSelect={true}
             />
             {data.renderFieldError("market_preferance")}
-          </div>
-        </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-          <label>
-            Purchase Method <span>*</span>
-          </label>
-          <div className="form-group">
-            <MultiSelect
-              name="purchase_method"
-              options={data.purchaseMethodsOption}
-              placeholder="Select Purchase Method"
-              setMultiselectOption={data.setPurchaseMethod}
-              showCreative={data.setShowCreativeFinancing}
-              selectValue={data.purchaseMethodsValue}
-              setSelectValues={data.setPurchaseMethodsValue}
-            />
-            {data.renderFieldError("purchase_method")}
           </div>
         </div>
       </div>
@@ -744,4 +677,4 @@ const MultiFamilyResidential = ({ data }) => {
     </>
   );
 };
-export default MultiFamilyResidential;
+export default SingleFamily;

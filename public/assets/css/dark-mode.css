@@ -1,0 +1,182 @@
+/**************** DARK MODE PAGES CSS ***********************/
+
+body.dark {
+  background-color: #2f2f2f !important;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+  color: #fff;
+}
+body.dark .dashboard-header {
+  background: #1f1f1f;
+  border-bottom: 1px solid #2f2f2f !important;
+}
+
+body.dark .footer-main {
+  background: #1f1f1f;
+  border-top: 1px solid #2f2f2f !important;
+}
+body.dark .back-block,
+body.dark .card-box,
+body.dark .contact-update .contact-update-item a .icon,
+body.dark .img-user,
+body.dark .upload-buyer {
+  background: rgb(255 255 255 / 10%);
+}
+body.dark .back-block .center-head,
+body.dark .upload-buyer p {
+  color: #fff;
+}
+body.dark .personal-information,
+body.dark .contact-detail,
+body.dark .contact-desc-box {
+  background: #2f2f2f;
+}
+body.dark .personal-information h3 {
+  color: #fff;
+}
+body.dark .personal-information p,
+body.dark .contact-desc-box,
+body.dark .contact-desc-box p,
+body.dark .welcome,
+body.dark .profile-data-content p,
+body.dark .application-process p,
+body.dark .card-box-inner p {
+  color: #cacaca;
+}
+body.dark .contact-update .contact-update-item a,
+body.dark .user-name-title {
+  color: #fff;
+}
+body.dark .contact-update {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+body.dark .footer-main .copyright-text,
+body.dark .footer-main .copyright-text a {
+  color: #fff;
+}
+body.dark .profile-data-content h3 {
+  color: #fff;
+}
+.lightmode-none,
+body.dark .darkmode-none {
+  display: none;
+}
+
+body.dark .lightmode-none {
+  display: block;
+}
+body.dark .active-inactive button,
+body.dark .field-box button,
+body.dark .otp-digit .otpnumb,
+body.dark .card-box-blocks .form-control {
+  background: rgb(255 255 255 / 10%) !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+  color: #fff !important;
+}
+body.dark .active-inactive button .userimg,
+body.dark .field-box button .commentic {
+  border-color: rgb(255 255 255 / 20%);
+}
+
+body.dark .dropdown-arr svg path,
+body.dark .user-dropdown .arrow-icon svg path {
+  stroke: #fff;
+}
+body.dark .account-check button {
+  background: rgba(25, 180, 0, 0.15);
+}
+body.dark .component-group .dropdown-menu,
+body.dark .component-group .dropdown-menu:before,
+body.dark .user-dropdown .dropdown-menu,
+body.dark .user-dropdown .dropdown-menu:before {
+  background: #2f2f2f;
+  box-shadow: 2.01px -0.934153px 18.6831px rgba(4, 12, 30, 0.2);
+}
+body.dark .component-group .dropdown-menu li .dropdown-item,
+body.dark .user-dropdown .dropdown-menu li .dropdown-item {
+  border-color: rgb(255 255 255 / 20%);
+  color: #fff;
+}
+body.dark .component-group .dropdown-menu li:hover:before,
+body.dark .component-group .dropdown-menu li.active:before,
+body.dark .user-dropdown .dropdown-menu li:hover:before,
+body.dark .user-dropdown .dropdown-menu li.active:before {
+  background: #fff;
+}
+body.dark .user-dropdown .dropdown-menu li .dropdown-item img {
+  filter: invert(100%) sepia(91%) saturate(32%) hue-rotate(199deg)
+    brightness(140%) contrast(109%);
+  mix-blend-mode: luminosity;
+}
+
+body.dark .profile-varification {
+  background: #444;
+}
+
+body.dark .card-box-blocks {
+  background: #1f1f1f;
+}
+body.dark .card-box-blocks label,
+body.dark .otp-digit .otpnumb,
+body.dark .card-box-blocks .form-control::placeholder,
+body.dark .application-process h3,
+body.dark .btn-outline,
+body.dark .file-upload-choosen .file-select .file-select-name {
+  color: #fff !important;
+}
+body.dark .file-upload-choosen .file-select,
+body.dark .radio-block-group {
+  background: rgb(255 255 255 / 10%) !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .profile-varification .nav-item .nav-link {
+  background: #1f1f1f;
+  color: #fff !important;
+}
+body.dark .profile-varification .nav-item:not(:last-child) .nav-link {
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .application-process {
+  background: rgb(255 255 255 / 10%) !important;
+}
+body.dark .label-container span {
+  color: #fff;
+}
+
+body.dark .change-password-form {
+  border-top-color: rgb(255 255 255 / 20%) !important;
+}
+
+body.dark .back {
+  color: #fff;
+}
+body.dark .back svg path {
+  stroke: #fff;
+}
+body.dark .upload-photo,
+body.dark .file-upload {
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .file-upload {
+  color: #fff;
+}
+body.dark .containers .imageWrapper {
+  background: #2f2f2f;
+}
+body.dark .select2-container--default .select2-selection--single,
+body.dark .select2-container--default .select2-selection--multiple {
+  background: rgb(255 255 255 / 10%) !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  color: #fff !important;
+}

@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Select from "react-select";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import SingleSelect from "../../partials/Select2/SingleSelect";
-import DatePicker from "react-datepicker";
 import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
 
-const MultiFamilyResidential = ({ data }) => {
-  const [startDate, setStartDate] = useState("");
-
+const MobileHomePark = ({ data }) => {
   return (
     <>
       <div className="row">
@@ -72,50 +69,6 @@ const MultiFamilyResidential = ({ data }) => {
           </div>
         </div>
 
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bed</label>
-          <div className="form-group">
-            <input
-              type="number"
-              name="bedroom"
-              className="form-control"
-              placeholder="Bed"
-              value={data.bedroom}
-              onChange={(e) => data.setBedroom(e.target.value)}
-            />
-            {data.renderFieldError("bedroom")}
-          </div>
-        </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bath</label>
-          <div className="form-group">
-            <input
-              type="number"
-              name="bath"
-              className="form-control"
-              placeholder="Bath"
-              value={data.bath}
-              onChange={(e) => data.setBath(e.target.value)}
-            />
-            {data.renderFieldError("bath")}
-          </div>
-        </div>
-
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Sq Ft</label>
-          <div className="form-group">
-            <input
-              type="number"
-              name="size"
-              className="form-control"
-              placeholder="Sq Ft"
-              value={data.size}
-              onChange={(e) => data.setSize(e.target.value)}
-            />
-            {data.renderFieldError("size")}
-          </div>
-        </div>
-
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Lot Size Sq Ft</label>
           <div className="form-group">
@@ -127,44 +80,6 @@ const MultiFamilyResidential = ({ data }) => {
               value={data.lotSize}
               onChange={(e) => data.setLotSize(e.target.value)}
             />
-          </div>
-        </div>
-
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Year Built</label>
-          <div className="form-group">
-            <DatePicker
-              id="DatePicker"
-              type="string"
-              maxDate={new Date()}
-              className="text-primary text-center form-control"
-              selected={startDate}
-              name="build_year"
-              autoComplete="off"
-              showYearPicker
-              dateFormat="yyyy"
-              yearItemNumber={9}
-              placeholderText="Year Built"
-              onChange={(e) => {
-                setStartDate(e);
-              }}
-            />
-            {data.renderFieldError("build_year")}
-          </div>
-        </div>
-
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Stories</label>
-          <div className="form-group">
-            <input
-              type="number"
-              name="of_stories"
-              className="form-control"
-              placeholder="Enter Stories"
-              value={data.ofStories}
-              onChange={(e) => data.setOfStories(e.target.value)}
-            />
-            {data.renderFieldError("of_stories")}
           </div>
         </div>
 
@@ -182,6 +97,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("price")}
           </div>
         </div>
+
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Parking</label>
           <div className="form-group">
@@ -256,6 +172,20 @@ const MultiFamilyResidential = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+          <label>Park Owned/Tenant Owned </label>
+          <div className="form-group">
+            <SingleSelect
+              name="park"
+              options={data.parkOption}
+              placeholder="Select Park Owned/Tenant Owned"
+              setValue={data.setPark}
+              value={data.park}
+            />
+            {data.renderFieldError("park")}
+          </div>
+        </div>
+
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>
             MLS Status<span>*</span>
           </label>
@@ -278,6 +208,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("market_preferance")}
           </div>
         </div>
+
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>
             Purchase Method <span>*</span>
@@ -744,4 +675,4 @@ const MultiFamilyResidential = ({ data }) => {
     </>
   );
 };
-export default MultiFamilyResidential;
+export default MobileHomePark;

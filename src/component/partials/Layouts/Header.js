@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MiniLoader from "../MiniLoader";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -18,14 +18,8 @@ function Header() {
   }
 
   useEffect(() => {
-    let data = "";
     getCurrentLimit();
-    const apiUrl = process.env.REACT_APP_API_URL;
-    if (getTokenData().access_token != null) {
-      /* let headers = {
-				"Accept": "application/json", 
-				'Authorization': 'Bearer ' + getTokenData().access_token,
-			} */
+    if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
       if (userData !== null) {
         setUserDetails(userData);
@@ -68,19 +62,24 @@ function Header() {
             <div className="col-6 col-sm-6 col-md-4 col-lg-3">
               <div className="header-logo">
                 <Link to="/">
-                  <img src="./assets/images/logo.svg" className="img-fluid" />
+                  <img
+                    alt="logo"
+                    src="./assets/images/logo.svg"
+                    className="img-fluid"
+                  />
                 </Link>
               </div>
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">
               <div className="block-session">
-                {userDetails != null &&
-                userDetails.level_type != 1 &&
+                {userDetails !== null &&
+                userDetails.level_type !== 1 &&
                 userDetails.credit_limit < 5 ? (
                   <Link to="/additional-credits">
                     <div className="upload-buyer bg-green">
                       <span className="upload-buyer-icon d-flex">
                         <img
+                          alt="coin"
                           src="./assets/images/coin.svg"
                           className="img-fluid"
                         />
@@ -94,6 +93,7 @@ function Header() {
                 <div className="upload-buyer">
                   <span className="upload-buyer-icon d-flex">
                     <img
+                      alt="folder"
                       src="./assets/images/folder.svg"
                       className="img-fluid"
                     />
@@ -101,7 +101,7 @@ function Header() {
                   <p>
                     uploaded Buyer Data :{" "}
                     <b>
-                      {creditLimit != null ? (
+                      {creditLimit !== null ? (
                         creditLimit.total_buyer_uploaded
                       ) : (
                         <MiniLoader />
@@ -109,10 +109,11 @@ function Header() {
                     </b>
                   </p>
                 </div>
-                {userDetails != null && userDetails.level_type != 1 ? (
+                {userDetails !== null && userDetails.level_type !== 1 ? (
                   <div className="upload-buyer">
                     <span className="upload-buyer-icon d-flex">
                       <img
+                        alt="wallet"
                         src="./assets/images/wallet.svg"
                         className="img-fluid"
                       />
@@ -120,7 +121,7 @@ function Header() {
                     <p>
                       Credits Points :{" "}
                       <b className="credit_limit">
-                        {creditLimit != null ? (
+                        {creditLimit !== null ? (
                           creditLimit.credit_limit
                         ) : (
                           <MiniLoader />
@@ -144,8 +145,8 @@ function Header() {
                       <div className="img-user">
                         <img
                           src={
-                            userDetails != null &&
-                            userDetails.profile_image != ""
+                            userDetails !== null &&
+                            userDetails.profile_image !== ""
                               ? userDetails.profile_image
                               : "./assets/images/avtar.png"
                           }
@@ -159,7 +160,7 @@ function Header() {
                       >
                         <span className="welcome">welcome</span>
                         <span className="user-name-title">
-                          {userDetails != null
+                          {userDetails !== null
                             ? userDetails.first_name +
                               " " +
                               userDetails.last_name
@@ -193,6 +194,7 @@ function Header() {
                       <li>
                         <Link className="dropdown-item" to="/my-profile">
                           <img
+                            alt=""
                             src="./assets/images/user-login.svg"
                             className="img-fluid"
                           />
@@ -202,6 +204,7 @@ function Header() {
                       <li>
                         <Link className="dropdown-item" to="/my-buyers">
                           <img
+                            alt=""
                             src="./assets/images/booksaved.svg"
                             className="img-fluid"
                           />
@@ -211,6 +214,7 @@ function Header() {
                       <li>
                         <Link className="dropdown-item" to="/last-search-data">
                           <img
+                            alt=""
                             src="./assets/images/search-log.svg"
                             className="img-fluid"
                           />
@@ -220,6 +224,7 @@ function Header() {
                       <li>
                         <Link className="dropdown-item" to="/support">
                           <img
+                            alt=""
                             src="./assets/images/messages.svg"
                             className="img-fluid"
                           />
@@ -228,11 +233,13 @@ function Header() {
                       </li>
                       <li>
                         <a
+                          href={void 0}
                           className="dropdown-item"
                           style={{ cursor: "pointer" }}
                           onClick={setLogout}
                         >
                           <img
+                            alt=""
                             src="./assets/images/logoutcurve.svg"
                             className="img-fluid"
                           />

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-//import AuthContext from "../../context/authContext";
 import Header from "../partials/Layouts/Header";
 import Footer from "../partials/Layouts/Footer";
-// import SingleSelect from "../partials/Select2/SingleSelect";
 import MultiSelect from "../partials/Select2/MultiSelect";
-// import { City, Country, State } from "country-state-city";
 import { useAuth } from "../../hooks/useAuth";
 import Select from "react-select";
-// import {useForm} from "../../hooks/useForm";
 import { useFormError } from "../../hooks/useFormError";
 import axios from "axios";
 import MiniLoader from "../partials/MiniLoader";
@@ -20,7 +16,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import WatchVideo from "../partials/Modal/WatchVideo";
 
 function AddBuyerDetails() {
-  //const {authData} = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -58,7 +53,6 @@ function AddBuyerDetails() {
   const [sewerOption, setSewerOption] = useState([]);
   const [utilitiesOption, setUtilitiesOption] = useState([]);
 
-  //const [countryOptions,setCountryOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [parkOption, setParkOption] = useState([]);
@@ -72,14 +66,12 @@ function AddBuyerDetails() {
   const [hotelMotelSelected, setHotelMotelSelected] = useState(false);
 
   const [parkingValue, setParkingValue] = useState([]);
-  const [parkValue, setParkValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [locationFlawsValue, setLocationFlawsValue] = useState([]);
   const [buyerTypeValue, setBuyerTypeValue] = useState([]);
   const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
   const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
   const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
-  const [contactPreferanceValue, setContactPreferanceValue] = useState([]);
   const [zoningValue, setZoningValue] = useState([]);
   const [stateValue, setStatevalue] = useState([]);
   const [cityValue, setCityvalue] = useState([]);
@@ -93,8 +85,6 @@ function AddBuyerDetails() {
   const [sqFtMax, setSqFtMax] = useState("");
   const [lotSizesqFtMin, setlotSizesqFtMin] = useState("");
   const [lotSizesqFtMax, setlotSizesqFtMax] = useState("");
-  const [yearBuildMin, setYearBuildMin] = useState("");
-  const [yearBuildMax, setYearBuildMax] = useState("");
   const [storiesMin, setStoriesMin] = useState("");
   const [storiesMax, setStoriesMax] = useState("");
   const [priceMin, setPriceMin] = useState("");
@@ -124,7 +114,7 @@ function AddBuyerDetails() {
   const getOptionsValues = () => {
     try {
       axios
-        .get(apiUrl + "single-buyer-form-details/add-single-buyer-details", {
+        .get(apiUrl + "single-buyer-form-details", {
           headers: headers,
         })
         .then((response) => {
@@ -135,7 +125,6 @@ function AddBuyerDetails() {
             setPropertyTypeOption(result.property_types);
             setLocationFlawsOption(result.location_flaws);
             setParkingOption(result.parking_values);
-            //setCountryOptions(result.countries);
             setParkOption(result.park);
             setStateOptions(result.states);
             setbuyerTypeOption(result.buyer_types);
@@ -225,7 +214,6 @@ function AddBuyerDetails() {
 
       setCityOptions([]);
     } else {
-      let country_id = { country };
       const selectedStates = state_id.map((item) => item.value);
       setStatevalue(selectedStates);
       axios
@@ -705,41 +693,12 @@ function AddBuyerDetails() {
                               {renderFieldError("phone")}
                             </div>
                           </div>
-                          {/* <div className="col-12 col-lg-12">
-                                                    <label>Address<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" {
-                                                        ...register("address", {
-                                                            required: "Address is required",
-                                                        })
-                                                        } />
-                                                         {errors.address && <p className="error">{errors.address?.message}</p>}
-                                                        {renderFieldError('address') }
-                                                    </div>
-                                                </div> */}
-                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Country</label>
-                                                    <div className="form-group">
-                                                    <input type="text" className="form-control country-field" value="United States" readOnly />
-                                                    </div>
-                                                </div> */}
+
                           <div className="col-12 col-lg-12">
                             <label>
                               State<span>*</span>
                             </label>
                             <div className="form-group">
-                              {/* <Select
-                                                            name="state"
-                                                            defaultValue=''
-                                                            options={stateOptions}
-                                                            onChange={(item) => getCities(item)}
-                                                            className="select"
-                                                            isClearable={true}
-                                                            isSearchable={true}
-                                                            placeholder="Select State"
-                                                            closeMenuOnSelect={false}
-                                                            isMulti
-                                                        /> */}
                               <Controller
                                 control={control}
                                 name="state"
@@ -750,7 +709,7 @@ function AddBuyerDetails() {
                                   <Select
                                     options={stateOptions}
                                     name={name}
-                                    value={state}
+                                    //value={state}
                                     closeMenuOnSelect={false}
                                     isClearable={true}
                                     className="select"
