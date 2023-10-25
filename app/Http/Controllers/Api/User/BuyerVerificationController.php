@@ -349,7 +349,7 @@ class BuyerVerificationController extends Controller
         //Return Success Response
         $responseData = [
             'status'        => true,
-            'lastStepForm'  => (int)$lastStepForm-1,
+            'lastStepForm'  => (int)$lastStepForm,
         ];
         return response()->json($responseData, 200);
     }
