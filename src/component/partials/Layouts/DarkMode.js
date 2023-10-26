@@ -1,8 +1,15 @@
 import React from "react";
 const DarkMode = () => {
-  const handleChange = () => {
+  const handleChange = (e) => {
+    if (e.target.checked) {
+      localStorage.setItem("darkMode", true);
+    } else {
+      localStorage.removeItem("darkMode");
+    }
     document.body.classList.toggle("dark");
   };
+  const myValue = localStorage.getItem("darkMode");
+
   return (
     <>
       <input
@@ -10,6 +17,7 @@ const DarkMode = () => {
         className="checkbox"
         id="checkbox"
         onChange={handleChange}
+        defaultChecked={myValue === "true" ? "checked" : ""}
       />
       <label htmlFor="checkbox" className="checkbox-label">
         <span className="moon togglecontent">

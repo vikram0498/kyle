@@ -4,6 +4,7 @@ import React from "react";
 // import './../../assets/css/responsive.css';
 
 import { Link, useLocation } from "react-router-dom";
+import DarkMode from "../partials/Layouts/DarkMode";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -22,7 +23,12 @@ const Layout = ({ children }) => {
                         </Link> : ''
                     } */}
           <div className="row align-items-center g-0 h-100vh">
-            <div className="col-12 col-lg-6">{children}</div>
+            <div className="col-12 col-lg-6">
+              <div className="dark-container">
+                <DarkMode />
+              </div>
+              {children}
+            </div>
             <div className="col-12 col-lg-6">
               <div className="session-img">
                 <img

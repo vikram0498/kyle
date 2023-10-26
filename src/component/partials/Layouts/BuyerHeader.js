@@ -18,12 +18,12 @@ function BuyerHeader() {
                     className="img-fluid darkmode-none"
                   />
                 </a>
-                <a href="">
+                {/* <a href="">
                   <img
                     src="/assets/images/dark-mode-logo.png"
                     className="img-fluid lightmode-none"
                   />
-                </a>
+                </a> */}
               </div>
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">

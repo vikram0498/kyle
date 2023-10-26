@@ -131,16 +131,13 @@
         });
       });
 
-      // const myValue = localStorage.getItem("darkMode");
-      // console.log(myValue, "myValue");
-      // if (myValue) {
-      //   console.log("case 1");
-      //   $("body").addClass("dark");
-      // } else {
-      //   console.log("case 2");
-
-      //   $("body").removeClass("dark");
-      // }
+      const myValue = localStorage.getItem("darkMode");
+      console.log(myValue, "myValue");
+      if (myValue === "true") {
+        $("body").addClass("dark");
+      } else {
+        $("body").removeClass("dark");
+      }
     </script>
   </body>
 </html>

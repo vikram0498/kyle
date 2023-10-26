@@ -3,7 +3,6 @@
 body.dark {
   background-color: #2f2f2f !important;
 }
-
 body.dark h1,
 body.dark h2,
 body.dark h3,
@@ -12,7 +11,6 @@ body.dark h5,
 body.dark h6 {
   color: #fff !important;
 }
-
 body.dark .dashboard-header {
   background: #1f1f1f;
   border-bottom: 1px solid #2f2f2f !important;
@@ -36,12 +34,11 @@ body.dark .personal-information,
 body.dark .contact-detail,
 body.dark .contact-desc-box {
   background: #2f2f2f;
+  color: #cacaca;
 }
-
 body.dark .personal-information h3 {
   color: #fff;
 }
-
 body.dark p {
   color: #cacaca;
 }
@@ -56,17 +53,9 @@ body.dark .footer-main .copyright-text,
 body.dark .footer-main .copyright-text a {
   color: #fff;
 }
-body.dark .profile-data-content h3 {
+bo00000004dy.dark .profile-data-content h3 {
   color: #fff;
 }
-.lightmode-none,
-body.dark .darkmode-none {
-  display: none;
-}
-body.dark .lightmode-none {
-  display: block;
-}
-
 body.dark .active-inactive button,
 body.dark .field-box button,
 body.dark .otp-digit .otpnumb,
@@ -75,21 +64,17 @@ body.dark .card-box-blocks .form-control {
   border-color: rgb(255 255 255 / 20%) !important;
   color: #fff !important;
 }
-
 body.dark .active-inactive button .userimg,
 body.dark .field-box button .commentic {
   border-color: rgb(255 255 255 / 20%);
 }
-
 body.dark .dropdown-arr svg path,
 body.dark .user-dropdown .arrow-icon svg path {
   stroke: #fff;
 }
-
 body.dark .account-check button {
   background: rgba(25, 180, 0, 0.15);
 }
-
 body.dark .component-group .dropdown-menu,
 body.dark .component-group .dropdown-menu:before,
 body.dark .user-dropdown .dropdown-menu,
@@ -97,20 +82,17 @@ body.dark .user-dropdown .dropdown-menu:before {
   background: #2f2f2f;
   box-shadow: 2.01px -0.934153px 18.6831px rgba(4, 12, 30, 0.2);
 }
-
 body.dark .component-group .dropdown-menu li .dropdown-item,
 body.dark .user-dropdown .dropdown-menu li .dropdown-item {
   border-color: rgb(255 255 255 / 20%);
   color: #fff;
 }
-
 body.dark .component-group .dropdown-menu li:hover:before,
 body.dark .component-group .dropdown-menu li.active:before,
 body.dark .user-dropdown .dropdown-menu li:hover:before,
 body.dark .user-dropdown .dropdown-menu li.active:before {
   background: #fff;
 }
-
 body.dark .user-dropdown .dropdown-menu li .dropdown-item img,
 body.dark .form-icon img,
 body.dark .form-icon-password img,
@@ -126,7 +108,6 @@ body.dark .profile-varification {
 body.dark .card-box-blocks {
   background: #1f1f1f !important;
 }
-
 body.dark .card-box-blocks label,
 body.dark .otp-digit .otpnumb,
 body.dark .card-box-blocks .form-control::placeholder,
@@ -135,6 +116,7 @@ body.dark .btn-outline,
 body.dark .file-upload-choosen .file-select .file-select-name {
   color: #fff !important;
 }
+
 body.dark .file-upload-choosen .file-select,
 body.dark .radio-block-group {
   background: rgb(255 255 255 / 10%) !important;
@@ -145,6 +127,7 @@ body.dark .profile-varification .nav-item .nav-link {
   background: #1f1f1f;
   color: #fff !important;
 }
+
 body.dark .profile-varification .nav-item:not(:last-child) .nav-link {
   border-color: rgb(255 255 255 / 20%) !important;
 }
@@ -163,6 +146,7 @@ body.dark .back {
 body.dark .back svg path {
   stroke: #fff;
 }
+
 body.dark .upload-photo,
 body.dark .file-upload {
   border-color: rgb(255 255 255 / 20%) !important;
@@ -187,8 +171,10 @@ body.dark
 }
 
 /************ LOGIN ****************/
+
 body.dark .account-in,
-body.dark .grid-block-view {
+body.dark .grid-block-view,
+body.dark .boost-box-block-item {
   background: #1f1f1f;
   border-color: rgb(255 255 255 / 20%) !important;
 }
@@ -199,10 +185,15 @@ body.dark .form-control-form {
   border-color: rgb(255 255 255 / 20%) !important;
   color: #fff !important;
 }
+
 body.dark .form-control::placeholder,
-body.dark .form-control-form::placeholder {
+body.dark .form-control-form::placeholder,
+body.dark .boost-title,
+body.dark .boost-box-block-item .postion,
+body.dark .priceby {
   color: #fff !important;
 }
+
 body.dark .btn-fill:hover {
   border-color: #fff;
   color: #fff;
@@ -210,13 +201,16 @@ body.dark .btn-fill:hover {
 body.dark .form-icon {
   border-color: #fff;
 }
-
 body.dark .slider,
 body.dark .css-13cymwt-control,
 body.dark .css-13cymwt-control,
 body.dark .css-t3ipsp-control {
   background-color: #363636 !important;
   border-color: rgb(255 255 255 / 20%) !important;
+}
+body.dark .notifyinfo {
+  background-color: #363636 !important;
+  color: #fff !important;
 }
 body.dark .account-in label,
 body.dark .toggle-heading,
@@ -238,27 +232,56 @@ body.dark .modal-form label,
 body.dark .msg-passwrd {
   color: #fff !important;
 }
+
 body.dark input[type="radio"]:checked:before,
 body.dark .form-icon-password:before {
   background: #fff;
 }
+
 body.dark .upload-multiple-data,
-body.dark .upload-single-data {
+body.dark .upload-single-data,
+body.dark #inviteCode.invite-page {
   background: #1f1f1f;
   border-color: rgb(255 255 255 / 20%) !important;
 }
 body.dark .upload-single-data .drag-file-area label .browse-files-text {
   border-color: rgb(255 255 255 / 20%) !important;
 }
+
 body.dark .watch-video,
 body.dark .property-critera-block,
-body.dark .modal-content {
+body.dark .modal-content,
+body.dark .boost-box .card-box-inner {
   background: #1f1f1f;
 }
+
 body.dark .watch-video svg path {
   stroke: #fff;
 }
 
 body.dark .critera-card {
   background: rgb(255 255 255 / 20%) !important;
+}
+
+body.dark .support-account .card-box-blocks {
+  padding: 20px !important;
+}
+body.dark .card-box-blocks .css-1dimb5e-singleValue {
+  color: #fff !important;
+}
+body.dark #inviteCode.invite-page input#link {
+  outline: 0 !important;
+  background: transparent !important;
+  color: #fff !important;
+}
+.loader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
