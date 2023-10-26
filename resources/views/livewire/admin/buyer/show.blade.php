@@ -15,20 +15,20 @@
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.name')}}</th>
-            <td>{{ $details->first_name.' '. $details->last_name  }}</td>
+            <td>{{ $details->userDetail->name  }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.email')}}</th>
-            <td>{{ $details->email ?? 'N/A' }}</td>
+            <td>{{ $details->userDetail->email }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.phone')}}</th>
-            <td> {{ $details->phone ?? 'N/A' }}</td>
+            <td> {{ $details->userDetail->phone ?? 'N/A' }}</td>
         </tr>
-        <tr>
+        {{-- <tr>
             <th width="25%">{{ __('cruds.buyer.fields.address')}}</th>
             <td> {{ $details->address ?? 'N/A' }}</td>
-        </tr>
+        </tr> --}}
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.country')}}</th>
             <td> {{ $details->country ?? 'N/A' }}</td>
@@ -43,7 +43,7 @@
                     $AllStates = \DB::table('states')->whereIn('id', $details->state)->pluck('name')->toArray();
                   }
                 @endphp
-                 {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
+                 {{  count($AllStates) > 0 ? implode(', ',$AllStates) : 'N/A'   }}
             </td>
         </tr>
         <tr>
@@ -55,13 +55,13 @@
                     $AllCities = \DB::table('cities')->whereIn('id', $details->city)->pluck('name')->toArray();
                   }
                 @endphp
-                {{  count($AllCities) > 0 ? implode(',',$AllCities) : 'N/A'   }}
+                {{  count($AllCities) > 0 ? implode(', ',$AllCities) : 'N/A'   }}
             </td>
         </tr>        
-        <tr>
+        {{-- <tr>
             <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
             <td> {{ $details->zip_code ?? 'N/A' }}</td>
-        </tr>
+        </tr> --}}
 
         
         <tr>

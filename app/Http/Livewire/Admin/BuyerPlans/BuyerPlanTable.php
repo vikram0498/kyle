@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Buyer;
+namespace App\Http\Livewire\Admin\BuyerPlans;
 
-use App\Models\Buyer;
+use App\Models\BuyerPlan;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 
-class BuyerTable extends Component
+class BuyerPlanTable extends Component
 {
     use WithPagination;
 
     public $search = null;
     
-    public $sortColumnName = 'updated_at', $sortDirection = 'desc', $perPage = 10;
+    public $sortColumnName = 'created_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
         'refreshTable' =>'render'
@@ -29,16 +29,18 @@ class BuyerTable extends Component
             $statusSearch = 0;
         }
 
-        $buyers = Buyer::query()
+        $plans = BuyerPlan::query()
         ->where(function ($query) use ($searchValue,$statusSearch) {
-            $query->whereRelation('userDetail', 'name', 'like',  ["%{$searchValue}%"])
-            ->orWhereRelation('userDetail', 'is_active', '=',  $statusSearch)
-            ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
-            ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
+            $query->where('title','like','%'.$searchValue.'%')
+            ->orWhere('amount','like',$searchValue.'%')
+            ->orWhere('type','like',$searchValue.'%')
+            ->orWhere('position','like',$searchValue.'%')
+            ->orWhere('status',$statusSearch)
+            ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->perPage);
 
-        return view('livewire.admin.buyer.buyer-table',compact('buyers'));
+        return view('livewire.admin.buyer-plans.buyer-plan-table',compact('plans'));
     }
 
     public function updatedSearch()

@@ -147,9 +147,10 @@
         if(pr == 'buyer_type'){
            
             @this.emit('initializePlugins');
-        } else if(pr == 'country'){
+        } /*else if(pr == 'country'){
             @this.emit('getStates', $('.country').select2('val'));
-        } else if(pr == 'state'){
+        } */
+        else if(pr == 'state'){
             @this.emit('getCities', $('.state').select2('val'));
         } else if(pr == 'city'){           
             @this.emit('initializePlugins');

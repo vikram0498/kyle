@@ -282,6 +282,148 @@ class BuyerController extends Controller
             $buyer_details = collect($buyer_details);
             $other_details = $buyer->buyerDetail()->select('occupation','replacing_occupation','company_name','address','country','state','city','zip_code','price_min','price_max','bedroom_min','bedroom_max','bath_min','bath_max','size_min','size_max','lot_size_min','lot_size_max','build_year_min','build_year_max','arv_min','arv_max','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','buyer_type','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','unit_min','unit_max','building_class','value_add','purchase_method','stories_min','stories_max','zoning','utilities','sewer','market_preferance','contact_preferance','is_ban','permanent_affix','park','rooms')->first();
 
+            //Start State Column
+            $states = DB::table('states')->where('flag','=',1)->whereIn('id',$other_details->state)->orderBy('name','ASC')->pluck('name','id');
+
+            $other_details->state = $states->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+            //End State Column
+
+            //Start City Column
+            $cities = DB::table('cities')->whereIn('id',$other_details->city)->orderBy('name','ASC')->pluck('name','id');
+
+            $other_details->city = $cities->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => ucwords(strtolower($label)),
+                ];
+            })->values()->all();
+            //End City Column
+
+            //Start Market Preference (MLS Status) Column
+            $mls_status_arr = \Arr::only(config('constants.market_preferances'), $other_details->market_preferance);
+            $other_details->market_preferance = collect($mls_status_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Market Preference (MLS Status) Column
+
+            //Start Contact Preference Column
+            $contact_pref_arr = \Arr::only(config('constants.contact_preferances'), $other_details->contact_preferance);
+            $other_details->contact_preferance = collect($contact_pref_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Contact Preference Column
+
+            //Start Property Type Column
+            $property_type_arr = \Arr::only(config('constants.property_types'), $other_details->property_type);
+            $other_details->property_type = collect($property_type_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Property Type Column
+
+            //Start Purchase Method Column
+            $purchase_method_arr = \Arr::only(config('constants.purchase_methods'), $other_details->purchase_method);
+            $other_details->purchase_method = collect($purchase_method_arr)->map(function ($label, $value) {
+                 return [
+                     'value' => $value,
+                     'label' => $label,
+                 ];
+            })->values()->all();  
+            //End Purchase Method Column
+
+            //Start Zoning Column
+            $zoning_arr = \Arr::only(config('constants.zonings'), json_decode($other_details->zoning));
+            $other_details->zoning = collect($zoning_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Zoing Column
+
+            //Start Utilities Column
+            $utilities_arr = \Arr::only(config('constants.utilities'), $other_details->utilities);
+            $other_details->utilities = collect($utilities_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Utilities Column
+
+            //Start Sewage Column
+            $sewer_arr = \Arr::only(config('constants.sewers'), $other_details->sewer);
+            $other_details->sewer = collect($sewer_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Sewage Column
+
+            //Start Building Class Column
+            $building_class_arr = \Arr::only(config('constants.building_class_values'), $other_details->building_class);
+            $other_details->building_class = collect($building_class_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Building Class Column
+
+            //Start Parking Column
+            $parking_arr = \Arr::only(config('constants.parking_values'), $other_details->parking);
+            $other_details->parking = collect($parking_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Parking Column
+
+            //Start Buyer Type Column
+            $buyer_type_arr = \Arr::only(config('constants.buyer_types'), $other_details->buyer_type);
+            $other_details->buyer_type = collect($buyer_type_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Buyer Type Column
+
+            //Start Park Column
+            $park_arr = \Arr::only(config('constants.park'), $other_details->park);
+            $other_details->park = collect($park_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Park Column
+
+            //Start Location Flaw Column
+            $property_flaw_arr = \Arr::only(config('constants.property_flaws'), $other_details->property_flaw);
+            $other_details->property_flaw = collect($property_flaw_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();  
+            //End Location Flaw Column
+
             $mergedBuyerDetails = $buyer_details->merge($other_details);
 
             //Return Success Response

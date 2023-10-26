@@ -356,11 +356,16 @@ class Index extends Component
 
     public function edit($id) {
         $buyer = Buyer::findOrFail($id);
+       
         $stateId = null;
         $cityId = null;
 
         $this->buyer = $buyer;
         $this->state = $buyer->toArray();
+        $this->state['first_name'] = $buyer->userDetail->first_name;
+        $this->state['last_name'] = $buyer->userDetail->last_name;
+        $this->state['email'] = $buyer->userDetail->email;
+        $this->state['phone'] = $buyer->userDetail->phone;
 
         $this->state['zoning'] = json_decode($this->state['zoning'],true);
          
@@ -395,28 +400,38 @@ class Index extends Component
         $this->validatiionForm();
 
         try {
+           
+            $isSendMail = false;
+
+            $user = User::find($this->buyer_user_id);
+
+            if($user->email !== $this->state['email']){
+                $isSendMail = true;
+                $user->email_verified_at = null;
+                $user->save();
+            }else{
+                $isSendMail = false;
+            }
+            
             // Start create users table
             $userDetails =  [
                 'first_name'     => $this->state['first_name'],
                 'last_name'      => $this->state['last_name'],
-                'name'           => $this->state['first_name'].' '.$this->state['last_name'],
-                // 'email'          => $this->state['email'], 
-                // 'phone'          => $this->state['phone'], 
+                'name'           => ucwords($this->state['first_name'].' '.$this->state['last_name']),
+                'email'          => $this->state['email'], 
+                'phone'          => $this->state['phone'], 
             ];
-            $updateUser = User::where('id',$this->buyer_user_id)->update($userDetails);
+            $updateUser =  $user->update($userDetails);
             // End create users table
 
             $this->state['country'] = DB::table('countries')->where('id', 233)->first()->name;
                     
             if(isset($this->state['state']) && !empty($this->state['state'])){
-                $this->state['state']   =  array_map('intval',[$this->state['state']]);
-                // $this->state['state']   =  [(int)$this->state['state']];
+                $this->state['state']   =  array_map('intval',$this->state['state']);
             }
 
             if(isset($this->state['city']) && !empty($this->state['city'])){
-                $this->state['city']    =  array_map('intval',[$this->state['city']]);
-                
-                // $this->state['city']    =  [(int)$this->state['city']];
+                $this->state['city']    =  array_map('intval',$this->state['city']);
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
@@ -446,7 +461,14 @@ class Index extends Component
             $this->formMode = false;
             $this->updateMode = false;
     
-            $this->flash('success',trans('messages.edit_success_message'));
+           if($isSendMail){
+                //Verification mail sent
+                $user->NotificationSendToBuyerVerifyEmail();
+                $this->flash('success',trans('messages.auth.buyer.update_success_with_mail_sent_alert'));
+           }else{
+                $this->flash('success',trans('messages.auth.buyer.update_buyer_success_alert'));
+           }
+            
             $this->resetInputFields();
             return redirect()->route('admin.buyer');
         }catch (\Exception $e) {
@@ -473,6 +495,8 @@ class Index extends Component
 
     public function deleteConfirm($id) {
         $model = Buyer::find($id);
+        $model->userDetail()->delete();
+        // $model->buyersPurchasedByUser()->delete();
         $model->delete();
         
         $this->emit('refreshTable');
@@ -496,7 +520,7 @@ class Index extends Component
         $type = $data['type'];
 
         $model = Buyer::find($id);
-
+        $model->userDetail()->update(['is_active'=>!$model->$type]);
         $model->update([$type => !$model->$type]);
         $this->alert('success', trans('messages.change_status_success_message'));
     }
@@ -522,23 +546,23 @@ class Index extends Component
         $this->initializePlugins();
     } 
 
-    public function getStates($countryId){
-        $this->cities = [];
-        if($countryId){
-            $stateData = DB::table('states')->where('country_id', $countryId)->orderBy('name', 'asc')->pluck('name', 'id');
-            if($stateData->count() > 0){
-                $this->states = $stateData;
-            } else {
-                $this->states = [];
-                // $this->addError('country', 'Please select valid country');
-            }
-        } else {
-            $this->states = [];
-            $this->cities = [];
-        }
+    // public function getStates($countryId){
+    //     $this->cities = [];
+    //     if($countryId){
+    //         $stateData = DB::table('states')->where('country_id', $countryId)->orderBy('name', 'asc')->pluck('name', 'id');
+    //         if($stateData->count() > 0){
+    //             $this->states = $stateData;
+    //         } else {
+    //             $this->states = [];
+    //             // $this->addError('country', 'Please select valid country');
+    //         }
+    //     } else {
+    //         $this->states = [];
+    //         $this->cities = [];
+    //     }
         
-        $this->initializePlugins();
-    }
+    //     $this->initializePlugins();
+    // }
 
     public function getCities($stateId){
      

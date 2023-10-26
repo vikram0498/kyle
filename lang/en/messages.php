@@ -19,6 +19,8 @@ return [
     'auth'=>[
         'buyer'=>[
             'register_success_alert'=>'Buyer register successfully! We\'ve sent an email with a verification link.',
+            'update_buyer_success_alert'=>'Buyer updated successfully!',
+            'update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email with a verification link.',
         ],
         'verification'=>[
             'invalid_otp'         => 'Invalid OTP Number!',

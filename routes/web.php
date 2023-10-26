@@ -62,7 +62,11 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
 
         Route::view('search-buyer', 'admin.buyer.search-buyer')->name('search-buyer-form');
 
-        Route::view('transactions', 'admin.transactions.index')->name('transactions');     
+        Route::view('transactions', 'admin.transactions.index')->name('transactions'); 
+
+        Route::view('buyer-transactions', 'admin.transactions.index')->name('buyer-transactions'); 
+        
+        Route::view('buyer-plans', 'admin.buyer-plans.index')->name('buyer-plans');    
         
         
 

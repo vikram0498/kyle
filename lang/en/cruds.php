@@ -262,5 +262,35 @@ return [
             'created_at' => 'Created At',
         ]
 
-    ]
+        ],
+
+
+    'buyer_plan' => [
+        'title' => 'Buyer Plans',
+        'title_singular' => 'Buyer Plan',
+        'fields' => [
+            'title' => 'Plan Name',
+            'amount' => 'Amount',
+            'type'  => 'Type',
+            'position'  => 'Position',
+            'description'       => 'Description',
+            'image'             => 'Image',          
+            'status'            => 'Status', 
+            'created_at'        => 'Created At',
+        ],
+    ],
+
+    'buyer_transaction' => [
+        'title'                 => 'Buyer Transactions',
+        'title_singular'        => 'Buyer Transaction',
+        'fields' => [
+            'user'   => 'User',
+            'plan'   => 'Plan',
+            'amount' => 'Amount',
+            'currency' => 'Currency',
+            'payment_type'   => 'Payment Type',
+            'payment_method' => 'Payment Method',
+            'status'         => 'Status',
+        ],
+    ],
 ];

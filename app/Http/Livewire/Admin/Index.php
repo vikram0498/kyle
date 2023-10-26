@@ -25,6 +25,7 @@ class Index extends Component
                  ->where('buyers.user_id', '=', 1);
         })
         ->join('users', 'purchased_buyers.user_id', '=', 'users.id')
+        ->join('users AS buyer_user', 'buyers.buyer_user_id', '=', 'buyer_user.id')
         ->where('purchased_buyers.user_id', '!=', 1)
         ->groupBy('purchased_buyers.buyer_id')
         ->select(
@@ -32,6 +33,8 @@ class Index extends Component
             'purchased_buyers.user_id',
             'users.first_name AS user_first_name',
             'users.last_name AS user_last_name',
+            'buyer_user.first_name AS buyer_first_name',
+            'buyer_user.last_name AS buyer_last_name',
             DB::raw('MAX(purchased_buyers.created_at) AS max_created_at')
         )
         ->orderByDesc('max_created_at')

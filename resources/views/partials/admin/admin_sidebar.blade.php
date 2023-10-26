@@ -57,6 +57,23 @@
                             </a>
                         </li>
                         @endcan
+
+                        @can('buyer_plan_access')
+                        <li class="nav-item {{ request()->segment(2) == 'buyer-plans' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.buyer-plans') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer_plan.title') }} </span>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('buyer_transaction_access')
+                        <li class="nav-item {{ (request()->is('admin/buyer-transactions')) ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('admin.buyer-transactions') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer_transaction.title') }} </span>
+                            </a>
+                        </li>
+                        @endcan
+
                         @can('buyer_flag_access')
                         <li class="nav-item {{ request()->is('admin/buyer') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.buyer') }}">
@@ -81,7 +98,7 @@
                 <div class="collapse" id="master-menu">
                     <ul class="nav flex-column sub-menu">
                         @can('plan_access')
-                        <li class="nav-item {{ request()->is('admin/plan') ? 'active' : '' }}">
+                        <li class="nav-item {{ request()->segment(2) == 'plan' ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.plan') }}">
                                 <span class="menu-title">{{__('cruds.plan.title')}}</span>
                             </a>
