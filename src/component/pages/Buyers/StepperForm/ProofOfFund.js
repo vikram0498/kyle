@@ -29,13 +29,14 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
                   <div className="upload-photo">
                     <div className="containers">
                       <div className="imageWrapper">
-                        <img className="image" src="./assets/images/pdf.png" />
+                        <img className="image" src="./assets/images/pdf.svg" />
                       </div>
                       <p>{documentName}</p>
                     </div>
                     <button className="file-upload">
                       <input
                         type="file"
+                        accept="application/pdf"
                         className="file-input"
                         name="bank_statement_pdf"
                         {...register("bank_statement_pdf", {
@@ -92,7 +93,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
 
                 <div className="upload-btn">
                   <button type="submit" className="btn btn-fill w-auto">
-                    Upload
+                    Upload & Next
                   </button>
                 </div>
               </div>

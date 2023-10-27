@@ -45,7 +45,7 @@ const VerifyAndSetPassword = () => {
         toast.success(response.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
-        navigate("/stepper-form");
+        navigate("/");
       }
       setLoading(false);
     } catch (error) {

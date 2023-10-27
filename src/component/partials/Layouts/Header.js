@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MiniLoader from "../MiniLoader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DarkMode from "./DarkMode";
 
 function Header() {
+  const navigate = useNavigate();
+
   const [userDetails, setUserDetails] = useState(null);
   const [creditLimit, setCreditLimit] = useState(null);
   const { setLogout, getTokenData, getLocalStorageUserdata } = useAuth();
@@ -23,6 +25,9 @@ function Header() {
     getCurrentLimit();
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
+      if (userData.role === 3) {
+        navigate("/buyer-profile");
+      }
       if (userData !== null) {
         setUserDetails(userData);
       }

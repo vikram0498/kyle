@@ -19,10 +19,10 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
     }
   };
   const validateFileSize = (file) => {
-    let extension = ["image/jpg", "image/jpeg"];
+    let extension = ["image/png", "image/jpg", "image/jpeg"];
     if (!extension.includes(file[0].type)) {
       setBorder("1px dashed #ff0000");
-      return "Please add valid file (jpg,jpeg)";
+      return "Please add valid file (png,jpg,jpeg)";
     } else if (file[0].size > 2097152) {
       setBorder("1px dashed #ff0000");
       return "File size is too large. Please upload a file that is less than 2MB.";
@@ -59,6 +59,7 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
                       <input
                         type="file"
                         className="file-input"
+                        accept="image/png, image/jpg, image/jpeg"
                         name="driver_license_front_image"
                         {...register("driver_license_front_image", {
                           onChange: (e) => {
@@ -106,6 +107,7 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
                       <input
                         type="file"
                         className="file-input"
+                        accept="image/png, image/jpg, image/jpeg"
                         name="driver_license_back_image"
                         {...register("driver_license_back_image", {
                           onChange: (e) => {
@@ -129,7 +131,7 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
             <div className="col-12 col-lg-12">
               <div className="upload-btn text-end">
                 <button type="submit" className="btn btn-fill w-auto">
-                  Upload
+                  Upload & Next
                 </button>
               </div>
             </div>

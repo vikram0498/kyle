@@ -251,7 +251,9 @@ body.dark .upload-single-data .drag-file-area label .browse-files-text {
 body.dark .watch-video,
 body.dark .property-critera-block,
 body.dark .modal-content,
-body.dark .boost-box .card-box-inner {
+body.dark .boost-box .card-box-inner,
+body.dark .lic-detail-area,
+body.dark .licenses-wrapper .upload-photo {
   background: #1f1f1f;
 }
 
@@ -284,4 +286,12 @@ body.dark #inviteCode.invite-page input#link {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.dark .radio-block {
+  background: #363636;
+  border: 1px solid #5e5e5e !important;
+}
+.dark .MuiStepLabel-label {
+  color: rgb(255 255 255 / 87%) !important;
+  font-weight: 500;
 }

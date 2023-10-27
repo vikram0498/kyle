@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import Header from "../partials/Layouts/Header";
+import BuyerHeader from "../partials/Layouts/BuyerHeader";
 import Footer from "../partials/Layouts/Footer";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormError } from "../../hooks/useFormError";
@@ -41,7 +42,11 @@ const Support = () => {
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
-          navigate("/");
+          if (isLogin.role === 3) {
+            navigate("/buyer-profile");
+          } else {
+            navigate("/");
+          }
         }
       }
     } catch (error) {
@@ -103,47 +108,49 @@ const Support = () => {
   useEffect(() => {
     getContactPreference();
   }, []);
+  console.log(isLogin, "isLogin");
   return (
     <>
-      {isLogin != "" ? <Header /> : ""}
+      {isLogin != "" ? isLogin.role === 3 ? <BuyerHeader /> : <Header /> : ""}
       <section className="main-section position-relative pt-4 pb-0">
-        <div className="container position-relative">
-          <div className="back-block">
-            <div className="row align-items-center">
-              <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                <Link to="/" className="back">
-                  <svg
-                    width="16"
-                    height="12"
-                    viewBox="0 0 16 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 6H1"
-                      stroke="#0A2540"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.9 11L1 6L5.9 1"
-                      stroke="#0A2540"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  Back
-                </Link>
+        {loading ? (
+          <div className="loader" style={{ textAlign: "center" }}>
+            <img alt="loader" src="assets/images/loader.svg" />
+          </div>
+        ) : (
+          <div className="container position-relative">
+            <div className="back-block">
+              <div className="row align-items-center">
+                <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                  <Link to="/" className="back">
+                    <svg
+                      width="16"
+                      height="12"
+                      viewBox="0 0 16 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15 6H1"
+                        stroke="#0A2540"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M5.9 11L1 6L5.9 1"
+                        stroke="#0A2540"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Back
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-          {loading ? (
-            <div className="loader" style={{ textAlign: "center" }}>
-              <img alt="loader" src="assets/images/loader.svg" />
-            </div>
-          ) : (
+
             <div className="card-box ">
               <form
                 method="post"
@@ -316,8 +323,8 @@ const Support = () => {
                 </div>
               </form>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </section>
       <Footer />
     </>

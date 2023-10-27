@@ -13,6 +13,15 @@ const PhoneVerification = ({
   miniLoader,
 }) => {
   const inputfocus = (elmnt) => {
+    const elements = document.getElementsByClassName("otpnumb");
+    const inputField = document.getElementById("otp_value");
+
+    const values = [];
+    for (const element of elements) {
+      values.push(element.value);
+    }
+    let inputValue = values.join("");
+    inputField.value = inputValue;
     if (elmnt.key === "Delete" || elmnt.key === "Backspace") {
       const next = elmnt.target.tabIndex - 2;
       console.log(next);
@@ -40,7 +49,6 @@ const PhoneVerification = ({
             <div className="col-12 col-lg-8">
               <label>Phone Number</label>
               <div className="form-group mb-0">
-                <input type="hidden" value="1" name="step" />
                 <input
                   autoComplete="off"
                   type="text"
@@ -64,8 +72,6 @@ const PhoneVerification = ({
                   })}
                 />
               </div>
-              {errors.phone && <p className="error">{errors.phone?.message}</p>}
-              {renderFieldError("phone")}
             </div>
             <div className="col-12 col-sm- col-md-6 col-lg-2">
               <div className={isOtpSent ? "sent-btn" : "send-btn"}>
@@ -104,6 +110,8 @@ const PhoneVerification = ({
               ""
             )}
           </div>
+          {errors.phone && <p className="error">{errors.phone?.message}</p>}
+          {renderFieldError("phone")}
         </div>
       </div>
 
@@ -115,6 +123,7 @@ const PhoneVerification = ({
           <div className="lic-detail-area">
             <div className="row align-items-end">
               <div className="col-12 col-lg-3">
+                <input type="hidden" name="otp" id="otp_value" value="" />
                 <label>Enter OTP</label>
                 <div className="otp-digit">
                   {/* <span className="otpnumb">4</span>
@@ -176,7 +185,7 @@ const PhoneVerification = ({
                     </button>
                   ) : (
                     <button type="submit" className="btn btn-fill w-auto">
-                      verify
+                      verify & next
                     </button>
                   )}
                 </div>

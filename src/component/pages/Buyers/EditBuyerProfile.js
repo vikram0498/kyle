@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import Select from "react-select";
 import { useFormError } from "../../../hooks/useFormError";
@@ -7,7 +7,6 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import MiniLoader from "../../partials/MiniLoader";
 import DatePicker from "react-datepicker";
-import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/useAuth";
@@ -15,12 +14,10 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
 
 function EditBuyerProfile() {
-  const { token } = useParams();
-
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { getTokenData, setLogout } = useAuth();
+  const { getTokenData, setLogout, setLocalStorageUserdata } = useAuth();
 
   const { setErrors, renderFieldError } = useFormError();
   const {
@@ -33,6 +30,9 @@ function EditBuyerProfile() {
   } = useForm();
   /* previous form data start*/
   const [loader, setLoader] = useState(true);
+  const [miniLoader, setMiniLoader] = useState(false);
+  const [profileModal, setProfileModal] = useState(false);
+
   const [solar, setSolar] = useState("");
   const [pool, setPool] = useState("");
   const [septic, setSeptic] = useState("");
@@ -49,6 +49,7 @@ function EditBuyerProfile() {
   const [mold, setMold] = useState("");
   const [fireDamaged, setFireDamaged] = useState("");
   const [permanentAffix, setPermanentAffix] = useState("");
+  const [valueAdd, setValueAdd] = useState("");
 
   /* previous form data end */
   const [currentBuyerData, setCurrentBuyerData] = useState({});
@@ -60,6 +61,9 @@ function EditBuyerProfile() {
   const [locationFlaws, setLocationFlaws] = useState([]);
   const [marketPreferance, setMarketPreferance] = useState([]);
   const [contactPreferance, setContactPreferance] = useState([]);
+  const [zoning, setZoning] = useState([]);
+  const [sewer, setSewer] = useState([]);
+  const [utilities, setUtilities] = useState([]);
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -111,8 +115,6 @@ function EditBuyerProfile() {
   const [priceMax, setPriceMax] = useState("");
   /* min max value states end */
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     getOptionsValues();
     fetchBuyerData();
@@ -132,9 +134,6 @@ function EditBuyerProfile() {
       });
       if (response.data.status) {
         let responseData = response.data.buyer;
-        let StatesObject = responseData.state;
-        let CityObject = responseData.city;
-        let PropertyObject = responseData.property_type;
 
         setCurrentBuyerData(responseData);
         setState(responseData.state);
@@ -146,22 +145,63 @@ function EditBuyerProfile() {
         setLocationFlaws(responseData.property_flaw);
         setMarketPreferance(responseData.market_preferance);
         setContactPreferance(responseData.contact_preferance);
+        setZoning(responseData.zoning);
+        setSewer(responseData.sewer);
+        setUtilities(responseData.utilities);
 
-        const selectedStates = StatesObject.map((item) => item.value);
+        // set form value and react-hook-form validation value
+        const selectedStates = responseData.state.map((item) => item.value);
         setStatevalue(selectedStates);
+        setValue("state", responseData.state);
 
-        const selectedCity = CityObject.map((item) => item.value);
+        const selectedCity = responseData.city.map((item) => item.value);
         setCityvalue(selectedCity);
+        setValue("city", responseData.city);
 
-        console.log(responseData.property_type, "selectedProperty");
         const selectedProperty = responseData.property_type.map(
           (item) => item.value
         );
         setPropertyTypeValue(selectedProperty);
-        const selectedPurchase = responseData.purchase_method.map(
+        setValue("property_type", responseData.property_type);
+
+        if (selectedProperty.includes(7)) {
+          setIsLandSelected(true);
+          const selectedZoning = responseData.zoning.map((item) => item.value);
+          setZoningValue(selectedZoning);
+          setValue("zoning", responseData.zoning);
+          setValue("utilities", responseData.utilities);
+          setValue("sewer", responseData.sewer);
+        }
+
+        if (selectedProperty.includes(10)) {
+          setMultiFamilyBuyerSelected(true);
+          const selectedBuildingClass = responseData.building_class.map(
+            (item) => item.value
+          );
+          setBuildingClassNamesValue(selectedBuildingClass);
+          setValueAdd(String(responseData.value_add));
+          setValue("building_class", responseData.building_class);
+          setValue("value_add", responseData.value_add);
+        }
+        const selectedPurchaseMethods = responseData.purchase_method.map(
           (item) => item.value
         );
-        setPurchaseMethodsValue(selectedPurchase);
+        setPurchaseMethodsValue(selectedPurchaseMethods);
+        setValue("purchase_method", responseData.purchase_method);
+
+        const selectedLocationFlaws = responseData.property_flaw.map(
+          (item) => item.value
+        );
+        setLocationFlawsValue(selectedLocationFlaws);
+        setValue("property_flaw", responseData.property_flaw);
+
+        setValue("market_preferance", responseData.market_preferance);
+        setValue("contact_preferance", responseData.contact_preferance);
+        setValue("buyer_type", responseData.buyer_type);
+        setValue("parking", responseData.parking);
+        setValue("build_year_max", responseData.build_year_max);
+        setValue("build_year_min", responseData.build_year_min);
+
         /*  update min max value */
         setBedRoomMin(responseData.bedroom_min);
         setBedRoomMax(responseData.bedroom_max);
@@ -181,7 +221,6 @@ function EditBuyerProfile() {
         setPriceMin(responseData.price_min);
         setPriceMax(responseData.price_max);
 
-        //setState();
         if (responseData.build_year_min) {
           setStartDate(new Date(responseData.build_year_min, 0, 1, 0, 0, 0));
         }
@@ -189,10 +228,41 @@ function EditBuyerProfile() {
           setEndDate(new Date(responseData.build_year_max, 0, 1, 0, 0, 0));
         }
         /*  update min max value */
+
+        /** updated checked box value */
+        setSolar(String(responseData.solar));
+        setPool(String(responseData.pool));
+        setSeptic(String(responseData.septic));
+        setWell(String(responseData.well));
+        setHoa(String(responseData.hoa));
+        setAgeRestriction(String(responseData.age_restriction));
+        setRentalRestriction(String(responseData.rental_restriction));
+        setPostPossession(String(responseData.post_possession));
+        setTenantConveys(String(responseData.tenant));
+        setSquatters(String(responseData.squatters));
+        setBuildingRequired(String(responseData.building_required));
+        setRebuild(String(responseData.rebuild));
+        setFoundationIssues(String(responseData.foundation_issues));
+        setMold(String(responseData.mold));
+        setFireDamaged(String(responseData.fire_damaged));
+        setPermanentAffix(String(responseData.permanent_affix));
+
         setLoader(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        if (error.response.data.validation_errors) {
+          setErrors(error.response.data.validation_errors);
+        }
+        if (error.response.data.error) {
+          toast.error(error.response.data.error, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      }
+    }
   };
+  console.log(locationFlaws, "locationFlaws");
   const getOptionsValues = () => {
     try {
       axios
@@ -282,12 +352,23 @@ function EditBuyerProfile() {
           setCityOptions(result);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        if (error.response.data.validation_errors) {
+          setErrors(error.response.data.validation_errors);
+        }
+        if (error.response.data.error) {
+          toast.error(error.response.data.error, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      }
+    }
   };
   const submitSingleBuyerForm = (data, e) => {
     e.preventDefault();
     setErrors(null);
-    setLoading(true);
+    setMiniLoader(true);
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
@@ -314,16 +395,36 @@ function EditBuyerProfile() {
         headers: headers,
       })
       .then((response) => {
-        setLoading(false);
+        setMiniLoader(false);
         if (response.data.status) {
+          console.log(response.data.userData, "rohittt");
+          const userData = {
+            first_name: response.data.userData.first_name,
+            last_name: response.data.userData.last_name,
+            profile_image: response.data.userData.profile_image,
+            level_type: response.data.userData.level_type,
+            role: response.data.userData.role,
+            total_buyer_uploaded: response.data.total_buyer_uploaded,
+          };
+          setLocalStorageUserdata(userData);
+          const profileName = document.querySelector(".user-name-title");
+          const profilePic = document.querySelector(".user-profile");
+          console.log(userData.first_name);
+          profileName.innerHTML =
+            response.data.userData.first_name +
+            " " +
+            response.data.userData.last_name;
+          if (response.data.userData.profile_image != "") {
+            profilePic.src = response.data.userData.profile_image;
+          }
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
           });
-          navigate("/edit-profile");
+          navigate("/buyer-profile");
         }
       })
       .catch((error) => {
-        setLoading(false);
+        setMiniLoader(false);
         if (error.response) {
           if (error.response.data.validation_errors) {
             setErrors(error.response.data.validation_errors);
@@ -339,6 +440,7 @@ function EditBuyerProfile() {
   const handleCustum = (e, name) => {
     const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
+      setPropertyTypeValue(selectedValues);
       setPropertyType(e);
       if (
         selectedValues.includes(2) ||
@@ -403,8 +505,7 @@ function EditBuyerProfile() {
       setContactPreferance(e);
     } else if (name == "zoning") {
       setZoningValue(selectedValues);
-    } else if (name == "zoning") {
-      setZoningValue(selectedValues);
+      setZoning(e);
     }
   };
   const handleCityChange = (event) => {
@@ -439,59 +540,67 @@ function EditBuyerProfile() {
       }
     }
   };
-  console.log("errors", errors);
+
+  const handleProfileChange = (e) => {
+    console.log("hello");
+    e.preventDefault();
+    setProfileModal(true);
+  };
   return (
     <>
       <BuyerHeader />
       <section className="main-section position-relative pt-4 pb-120">
-        <div className="container position-relative">
-          <div className="back-block">
-            <div className="row">
-              <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                <a href="#" className="back">
-                  <svg
-                    width="16"
-                    height="12"
-                    viewBox="0 0 16 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 6H1"
-                      stroke="#0A2540"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                    <path
-                      d="M5.9 11L1 6L5.9 1"
-                      stroke="#0A2540"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                  </svg>
-                  Back
-                </a>
-              </div>
-              <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                <h6 className="center-head text-center mb-0">Edit Profile</h6>
+        {loader ? (
+          <div className="loader" style={{ textAlign: "center" }}>
+            <img src="assets/images/loader.svg" />
+          </div>
+        ) : (
+          <div className="container position-relative">
+            <div className="back-block">
+              <div className="row">
+                <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                  <Link to="/buyer-profile" className="back">
+                    <svg
+                      width="16"
+                      height="12"
+                      viewBox="0 0 16 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15 6H1"
+                        stroke="#0A2540"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                      <path
+                        d="M5.9 11L1 6L5.9 1"
+                        stroke="#0A2540"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></path>
+                    </svg>
+                    Back
+                  </Link>
+                </div>
+                <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                  <h6 className="center-head text-center mb-0">Edit Profile</h6>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="card-box">
-            {loader ? (
-              <div className="loader" style={{ textAlign: "center" }}>
-                <img src="assets/images/loader.svg" />
-              </div>
-            ) : (
+            <div className="card-box">
               <div className="row">
                 <div className="col-12 col-lg-4">
                   <form className="form-container">
                     <div className="outer-heading text-center">
                       <h3 className="mb-0">Edit Profile Picture </h3>
                     </div>
-                    <div className="upload-photo">
+                    <div
+                      className="upload-photo"
+                      style={{ cursor: "not-allowed" }}
+                    >
                       <div className="containers">
                         <div className="imageWrapper">
                           <img
@@ -500,9 +609,13 @@ function EditBuyerProfile() {
                           />
                         </div>
                       </div>
-                      <button className="file-upload">
-                        <input type="file" className="file-input" />
-                        upload Your Image
+                      <button className="file-upload" disabled>
+                        {/* <input
+                          type="file"
+                          className="file-input"
+                          onClick={handleProfileChange}
+                        /> */}
+                        Upload Your Image
                       </button>
                     </div>
                   </form>
@@ -588,23 +701,10 @@ function EditBuyerProfile() {
                             <div className="form-group">
                               <input
                                 type="text"
-                                name="email"
                                 className="form-control"
                                 placeholder="Email Address"
                                 defaultValue={currentBuyerData.email}
-                                {...register("email", {
-                                  required: "Email is required",
-                                  validate: {
-                                    maxLength: (v) =>
-                                      v.length <= 50 ||
-                                      "The email should have at most 50 characters",
-                                    matchPattern: (v) =>
-                                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
-                                        v
-                                      ) ||
-                                      "Email address must be a valid address",
-                                  },
-                                })}
+                                disabled
                               />
                               {errors.email && (
                                 <p className="error">{errors.email?.message}</p>
@@ -619,21 +719,10 @@ function EditBuyerProfile() {
                             <div className="form-group">
                               <input
                                 type="text"
-                                name="phone"
                                 className="form-control"
                                 placeholder="Phone Number"
                                 defaultValue={currentBuyerData.phone}
-                                {...register("phone", {
-                                  required: "Phone is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid phone number",
-                                    maxLength: (v) =>
-                                      (v.length <= 15 && v.length >= 5) ||
-                                      "The phone number should be more than 4 digit and less than equal 15",
-                                  },
-                                })}
+                                disabled
                               />
                               {errors.phone && (
                                 <p className="error">{errors.phone?.message}</p>
@@ -649,7 +738,7 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="state"
-                                //rules={{ required: "State is required" }}
+                                rules={{ required: "State is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -683,7 +772,7 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="city"
-                                //rules={{ required: "City is required" }}
+                                rules={{ required: "City is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -746,7 +835,7 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="market_preferance"
-                                //rules={{ required: "mls Status is required" }}
+                                rules={{ required: "mls Status is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -779,7 +868,9 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="contact_preferance"
-                                //rules={{required: "Contact Preference is required",}}
+                                rules={{
+                                  required: "Contact Preference is required",
+                                }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -813,9 +904,9 @@ function EditBuyerProfile() {
                                 <Controller
                                   control={control}
                                   name="property_type"
-                                  // rules={{
-                                  //   required: "Property Type is required",
-                                  // }}
+                                  rules={{
+                                    required: "Property Type is required",
+                                  }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -858,12 +949,13 @@ function EditBuyerProfile() {
                                     <Controller
                                       control={control}
                                       name="zoning"
-                                      // rules={{ required: "Zoning is required" }}
+                                      rules={{ required: "Zoning is required" }}
                                       render={({
                                         field: { value, onChange, name },
                                       }) => (
                                         <Select
                                           options={zoningOption}
+                                          value={zoning}
                                           name={name}
                                           placeholder="Select zoning"
                                           onChange={(e) => {
@@ -891,14 +983,15 @@ function EditBuyerProfile() {
                                     <Controller
                                       control={control}
                                       name="utilities"
-                                      // rules={{
-                                      //   required: "Utilities is required",
-                                      // }}
+                                      rules={{
+                                        required: "Utilities is required",
+                                      }}
                                       render={({
                                         field: { value, onChange, name },
                                       }) => (
                                         <Select
                                           options={utilitiesOption}
+                                          defaultValue={utilities}
                                           name={name}
                                           placeholder="Select Utilities"
                                           onChange={(e) => {
@@ -925,13 +1018,14 @@ function EditBuyerProfile() {
                                     <Controller
                                       control={control}
                                       name="sewer"
-                                      // rules={{ required: "Sewage is required" }}
+                                      rules={{ required: "Sewage is required" }}
                                       render={({
                                         field: { value, onChange, name },
                                       }) => (
                                         <Select
                                           options={sewerOption}
                                           name={name}
+                                          defaultValue={sewer}
                                           placeholder="Select Sewage"
                                           onChange={(e) => {
                                             onChange(e);
@@ -965,6 +1059,7 @@ function EditBuyerProfile() {
                                       type="text"
                                       name="unit_min"
                                       className="form-control"
+                                      defaultValue={currentBuyerData.unit_min}
                                       placeholder="Minimum Units"
                                       {...register("unit_min", {
                                         required: "Minimum Units is required",
@@ -997,6 +1092,7 @@ function EditBuyerProfile() {
                                       name="unit_max"
                                       className="form-control"
                                       placeholder="Maximum Units"
+                                      defaultValue={currentBuyerData.unit_max}
                                       {...register("unit_max", {
                                         required: "Maximum Units is required",
                                         validate: {
@@ -1033,6 +1129,9 @@ function EditBuyerProfile() {
                                       }) => (
                                         <Select
                                           options={buildingClassNamesOption}
+                                          defaultValue={
+                                            currentBuyerData.building_class
+                                          }
                                           name={name}
                                           placeholder="Select Building class"
                                           onChange={(e) => {
@@ -1062,9 +1161,15 @@ function EditBuyerProfile() {
                                         <input
                                           type="radio"
                                           name="value_add"
-                                          value="0"
+                                          value="1"
+                                          checked={
+                                            valueAdd === "1" ? "checked" : ""
+                                          }
                                           id="value_add_yes"
                                           {...register("value_add", {
+                                            onChange: (e) => {
+                                              setValueAdd(e.target.value);
+                                            },
                                             required: "Value Add is required",
                                           })}
                                         />
@@ -1079,9 +1184,15 @@ function EditBuyerProfile() {
                                         <input
                                           type="radio"
                                           name="value_add"
-                                          value="1"
+                                          value="0"
                                           id="value_add_no"
+                                          checked={
+                                            valueAdd === "0" ? "checked" : ""
+                                          }
                                           {...register("value_add", {
+                                            onChange: (e) => {
+                                              setValueAdd(e.target.value);
+                                            },
                                             required: "Value Add is required",
                                           })}
                                         />
@@ -1112,9 +1223,9 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="purchase_method"
-                                // rules={{
-                                //   required: "Purchase Method is required",
-                                // }}
+                                rules={{
+                                  required: "Purchase Method is required",
+                                }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -1683,9 +1794,9 @@ function EditBuyerProfile() {
                                   <Controller
                                     control={control}
                                     name="build_year_min"
-                                    // rules={{
-                                    //   required: "Year Built (Min) is required",
-                                    // }}
+                                    rules={{
+                                      required: "Year Built (Min) is required",
+                                    }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -1724,9 +1835,9 @@ function EditBuyerProfile() {
                                   <Controller
                                     control={control}
                                     name="build_year_max"
-                                    // rules={{
-                                    //   required: "Year Built (Max) is required",
-                                    // }}
+                                    rules={{
+                                      required: "Year Built (Max) is required",
+                                    }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -1933,7 +2044,7 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="parking"
-                                // rules={{ required: "Parking is required" }}
+                                rules={{ required: "Parking is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -1967,7 +2078,7 @@ function EditBuyerProfile() {
                               <Controller
                                 control={control}
                                 name="buyer_type"
-                                // rules={{ required: "Buyer Type is required" }}
+                                rules={{ required: "Buyer Type is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -2109,9 +2220,9 @@ function EditBuyerProfile() {
                                     value="0"
                                     id="pool_no"
                                     onChange={(e) => {
-                                      setSeptic(e.target.value);
+                                      setPool(e.target.value);
                                     }}
-                                    checked={septic === "0" ? "checked" : ""}
+                                    checked={pool === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="pool_no">
                                     No
@@ -2334,7 +2445,7 @@ function EditBuyerProfile() {
                                       setPostPossession(e.target.value);
                                     }}
                                     checked={
-                                      postPossession === 1 ? "checked" : ""
+                                      postPossession === "1" ? "checked" : ""
                                     }
                                   />
                                   <label
@@ -2719,9 +2830,9 @@ function EditBuyerProfile() {
                           <button
                             type="submit"
                             className="btn btn-fill"
-                            disabled={loading ? "disabled" : ""}
+                            disabled={miniLoader ? "disabled" : ""}
                           >
-                            Submit Now! {loading ? <MiniLoader /> : ""}{" "}
+                            Submit Now! {miniLoader ? <MiniLoader /> : ""}{" "}
                           </button>
                         </div>
                       </div>
@@ -2729,7 +2840,36 @@ function EditBuyerProfile() {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          </div>
+        )}
+        <div
+          className={
+            profileModal
+              ? "modal fade modal-form-main show"
+              : "modal fade modal-form-main"
+          }
+          id="exampleModal"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+          style={{ display: profileModal ? "block" : "none" }}
+        >
+          <div className="card-box-blocks">
+            <div className="application-process">
+              <div className="pricehard">$100</div>
+              <h3>Please Pay for complete Your application</h3>
+              <p className="mb-0">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has the industry's standard dummy text
+                ever since the 1500s,
+              </p>
+              <div className="process-payment-btn">
+                <button type="submit" className="btn btn-fill">
+                  Process Payment
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

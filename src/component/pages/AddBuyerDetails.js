@@ -467,273 +467,283 @@ function AddBuyerDetails() {
   return (
     <>
       <Header />
-      {isLoader ? (
-        <div className="loader" style={{ textAlign: "center" }}>
-          <img src="assets/images/loader.svg" />
-        </div>
-      ) : (
-        <section className="main-section position-relative pt-4 pb-120">
-          <div className="container position-relative">
-            <div className="back-block">
-              <Link to="/" className="back">
-                <svg
-                  width="16"
-                  height="12"
-                  viewBox="0 0 16 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 6H1"
-                    stroke="#0A2540"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5.9 11L1 6L5.9 1"
-                    stroke="#0A2540"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Back
-              </Link>
-            </div>
-            <div className="card-box">
-              <div className="row">
-                <div className="col-12 col-lg-8 w-70">
-                  <div className="card-box-inner">
-                    <div className="row">
-                      <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                        <h3>Upload Single Buyer Detail</h3>
-                        <p>Fill the below form OR send link to the buyer</p>
-                      </div>
-                      <div className="col-12 col-sm-5 col-md-6 col-lg-6">
-                        <button
-                          type="button"
-                          className="copy-link"
-                          onClick={copyAddBuyerLink}
-                          disabled={copyLoading ? <MiniLoader /> : ""}
-                        >
-                          <span className="link-icon">
-                            <svg
-                              width="18"
-                              height="17"
-                              viewBox="0 0 18 17"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clipPath="url(#clip0_270_17734)">
-                                <path
-                                  d="M7.5 9.20823C7.82209 9.6149 8.23302 9.9514 8.70491 10.1949C9.17681 10.4384 9.69863 10.5832 10.235 10.6195C10.7713 10.6557 11.3097 10.5827 11.8135 10.4052C12.3173 10.2277 12.7748 9.9499 13.155 9.59073L15.405 7.46573C16.0881 6.79776 16.4661 5.90313 16.4575 4.97451C16.449 4.0459 16.0546 3.15761 15.3593 2.50095C14.664 1.8443 13.7235 1.47183 12.7403 1.46376C11.757 1.45569 10.8098 1.81267 10.1025 2.45781L8.8125 3.66906"
-                                  stroke="#121639"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M10.5001 7.79162C10.1781 7.38495 9.76713 7.04845 9.29524 6.80496C8.82334 6.56146 8.30152 6.41667 7.76516 6.38039C7.2288 6.34411 6.69046 6.4172 6.18664 6.59469C5.68282 6.77219 5.22531 7.04995 4.84515 7.40912L2.59515 9.53412C1.91206 10.2021 1.53408 11.0967 1.54262 12.0253C1.55117 12.9539 1.94555 13.8422 2.64083 14.4989C3.33611 15.1556 4.27666 15.528 5.2599 15.5361C6.24313 15.5442 7.19039 15.1872 7.89765 14.542L9.18015 13.3308"
-                                  stroke="#121639"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_270_17734">
-                                  <rect width="18" height="17" fill="white" />
-                                </clipPath>
-                              </defs>
-                            </svg>
-                          </span>
-                          Copy Form Link {copyLoading ? <MiniLoader /> : ""}
-                        </button>
-                      </div>
-                    </div>
-                    {copySuccess && generatedUrl != "" ? (
-                      <div id="inviteCode" className="invite-page">
-                        <input id="link" value={generatedUrl} readOnly />
-                        <div id="copy">
-                          <i
-                            className="fa-solid fa-copy"
-                            aria-hidden="true"
-                            data-copytarget="#link"
-                            onClick={() => handleCopyToClipBoard(generatedUrl)}
-                          ></i>
+
+      <section className="main-section position-relative pt-4 pb-120">
+        {isLoader ? (
+          <div className="loader" style={{ textAlign: "center" }}>
+            <img src="assets/images/loader.svg" />
+          </div>
+        ) : (
+          <>
+            <div className="container position-relative">
+              <div className="back-block">
+                <Link to="/" className="back">
+                  <svg
+                    width="16"
+                    height="12"
+                    viewBox="0 0 16 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 6H1"
+                      stroke="#0A2540"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M5.9 11L1 6L5.9 1"
+                      stroke="#0A2540"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Back
+                </Link>
+              </div>
+              <div className="card-box">
+                <div className="row">
+                  <div className="col-12 col-lg-8 w-70">
+                    <div className="card-box-inner">
+                      <div className="row">
+                        <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                          <h3>Upload Single Buyer Detail</h3>
+                          <p>Fill the below form OR send link to the buyer</p>
+                        </div>
+                        <div className="col-12 col-sm-5 col-md-6 col-lg-6">
+                          <button
+                            type="button"
+                            className="copy-link"
+                            onClick={copyAddBuyerLink}
+                            disabled={copyLoading ? <MiniLoader /> : ""}
+                          >
+                            <span className="link-icon">
+                              <svg
+                                width="18"
+                                height="17"
+                                viewBox="0 0 18 17"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <g clipPath="url(#clip0_270_17734)">
+                                  <path
+                                    d="M7.5 9.20823C7.82209 9.6149 8.23302 9.9514 8.70491 10.1949C9.17681 10.4384 9.69863 10.5832 10.235 10.6195C10.7713 10.6557 11.3097 10.5827 11.8135 10.4052C12.3173 10.2277 12.7748 9.9499 13.155 9.59073L15.405 7.46573C16.0881 6.79776 16.4661 5.90313 16.4575 4.97451C16.449 4.0459 16.0546 3.15761 15.3593 2.50095C14.664 1.8443 13.7235 1.47183 12.7403 1.46376C11.757 1.45569 10.8098 1.81267 10.1025 2.45781L8.8125 3.66906"
+                                    stroke="#121639"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M10.5001 7.79162C10.1781 7.38495 9.76713 7.04845 9.29524 6.80496C8.82334 6.56146 8.30152 6.41667 7.76516 6.38039C7.2288 6.34411 6.69046 6.4172 6.18664 6.59469C5.68282 6.77219 5.22531 7.04995 4.84515 7.40912L2.59515 9.53412C1.91206 10.2021 1.53408 11.0967 1.54262 12.0253C1.55117 12.9539 1.94555 13.8422 2.64083 14.4989C3.33611 15.1556 4.27666 15.528 5.2599 15.5361C6.24313 15.5442 7.19039 15.1872 7.89765 14.542L9.18015 13.3308"
+                                    stroke="#121639"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </g>
+                                <defs>
+                                  <clipPath id="clip0_270_17734">
+                                    <rect width="18" height="17" fill="white" />
+                                  </clipPath>
+                                </defs>
+                              </svg>
+                            </span>
+                            Copy Form Link {copyLoading ? <MiniLoader /> : ""}
+                          </button>
                         </div>
                       </div>
-                    ) : (
-                      ""
-                    )}
-                    <form
-                      method="post"
-                      onSubmit={handleSubmit(submitSingleBuyerForm)}
-                    >
-                      <div className="card-box-blocks">
-                        <div className="row">
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              First Name<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="first_name"
-                                className="form-control"
-                                placeholder="First Name"
-                                {...register("first_name", {
-                                  required: "First Name is required",
-                                  validate: {
-                                    maxLength: (v) =>
-                                      v.length <= 50 ||
-                                      "The First Name should have at most 50 characters",
-                                    matchPattern: (v) =>
-                                      /^[a-zA-Z\s]+$/.test(v) ||
-                                      "First Name can not include number or special character",
-                                  },
-                                })}
-                              />
+                      {copySuccess && generatedUrl != "" ? (
+                        <div id="inviteCode" className="invite-page">
+                          <input id="link" value={generatedUrl} readOnly />
+                          <div id="copy">
+                            <i
+                              className="fa-solid fa-copy"
+                              aria-hidden="true"
+                              data-copytarget="#link"
+                              onClick={() =>
+                                handleCopyToClipBoard(generatedUrl)
+                              }
+                            ></i>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <form
+                        method="post"
+                        onSubmit={handleSubmit(submitSingleBuyerForm)}
+                      >
+                        <div className="card-box-blocks">
+                          <div className="row">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                First Name<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="first_name"
+                                  className="form-control"
+                                  placeholder="First Name"
+                                  {...register("first_name", {
+                                    required: "First Name is required",
+                                    validate: {
+                                      maxLength: (v) =>
+                                        v.length <= 50 ||
+                                        "The First Name should have at most 50 characters",
+                                      matchPattern: (v) =>
+                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                        "First Name can not include number or special character",
+                                    },
+                                  })}
+                                />
 
-                              {errors.first_name && (
-                                <p className="error">
-                                  {errors.first_name?.message}
-                                </p>
-                              )}
-                              {renderFieldError("first_name")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Last Name<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="last_name"
-                                className="form-control"
-                                placeholder="Last Name"
-                                {...register("last_name", {
-                                  required: "Last Name is required",
-                                  validate: {
-                                    maxLength: (v) =>
-                                      v.length <= 50 ||
-                                      "The Last Name should have at most 50 characters",
-                                    matchPattern: (v) =>
-                                      /^[a-zA-Z\s]+$/.test(v) ||
-                                      "Last Name can not include number or special character",
-                                  },
-                                })}
-                              />
-
-                              {errors.last_name && (
-                                <p className="error">
-                                  {errors.last_name?.message}
-                                </p>
-                              )}
-                              {renderFieldError("last_name")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Email Address<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="email"
-                                className="form-control"
-                                placeholder="Email Address"
-                                {...register("email", {
-                                  required: "Email address is required",
-                                  validate: {
-                                    maxLength: (v) =>
-                                      v.length <= 50 ||
-                                      "The Email address should have at most 50 characters",
-                                    matchPattern: (v) =>
-                                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
-                                        v
-                                      ) ||
-                                      "Email address must be a valid address",
-                                  },
-                                })}
-                              />
-                              {errors.email && (
-                                <p className="error">{errors.email?.message}</p>
-                              )}
-                              {renderFieldError("email")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Phone Number<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="phone"
-                                className="form-control"
-                                placeholder="Phone Number"
-                                {...register("phone", {
-                                  required: "Phone Number is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid phone number",
-                                    maxLength: (v) =>
-                                      (v.length <= 15 && v.length >= 5) ||
-                                      "The phone number should be more than 4 digit and less than equal 15",
-                                  },
-                                })}
-                              />
-                              {errors.phone && (
-                                <p className="error">{errors.phone?.message}</p>
-                              )}
-                              {renderFieldError("phone")}
-                            </div>
-                          </div>
-
-                          <div className="col-12 col-lg-12">
-                            <label>
-                              State<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <Controller
-                                control={control}
-                                name="state"
-                                rules={{ required: "State is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={stateOptions}
-                                    name={name}
-                                    //value={state}
-                                    closeMenuOnSelect={false}
-                                    isClearable={true}
-                                    className="select"
-                                    placeholder="Select State"
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "state");
-                                    }}
-                                    isMulti
-                                  />
+                                {errors.first_name && (
+                                  <p className="error">
+                                    {errors.first_name?.message}
+                                  </p>
                                 )}
-                              />
-                              {errors.state && (
-                                <p className="error">{errors.state?.message}</p>
-                              )}
-                              {renderFieldError("state")}
+                                {renderFieldError("first_name")}
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-12 col-lg-12">
-                            <label>
-                              City<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              {/* <Select
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Last Name<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="last_name"
+                                  className="form-control"
+                                  placeholder="Last Name"
+                                  {...register("last_name", {
+                                    required: "Last Name is required",
+                                    validate: {
+                                      maxLength: (v) =>
+                                        v.length <= 50 ||
+                                        "The Last Name should have at most 50 characters",
+                                      matchPattern: (v) =>
+                                        /^[a-zA-Z\s]+$/.test(v) ||
+                                        "Last Name can not include number or special character",
+                                    },
+                                  })}
+                                />
+
+                                {errors.last_name && (
+                                  <p className="error">
+                                    {errors.last_name?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("last_name")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Email Address<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="email"
+                                  className="form-control"
+                                  placeholder="Email Address"
+                                  {...register("email", {
+                                    required: "Email address is required",
+                                    validate: {
+                                      maxLength: (v) =>
+                                        v.length <= 50 ||
+                                        "The Email address should have at most 50 characters",
+                                      matchPattern: (v) =>
+                                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                                          v
+                                        ) ||
+                                        "Email address must be a valid address",
+                                    },
+                                  })}
+                                />
+                                {errors.email && (
+                                  <p className="error">
+                                    {errors.email?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("email")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Phone Number<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="phone"
+                                  className="form-control"
+                                  placeholder="Phone Number"
+                                  {...register("phone", {
+                                    required: "Phone Number is required",
+                                    validate: {
+                                      matchPattern: (v) =>
+                                        /^[0-9]\d*$/.test(v) ||
+                                        "Please enter valid phone number",
+                                      maxLength: (v) =>
+                                        (v.length <= 15 && v.length >= 5) ||
+                                        "The phone number should be more than 4 digit and less than equal 15",
+                                    },
+                                  })}
+                                />
+                                {errors.phone && (
+                                  <p className="error">
+                                    {errors.phone?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("phone")}
+                              </div>
+                            </div>
+
+                            <div className="col-12 col-lg-12">
+                              <label>
+                                State<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <Controller
+                                  control={control}
+                                  name="state"
+                                  rules={{ required: "State is required" }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={stateOptions}
+                                      name={name}
+                                      //value={state}
+                                      closeMenuOnSelect={false}
+                                      isClearable={true}
+                                      className="select"
+                                      placeholder="Select State"
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "state");
+                                      }}
+                                      isMulti
+                                    />
+                                  )}
+                                />
+                                {errors.state && (
+                                  <p className="error">
+                                    {errors.state?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("state")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-lg-12">
+                              <label>
+                                City<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                {/* <Select
                                                             name="city"
                                                             defaultValue=''
                                                             options={cityOptions}
@@ -749,37 +759,39 @@ function AddBuyerDetails() {
                                                             closeMenuOnSelect={false}
                                                             isMulti
                                                         /> */}
-                              <Controller
-                                control={control}
-                                name="city"
-                                rules={{ required: "City is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={cityOptions}
-                                    name={name}
-                                    value={city}
-                                    isClearable={true}
-                                    closeMenuOnSelect={false}
-                                    className="select"
-                                    placeholder="Select City"
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCityChange(e);
-                                    }}
-                                    isMulti
-                                  />
+                                <Controller
+                                  control={control}
+                                  name="city"
+                                  rules={{ required: "City is required" }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={cityOptions}
+                                      name={name}
+                                      value={city}
+                                      isClearable={true}
+                                      closeMenuOnSelect={false}
+                                      className="select"
+                                      placeholder="Select City"
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCityChange(e);
+                                      }}
+                                      isMulti
+                                    />
+                                  )}
+                                />
+                                {errors.city && (
+                                  <p className="error">
+                                    {errors.city?.message}
+                                  </p>
                                 )}
-                              />
-                              {errors.city && (
-                                <p className="error">{errors.city?.message}</p>
-                              )}
 
-                              {renderFieldError("city")}
+                                {renderFieldError("city")}
+                              </div>
                             </div>
-                          </div>
-                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                     <label>Zip<span>*</span></label>
                                                     <div className="form-group">
                                                         <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
@@ -798,184 +810,188 @@ function AddBuyerDetails() {
                                                         {renderFieldError('zip_code') }
                                                     </div>
                                                 </div> */}
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                            <label>
-                              Company/LLC<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                className="form-control"
-                                name="company_name"
-                                placeholder="Company LLC"
-                                {...register("company_name", {
-                                  required: "Company/LLC is required",
-                                  validate: {
-                                    maxLength: (v) =>
-                                      v.length <= 50 ||
-                                      "The Company/LLC should have at most 50 characters",
-                                  },
-                                })}
-                              />
-                              {errors.company_name && (
-                                <p className="error">
-                                  {errors.company_name?.message}
-                                </p>
-                              )}
-                              {renderFieldError("company_name")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                            <label>
-                              MLS Status<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <Controller
-                                control={control}
-                                name="market_preferance"
-                                rules={{ required: "mls status is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={marketPreferanceOption}
-                                    name={name}
-                                    placeholder="Select MLS Status"
-                                    isClearable={true}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "market_preferance");
-                                    }}
-                                  />
-                                )}
-                              />
-                              {errors.market_preferance && (
-                                <p className="error">
-                                  {errors.market_preferance?.message}
-                                </p>
-                              )}
-
-                              {renderFieldError("market_preferance")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                            <label>
-                              Contact Preference<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <Controller
-                                control={control}
-                                name="contact_preferance"
-                                rules={{
-                                  required: "Contact Preference is required",
-                                }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={contactPreferanceOption}
-                                    name={name}
-                                    placeholder="Select Contact Preference"
-                                    isClearable={true}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "contact_preferance");
-                                    }}
-                                  />
-                                )}
-                              />
-                              {errors.contact_preferance && (
-                                <p className="error">
-                                  {errors.contact_preferance?.message}
-                                </p>
-                              )}
-                              {renderFieldError("contact_preferance")}
-                            </div>
-                          </div>
-                          <div className="col-12 col-lg-12">
-                            <div className="form-group">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                               <label>
-                                Property Type<span>*</span>
+                                Company/LLC<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="company_name"
+                                  placeholder="Company LLC"
+                                  {...register("company_name", {
+                                    required: "Company/LLC is required",
+                                    validate: {
+                                      maxLength: (v) =>
+                                        v.length <= 50 ||
+                                        "The Company/LLC should have at most 50 characters",
+                                    },
+                                  })}
+                                />
+                                {errors.company_name && (
+                                  <p className="error">
+                                    {errors.company_name?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("company_name")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                              <label>
+                                MLS Status<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
                                   control={control}
-                                  name="property_type"
+                                  name="market_preferance"
+                                  rules={{ required: "mls status is required" }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={marketPreferanceOption}
+                                      name={name}
+                                      placeholder="Select MLS Status"
+                                      isClearable={true}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "market_preferance");
+                                      }}
+                                    />
+                                  )}
+                                />
+                                {errors.market_preferance && (
+                                  <p className="error">
+                                    {errors.market_preferance?.message}
+                                  </p>
+                                )}
+
+                                {renderFieldError("market_preferance")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                              <label>
+                                Contact Preference<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <Controller
+                                  control={control}
+                                  name="contact_preferance"
                                   rules={{
-                                    required: "Property Type is required",
+                                    required: "Contact Preference is required",
                                   }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
                                     <Select
-                                      options={propertyTypeOption}
+                                      options={contactPreferanceOption}
                                       name={name}
-                                      placeholder="Select Property Type"
-                                      setMultiselectOption={
-                                        setPropertyTypeValue
-                                      }
-                                      showCreative={setMultiFamilyBuyerSelected}
+                                      placeholder="Select Contact Preference"
+                                      isClearable={true}
                                       onChange={(e) => {
                                         onChange(e);
-                                        handleCustum(e, "property_type");
+                                        handleCustum(e, "contact_preferance");
                                       }}
-                                      isMulti
-                                      closeMenuOnSelect={false}
                                     />
                                   )}
                                 />
-                                {errors.property_type && (
+                                {errors.contact_preferance && (
                                   <p className="error">
-                                    {errors.property_type?.message}
+                                    {errors.contact_preferance?.message}
                                   </p>
                                 )}
-
-                                {renderFieldError("property_type")}
+                                {renderFieldError("contact_preferance")}
                               </div>
                             </div>
-                          </div>
-                          {isLandSelected && (
-                            <div className="block-divide">
-                              <div className="row">
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                  <label>
-                                    Zoning <span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    <Controller
-                                      control={control}
-                                      name="zoning"
-                                      rules={{ required: "Zoning is required" }}
-                                      render={({
-                                        field: { value, onChange, name },
-                                      }) => (
-                                        <Select
-                                          options={zoningOption}
-                                          name={name}
-                                          placeholder="Select zoning"
-                                          onChange={(e) => {
-                                            onChange(e);
-                                            handleCustum(e, "zoning");
-                                          }}
-                                          closeMenuOnSelect={false}
-                                          isMulti
-                                        />
-                                      )}
-                                    />
-                                    {errors.zoning && (
-                                      <p className="error">
-                                        {errors.zoning?.message}
-                                      </p>
+                            <div className="col-12 col-lg-12">
+                              <div className="form-group">
+                                <label>
+                                  Property Type<span>*</span>
+                                </label>
+                                <div className="form-group">
+                                  <Controller
+                                    control={control}
+                                    name="property_type"
+                                    rules={{
+                                      required: "Property Type is required",
+                                    }}
+                                    render={({
+                                      field: { value, onChange, name },
+                                    }) => (
+                                      <Select
+                                        options={propertyTypeOption}
+                                        name={name}
+                                        placeholder="Select Property Type"
+                                        setMultiselectOption={
+                                          setPropertyTypeValue
+                                        }
+                                        showCreative={
+                                          setMultiFamilyBuyerSelected
+                                        }
+                                        onChange={(e) => {
+                                          onChange(e);
+                                          handleCustum(e, "property_type");
+                                        }}
+                                        isMulti
+                                        closeMenuOnSelect={false}
+                                      />
                                     )}
-                                    {renderFieldError("zoning")}
-                                  </div>
+                                  />
+                                  {errors.property_type && (
+                                    <p className="error">
+                                      {errors.property_type?.message}
+                                    </p>
+                                  )}
+
+                                  {renderFieldError("property_type")}
                                 </div>
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                  <label>
-                                    Utilities <span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    {/* <Select
+                              </div>
+                            </div>
+                            {isLandSelected && (
+                              <div className="block-divide">
+                                <div className="row">
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                      Zoning <span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <Controller
+                                        control={control}
+                                        name="zoning"
+                                        rules={{
+                                          required: "Zoning is required",
+                                        }}
+                                        render={({
+                                          field: { value, onChange, name },
+                                        }) => (
+                                          <Select
+                                            options={zoningOption}
+                                            name={name}
+                                            placeholder="Select zoning"
+                                            onChange={(e) => {
+                                              onChange(e);
+                                              handleCustum(e, "zoning");
+                                            }}
+                                            closeMenuOnSelect={false}
+                                            isMulti
+                                          />
+                                        )}
+                                      />
+                                      {errors.zoning && (
+                                        <p className="error">
+                                          {errors.zoning?.message}
+                                        </p>
+                                      )}
+                                      {renderFieldError("zoning")}
+                                    </div>
+                                  </div>
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                      Utilities <span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      {/* <Select
                                                                 options={utilitiesOption}
                                                                 name = 'utilities'
                                                                 placeholder='Select Utilities Type'
@@ -983,41 +999,41 @@ function AddBuyerDetails() {
                                                                 isClearable={true}
                                                                 isSearchable={true}
                                                             /> */}
-                                    <Controller
-                                      control={control}
-                                      name="utilities"
-                                      rules={{
-                                        required: "Utilities is required",
-                                      }}
-                                      render={({
-                                        field: { value, onChange, name },
-                                      }) => (
-                                        <Select
-                                          options={utilitiesOption}
-                                          name={name}
-                                          placeholder="Select Utilities"
-                                          onChange={(e) => {
-                                            onChange(e);
-                                            handleCustum(e, "utilities");
-                                          }}
-                                          closeMenuOnSelect={false}
-                                        />
+                                      <Controller
+                                        control={control}
+                                        name="utilities"
+                                        rules={{
+                                          required: "Utilities is required",
+                                        }}
+                                        render={({
+                                          field: { value, onChange, name },
+                                        }) => (
+                                          <Select
+                                            options={utilitiesOption}
+                                            name={name}
+                                            placeholder="Select Utilities"
+                                            onChange={(e) => {
+                                              onChange(e);
+                                              handleCustum(e, "utilities");
+                                            }}
+                                            closeMenuOnSelect={false}
+                                          />
+                                        )}
+                                      />
+                                      {errors.utilities && (
+                                        <p className="error">
+                                          {errors.utilities?.message}
+                                        </p>
                                       )}
-                                    />
-                                    {errors.utilities && (
-                                      <p className="error">
-                                        {errors.utilities?.message}
-                                      </p>
-                                    )}
-                                    {renderFieldError("utilities")}
+                                      {renderFieldError("utilities")}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                                  <label>
-                                    Sewage <span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    {/* <Select
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                                    <label>
+                                      Sewage <span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      {/* <Select
                                                                     options={sewerOption}
                                                                     name = 'sewer'
                                                                     placeholder='Select Sewage Type'
@@ -1025,200 +1041,203 @@ function AddBuyerDetails() {
                                                                     isClearable={true}
                                                                     isSearchable={true}
                                                                 /> */}
-                                    <Controller
-                                      control={control}
-                                      name="sewer"
-                                      rules={{ required: "Sewage is required" }}
-                                      render={({
-                                        field: { value, onChange, name },
-                                      }) => (
-                                        <Select
-                                          options={sewerOption}
-                                          name={name}
-                                          placeholder="Select Sewage"
-                                          onChange={(e) => {
-                                            onChange(e);
-                                            handleCustum(e, "sewer");
-                                          }}
-                                          closeMenuOnSelect={false}
-                                        />
+                                      <Controller
+                                        control={control}
+                                        name="sewer"
+                                        rules={{
+                                          required: "Sewage is required",
+                                        }}
+                                        render={({
+                                          field: { value, onChange, name },
+                                        }) => (
+                                          <Select
+                                            options={sewerOption}
+                                            name={name}
+                                            placeholder="Select Sewage"
+                                            onChange={(e) => {
+                                              onChange(e);
+                                              handleCustum(e, "sewer");
+                                            }}
+                                            closeMenuOnSelect={false}
+                                          />
+                                        )}
+                                      />
+                                      {errors.sewer && (
+                                        <p className="error">
+                                          {errors.sewer?.message}
+                                        </p>
                                       )}
-                                    />
-                                    {errors.sewer && (
-                                      <p className="error">
-                                        {errors.sewer?.message}
-                                      </p>
-                                    )}
-                                    {renderFieldError("sewer")}
+                                      {renderFieldError("sewer")}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
-                          {multiFamilyBuyerSelected && (
-                            <div className="block-divide">
-                              {/* <h5>Multi Family Buyer</h5> */}
-                              <div className="row">
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                  <label>
-                                    Minimum Units<span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      name="unit_min"
-                                      className="form-control"
-                                      placeholder="Minimum Units"
-                                      {...register("unit_min", {
-                                        required: "Minimum Units is required",
-                                        validate: {
-                                          matchPattern: (v) =>
-                                            /^[0-9]\d*$/.test(v) ||
-                                            "Please enter valid number",
-                                          maxLength: (v) =>
-                                            v.length <= 10 ||
-                                            "The digit should be less than equal 10",
-                                        },
-                                      })}
-                                    />
-                                    {errors.unit_min && (
-                                      <p className="error">
-                                        {errors.unit_min?.message}
-                                      </p>
-                                    )}
+                            )}
+                            {multiFamilyBuyerSelected && (
+                              <div className="block-divide">
+                                {/* <h5>Multi Family Buyer</h5> */}
+                                <div className="row">
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Minimum Units<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        name="unit_min"
+                                        className="form-control"
+                                        placeholder="Minimum Units"
+                                        {...register("unit_min", {
+                                          required: "Minimum Units is required",
+                                          validate: {
+                                            matchPattern: (v) =>
+                                              /^[0-9]\d*$/.test(v) ||
+                                              "Please enter valid number",
+                                            maxLength: (v) =>
+                                              v.length <= 10 ||
+                                              "The digit should be less than equal 10",
+                                          },
+                                        })}
+                                      />
+                                      {errors.unit_min && (
+                                        <p className="error">
+                                          {errors.unit_min?.message}
+                                        </p>
+                                      )}
 
-                                    {renderFieldError("unit_min")}
+                                      {renderFieldError("unit_min")}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                  <label>
-                                    Maximum Units<span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      name="unit_max"
-                                      className="form-control"
-                                      placeholder="Maximum Units"
-                                      {...register("unit_max", {
-                                        required: "Maximum Units is required",
-                                        validate: {
-                                          matchPattern: (v) =>
-                                            /^[0-9]\d*$/.test(v) ||
-                                            "Please enter valid number",
-                                          maxLength: (v) =>
-                                            v.length <= 10 ||
-                                            "The digit should be less than equal 10",
-                                        },
-                                      })}
-                                    />
-                                    {errors.unit_max && (
-                                      <p className="error">
-                                        {errors.unit_max?.message}
-                                      </p>
-                                    )}
-                                    {renderFieldError("unit_max")}
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Maximum Units<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        name="unit_max"
+                                        className="form-control"
+                                        placeholder="Maximum Units"
+                                        {...register("unit_max", {
+                                          required: "Maximum Units is required",
+                                          validate: {
+                                            matchPattern: (v) =>
+                                              /^[0-9]\d*$/.test(v) ||
+                                              "Please enter valid number",
+                                            maxLength: (v) =>
+                                              v.length <= 10 ||
+                                              "The digit should be less than equal 10",
+                                          },
+                                        })}
+                                      />
+                                      {errors.unit_max && (
+                                        <p className="error">
+                                          {errors.unit_max?.message}
+                                        </p>
+                                      )}
+                                      {renderFieldError("unit_max")}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                  <label>
-                                    Building class<span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    {/* <MultiSelect
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Building class<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      {/* <MultiSelect
                                                                         name="building_class"
                                                                         options={buildingClassNamesOption}
                                                                         placeholder='Select Option'
                                                                         setMultiselectOption = {setBuildingClassNamesValue}
                                                                     /> */}
-                                    <Controller
-                                      control={control}
-                                      name="building_class"
-                                      rules={{
-                                        required: "Building class is required",
-                                      }}
-                                      render={({
-                                        field: { value, onChange, name },
-                                      }) => (
-                                        <Select
-                                          options={buildingClassNamesOption}
-                                          name={name}
-                                          placeholder="Select Building class"
-                                          onChange={(e) => {
-                                            onChange(e);
-                                            handleCustum(e, "building_class");
-                                          }}
-                                          closeMenuOnSelect={false}
-                                          isMulti
-                                        />
+                                      <Controller
+                                        control={control}
+                                        name="building_class"
+                                        rules={{
+                                          required:
+                                            "Building class is required",
+                                        }}
+                                        render={({
+                                          field: { value, onChange, name },
+                                        }) => (
+                                          <Select
+                                            options={buildingClassNamesOption}
+                                            name={name}
+                                            placeholder="Select Building class"
+                                            onChange={(e) => {
+                                              onChange(e);
+                                              handleCustum(e, "building_class");
+                                            }}
+                                            closeMenuOnSelect={false}
+                                            isMulti
+                                          />
+                                        )}
+                                      />
+                                      {errors.building_class && (
+                                        <p className="error">
+                                          {errors.building_class?.message}
+                                        </p>
                                       )}
-                                    />
-                                    {errors.building_class && (
-                                      <p className="error">
-                                        {errors.building_class?.message}
-                                      </p>
-                                    )}
-                                    {renderFieldError("building_class")}
-                                  </div>
-                                </div>
-                                <div className="col-12 col-md-12 col-lg-3">
-                                  <label>
-                                    Value Add<span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    <div className="radio-block">
-                                      <div className="label-container">
-                                        <input
-                                          type="radio"
-                                          name="value_add"
-                                          value="0"
-                                          id="value_add_yes"
-                                          {...register("value_add", {
-                                            required: "Value Add is required",
-                                          })}
-                                        />
-                                        <label
-                                          className="mb-0"
-                                          htmlFor="value_add_yes"
-                                        >
-                                          Yes
-                                        </label>
-                                      </div>
-                                      <div className="label-container">
-                                        <input
-                                          type="radio"
-                                          name="value_add"
-                                          value="1"
-                                          id="value_add_no"
-                                          {...register("value_add", {
-                                            required: "Value Add is required",
-                                          })}
-                                        />
-                                        <label
-                                          className="mb-0"
-                                          htmlFor="value_add_no"
-                                        >
-                                          No
-                                        </label>
-                                      </div>
+                                      {renderFieldError("building_class")}
                                     </div>
-                                    {errors.value_add && (
-                                      <p className="error">
-                                        {errors.value_add?.message}
-                                      </p>
-                                    )}
-                                    {renderFieldError("value_add")}
+                                  </div>
+                                  <div className="col-12 col-md-12 col-lg-3">
+                                    <label>
+                                      Value Add<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <div className="radio-block">
+                                        <div className="label-container">
+                                          <input
+                                            type="radio"
+                                            name="value_add"
+                                            value="0"
+                                            id="value_add_yes"
+                                            {...register("value_add", {
+                                              required: "Value Add is required",
+                                            })}
+                                          />
+                                          <label
+                                            className="mb-0"
+                                            htmlFor="value_add_yes"
+                                          >
+                                            Yes
+                                          </label>
+                                        </div>
+                                        <div className="label-container">
+                                          <input
+                                            type="radio"
+                                            name="value_add"
+                                            value="1"
+                                            id="value_add_no"
+                                            {...register("value_add", {
+                                              required: "Value Add is required",
+                                            })}
+                                          />
+                                          <label
+                                            className="mb-0"
+                                            htmlFor="value_add_no"
+                                          >
+                                            No
+                                          </label>
+                                        </div>
+                                      </div>
+                                      {errors.value_add && (
+                                        <p className="error">
+                                          {errors.value_add?.message}
+                                        </p>
+                                      )}
+                                      {renderFieldError("value_add")}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
-                          <div className="col-12 col-lg-12">
-                            <label>
-                              Purchase Method<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              {/* <MultiSelect
+                            )}
+                            <div className="col-12 col-lg-12">
+                              <label>
+                                Purchase Method<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                {/* <MultiSelect
                                                             name="purchase_method"
                                                             options={purchaseMethodsOption}
                                                             placeholder='Select Purchase Method'
@@ -1226,811 +1245,822 @@ function AddBuyerDetails() {
                                                             showCreative = {setShowCreativeFinancing}
                                                         /> */}
 
-                              <Controller
-                                control={control}
-                                name="purchase_method"
-                                rules={{
-                                  required: "Purchase Method is required",
-                                }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={purchaseMethodsOption}
-                                    name={name}
-                                    placeholder="Select Purchase Method"
-                                    setMultiselectOption={
-                                      setPurchaseMethodsValue
-                                    }
-                                    showCreative={setShowCreativeFinancing}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "purchase_method");
-                                    }}
-                                    closeMenuOnSelect={false}
-                                    isMulti
-                                  />
+                                <Controller
+                                  control={control}
+                                  name="purchase_method"
+                                  rules={{
+                                    required: "Purchase Method is required",
+                                  }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={purchaseMethodsOption}
+                                      name={name}
+                                      placeholder="Select Purchase Method"
+                                      setMultiselectOption={
+                                        setPurchaseMethodsValue
+                                      }
+                                      showCreative={setShowCreativeFinancing}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "purchase_method");
+                                      }}
+                                      closeMenuOnSelect={false}
+                                      isMulti
+                                    />
+                                  )}
+                                />
+                                {errors.purchase_method && (
+                                  <p className="error">
+                                    {errors.purchase_method?.message}
+                                  </p>
                                 )}
-                              />
-                              {errors.purchase_method && (
-                                <p className="error">
-                                  {errors.purchase_method?.message}
-                                </p>
-                              )}
 
-                              {renderFieldError("purchase_method")}
+                                {renderFieldError("purchase_method")}
+                              </div>
                             </div>
-                          </div>
 
-                          {showCreativeFinancing && (
-                            <div className="block-divide">
-                              <h5>Creative Financing</h5>
-                              <div className="row">
-                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                  <label>
-                                    Down Payment (%) <span>*</span>
-                                  </label>
-                                  <div className="form-group">
-                                    <input
-                                      type="text"
-                                      name="max_down_payment_percentage"
-                                      className="form-control"
-                                      placeholder="Down Payment (%)"
-                                      {...register(
-                                        "max_down_payment_percentage",
-                                        {
+                            {showCreativeFinancing && (
+                              <div className="block-divide">
+                                <h5>Creative Financing</h5>
+                                <div className="row">
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Down Payment (%) <span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        name="max_down_payment_percentage"
+                                        className="form-control"
+                                        placeholder="Down Payment (%)"
+                                        {...register(
+                                          "max_down_payment_percentage",
+                                          {
+                                            required:
+                                              "Down Payment (%) is required",
+                                            validate: {
+                                              matchPattern: (v) =>
+                                                /^[0-9]\d*$/.test(v) ||
+                                                "Please enter valid Down Payment (%)",
+                                              maxLength: (v) =>
+                                                (v.length <= 15 &&
+                                                  v.length >= 1) ||
+                                                "The Down Payment (%) should be more than 1 digit and less than equal 15",
+                                            },
+                                          }
+                                        )}
+                                      />
+                                      {errors.max_down_payment_percentage && (
+                                        <p className="error">
+                                          {
+                                            errors.max_down_payment_percentage
+                                              ?.message
+                                          }
+                                        </p>
+                                      )}
+                                      {renderFieldError(
+                                        "max_down_payment_percentage"
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Down Payment ($)<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <input
+                                        type="text"
+                                        name="max_down_payment_money"
+                                        className="form-control"
+                                        placeholder="Down Payment ($)"
+                                        {...register("max_down_payment_money", {
                                           required:
-                                            "Down Payment (%) is required",
+                                            "Down Payment ($) is required",
                                           validate: {
                                             matchPattern: (v) =>
                                               /^[0-9]\d*$/.test(v) ||
-                                              "Please enter valid Down Payment (%)",
+                                              "Please enter valid Down Payment ($)",
                                             maxLength: (v) =>
                                               (v.length <= 15 &&
                                                 v.length >= 1) ||
-                                              "The Down Payment (%) should be more than 1 digit and less than equal 15",
+                                              "The Down Payment ($) should be more than 1 digit and less than equal 15",
                                           },
-                                        }
+                                        })}
+                                      />
+                                      {errors.max_down_payment_money && (
+                                        <p className="error">
+                                          {
+                                            errors.max_down_payment_money
+                                              ?.message
+                                          }
+                                        </p>
                                       )}
-                                    />
-                                    {errors.max_down_payment_percentage && (
-                                      <p className="error">
-                                        {
-                                          errors.max_down_payment_percentage
-                                            ?.message
-                                        }
-                                      </p>
-                                    )}
-                                    {renderFieldError(
-                                      "max_down_payment_percentage"
-                                    )}
+                                      {renderFieldError(
+                                        "max_down_payment_money"
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Interest Rate (%)<span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <input
+                                        type="number"
+                                        name="max_interest_rate"
+                                        className="form-control"
+                                        placeholder="Interest Rate (%)"
+                                        {...register("max_interest_rate", {
+                                          required:
+                                            "Interest Rate (%) is required",
+                                          validate: {
+                                            matchPattern: (v) =>
+                                              /^[0-9]\d*$/.test(v) ||
+                                              "Please enter valid Interest Rate (%)",
+                                            maxLength: (v) =>
+                                              (v.length <= 15 &&
+                                                v.length >= 1) ||
+                                              "The Interest Rate (%) should be more than 1 digit and less than equal 15",
+                                          },
+                                        })}
+                                      />
+                                      {errors.max_interest_rate && (
+                                        <p className="error">
+                                          {errors.max_interest_rate?.message}
+                                        </p>
+                                      )}
+                                      {renderFieldError("max_interest_rate")}
+                                    </div>
+                                  </div>
+                                  <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>
+                                      Balloon Payment <span>*</span>
+                                    </label>
+                                    <div className="form-group">
+                                      <div className="radio-block">
+                                        <div className="label-container">
+                                          <input
+                                            type="radio"
+                                            name="balloon_payment"
+                                            value="1"
+                                            id="balloon_payment_yes"
+                                            {...register("balloon_payment", {
+                                              required:
+                                                "Balloon Payment is required",
+                                            })}
+                                          />
+                                          <label
+                                            className="mb-0"
+                                            htmlFor="balloon_payment_yes"
+                                          >
+                                            Yes
+                                          </label>
+                                        </div>
+                                        <div className="label-container">
+                                          <input
+                                            type="radio"
+                                            name="balloon_payment"
+                                            value="0"
+                                            id="balloon_payment_no"
+                                            {...register("balloon_payment", {
+                                              required:
+                                                "Balloon Payment is required",
+                                            })}
+                                          />
+                                          <label
+                                            className="mb-0"
+                                            htmlFor="balloon_payment_no"
+                                          >
+                                            No
+                                          </label>
+                                        </div>
+                                      </div>
+                                      {errors.balloon_payment && (
+                                        <p className="error">
+                                          {errors.balloon_payment?.message}
+                                        </p>
+                                      )}
+                                      {renderFieldError("balloon_payment")}
+                                    </div>
                                   </div>
                                 </div>
+                              </div>
+                            )}
+                            {!mobileHomeParkSelected && !hotelMotelSelected && (
+                              <>
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                   <label>
-                                    Down Payment ($)<span>*</span>
+                                    Bedroom (min)<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     <input
                                       type="text"
-                                      name="max_down_payment_money"
+                                      name="bedroom_min"
                                       className="form-control"
-                                      placeholder="Down Payment ($)"
-                                      {...register("max_down_payment_money", {
-                                        required:
-                                          "Down Payment ($) is required",
+                                      placeholder="Bedroom (min)"
+                                      {...register("bedroom_min", {
+                                        onChange: (e) => {
+                                          setBedRoomMin(e.target.value);
+                                        },
+                                        required: "Bedroom (min) is required",
                                         validate: {
                                           matchPattern: (v) =>
                                             /^[0-9]\d*$/.test(v) ||
-                                            "Please enter valid Down Payment ($)",
+                                            "Please enter valid number",
                                           maxLength: (v) =>
-                                            (v.length <= 15 && v.length >= 1) ||
-                                            "The Down Payment ($) should be more than 1 digit and less than equal 15",
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) <= bedRoomMax ||
+                                            "The Bedroom (min) should be less than or equal Bedroom (max)",
                                         },
                                       })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("bedroom");
+                                      }}
                                     />
-                                    {errors.max_down_payment_money && (
+                                    {errors.bedroom_min && (
                                       <p className="error">
-                                        {errors.max_down_payment_money?.message}
+                                        {errors.bedroom_min?.message}
                                       </p>
                                     )}
-                                    {renderFieldError("max_down_payment_money")}
+
+                                    {renderFieldError("bedroom_min")}
                                   </div>
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                   <label>
-                                    Interest Rate (%)<span>*</span>
+                                    Bedroom (max)<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     <input
-                                      type="number"
-                                      name="max_interest_rate"
+                                      type="text"
+                                      name="bedroom_max"
                                       className="form-control"
-                                      placeholder="Interest Rate (%)"
-                                      {...register("max_interest_rate", {
-                                        required:
-                                          "Interest Rate (%) is required",
+                                      placeholder="Bedroom (max)"
+                                      {...register("bedroom_max", {
+                                        onChange: (e) => {
+                                          setBedRoomMax(e.target.value);
+                                        },
+                                        required: "Bedroom (max) is required",
                                         validate: {
                                           matchPattern: (v) =>
                                             /^[0-9]\d*$/.test(v) ||
-                                            "Please enter valid Interest Rate (%)",
+                                            "Please enter valid number",
                                           maxLength: (v) =>
-                                            (v.length <= 15 && v.length >= 1) ||
-                                            "The Interest Rate (%) should be more than 1 digit and less than equal 15",
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) >= bedRoomMin ||
+                                            "The Bedroom (max) should be greater than or equal Bedroom (min)",
                                         },
                                       })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("bedroom");
+                                      }}
                                     />
-                                    {errors.max_interest_rate && (
+                                    {errors.bedroom_max && (
                                       <p className="error">
-                                        {errors.max_interest_rate?.message}
+                                        {errors.bedroom_max?.message}
                                       </p>
                                     )}
-                                    {renderFieldError("max_interest_rate")}
+
+                                    {renderFieldError("bedroom_max")}
                                   </div>
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                   <label>
-                                    Balloon Payment <span>*</span>
+                                    Bath (min)<span>*</span>
                                   </label>
                                   <div className="form-group">
-                                    <div className="radio-block">
-                                      <div className="label-container">
-                                        <input
-                                          type="radio"
-                                          name="balloon_payment"
-                                          value="1"
-                                          id="balloon_payment_yes"
-                                          {...register("balloon_payment", {
-                                            required:
-                                              "Balloon Payment is required",
-                                          })}
-                                        />
-                                        <label
-                                          className="mb-0"
-                                          htmlFor="balloon_payment_yes"
-                                        >
-                                          Yes
-                                        </label>
-                                      </div>
-                                      <div className="label-container">
-                                        <input
-                                          type="radio"
-                                          name="balloon_payment"
-                                          value="0"
-                                          id="balloon_payment_no"
-                                          {...register("balloon_payment", {
-                                            required:
-                                              "Balloon Payment is required",
-                                          })}
-                                        />
-                                        <label
-                                          className="mb-0"
-                                          htmlFor="balloon_payment_no"
-                                        >
-                                          No
-                                        </label>
-                                      </div>
-                                    </div>
-                                    {errors.balloon_payment && (
+                                    <input
+                                      type="text"
+                                      name="bath_min"
+                                      className="form-control"
+                                      placeholder="Bath (min)"
+                                      {...register("bath_min", {
+                                        onChange: (e) => {
+                                          setBathMin(e.target.value);
+                                        },
+                                        required: "Bath (min) is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          maxLength: (v) =>
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) <= bathMax ||
+                                            "The Bath (min) should be less than or equal Bath (max)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("bath");
+                                      }}
+                                    />
+                                    {errors.bath_min && (
                                       <p className="error">
-                                        {errors.balloon_payment?.message}
+                                        {errors.bath_min?.message}
                                       </p>
                                     )}
-                                    {renderFieldError("balloon_payment")}
+                                    {renderFieldError("bath_min")}
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                          )}
-                          {!mobileHomeParkSelected && !hotelMotelSelected && (
-                            <>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Bedroom (min)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="bedroom_min"
-                                    className="form-control"
-                                    placeholder="Bedroom (min)"
-                                    {...register("bedroom_min", {
-                                      onChange: (e) => {
-                                        setBedRoomMin(e.target.value);
-                                      },
-                                      required: "Bedroom (min) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) <= bedRoomMax ||
-                                          "The Bedroom (min) should be less than or equal Bedroom (max)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("bedroom");
-                                    }}
-                                  />
-                                  {errors.bedroom_min && (
-                                    <p className="error">
-                                      {errors.bedroom_min?.message}
-                                    </p>
-                                  )}
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Bath (max)<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <input
+                                      type="text"
+                                      name="bath_max"
+                                      className="form-control"
+                                      placeholder="Bath (max)"
+                                      {...register("bath_max", {
+                                        onChange: (e) => {
+                                          setBathMax(e.target.value);
+                                        },
+                                        required: "Bath (max) is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          maxLength: (v) =>
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) >= bathMin ||
+                                            "The Bath (max) should be greater than or equal Bath (min)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("bath");
+                                      }}
+                                    />
+                                    {errors.bath_max && (
+                                      <p className="error">
+                                        {errors.bath_max?.message}
+                                      </p>
+                                    )}
 
-                                  {renderFieldError("bedroom_min")}
+                                    {renderFieldError("bath_max")}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Bedroom (max)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="bedroom_max"
-                                    className="form-control"
-                                    placeholder="Bedroom (max)"
-                                    {...register("bedroom_max", {
-                                      onChange: (e) => {
-                                        setBedRoomMax(e.target.value);
-                                      },
-                                      required: "Bedroom (max) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) >= bedRoomMin ||
-                                          "The Bedroom (max) should be greater than or equal Bedroom (min)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("bedroom");
-                                    }}
-                                  />
-                                  {errors.bedroom_max && (
-                                    <p className="error">
-                                      {errors.bedroom_max?.message}
-                                    </p>
-                                  )}
+                              </>
+                            )}
+                            {!mobileHomeParkSelected && (
+                              <>
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Sq Ft Min<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <input
+                                      type="text"
+                                      name="size_min"
+                                      className="form-control"
+                                      placeholder="Sq Ft Min"
+                                      {...register("size_min", {
+                                        onChange: (e) => {
+                                          setSqFtMin(e.target.value);
+                                        },
+                                        required: "Sq Ft Min is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          maxLength: (v) =>
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) <= sqFtMin ||
+                                            "The Sq Ft (min) should be less than or equal Sq Ft (max)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("sqft");
+                                      }}
+                                    />
+                                    {errors.size_min && (
+                                      <p className="error">
+                                        {errors.size_min?.message}
+                                      </p>
+                                    )}
 
-                                  {renderFieldError("bedroom_max")}
+                                    {renderFieldError("size_min")}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Bath (min)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="bath_min"
-                                    className="form-control"
-                                    placeholder="Bath (min)"
-                                    {...register("bath_min", {
-                                      onChange: (e) => {
-                                        setBathMin(e.target.value);
-                                      },
-                                      required: "Bath (min) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) <= bathMax ||
-                                          "The Bath (min) should be less than or equal Bath (max)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("bath");
-                                    }}
-                                  />
-                                  {errors.bath_min && (
-                                    <p className="error">
-                                      {errors.bath_min?.message}
-                                    </p>
-                                  )}
-                                  {renderFieldError("bath_min")}
-                                </div>
-                              </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Bath (max)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="bath_max"
-                                    className="form-control"
-                                    placeholder="Bath (max)"
-                                    {...register("bath_max", {
-                                      onChange: (e) => {
-                                        setBathMax(e.target.value);
-                                      },
-                                      required: "Bath (max) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) >= bathMin ||
-                                          "The Bath (max) should be greater than or equal Bath (min)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("bath");
-                                    }}
-                                  />
-                                  {errors.bath_max && (
-                                    <p className="error">
-                                      {errors.bath_max?.message}
-                                    </p>
-                                  )}
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Sq Ft Max<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <input
+                                      type="text"
+                                      name="size_max"
+                                      className="form-control"
+                                      placeholder="Sq Ft Max"
+                                      {...register("size_max", {
+                                        onChange: (e) => {
+                                          setSqFtMax(e.target.value);
+                                        },
+                                        required: "Sq Ft Max is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          maxLength: (v) =>
+                                            v.length <= 10 ||
+                                            "The digit should be less than equal 10",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) >= sqFtMin ||
+                                            "The Sq Ft (max) should be greater than or equal Sq Ft (min)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("sqft");
+                                      }}
+                                    />
+                                    {errors.size_max && (
+                                      <p className="error">
+                                        {errors.size_max?.message}
+                                      </p>
+                                    )}
 
-                                  {renderFieldError("bath_max")}
+                                    {renderFieldError("size_max")}
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          )}
-                          {!mobileHomeParkSelected && (
-                            <>
+                              </>
+                            )}
+                            {hotelMotelSelected && (
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>
-                                  Sq Ft Min<span>*</span>
+                                  Rooms <span>*</span>
                                 </label>
                                 <div className="form-group">
                                   <input
                                     type="text"
-                                    name="size_min"
+                                    name="rooms"
                                     className="form-control"
-                                    placeholder="Sq Ft Min"
-                                    {...register("size_min", {
+                                    placeholder="Rooms"
+                                    {...register("rooms", {
                                       onChange: (e) => {
-                                        setSqFtMin(e.target.value);
+                                        setlotSizesqFtMin(e.target.value);
                                       },
-                                      required: "Sq Ft Min is required",
+                                      required: "Rooms is required",
                                       validate: {
                                         matchPattern: (v) =>
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) <= sqFtMin ||
-                                          "The Sq Ft (min) should be less than or equal Sq Ft (max)",
                                       },
                                     })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("sqft");
-                                    }}
                                   />
-                                  {errors.size_min && (
+                                  {errors.rooms && (
                                     <p className="error">
-                                      {errors.size_min?.message}
+                                      {errors.rooms?.message}
                                     </p>
                                   )}
-
-                                  {renderFieldError("size_min")}
+                                  {renderFieldError("rooms")}
                                 </div>
                               </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Sq Ft Max<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="size_max"
-                                    className="form-control"
-                                    placeholder="Sq Ft Max"
-                                    {...register("size_max", {
-                                      onChange: (e) => {
-                                        setSqFtMax(e.target.value);
-                                      },
-                                      required: "Sq Ft Max is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) >= sqFtMin ||
-                                          "The Sq Ft (max) should be greater than or equal Sq Ft (min)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("sqft");
-                                    }}
-                                  />
-                                  {errors.size_max && (
-                                    <p className="error">
-                                      {errors.size_max?.message}
-                                    </p>
-                                  )}
-
-                                  {renderFieldError("size_max")}
-                                </div>
-                              </div>
-                            </>
-                          )}
-                          {hotelMotelSelected && (
+                            )}
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                               <label>
-                                Rooms <span>*</span>
+                                Lot Size Sq Ft (min)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <input
                                   type="text"
-                                  name="rooms"
+                                  name="lot_size_min"
                                   className="form-control"
-                                  placeholder="Rooms"
-                                  {...register("rooms", {
+                                  placeholder="Lot Size Sq Ft (min)"
+                                  {...register("lot_size_min", {
                                     onChange: (e) => {
                                       setlotSizesqFtMin(e.target.value);
                                     },
-                                    required: "Rooms is required",
+                                    required:
+                                      "Lot Size Sq Ft (min) is required",
                                     validate: {
                                       matchPattern: (v) =>
                                         /^[0-9]\d*$/.test(v) ||
                                         "Please enter valid number",
+                                      maxLength: (v) =>
+                                        v.length <= 10 ||
+                                        "The digit should be less than equal 10",
+                                      positiveNumber: (v) =>
+                                        parseFloat(v) <= lotSizesqFtMax ||
+                                        "The Lot Size Sq Ft (min) should be less than or equal Lot Size Sq Ft (max)",
                                     },
                                   })}
+                                  onKeyUp={() => {
+                                    handleChangeErrorMessage("lotsizesqft");
+                                  }}
                                 />
-                                {errors.rooms && (
+                                {errors.lot_size_min && (
                                   <p className="error">
-                                    {errors.rooms?.message}
+                                    {errors.lot_size_min?.message}
                                   </p>
                                 )}
-                                {renderFieldError("rooms")}
+
+                                {renderFieldError("lot_size_min")}
                               </div>
                             </div>
-                          )}
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Lot Size Sq Ft (min)<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="lot_size_min"
-                                className="form-control"
-                                placeholder="Lot Size Sq Ft (min)"
-                                {...register("lot_size_min", {
-                                  onChange: (e) => {
-                                    setlotSizesqFtMin(e.target.value);
-                                  },
-                                  required: "Lot Size Sq Ft (min) is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid number",
-                                    maxLength: (v) =>
-                                      v.length <= 10 ||
-                                      "The digit should be less than equal 10",
-                                    positiveNumber: (v) =>
-                                      parseFloat(v) <= lotSizesqFtMax ||
-                                      "The Lot Size Sq Ft (min) should be less than or equal Lot Size Sq Ft (max)",
-                                  },
-                                })}
-                                onKeyUp={() => {
-                                  handleChangeErrorMessage("lotsizesqft");
-                                }}
-                              />
-                              {errors.lot_size_min && (
-                                <p className="error">
-                                  {errors.lot_size_min?.message}
-                                </p>
-                              )}
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Lot Size Sq Ft (max)<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="lot_size_max"
+                                  className="form-control"
+                                  placeholder="Lot Size Sq Ft (max)"
+                                  {...register("lot_size_max", {
+                                    onChange: (e) => {
+                                      setlotSizesqFtMax(e.target.value);
+                                    },
+                                    required:
+                                      "Lot Size Sq Ft (max) is required",
+                                    validate: {
+                                      matchPattern: (v) =>
+                                        /^[0-9]\d*$/.test(v) ||
+                                        "Please enter valid number",
+                                      maxLength: (v) =>
+                                        v.length <= 10 ||
+                                        "The digit should be less than equal 10",
+                                      positiveNumber: (v) =>
+                                        parseFloat(v) >= lotSizesqFtMin ||
+                                        "The Lot Size Sq Ft (max) should be greater than or equal Lot Size Sq Ft (min)",
+                                    },
+                                  })}
+                                  onKeyUp={() => {
+                                    handleChangeErrorMessage("lotsizesqft");
+                                  }}
+                                />
+                                {errors.lot_size_max && (
+                                  <p className="error">
+                                    {errors.lot_size_max?.message}
+                                  </p>
+                                )}
 
-                              {renderFieldError("lot_size_min")}
+                                {renderFieldError("lot_size_max")}
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Lot Size Sq Ft (max)<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="lot_size_max"
-                                className="form-control"
-                                placeholder="Lot Size Sq Ft (max)"
-                                {...register("lot_size_max", {
-                                  onChange: (e) => {
-                                    setlotSizesqFtMax(e.target.value);
-                                  },
-                                  required: "Lot Size Sq Ft (max) is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid number",
-                                    maxLength: (v) =>
-                                      v.length <= 10 ||
-                                      "The digit should be less than equal 10",
-                                    positiveNumber: (v) =>
-                                      parseFloat(v) >= lotSizesqFtMin ||
-                                      "The Lot Size Sq Ft (max) should be greater than or equal Lot Size Sq Ft (min)",
-                                  },
-                                })}
-                                onKeyUp={() => {
-                                  handleChangeErrorMessage("lotsizesqft");
-                                }}
-                              />
-                              {errors.lot_size_max && (
-                                <p className="error">
-                                  {errors.lot_size_max?.message}
-                                </p>
-                              )}
-
-                              {renderFieldError("lot_size_max")}
-                            </div>
-                          </div>
-                          {!mobileHomeParkSelected && (
-                            <>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Year Built (min)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <Controller
-                                    control={control}
-                                    name="build_year_min"
-                                    rules={{
-                                      required: "Year Built (min) is required",
-                                    }}
-                                    render={({
-                                      field: { value, onChange, name },
-                                    }) => (
-                                      <DatePicker
-                                        id="DatePicker"
-                                        type="string"
-                                        maxDate={new Date()}
-                                        className="text-primary text-center form-control"
-                                        selected={startDate}
-                                        placeholderText="Year Built (Min)"
-                                        name="build_year_min"
-                                        autoComplete="off"
-                                        onChange={(e) => {
-                                          onChange(e);
-                                          handleCustum(e, "start_date");
-                                        }}
-                                        showYearPicker
-                                        dateFormat="yyyy"
-                                        yearItemNumber={9}
-                                      />
+                            {!mobileHomeParkSelected && (
+                              <>
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Year Built (min)<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <Controller
+                                      control={control}
+                                      name="build_year_min"
+                                      rules={{
+                                        required:
+                                          "Year Built (min) is required",
+                                      }}
+                                      render={({
+                                        field: { value, onChange, name },
+                                      }) => (
+                                        <DatePicker
+                                          id="DatePicker"
+                                          type="string"
+                                          maxDate={new Date()}
+                                          className="text-primary text-center form-control"
+                                          selected={startDate}
+                                          placeholderText="Year Built (Min)"
+                                          name="build_year_min"
+                                          autoComplete="off"
+                                          onChange={(e) => {
+                                            onChange(e);
+                                            handleCustum(e, "start_date");
+                                          }}
+                                          showYearPicker
+                                          dateFormat="yyyy"
+                                          yearItemNumber={9}
+                                        />
+                                      )}
+                                    />
+                                    {errors.build_year_min && (
+                                      <p className="error">
+                                        {errors.build_year_min?.message}
+                                      </p>
                                     )}
-                                  />
-                                  {errors.build_year_min && (
-                                    <p className="error">
-                                      {errors.build_year_min?.message}
-                                    </p>
-                                  )}
 
-                                  {renderFieldError("build_year_min")}
+                                    {renderFieldError("build_year_min")}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Year Built (max)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <Controller
-                                    control={control}
-                                    name="build_year_max"
-                                    rules={{
-                                      required: "Year Built (max) is required",
-                                    }}
-                                    render={({
-                                      field: { value, onChange, name },
-                                    }) => (
-                                      <DatePicker
-                                        minDate={startDate}
-                                        maxDate={new Date()}
-                                        id="DatePicker"
-                                        type="string"
-                                        className="text-primary text-center form-control"
-                                        selected={endDate}
-                                        name="build_year_max"
-                                        placeholderText="Year Built (Max)"
-                                        autoComplete="off"
-                                        onChange={(e) => {
-                                          onChange(e);
-                                          handleCustum(e, "end_date");
-                                        }}
-                                        showYearPicker
-                                        dateFormat="yyyy"
-                                        yearItemNumber={9}
-                                      />
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Year Built (max)<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <Controller
+                                      control={control}
+                                      name="build_year_max"
+                                      rules={{
+                                        required:
+                                          "Year Built (max) is required",
+                                      }}
+                                      render={({
+                                        field: { value, onChange, name },
+                                      }) => (
+                                        <DatePicker
+                                          minDate={startDate}
+                                          maxDate={new Date()}
+                                          id="DatePicker"
+                                          type="string"
+                                          className="text-primary text-center form-control"
+                                          selected={endDate}
+                                          name="build_year_max"
+                                          placeholderText="Year Built (Max)"
+                                          autoComplete="off"
+                                          onChange={(e) => {
+                                            onChange(e);
+                                            handleCustum(e, "end_date");
+                                          }}
+                                          showYearPicker
+                                          dateFormat="yyyy"
+                                          yearItemNumber={9}
+                                        />
+                                      )}
+                                    />
+                                    {errors.build_year_max && (
+                                      <p className="error">
+                                        {errors.build_year_max?.message}
+                                      </p>
                                     )}
-                                  />
-                                  {errors.build_year_max && (
-                                    <p className="error">
-                                      {errors.build_year_max?.message}
-                                    </p>
-                                  )}
-                                  {renderFieldError("build_year_max")}
+                                    {renderFieldError("build_year_max")}
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          )}
-                          {!isLandSelected && !mobileHomeParkSelected && (
-                            <>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Stories (min)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="stories_min"
-                                    className="form-control"
-                                    placeholder="Stories (min)"
-                                    {...register("stories_min", {
-                                      onChange: (e) => {
-                                        setStoriesMin(e.target.value);
-                                      },
-                                      required: "Stories (min) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) <= storiesMax ||
-                                          "The Stories (min) should be less than or equal Stories (max)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("stories");
-                                    }}
-                                  />
-                                  {errors.stories_min && (
-                                    <p className="error">
-                                      {errors.stories_min?.message}
-                                    </p>
-                                  )}
+                              </>
+                            )}
+                            {!isLandSelected && !mobileHomeParkSelected && (
+                              <>
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Stories (min)<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <input
+                                      type="text"
+                                      name="stories_min"
+                                      className="form-control"
+                                      placeholder="Stories (min)"
+                                      {...register("stories_min", {
+                                        onChange: (e) => {
+                                          setStoriesMin(e.target.value);
+                                        },
+                                        required: "Stories (min) is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) <= storiesMax ||
+                                            "The Stories (min) should be less than or equal Stories (max)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("stories");
+                                      }}
+                                    />
+                                    {errors.stories_min && (
+                                      <p className="error">
+                                        {errors.stories_min?.message}
+                                      </p>
+                                    )}
 
-                                  {renderFieldError("stories_min")}
+                                    {renderFieldError("stories_min")}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Stories (max)<span>*</span>
-                                </label>
-                                <div className="form-group">
-                                  <input
-                                    type="text"
-                                    name="stories_max"
-                                    className="form-control"
-                                    placeholder="Stories (max)"
-                                    {...register("stories_max", {
-                                      onChange: (e) => {
-                                        setStoriesMax(e.target.value);
-                                      },
-                                      required: "Stories (max) is required",
-                                      validate: {
-                                        matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid number",
-                                        positiveNumber: (v) =>
-                                          parseFloat(v) >= storiesMin ||
-                                          "The Stories (max) should be greater than or equal Stories (min)",
-                                      },
-                                    })}
-                                    onKeyUp={() => {
-                                      handleChangeErrorMessage("stories");
-                                    }}
-                                  />
-                                  {errors.stories_max && (
-                                    <p className="error">
-                                      {errors.stories_max?.message}
-                                    </p>
-                                  )}
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                  <label>
+                                    Stories (max)<span>*</span>
+                                  </label>
+                                  <div className="form-group">
+                                    <input
+                                      type="text"
+                                      name="stories_max"
+                                      className="form-control"
+                                      placeholder="Stories (max)"
+                                      {...register("stories_max", {
+                                        onChange: (e) => {
+                                          setStoriesMax(e.target.value);
+                                        },
+                                        required: "Stories (max) is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9]\d*$/.test(v) ||
+                                            "Please enter valid number",
+                                          positiveNumber: (v) =>
+                                            parseFloat(v) >= storiesMin ||
+                                            "The Stories (max) should be greater than or equal Stories (min)",
+                                        },
+                                      })}
+                                      onKeyUp={() => {
+                                        handleChangeErrorMessage("stories");
+                                      }}
+                                    />
+                                    {errors.stories_max && (
+                                      <p className="error">
+                                        {errors.stories_max?.message}
+                                      </p>
+                                    )}
 
-                                  {renderFieldError("stories_max")}
+                                    {renderFieldError("stories_max")}
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          )}
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Price (min)<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="price_min"
-                                className="form-control"
-                                placeholder="Price (min)"
-                                {...register("price_min", {
-                                  onChange: (e) => {
-                                    setPriceMin(e.target.value);
-                                  },
-                                  required: "Price (min) is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid number",
-                                    maxLength: (v) =>
-                                      v.length <= 10 ||
-                                      "The digit should be less than equal 10",
-                                    positiveNumber: (v) =>
-                                      parseFloat(v) <= priceMax ||
-                                      "The Price (min) should be less than or equal Price (max)",
-                                  },
-                                })}
-                                onKeyUp={() => {
-                                  handleChangeErrorMessage("price");
-                                }}
-                              />
-                              {errors.price_min && (
-                                <p className="error">
-                                  {errors.price_min?.message}
-                                </p>
-                              )}
+                              </>
+                            )}
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Price (min)<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="price_min"
+                                  className="form-control"
+                                  placeholder="Price (min)"
+                                  {...register("price_min", {
+                                    onChange: (e) => {
+                                      setPriceMin(e.target.value);
+                                    },
+                                    required: "Price (min) is required",
+                                    validate: {
+                                      matchPattern: (v) =>
+                                        /^[0-9]\d*$/.test(v) ||
+                                        "Please enter valid number",
+                                      maxLength: (v) =>
+                                        v.length <= 10 ||
+                                        "The digit should be less than equal 10",
+                                      positiveNumber: (v) =>
+                                        parseFloat(v) <= priceMax ||
+                                        "The Price (min) should be less than or equal Price (max)",
+                                    },
+                                  })}
+                                  onKeyUp={() => {
+                                    handleChangeErrorMessage("price");
+                                  }}
+                                />
+                                {errors.price_min && (
+                                  <p className="error">
+                                    {errors.price_min?.message}
+                                  </p>
+                                )}
 
-                              {renderFieldError("price_min")}
+                                {renderFieldError("price_min")}
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                            <label>
-                              Price (max)<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <input
-                                type="text"
-                                name="price_max"
-                                className="form-control"
-                                placeholder="Price (max)"
-                                {...register("price_max", {
-                                  onChange: (e) => {
-                                    setPriceMax(e.target.value);
-                                  },
-                                  required: "Price (max) is required",
-                                  validate: {
-                                    matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid number",
-                                    maxLength: (v) =>
-                                      v.length <= 10 ||
-                                      "The digit should be less than equal 10",
-                                    positiveNumber: (v) =>
-                                      parseFloat(v) >= priceMin ||
-                                      "The Price (max) should be greater than or equal Price (min)",
-                                  },
-                                })}
-                                onKeyUp={() => {
-                                  handleChangeErrorMessage("price");
-                                }}
-                              />
-                              {errors.price_max && (
-                                <p className="error">
-                                  {errors.price_max?.message}
-                                </p>
-                              )}
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <label>
+                                Price (max)<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  name="price_max"
+                                  className="form-control"
+                                  placeholder="Price (max)"
+                                  {...register("price_max", {
+                                    onChange: (e) => {
+                                      setPriceMax(e.target.value);
+                                    },
+                                    required: "Price (max) is required",
+                                    validate: {
+                                      matchPattern: (v) =>
+                                        /^[0-9]\d*$/.test(v) ||
+                                        "Please enter valid number",
+                                      maxLength: (v) =>
+                                        v.length <= 10 ||
+                                        "The digit should be less than equal 10",
+                                      positiveNumber: (v) =>
+                                        parseFloat(v) >= priceMin ||
+                                        "The Price (max) should be greater than or equal Price (min)",
+                                    },
+                                  })}
+                                  onKeyUp={() => {
+                                    handleChangeErrorMessage("price");
+                                  }}
+                                />
+                                {errors.price_max && (
+                                  <p className="error">
+                                    {errors.price_max?.message}
+                                  </p>
+                                )}
 
-                              {renderFieldError("price_max")}
+                                {renderFieldError("price_max")}
+                              </div>
                             </div>
-                          </div>
-                          {!mobileHomeParkSelected && (
-                            <>
-                              {/* remove from all form Single Buyer Form Notes*/}
-                              {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            {!mobileHomeParkSelected && (
+                              <>
+                                {/* remove from all form Single Buyer Form Notes*/}
+                                {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                             <label>ARV (min)<span>*</span></label>
                                                             <div className="form-group">
                                                                 <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
@@ -2071,608 +2101,201 @@ function AddBuyerDetails() {
                                                                 {renderFieldError('arv_max') }
                                                             </div>
                                                         </div> */}
-                            </>
-                          )}
-                          <div className="col-6 col-lg-6">
-                            <label>
-                              Parking<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              {/* <MultiSelect
+                              </>
+                            )}
+                            <div className="col-6 col-lg-6">
+                              <label>
+                                Parking<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                {/* <MultiSelect
                                                             name="parking"
                                                             options={parkingOption}
                                                             placeholder='Select Parking'
                                                             setMultiselectOption = {setParkingValue}
                                                         /> */}
-                              <Controller
-                                control={control}
-                                name="parking"
-                                rules={{ required: "Parking is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={parkingOption}
-                                    name={name}
-                                    placeholder="Select parking"
-                                    setMultiselectOption={setParkingValue}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "parking");
-                                    }}
-                                  />
-                                )}
-                              />
-                              {errors.parking && (
-                                <p className="error">
-                                  {errors.parking?.message}
-                                </p>
-                              )}
-
-                              {renderFieldError("parking")}
-                            </div>
-                          </div>
-                          <div className="col-6 col-lg-6">
-                            <label>
-                              Buyer Type<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <Controller
-                                control={control}
-                                name="buyer_type"
-                                rules={{ required: "Buyer Type is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={buyerTypeOption}
-                                    name={name}
-                                    placeholder="Select Buyer Type"
-                                    setMultiselectOption={setBuyerTypeValue}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "buyer_type");
-                                    }}
-                                  />
-                                )}
-                              />
-                              {errors.buyer_type && (
-                                <p className="error">
-                                  {errors.buyer_type?.message}
-                                </p>
-                              )}
-
-                              {renderFieldError("buyer_type")}
-                            </div>
-                          </div>
-                          {mobileHomeParkSelected && (
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                              <label>
-                                Park Owned/Tenant Owned <span>*</span>
-                              </label>
-                              <div className="form-group">
                                 <Controller
                                   control={control}
-                                  name="park"
-                                  rules={{
-                                    required:
-                                      "Park Owned/Tenant Owned is required",
-                                  }}
+                                  name="parking"
+                                  rules={{ required: "Parking is required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
                                     <Select
-                                      options={parkOption}
+                                      options={parkingOption}
                                       name={name}
-                                      placeholder="Select Park Owned/Tenant Owned"
-                                      setMultiselectOption={setBuyerTypeValue}
+                                      placeholder="Select parking"
+                                      setMultiselectOption={setParkingValue}
                                       onChange={(e) => {
                                         onChange(e);
-                                        handleCustum(e, "park");
+                                        handleCustum(e, "parking");
                                       }}
                                     />
                                   )}
                                 />
-                                {errors.park && (
+                                {errors.parking && (
                                   <p className="error">
-                                    {errors.park?.message}
+                                    {errors.parking?.message}
                                   </p>
                                 )}
-                                {renderFieldError("park")}
+
+                                {renderFieldError("parking")}
                               </div>
                             </div>
-                          )}
-                          <div className="col-12 col-lg-12">
-                            <div className="form-group">
-                              <label>Location Flaws</label>
+                            <div className="col-6 col-lg-6">
+                              <label>
+                                Buyer Type<span>*</span>
+                              </label>
                               <div className="form-group">
-                                <MultiSelect
-                                  name="property_flaw"
-                                  options={locationFlawsOption}
-                                  placeholder="Select Location Flaws"
-                                  setMultiselectOption={setLocationFlawsValue}
+                                <Controller
+                                  control={control}
+                                  name="buyer_type"
+                                  rules={{ required: "Buyer Type is required" }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={buyerTypeOption}
+                                      name={name}
+                                      placeholder="Select Buyer Type"
+                                      setMultiselectOption={setBuyerTypeValue}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "buyer_type");
+                                      }}
+                                    />
+                                  )}
                                 />
-                                {renderFieldError("property_flaw")}
+                                {errors.buyer_type && (
+                                  <p className="error">
+                                    {errors.buyer_type?.message}
+                                  </p>
+                                )}
+
+                                {renderFieldError("buyer_type")}
                               </div>
                             </div>
-                          </div>
-                          <div className="column--grid">
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Solar</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="solar"
-                                    value="1"
-                                    id="solar_yes"
+                            {mobileHomeParkSelected && (
+                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <label>
+                                  Park Owned/Tenant Owned <span>*</span>
+                                </label>
+                                <div className="form-group">
+                                  <Controller
+                                    control={control}
+                                    name="park"
+                                    rules={{
+                                      required:
+                                        "Park Owned/Tenant Owned is required",
+                                    }}
+                                    render={({
+                                      field: { value, onChange, name },
+                                    }) => (
+                                      <Select
+                                        options={parkOption}
+                                        name={name}
+                                        placeholder="Select Park Owned/Tenant Owned"
+                                        setMultiselectOption={setBuyerTypeValue}
+                                        onChange={(e) => {
+                                          onChange(e);
+                                          handleCustum(e, "park");
+                                        }}
+                                      />
+                                    )}
                                   />
-                                  <label className="mb-0" htmlFor="solar_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="solar"
-                                    value="0"
-                                    id="solar_no"
-                                  />
-                                  <label className="mb-0" htmlFor="solar_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("solar")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Pool</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="pool"
-                                    value="1"
-                                    id="pool_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="pool_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="pool"
-                                    value="0"
-                                    id="pool_no"
-                                  />
-                                  <label className="mb-0" htmlFor="pool_no">
-                                    No
-                                  </label>
+                                  {errors.park && (
+                                    <p className="error">
+                                      {errors.park?.message}
+                                    </p>
+                                  )}
+                                  {renderFieldError("park")}
                                 </div>
                               </div>
-                              {renderFieldError("pool")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Septic</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="septic"
-                                    value="1"
-                                    id="septic_yes"
+                            )}
+                            <div className="col-12 col-lg-12">
+                              <div className="form-group">
+                                <label>Location Flaws</label>
+                                <div className="form-group">
+                                  <MultiSelect
+                                    name="property_flaw"
+                                    options={locationFlawsOption}
+                                    placeholder="Select Location Flaws"
+                                    setMultiselectOption={setLocationFlawsValue}
                                   />
-                                  <label className="mb-0" htmlFor="septic_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="septic"
-                                    value="0"
-                                    id="septic_no"
-                                  />
-                                  <label className="mb-0" htmlFor="septic_no">
-                                    No
-                                  </label>
+                                  {renderFieldError("property_flaw")}
                                 </div>
                               </div>
-                              {renderFieldError("septic")}
                             </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Well</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="well"
-                                    value="1"
-                                    id="well_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="well_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="well"
-                                    value="0"
-                                    id="well_no"
-                                  />
-                                  <label className="mb-0" htmlFor="well_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("well")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>HOA</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="hoa"
-                                    value="1"
-                                    id="hoa_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="hoa_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="hoa"
-                                    value="0"
-                                    id="hoa_no"
-                                  />
-                                  <label className="mb-0" htmlFor="hoa_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("hoa")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Age restriction</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="age_restriction"
-                                    value="1"
-                                    id="age_restriction_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="age_restriction_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="age_restriction"
-                                    value="0"
-                                    id="age_restriction_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="age_restriction_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("age_restriction")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Rental Restriction</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="rental_restriction"
-                                    value="1"
-                                    id="rental_restriction_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="rental_restriction_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="rental_restriction"
-                                    value="0"
-                                    id="rental_restriction_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="rental_restriction_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("rental_restriction")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Post-Possession</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="post_possession"
-                                    value="1"
-                                    id="post_possession_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="post_possession_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="post_possession"
-                                    value="0"
-                                    id="post_possession_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="post_possession_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("post_possession")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Tenant Conveys</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="tenant"
-                                    value="1"
-                                    id="tenant_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="tenant_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="tenant"
-                                    value="0"
-                                    id="tenant_no"
-                                  />
-                                  <label className="mb-0" htmlFor="tenant_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("tenant")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Squatters</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="squatters"
-                                    value="1"
-                                    id="squatters_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="squatters_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="squatters"
-                                    value="0"
-                                    id="squatters_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="squatters_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("squatters")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Building Required</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="building_required"
-                                    value="1"
-                                    id="building_required_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="building_required_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="building_required"
-                                    value="0"
-                                    id="building_required_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="building_required_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("building_required")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Rebuild</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="rebuild"
-                                    value="1"
-                                    id="rebuild_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="rebuild_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="rebuild"
-                                    value="0"
-                                    id="rebuild_no"
-                                  />
-                                  <label className="mb-0" htmlFor="rebuild_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("rebuild")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Foundation Issues</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="foundation_issues"
-                                    value="1"
-                                    id="foundation_issues_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="foundation_issues_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="foundation_issues"
-                                    value="0"
-                                    id="foundation_issues_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="foundation_issues_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("foundation_issues")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Mold</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="mold"
-                                    value="1"
-                                    id="mold_yes"
-                                  />
-                                  <label className="mb-0" htmlFor="mold_yes">
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="mold"
-                                    value="0"
-                                    id="mold_no"
-                                  />
-                                  <label className="mb-0" htmlFor="mold_no">
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("mold")}
-                            </div>
-                            <div className="grid-template-col">
-                              <div className="radio-block-group">
-                                <label>Fire Damaged</label>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="fire_damaged"
-                                    value="1"
-                                    id="fire_damaged_yes"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="fire_damaged_yes"
-                                  >
-                                    Yes
-                                  </label>
-                                </div>
-                                <div className="label-container">
-                                  <input
-                                    type="radio"
-                                    name="fire_damaged"
-                                    value="0"
-                                    id="fire_damaged_no"
-                                  />
-                                  <label
-                                    className="mb-0"
-                                    htmlFor="fire_damaged_no"
-                                  >
-                                    No
-                                  </label>
-                                </div>
-                              </div>
-                              {renderFieldError("fire_damaged")}
-                            </div>
-                            {manufactureSelected && (
+                            <div className="column--grid">
                               <div className="grid-template-col">
                                 <div className="radio-block-group">
-                                  <label>Permanently affixed </label>
+                                  <label>Solar</label>
                                   <div className="label-container">
                                     <input
                                       type="radio"
-                                      name="permanent_affix"
+                                      name="solar"
                                       value="1"
-                                      id="permanent_affix_yes"
+                                      id="solar_yes"
+                                    />
+                                    <label className="mb-0" htmlFor="solar_yes">
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="solar"
+                                      value="0"
+                                      id="solar_no"
+                                    />
+                                    <label className="mb-0" htmlFor="solar_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("solar")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Pool</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="pool"
+                                      value="1"
+                                      id="pool_yes"
+                                    />
+                                    <label className="mb-0" htmlFor="pool_yes">
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="pool"
+                                      value="0"
+                                      id="pool_no"
+                                    />
+                                    <label className="mb-0" htmlFor="pool_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("pool")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Septic</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="septic"
+                                      value="1"
+                                      id="septic_yes"
                                     />
                                     <label
                                       className="mb-0"
-                                      htmlFor="permanent_affix_yes"
+                                      htmlFor="septic_yes"
                                     >
                                       Yes
                                     </label>
@@ -2680,86 +2303,504 @@ function AddBuyerDetails() {
                                   <div className="label-container">
                                     <input
                                       type="radio"
-                                      name="permanent_affix"
+                                      name="septic"
                                       value="0"
-                                      id="permanent_affix_no"
+                                      id="septic_no"
+                                    />
+                                    <label className="mb-0" htmlFor="septic_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("septic")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Well</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="well"
+                                      value="1"
+                                      id="well_yes"
+                                    />
+                                    <label className="mb-0" htmlFor="well_yes">
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="well"
+                                      value="0"
+                                      id="well_no"
+                                    />
+                                    <label className="mb-0" htmlFor="well_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("well")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>HOA</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="hoa"
+                                      value="1"
+                                      id="hoa_yes"
+                                    />
+                                    <label className="mb-0" htmlFor="hoa_yes">
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="hoa"
+                                      value="0"
+                                      id="hoa_no"
+                                    />
+                                    <label className="mb-0" htmlFor="hoa_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("hoa")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Age restriction</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="age_restriction"
+                                      value="1"
+                                      id="age_restriction_yes"
                                     />
                                     <label
                                       className="mb-0"
-                                      htmlFor="permanent_affix_no"
+                                      htmlFor="age_restriction_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="age_restriction"
+                                      value="0"
+                                      id="age_restriction_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="age_restriction_no"
                                     >
                                       No
                                     </label>
                                   </div>
                                 </div>
-                                {renderFieldError("permanent_affix")}
+                                {renderFieldError("age_restriction")}
                               </div>
-                            )}
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Rental Restriction</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="rental_restriction"
+                                      value="1"
+                                      id="rental_restriction_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="rental_restriction_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="rental_restriction"
+                                      value="0"
+                                      id="rental_restriction_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="rental_restriction_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("rental_restriction")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Post-Possession</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="post_possession"
+                                      value="1"
+                                      id="post_possession_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="post_possession_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="post_possession"
+                                      value="0"
+                                      id="post_possession_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="post_possession_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("post_possession")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Tenant Conveys</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="tenant"
+                                      value="1"
+                                      id="tenant_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="tenant_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="tenant"
+                                      value="0"
+                                      id="tenant_no"
+                                    />
+                                    <label className="mb-0" htmlFor="tenant_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("tenant")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Squatters</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="squatters"
+                                      value="1"
+                                      id="squatters_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="squatters_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="squatters"
+                                      value="0"
+                                      id="squatters_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="squatters_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("squatters")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Building Required</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="building_required"
+                                      value="1"
+                                      id="building_required_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="building_required_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="building_required"
+                                      value="0"
+                                      id="building_required_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="building_required_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("building_required")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Rebuild</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="rebuild"
+                                      value="1"
+                                      id="rebuild_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="rebuild_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="rebuild"
+                                      value="0"
+                                      id="rebuild_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="rebuild_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("rebuild")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Foundation Issues</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="foundation_issues"
+                                      value="1"
+                                      id="foundation_issues_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="foundation_issues_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="foundation_issues"
+                                      value="0"
+                                      id="foundation_issues_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="foundation_issues_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("foundation_issues")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Mold</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="mold"
+                                      value="1"
+                                      id="mold_yes"
+                                    />
+                                    <label className="mb-0" htmlFor="mold_yes">
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="mold"
+                                      value="0"
+                                      id="mold_no"
+                                    />
+                                    <label className="mb-0" htmlFor="mold_no">
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("mold")}
+                              </div>
+                              <div className="grid-template-col">
+                                <div className="radio-block-group">
+                                  <label>Fire Damaged</label>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="fire_damaged"
+                                      value="1"
+                                      id="fire_damaged_yes"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="fire_damaged_yes"
+                                    >
+                                      Yes
+                                    </label>
+                                  </div>
+                                  <div className="label-container">
+                                    <input
+                                      type="radio"
+                                      name="fire_damaged"
+                                      value="0"
+                                      id="fire_damaged_no"
+                                    />
+                                    <label
+                                      className="mb-0"
+                                      htmlFor="fire_damaged_no"
+                                    >
+                                      No
+                                    </label>
+                                  </div>
+                                </div>
+                                {renderFieldError("fire_damaged")}
+                              </div>
+                              {manufactureSelected && (
+                                <div className="grid-template-col">
+                                  <div className="radio-block-group">
+                                    <label>Permanently affixed </label>
+                                    <div className="label-container">
+                                      <input
+                                        type="radio"
+                                        name="permanent_affix"
+                                        value="1"
+                                        id="permanent_affix_yes"
+                                      />
+                                      <label
+                                        className="mb-0"
+                                        htmlFor="permanent_affix_yes"
+                                      >
+                                        Yes
+                                      </label>
+                                    </div>
+                                    <div className="label-container">
+                                      <input
+                                        type="radio"
+                                        name="permanent_affix"
+                                        value="0"
+                                        id="permanent_affix_no"
+                                      />
+                                      <label
+                                        className="mb-0"
+                                        htmlFor="permanent_affix_no"
+                                      >
+                                        No
+                                      </label>
+                                    </div>
+                                  </div>
+                                  {renderFieldError("permanent_affix")}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="submit-btn">
+                            <button
+                              type="submit"
+                              className="btn btn-fill"
+                              disabled={loading ? "disabled" : ""}
+                            >
+                              Submit Now! {loading ? <MiniLoader /> : ""}{" "}
+                            </button>
                           </div>
                         </div>
-
-                        <div className="submit-btn">
-                          <button
-                            type="submit"
-                            className="btn btn-fill"
-                            disabled={loading ? "disabled" : ""}
-                          >
-                            Submit Now! {loading ? <MiniLoader /> : ""}{" "}
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-                <div className="col-12 col-lg-4 w-30">
-                  <UploadMultipleBuyers />
-                  {isActiveVideo ? (
-                    <div className="watch-video">
-                      <p>{videoTitle}</p>
-                      <a onClick={handleOpenModal} className="title">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                            stroke="#121639"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M10 8L16 12L10 16V8Z"
-                            stroke="#121639"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        Watch The Video!
-                      </a>
+                      </form>
                     </div>
-                  ) : (
-                    ""
-                  )}
+                  </div>
+                  <div className="col-12 col-lg-4 w-30">
+                    <UploadMultipleBuyers />
+                    {isActiveVideo ? (
+                      <div className="watch-video">
+                        <p>{videoTitle}</p>
+                        <a onClick={handleOpenModal} className="title">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                              stroke="#121639"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="M10 8L16 12L10 16V8Z"
+                              stroke="#121639"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          Watch The Video!
+                        </a>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <WatchVideo
-            isLoader={isLoader}
-            videoUrl={videoUrl}
-            videoSubTitle={videoSubTitle}
-            SetOpenVideoModal={SetOpenVideoModal}
-            openVideoModal={openVideoModal}
-          />
-
-          {/* modal box for video */}
-          {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <WatchVideo
+              isLoader={isLoader}
+              videoUrl={videoUrl}
+              videoSubTitle={videoSubTitle}
+              SetOpenVideoModal={SetOpenVideoModal}
+              openVideoModal={openVideoModal}
+            />
+            {/* modal box for video */}
+            {/* <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -2777,8 +2818,10 @@ function AddBuyerDetails() {
                         </div>
                     </div>
                 </div> */}
-        </section>
-      )}
+          </>
+        )}
+      </section>
+
       <Footer />
     </>
   );

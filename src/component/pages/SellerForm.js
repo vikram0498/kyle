@@ -559,158 +559,165 @@ const SellerForm = () => {
   return (
     <>
       <Header />
-      {isLoader ? (
-        <div className="loader" style={{ textAlign: "center" }}>
-          <img alt="" src="assets/images/loader.svg" />
-        </div>
-      ) : isFiltered ? (
-        <ResultPage setIsFiltered={setIsFiltered} />
-      ) : (
-        <section className="main-section position-relative pt-4 pb-120">
-          <div className="container position-relative">
-            <div className="back-block">
-              <Link to="/" className="back">
-                <svg
-                  width="16"
-                  height="12"
-                  viewBox="0 0 16 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 6H1"
-                    stroke="#0A2540"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5.9 11L1 6L5.9 1"
-                    stroke="#0A2540"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Back
-              </Link>
-            </div>
-            <div className="card-box">
-              <div className="row">
-                <div className="col-12 col-lg-12">
-                  <div className="card-box-inner">
-                    <h3>Buybox Search</h3>
-                    <form method="post" onSubmit={submitSearchBuyerForm}>
-                      <div className="card-box-blocks">
-                        <div className="row">
-                          <div className="col-12 col-lg-12">
-                            <div className="form-group">
-                              <label>
-                                Property Type<span>*</span>
-                              </label>
-                              <Select
-                                name="property_type"
-                                defaultValue=""
-                                options={propertyTypeOption}
-                                onChange={(item) =>
-                                  handlePropertyTypeChange(item)
-                                }
-                                className="select"
-                                isClearable={true}
-                                isSearchable={true}
-                                isDisabled={false}
-                                isLoading={false}
-                                value={propertyTypeValue}
-                                isRtl={false}
-                                placeholder="Select Property Type"
-                                closeMenuOnSelect={true}
-                              />
-                              {renderFieldError("property_type")}
+      <section className="main-section position-relative pt-4 pb-120">
+        {isLoader ? (
+          <div className="loader" style={{ textAlign: "center" }}>
+            <img alt="" src="assets/images/loader.svg" />
+          </div>
+        ) : isFiltered ? (
+          <ResultPage setIsFiltered={setIsFiltered} />
+        ) : (
+          <>
+            <div className="container position-relative">
+              <div className="back-block">
+                <Link to="/" className="back">
+                  <svg
+                    width="16"
+                    height="12"
+                    viewBox="0 0 16 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 6H1"
+                      stroke="#0A2540"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M5.9 11L1 6L5.9 1"
+                      stroke="#0A2540"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Back
+                </Link>
+              </div>
+              <div className="card-box">
+                <div className="row">
+                  <div className="col-12 col-lg-12">
+                    <div className="card-box-inner">
+                      <h3>Buybox Search</h3>
+                      <form method="post" onSubmit={submitSearchBuyerForm}>
+                        <div className="card-box-blocks">
+                          <div className="row">
+                            <div className="col-12 col-lg-12">
+                              <div className="form-group">
+                                <label>
+                                  Property Type<span>*</span>
+                                </label>
+                                <Select
+                                  name="property_type"
+                                  defaultValue=""
+                                  options={propertyTypeOption}
+                                  onChange={(item) =>
+                                    handlePropertyTypeChange(item)
+                                  }
+                                  className="select"
+                                  isClearable={true}
+                                  isSearchable={true}
+                                  isDisabled={false}
+                                  isLoading={false}
+                                  value={propertyTypeValue}
+                                  isRtl={false}
+                                  placeholder="Select Property Type"
+                                  closeMenuOnSelect={true}
+                                />
+                                {renderFieldError("property_type")}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {isSearchForm === 3 && (
-                          <CommercialRetail data={dataObj} />
-                        )}
-                        {isSearchForm === 4 && <Condo data={dataObj} />}
-                        {isSearchForm === 7 && <Land data={dataObj} />}
-                        {isSearchForm === 8 && <Manufactured data={dataObj} />}
-                        {isSearchForm === 10 && (
-                          <MultiFamilyCommercial data={dataObj} />
-                        )}
-                        {isSearchForm === 11 && (
-                          <MultiFamilyResidential data={dataObj} />
-                        )}
-                        {isSearchForm === 12 && <SingleFamily data={dataObj} />}
-                        {isSearchForm === 13 && <TownHouse data={dataObj} />}
-                        {isSearchForm === 14 && (
-                          <MobileHomePark data={dataObj} />
-                        )}
-                        {isSearchForm === 15 && <HotelMotel data={dataObj} />}
+                          {isSearchForm === 3 && (
+                            <CommercialRetail data={dataObj} />
+                          )}
+                          {isSearchForm === 4 && <Condo data={dataObj} />}
+                          {isSearchForm === 7 && <Land data={dataObj} />}
+                          {isSearchForm === 8 && (
+                            <Manufactured data={dataObj} />
+                          )}
+                          {isSearchForm === 10 && (
+                            <MultiFamilyCommercial data={dataObj} />
+                          )}
+                          {isSearchForm === 11 && (
+                            <MultiFamilyResidential data={dataObj} />
+                          )}
+                          {isSearchForm === 12 && (
+                            <SingleFamily data={dataObj} />
+                          )}
+                          {isSearchForm === 13 && <TownHouse data={dataObj} />}
+                          {isSearchForm === 14 && (
+                            <MobileHomePark data={dataObj} />
+                          )}
+                          {isSearchForm === 15 && <HotelMotel data={dataObj} />}
 
-                        <div className="submit-btn">
-                          <button
-                            type="submit"
-                            className="btn btn-fill"
-                            disabled={loading ? "disabled" : ""}
-                          >
-                            Submit Now! {loading ? <MiniLoader /> : ""}{" "}
-                          </button>
+                          <div className="submit-btn">
+                            <button
+                              type="submit"
+                              className="btn btn-fill"
+                              disabled={loading ? "disabled" : ""}
+                            >
+                              Submit Now! {loading ? <MiniLoader /> : ""}{" "}
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* modal box for video */}
-          <div
-            className="modal fade"
-            id="exampleModal"
-            tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
-                    Watch The Video
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  {isLoader ? (
-                    <div className="video-loader">
-                      {" "}
-                      <img alt="" src="/assets/images/data-loader.svg" />
-                    </div>
-                  ) : (
-                    <div className="video">
-                      <video
-                        width="460"
-                        height="240"
-                        src={videoUrl}
-                        loop
-                        autoPlay
-                        muted
-                        controls
-                      />
-                    </div>
-                  )}
+            {/* modal box for video */}
+            <div
+              className="modal fade"
+              id="exampleModal"
+              tabIndex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">
+                      Watch The Video
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    {isLoader ? (
+                      <div className="video-loader">
+                        {" "}
+                        <img alt="" src="/assets/images/data-loader.svg" />
+                      </div>
+                    ) : (
+                      <div className="video">
+                        <video
+                          width="460"
+                          height="240"
+                          src={videoUrl}
+                          loop
+                          autoPlay
+                          muted
+                          controls
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          </>
+        )}
+      </section>
+
       <Footer />
     </>
   );

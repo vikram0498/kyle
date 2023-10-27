@@ -4673,7 +4673,11 @@ body.nonscroll {
 
   right: 2px;
 
-  bottom: 1px;
+  bottom: 2px;
+}
+span.sun-icon {
+  position: relative;
+  bottom: 2px;
 }
 
 .checkbox:checked + .checkbox-label span.moon.togglecontent {
@@ -5056,7 +5060,7 @@ span.moon.togglecontent {
   min-height: 100%;
 }
 
-.css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+.svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiStepIcon-root {
   color: #35eb0a !important;
 }
 
@@ -5142,7 +5146,16 @@ button.next-btn-stepper:hover {
   margin-left: auto;
   padding: 13px;
 }
-.dark .MuiStepLabel-label {
-  color: rgb(255 255 255 / 87%) !important;
-  font-weight: 500;
+
+.Mui-completed svg {
+  color: green !important;
+}
+li.profile-status {
+  cursor: pointer;
+}
+span.markedChecked {
+  color: #19b400;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 22px;
 }

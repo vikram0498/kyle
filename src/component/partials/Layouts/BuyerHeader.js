@@ -1,10 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import DarkMode from "./DarkMode";
 
 function BuyerHeader() {
-  const { setLogout } = useAuth();
+  const navigate = useNavigate();
+  const { setLogout, getTokenData, getLocalStorageUserdata } = useAuth();
+  const [userDetails, setUserDetails] = useState(null);
+  useEffect(() => {
+    if (getTokenData().access_token !== null) {
+      let userData = getLocalStorageUserdata();
+      if (userData !== null) {
+        if (userData.role === 2) {
+          navigate("/");
+        }
+        setUserDetails(userData);
+      }
+    }
+  }, []);
   return (
     <>
       <header className="dashboard-header">
@@ -51,14 +64,25 @@ function BuyerHeader() {
                     <div className="dropdown-data">
                       <div className="img-user">
                         <img
-                          src="/assets/images/avtar.png"
-                          className="img-fluid"
+                          src={
+                            userDetails !== null &&
+                            userDetails.profile_image !== ""
+                              ? userDetails.profile_image
+                              : "./assets/images/avtar.png"
+                          }
+                          className="img-fluid user-profile"
                           alt=""
                         />
                       </div>
                       <div className="welcome-user">
                         <span className="welcome">welcome</span>
-                        <span className="user-name-title">John Thomsan</span>
+                        <span className="user-name-title">
+                          {userDetails !== null
+                            ? userDetails.first_name +
+                              " " +
+                              userDetails.last_name
+                            : ""}
+                        </span>{" "}
                       </div>
                     </div>
                     <span className="arrow-icon">
@@ -93,7 +117,7 @@ function BuyerHeader() {
                           My Profile
                         </Link>
                       </li>
-                      <li className="active">
+                      {/* <li className="active">
                         <Link to="/my-buyers" className="dropdown-item">
                           <img
                             src="/assets/images/booksaved.svg"
@@ -101,7 +125,7 @@ function BuyerHeader() {
                           />
                           My Buyers Data
                         </Link>
-                      </li>
+                      </li> */}
                       <li>
                         <Link to="/support" className="dropdown-item">
                           <img

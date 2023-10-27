@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
                             Back 
                         </Link> : ''
                     } */}
-          <div className="row align-items-center g-0 h-100vh">
+          <div className="row align-items-center g-0">
             <div className="col-12 col-lg-6">
               <div className="dark-container">
                 <DarkMode />

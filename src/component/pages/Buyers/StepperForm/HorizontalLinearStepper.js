@@ -34,7 +34,7 @@ const HorizontalLinearStepper = () => {
   const [phoneNumber, setphoneNumber] = React.useState("");
   const { getTokenData, setLogout } = useAuth();
   const { setErrors, renderFieldError } = useFormError();
-
+  const [loader, setLoader] = React.useState(true);
   const {
     register,
     handleSubmit,
@@ -157,6 +157,7 @@ const HorizontalLinearStepper = () => {
     }
   };
   const stepperForm = async (formObject) => {
+    setMiniLoader(true);
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",
@@ -171,14 +172,21 @@ const HorizontalLinearStepper = () => {
         headers: headers,
       }
     );
-
+    console.log(response.data);
     if (response.data.status) {
+      if (parseInt(response.data.current_step) === 5) {
+        let url = response.data.session.url;
+        console.log(url, url);
+        window.location.href = url;
+        return false;
+      }
       setIsOtpVerify(true);
       setActiveStep(parseInt(response.data.current_step));
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
+    setMiniLoader(false);
   };
 
   const getLastFormStep = async () => {
@@ -192,9 +200,11 @@ const HorizontalLinearStepper = () => {
       let response = await axios.get(apiUrl + "last-form-step", {
         headers: headers,
       });
+      setLoader(false);
       setActiveStep(response.data.lastStepForm);
     } catch (error) {
       if (error.response) {
+        setLoader(false);
         if (error.response.status === 401) {
           setLogout();
         }
@@ -216,108 +226,118 @@ const HorizontalLinearStepper = () => {
     getLastFormStep();
   }, []);
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            <SuccessfullySubmiitedPage />
-            {/* All steps completed - you&apos;re finished */}
-          </Typography>
-          {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box> */}
-        </React.Fragment>
+    <div className="main-section position-relative pt-4 pb-120">
+      {loader ? (
+        <div className="loader" style={{ textAlign: "center" }}>
+          <img src="assets/images/loader.svg" />
+        </div>
       ) : (
-        <React.Fragment>
-          {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
-          <form method="post" onSubmit={handleSubmit(stepperFormSubmit)}>
-            <div className="profile-varification">
-              {activeStep === 0 && (
-                <PhoneVerification
-                  register={register}
-                  errors={errors}
-                  renderFieldError={renderFieldError}
-                  isOtpSent={isOtpSent}
-                  sendOtp={sendOtp}
-                  setphoneNumber={setphoneNumber}
-                  phoneNumber={phoneNumber}
-                  handleSubmit={handleSubmit}
-                  isOtpVerify={isOtpVerify}
-                  miniLoader={miniLoader}
-                />
-              )}
-              {activeStep === 1 && (
-                <DriverLicense
-                  register={register}
-                  errors={errors}
-                  renderFieldError={renderFieldError}
-                />
-              )}
-              {activeStep === 2 && (
-                <ProofOfFund
-                  register={register}
-                  errors={errors}
-                  renderFieldError={renderFieldError}
-                />
-              )}
-              {activeStep === 3 && (
-                <LLCVerification
-                  register={register}
-                  errors={errors}
-                  renderFieldError={renderFieldError}
-                />
-              )}
-              {activeStep === 4 && <ApplicationProcess />}
-            </div>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              {/* <Button
-                className="back-btn-stepper"
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button> */}
-              <Box sx={{ flex: "1 1 auto" }} />
-              {/* {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )} */}
+        <Box sx={{ width: "100%" }}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const stepProps = {};
+              const labelProps = {};
+              if (isStepOptional(index)) {
+                labelProps.optional = (
+                  <Typography variant="caption">Optional</Typography>
+                );
+              }
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
+              return (
+                <Step key={label} {...stepProps}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <React.Fragment>
+              <Typography sx={{ mt: 2, mb: 1 }}>
+                <SuccessfullySubmiitedPage />
+                {/* All steps completed - you&apos;re finished */}
+              </Typography>
+              {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+         <Box sx={{ flex: "1 1 auto" }} />
+         <Button onClick={handleReset}>Reset</Button>
+       </Box> */}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
+              <form method="post" onSubmit={handleSubmit(stepperFormSubmit)}>
+                <div className="profile-varification">
+                  {activeStep === 0 && (
+                    <PhoneVerification
+                      register={register}
+                      errors={errors}
+                      renderFieldError={renderFieldError}
+                      isOtpSent={isOtpSent}
+                      sendOtp={sendOtp}
+                      setphoneNumber={setphoneNumber}
+                      phoneNumber={phoneNumber}
+                      handleSubmit={handleSubmit}
+                      isOtpVerify={isOtpVerify}
+                      miniLoader={miniLoader}
+                    />
+                  )}
+                  {activeStep === 1 && (
+                    <DriverLicense
+                      register={register}
+                      errors={errors}
+                      renderFieldError={renderFieldError}
+                    />
+                  )}
+                  {activeStep === 2 && (
+                    <ProofOfFund
+                      register={register}
+                      errors={errors}
+                      renderFieldError={renderFieldError}
+                    />
+                  )}
+                  {activeStep === 3 && (
+                    <LLCVerification
+                      register={register}
+                      errors={errors}
+                      renderFieldError={renderFieldError}
+                    />
+                  )}
+                  {activeStep === 4 && (
+                    <ApplicationProcess miniLoader={miniLoader} />
+                  )}
+                </div>
+                {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+           <Button
+             className="back-btn-stepper"
+             color="inherit"
+             disabled={activeStep === 0}
+             onClick={handleBack}
+             sx={{ mr: 1 }}
+           >
+             Back
+           </Button>
+           <Box sx={{ flex: "1 1 auto" }} />
+           {isStepOptional(activeStep) && (
+             <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+               Skip
+             </Button>
+           )}
 
-              <Button
-                className="next-btn-stepper"
-                type="button"
-                onClick={handleSubmit(handleNext)}
-              >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </Box>
-          </form>
-        </React.Fragment>
+           <Button
+             className="next-btn-stepper"
+             type="button"
+             onClick={handleSubmit(handleNext)}
+           >
+             {activeStep === steps.length - 1 ? "Finish" : "Next"}
+           </Button>
+         </Box> */}
+              </form>
+            </React.Fragment>
+          )}
+        </Box>
       )}
-    </Box>
+    </div>
   );
 };
 export default HorizontalLinearStepper;

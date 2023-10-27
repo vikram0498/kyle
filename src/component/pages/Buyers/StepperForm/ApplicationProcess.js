@@ -1,6 +1,8 @@
 import React from "react";
+import ButtonLoader from "../../../partials/MiniLoader";
 
-const ApplicationProcess = () => {
+const ApplicationProcess = ({ miniLoader }) => {
+  console.log(miniLoader, "miniLoader");
   return (
     <>
       <fieldset>
@@ -15,7 +17,7 @@ const ApplicationProcess = () => {
             </p>
             <div className="process-payment-btn">
               <button type="submit" className="btn btn-fill">
-                Process Payment
+                Process Payment {miniLoader ? <ButtonLoader /> : ""}
               </button>
             </div>
           </div>
