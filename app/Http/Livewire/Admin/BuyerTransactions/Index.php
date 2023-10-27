@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Transactions;
+namespace App\Http\Livewire\Admin\BuyerTransactions;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class Index extends Component
 {
@@ -15,12 +16,12 @@ class Index extends Component
     ];
 
     public function mount(){
-        abort_if(Gate::denies('transaction_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('buyer_transaction_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
     
     public function render()
     {
-        return view('livewire.admin.transactions.index');
+        return view('livewire.admin.buyer-transactions.index');
     }
     
     public function show($id){

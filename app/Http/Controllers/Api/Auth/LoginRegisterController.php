@@ -21,7 +21,7 @@ class LoginRegisterController extends Controller
             'last_name'                 => 'required',
             // 'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
-            'email'                     => 'required|email|unique:users,email,NULL,id',
+            'email'                     => 'required|email:dns|unique:users,email,NULL,id',
             'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             // 'address'                   => 'required',
             'company_name'              => 'required',
@@ -77,7 +77,7 @@ class LoginRegisterController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email'             => 'required|email',
+            'email'             => 'required|email:dns',
             'password'          => 'required|min:8'
         ]);
         if($validator->fails()){

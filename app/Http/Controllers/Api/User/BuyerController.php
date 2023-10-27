@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\BuyerPlan;
 use App\Models\User;
 use App\Models\UserBuyerLikes;
 use App\Models\PurchasedBuyer;
@@ -277,6 +278,8 @@ class BuyerController extends Controller
                 'phone'      => $buyer->phone ?? null,
                 'profile_image' => $buyer->profile_image_url ?? null,
                 'is_active'  => $buyer->is_active ?? 0,
+                'buyer_search_status'=>  $buyer->buyerDetail->status ?? 0,
+                'contact_value'=>  $buyer->buyerDetail->contact_preferance,
             ];
 
             $buyer_details = collect($buyer_details);
@@ -508,19 +511,30 @@ class BuyerController extends Controller
 
             }
             
+            $authUser = User::where('id',$authUserId)->first();
+            $userData          = [
+                'id'           => $authUser->id,
+                'first_name'   => $authUser->first_name ?? '',
+                'last_name'    => $authUser->last_name ?? '',
+                'profile_image'=> $authUser->profile_image_url ?? '',
+                'role'=> $authUser->roles()->first()->id ?? '',
+                'is_verified'  => $authUser->is_buyer_verified ?? false,
+                'total_buyer_uploaded' => $authUser->buyers()->count(),
+            ];
 
             DB::commit();
             
             //Success Response Send
             $responseData = [
                 'status'            => true,
+                'userData'          => $userData,
                 'message'           => trans('messages.edit_success_message'),
             ];
             return response()->json($responseData, 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
-             dd($e->getMessage().'->'.$e->getLine());
+            //  dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response   
             $responseData = [
@@ -550,9 +564,13 @@ class BuyerController extends Controller
             $perPage = 10;
             $userId = auth()->user()->id;
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
-            $buyers = Buyer::select('id','first_name','last_name','email','phone')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->orderBy('created_by','desc')->paginate($perPage);
+            $buyers = Buyer::select('id')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->orderBy('created_by','desc')->paginate($perPage);
         
             foreach ($buyers as $buyer) {
+                $buyer->first_name = $buyer->userDetail->first_name;
+                $buyer->last_name = $buyer->userDetail->last_name;
+                $buyer->phone = $buyer->userDetail->phone;
+                $buyer->email = $buyer->userDetail->email;
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
@@ -916,7 +934,7 @@ class BuyerController extends Controller
             $radioValues = [0,1];
             $userId = auth()->user()->id;
             
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            $buyers = Buyer::query()->with(['userDetail'])->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             $buyers = $buyers->orderBy('created_by','desc')->paginate(20);
 
@@ -930,9 +948,26 @@ class BuyerController extends Controller
                     $disliked=$getrecentaction->disliked == 1 ? true : false;
                 }
                 
-                $name = $buyer->first_name.' '.$buyer->last_name;
-                $buyer->name =  $name;
+                //Buyer login
+                if(auth()->user()->is_buyer){
+                    $buyer->name =  $buyer->userDetail->name;
 
+                    $buyer->first_name = $buyer->userDetail->first_name;
+                    $buyer->last_name = $buyer->userDetail->last_name;
+                    $buyer->email = $buyer->userDetail->email;
+                    $buyer->phone = $buyer->userDetail->phone;    
+                }
+
+                //Seller login
+                if(auth()->user()->is_seller){
+                    $buyer->name =  $buyer->seller->name;
+
+                    $buyer->first_name = $buyer->seller->first_name;
+                    $buyer->last_name = $buyer->seller->last_name;
+                    $buyer->email = $buyer->seller->email;
+                    $buyer->phone = $buyer->seller->phone;  
+                }
+               
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
 
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
@@ -958,7 +993,7 @@ class BuyerController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message'),
+                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 400);
         }
@@ -1040,5 +1075,39 @@ class BuyerController extends Controller
             return response()->json($responseData, 400);
         }
 
+    }
+
+    public function getBuyerPlans(){
+        try{
+
+            $buyerPlans = BuyerPlan::where('status',1)->get();
+
+            $buyerPlansList = [];
+            foreach($buyerPlans as $key=>$plan){
+                $buyerPlansList[$key]['title']        = $plan->title;
+                $buyerPlansList[$key]['type']         = $plan->type;
+                $buyerPlansList[$key]['position']     = $plan->position;
+                $buyerPlansList[$key]['amount']       = $plan->amount;
+                $buyerPlansList[$key]['description']  = strip_tags($plan->description);
+                $buyerPlansList[$key]['image_url']    = $plan->image_url;
+            }
+
+            //Return Success Response
+            $responseData = [
+                'status'       => true,
+                'buyer_plans'  => $buyerPlansList,
+            ];
+            return response()->json($responseData, 200);
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+
+        }
     }
 }

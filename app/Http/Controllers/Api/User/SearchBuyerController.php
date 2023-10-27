@@ -152,7 +152,7 @@ class SearchBuyerController extends Controller
            
             $userId = auth()->user()->id;
             
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','contact_preferance','created_by');
+            $buyers = Buyer::query()->select('id','user_id','contact_preferance','created_by');
             $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
@@ -604,7 +604,14 @@ class SearchBuyerController extends Controller
                 $liked = false;
                 $disliked = false;
                 
-                $name = $buyer->first_name.' '.$buyer->last_name;
+                if(auth()->user()->is_buyer){
+                    $name = $buyer->userDetail->name;
+                }
+
+                if(auth()->user()->is_seller){
+                    $name = $buyer->seller->name;
+                }
+
                 $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',auth()->user()->id)->where('buyer_id',$buyer->id)->first();
                 if($getrecentaction){
                     $liked = $getrecentaction->liked == 1 ? true : false;
@@ -613,7 +620,22 @@ class SearchBuyerController extends Controller
                 
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers'){
-                        $buyer->name =  $name;
+                        if(auth()->user()->is_buyer){
+                            $buyer->name =  $name;
+                            $buyer->first_name = $buyer->userDetail->first_name;
+                            $buyer->last_name = $buyer->userDetail->last_name;
+                            $buyer->email = $buyer->userDetail->email;
+                            $buyer->phone = $buyer->userDetail->phone;
+                        }
+
+                        if(auth()->user()->is_seller){
+                            $buyer->name =  $name;
+                            $buyer->first_name = $buyer->seller->first_name;
+                            $buyer->last_name = $buyer->seller->last_name;
+                            $buyer->email = $buyer->seller->email;
+                            $buyer->phone = $buyer->seller->phone;
+                        }
+
                         $buyer->contact_preferance_id = $buyer->contact_preferance;
                         $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
@@ -626,11 +648,21 @@ class SearchBuyerController extends Controller
 
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
-                        $buyer->first_name  =  substr($buyer->first_name, 0, 1).str_repeat("X", strlen($buyer->first_name)-1);
-                        $buyer->last_name  =  substr($buyer->last_name, 0, 1).str_repeat("X", strlen($buyer->last_name)-1);
-                        $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
-                        $buyer->email =  substr($buyer->email, 0, 3).str_repeat("X", strlen($buyer->email)-3);
-                        $buyer->phone =  substr($buyer->phone, 0, 3).str_repeat("X", strlen($buyer->phone)-3);
+                        if(auth()->user()->is_buyer){
+                            $buyer->first_name  =  substr($buyer->userDetail->first_name, 0, 1).str_repeat("X", strlen($buyer->userDetail->first_name)-1);
+                            $buyer->last_name  =  substr($buyer->userDetail->last_name, 0, 1).str_repeat("X", strlen($buyer->userDetail->last_name)-1);
+                            $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                            $buyer->email =  substr($buyer->userDetail->email, 0, 3).str_repeat("X", strlen($buyer->userDetail->email)-3);
+                            $buyer->phone =  substr($buyer->userDetail->phone, 0, 3).str_repeat("X", strlen($buyer->userDetail->phone)-3);
+                        }
+
+                        if(auth()->user()->is_seller){
+                            $buyer->first_name  =  substr($buyer->seller->first_name, 0, 1).str_repeat("X", strlen($buyer->seller->first_name)-1);
+                            $buyer->last_name  =  substr($buyer->seller->last_name, 0, 1).str_repeat("X", strlen($buyer->seller->last_name)-1);
+                            $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                            $buyer->email =  substr($buyer->seller->email, 0, 3).str_repeat("X", strlen($buyer->seller->email)-3);
+                            $buyer->phone =  substr($buyer->seller->phone, 0, 3).str_repeat("X", strlen($buyer->seller->phone)-3);
+                        }
 
                         $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         
@@ -685,7 +717,7 @@ class SearchBuyerController extends Controller
             
             if($lastSearchLog){
 
-            $buyers = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            $buyers = Buyer::query()->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
             if($lastSearchLog->property_type){
@@ -967,8 +999,25 @@ class SearchBuyerController extends Controller
                     $disliked=$getrecentaction->disliked == 1 ? true : false;
                 }
                 
-                $name = $buyer->first_name.' '.$buyer->last_name;
-                $buyer->name =  $name;
+                if(auth()->user()->is_buyer){
+                    $name = $buyer->userDetail->first_name.' '.$buyer->userDetail->first_name;
+                    $buyer->name =  $name;
+
+                    $buyer->first_name = $buyer->userDetail->first_name;
+                    $buyer->last_name = $buyer->userDetail->last_name;
+                    $buyer->email = $buyer->userDetail->email;
+                    $buyer->phone = $buyer->userDetail->phone;
+                }
+
+                if(auth()->user()->is_seller){
+                    $name = $buyer->seller->first_name.' '.$buyer->seller->first_name;
+                    $buyer->name =  $name;
+
+                    $buyer->first_name = $buyer->seller->first_name;
+                    $buyer->last_name = $buyer->seller->last_name;
+                    $buyer->email = $buyer->seller->email;
+                    $buyer->phone = $buyer->seller->phone;
+                }
 
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
 

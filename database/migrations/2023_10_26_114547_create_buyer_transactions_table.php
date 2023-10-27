@@ -18,11 +18,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->json('user_json')->nullable();
-            $table->unsignedBigInteger('plan_id');
+            $table->unsignedBigInteger('plan_id')->nullable();
             $table->json('plan_json')->nullable();
             $table->string('payment_intent_id')->nullable();
             $table->decimal('amount', 11, 2);
-            $table->string('currency');
+            $table->string('currency')->nullable();
             $table->string('payment_method')->nullable(); // Credit card, bank transfer, etc.
             $table->enum('payment_type',['debit','credit'])->nullable(); 
             $table->json('payment_json')->nullable();

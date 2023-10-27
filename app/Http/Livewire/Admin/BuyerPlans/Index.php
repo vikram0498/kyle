@@ -30,7 +30,7 @@ class Index extends Component
     public $plan_id =null;
 
     protected $listeners = [
-        'show', 'edit', 'confirmedToggleAction','deleteConfirm'
+        'show', 'edit', 'cancel','confirmedToggleAction','deleteConfirm'
     ];
 
     public function mount(){
@@ -76,6 +76,11 @@ class Index extends Component
             'interval' => $this->type == 'monthly' ? 'month' : 'year',
             'product' => [
                 'name' => $this->title,
+            ],
+            'nickname' => $this->title, // Set a nickname for your plan
+            'metadata' => [
+                'plan_type'=>'buyer plan',
+                'description' => strip_tags($this->description), // Set a description for your plan
             ],
         ]);
 

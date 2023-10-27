@@ -19,5 +19,9 @@ class Show extends Component
     {
         return view('livewire.admin.buyer-plans.show');
     }
+
+    public function cancel(){
+        $this->emit('cancel');
+    }
 }
 

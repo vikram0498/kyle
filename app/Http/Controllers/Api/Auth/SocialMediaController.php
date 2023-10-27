@@ -37,18 +37,22 @@ class SocialMediaController extends Controller
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                    //Success Response Send
                     $responseData = [
-                        'status'        => true,
+                        'status'            => true,
+                        'message'           => 'You have logged in successfully!',
                         'userData'          => [
                             'first_name'   => $isUser->first_name ?? '',
                             'last_name'    => $isUser->last_name ?? '',
                             'profile_image'=> $isUser->profile_image_url ?? '',
+                            'role'=> $isUser->roles()->first()->id ?? '',
                             'level_type'   => $isUser->level_type,
                             'credit_limit' => $isUser->credit_limit,
+                            'is_verified'  => $isUser->is_buyer_verified ?? false,
                             'total_buyer_uploaded' => $isUser->buyers()->count(),
                         ],
-                        'message'       => 'Login successfully!',
-                        'access_token'  => $accessToken
+                        'remember_me_token' => $isUser->remember_token,
+                        'access_token'      => $accessToken
                     ];
                     return response()->json($responseData, 200);
                 }else{
@@ -78,18 +82,23 @@ class SocialMediaController extends Controller
                 Auth::login($newUser);
 
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+
+                //Success Response Send
                 $responseData = [
-                    'status'        => true,
+                    'status'            => true,
+                    'message'           => 'You have logged in successfully!',
                     'userData'          => [
                         'first_name'   => $newUser->first_name ?? '',
                         'last_name'    => $newUser->last_name ?? '',
                         'profile_image'=> $newUser->profile_image_url ?? '',
+                        'role'=> $newUser->roles()->first()->id ?? '',
                         'level_type'   => $newUser->level_type,
                         'credit_limit' => $newUser->credit_limit,
+                        'is_verified'  => $newUser->is_buyer_verified ?? false,
                         'total_buyer_uploaded' => $newUser->buyers()->count(),
                     ],
-                    'message'       => 'Login successfully!',
-                    'access_token'  => $accessToken
+                    'remember_me_token' => $newUser->remember_token,
+                    'access_token'      => $accessToken
                 ];
                 return response()->json($responseData, 200);
             }

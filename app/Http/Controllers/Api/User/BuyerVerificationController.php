@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use Stripe\Stripe;
+use Stripe\Event;
+use Stripe\Customer;
+use Stripe\Checkout\Session as StripeSession;
+
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -42,13 +47,20 @@ class BuyerVerificationController extends Controller
     private function phoneVerification($request){
         $userId = auth()->user()->id;
 
-        $rules['phone'] = ['required', 'numeric','not_in:-','unique:users,phone,'.$userId.',id,deleted_at,NULL'];
-        $rules['otp1'] = ['required','numeric','digits:1','not_in:-'];
-        $rules['otp2'] = ['required','numeric','digits:1','not_in:-'];
-        $rules['otp3'] = ['required','numeric','digits:1','not_in:-'];
-        $rules['otp4'] = ['required','numeric','digits:1','not_in:-'];
+        $combinedOTP = $request->otp1 . $request->otp2 . $request->otp3 . $request->otp4;
 
-        $request->validate($rules);
+        $rules['phone'] = ['required', 'numeric','not_in:-','unique:users,phone,'.$userId.',id,deleted_at,NULL'];
+        $rules['otp'] = ['required','numeric','digits:4','not_in:-'];
+
+        // $rules['otp1'] = ['required','numeric','digits:1','not_in:-'];
+        // $rules['otp2'] = ['required','numeric','digits:1','not_in:-'];
+        // $rules['otp3'] = ['required','numeric','digits:1','not_in:-'];
+        // $rules['otp4'] = ['required','numeric','digits:1','not_in:-'];
+       
+        $request->validate($rules,[
+            'otp.required' => 'Please enter the OTP.',
+            'otp.digits' => 'The OTP must be exactly 4 digits.',
+        ],[]);
 
         DB::beginTransaction();
         try {
@@ -97,8 +109,8 @@ class BuyerVerificationController extends Controller
          * Rules
          * image|mimes:jpeg,png,gif|max:2048|dimensions:min_width=800,min_height=600
          */
-        $rules['driver_license_front_image'] = ['required','image','mimes:jpeg,jpg','max:2048'];
-        $rules['driver_license_back_image']  = ['required','image','mimes:jpeg,jpg','max:2048'];
+        $rules['driver_license_front_image'] = ['required','image','mimes:jpeg,jpg,png','max:2048'];
+        $rules['driver_license_back_image']  = ['required','image','mimes:jpeg,jpg,png','max:2048'];
 
         $customMessage = [];
 
@@ -225,8 +237,8 @@ class BuyerVerificationController extends Controller
          * Rules
          * image|mimes:jpeg,png,gif|max:2048|dimensions:min_width=800,min_height=600
         */
-        $rules['llc_front_image'] = ['required','image','mimes:jpeg,jpg','max:2048'];
-        $rules['llc_back_image']  = ['required','image','mimes:jpeg,jpg','max:2048'];
+        $rules['llc_front_image'] = ['required','image','mimes:jpeg,jpg,png','max:2048'];
+        $rules['llc_back_image']  = ['required','image','mimes:jpeg,jpg,png','max:2048'];
 
         $customMessage = [];
 
@@ -290,24 +302,63 @@ class BuyerVerificationController extends Controller
         }
     }
 
-    private function applicationProcess(){
+    private function applicationProcess($request){
         DB::beginTransaction();
         try {
             $userId = auth()->user()->id;
-            $user = User::where('id',$userId)->first();
-            if($user){
-                $user->buyerVerification->is_application_process = 1;
-                $user->save();
+            $authUser = User::where('id',$userId)->first();
+            if($authUser){
+                // $authUser->buyerVerification->is_application_process = 1;
+                // $authUser->save();
+
+                // Set your Stripe secret key
+                Stripe::setApiKey(config('app.stripe_secret_key'));
+
+                // Create or retrieve Stripe customer
+                if (!$authUser->stripe_customer_id) {
+                    $customer = Customer::create([
+                        'name'  => $authUser->name,
+                        'email' => $authUser->email,
+                    ]);
+                    $authUser->stripe_customer_id = $customer->id;
+                    $authUser->save();
+                } else {
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
+                }
+
+
+                $metadata = [
+                    'user_type' => 'buyer',
+                    'product_type' => 'application_fee',
+                    'description'  => 'Application Fee Payment',
+                ];
+
+                $sessionData = [
+                    'payment_method_types' => ['card'],
+                    'line_items' => [
+                        [
+                            'price' => config('constants.buyer_application_free_price_id'),
+                            'quantity' => 1,
+                        ],
+                    ],
+                    'mode' => 'payment',
+                    'metadata' => $metadata,
+                    'success_url' => env('FRONTEND_URL').'buyer-profile',
+                    'cancel_url' => env('FRONTEND_URL').'profile-verification',
+                ];
+
+                
+                // If customer ID is provided, set it in the session data
+                if ($customer) {
+                    $sessionData['customer'] = $customer->id;
+                }
+
+                // Create a Checkout Session
+                $session = StripeSession::create($sessionData);
 
                 DB::commit();
 
-                //Return Success Response
-                $responseData = [
-                    'status'        => true,
-                    'current_step'  => $request->step,
-                    'message'       => trans('messages.auth.verification.application_process_success'),
-                ];
-                return response()->json($responseData, 200);
+                return response()->json(['status'=>true,'current_step'  => $request->step,'session' => $session],200);
             }
         }catch (\Exception $e) {
             DB::rollBack();
@@ -316,7 +367,7 @@ class BuyerVerificationController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message'),
+                'error'         => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 400);
         }

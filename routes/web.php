@@ -53,7 +53,7 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('addon', 'admin.addon.index')->name('addon');
         Route::view('setting', 'admin.setting.index')->name('setting');
         Route::view('users', 'admin.seller.index')->name('seller');
-        Route::view('deleted', 'admin.deleted-users.index')->name('deleted-users');
+        Route::view('deleted-users', 'admin.deleted-users.index')->name('deleted-users');
         Route::view('buyer', 'admin.buyer.index')->name('buyer');        
         Route::view('buyer/import', 'admin.buyer.import-buyers')->name('import-buyers');
         Route::view('supports', 'admin.support.index')->name('supports');
@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
 
         Route::view('transactions', 'admin.transactions.index')->name('transactions'); 
 
-        Route::view('buyer-transactions', 'admin.transactions.index')->name('buyer-transactions'); 
+        Route::view('buyer-transactions', 'admin.buyer-transactions.index')->name('buyer-transactions'); 
         
         Route::view('buyer-plans', 'admin.buyer-plans.index')->name('buyer-plans');    
         

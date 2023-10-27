@@ -45,37 +45,29 @@
             <thead>
                 <tr>
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
-                    <th class="text-gray-500 text-xs font-medium">Image</th>
                     <th class="text-gray-500 text-xs">
-                        {{ __('cruds.buyer_plan.fields.title')}}
-                        <span wire:click="sortBy('title')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        {{ __('cruds.buyer_transaction.fields.user')}}
+                        <span wire:click="sortBy('users.name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'users.name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'users.name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
-                    <th class="text-gray-500 text-xs">
-                        {{ __('cruds.buyer_plan.fields.amount')}}
+                    {{-- <th class="text-gray-500 text-xs">
+                        {{ __('cruds.buyer_transaction.fields.plan')}}
+                        <span wire:click="sortBy('plan-title')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'plan-title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'plan-title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th> --}}
+                    <th class="text-gray-500 text-xs">{{ __('cruds.buyer_transaction.fields.amount')}}
                         <span wire:click="sortBy('amount')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'amount' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'amount' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
+                    <th class="text-gray-500 text-xs">{{ __('cruds.buyer_transaction.fields.currency')}}</th>
                     <th class="text-gray-500 text-xs">
-                        {{ __('cruds.buyer_plan.fields.type')}}
-                        <span wire:click="sortBy('type')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'type' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'type' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
-                        </span>
-                    </th>
-                    <th class="text-gray-500 text-xs">
-                        {{ __('cruds.buyer_plan.fields.position')}}
-                        <span wire:click="sortBy('position')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'position' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'position' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
-                        </span>
-                    </th>
-                    <th class="text-gray-500 text-xs">
-                        {{ __('cruds.buyer_plan.fields.status')}}
+                        {{ trans('cruds.buyer_transaction.fields.status') }}
                         <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
@@ -91,30 +83,24 @@
                 </tr>
             </thead>
             <tbody>
-                @if($plans->count() > 0)
-                    @foreach($plans as $serialNo => $plan)
+                @if($transactions->count() > 0)
+                    @foreach($transactions as $serialNo => $transaction)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td><img src="{{ $plan->image_url ?? '' }}" width="100" /></td>
-                        <td>{{ ucwords($plan->title) }}</td>
-                        <td>{{ '$'.number_format($plan->amount,2) }}</td>
-                        <td>{{ ucfirst($plan->type) }}</td>
-                        <td>{{ $plan->position ?? '' }}</td>
-                        <td>
-                            <label class="toggle-switch">
-                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$plan->id}}"  {{ $plan->status == 1 ? 'checked' : '' }}>
-                                <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
-                            </label>
-                        </td>
-                     
-                        <td>{{ convertDateTimeFormat($plan->created_at,'date') }}</td>
+                        <td>{{ $transaction->user ? ucwords($transaction->user->name) : '' }}</td>
+                        {{-- <td>
+                            {{ $transaction->plan_title ? ucwords($transaction->plan_title) : '' }}
+                        </td> --}}
+
+                        <td><i class='fa fa-dollar'></i>{{ number_format($transaction->amount,2) }}</td>
+                        <td>{{ strtoupper($transaction->currency) }}</td>
+                        <td>{{ ucfirst($transaction->status) }}</td>
+
+                        <td>{{ convertDateTimeFormat($transaction->created_at,'date') }}</td>
 
                         <td>
-                            <button type="button" wire:click="$emitUp('show', {{$plan->id}})" class="btn btn-primary btn-rounded btn-icon">
+                            <button type="button" wire:click="$emitUp('show', {{$transaction->id}})" class="btn btn-primary btn-rounded btn-icon">
                                 <i class="ti-eye"></i>
-                            </button>
-                            <button type="button" data-id="{{$plan->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
-                                <i class="ti-trash"></i>
                             </button>
                         </td>
 
@@ -122,7 +108,7 @@
                     @endforeach
                 @else
                 <tr>
-                    <td class="text-center" colspan="9">{{ __('messages.no_record_found')}}</td>
+                    <td class="text-center" colspan="8">{{ __('messages.no_record_found')}}</td>
                 </tr>
                 @endif
             
@@ -130,7 +116,7 @@
             </table>
         </div>
 
-        {{ $plans->links('vendor.pagination.custom-pagination') }}
+        {{ $transactions->links('vendor.pagination.custom-pagination') }}
     </div>
 
 </div>

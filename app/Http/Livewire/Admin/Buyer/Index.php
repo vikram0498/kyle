@@ -274,6 +274,10 @@ class Index extends Component
             // End create users table
             
             if($createUser){
+
+                // Buyer verification entry
+                $createUser->buyerVerification()->create(['user_id'=>$createUser->id]);
+
                 //Assign buyer role
                 $createUser->roles()->sync(3);
 

@@ -463,10 +463,12 @@ span.select2-selection.select2-selection--multiple  span.select2-search.select2-
 .sidebar .nav.sub-menu .nav-item .nav-link{
     padding: 0.7rem 2rem;
 }
+
 .sidebar .nav.sub-menu .nav-item .nav-link.active {
     color: #ffffff;
     background: #121639;
-}
+} 
+
 .sidebar .nav.sub-menu .nav-item::before{
     z-index: 9;
 }

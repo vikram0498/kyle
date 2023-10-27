@@ -10,6 +10,7 @@ use App\Models\Plan;
 use App\Models\Addon;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Models\BuyerTransaction;
 use App\Models\Subscription;
 use App\Models\UserToken;
 use Illuminate\Support\Facades\DB; 
@@ -295,7 +296,7 @@ class PaymentController extends Controller
                 break;
                 
                 case 'checkout.session.completed':
-                    Log::info('Payment successfully of additional plan!');
+                    Log::info('Single Payment successfully!');
     
                     // Handle successful payment event
                     $paymentIntent = $event->data->object;
@@ -325,6 +326,41 @@ class PaymentController extends Controller
                                 ]);
                             }
                         }
+                    }
+
+                    if(isset($paymentIntent->metadata->product_type) && isset($paymentIntent->metadata->user_type)){
+                        if($paymentIntent->metadata->product_type == 'application_fee' && $paymentIntent->metadata->user_type == 'buyer'){
+
+                            $user = User::where('stripe_customer_id',$customer_stripe_id)->first();
+                            $user->buyerVerification()->update(['is_application_process'=>1]);
+
+                            $authUser = User::where('stripe_customer_id',$customer_stripe_id)->first();
+                            $userJson = [
+                                'stripe_customer_id'=>$authUser->stripe_customer_id,
+                                'name'  => $authUser->name,
+                                'email' => $authUser->email,
+                                'phone' => $authUser->phone,
+                                'register_type'=> $authUser->register_type,
+                                'email_verified_at' => $authUser->email_verified_at,
+                                'phone_verified_at' => $authUser->phone_verified_at,
+                            ];
+
+                            BuyerTransaction::create([
+                                'user_id' => $authUser->id,
+                                'user_json' => json_encode($userJson),
+                                'plan_id'   => null,
+                                'plan_json' =>  json_encode(['title'=>'Application Fee']),
+                                'payment_intent_id' => $paymentIntent->payment_intent,
+                                'amount' => (float)$paymentIntent->amount_total/100,
+                                'currency' => $paymentIntent->currency,
+                                'payment_method' => $paymentIntent->payment_method_types[0],
+                                'payment_type'   => 'credit',
+                                'status' => 'success',
+                                'payment_json' => json_encode($event),
+                            ]);
+                            
+                        }
+                       
                     }
                 break;
 
@@ -366,8 +402,8 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
            
             // dd($e->getMessage().'->'.$e->getLine());
-            // return response()->json(['error' => $e->getMessage().'->'.$e->getLine()], 400);
-            return response()->json(['error' => 'Something went wrong!'], 400);
+            return response()->json(['error' => $e->getMessage().'->'.$e->getLine()], 400);
+            // return response()->json(['error' => 'Something went wrong!'], 400);
         }
 
         Log::info('End stripe webhook');

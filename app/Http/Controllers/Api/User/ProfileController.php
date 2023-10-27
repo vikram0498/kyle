@@ -139,5 +139,41 @@ class ProfileController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function updateBuyerSearchStatus(Request $request){
+        $rules['status'] = ['required','numeric','in:0,1'];
+        $request->validate($rules);
+
+        $userId = auth()->user()->id;
+
+        Buyer::where('buyer_user_id',$userId)->update(['status'=>$request->status]);
+
+        // Return response
+        $responseData = [
+            'status' => true,
+            'message'   => 'Status Updated Successfully!',
+        ];
+        return response()->json($responseData, 200);
+        
+    }
+
+    public function updateBuyerContactPreference(Request $request){
+        $rules['contact_preference'] = ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))];
+
+        $request->validate($rules);
+
+        $userId = auth()->user()->id;
+
+        Buyer::where('buyer_user_id',$userId)->update(['contact_preferance'=>$request->contact_preference]);
+
+        // Return response
+        $responseData = [
+            'status' => true,
+            'message'   => 'Updated Successfully!',
+        ];
+        return response()->json($responseData, 200);
+        
+    }
+
+
     
 }

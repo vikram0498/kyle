@@ -83,6 +83,10 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('update-profile', [ProfileController::class, 'updateProfile']);
 
+    Route::post('update-buyer-search-status', [ProfileController::class, 'updateBuyerSearchStatus']);
+
+    Route::post('update-buyer-contact-pref', [ProfileController::class, 'updateBuyerContactPreference']);
+
     Route::get('last-form-step', [BuyerVerificationController::class, 'getLastVerificationForm']);
 
     Route::post('buyer-profile-verification', [BuyerVerificationController::class, 'index']);
@@ -108,7 +112,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('fetch-buyers/{page?}', [BuyerController::class, 'fetchBuyers']);
 
-
+    Route::get('get-buyer-plans', [BuyerController::class, 'getBuyerPlans']);
+    
     Route::post('red-flag-buyer', [BuyerController::class, 'redFlagBuyer']);
 
     Route::post('unhide-buyer', [BuyerController::class, 'unhideBuyer']);

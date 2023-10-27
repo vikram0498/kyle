@@ -93,10 +93,10 @@
                      @endphp
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ ucwords($buyer->userDetail->name) }}</td>
+                        <td>{{ $buyer->userDetail ? ucwords($buyer->userDetail->name) : '' }}</td>
                         <td>
                             <label class="toggle-switch">
-                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->status == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->userDetail->is_active == 1 ? 'checked' : '' }}>
                                 <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                             </label>
                         </td>

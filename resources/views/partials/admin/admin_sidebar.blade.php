@@ -17,7 +17,7 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('admin/deleted') ? 'active' : '' }}">
+            <li class="nav-item {{ request()->is('admin/deleted-users') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.deleted-users') }}">
                     <i class="icon-grid menu-icon fas fa-users-slash"></i>
                     <span class="menu-title"> {{__('global.deleted')}} {{ __('cruds.user.title') }} </span>
@@ -41,34 +41,42 @@
             </li>
             @endcan
 
-            @can('buyer_access')            
-            <li class="nav-item">
+            @can('buyer_access')  
+            @php
+              $buyerCallapse = (
+                request()->is('admin/buyer') || 
+                request()->is('admin/buyer/import') || 
+                request()->is('admin/buyer-plans')  ||
+                request()->is('admin/buyer-transactions')
+              ); 
+            @endphp          
+            <li class="nav-item {{ $buyerCallapse ? 'active' : '' }}">
                 <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
                     <i class="icon-grid menu-icon fas fa-house-user"></i>
                     <span class="menu-title"> {{ __('cruds.buyer.title') }} </span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="buyer-menu">
+                <div class="collapse {{ $buyerCallapse ? 'show' : 'hide' }}" id="buyer-menu">
                     <ul class="nav flex-column sub-menu">
                         @can('buyer_access')
-                        <li class="nav-item {{ (request()->is('admin/buyer') || request()->is('admin/buyer/import')) ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.buyer') }}">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->is('admin/buyer') || request()->is('admin/buyer/import')) ? 'active' : '' }}" href="{{ route('admin.buyer') }}">
                                 <span class="menu-title"> {{ __('cruds.buyer.sub_menu_list_title') }} </span>
                             </a>
                         </li>
                         @endcan
 
                         @can('buyer_plan_access')
-                        <li class="nav-item {{ request()->segment(2) == 'buyer-plans' ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.buyer-plans') }}">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->segment(2) === 'buyer-plans') ? 'active' : '' }}" href="{{ route('admin.buyer-plans') }}">
                                 <span class="menu-title"> {{ __('cruds.buyer_plan.title') }} </span>
                             </a>
                         </li>
                         @endcan
 
                         @can('buyer_transaction_access')
-                        <li class="nav-item {{ (request()->is('admin/buyer-transactions')) ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.buyer-transactions') }}">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->is('admin/buyer-transactions')) ? 'active' : '' }}" href="{{ route('admin.buyer-transactions') }}">
                                 <span class="menu-title"> {{ __('cruds.buyer_transaction.title') }} </span>
                             </a>
                         </li>
@@ -89,24 +97,27 @@
             
 
             {{-- Masters --}}
-            <li class="nav-item">
+            @php
+              $subscriptionCallapse = in_array(request()->segment(2),array('plan','addon')); 
+            @endphp
+            <li class="nav-item {{ $subscriptionCallapse ? 'active' : '' }}">
                 <a class="nav-link" data-toggle="collapse" href="#master-menu"  aria-expanded="false" aria-controls="master-menu">
                     <i class="menu-icon fas fa-money-check-alt"></i>
                     <span class="menu-title">Subscription Plans</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="master-menu">
+                <div class="collapse {{ $subscriptionCallapse ? 'show' : 'hide' }}" id="master-menu">
                     <ul class="nav flex-column sub-menu">
                         @can('plan_access')
-                        <li class="nav-item {{ request()->segment(2) == 'plan' ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.plan') }}">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->segment(2) === 'plan') ? 'active' : '' }}" href="{{ route('admin.plan') }}">
                                 <span class="menu-title">{{__('cruds.plan.title')}}</span>
                             </a>
                         </li>
                         @endcan
                         @can('addon_access')
-                        <li class="nav-item {{ request()->is('admin/addon') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.addon') }}">
+                        <li class="nav-item ">
+                            <a class="nav-link {{ request()->is('admin/addon') ? 'active' : '' }}" href="{{ route('admin.addon') }}">
                                 <span class="menu-title">{{__('cruds.addon.title')}}</span>
                             </a>
                         </li>

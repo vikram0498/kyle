@@ -1,5 +1,6 @@
 
-<h4 class="card-title">
+<div>
+   <h4 class="card-title">
     {{__('global.show')}}
     {{ strtolower(__('cruds.buyer_plan.title_singular'))}}</h4>
 
@@ -45,5 +46,5 @@
             </span>
         </button>
     </div>
-
+</div>
                
