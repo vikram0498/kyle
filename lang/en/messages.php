@@ -26,7 +26,7 @@ return [
             'invalid_otp'         => 'Invalid OTP Number!',
             'otp_send_success'    => 'OTP has been sent!',
             'phone_verify_success'=> 'Phone Verified Successfully!',
-            'driver_license_success'=> 'Driver License Verified Successfully!',
+            'driver_license_success'=> 'ID Verified Successfully!',
             'proof_of_funds_success'=> 'Proof Of Funds Verified Successfully!',
             'llc_verification_success'=> 'LLC Verified Successfully!',
             'application_process_success'=> 'Application Payment Successfully!',

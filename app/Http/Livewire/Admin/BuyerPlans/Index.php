@@ -54,14 +54,17 @@ class Index extends Component
     {   
         $validatedData = $this->validate(
             [
-                'title'       => ['required'],
+                'title'       => ['required', 'unique:buyer_plans,title,NULL,id,deleted_at,NULL'],
                 'amount'      => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'type'        => ['required', 'in:monthly,yearly'],
-                'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
+                'position'    => ['required', 'numeric', 'min:0', 'max:99999','unique:buyer_plans,position,NULL,id,deleted_at,NULL'],
                 'description' => ['required', 'without_spaces'],
                 'status'      => 'required',
                 'image' => ['required', 'image', 'valid_extensions:svg','max:'.config('constants.img_max_size')],
-            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']
+            ],[
+                'image.valid_extensions' => 'The image must be an SVG file.',
+                'without_spaces' => 'The :attribute field is required'
+            ],['title'  => 'plan name']
         );
         
         $validatedData['status'] = $this->status;
@@ -140,7 +143,10 @@ class Index extends Component
               $validateArr['image'] = 'required|image|max:'.config('constants.img_max_size');
           }
     
-          $validatedData = $this->validate($validateArr, ['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name']);
+          $validatedData = $this->validate($validateArr, [
+            'image.valid_extensions' => 'The image must be an SVG file.',
+            'without_spaces' => 'The :attribute field is required'
+        ],['title'  => 'plan name']);
   
           $validatedData['status'] = $this->status;
   

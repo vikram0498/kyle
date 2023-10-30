@@ -1083,7 +1083,7 @@ class BuyerController extends Controller
     public function getBuyerPlans(){
         try{
 
-            $buyerPlans = BuyerPlan::where('status',1)->get();
+            $buyerPlans = BuyerPlan::where('status',1)->orderBy('position','asc')->get();
 
             $buyerPlansList = [];
             foreach($buyerPlans as $key=>$plan){
