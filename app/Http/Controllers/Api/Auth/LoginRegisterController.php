@@ -100,34 +100,38 @@ class LoginRegisterController extends Controller
 
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
-            if(!is_null($checkUserStatus->deleted_at) && $checkUserStatus->roles()->first()->id == 2){
-                //Error Response Send
-                $responseData = [
-                    'status'        => false,
-                    'error'         => 'Your account has been deactivated!',
-                ];
-                return response()->json($responseData, 401);
-            }
+            if($checkUserStatus){
 
-            if(!$checkUserStatus->is_active){
-                //Error Response Send
-                $responseData = [
-                    'status'        => false,
-                    'error'         => 'Your account has been blocked!',
-                ];
-                return response()->json($responseData, 401);
-            }
+                if(!is_null($checkUserStatus->deleted_at) && $checkUserStatus->roles()->first()->id == 2){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been deactivated!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
 
-            if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
+                if(!$checkUserStatus->is_active){
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account has been blocked!',
+                    ];
+                    return response()->json($responseData, 401);
+                }
 
-                $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+                if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
 
-                //Error Response Send
-                $responseData = [
-                    'status'        => false,
-                    'error'         => 'Your account is not verified! Please check your mail',
-                ];
-                return response()->json($responseData, 401);
+                    $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account is not verified! Please check your mail',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
             }
 
 
