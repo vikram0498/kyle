@@ -87,6 +87,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('update-buyer-contact-pref', [ProfileController::class, 'updateBuyerContactPreference']);
 
+    Route::post('update-buyer-profile-image', [ProfileController::class, 'updateBuyerProfileImage']);
+
     Route::get('last-form-step', [BuyerVerificationController::class, 'getLastVerificationForm']);
 
     Route::post('buyer-profile-verification', [BuyerVerificationController::class, 'index']);
@@ -106,7 +108,6 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('edit-buyer-form-element-values', [CommanController::class, 'editBuyerFormElementValues']);
     Route::post('update-single-buyer-details', [BuyerController::class, 'updateSingleBuyerDetails']);
     //End edit buyer
-
 
     Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);
 
@@ -135,9 +136,9 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('config', [PaymentController::class, 'config']);
  
-    Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
+    Route::post('create-upgrade-buyer-session', [PaymentController::class, 'createProfileUpgradeSession']);
 
-    Route::post('/buyer-make-payment', [PaymentController::class, 'createBuyerPaymentIntent']);
+    Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 

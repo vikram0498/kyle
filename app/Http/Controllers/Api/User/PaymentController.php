@@ -440,58 +440,77 @@ class PaymentController extends Controller
    }
 
 
-   public function createBuyerPaymentIntent(Request $request){
+   public function createProfileUpgradeSession(){
+        dd('working');
+        DB::beginTransaction();
+        try {
+            $userId = auth()->user()->id;
+            $authUser = User::where('id',$userId)->first();
+            if($authUser){
+                // $authUser->buyerVerification->is_application_process = 1;
+                // $authUser->save();
 
-    $request->validate([
-        'amount' =>['required','numeric','not_in:-'],
-    ]);
+                // Set your Stripe secret key
+                Stripe::setApiKey(config('app.stripe_secret_key'));
 
-    try {
+                // Create or retrieve Stripe customer
+                if (!$authUser->stripe_customer_id) {
+                    $customer = Customer::create([
+                        'name'  => $authUser->name,
+                        'email' => $authUser->email,
+                    ]);
+                    $authUser->stripe_customer_id = $customer->id;
+                    $authUser->save();
+                } else {
+                    $customer = Customer::retrieve($authUser->stripe_customer_id);
+                }
 
-        // Set your Stripe secret key
-        Stripe::setApiKey(config('app.stripe_secret_key'));
 
-        $authUser = auth()->user();
+                $metadata = [
+                    'user_type' => 'buyer',
+                    'product_type' => 'application_fee',
+                    'description'  => 'Application Fee Payment',
+                ];
 
-        // Create or retrieve Stripe customer
-        if (!$authUser->stripe_customer_id) {
-            $customer = Customer::create([
-                'name'  => $authUser->name,
-                'email' => $authUser->email,
-            ]);
-            $authUser->stripe_customer_id = $customer->id;
-            $authUser->save();
-        } else {
-            $customer = Customer::retrieve($authUser->stripe_customer_id);
+                $sessionData = [
+                    'payment_method_types' => ['card'],
+                    'line_items' => [
+                        [
+                            'price' => config('constants.buyer_application_free_price_id'),
+                            'quantity' => 1,
+                        ],
+                    ],
+                    'mode' => 'payment',
+                    'metadata' => $metadata,
+                    'success_url' => env('FRONTEND_URL').'buyer-profile',
+                    'cancel_url' => env('FRONTEND_URL').'profile-verification',
+                ];
+
+                
+                // If customer ID is provided, set it in the session data
+                if ($customer) {
+                    $sessionData['customer'] = $customer->id;
+                }
+
+                // Create a Checkout Session
+                $session = StripeSession::create($sessionData);
+
+                DB::commit();
+
+                return response()->json(['status'=>true,'current_step'  => $request->step,'session' => $session],200);
+            }
+        }catch (\Exception $e) {
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => $e->getMessage().'->'.$e->getLine(),
+            ];
+            return response()->json($responseData, 400);
         }
-
-        // Create a Payment Intent
-        $extraData = [
-            'type'=>'buyer-payment',
-        ];
-
-        $paymentIntent = PaymentIntent::create([
-            'amount' => (float)$request->amount * 100, // Amount in cents
-            'currency' => config('constants.default_currency'), // Currency
-            'customer' => $customer ? $customer->id : null, // Customer ID
-            'metadata' => $extraData, // Attach custom data
-        ]);
-
-        return  response()->json(['status'=>true,'client_secret' => $paymentIntent->client_secret],200);
-
-    }catch (\Exception $e) {
-        // dd($e->getMessage().'->'.$e->getLine());
-        // return response()->json(['error' => $e->getMessage().'->'.$e->getLine()], 400);
-
-        //Return Error Response
-        $responseData = [
-            'status'        => false,
-            'error'         => trans('messages.error_message'),
-        ];
-        return response()->json($responseData, 400);
     }
-    
-   }
 
 }
 ?>

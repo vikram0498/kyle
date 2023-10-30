@@ -61,7 +61,7 @@ class ProfileController extends Controller
         }
 
         if($request->hasFile('profile_image')){
-            $validatedData['profile_image'] = ['image','mimes:jpeg,jpg,png','max:1024'];
+            $validatedData['profile_image'] = ['image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
         }
 
         $request->validate($validatedData,[
@@ -138,6 +138,60 @@ class ProfileController extends Controller
         ];
         return response()->json($responseData, 200);
     }
+    
+    public function updateBuyerProfileImage(Request $request){
+        $user = auth()->user();
+
+        $rules['profile_image'] = ['required','image','mimes:jpeg,jpg,png','max:'.config('constants.profile_image_size')];
+
+        $request->validate($rules);
+
+        DB::beginTransaction();
+        try {
+            if($user->buyerDetail->is_profile_payment){
+              
+                // Start to Update Profile Image
+                if($request->hasFile('profile_image')){
+                    $actionType = 'save';
+                    $uploadId = null;
+                    if($user->profileImage){
+                        $uploadId = $user->profileImage->id;
+                        $actionType = 'update';
+                    }
+                    uploadImage($user, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
+                }
+                // End to Update Profile Image
+
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'message'       => trans('messages.auth.verification.profile_upload_success'),
+                ];
+                return response()->json($responseData, 200);
+            }else{
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.auth.buyer.upgrade_error'),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+
+
+    }
 
     public function updateBuyerSearchStatus(Request $request){
         $rules['status'] = ['required','numeric','in:0,1'];
@@ -173,7 +227,6 @@ class ProfileController extends Controller
         return response()->json($responseData, 200);
         
     }
-
 
     
 }

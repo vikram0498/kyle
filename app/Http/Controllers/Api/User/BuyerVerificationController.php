@@ -308,9 +308,6 @@ class BuyerVerificationController extends Controller
             $userId = auth()->user()->id;
             $authUser = User::where('id',$userId)->first();
             if($authUser){
-                // $authUser->buyerVerification->is_application_process = 1;
-                // $authUser->save();
-
                 // Set your Stripe secret key
                 Stripe::setApiKey(config('app.stripe_secret_key'));
 

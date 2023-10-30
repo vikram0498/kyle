@@ -21,6 +21,7 @@ return [
             'register_success_alert'=>'Buyer register successfully! We\'ve sent an email with a verification link.',
             'update_buyer_success_alert'=>'Buyer updated successfully!',
             'update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email with a verification link.',
+            'upgrade_error'=>'Please upgrade your account first!',
         ],
         'verification'=>[
             'invalid_otp'         => 'Invalid OTP Number!',
@@ -30,6 +31,8 @@ return [
             'proof_of_funds_success'=> 'Proof Of Funds Verified Successfully!',
             'llc_verification_success'=> 'LLC Verified Successfully!',
             'application_process_success'=> 'Application Payment Successfully!',
+            'profile_upload_success' => 'Your profile image has been successfully uploaded!',
+
         ]
     ],
 ];
