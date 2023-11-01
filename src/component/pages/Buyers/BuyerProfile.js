@@ -1,18 +1,19 @@
 import React from "react";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useFormError } from "../../../hooks/useFormError";
 import { toast } from "react-toastify";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const BuyerProfile = () => {
   const { getTokenData, setLogout } = useAuth();
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [loader, setLoader] = useState(true);
-  const { setErrors, renderFieldError } = useFormError();
+  const { setErrors } = useFormError();
 
   const apiUrl = process.env.REACT_APP_API_URL;
   let headers = {
@@ -126,10 +127,16 @@ const BuyerProfile = () => {
       return selectedBuildingClass.join(", ");
     }
   };
+  const profileIcons = {
+    1: "./assets/images/buyer-01.svg",
+    2: "./assets/images/buyer-03.svg",
+    3: "./assets/images/buyer-02.svg",
+    4: "./assets/images/buyer-04.svg",
+  };
   return (
     <>
       <BuyerHeader />
-      <section className="main-section position-relative pt-4 pb-120">
+      <section className="main-section position-relative pt-4 pb-120 buyer-proinner">
         {loader ? (
           <div className="loader" style={{ textAlign: "center" }}>
             <img src="assets/images/loader.svg" />
@@ -194,7 +201,7 @@ const BuyerProfile = () => {
                               </defs>
                             </svg>
                           </span>
-                          <span className="contact-title">
+                          <span className="contact-title align-self-center">
                             {currentBuyerData.first_name +
                               " " +
                               currentBuyerData.last_name}
@@ -251,7 +258,7 @@ const BuyerProfile = () => {
                               </defs>
                             </svg>
                           </span>
-                          <span className="contact-title">
+                          <span className="contact-title align-self-center">
                             {currentBuyerData.phone}
                           </span>
                         </a>
@@ -288,7 +295,7 @@ const BuyerProfile = () => {
                               />
                             </svg>
                           </span>
-                          <span className="contact-title">
+                          <span className="contact-title align-self-center">
                             {currentBuyerData.email}
                           </span>
                         </a>
@@ -432,7 +439,11 @@ const BuyerProfile = () => {
                         <div className="profile-data">
                           <div className="profile-img">
                             <img
-                              src="/assets/images/avtar-big.png"
+                              src={
+                                currentBuyerData.profile_image != ""
+                                  ? currentBuyerData.profile_image
+                                  : "/assets/images/avtar-big.png"
+                              }
                               className="img-fluid"
                               alt=""
                               title=""
@@ -452,7 +463,13 @@ const BuyerProfile = () => {
                       </div>
                       <div className="col-12 col-lg-6">
                         <div className="component-group">
-                          <div className="active-inactive">
+                          <div
+                            className={
+                              currentBuyerData.buyer_search_status === 1
+                                ? "active-inactive status-active"
+                                : "active-inactive status-inactive"
+                            }
+                          >
                             <div className="dropdown">
                               <button
                                 className="btn dropdown-toggle"
@@ -463,7 +480,11 @@ const BuyerProfile = () => {
                               >
                                 <span className="userimg">
                                   <img
-                                    src="/assets/images/avtar.png"
+                                    src={
+                                      currentBuyerData.profile_image != ""
+                                        ? currentBuyerData.profile_image
+                                        : "/assets/images/avtar-big.png"
+                                    }
                                     alt=""
                                     title=""
                                   />
@@ -573,29 +594,34 @@ const BuyerProfile = () => {
                               </svg>
                             </button>
                           </div>
-                          <div className="account-check">
-                            <button className="btn">
-                              <svg
-                                width="30"
-                                height="30"
-                                viewBox="0 0 30 30"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                          <div className="account-check user-ac-check">
+                            <OverlayTrigger
+                              placement="top"
+                              style={{ backgroundColor: "green" }}
+                              overlay={
+                                <Tooltip>
+                                  {currentBuyerData.is_buyer_verified
+                                    ? "Profile Verified"
+                                    : "Profile Not Verified"}{" "}
+                                </Tooltip>
+                              }
+                            >
+                              <button
+                                className={
+                                  currentBuyerData.is_buyer_verified
+                                    ? "btn"
+                                    : "btn not-verified notify"
+                                }
                               >
-                                <path
-                                  d="M12.9691 11.6062C15.9152 11.6062 18.3035 9.21797 18.3035 6.27187C18.3035 3.32578 15.9152 0.9375 12.9691 0.9375C10.023 0.9375 7.63477 3.32578 7.63477 6.27187C7.63477 9.21797 10.023 11.6062 12.9691 11.6062Z"
-                                  fill="#19B400"
+                                <img
+                                  src={
+                                    currentBuyerData.is_buyer_verified
+                                      ? "./assets/images/profile-verified.svg"
+                                      : "./assets/images/profile-not-verified.svg"
+                                  }
                                 />
-                                <path
-                                  d="M18.4805 17.8776C19.2211 17.5776 20.0086 17.4088 20.843 17.3807C22.4768 14.6211 16.7389 12.3155 14.5993 12.4963C14.5992 12.4963 11.3367 12.4963 11.3367 12.4963C6.79922 12.4963 3.10547 16.1994 3.10547 20.7369V21.8338C3.10547 24.1588 4.98985 26.0432 7.31483 26.0432H12.968C13.3149 26.0432 13.6336 25.9494 13.9055 25.7713C13.8614 25.4208 13.8293 25.0623 13.8305 24.6932C13.7912 21.712 15.732 18.9148 18.4805 17.8776Z"
-                                  fill="#19B400"
-                                />
-                                <path
-                                  d="M25.9423 20.5317C25.2767 20.1754 24.4236 20.288 23.8705 20.8599L20.0549 24.8161L18.7705 23.5505C18.0767 22.8754 16.9611 22.8942 16.2861 23.5879C15.6017 24.2817 15.6204 25.3973 16.3142 26.0723L18.8736 28.5661C19.2017 28.8849 19.6424 29.063 20.1017 29.063H20.1205C20.5892 29.0536 21.0392 28.8661 21.358 28.5286L26.4017 23.3067C26.6454 23.0442 26.8049 22.7348 26.8704 22.4161C26.8704 22.4067 26.8704 22.4067 26.8704 22.3974V22.388C26.9642 21.8348 26.7955 21.2442 26.3548 20.8223C26.2329 20.7004 26.0924 20.6067 25.9423 20.5317Z"
-                                  fill="#19B400"
-                                />
-                              </svg>
-                            </button>
+                              </button>
+                            </OverlayTrigger>
                           </div>
                           <div className="field-box">
                             <div className="dropdown">
@@ -607,37 +633,13 @@ const BuyerProfile = () => {
                                 aria-expanded="false"
                               >
                                 <span className="commentic">
-                                  <svg
-                                    width="26"
-                                    height="26"
-                                    viewBox="0 0 26 26"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <g clipPath="url(#clip0_2430_10473)">
-                                      <path
-                                        d="M7.54492 25.5352C7.42548 25.5352 7.30523 25.5083 7.1923 25.4547C6.91198 25.319 6.73242 25.0355 6.73242 24.7227V20.6602H4.29492C2.95105 20.6602 1.85742 19.5665 1.85742 18.2227V5.22266C1.85742 3.87878 2.95105 2.78516 4.29492 2.78516H23.7949C25.1388 2.78516 26.2324 3.87878 26.2324 5.22266V18.2227C26.2324 19.5665 25.1388 20.6602 23.7949 20.6602H13.9239L8.05273 25.3572C7.90567 25.475 7.72611 25.5352 7.54492 25.5352ZM4.29492 4.41016C3.84642 4.41016 3.48242 4.77497 3.48242 5.22266V18.2227C3.48242 18.6703 3.84642 19.0352 4.29492 19.0352H7.54492C7.99423 19.0352 8.35742 19.3983 8.35742 19.8477V23.0327L13.1309 19.2131C13.2755 19.0977 13.4534 19.0352 13.6387 19.0352H23.7949C24.2434 19.0352 24.6074 18.6703 24.6074 18.2227V5.22266C24.6074 4.77497 24.2434 4.41016 23.7949 4.41016H4.29492Z"
-                                        fill="#19B400"
-                                      />
-                                      <path
-                                        d="M20.5449 10.9102H7.54492C7.09561 10.9102 6.73242 10.5462 6.73242 10.0977C6.73242 9.64916 7.09561 9.28516 7.54492 9.28516H20.5449C20.9942 9.28516 21.3574 9.64916 21.3574 10.0977C21.3574 10.5462 20.9942 10.9102 20.5449 10.9102Z"
-                                        fill="#19B400"
-                                      />
-                                      <path
-                                        d="M14.0449 14.1602H7.54492C7.09561 14.1602 6.73242 13.7962 6.73242 13.3477C6.73242 12.8992 7.09561 12.5352 7.54492 12.5352H14.0449C14.4942 12.5352 14.8574 12.8992 14.8574 13.3477C14.8574 13.7962 14.4942 14.1602 14.0449 14.1602Z"
-                                        fill="#19B400"
-                                      />
-                                    </g>
-                                    <defs>
-                                      <clipPath id="clip0_2430_10473">
-                                        <rect
-                                          width="26"
-                                          height="26"
-                                          fill="white"
-                                        />
-                                      </clipPath>
-                                    </defs>
-                                  </svg>
+                                  <img
+                                    src={
+                                      profileIcons[
+                                        currentBuyerData.contact_value
+                                      ]
+                                    }
+                                  />
                                 </span>
                                 <span className="dropdown-arr">
                                   <svg

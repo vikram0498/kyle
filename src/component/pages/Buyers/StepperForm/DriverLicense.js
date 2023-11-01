@@ -113,7 +113,7 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
                           onChange: (e) => {
                             previewImage(e, "driver_license_back_image");
                           },
-                          required: "This fields is required",
+                          required: "This field is required",
                         })}
                       />
                       Upload License

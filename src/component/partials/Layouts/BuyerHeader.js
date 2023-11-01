@@ -25,12 +25,12 @@ function BuyerHeader() {
           <div className="row align-items-center">
             <div className="col-6 col-sm-6 col-md-4 col-lg-3">
               <div className="header-logo">
-                <a href="">
+                <Link to="/buyer-profile">
                   <img
                     src="/assets/images/logo.svg"
                     className="img-fluid darkmode-none"
                   />
-                </a>
+                </Link>
                 {/* <a href="">
                   <img
                     src="/assets/images/dark-mode-logo.png"

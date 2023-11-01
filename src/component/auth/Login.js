@@ -122,7 +122,11 @@ function Login(props) {
           />
           <h2>Welcome Back!</h2>
         </div>
-        <form method="post" onSubmit={submitLoginForm}>
+        <form
+          className="main-login-form"
+          method="post"
+          onSubmit={submitLoginForm}
+        >
           <div className="row">
             <div className="col-12 col-lg-12">
               <div className="form-group">

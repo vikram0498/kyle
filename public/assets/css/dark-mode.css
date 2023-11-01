@@ -72,7 +72,7 @@ body.dark .dropdown-arr svg path,
 body.dark .user-dropdown .arrow-icon svg path {
   stroke: #fff;
 }
-body.dark .account-check button {
+body.dark .account-check .btn {
   background: rgba(25, 180, 0, 0.15);
 }
 body.dark .component-group .dropdown-menu,
@@ -294,4 +294,8 @@ body.dark #inviteCode.invite-page input#link {
 .dark .MuiStepLabel-label {
   color: rgb(255 255 255 / 87%) !important;
   font-weight: 500;
+}
+body.dark button.btn.not-verified {
+  background: rgb(231 231 231 / 15%);
+  border-color: #6a6a6a;
 }

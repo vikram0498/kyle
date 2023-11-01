@@ -21,7 +21,7 @@ const DarkMode = () => {
       />
       <label htmlFor="checkbox" className="checkbox-label">
         <span className="moon togglecontent">
-          <span className="lightmode txtmode">lightmode</span>
+          <span className="lightmode txtmode">light mode</span>
           <span className="moon-icon">
             <svg
               width="16"
@@ -98,7 +98,7 @@ const DarkMode = () => {
               </defs>
             </svg>
           </span>
-          <span className="darkmode txtmode">DarkMode</span>
+          <span className="darkmode txtmode">Dark Mode</span>
         </span>
         <span className="ball"></span>
       </label>

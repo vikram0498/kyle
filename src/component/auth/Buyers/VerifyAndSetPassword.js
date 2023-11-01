@@ -152,8 +152,8 @@ const VerifyAndSetPassword = () => {
                       alt=""
                     />
                   </span>
-                  {renderFieldError("password")}
                 </div>
+                {renderFieldError("password")}
               </div>
             </div>
             <div className="col-12 col-lg-12">
@@ -187,8 +187,8 @@ const VerifyAndSetPassword = () => {
                       alt=""
                     />
                   </span>
-                  {renderFieldError("password_confirmation")}
                 </div>
+                {renderFieldError("password_confirmation")}
               </div>
             </div>
             <div className="col-12 col-lg-12">

@@ -10,12 +10,12 @@ import DriverLicense from "./DriverLicense";
 import LLCVerification from "./LLCVerification";
 import ProofOfFund from "./ProofOfFund";
 import ApplicationProcess from "./ApplicationProcess";
-import SuccessfullySubmiitedPage from "../../SuccessfullySubmiitedPage";
 import { useForm, Controller } from "react-hook-form";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useFormError } from "../../../../hooks/useFormError";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SuccessPage from "./SuccessPage";
 
 const steps = [
   "Phone Verification",
@@ -255,7 +255,7 @@ const HorizontalLinearStepper = () => {
           {activeStep === steps.length ? (
             <React.Fragment>
               <Typography sx={{ mt: 2, mb: 1 }}>
-                <SuccessfullySubmiitedPage />
+                <SuccessPage />
                 {/* All steps completed - you&apos;re finished */}
               </Typography>
               {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

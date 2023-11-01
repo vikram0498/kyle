@@ -40,7 +40,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
                         className="file-input"
                         name="bank_statement_pdf"
                         {...register("bank_statement_pdf", {
-                          required: "This fields is required",
+                          required: "This field is required",
                           validate: {
                             fileSize: validateFileSize,
                           },

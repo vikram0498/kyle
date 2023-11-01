@@ -64,6 +64,10 @@ function ResetPassword() {
       .catch((error) => {
         setLoading(false);
         if (error.response) {
+          console.log(error.response);
+          if (error.response.data.validation_errors) {
+            setErrors(error.response.data.validation_errors);
+          }
           if (error.response.data.errors) {
             setErrors(error.response.data.errors);
           }

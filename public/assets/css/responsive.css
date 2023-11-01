@@ -91,6 +91,9 @@
     max-width: 90px;
     padding: 14px 15px;
   }
+  .user-dropdown .arrow-icon {
+    margin-bottom: 17px;
+  }
 }
 
 @media (max-width: 991px) {
@@ -175,6 +178,18 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 15px;
+  }
+  .contact-detail .component-group .dropdown-menu {
+    z-index: 1;
+  }
+  .contact-detail .component-group .active-inactive .dropdown-menu {
+    right: inherit !important;
+  }
+  .buyer-proinner .component-group .active-inactive .dropdown-menu:before {
+    left: 30px;
+  }
+  .support-inner .card-box-blocks .row {
+    row-gap: 0;
   }
 }
 @media (max-width: 767px) {
@@ -279,6 +294,34 @@
   .lic-detail-area .upload-img {
     height: auto !important;
   }
+  .buyer-proinner .card-box {
+    padding: 0;
+  }
+  .buyer-proinner .component-group {
+    gap: 5px;
+  }
+  .buyer-proinner .component-group button {
+    padding: 5px;
+  }
+  .buyer-proinner .component-group .active-inactive button .userimg,
+  .buyer-proinner .component-group .field-box button .commentic {
+    margin-right: 8px;
+    padding-right: 8px;
+  }
+  .buyer-proinner .component-group .active-inactive button .userimg:before {
+    right: 6px;
+  }
+  .buyer-proinner .component-group .account-check .btn,
+  .buyer-proinner .component-group .premium-quality button {
+    width: 40px;
+  }
+  .buyer-proinner .component-group .account-check .btn img {
+    width: 25px;
+  }
+  .buyer-proinner .component-group .account-check .btn svg {
+    width: 25px;
+    height: 25px;
+  }
 }
 
 @media (max-width: 575px) {
@@ -377,6 +420,12 @@
   .account-in {
     max-width: 100%;
   }
+  .user-dropdown .arrow-icon {
+    margin-bottom: 7px;
+  }
+  .back-block {
+    padding: 10px;
+  }
 }
 @media (max-width: 480px) {
   .account-with-social > li {
@@ -397,5 +446,14 @@
 @media screen and (max-width: 400px) {
   .lic-detail-area .upload-img {
     width: 100% !important;
+  }
+  .dashboard-header .block-session {
+    gap: 10px;
+  }
+  .dashboard-header .block-session .modetype {
+    margin-right: 0;
+  }
+  .header-logo img {
+    max-width: 105px;
   }
 }

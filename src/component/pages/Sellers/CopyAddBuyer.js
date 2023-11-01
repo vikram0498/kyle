@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import Select from "react-select";
 import { useFormError } from "../../../hooks/useFormError";
@@ -7,19 +7,22 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import MiniLoader from "../../partials/MiniLoader";
 import DatePicker from "react-datepicker";
+import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
+import LinkExpirePage from "./LinkExpirePage";
+import SuccessfullySubmiitedPage from "./SuccessfullySubmiitedPage";
 import { useAuth } from "../../../hooks/useAuth";
-import BuyerHeader from "../../partials/Layouts/BuyerHeader";
-import Footer from "../../partials/Layouts/Footer";
-import BuyerProfilePayment from "../../partials/Modal/BuyerProfilePayment";
 
-function EditBuyerProfile() {
+function CopyAddBuyer() {
+  const { token } = useParams();
+
   const navigate = useNavigate();
+  const [isLoader, setIsLoader] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const { getTokenData, setLogout, setLocalStorageUserdata } = useAuth();
+  const { getTokenData, setLogout } = useAuth();
 
   const { setErrors, renderFieldError } = useFormError();
   const {
@@ -28,46 +31,11 @@ function EditBuyerProfile() {
     control,
     formState: { errors },
     clearErrors,
-    setValue,
   } = useForm();
-  /* previous form data start*/
-  const [loader, setLoader] = useState(true);
-  const [miniLoader, setMiniLoader] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [border, setBorder] = useState("1px dashed #677AAB");
-  const [previewImageUrl, setPreviewImageUrl] = useState("");
 
-  const [solar, setSolar] = useState("");
-  const [pool, setPool] = useState("");
-  const [septic, setSeptic] = useState("");
-  const [well, setWell] = useState("");
-  const [hoa, setHoa] = useState("");
-  const [ageRestriction, setAgeRestriction] = useState("");
-  const [rentalRestriction, setRentalRestriction] = useState("");
-  const [postPossession, setPostPossession] = useState("");
-  const [tenantConveys, setTenantConveys] = useState("");
-  const [squatters, setSquatters] = useState("");
-  const [buildingRequired, setBuildingRequired] = useState("");
-  const [rebuild, setRebuild] = useState("");
-  const [foundationIssues, setFoundationIssues] = useState("");
-  const [mold, setMold] = useState("");
-  const [fireDamaged, setFireDamaged] = useState("");
-  const [permanentAffix, setPermanentAffix] = useState("");
-  const [valueAdd, setValueAdd] = useState("");
-
-  /* previous form data end */
-  const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
-  const [propertyType, setPropertyType] = useState([]);
-  const [purchaseMethods, setPurchaseMethods] = useState([]);
-  const [locationFlaws, setLocationFlaws] = useState([]);
-  const [marketPreferance, setMarketPreferance] = useState([]);
-  const [contactPreferance, setContactPreferance] = useState([]);
-  const [zoning, setZoning] = useState([]);
-  const [sewer, setSewer] = useState([]);
-  const [utilities, setUtilities] = useState([]);
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -100,6 +68,7 @@ function EditBuyerProfile() {
   const [buyerTypeValue, setBuyerTypeValue] = useState([]);
   const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
   const [buildingClassNamesValue, setBuildingClassNamesValue] = useState([]);
+  const [marketPreferanceValue, setMarketPreferanceValue] = useState([]);
   const [zoningValue, setZoningValue] = useState([]);
   const [stateValue, setStatevalue] = useState([]);
   const [cityValue, setCityvalue] = useState([]);
@@ -119,146 +88,48 @@ function EditBuyerProfile() {
   const [priceMax, setPriceMax] = useState("");
   /* min max value states end */
 
+  const [isTokenExpire, setIsTokenExpire] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    getOptionsValues();
-    fetchBuyerData();
+    checkTokenExpire();
   }, [navigate]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
   let headers = {
     Accept: "application/json",
-    Authorization: "Bearer " + getTokenData().access_token,
-    "Content-Type": "multipart/form-data",
   };
-
-  const fetchBuyerData = async () => {
+  const checkTokenExpire = () => {
     try {
-      let response = await axios.get(apiUrl + "edit-buyer", {
-        headers: headers,
-      });
-      if (response.data.status) {
-        let responseData = response.data.buyer;
-        if (responseData.profile_image != "")
-          setPreviewImageUrl(responseData.profile_image);
-        setCurrentBuyerData(responseData);
-        setState(responseData.state);
-        setCity(responseData.city);
-        setPropertyType(responseData.property_type);
-        setPurchaseMethods(responseData.purchase_method);
-        setParkingValue(responseData.parking);
-        setBuyerTypeValue(responseData.buyer_type);
-        setLocationFlaws(responseData.property_flaw);
-        setMarketPreferance(responseData.market_preferance);
-        setContactPreferance(responseData.contact_preferance);
-        setZoning(responseData.zoning);
-        setSewer(responseData.sewer);
-        setUtilities(responseData.utilities);
+      axios
+        .get(`${apiUrl}check-token/${token}`, { headers: headers })
+        .then((response) => {
+          if (response.data.status) {
+            setIsTokenExpire(false);
+            getOptionsValues();
 
-        // set form value and react-hook-form validation value
-        const selectedStates = responseData.state.map((item) => item.value);
-        setStatevalue(selectedStates);
-        setValue("state", responseData.state);
+            setIsLoader(false);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.data.error) {
+              // toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
+              setIsTokenExpire(true);
 
-        const selectedCity = responseData.city.map((item) => item.value);
-        setCityvalue(selectedCity);
-        setValue("city", responseData.city);
-
-        const selectedProperty = responseData.property_type.map(
-          (item) => item.value
-        );
-        setPropertyTypeValue(selectedProperty);
-        setValue("property_type", responseData.property_type);
-
-        if (selectedProperty.includes(7)) {
-          setIsLandSelected(true);
-          const selectedZoning = responseData.zoning.map((item) => item.value);
-          setZoningValue(selectedZoning);
-          setValue("zoning", responseData.zoning);
-          setValue("utilities", responseData.utilities);
-          setValue("sewer", responseData.sewer);
-        }
-
-        if (selectedProperty.includes(10)) {
-          setMultiFamilyBuyerSelected(true);
-          const selectedBuildingClass = responseData.building_class.map(
-            (item) => item.value
-          );
-          setBuildingClassNamesValue(selectedBuildingClass);
-          setValueAdd(String(responseData.value_add));
-          setValue("building_class", responseData.building_class);
-          setValue("value_add", responseData.value_add);
-        }
-        const selectedPurchaseMethods = responseData.purchase_method.map(
-          (item) => item.value
-        );
-        setPurchaseMethodsValue(selectedPurchaseMethods);
-        setValue("purchase_method", responseData.purchase_method);
-
-        const selectedLocationFlaws = responseData.property_flaw.map(
-          (item) => item.value
-        );
-        setLocationFlawsValue(selectedLocationFlaws);
-        setValue("property_flaw", responseData.property_flaw);
-
-        setValue("market_preferance", responseData.market_preferance);
-        setValue("contact_preferance", responseData.contact_preferance);
-        setValue("buyer_type", responseData.buyer_type);
-        setValue("parking", responseData.parking);
-        setValue("build_year_max", responseData.build_year_max);
-        setValue("build_year_min", responseData.build_year_min);
-
-        /*  update min max value */
-        setBedRoomMin(responseData.bedroom_min);
-        setBedRoomMax(responseData.bedroom_max);
-
-        setBathMin(responseData.bath_min);
-        setBathMax(responseData.bath_max);
-
-        setSqFtMin(responseData.size_min);
-        setSqFtMax(responseData.size_max);
-
-        setlotSizesqFtMin(responseData.lot_size_min);
-        setlotSizesqFtMax(responseData.lot_size_max);
-
-        setStoriesMin(responseData.stories_min);
-        setStoriesMax(responseData.stories_max);
-
-        setPriceMin(responseData.price_min);
-        setPriceMax(responseData.price_max);
-
-        if (responseData.build_year_min) {
-          setStartDate(new Date(responseData.build_year_min, 0, 1, 0, 0, 0));
-        }
-        if (responseData.build_year_max) {
-          setEndDate(new Date(responseData.build_year_max, 0, 1, 0, 0, 0));
-        }
-        /*  update min max value */
-
-        /** updated checked box value */
-        setSolar(String(responseData.solar));
-        setPool(String(responseData.pool));
-        setSeptic(String(responseData.septic));
-        setWell(String(responseData.well));
-        setHoa(String(responseData.hoa));
-        setAgeRestriction(String(responseData.age_restriction));
-        setRentalRestriction(String(responseData.rental_restriction));
-        setPostPossession(String(responseData.post_possession));
-        setTenantConveys(String(responseData.tenant));
-        setSquatters(String(responseData.squatters));
-        setBuildingRequired(String(responseData.building_required));
-        setRebuild(String(responseData.rebuild));
-        setFoundationIssues(String(responseData.foundation_issues));
-        setMold(String(responseData.mold));
-        setFireDamaged(String(responseData.fire_damaged));
-        setPermanentAffix(String(responseData.permanent_affix));
-
-        setLoader(false);
-      }
+              setIsLoader(false);
+            }
+          }
+        });
     } catch (error) {
       if (error.response) {
-        if (error.response.data.validation_errors) {
-          setErrors(error.response.data.validation_errors);
+        if (error.response.status === 401) {
+          setLogout();
+        }
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
         }
         if (error.response.data.error) {
           toast.error(error.response.data.error, {
@@ -268,18 +139,21 @@ function EditBuyerProfile() {
       }
     }
   };
+
   const getOptionsValues = () => {
     try {
       axios
-        .get(apiUrl + "edit-buyer-form-element-values", { headers: headers })
+        .get(apiUrl + "copy-buyer-form-details", { headers: headers })
         .then((response) => {
           if (response.data.status) {
             let result = response.data.result;
+
             setPurchaseMethodsOption(result.purchase_methods);
             setBuildingClassNamesOption(result.building_class_values);
             setPropertyTypeOption(result.property_types);
             setLocationFlawsOption(result.location_flaws);
             setParkingOption(result.parking_values);
+            //setCountryOptions(result.countries);
             setParkOption(result.park);
             setStateOptions(result.states);
             setbuyerTypeOption(result.buyer_types);
@@ -288,6 +162,8 @@ function EditBuyerProfile() {
             setZoningOption(result.zonings);
             setSewerOption(result.sewers);
             setUtilitiesOption(result.utilities);
+
+            setIsLoader(false);
           }
         });
     } catch (error) {
@@ -324,6 +200,7 @@ function EditBuyerProfile() {
         )
         .then((response) => {
           let result = response.data.options;
+
           setCountry([]);
           setState([]);
           setCity([]);
@@ -357,28 +234,21 @@ function EditBuyerProfile() {
           setCityOptions(result);
         }
       }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.data.validation_errors) {
-          setErrors(error.response.data.validation_errors);
-        }
-        if (error.response.data.error) {
-          toast.error(error.response.data.error, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
-        }
-      }
-    }
+    } catch (error) {}
   };
   const submitSingleBuyerForm = (data, e) => {
     e.preventDefault();
     setErrors(null);
-    setMiniLoader(true);
+
+    setLoading(true);
+
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
+    //formObject.parking          =  parkingValue;
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
+    // formObject.buyer_type       =  buyerTypeValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
       formObject.building_class = buildingClassNamesValue;
@@ -396,40 +266,25 @@ function EditBuyerProfile() {
     }
 
     axios
-      .post(`${apiUrl}update-single-buyer-details`, formObject, {
+      .post(`${apiUrl}copy-single-buyer-details/${token}`, formObject, {
         headers: headers,
       })
       .then((response) => {
-        setMiniLoader(false);
+        setLoading(false);
+        setIsSubmitted(true);
         if (response.data.status) {
-          console.log(response.data.userData, "rohittt");
-          const userData = {
-            first_name: response.data.userData.first_name,
-            last_name: response.data.userData.last_name,
-            profile_image: response.data.userData.profile_image,
-            level_type: response.data.userData.level_type,
-            role: response.data.userData.role,
-            total_buyer_uploaded: response.data.total_buyer_uploaded,
-          };
-          setLocalStorageUserdata(userData);
-          const profileName = document.querySelector(".user-name-title");
-          const profilePic = document.querySelector(".user-profile");
-          console.log(userData.first_name);
-          profileName.innerHTML =
-            response.data.userData.first_name +
-            " " +
-            response.data.userData.last_name;
-          if (response.data.userData.profile_image != "") {
-            profilePic.src = response.data.userData.profile_image;
-          }
-          toast.success(response.data.message, {
-            position: toast.POSITION.TOP_RIGHT,
+          Swal.fire({
+            icon: "success",
+            title: "success",
+            text: "Buyer data saved successfully",
           });
-          navigate("/buyer-profile");
+          // toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
+          navigate("/add-buyer/" + token);
+          setIsTokenExpire(true);
         }
       })
       .catch((error) => {
-        setMiniLoader(false);
+        setLoading(false);
         if (error.response) {
           if (error.response.data.validation_errors) {
             setErrors(error.response.data.validation_errors);
@@ -438,6 +293,9 @@ function EditBuyerProfile() {
             toast.error(error.response.data.error, {
               position: toast.POSITION.TOP_RIGHT,
             });
+            if (error.response.data.error_type == "token_expired") {
+              setIsTokenExpire(true);
+            }
           }
         }
       });
@@ -445,8 +303,6 @@ function EditBuyerProfile() {
   const handleCustum = (e, name) => {
     const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
-      setPropertyTypeValue(selectedValues);
-      setPropertyType(e);
       if (
         selectedValues.includes(2) ||
         selectedValues.includes(10) ||
@@ -478,8 +334,8 @@ function EditBuyerProfile() {
       } else {
         setHotelMotelSelected(false);
       }
+      setPropertyTypeValue(selectedValues);
     } else if (name == "purchase_method") {
-      setPurchaseMethods(e);
       if (selectedValues.includes(5)) {
         setShowCreativeFinancing(true);
       } else {
@@ -497,28 +353,30 @@ function EditBuyerProfile() {
       //setCity(e);
     } else if (name == "building_class") {
       setBuildingClassNamesValue(selectedValues);
+    } else if (name == "parking") {
+      setParkingValue(e);
     } else if (name == "buyer_type") {
       setBuyerTypeValue(e);
     } else if (name == "start_date") {
       setStartDate(e);
-      setEndDate("");
     } else if (name == "end_date") {
       setEndDate(e);
     } else if (name == "market_preferance") {
-      setMarketPreferance(e);
-    } else if (name == "contact_preferance") {
-      setContactPreferance(e);
+      setMarketPreferanceValue(e);
     } else if (name == "zoning") {
       setZoningValue(selectedValues);
-      setZoning(e);
+    } else if (name == "zoning") {
+      setZoningValue(selectedValues);
     }
   };
   const handleCityChange = (event) => {
     let selectedValues = event.map((item) => item.value);
+    console.log(selectedValues, "selectedValues");
     setCityvalue(selectedValues);
     setCity(event);
   };
   const handleChangeErrorMessage = (field_name) => {
+    console.log("hello", field_name);
     if (field_name === "bedroom") {
       if (parseInt(bedRoomMax) >= parseInt(bedRoomMin)) {
         clearErrors(["bedroom_min", "bedroom_max"]);
@@ -536,6 +394,8 @@ function EditBuyerProfile() {
         clearErrors(["lot_size_min", "lot_size_max"]);
       }
     } else if (field_name === "stories") {
+      console.log(parseInt(storiesMax));
+      console.log(parseInt(storiesMin));
       if (parseInt(storiesMax) >= parseInt(storiesMin)) {
         clearErrors(["stories_min", "stories_max"]);
       }
@@ -545,174 +405,30 @@ function EditBuyerProfile() {
       }
     }
   };
-
-  const handleProfileChange = async (e, isPayment) => {
-    e.preventDefault();
-    try {
-      if (isPayment === 0) {
-        setModalOpen(true);
-      } else {
-        const file = e.target.files[0];
-        const checkImage = isValidImage(file);
-        if (checkImage) {
-          let response = await axios.post(
-            apiUrl + "update-buyer-profile-image",
-            { profile_image: file },
-            {
-              headers: headers,
-            }
-          );
-          if (response.data.status) {
-            toast.success(response.data.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-          }
-        }
-        setModalOpen(false);
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.data.validation_errors) {
-          setErrors(error.response.data.validation_errors);
-        }
-        if (error.response.data.error) {
-          toast.error(error.response.data.error, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
-        }
-      }
-    }
-  };
-  const isValidImage = (file) => {
-    const maxFileSize = 2 * 1024 * 1024; // 2MB
-    const fileSize = file.size;
-    const fileType = file.type;
-    const fileName = file.name;
-    const extension = ["image/png", "image/jpg", "image/jpeg"];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setPreviewImageUrl(reader.result);
-      });
-      reader.readAsDataURL(file);
-    }
-
-    if (fileName != "" && !extension.includes(fileType)) {
-      setErrorMsg("Please add valid file (jpg,jpeg,png)");
-      setBorder("1px dashed #ff0018");
-      return false;
-    } else if (fileSize > maxFileSize) {
-      setErrorMsg(
-        "File size is too large. Please upload a file that is less than 2MB."
-      );
-      setBorder("1px dashed #ff0018");
-      return false;
-    } else {
-      setBorder("1px dashed #677AAB");
-      setErrorMsg("");
-      setPreviewImageUrl("");
-    }
-    return true;
-  };
   return (
     <>
-      <BuyerHeader />
-      <section className="main-section position-relative pt-4 pb-120">
-        {loader ? (
-          <div className="loader" style={{ textAlign: "center" }}>
-            <img src="assets/images/loader.svg" />
-          </div>
-        ) : (
+      {isLoader ? (
+        <div className="loader" style={{ textAlign: "center" }}>
+          <img src="/assets/images/loader.svg" />
+        </div>
+      ) : isTokenExpire ? (
+        <div className="row">
+          {isSubmitted ? <SuccessfullySubmiitedPage /> : <LinkExpirePage />}
+        </div>
+      ) : (
+        <section className="main-section position-relative pt-4 pb-120">
           <div className="container position-relative">
-            <div className="back-block">
-              <div className="row">
-                <div className="col-4 col-sm-4 col-md-4 col-lg-4">
-                  <Link to="/buyer-profile" className="back">
-                    <svg
-                      width="16"
-                      height="12"
-                      viewBox="0 0 16 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M15 6H1"
-                        stroke="#0A2540"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      ></path>
-                      <path
-                        d="M5.9 11L1 6L5.9 1"
-                        stroke="#0A2540"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      ></path>
-                    </svg>
-                    Back
-                  </Link>
-                </div>
-                <div className="col-6 col-sm-4 col-md-4 col-lg-4 align-self-center">
-                  <h6 className="center-head text-center mb-0">Edit Profile</h6>
-                </div>
-              </div>
-            </div>
             <div className="card-box">
               <div className="row">
-                <div className="col-12 col-lg-4">
-                  <div className="outer-heading text-center">
-                    <h3 className="mb-0">Edit Profile Picture </h3>
-                  </div>
-                  <div className="upload-photo" style={{ border: border }}>
-                    <div className="containers">
-                      <div className="imageWrapper">
-                        {previewImageUrl == "" ? (
-                          <img
-                            className="image img-fluid"
-                            src="assets/images/avtar-big.png"
-                          />
-                        ) : (
-                          <img className="image" src={previewImageUrl} />
-                        )}
+                <div className="col-12 col-lg-12">
+                  <div className="card-box-inner">
+                    <div className="row">
+                      <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                        <h3>Buyer Form</h3>
+                        <p>Fill the below form </p>
                       </div>
                     </div>
 
-                    {currentBuyerData.is_profile_payment === 1 ? (
-                      <button className="file-upload">
-                        <input
-                          type="file"
-                          className="file-input"
-                          onChange={(e) => handleProfileChange(e, 1)}
-                        />
-                        Upload Your Image
-                      </button>
-                    ) : (
-                      <button
-                        className="file-upload"
-                        onClick={(e) => handleProfileChange(e, 0)}
-                      >
-                        Upload Your Image
-                      </button>
-                    )}
-                  </div>
-                  <p
-                    style={{
-                      padding: "6px",
-                      textAlign: "center",
-                      fontSize: "13px",
-                      color: "red",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {errorMsg}
-                  </p>
-                </div>
-                <div className="col-12 col-lg-8">
-                  <div className="card-box-inner">
-                    <h3>Edit Profile</h3>
-                    <p>Lorem Ipsum is simply dummy text of the</p>
                     <form
                       method="post"
                       onSubmit={handleSubmit(submitSingleBuyerForm)}
@@ -729,7 +445,6 @@ function EditBuyerProfile() {
                                 name="first_name"
                                 className="form-control"
                                 placeholder="First Name"
-                                defaultValue={currentBuyerData.first_name}
                                 {...register("first_name", {
                                   required: "First Name is required",
                                   validate: {
@@ -761,7 +476,6 @@ function EditBuyerProfile() {
                                 name="last_name"
                                 className="form-control"
                                 placeholder="Last Name"
-                                defaultValue={currentBuyerData.last_name}
                                 {...register("last_name", {
                                   required: "Last Name is required",
                                   validate: {
@@ -790,10 +504,22 @@ function EditBuyerProfile() {
                             <div className="form-group">
                               <input
                                 type="text"
+                                name="email"
                                 className="form-control"
                                 placeholder="Email Address"
-                                defaultValue={currentBuyerData.email}
-                                disabled
+                                {...register("email", {
+                                  required: "Email is required",
+                                  validate: {
+                                    maxLength: (v) =>
+                                      v.length <= 50 ||
+                                      "The email should have at most 50 characters",
+                                    matchPattern: (v) =>
+                                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                                        v
+                                      ) ||
+                                      "Email address must be a valid address",
+                                  },
+                                })}
                               />
                               {errors.email && (
                                 <p className="error">{errors.email?.message}</p>
@@ -808,10 +534,20 @@ function EditBuyerProfile() {
                             <div className="form-group">
                               <input
                                 type="text"
+                                name="phone"
                                 className="form-control"
                                 placeholder="Phone Number"
-                                defaultValue={currentBuyerData.phone}
-                                disabled
+                                {...register("phone", {
+                                  required: "Phone is required",
+                                  validate: {
+                                    matchPattern: (v) =>
+                                      /^[0-9]\d*$/.test(v) ||
+                                      "Please enter valid phone number",
+                                    maxLength: (v) =>
+                                      (v.length <= 15 && v.length >= 5) ||
+                                      "The phone number should be more than 4 digit and less than equal 15",
+                                  },
+                                })}
                               />
                               {errors.phone && (
                                 <p className="error">{errors.phone?.message}</p>
@@ -819,11 +555,57 @@ function EditBuyerProfile() {
                               {renderFieldError("phone")}
                             </div>
                           </div>
+                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Address<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="address" className="form-control" placeholder="Enter Address" {
+                                                                    ...register("address", {
+                                                                        required: "Address is required",
+                                                                    })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.address?.message}</p>}
+                                                                    {renderFieldError('address') }
+                                                                </div>
+                                                            </div> */}
+                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Country</label>
+                                                                <div className="form-group">
+                                                                <input type="text" className="form-control country-field" value="United States" readOnly/>
+                                                                </div>
+                                                            </div> */}
                           <div className="col-12 col-lg-12">
                             <label>
                               State<span>*</span>
                             </label>
                             <div className="form-group">
+                              {/* <Select
+                                                                    name="state"
+                                                                    defaultValue=''
+                                                                    options={stateOptions}
+                                                                    onChange={(item) => getCities(item)}
+                                                                    className="select"
+                                                                    isClearable={true}
+                                                                    isSearchable={true}
+                                                                    placeholder="Select State"
+                                                                    closeMenuOnSelect={false}
+                                                                    isMulti
+                                                                />
+                                                                    {renderFieldError('state') } */}
+                              {/* <Select
+                                                                        name="state"
+                                                                        defaultValue=''
+                                                                        options={stateOptions}
+                                                                        onChange={(item) => getCities(item)}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        value={state}
+                                                                        isRtl={false}
+                                                                        placeholder="Select State"
+                                                                        closeMenuOnSelect={true}
+                                                                    /> */}
                               <Controller
                                 control={control}
                                 name="state"
@@ -858,6 +640,38 @@ function EditBuyerProfile() {
                               City<span>*</span>
                             </label>
                             <div className="form-group">
+                              {/* <Select
+                                                                        name="city"
+                                                                        defaultValue=''
+                                                                        options={cityOptions}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        onChange={handleCityChange}
+                                                                        isRtl={false}
+                                                                        value={city}
+                                                                        placeholder="Select City"
+                                                                        closeMenuOnSelect={false}
+                                                                        isMulti
+                                                                    />
+                                                                    {renderFieldError('city') } */}
+                              {/* <Select
+                                                                        name="city"
+                                                                        defaultValue=''
+                                                                        options={cityOptions}
+                                                                        onChange={(item) => setCity(item)}
+                                                                        className="select"
+                                                                        isClearable={true}
+                                                                        isSearchable={true}
+                                                                        isDisabled={false}
+                                                                        isLoading={false}
+                                                                        value={city}
+                                                                        isRtl={false}
+                                                                        placeholder="Select City"
+                                                                        closeMenuOnSelect={true}
+                                                                    /> */}
                               <Controller
                                 control={control}
                                 name="city"
@@ -898,7 +712,6 @@ function EditBuyerProfile() {
                                 className="form-control"
                                 name="company_name"
                                 placeholder="Company LLC"
-                                defaultValue={currentBuyerData.company_name}
                                 {...register("company_name", {
                                   required: "Company/LLC is required",
                                   validate: {
@@ -932,7 +745,6 @@ function EditBuyerProfile() {
                                     options={marketPreferanceOption}
                                     name={name}
                                     placeholder="Select MLS Status"
-                                    value={marketPreferance}
                                     isClearable={true}
                                     onChange={(e) => {
                                       onChange(e);
@@ -966,7 +778,6 @@ function EditBuyerProfile() {
                                   <Select
                                     options={contactPreferanceOption}
                                     name={name}
-                                    value={contactPreferance}
                                     placeholder="Select Contact Preference"
                                     isClearable={true}
                                     onChange={(e) => {
@@ -984,6 +795,23 @@ function EditBuyerProfile() {
                               {renderFieldError("contact_preferance")}
                             </div>
                           </div>
+                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                                                <label>Zip<span>*</span></label>
+                                                                <div className="form-group">
+                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                                                        ...register("zip_code", {
+                                                                            required: "Zip Code is required",
+                                                                            validate: {
+                                                                                maxLength: (v) =>
+                                                                                v.length <= 10 || "The digit should be less than equal 10",
+                                                                            },
+                                                                        })
+                                                                    } />
+                                                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
+                                                                    {renderFieldError('zip_code') }
+                                                                </div>
+                                                            </div> */}
+
                           <div className="col-12 col-lg-12">
                             <div className="form-group">
                               <label>
@@ -1002,7 +830,6 @@ function EditBuyerProfile() {
                                     <Select
                                       options={propertyTypeOption}
                                       name={name}
-                                      value={propertyType}
                                       placeholder="Select Property Type"
                                       setMultiselectOption={
                                         setPropertyTypeValue
@@ -1044,7 +871,6 @@ function EditBuyerProfile() {
                                       }) => (
                                         <Select
                                           options={zoningOption}
-                                          value={zoning}
                                           name={name}
                                           placeholder="Select zoning"
                                           onChange={(e) => {
@@ -1069,6 +895,14 @@ function EditBuyerProfile() {
                                     Utilities<span>*</span>
                                   </label>
                                   <div className="form-group">
+                                    {/* <Select
+                                                                                    options={utilitiesOption}
+                                                                                    name = 'utilities'
+                                                                                    placeholder='Select Utilities Type'
+                                                                                    closeMenuOnSelect={true}
+                                                                                    isClearable={true}
+                                                                                    isSearchable={true}
+                                                                                /> */}
                                     <Controller
                                       control={control}
                                       name="utilities"
@@ -1080,7 +914,6 @@ function EditBuyerProfile() {
                                       }) => (
                                         <Select
                                           options={utilitiesOption}
-                                          defaultValue={utilities}
                                           name={name}
                                           placeholder="Select Utilities"
                                           onChange={(e) => {
@@ -1104,6 +937,14 @@ function EditBuyerProfile() {
                                     Sewage<span>*</span>
                                   </label>
                                   <div className="form-group">
+                                    {/* <Select
+                                                                                    options={sewerOption}
+                                                                                    name = 'sewer'
+                                                                                    placeholder='Select Sewage Type'
+                                                                                    closeMenuOnSelect={true}
+                                                                                    isClearable={true}
+                                                                                    isSearchable={true}
+                                                                                /> */}
                                     <Controller
                                       control={control}
                                       name="sewer"
@@ -1114,7 +955,6 @@ function EditBuyerProfile() {
                                         <Select
                                           options={sewerOption}
                                           name={name}
-                                          defaultValue={sewer}
                                           placeholder="Select Sewage"
                                           onChange={(e) => {
                                             onChange(e);
@@ -1148,7 +988,6 @@ function EditBuyerProfile() {
                                       type="text"
                                       name="unit_min"
                                       className="form-control"
-                                      defaultValue={currentBuyerData.unit_min}
                                       placeholder="Minimum Units"
                                       {...register("unit_min", {
                                         required: "Minimum Units is required",
@@ -1181,7 +1020,6 @@ function EditBuyerProfile() {
                                       name="unit_max"
                                       className="form-control"
                                       placeholder="Maximum Units"
-                                      defaultValue={currentBuyerData.unit_max}
                                       {...register("unit_max", {
                                         required: "Maximum Units is required",
                                         validate: {
@@ -1207,6 +1045,12 @@ function EditBuyerProfile() {
                                     Building class<span>*</span>
                                   </label>
                                   <div className="form-group">
+                                    {/* <MultiSelect
+                                                                                    name="building_class"
+                                                                                    options={buildingClassNamesOption}
+                                                                                    placeholder='Select Option'
+                                                                                    setMultiselectOption = {setBuildingClassNamesValue}
+                                                                                /> */}
                                     <Controller
                                       control={control}
                                       name="building_class"
@@ -1218,9 +1062,6 @@ function EditBuyerProfile() {
                                       }) => (
                                         <Select
                                           options={buildingClassNamesOption}
-                                          defaultValue={
-                                            currentBuyerData.building_class
-                                          }
                                           name={name}
                                           placeholder="Select Building class"
                                           onChange={(e) => {
@@ -1250,15 +1091,9 @@ function EditBuyerProfile() {
                                         <input
                                           type="radio"
                                           name="value_add"
-                                          value="1"
-                                          checked={
-                                            valueAdd === "1" ? "checked" : ""
-                                          }
+                                          value="0"
                                           id="value_add_yes"
                                           {...register("value_add", {
-                                            onChange: (e) => {
-                                              setValueAdd(e.target.value);
-                                            },
                                             required: "Value Add is required",
                                           })}
                                         />
@@ -1273,15 +1108,9 @@ function EditBuyerProfile() {
                                         <input
                                           type="radio"
                                           name="value_add"
-                                          value="0"
+                                          value="1"
                                           id="value_add_no"
-                                          checked={
-                                            valueAdd === "0" ? "checked" : ""
-                                          }
                                           {...register("value_add", {
-                                            onChange: (e) => {
-                                              setValueAdd(e.target.value);
-                                            },
                                             required: "Value Add is required",
                                           })}
                                         />
@@ -1309,6 +1138,14 @@ function EditBuyerProfile() {
                               Purchase Method<span>*</span>
                             </label>
                             <div className="form-group">
+                              {/* <MultiSelect
+                                                                        name="purchase_method"
+                                                                        options={purchaseMethodsOption}
+                                                                        placeholder='Select Purchase Method'
+                                                                        setMultiselectOption = {setPurchaseMethodsValue}
+                                                                        showCreative = {setShowCreativeFinancing}
+                                                                    /> */}
+
                               <Controller
                                 control={control}
                                 name="purchase_method"
@@ -1321,7 +1158,6 @@ function EditBuyerProfile() {
                                   <Select
                                     options={purchaseMethodsOption}
                                     name={name}
-                                    value={purchaseMethods}
                                     placeholder="Select Purchase Method"
                                     setMultiselectOption={
                                       setPurchaseMethodsValue
@@ -1518,7 +1354,6 @@ function EditBuyerProfile() {
                                     name="bedroom_min"
                                     className="form-control"
                                     placeholder="Bedroom (min)"
-                                    defaultValue={currentBuyerData.bedroom_min}
                                     {...register("bedroom_min", {
                                       onChange: (e) => {
                                         setBedRoomMin(e.target.value);
@@ -1559,7 +1394,6 @@ function EditBuyerProfile() {
                                     name="bedroom_max"
                                     className="form-control"
                                     placeholder="Bedroom (max)"
-                                    defaultValue={currentBuyerData.bedroom_max}
                                     {...register("bedroom_max", {
                                       onChange: (e) => {
                                         setBedRoomMax(e.target.value);
@@ -1599,7 +1433,6 @@ function EditBuyerProfile() {
                                     name="bath_min"
                                     className="form-control"
                                     placeholder="Bath (min)"
-                                    defaultValue={currentBuyerData.bath_min}
                                     {...register("bath_min", {
                                       onChange: (e) => {
                                         setBathMin(e.target.value);
@@ -1639,7 +1472,6 @@ function EditBuyerProfile() {
                                     name="bath_max"
                                     className="form-control"
                                     placeholder="Bath (max)"
-                                    defaultValue={currentBuyerData.bath_max}
                                     {...register("bath_max", {
                                       onChange: (e) => {
                                         setBathMax(e.target.value);
@@ -1683,7 +1515,6 @@ function EditBuyerProfile() {
                                     type="text"
                                     name="size_min"
                                     className="form-control"
-                                    defaultValue={currentBuyerData.size_min}
                                     placeholder="Sq Ft Min"
                                     {...register("size_min", {
                                       onChange: (e) => {
@@ -1725,7 +1556,6 @@ function EditBuyerProfile() {
                                     name="size_max"
                                     className="form-control"
                                     placeholder="Sq Ft Max"
-                                    defaultValue={currentBuyerData.size_max}
                                     {...register("size_max", {
                                       onChange: (e) => {
                                         setSqFtMax(e.target.value);
@@ -1769,7 +1599,6 @@ function EditBuyerProfile() {
                                   name="rooms"
                                   className="form-control"
                                   placeholder="Rooms"
-                                  defaultValue={currentBuyerData.rooms}
                                   {...register("rooms", {
                                     onChange: (e) => {
                                       setlotSizesqFtMin(e.target.value);
@@ -1801,7 +1630,6 @@ function EditBuyerProfile() {
                                 name="lot_size_min"
                                 className="form-control"
                                 placeholder="Lot Size Sq Ft (min)"
-                                defaultValue={currentBuyerData.lot_size_min}
                                 {...register("lot_size_min", {
                                   onChange: (e) => {
                                     setlotSizesqFtMin(e.target.value);
@@ -1842,7 +1670,6 @@ function EditBuyerProfile() {
                                 name="lot_size_max"
                                 className="form-control"
                                 placeholder="Lot Size Sq Ft (max)"
-                                defaultValue={currentBuyerData.lot_size_max}
                                 {...register("lot_size_max", {
                                   onChange: (e) => {
                                     setlotSizesqFtMax(e.target.value);
@@ -1934,9 +1761,6 @@ function EditBuyerProfile() {
                                         minDate={startDate}
                                         id="DatePicker"
                                         type="string"
-                                        defaultValue={
-                                          currentBuyerData.build_year_min
-                                        }
                                         className="text-primary text-center form-control"
                                         selected={endDate}
                                         name="build_year_max"
@@ -1975,7 +1799,6 @@ function EditBuyerProfile() {
                                     name="stories_min"
                                     className="form-control"
                                     placeholder="Stories (min)"
-                                    defaultValue={currentBuyerData.stories_min}
                                     {...register("stories_min", {
                                       onChange: (e) => {
                                         setStoriesMin(e.target.value);
@@ -2013,7 +1836,6 @@ function EditBuyerProfile() {
                                     name="stories_max"
                                     className="form-control"
                                     placeholder="Stories (max)"
-                                    defaultValue={currentBuyerData.stories_max}
                                     {...register("stories_max", {
                                       onChange: (e) => {
                                         setStoriesMax(e.target.value);
@@ -2052,7 +1874,6 @@ function EditBuyerProfile() {
                                 type="text"
                                 name="price_min"
                                 className="form-control"
-                                defaultValue={currentBuyerData.price_min}
                                 placeholder="Price (min)"
                                 {...register("price_min", {
                                   onChange: (e) => {
@@ -2094,7 +1915,6 @@ function EditBuyerProfile() {
                                 name="price_max"
                                 className="form-control"
                                 placeholder="Price (max)"
-                                defaultValue={currentBuyerData.price_max}
                                 {...register("price_max", {
                                   onChange: (e) => {
                                     setPriceMax(e.target.value);
@@ -2125,11 +1945,64 @@ function EditBuyerProfile() {
                               {renderFieldError("price_max")}
                             </div>
                           </div>
+                          {!mobileHomeParkSelected && (
+                            <>
+                              {/* remove from all form Single Buyer Form Notes*/}
+                              {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>ARV (min)<span>*</span></label>
+                                    <div className="form-group">
+                                        <input type="text" name="arv_min" className="form-control" placeholder="ARV (min)" 
+                                        {
+                                        ...register("arv_min", {
+                                            required: "ARV (min) is required",
+                                            validate: {
+                                                matchPattern: (v) =>
+                                                /^[0-9]\d*$/.test(v) ||
+                                                "Please enter valid number",
+                                                maxLength: (v) =>
+                                                v.length <= 10 || "The digit should be less than equal 10",
+                                            },
+                                        })
+                                        } />
+                                        {errors.arv_min && <p className="error">{errors.arv_min?.message}</p>}
+
+                                        {renderFieldError('arv_min') }
+                                    </div>
+                                </div>
+                                <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                    <label>ARV (max)<span>*</span></label>
+                                    <div className="form-group">
+                                        <input type="text" name="arv_max" className="form-control" placeholder="ARV (max)" {
+                                        ...register("arv_max", {
+                                            required: "ARV (max) is required",
+                                            validate: {
+                                                matchPattern: (v) =>
+                                                /^[0-9]\d*$/.test(v) ||
+                                                "Please enter valid number",
+                                                maxLength: (v) =>
+                                                v.length <= 10 || "The digit should be less than equal 10",
+                                            },
+                                        })
+                                        } />
+                                        {errors.arv_max && <p className="error">{errors.arv_max?.message}</p>}
+
+                                        {renderFieldError('arv_max') }
+                                    </div>
+                                </div> */}
+                            </>
+                          )}
                           <div className="col-6 col-lg-6">
                             <label>
                               Parking<span>*</span>
                             </label>
                             <div className="form-group">
+                              {/* <MultiSelect
+                                    name="parking"
+                                    options={parkingOption}
+                                    placeholder='Select Parking'
+                                    setMultiselectOption = {setParkingValue}
+                                    /> 
+                                */}
                               <Controller
                                 control={control}
                                 name="parking"
@@ -2141,7 +2014,6 @@ function EditBuyerProfile() {
                                     options={parkingOption}
                                     name={name}
                                     placeholder="Select parking"
-                                    value={parkingValue}
                                     setMultiselectOption={setParkingValue}
                                     onChange={(e) => {
                                       onChange(e);
@@ -2174,7 +2046,6 @@ function EditBuyerProfile() {
                                   <Select
                                     options={buyerTypeOption}
                                     name={name}
-                                    value={buyerTypeValue}
                                     placeholder="Select Buyer Type"
                                     setMultiselectOption={setBuyerTypeValue}
                                     onChange={(e) => {
@@ -2238,10 +2109,8 @@ function EditBuyerProfile() {
                                 <MultiSelect
                                   name="property_flaw"
                                   options={locationFlawsOption}
-                                  selectValue={locationFlaws}
                                   placeholder="Select Location Flaws"
                                   setMultiselectOption={setLocationFlawsValue}
-                                  setSelectValues={setLocationFlaws}
                                 />
                                 {renderFieldError("property_flaw")}
                               </div>
@@ -2257,10 +2126,6 @@ function EditBuyerProfile() {
                                     name="solar"
                                     value="1"
                                     id="solar_yes"
-                                    onChange={(e) => {
-                                      setSolar(e.target.value);
-                                    }}
-                                    checked={solar === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="solar_yes">
                                     Yes
@@ -2272,10 +2137,6 @@ function EditBuyerProfile() {
                                     name="solar"
                                     value="0"
                                     id="solar_no"
-                                    onChange={(e) => {
-                                      setSolar(e.target.value);
-                                    }}
-                                    checked={solar === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="solar_no">
                                     No
@@ -2293,10 +2154,6 @@ function EditBuyerProfile() {
                                     name="pool"
                                     value="1"
                                     id="pool_yes"
-                                    onChange={(e) => {
-                                      setPool(e.target.value);
-                                    }}
-                                    checked={pool === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="pool_yes">
                                     Yes
@@ -2308,10 +2165,6 @@ function EditBuyerProfile() {
                                     name="pool"
                                     value="0"
                                     id="pool_no"
-                                    onChange={(e) => {
-                                      setPool(e.target.value);
-                                    }}
-                                    checked={pool === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="pool_no">
                                     No
@@ -2329,10 +2182,6 @@ function EditBuyerProfile() {
                                     name="septic"
                                     value="1"
                                     id="septic_yes"
-                                    onChange={(e) => {
-                                      setSeptic(e.target.value);
-                                    }}
-                                    checked={septic === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="septic_yes">
                                     Yes
@@ -2344,10 +2193,6 @@ function EditBuyerProfile() {
                                     name="septic"
                                     value="0"
                                     id="septic_no"
-                                    onChange={(e) => {
-                                      setSeptic(e.target.value);
-                                    }}
-                                    checked={septic === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="septic_no">
                                     No
@@ -2365,10 +2210,6 @@ function EditBuyerProfile() {
                                     name="well"
                                     value="1"
                                     id="well_yes"
-                                    onChange={(e) => {
-                                      setWell(e.target.value);
-                                    }}
-                                    checked={well === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="well_yes">
                                     Yes
@@ -2380,10 +2221,6 @@ function EditBuyerProfile() {
                                     name="well"
                                     value="0"
                                     id="well_no"
-                                    onChange={(e) => {
-                                      setWell(e.target.value);
-                                    }}
-                                    checked={well === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="well_no">
                                     No
@@ -2401,10 +2238,6 @@ function EditBuyerProfile() {
                                     name="hoa"
                                     value="1"
                                     id="hoa_yes"
-                                    onChange={(e) => {
-                                      setHoa(e.target.value);
-                                    }}
-                                    checked={hoa === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="hoa_yes">
                                     Yes
@@ -2416,10 +2249,6 @@ function EditBuyerProfile() {
                                     name="hoa"
                                     value="0"
                                     id="hoa_no"
-                                    onChange={(e) => {
-                                      setHoa(e.target.value);
-                                    }}
-                                    checked={hoa === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="hoa_no">
                                     No
@@ -2437,12 +2266,6 @@ function EditBuyerProfile() {
                                     name="age_restriction"
                                     value="1"
                                     id="age_restriction_yes"
-                                    onChange={(e) => {
-                                      setAgeRestriction(e.target.value);
-                                    }}
-                                    checked={
-                                      ageRestriction === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2457,12 +2280,6 @@ function EditBuyerProfile() {
                                     name="age_restriction"
                                     value="0"
                                     id="age_restriction_no"
-                                    onChange={(e) => {
-                                      setAgeRestriction(e.target.value);
-                                    }}
-                                    checked={
-                                      ageRestriction === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2483,12 +2300,6 @@ function EditBuyerProfile() {
                                     name="rental_restriction"
                                     value="1"
                                     id="rental_restriction_yes"
-                                    onChange={(e) => {
-                                      setRentalRestriction(e.target.value);
-                                    }}
-                                    checked={
-                                      rentalRestriction === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2503,12 +2314,6 @@ function EditBuyerProfile() {
                                     name="rental_restriction"
                                     value="0"
                                     id="rental_restriction_no"
-                                    onChange={(e) => {
-                                      setRentalRestriction(e.target.value);
-                                    }}
-                                    checked={
-                                      rentalRestriction === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2530,12 +2335,6 @@ function EditBuyerProfile() {
                                     name="post_possession"
                                     value="1"
                                     id="post_possession_yes"
-                                    onChange={(e) => {
-                                      setPostPossession(e.target.value);
-                                    }}
-                                    checked={
-                                      postPossession === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2550,12 +2349,6 @@ function EditBuyerProfile() {
                                     name="post_possession"
                                     value="0"
                                     id="post_possession_no"
-                                    onChange={(e) => {
-                                      setPostPossession(e.target.value);
-                                    }}
-                                    checked={
-                                      postPossession === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2577,12 +2370,6 @@ function EditBuyerProfile() {
                                     name="tenant"
                                     value="1"
                                     id="tenant_yes"
-                                    onChange={(e) => {
-                                      setTenantConveys(e.target.value);
-                                    }}
-                                    checked={
-                                      tenantConveys === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label className="mb-0" htmlFor="tenant_yes">
                                     Yes
@@ -2594,12 +2381,6 @@ function EditBuyerProfile() {
                                     name="tenant"
                                     value="0"
                                     id="tenant_no"
-                                    onChange={(e) => {
-                                      setTenantConveys(e.target.value);
-                                    }}
-                                    checked={
-                                      tenantConveys === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label className="mb-0" htmlFor="tenant_no">
                                     No
@@ -2618,10 +2399,6 @@ function EditBuyerProfile() {
                                     name="squatters"
                                     value="1"
                                     id="squatters_yes"
-                                    onChange={(e) => {
-                                      setSquatters(e.target.value);
-                                    }}
-                                    checked={squatters === "1" ? "checked" : ""}
                                   />
                                   <label
                                     className="mb-0"
@@ -2636,10 +2413,6 @@ function EditBuyerProfile() {
                                     name="squatters"
                                     value="0"
                                     id="squatters_no"
-                                    onChange={(e) => {
-                                      setSquatters(e.target.value);
-                                    }}
-                                    checked={squatters === "0" ? "checked" : ""}
                                   />
                                   <label
                                     className="mb-0"
@@ -2661,12 +2434,6 @@ function EditBuyerProfile() {
                                     name="building_required"
                                     value="1"
                                     id="building_required_yes"
-                                    onChange={(e) => {
-                                      setBuildingRequired(e.target.value);
-                                    }}
-                                    checked={
-                                      buildingRequired === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2681,12 +2448,6 @@ function EditBuyerProfile() {
                                     name="building_required"
                                     value="0"
                                     id="building_required_no"
-                                    onChange={(e) => {
-                                      setBuildingRequired(e.target.value);
-                                    }}
-                                    checked={
-                                      buildingRequired === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2708,10 +2469,6 @@ function EditBuyerProfile() {
                                     name="rebuild"
                                     value="1"
                                     id="rebuild_yes"
-                                    onChange={(e) => {
-                                      setRebuild(e.target.value);
-                                    }}
-                                    checked={rebuild === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="rebuild_yes">
                                     Yes
@@ -2723,10 +2480,6 @@ function EditBuyerProfile() {
                                     name="rebuild"
                                     value="0"
                                     id="rebuild_no"
-                                    onChange={(e) => {
-                                      setRebuild(e.target.value);
-                                    }}
-                                    checked={rebuild === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="rebuild_no">
                                     No
@@ -2745,12 +2498,6 @@ function EditBuyerProfile() {
                                     name="foundation_issues"
                                     value="1"
                                     id="foundation_issues_yes"
-                                    onChange={(e) => {
-                                      setFoundationIssues(e.target.value);
-                                    }}
-                                    checked={
-                                      foundationIssues === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2765,12 +2512,6 @@ function EditBuyerProfile() {
                                     name="foundation_issues"
                                     value="0"
                                     id="foundation_issues_no"
-                                    onChange={(e) => {
-                                      setFoundationIssues(e.target.value);
-                                    }}
-                                    checked={
-                                      foundationIssues === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2791,10 +2532,6 @@ function EditBuyerProfile() {
                                     name="mold"
                                     value="1"
                                     id="mold_yes"
-                                    onChange={(e) => {
-                                      setMold(e.target.value);
-                                    }}
-                                    checked={mold === "1" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="mold_yes">
                                     Yes
@@ -2806,10 +2543,6 @@ function EditBuyerProfile() {
                                     name="mold"
                                     value="0"
                                     id="mold_no"
-                                    onChange={(e) => {
-                                      setMold(e.target.value);
-                                    }}
-                                    checked={mold === "0" ? "checked" : ""}
                                   />
                                   <label className="mb-0" htmlFor="mold_no">
                                     No
@@ -2827,12 +2560,6 @@ function EditBuyerProfile() {
                                     name="fire_damaged"
                                     value="1"
                                     id="fire_damaged_yes"
-                                    onChange={(e) => {
-                                      setFireDamaged(e.target.value);
-                                    }}
-                                    checked={
-                                      fireDamaged === "1" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2847,12 +2574,6 @@ function EditBuyerProfile() {
                                     name="fire_damaged"
                                     value="0"
                                     id="fire_damaged_no"
-                                    onChange={(e) => {
-                                      setFireDamaged(e.target.value);
-                                    }}
-                                    checked={
-                                      fireDamaged === "0" ? "checked" : ""
-                                    }
                                   />
                                   <label
                                     className="mb-0"
@@ -2874,12 +2595,6 @@ function EditBuyerProfile() {
                                       name="permanent_affix"
                                       value="1"
                                       id="permanent_affix_yes"
-                                      onChange={(e) =>
-                                        setPermanentAffix(e.target.value())
-                                      }
-                                      checked={
-                                        permanentAffix === "1" ? "checked" : ""
-                                      }
                                     />
                                     <label
                                       className="mb-0"
@@ -2894,12 +2609,6 @@ function EditBuyerProfile() {
                                       name="permanent_affix"
                                       value="0"
                                       id="permanent_affix_no"
-                                      onChange={(e) =>
-                                        setPermanentAffix(e.target.value())
-                                      }
-                                      checked={
-                                        permanentAffix === "0" ? "checked" : ""
-                                      }
                                     />
                                     <label
                                       className="mb-0"
@@ -2919,9 +2628,9 @@ function EditBuyerProfile() {
                           <button
                             type="submit"
                             className="btn btn-fill"
-                            disabled={miniLoader ? "disabled" : ""}
+                            disabled={loading ? "disabled" : ""}
                           >
-                            Submit Now! {miniLoader ? <MiniLoader /> : ""}{" "}
+                            Submit Now! {loading ? <MiniLoader /> : ""}{" "}
                           </button>
                         </div>
                       </div>
@@ -2931,14 +2640,10 @@ function EditBuyerProfile() {
               </div>
             </div>
           </div>
-        )}
-        <BuyerProfilePayment
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-        />
-      </section>
-      <Footer />
+        </section>
+      )}
     </>
   );
 }
-export default EditBuyerProfile;
+
+export default CopyAddBuyer;

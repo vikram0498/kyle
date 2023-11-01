@@ -59,7 +59,7 @@ const LLCVerification = ({ register, errors }) => {
                         accept="image/png, image/jpg, image/jpeg"
                         name="llc_front_image"
                         {...register("llc_front_image", {
-                          required: "This fields is required",
+                          required: "This field is required",
                           validate: {
                             fileSize: validateFileSize,
                           },
@@ -104,7 +104,7 @@ const LLCVerification = ({ register, errors }) => {
                         accept="image/png, image/jpg, image/jpeg"
                         name="llc_back_image"
                         {...register("llc_back_image", {
-                          required: "This fields is required",
+                          required: "This field is required",
                           validate: {
                             fileSize: validateFileSize,
                           },
