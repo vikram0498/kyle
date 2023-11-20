@@ -1892,6 +1892,7 @@ function EditBuyerProfile() {
                                       <DatePicker
                                         id="DatePicker"
                                         type="string"
+                                        maxDate={new Date()}
                                         className="text-primary text-center form-control"
                                         selected={startDate}
                                         placeholderText="Year Built (Min)"
@@ -1934,6 +1935,7 @@ function EditBuyerProfile() {
                                         minDate={startDate}
                                         id="DatePicker"
                                         type="string"
+                                        maxDate={new Date()}
                                         defaultValue={
                                           currentBuyerData.build_year_min
                                         }

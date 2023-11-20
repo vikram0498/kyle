@@ -1718,6 +1718,7 @@ function CopyAddBuyer() {
                                     }) => (
                                       <DatePicker
                                         id="DatePicker"
+                                        maxDate={new Date()}
                                         type="string"
                                         className="text-primary text-center form-control"
                                         selected={startDate}
@@ -1761,6 +1762,7 @@ function CopyAddBuyer() {
                                         minDate={startDate}
                                         id="DatePicker"
                                         type="string"
+                                        maxDate={new Date()}
                                         className="text-primary text-center form-control"
                                         selected={endDate}
                                         name="build_year_max"
