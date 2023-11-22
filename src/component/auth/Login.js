@@ -24,7 +24,7 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let login = localStorage.getItem("_token");
+    let login = getTokenData();
     let userData = getRememberMeData();
     //console.log(userData,'userData',remember);
     if (userData != "" && userData != undefined) {
@@ -32,8 +32,8 @@ function Login(props) {
       setPassword(userData.password);
       setRemember(userData.isRemember);
     }
-
-    if (login != "" && login != null) {
+    // console.log(login,'loginlogin');
+    if (login) {
       navigate("/");
     }
   }, []);
@@ -272,7 +272,7 @@ function Login(props) {
             </div>
           </div>
         </form>
-        <p className="account-now mt-4 pt-2">
+        <p className="support-text mt-4 pt-2">
           Want to get in touch? We'd love to hear from you.{" "}
           <Link to="/support" style={{ color: "#0d6efd" }}>
             click here

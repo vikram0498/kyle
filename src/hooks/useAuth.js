@@ -85,8 +85,9 @@ export const useAuth = () => {
     if (token !== "" && token !== undefined) {
       return token;
     }
-    var deft = { signedIn: false, access_token: null };
-    return deft;
+    return false;
+    // var deft = { signedIn: false, access_token: null };
+    // return deft;
   }
   // function setLogout() {
   //   const apiUrl = process.env.REACT_APP_API_URL;
@@ -173,6 +174,14 @@ export const useAuth = () => {
   //   }
   // }
 
+  // const isTokenValid = async () => {
+  //    try{
+
+  //    }catch(){
+
+  //    }
+  // }
+
   async function setLogout() {
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
@@ -234,6 +243,7 @@ export const useAuth = () => {
     return data;
   };
   const getLocalStorageUserdata = () => {
+
     let data = localStorage.getItem("user_data");
     let decryptDatas = "";
     if (data !== null) {

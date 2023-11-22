@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const BuyerProfile = () => {
+  console.log("enterrrerer");
   const { getTokenData, setLogout } = useAuth();
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [loader, setLoader] = useState(true);
@@ -34,6 +35,7 @@ const BuyerProfile = () => {
       }
     } catch (error) {
       if (error.response) {
+        console.log(error.response,'sssss');
         if (error.response.status === 401) {
           setLogout();
         }

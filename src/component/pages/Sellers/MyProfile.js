@@ -11,7 +11,7 @@ import axios from "axios";
 
 const MyProfile = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { getTokenData, setLogout, setLocalStorageUserdata } = useAuth();
+  const { getTokenData, setLogout, getLocalStorageUserdata, setLocalStorageUserdata } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState("");
   const [oldPassword, setOldPassword] = useState("");
@@ -56,15 +56,16 @@ const MyProfile = () => {
         setUserData(response.data.data);
         setFirstName(response.data.data.first_name);
         setLastName(response.data.data.last_name);
-        const userData = {
-          first_name: response.data.data.first_name,
-          last_name: response.data.data.last_name,
-          profile_image: response.data.data.profile_image,
-          level_type: response.data.data.level_type,
-          role: response.data.data.role,
-          total_buyer_uploaded: response.data.data.total_buyer_uploaded,
-        };
+       
+        let userData = getLocalStorageUserdata();
+        userData.first_name = response.data.data.first_name;
+        userData.last_name = response.data.data.last_name;
+        userData.profile_image =response.data.data.profile_image;
+        userData.level_type = response.data.data.level_type;
+        userData.role = response.data.data.role;
+        userData.total_buyer_uploaded = response.data.data.total_buyer_uploaded;
         setLocalStorageUserdata(userData);
+        
         const profileName = document.querySelector(".user-name-title");
         const profilePic = document.querySelector(".user-profile");
 

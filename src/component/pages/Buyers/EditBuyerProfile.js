@@ -19,7 +19,7 @@ function EditBuyerProfile() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const { getTokenData, setLogout, setLocalStorageUserdata } = useAuth();
+  const { getTokenData, setLogout, getLocalStorageUserdata, setLocalStorageUserdata} = useAuth();
 
   const { setErrors, renderFieldError } = useFormError();
   const {
@@ -33,6 +33,7 @@ function EditBuyerProfile() {
   /* previous form data start*/
   const [loader, setLoader] = useState(true);
   const [miniLoader, setMiniLoader] = useState(false);
+  const [miniProfileLoader, setMiniProfileLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [border, setBorder] = useState("1px dashed #677AAB");
   const [previewImageUrl, setPreviewImageUrl] = useState("");
@@ -403,18 +404,18 @@ function EditBuyerProfile() {
         setMiniLoader(false);
         if (response.data.status) {
           console.log(response.data.userData, "rohittt");
-          const userData = {
-            first_name: response.data.userData.first_name,
-            last_name: response.data.userData.last_name,
-            profile_image: response.data.userData.profile_image,
-            level_type: response.data.userData.level_type,
-            role: response.data.userData.role,
-            total_buyer_uploaded: response.data.total_buyer_uploaded,
-          };
+          let userData = getLocalStorageUserdata();
+          
+          userData.first_name = response.data.userData.first_name;
+          userData.last_name = response.data.userData.last_name;
+          userData.profile_image = response.data.userData.profile_image;
+          userData.level_type = response.data.userData.level_type;
+          userData.role = response.data.userData.role;
+          userData.total_buyer_uploaded = response.data.userData.total_buyer_uploaded;
+          
           setLocalStorageUserdata(userData);
           const profileName = document.querySelector(".user-name-title");
           const profilePic = document.querySelector(".user-profile");
-          console.log(userData.first_name);
           profileName.innerHTML =
             response.data.userData.first_name +
             " " +
@@ -549,6 +550,7 @@ function EditBuyerProfile() {
   const handleProfileChange = async (e, isPayment) => {
     e.preventDefault();
     try {
+      setMiniProfileLoader(true)
       if (isPayment === 0) {
         setModalOpen(true);
       } else {
@@ -563,17 +565,25 @@ function EditBuyerProfile() {
             }
           );
           if (response.data.status) {
+            console.log(getLocalStorageUserdata().profile_image);
             toast.success(response.data.message, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
         }
+        setMiniProfileLoader(false)
         setModalOpen(false);
       }
     } catch (error) {
+      console.log(error.response);
+      setMiniProfileLoader(false)
       if (error.response) {
         if (error.response.data.validation_errors) {
           setErrors(error.response.data.validation_errors);
+        }
+        // console.log(error.response.data.errors.profile_image,'sssssj');
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
         }
         if (error.response.data.error) {
           toast.error(error.response.data.error, {
@@ -686,17 +696,18 @@ function EditBuyerProfile() {
                           className="file-input"
                           onChange={(e) => handleProfileChange(e, 1)}
                         />
-                        Upload Your Image
+                        Upload Your Image {miniProfileLoader ? <MiniLoader /> : ""}{" "}
                       </button>
                     ) : (
                       <button
                         className="file-upload"
                         onClick={(e) => handleProfileChange(e, 0)}
                       >
-                        Upload Your Image
+                        Upload Your Image 
                       </button>
                     )}
                   </div>
+                  {renderFieldError("profile_image")}
                   <p
                     style={{
                       padding: "6px",

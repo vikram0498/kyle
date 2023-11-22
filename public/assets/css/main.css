@@ -5250,3 +5250,18 @@ span.badge.bg-success.purchased-profile {
 .error + .invalid-feedback {
   display: none !important;
 }
+.success-btn {
+  background: #198754;
+  color: #fff;
+  border: 2px solid #198754;
+  width: 100%;
+  padding: 14px 22px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  transition: all 0.4s ease-in-out;
+  text-transform: capitalize;
+  box-shadow: none !important;
+  font-family: "Barlow", sans-serif;
+}

@@ -117,15 +117,18 @@ function BuyerHeader() {
                           My Profile
                         </Link>
                       </li>
-                      {/* <li className="active">
-                        <Link to="/my-buyers" className="dropdown-item">
+                      {(userDetails !== null && userDetails.is_profile_verified) ? '':
+                      <li className="active">
+                        <Link to="/profile-verification" className="dropdown-item">
                           <img
-                            src="/assets/images/booksaved.svg"
+                            src="/assets/images/search-log.svg"
                             className="img-fluid"
                           />
-                          My Buyers Data
+                          Profile verification
                         </Link>
-                      </li> */}
+                      </li>
+                      }
+                      
                       <li>
                         <Link to="/support" className="dropdown-item">
                           <img

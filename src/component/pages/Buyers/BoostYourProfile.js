@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
+import MiniLoader from "../../partials/MiniLoader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Footer from "../../partials/Layouts/Footer";
@@ -11,6 +12,7 @@ const BoostYourProfile = () => {
   const { getTokenData, setLogout } = useAuth();
   const [plans, setPlans] = useState("");
   const [loader, setLoader] = useState(true);
+  const [miniButtonLoader, setMiniButtonLoader] = useState('');
   const fetchBuyerPlans = async () => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
@@ -44,6 +46,7 @@ const BoostYourProfile = () => {
   }, []);
   const boostProfilePurchase = async (planId, payment_type) => {
     try {
+      setMiniButtonLoader(planId);
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
@@ -58,8 +61,11 @@ const BoostYourProfile = () => {
       });
       if (response.data.session) {
         window.location.href = response.data.session.url;
+      }else{
+        setMiniButtonLoader('');
       }
     } catch (error) {
+      setMiniButtonLoader('');
       if (error.response) {
         if (error.response.status === 401) {
           setLogout();
@@ -205,7 +211,12 @@ const BoostYourProfile = () => {
                             <div className="notifyinfo">{data.description}</div>
                           </div>
                           <div className="purchase-btn p-0">
-                            {!data.current_plan ? (
+                            {!data.current_plan ?  data.is_user_limit_reached ? 
+                                <span className="badge success-btn">
+                                      Plan Limit Exceed
+                                </span>
+                                    :(
+                             
                               <button
                                 type="button"
                                 className="btn btn-fill"
@@ -216,7 +227,7 @@ const BoostYourProfile = () => {
                                   )
                                 }
                               >
-                                purchase
+                                 {(miniButtonLoader === data.plan_stripe_id) ?<>Loading... <MiniLoader/></>  : 'Purchase'}
                               </button>
                             ) : (
                               <div className="renew-wrapper">

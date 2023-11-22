@@ -44,7 +44,7 @@ function Header() {
       };
       let url = apiUrl + "get-current-limit";
       let response = await axios.get(url, { headers: headers });
-      console.log(response, "response");
+      // console.log(response, "response");
       if (response.data.status) {
         console.log(response.data.is_active);
         if (!response.data.is_active) {
@@ -61,6 +61,7 @@ function Header() {
       }
     }
   };
+
   return (
     <>
       <header className="dashboard-header">

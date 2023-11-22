@@ -76,6 +76,9 @@ const VerifyAndSetPassword = () => {
       }
     } catch (error) {
       if (error.response) {
+        if(error.response.data.is_verify_email){
+          navigate('/login');
+        }
         if (error.response.data.validation_errors) {
           setErrors(error.response.data.validation_errors);
         }

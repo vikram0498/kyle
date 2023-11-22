@@ -28,6 +28,7 @@ const steps = [
 const HorizontalLinearStepper = () => {
   const [miniLoader, setMiniLoader] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
+  const [profileVerificationStatus, setProfileVerificationStatus] = React.useState('');
   const [skipped, setSkipped] = React.useState(new Set());
   const [isOtpSent, setIsOtpSent] = React.useState(false);
   const [isOtpVerify, setIsOtpVerify] = React.useState(false);
@@ -181,7 +182,8 @@ const HorizontalLinearStepper = () => {
         return false;
       }
       setIsOtpVerify(true);
-      setActiveStep(parseInt(response.data.current_step));
+      setProfileVerificationStatus("pending");
+      //setActiveStep(parseInt(response.data.current_step));
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -201,7 +203,12 @@ const HorizontalLinearStepper = () => {
         headers: headers,
       });
       setLoader(false);
-      setActiveStep(response.data.lastStepForm);
+      if(response.data.lastStepForm > 1){
+        setActiveStep(response.data.lastStepForm-1);
+        setProfileVerificationStatus(response.data.lastStepStatus);
+      }else{
+        setActiveStep(response.data.lastStepForm);
+      }
     } catch (error) {
       if (error.response) {
         setLoader(false);
@@ -268,6 +275,8 @@ const HorizontalLinearStepper = () => {
               {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
               <form method="post" onSubmit={handleSubmit(stepperFormSubmit)}>
                 <div className="profile-varification">
+                  {(profileVerificationStatus =='pending')? 'Pending status': profileVerificationStatus =='verify' ? 'Completed status':
+                  <>
                   {activeStep === 0 && (
                     <PhoneVerification
                       register={register}
@@ -306,6 +315,8 @@ const HorizontalLinearStepper = () => {
                   {activeStep === 4 && (
                     <ApplicationProcess miniLoader={miniLoader} />
                   )}
+                  </>
+                  }
                 </div>
                 {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
            <Button

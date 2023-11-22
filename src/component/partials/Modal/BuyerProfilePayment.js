@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import MiniLoader from "../MiniLoader";
+import { Link } from "react-router-dom";
 const BuyerProfilePayment = ({ setModalOpen, modalOpen }) => {
   const [buttonLoader, setButtonLoader] = useState(false);
   const { getTokenData, setLogout, setLocalStorageUserdata } = useAuth();
@@ -41,21 +42,26 @@ const BuyerProfilePayment = ({ setModalOpen, modalOpen }) => {
         </button>
         <Modal.Body>
           <div className="application-process">
-            <div className="pricehard">$100</div>
-            <h3>Please Pay for complete Your application</h3>
+            {/* <div className="pricehard">$100</div> */}
+            <h3>Please complete your profile verification to upload image</h3>
             <p className="mb-0">
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has the industry's standard dummy text ever
               since the 1500s,
             </p>
             <div className="process-payment-btn">
-              <button
+              {/* <button
                 type="submit"
                 className="btn btn-fill"
                 onClick={ProfilePayment}
               >
                 Process Payment {buttonLoader ? <MiniLoader /> : ""}
-              </button>
+              </button> */}
+              <Link to="/profile-verification">
+                <button type="button" className="btn btn-fill" >
+                  Complete verification {buttonLoader ? <MiniLoader /> : ""}
+                </button> 
+              </Link>
             </div>
           </div>
         </Modal.Body>

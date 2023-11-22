@@ -10,8 +10,10 @@ import GoogleLoginComponent from "../../partials/SocialLogin/GoogleLoginComponen
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import FacebookLoginButton from "../../partials/SocialLogin/FacebookLoginButton";
 import { useForm } from "react-hook-form";
-
+import { useAuth } from "../../../hooks/useAuth";
 const Register = () => {
+  const {getTokenData } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -20,8 +22,8 @@ const Register = () => {
   } = useForm();
 
   useEffect(() => {
-    let login = localStorage.getItem("_token");
-    if (login != "" && login != null) {
+    let login = getTokenData();
+    if (login) {
       navigate("/");
     }
   });
