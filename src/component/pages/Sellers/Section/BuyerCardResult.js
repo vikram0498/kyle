@@ -24,9 +24,14 @@ const BuyerCardResult = (props) => {
         <div className={"property-critera-block property-section-"+data.id}>
             <div className="critera-card">
                 <div className="center-align">
+                {(data.buyer_profile_image !='' && data.buyer_profile_image != undefined) ? 
+                    <img src={data.buyer_profile_image} className="img-fluid price-img" />
+                :
                     <span className="price-img">
-                        <img alt="price" src="/assets/images/price.svg" className="img-fluid" /></span>
-                    <p>Buyer </p>
+                    <img src='./assets/images/price.svg' className="img-fluid" />
+                    </span>
+                }
+                    <p>Buyer  </p>
                     {(activeTab ==='more_buyers')?
                     <ul className="like-unlike mb-0 list-unstyled">
                         <li>

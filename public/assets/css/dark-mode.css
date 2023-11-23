@@ -328,3 +328,13 @@ body.dark .card-box-light .feature-item-content {
 body.dark .payment-card {
   background-color: #444;
 }
+
+body.dark .inner-call-box .dropdown-toggle .dropdown-arr svg path{
+  stroke: #464B70;
+}
+body.dark .inner-call-box .dropdown-toggle{
+  background-color: #D6F5D1 !important;
+}
+body.dark .inswittcher label{
+  color: #fff;
+}

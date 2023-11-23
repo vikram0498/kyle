@@ -131,7 +131,7 @@ const DriverLicense = ({ register, errors, renderFieldError }) => {
             <div className="col-12 col-lg-12">
               <div className="upload-btn text-end">
                 <button type="submit" className="btn btn-fill w-auto">
-                  Upload & Next
+                  Upload
                 </button>
               </div>
             </div>

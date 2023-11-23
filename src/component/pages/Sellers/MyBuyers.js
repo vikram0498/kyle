@@ -169,6 +169,7 @@ const MyBuyer = () => {
       handleDoubleClick(id);
     }
     let newBuyerData = buyerData;
+    console.log(newBuyerData,'newBuyerData');
     newBuyerData[index] = CurrentBuyer[0];
     setBuyerData(newBuyerData);
     setLikeCount(likeCount + 1);

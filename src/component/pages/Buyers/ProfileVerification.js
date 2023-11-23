@@ -6,12 +6,7 @@ const ProfileVerification = () => {
   return (
     <>
       <BuyerHeader />
-      <section className="main-section position-relative pt-4 pb-120">
-        <div className="container position-relative">
-          {" "}
-          <HorizontalLinearStepper />
-        </div>
-      </section>
+        <HorizontalLinearStepper />
       <Footer />
     </>
   );

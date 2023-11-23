@@ -191,6 +191,10 @@
   .support-inner .card-box-blocks .row {
     row-gap: 0;
   }
+  .inswittcher label{
+    justify-content: flex-start;
+    margin-top: 15px;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -321,6 +325,9 @@
   .buyer-proinner .component-group .account-check .btn svg {
     width: 25px;
     height: 25px;
+  }
+  .profile-verification-st .cards{
+    padding: 30px;
   }
 }
 

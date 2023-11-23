@@ -17,15 +17,18 @@ export default function BuyerCard({
   } else if (data.contact_preferance_id === 4) {
     PreferenceIcons = "./assets/images/1.svg";
   }
-
   return (
     <div className="col-12 col-lg-6">
       <div className="property-critera-block">
         <div className="critera-card">
           <div className="center-align">
+            {(data.buyer_profile_image !='') ? 
+              <img src={data.buyer_profile_image} className="img-fluid price-img" />
+            :
             <span className="price-img">
-              <img src="./assets/images/price.svg" className="img-fluid" />
+              <img src='./assets/images/price.svg' className="img-fluid" />
             </span>
+            }
             <p>Buyer</p>
             {data.createdByAdmin ? (
               <ul className="like-unlike mb-0 list-unstyled 888">

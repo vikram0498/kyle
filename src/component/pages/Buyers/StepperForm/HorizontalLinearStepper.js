@@ -1,21 +1,23 @@
-import * as React from "react";
+import React , {useEffect, useState, Fragment} from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import PhoneVerification from "./PhoneVerification";
 import DriverLicense from "./DriverLicense";
 import LLCVerification from "./LLCVerification";
 import ProofOfFund from "./ProofOfFund";
 import ApplicationProcess from "./ApplicationProcess";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useFormError } from "../../../../hooks/useFormError";
 import axios from "axios";
 import { toast } from "react-toastify";
-import SuccessPage from "./SuccessPage";
+import SuccessPage from "./ApplicationStatusPage/SuccessPage";
+import ApprorvedPage from "./ApplicationStatusPage/ApprovedPage";
+import PendingPage from "./ApplicationStatusPage/PendingPage";
+import RejectedPage from "./ApplicationStatusPage/RejectedPage";
 
 const steps = [
   "Phone Verification",
@@ -26,16 +28,16 @@ const steps = [
 ];
 
 const HorizontalLinearStepper = () => {
-  const [miniLoader, setMiniLoader] = React.useState(false);
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [profileVerificationStatus, setProfileVerificationStatus] = React.useState('');
-  const [skipped, setSkipped] = React.useState(new Set());
-  const [isOtpSent, setIsOtpSent] = React.useState(false);
-  const [isOtpVerify, setIsOtpVerify] = React.useState(false);
-  const [phoneNumber, setphoneNumber] = React.useState("");
+  const [miniLoader, setMiniLoader] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [profileVerificationStatus, setProfileVerificationStatus] = useState('');
+  const [skipped, setSkipped] = useState(new Set());
+  const [isOtpSent, setIsOtpSent] =useState(false);
+  const [isOtpVerify, setIsOtpVerify] = useState(false);
+  const [phoneNumber, setphoneNumber] = useState("");
   const { getTokenData, setLogout } = useAuth();
   const { setErrors, renderFieldError } = useFormError();
-  const [loader, setLoader] = React.useState(true);
+  const [loader, setLoader] = useState(true);
   const {
     register,
     handleSubmit,
@@ -56,32 +58,9 @@ const HorizontalLinearStepper = () => {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
+    setProfileVerificationStatus("");
   };
   const stepperFormSubmit = async (data, e) => {
     e.preventDefault();
@@ -183,7 +162,6 @@ const HorizontalLinearStepper = () => {
       }
       setIsOtpVerify(true);
       setProfileVerificationStatus("pending");
-      //setActiveStep(parseInt(response.data.current_step));
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -229,126 +207,116 @@ const HorizontalLinearStepper = () => {
       }
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     getLastFormStep();
   }, []);
+
+  const renderComponent = (condition) => {
+    switch (condition) {
+      case 'pending':
+        return <PendingPage/>;
+      case 'verify':
+        return <ApprorvedPage handleNext={handleNext}/>;
+      case 'reject':
+        return <RejectedPage setProfileVerificationStatus={setProfileVerificationStatus}/>;
+      default:
+        return null;
+    }
+  }
+
   return (
-    <div className="main-section position-relative pt-4 pb-120">
+    <section className="main-section position-relative pt-4">
       {loader ? (
         <div className="loader" style={{ textAlign: "center" }}>
           <img src="assets/images/loader.svg" />
         </div>
       ) : (
-        <Box sx={{ width: "100%" }}>
-          <Stepper activeStep={activeStep}>
-            {steps.map((label, index) => {
-              const stepProps = {};
-              const labelProps = {};
-              if (isStepOptional(index)) {
-                labelProps.optional = (
-                  <Typography variant="caption">Optional</Typography>
+        <div className="container position-relative">
+          <Box sx={{ width: "100%" }}>
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps = {};
+                const labelProps = {};
+                if (isStepOptional(index)) {
+                  labelProps.optional = (
+                    <Typography variant="caption">Optional</Typography>
+                  );
+                }
+                if (isStepSkipped(index)) {
+                  stepProps.completed = false;
+                }
+                return (
+                  <Step key={label} {...stepProps}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                  </Step>
                 );
-              }
-              if (isStepSkipped(index)) {
-                stepProps.completed = false;
-              }
-              return (
-                <Step key={label} {...stepProps}>
-                  <StepLabel {...labelProps}>{label}</StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-          {activeStep === steps.length ? (
-            <React.Fragment>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                <SuccessPage />
-                {/* All steps completed - you&apos;re finished */}
-              </Typography>
-              {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-         <Box sx={{ flex: "1 1 auto" }} />
-         <Button onClick={handleReset}>Reset</Button>
-       </Box> */}
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
-              <form method="post" onSubmit={handleSubmit(stepperFormSubmit)}>
-                <div className="profile-varification">
-                  {(profileVerificationStatus =='pending')? 'Pending status': profileVerificationStatus =='verify' ? 'Completed status':
-                  <>
-                  {activeStep === 0 && (
-                    <PhoneVerification
-                      register={register}
-                      errors={errors}
-                      renderFieldError={renderFieldError}
-                      isOtpSent={isOtpSent}
-                      sendOtp={sendOtp}
-                      setphoneNumber={setphoneNumber}
-                      phoneNumber={phoneNumber}
-                      handleSubmit={handleSubmit}
-                      isOtpVerify={isOtpVerify}
-                      miniLoader={miniLoader}
-                    />
-                  )}
-                  {activeStep === 1 && (
-                    <DriverLicense
-                      register={register}
-                      errors={errors}
-                      renderFieldError={renderFieldError}
-                    />
-                  )}
-                  {activeStep === 2 && (
-                    <ProofOfFund
-                      register={register}
-                      errors={errors}
-                      renderFieldError={renderFieldError}
-                    />
-                  )}
-                  {activeStep === 3 && (
-                    <LLCVerification
-                      register={register}
-                      errors={errors}
-                      renderFieldError={renderFieldError}
-                    />
-                  )}
-                  {activeStep === 4 && (
-                    <ApplicationProcess miniLoader={miniLoader} />
-                  )}
-                  </>
-                  }
-                </div>
-                {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-           <Button
-             className="back-btn-stepper"
-             color="inherit"
-             disabled={activeStep === 0}
-             onClick={handleBack}
-             sx={{ mr: 1 }}
-           >
-             Back
-           </Button>
-           <Box sx={{ flex: "1 1 auto" }} />
-           {isStepOptional(activeStep) && (
-             <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-               Skip
-             </Button>
-           )}
+              })}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  <SuccessPage />
+                </Typography>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <form method="post" onSubmit={handleSubmit(stepperFormSubmit)}>
+                  <div className="profile-varification">
+                    {renderComponent(profileVerificationStatus)}
+                    {!renderComponent(profileVerificationStatus) && (
+                      <>
+                        {activeStep === 0 && (
+                          <PhoneVerification
+                            register={register}
+                            errors={errors}
+                            renderFieldError={renderFieldError}
+                            isOtpSent={isOtpSent}
+                            sendOtp={sendOtp}
+                            setphoneNumber={setphoneNumber}
+                            phoneNumber={phoneNumber}
+                            handleSubmit={handleSubmit}
+                            isOtpVerify={isOtpVerify}
+                            miniLoader={miniLoader}
+                          />
+                        )}
 
-           <Button
-             className="next-btn-stepper"
-             type="button"
-             onClick={handleSubmit(handleNext)}
-           >
-             {activeStep === steps.length - 1 ? "Finish" : "Next"}
-           </Button>
-         </Box> */}
-              </form>
-            </React.Fragment>
-          )}
-        </Box>
+                        {activeStep === 1 && (
+                          <DriverLicense
+                            register={register}
+                            errors={errors}
+                            renderFieldError={renderFieldError}
+                          />
+                        )}
+
+                        {activeStep === 2 && (
+                          <ProofOfFund
+                            register={register}
+                            errors={errors}
+                            renderFieldError={renderFieldError}
+                          />
+                        )}
+
+                        {activeStep === 3 && (
+                          <LLCVerification
+                            register={register}
+                            errors={errors}
+                            renderFieldError={renderFieldError}
+                          />
+                        )}
+
+                        {activeStep === 4 && (
+                          <ApplicationProcess miniLoader={miniLoader} />
+                        )}
+                      </>
+                    )}
+                  </div>
+                </form>
+              </Fragment>
+            )}
+          </Box>
+        </div>
       )}
-    </div>
+    </section>
   );
 };
 export default HorizontalLinearStepper;

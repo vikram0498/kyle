@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const BuyerProfile = () => {
-  console.log("enterrrerer");
   const { getTokenData, setLogout } = useAuth();
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [loader, setLoader] = useState(true);
@@ -51,8 +50,11 @@ const BuyerProfile = () => {
     }
   };
 
-  const profileStatus = async (data) => {
+  const profileStatus = async (e) => {
     try {
+      let isChecked = e.target.checked;
+      console.log(isChecked,'isChecked');
+      let data = isChecked ? 1: 0;
       let response = await axios.post(
         apiUrl + "update-buyer-search-status",
         { status: data },
@@ -123,7 +125,6 @@ const BuyerProfile = () => {
 
   const getLabelValue = (data) => {
     if (data !== undefined) {
-      console.log("enter");
       const selectedBuildingClass = data.map((item) => item.label);
       console.log(selectedBuildingClass.join(","));
       return selectedBuildingClass.join(", ");
@@ -302,6 +303,11 @@ const BuyerProfile = () => {
                           </span>
                         </a>
                       </div>
+                      <div className="update-profile">
+                        <Link to="/edit-profile" className="btn btn-fill">
+                          Edit Profile
+                        </Link>
+                      </div>
                       {/* <div className="contact-update-item">
                       <a href="#">
                         <span className="icon">
@@ -456,6 +462,12 @@ const BuyerProfile = () => {
                               {currentBuyerData.first_name +
                                 " " +
                                 currentBuyerData.last_name}
+                                <img
+                                  src="/assets/images/p-verfied.svg"
+                                  className="img-fluid ms-1"
+                                  alt=""
+                                  title=""
+                                />
                             </h3>
                             <p className="mb-0">
                               Lorem Ipsum is simply dummy text of the .
@@ -464,8 +476,18 @@ const BuyerProfile = () => {
                         </div>
                       </div>
                       <div className="col-12 col-lg-6">
+                        <div className="swittcher-area">
+                            <div className="inswittcher">
+                              <label>
+                                active
+                                <input type="checkbox" onChange={profileStatus} />
+                                <span></span>
+                                Inactive
+                              </label>
+                            </div>
+                          </div>
                         <div className="component-group">
-                          <div
+                          {/* <div
                             className={
                               currentBuyerData.buyer_search_status === 1
                                 ? "active-inactive status-active"
@@ -546,9 +568,20 @@ const BuyerProfile = () => {
                                 </li>
                               </ul>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="premium-quality">
-                            <button className="btn">
+                            <div className="town-div">
+                              <span>
+                                  <img
+                                    src="/assets/images/quality-icon.svg"
+                                    className="img-fluid"
+                                    alt=""
+                                    title=""
+                                  />
+                                </span>
+                                Actively Buying
+                              </div>
+                            {/* <button className="btn">
                               <svg
                                 width="20"
                                 height="20"
@@ -594,9 +627,9 @@ const BuyerProfile = () => {
                                   </clipPath>
                                 </defs>
                               </svg>
-                            </button>
+                            </button> */}
                           </div>
-                          <div className="account-check user-ac-check">
+                          {/* <div className="account-check user-ac-check">
                             <OverlayTrigger
                               placement="top"
                               style={{ backgroundColor: "green" }}
@@ -624,102 +657,107 @@ const BuyerProfile = () => {
                                 />
                               </button>
                             </OverlayTrigger>
-                          </div>
-                          <div className="field-box">
-                            <div className="dropdown">
-                              <button
-                                className="btn dropdown-toggle"
-                                type="button"
-                                id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                <span className="commentic">
-                                  <img
-                                    src={
-                                      profileIcons[
-                                        currentBuyerData.contact_value
-                                      ]
-                                    }
-                                  />
-                                </span>
-                                <span className="dropdown-arr">
-                                  <svg
-                                    width="10"
-                                    height="6"
-                                    viewBox="0 0 10 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M1 1L5 5L9 1"
-                                      stroke="#464B70"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
+                          </div> */}
+                          
+                          <div className="field-box call-darea">
+                            <div className="inner-call-box">
+                              <span>preference</span>
+                              <div className="dropdown">
+                                <button
+                                  className="btn dropdown-toggle"
+                                  type="button"
+                                  id="dropdownMenuButton1"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
+                                >
+                                  <span className="commentic">
+                                    <img
+                                      src={
+                                        profileIcons[
+                                          currentBuyerData.contact_value
+                                        ]
+                                      }
                                     />
-                                  </svg>
-                                </span>
-                              </button>
-                              <ul
-                                className="dropdown-menu"
-                                aria-labelledby="dropdownMenuButton1"
-                              >
-                                <li
-                                  className="profile-status"
-                                  onClick={() => contactPreferanceUpdate(1)}
+                                  </span>
+                                  <span className="dropdown-arr">
+                                    <svg
+                                      width="10"
+                                      height="6"
+                                      viewBox="0 0 10 6"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M1 1L5 5L9 1"
+                                        stroke="#464B70"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                  </span>
+                                </button>
+                                <ul
+                                  className="dropdown-menu"
+                                  aria-labelledby="dropdownMenuButton1"
                                 >
-                                  <a className="dropdown-item" href={void 0}>
-                                    Email
-                                    {currentBuyerData.contact_value === 1 ? (
-                                      <span className="markedChecked">✓</span>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </a>
-                                </li>
-                                <li
-                                  className="profile-status"
-                                  onClick={() => contactPreferanceUpdate(2)}
-                                >
-                                  <a className="dropdown-item" href={void 0}>
-                                    Text
-                                    {currentBuyerData.contact_value === 2 ? (
-                                      <span className="markedChecked">✓</span>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </a>
-                                </li>
-                                <li
-                                  className="profile-status"
-                                  onClick={() => contactPreferanceUpdate(3)}
-                                >
-                                  <a className="dropdown-item" href={void 0}>
-                                    Call
-                                    {currentBuyerData.contact_value === 3 ? (
-                                      <span className="markedChecked">✓</span>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </a>
-                                </li>
-                                <li
-                                  className="profile-status"
-                                  onClick={() => contactPreferanceUpdate(4)}
-                                >
-                                  <a className="dropdown-item" href={void 0}>
-                                    No Preference
-                                    {currentBuyerData.contact_value === 4 ? (
-                                      <span className="markedChecked">✓</span>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </a>
-                                </li>
-                              </ul>
+                                  <li
+                                    className="profile-status"
+                                    onClick={() => contactPreferanceUpdate(1)}
+                                  >
+                                    <a className="dropdown-item" href={void 0}>
+                                      Email
+                                      {currentBuyerData.contact_value === 1 ? (
+                                        <span className="markedChecked">✓</span>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </a>
+                                  </li>
+                                  <li
+                                    className="profile-status"
+                                    onClick={() => contactPreferanceUpdate(2)}
+                                  >
+                                    <a className="dropdown-item" href={void 0}>
+                                      Text
+                                      {currentBuyerData.contact_value === 2 ? (
+                                        <span className="markedChecked">✓</span>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </a>
+                                  </li>
+                                  <li
+                                    className="profile-status"
+                                    onClick={() => contactPreferanceUpdate(3)}
+                                  >
+                                    <a className="dropdown-item" href={void 0}>
+                                      Call
+                                      {currentBuyerData.contact_value === 3 ? (
+                                        <span className="markedChecked">✓</span>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </a>
+                                  </li>
+                                  <li
+                                    className="profile-status"
+                                    onClick={() => contactPreferanceUpdate(4)}
+                                  >
+                                    <a className="dropdown-item" href={void 0}>
+                                      No Preference
+                                      {currentBuyerData.contact_value === 4 ? (
+                                        <span className="markedChecked">✓</span>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
+                            
                           </div>
-                          <Link to="/edit-profile">
+                          {/* <Link to="/edit-profile">
                             <div className="account-check">
                               <button className="btn">
                                 <svg
@@ -736,7 +774,7 @@ const BuyerProfile = () => {
                                 </svg>
                               </button>
                             </div>
-                          </Link>
+                          </Link> */}
                         </div>
                       </div>
                     </div>

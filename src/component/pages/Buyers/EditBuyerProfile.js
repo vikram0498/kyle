@@ -550,6 +550,7 @@ function EditBuyerProfile() {
   const handleProfileChange = async (e, isPayment) => {
     e.preventDefault();
     try {
+      const profilePic = document.querySelector(".user-profile");
       setMiniProfileLoader(true)
       if (isPayment === 0) {
         setModalOpen(true);
@@ -566,6 +567,10 @@ function EditBuyerProfile() {
           );
           if (response.data.status) {
             console.log(getLocalStorageUserdata().profile_image);
+            let existingData = getLocalStorageUserdata();
+            existingData.profile_image = response.data.profile_image;
+            setLocalStorageUserdata(existingData);
+            profilePic.src = response.data.profile_image;
             toast.success(response.data.message, {
               position: toast.POSITION.TOP_RIGHT,
             });
@@ -689,7 +694,7 @@ function EditBuyerProfile() {
                       </div>
                     </div>
 
-                    {currentBuyerData.is_profile_payment === 1 ? (
+                    {currentBuyerData.is_profile_verified === 1 ? (
                       <button className="file-upload">
                         <input
                           type="file"

@@ -5265,3 +5265,118 @@ span.badge.bg-success.purchased-profile {
   box-shadow: none !important;
   font-family: "Barlow", sans-serif;
 }
+.town-div{
+  background-color: #E0F5FF;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #121639;
+  text-transform: uppercase;
+  padding: 2px 10px 2px 2px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+.town-div>span{
+  width: 34px;
+  height: 34px;
+  text-align: center;
+  line-height: 30px;
+  background-color: #D2ECF9;
+  border-radius: 2.5px;
+  display: inline-block;
+  margin-right: 8px;
+}
+.inner-call-box{
+  background-color: #E9FFE5;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #121639;
+  text-transform: uppercase;
+  padding: 2px 2px 2px 10px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+.inner-call-box .dropdown-toggle{
+  background-color: #D6F5D1;
+  border-radius: 2.5px;
+  border: none;
+  padding: 5px 10px 5px 6px;
+  margin-left: 10px;
+  height: 34px;
+}
+.inner-call-box .commentic{
+  padding-right: 10px !important;
+  margin-right: 10px !important;
+  border-color: #E9FFE5 !important;
+}
+.inner-call-box .commentic img{
+  width: 18px;
+}
+.inswittcher label{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #121639;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+.inswittcher label input{
+  display: none;
+}
+.inswittcher label span{
+  width: 44px;
+  height: 24px;
+  border: 1px solid #D2DFEB;
+  border-radius: 14px;
+  display: inline-block;
+  background: #fff;
+  margin: 0 6px;
+  position: relative;
+}
+.inswittcher label span::after{
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 19px;
+  height: 19px;
+  transform: translateY(-50%);
+  background-color: #21C607;
+  border-radius: 50%;
+  transition: all 350ms ease;
+}
+.inswittcher label input:checked + span::after{
+  background-color: red;
+  left: 21px;
+}
+.profile-verification-st{
+  height: auto;
+}
+.profile-verification-st .cards{
+  max-width: 396px;
+  margin: 0 auto;
+  padding: 50px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: none;
+}
+.profile-verification-st .cards .expireImg{
+  max-width: 120px;
+}
+.st-bg-blue{
+  background-color: rgba(246, 248, 252, 0.66);
+}
+.profile-verification-st .cards .heading{
+  font-size: 25px;
+}
+.profile-verification-st .cards .subheading{
+  font-size: 16px;
+  line-height: 23px;
+  margin-bottom: 0 !important;
+  margin-top: 10px !important;
+}

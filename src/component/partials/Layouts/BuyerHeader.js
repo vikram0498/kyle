@@ -10,6 +10,7 @@ function BuyerHeader() {
   useEffect(() => {
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
+      console.log(userData,'userData');
       if (userData !== null) {
         if (userData.role === 2) {
           navigate("/");

@@ -93,7 +93,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
 
                 <div className="upload-btn">
                   <button type="submit" className="btn btn-fill w-auto">
-                    Upload & Next
+                    Upload
                   </button>
                 </div>
               </div>
