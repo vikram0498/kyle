@@ -3,8 +3,8 @@ import React from "react";
 const SuccessPage = () => {
   return (
     <>
-      <div className="linkExpire successfull">
-        <div className="container h-100">
+      <div className="linkExpire successfull h-auto">
+        <div className="container">
           <div className="row h-100 align-items-center mx-0">
             <div className="col-lg-10 col-md-11 col-12 mx-auto">
               <div className="cards p-4">
@@ -21,11 +21,11 @@ const SuccessPage = () => {
                   <div className="col-12 text-center">
                     <div className="heading">Thank you!</div>
                     <div className="subheading my-md-3 my-2">
-                      Your form has been successfully submitted.
+                      Your profile has been successfully verfied.
                     </div>
-                    <div className="subheading my-md-3 my-2">
+                    {/* <div className="subheading my-md-3 my-2">
                       Please wait for approval
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

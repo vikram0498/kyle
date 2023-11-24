@@ -338,3 +338,24 @@ body.dark .inner-call-box .dropdown-toggle{
 body.dark .inswittcher label{
   color: #fff;
 }
+
+body.dark .profile-verification-st{
+  background-color: #1f1f1f;
+}
+body.dark .profile-verification-st .cards{
+  background-color: #2f2f2f;
+}
+body.dark .profile-verification-st .cards .heading:not(.profile-congtrs .cards .heading),
+body.dark .profile-verification-st .cards .subheading:not(.profile-congtrs .cards .subheading){
+  color: #fff;
+}
+
+body.dark .buyer-active-verfiy::after{
+  border-right-color: #4c4c4c;
+}
+body.dark .buyer-active-verfiy{
+  background-color: #1f1f1f;
+}
+body.dark .buyer-active-verfiy span{
+  color: #fff;
+}

@@ -24,16 +24,12 @@ function Completion(props) {
 
   const { token } = useParams();
   const sendPaymentDetails = async () => {
-    console.log(getTokenData(), "sdsd34343");
-
-    console.log(getTokenData().access_token, "sdsd");
     try {
       let headers = {
         Accept: "application/json",
         Authorization: "Bearer " + getTokenData().access_token,
         "auth-token": getTokenData().access_token,
       };
-      console.log(headers, "headers");
       const response = await axios.post(
         `${apiUrl}checkout-success`,
         { token: token },

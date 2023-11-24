@@ -17,7 +17,7 @@ const Buyers = () => {
       />
       <Route path="/profile-verification" element={<ProfileVerification />} />
       <Route
-        path="/buyer-profile"
+        path="/buyer-profile/:token?"
         element={<Protected Component={BuyerProfile} />}
       />
 

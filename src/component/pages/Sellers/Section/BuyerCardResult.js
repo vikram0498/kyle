@@ -21,16 +21,44 @@ const BuyerCardResult = (props) => {
     //onEntering={entering}
   return (
     <div className="col-12 col-lg-6" >
-        <div className={"property-critera-block property-section-"+data.id}>
+        <div className={"property-critera-block buyer-blog-area property-section-"+data.id}>
             <div className="critera-card">
-                <div className="center-align">
-                {(data.buyer_profile_image !='' && data.buyer_profile_image != undefined) ? 
+                {data.profile_tag_name &&
+                    <OverlayTrigger
+                        placement="top"
+                        style={{ backgroundColor: "green" }}
+                        overlay={ <Tooltip> Profile Tag </Tooltip>}>
+                        <div className="buyer-active-verfiy">
+                            {(data.profile_tag_image) && <img
+                                src={data.profile_tag_image}
+                                className="img-fluid profile-tag-image"
+                                alt=""
+                                title=""
+                                />
+                            }
+                            <span>{data.profile_tag_name}</span>
+                        </div>
+                    </OverlayTrigger>
+                }
+                <div className="center-align position-relative">
+                { 
+                    (data.buyer_profile_image !='' && data.buyer_profile_image != undefined) ? 
                     <img src={data.buyer_profile_image} className="img-fluid price-img" />
                 :
                     <span className="price-img">
                     <img src='./assets/images/price.svg' className="img-fluid" />
                     </span>
                 }
+                    {(data.is_buyer_verified) &&
+                        <div className="buyer-check">
+                            <OverlayTrigger
+                            placement="top"
+                            style={{ backgroundColor: "green" }}
+                            overlay={ <Tooltip> Profile Verified </Tooltip>}>
+                            <img src='./assets/images/pcheck.svg' className="img-fluid" />
+                            </OverlayTrigger>
+                        </div>
+                    }
                     <p>Buyer  </p>
                     {(activeTab ==='more_buyers')?
                     <ul className="like-unlike mb-0 list-unstyled">

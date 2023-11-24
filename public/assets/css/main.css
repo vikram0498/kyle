@@ -5161,7 +5161,7 @@ span.markedChecked {
   color: #19b400;
   font-size: 20px;
   font-weight: 700;
-  margin-left: 22px;
+  margin-left: 4px;
 }
 
 button.btn.not-verified {
@@ -5299,6 +5299,14 @@ span.badge.bg-success.purchased-profile {
   align-items: center;
   font-weight: 500;
 }
+.inner-call-box .dropdown button::before{
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 158px;
+  height: 100%;
+}
 .inner-call-box .dropdown-toggle{
   background-color: #D6F5D1;
   border-radius: 2.5px;
@@ -5356,23 +5364,36 @@ span.badge.bg-success.purchased-profile {
 }
 .profile-verification-st{
   height: auto;
+  background-color: #e8e9eb;
+  border-radius: 5px;
 }
 .profile-verification-st .cards{
-  max-width: 396px;
+  max-width: 410px;
   margin: 0 auto;
-  padding: 50px;
+  padding: 50px 40px;
   border-radius: 10px;
   text-align: center;
   box-shadow: none;
+  background-color: #fff;
 }
-.profile-verification-st .cards .expireImg{
-  max-width: 120px;
+.profile-verification-st .cards .expireImg:not(.profile-congtrs .cards .expireImg){
+  max-width: 100px;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  filter: drop-shadow(5px 7px 14px rgba(234, 214, 219, 0.54));
 }
+
 .st-bg-blue{
   background-color: rgba(246, 248, 252, 0.66);
 }
 .profile-verification-st .cards .heading{
-  font-size: 25px;
+  font-size: 24px;
+  margin-top: 25px;
+  padding-bottom: 5px;
 }
 .profile-verification-st .cards .subheading{
   font-size: 16px;
@@ -5380,3 +5401,63 @@ span.badge.bg-success.purchased-profile {
   margin-bottom: 0 !important;
   margin-top: 10px !important;
 }
+.profile-verification-st .cards .btn{
+  margin-top: 25px;
+}
+.profile-congtrs .cards{
+  background-color: #EDFAEB;
+  background-image: url('/assets/images/background-congrats.gif');
+  background-position: center;
+  background-size: cover;
+}
+.profile-congtrs .cards .btn{
+  background-color: #19B400;
+  border-color: #19B400;
+}
+.profile-congtrs .cards .btn:hover{
+  background-color: transparent;
+  color: #19B400;
+}
+.buyer-blog-area .critera-card .price-img{
+  object-fit: cover;
+}
+.buyer-check {
+  position: absolute;
+  right: -6px;
+  top: 65px;
+}
+.buyer-active-verfiy{
+  position: absolute;
+  left: 0;
+  top: 15px;
+  background-color: #E5F6FE;
+  display: flex;
+  align-items: center;
+  padding: 5px 15px 5px 8px;
+}
+.buyer-active-verfiy::after{
+  content: "";
+  position: absolute;
+  border-right: 8px solid white;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  top: 0;
+  right: 0;
+}
+.buyer-active-verfiy span{
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+  margin-left: 4px;
+  display: inline-block;
+  line-height: 12px;
+}
+.buyer-blog-area .critera-card{
+  padding-top: 50px;
+  position: relative;
+  height: 232px;
+}
+.profile-tag-image{
+  width: 20px;
+}
+

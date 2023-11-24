@@ -1,4 +1,5 @@
 import React from "react";
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 export default function BuyerCard({
   data,
@@ -19,15 +20,42 @@ export default function BuyerCard({
   }
   return (
     <div className="col-12 col-lg-6">
-      <div className="property-critera-block">
+      <div className="property-critera-block buyer-blog-area">
         <div className="critera-card">
-          <div className="center-align">
+            {data.profile_tag_name &&
+              <OverlayTrigger
+                  placement="top"
+                  style={{ backgroundColor: "green" }}
+                  overlay={ <Tooltip> Profile Tag </Tooltip>}>
+                  <div className="buyer-active-verfiy">
+                      {(data.profile_tag_image) && <img
+                          src={data.profile_tag_image}
+                          className="img-fluid profile-tag-image"
+                          alt=""
+                          title=""
+                        />
+                      }
+                      <span>{data.profile_tag_name}</span>
+                  </div>
+              </OverlayTrigger>
+            }
+          <div className="center-align position-relative">
             {(data.buyer_profile_image !='') ? 
               <img src={data.buyer_profile_image} className="img-fluid price-img" />
             :
             <span className="price-img">
               <img src='./assets/images/price.svg' className="img-fluid" />
             </span>
+            }
+            {(data.is_buyer_verified) &&
+              <div className="buyer-check">
+                <OverlayTrigger
+                  placement="top"
+                  style={{ backgroundColor: "green" }}
+                  overlay={ <Tooltip> Profile Verified </Tooltip>}>
+                  <img src='./assets/images/pcheck.svg' className="img-fluid" />
+                </OverlayTrigger>
+              </div>
             }
             <p>Buyer</p>
             {data.createdByAdmin ? (

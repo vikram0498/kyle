@@ -195,6 +195,9 @@
     justify-content: flex-start;
     margin-top: 15px;
   }
+  .inner-call-box .dropdown button::before{
+    width: 152px;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -327,7 +330,7 @@
     height: 25px;
   }
   .profile-verification-st .cards{
-    padding: 30px;
+    padding: 20px;
   }
 }
 

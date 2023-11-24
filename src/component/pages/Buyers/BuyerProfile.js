@@ -1,15 +1,17 @@
 import React from "react";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useFormError } from "../../../hooks/useFormError";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 const BuyerProfile = () => {
+  const { token } = useParams();
   const { getTokenData, setLogout } = useAuth();
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [loader, setLoader] = useState(true);
@@ -50,11 +52,9 @@ const BuyerProfile = () => {
     }
   };
 
-  const profileStatus = async (e) => {
+  const profileStatus = async (isChecked) => {
     try {
-      let isChecked = e.target.checked;
-      console.log(isChecked,'isChecked');
-      let data = isChecked ? 1: 0;
+      let data = isChecked ? 0: 1;
       let response = await axios.post(
         apiUrl + "update-buyer-search-status",
         { status: data },
@@ -118,11 +118,6 @@ const BuyerProfile = () => {
       }
     }
   };
-
-  useState(() => {
-    fetchBuyerData();
-  }, []);
-
   const getLabelValue = (data) => {
     if (data !== undefined) {
       const selectedBuildingClass = data.map((item) => item.label);
@@ -131,11 +126,66 @@ const BuyerProfile = () => {
     }
   };
   const profileIcons = {
-    1: "./assets/images/buyer-01.svg",
-    2: "./assets/images/buyer-03.svg",
-    3: "./assets/images/buyer-02.svg",
-    4: "./assets/images/buyer-04.svg",
+    1: "/assets/images/buyer-01.svg",
+    2: "/assets/images/buyer-03.svg",
+    3: "/assets/images/buyer-02.svg",
+    4: "/assets/images/buyer-04.svg",
   };
+  const handleClickConfirmation = (e) => {
+    let isChecked = e.target.checked;
+    console.log(isChecked,'isChecked');
+    Swal.fire({
+      icon: "warning",
+      title: "Do you want to make this change?",
+      // html: '<p class="popup-text-color">It will redeem one point from your account</p>',
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        profileStatus(isChecked);
+        console.log("hello !");
+      }else{
+        const checkbox = document.getElementById("buyer-status");
+        checkbox.checked = isChecked ? 0 : 1;
+      }
+    });
+  };
+
+  const sendPaymentDetails = async () => {
+    try {
+      let headers = {
+        Accept: "application/json",
+        Authorization: "Bearer " + getTokenData().access_token,
+        "auth-token": getTokenData().access_token,
+      };
+      const response = await axios.post(
+        `${apiUrl}checkout-success`,
+        { token: token },
+        { headers: headers }
+      );
+      if (response.data.status) {
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.errors) {
+          setErrors(error.response.errors);
+        }
+        if (error.response.error) {
+          toast.error(error.response.error, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      }
+    }
+  };
+
+  useState(() => {
+    if(token){
+      sendPaymentDetails();
+    }
+    fetchBuyerData();
+  }, []);
   return (
     <>
       <BuyerHeader />
@@ -264,6 +314,19 @@ const BuyerProfile = () => {
                           <span className="contact-title align-self-center">
                             {currentBuyerData.phone}
                           </span>
+                           {(currentBuyerData.phone_verified) && 
+                            <OverlayTrigger
+                                  placement="top"
+                                  style={{ backgroundColor: "green" }}
+                                  overlay={
+                                    <Tooltip>
+                                      Verified
+                                    </Tooltip>
+                                  }
+                                >
+                                <img src='./assets/images/ver-check-blue.svg' className="img-fluid" />
+                              </OverlayTrigger>
+                           }
                         </a>
                       </div>
                       <div className="contact-update-item">
@@ -301,6 +364,19 @@ const BuyerProfile = () => {
                           <span className="contact-title align-self-center">
                             {currentBuyerData.email}
                           </span>
+                          {(currentBuyerData.email_verified) && 
+                            <OverlayTrigger
+                                placement="top"
+                                style={{ backgroundColor: "green" }}
+                                overlay={
+                                  <Tooltip>
+                                    Verified
+                                  </Tooltip>
+                                }
+                              >
+                              <img src='./assets/images/ver-check-blue.svg' className="img-fluid" />
+                            </OverlayTrigger>
+                          }
                         </a>
                       </div>
                       <div className="update-profile">
@@ -462,12 +538,13 @@ const BuyerProfile = () => {
                               {currentBuyerData.first_name +
                                 " " +
                                 currentBuyerData.last_name}
-                                <img
-                                  src="/assets/images/p-verfied.svg"
-                                  className="img-fluid ms-1"
-                                  alt=""
-                                  title=""
-                                />
+                                {
+                                (currentBuyerData.is_buyer_verified) ? 
+                                <OverlayTrigger placement="top" style={{ backgroundColor: "green" }} overlay={ <Tooltip> Profile Verified </Tooltip>}>
+                                  <img src="/assets/images/p-verfied.svg" className="img-fluid ms-1" alt="" title=""/>
+                                </OverlayTrigger>
+                                :
+                                ''}
                             </h3>
                             <p className="mb-0">
                               Lorem Ipsum is simply dummy text of the .
@@ -480,7 +557,7 @@ const BuyerProfile = () => {
                             <div className="inswittcher">
                               <label>
                                 active
-                                <input type="checkbox" onChange={profileStatus} />
+                                <input type="checkbox" id="buyer-status" onChange={handleClickConfirmation} defaultChecked={(currentBuyerData.buyer_search_status ==0) ? 'checked': ''}/>
                                 <span></span>
                                 Inactive
                               </label>
@@ -570,193 +647,128 @@ const BuyerProfile = () => {
                             </div>
                           </div> */}
                           <div className="premium-quality">
-                            <div className="town-div">
-                              <span>
-                                  <img
-                                    src="/assets/images/quality-icon.svg"
-                                    className="img-fluid"
-                                    alt=""
-                                    title=""
-                                  />
-                                </span>
-                                Actively Buying
-                              </div>
-                            {/* <button className="btn">
-                              <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <g clipPath="url(#clip0_2365_14183)">
-                                  <path
-                                    d="M19.8102 10.8004C20.0632 10.2992 20.0632 9.70081 19.8102 9.19964L19.5482 8.68065C19.4911 8.56752 19.4711 8.44153 19.4905 8.31625L19.5793 7.74171C19.665 7.18689 19.4802 6.61778 19.0846 6.21935L18.6751 5.80674C18.5858 5.71677 18.5278 5.60309 18.5076 5.47796L18.4145 4.90409C18.3256 4.35608 17.9807 3.87658 17.4902 3.61777L16.9864 3.3206C16.9766 3.31486 16.9667 3.30939 16.9566 3.30423C16.8439 3.2463 16.7537 3.15609 16.6958 3.04335L16.4299 2.52635C16.1792 2.03881 15.668 1.67828 15.0958 1.58546L14.522 1.4924C14.3969 1.47209 14.2832 1.41419 14.1932 1.32493L13.7806 0.915324C13.3822 0.519823 12.8132 0.335042 12.2583 0.420674L11.6838 0.509471C11.5584 0.528847 11.4325 0.508885 11.3193 0.45177L10.8003 0.189757C10.2992 -0.0632327 9.70083 -0.0632718 9.1997 0.189757L8.68067 0.45177C8.56758 0.508846 8.44163 0.528769 8.31627 0.50951L7.74173 0.420713C7.1868 0.334886 6.61781 0.519862 6.21938 0.915363L5.80673 1.32489C5.7168 1.41419 5.60312 1.47209 5.47799 1.4924L4.90407 1.58546C4.33192 1.67828 3.82074 2.03878 3.57006 2.52635L3.30422 3.04335C3.24624 3.15605 3.15604 3.2463 3.0433 3.30423L2.52626 3.57011C2.03872 3.8208 1.67818 4.33197 1.5854 4.90413L1.49231 5.47804C1.47203 5.60317 1.4141 5.71681 1.3248 5.80678L0.915309 6.21939C0.519808 6.61782 0.33491 7.18689 0.420659 7.74171L0.509495 8.31628C0.528871 8.44153 0.508909 8.56752 0.451756 8.68065L0.189742 9.19964C-0.0632474 9.70077 -0.0632474 10.2991 0.189742 10.8003L0.451756 11.3193C0.50887 11.4324 0.528832 11.5584 0.509495 11.6837L0.420659 12.2583C0.33491 12.8131 0.519847 13.3822 0.915309 13.7806L1.32487 14.1932C1.41418 14.2832 1.47211 14.3969 1.49239 14.522L1.58548 15.0959C1.67826 15.6681 2.0388 16.1792 2.52634 16.4299L3.04334 16.6958C3.15608 16.7537 3.24628 16.8439 3.30426 16.9567L3.5701 17.4737C3.82082 17.9613 4.332 18.3218 4.90415 18.4146L5.47803 18.5077C5.60315 18.528 5.71684 18.5859 5.80677 18.6751L6.21942 19.0847C6.61792 19.4802 7.18696 19.665 7.74173 19.5794L8.31631 19.4905C8.44151 19.4711 8.56758 19.4911 8.68067 19.5483L9.1997 19.8103C9.45027 19.9368 9.72513 20 10 20C10.2749 20 10.5498 19.9368 10.8003 19.8103L11.3193 19.5483C11.4325 19.4911 11.5585 19.4712 11.6837 19.4905L12.2583 19.5793C12.8131 19.665 13.3822 19.4802 13.7806 19.0847L14.1932 18.6751C14.2832 18.5858 14.3968 18.5279 14.522 18.5076L15.0958 18.4145C15.6439 18.3256 16.1234 17.9807 16.3822 17.4902L16.6794 16.9863C16.6851 16.9766 16.6906 16.9667 16.6957 16.9566C16.7537 16.8439 16.8439 16.7537 16.9566 16.6957L17.4736 16.4299C17.9729 16.1732 18.3246 15.6891 18.4145 15.1349L18.5076 14.5611C18.5279 14.4359 18.5858 14.3222 18.6751 14.2323C18.6813 14.226 19.0949 13.7702 19.0949 13.7702C19.4833 13.3723 19.6643 12.8083 19.5793 12.2583L19.4905 11.6837C19.4711 11.5585 19.491 11.4324 19.5482 11.3193L19.8102 10.8004Z"
-                                    fill="url(#paint0_linear_2365_14183)"
-                                  />
-                                  <path
-                                    d="M10.0006 2.92969C6.11858 2.92969 2.92969 6.11944 2.92969 10.0006C2.92969 13.8826 6.11944 17.0715 10.0006 17.0715C13.8826 17.0715 17.0715 13.8817 17.0715 10.0006C17.0715 6.11858 13.8817 2.92969 10.0006 2.92969ZM14.085 8.38474L12.913 13.0726C12.8478 13.3335 12.6134 13.5165 12.3445 13.5165H7.65664C7.38775 13.5165 7.15335 13.3335 7.08815 13.0726L5.91618 8.38474C5.84715 8.10859 5.98658 7.82275 6.24672 7.70711C6.50682 7.59152 6.81243 7.67961 6.97115 7.91592C7.13152 8.15164 7.7116 8.82861 8.24262 8.82861C8.33966 8.82861 8.64031 8.60273 8.95003 7.90447C9.2279 7.27805 9.4146 6.47201 9.4146 5.89868C9.4146 5.57506 9.67696 5.3127 10.0006 5.3127C10.3242 5.3127 10.5866 5.57506 10.5866 5.89868C10.5866 6.47201 10.7733 7.27805 11.0511 7.90447C11.3609 8.60273 11.6615 8.82861 11.7585 8.82861C12.3053 8.82861 12.9005 8.10871 13.03 7.91592C13.1887 7.67965 13.4944 7.59155 13.7544 7.70711C14.0146 7.82275 14.154 8.10859 14.085 8.38474Z"
-                                    fill="url(#paint1_linear_2365_14183)"
-                                  />
-                                </g>
-                                <defs>
-                                  <linearGradient
-                                    id="paint0_linear_2365_14183"
-                                    x1="10"
-                                    y1="20"
-                                    x2="10"
-                                    y2="1.43051e-05"
-                                    gradientUnits="userSpaceOnUse"
-                                  >
-                                    <stop stopColor="#FD5900" />
-                                    <stop offset="1" stopColor="#FFDE00" />
-                                  </linearGradient>
-                                  <linearGradient
-                                    id="paint1_linear_2365_14183"
-                                    x1="10.0006"
-                                    y1="17.0715"
-                                    x2="10.0006"
-                                    y2="2.92969"
-                                    gradientUnits="userSpaceOnUse"
-                                  >
-                                    <stop stopColor="#FFE59A" />
-                                    <stop offset="1" stopColor="#FFFFD5" />
-                                  </linearGradient>
-                                  <clipPath id="clip0_2365_14183">
-                                    <rect width="20" height="20" fill="white" />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                            </button> */}
-                          </div>
-                          {/* <div className="account-check user-ac-check">
-                            <OverlayTrigger
-                              placement="top"
-                              style={{ backgroundColor: "green" }}
-                              overlay={
-                                <Tooltip>
-                                  {currentBuyerData.is_buyer_verified
-                                    ? "Profile Verified"
-                                    : "Profile Not Verified"}{" "}
-                                </Tooltip>
-                              }
-                            >
-                              <button
-                                className={
-                                  currentBuyerData.is_buyer_verified
-                                    ? "btn"
-                                    : "btn not-verified notify"
-                                }
-                              >
-                                <img
-                                  src={
-                                    currentBuyerData.is_buyer_verified
-                                      ? "./assets/images/profile-verified.svg"
-                                      : "./assets/images/profile-not-verified.svg"
-                                  }
-                                />
-                              </button>
-                            </OverlayTrigger>
-                          </div> */}
-                          
-                          <div className="field-box call-darea">
-                            <div className="inner-call-box">
-                              <span>preference</span>
-                              <div className="dropdown">
-                                <button
-                                  className="btn dropdown-toggle"
-                                  type="button"
-                                  id="dropdownMenuButton1"
-                                  data-bs-toggle="dropdown"
-                                  aria-expanded="false"
-                                >
-                                  <span className="commentic">
-                                    <img
-                                      src={
-                                        profileIcons[
-                                          currentBuyerData.contact_value
-                                        ]
-                                      }
+                            {currentBuyerData.profile_tag_name &&
+                                <OverlayTrigger
+                                placement="top"
+                                style={{ backgroundColor: "green" }}
+                                overlay={ <Tooltip> Profile Tag </Tooltip>}>
+                                <div className="town-div">
+                                  <span>
+                                  {(currentBuyerData.profile_tag_image) && <img
+                                      src={currentBuyerData.profile_tag_image}
+                                      className="img-fluid profile-tag-image"
+                                      alt=""
+                                      title=""
                                     />
+                                    }
                                   </span>
-                                  <span className="dropdown-arr">
-                                    <svg
-                                      width="10"
-                                      height="6"
-                                      viewBox="0 0 10 6"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M1 1L5 5L9 1"
-                                        stroke="#464B70"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </span>
-                                </button>
-                                <ul
-                                  className="dropdown-menu"
-                                  aria-labelledby="dropdownMenuButton1"
-                                >
-                                  <li
-                                    className="profile-status"
-                                    onClick={() => contactPreferanceUpdate(1)}
-                                  >
-                                    <a className="dropdown-item" href={void 0}>
-                                      Email
-                                      {currentBuyerData.contact_value === 1 ? (
-                                        <span className="markedChecked">✓</span>
-                                      ) : (
-                                        ""
-                                      )}
-                                    </a>
-                                  </li>
-                                  <li
-                                    className="profile-status"
-                                    onClick={() => contactPreferanceUpdate(2)}
-                                  >
-                                    <a className="dropdown-item" href={void 0}>
-                                      Text
-                                      {currentBuyerData.contact_value === 2 ? (
-                                        <span className="markedChecked">✓</span>
-                                      ) : (
-                                        ""
-                                      )}
-                                    </a>
-                                  </li>
-                                  <li
-                                    className="profile-status"
-                                    onClick={() => contactPreferanceUpdate(3)}
-                                  >
-                                    <a className="dropdown-item" href={void 0}>
-                                      Call
-                                      {currentBuyerData.contact_value === 3 ? (
-                                        <span className="markedChecked">✓</span>
-                                      ) : (
-                                        ""
-                                      )}
-                                    </a>
-                                  </li>
-                                  <li
-                                    className="profile-status"
-                                    onClick={() => contactPreferanceUpdate(4)}
-                                  >
-                                    <a className="dropdown-item" href={void 0}>
-                                      No Preference
-                                      {currentBuyerData.contact_value === 4 ? (
-                                        <span className="markedChecked">✓</span>
-                                      ) : (
-                                        ""
-                                      )}
-                                    </a>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                            
+                                  {currentBuyerData.profile_tag_name}
+                                </div>
+                            </OverlayTrigger>
+                            }
                           </div>
+                            <div className="field-box call-darea">
+                              <OverlayTrigger
+                                  placement="top"
+                                  style={{ backgroundColor: "green" }}
+                                  overlay={ <Tooltip> Contact Preference </Tooltip>}>
+                                  <div className="inner-call-box">
+                                    <span>preference</span>
+                                    <div className="dropdown">
+                                      <button
+                                        className="btn dropdown-toggle"
+                                        type="button"
+                                        id="dropdownMenuButton1"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                      >
+                                        <span className="commentic">
+                                          <img
+                                            src={
+                                              profileIcons[
+                                                currentBuyerData.contact_value
+                                              ]
+                                            }
+                                          />
+                                        </span>
+                                        <span className="dropdown-arr">
+                                          <svg
+                                            width="10"
+                                            height="6"
+                                            viewBox="0 0 10 6"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M1 1L5 5L9 1"
+                                              stroke="#464B70"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                      <ul
+                                        className="dropdown-menu"
+                                        aria-labelledby="dropdownMenuButton1"
+                                      >
+                                        <li
+                                          className="profile-status"
+                                          onClick={() => contactPreferanceUpdate(1)}
+                                        >
+                                          <a className="dropdown-item" href={void 0}>
+                                            Email
+                                            {currentBuyerData.contact_value === 1 ? (
+                                              <span className="markedChecked">✓</span>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </a>
+                                        </li>
+                                        <li
+                                          className="profile-status"
+                                          onClick={() => contactPreferanceUpdate(2)}
+                                        >
+                                          <a className="dropdown-item" href={void 0}>
+                                            Text
+                                            {currentBuyerData.contact_value === 2 ? (
+                                              <span className="markedChecked">✓</span>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </a>
+                                        </li>
+                                        <li
+                                          className="profile-status"
+                                          onClick={() => contactPreferanceUpdate(3)}
+                                        >
+                                          <a className="dropdown-item" href={void 0}>
+                                            Call
+                                            {currentBuyerData.contact_value === 3 ? (
+                                              <span className="markedChecked">✓</span>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </a>
+                                        </li>
+                                        <li
+                                          className="profile-status"
+                                          onClick={() => contactPreferanceUpdate(4)}
+                                        >
+                                          <a className="dropdown-item" href={void 0}>
+                                            No Preference
+                                            {currentBuyerData.contact_value === 4 ? (
+                                              <span className="markedChecked">✓</span>
+                                            ) : (
+                                              ""
+                                            )}
+                                          </a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                              </OverlayTrigger>
+                            </div>
                           {/* <Link to="/edit-profile">
                             <div className="account-check">
                               <button className="btn">

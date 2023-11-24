@@ -2,15 +2,17 @@ import React from "react";
 const RejectedPage = ({setProfileVerificationStatus}) => {
     return (
         <>
-          <div className="linkExpire successfull">
-            <div className="container h-100">
-              <div className="row align-items-center mx-0">
-                <div className="col-lg-10 col-md-11 col-12 mx-auto">
-                  <div className="cards p-4">
-                    <div className="row cardBody mx-0 py-5">
-                      <div className="col-xl-6 col-lg-7 col-md-8 col-9 mx-auto">
-                      </div>
-                      <div className="col-12 text-center">
+          <div className="linkExpire successfull profile-verification-st">
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-lg-6 col-md-8 col-12 mx-auto">
+                  <div className="cards">
+                  <     div className="expireImg mx-auto">
+                            <img
+                                src="/assets/images/app-close.svg"
+                                alt="expire link"
+                            />
+                        </div>
                         <div className="heading">Rejected!</div>
                         <div className="subheading my-md-3 my-2">
                           Your form has been Rejected.
@@ -18,9 +20,7 @@ const RejectedPage = ({setProfileVerificationStatus}) => {
                         <div className="subheading my-md-3 my-2">
                           Please submit form again
                         </div>
-                        <button className="btn btn-fill" onClick={()=>setProfileVerificationStatus('')}>Ok</button>
-                      </div>
-                    </div>
+                        <button className="btn btn-fill" onClick={()=>setProfileVerificationStatus('')}>Okay</button>
                   </div>
                 </div>
               </div>

@@ -160,8 +160,12 @@ const HorizontalLinearStepper = () => {
         window.location.href = url;
         return false;
       }
+      if(response.data.current_step === '1'){
+        setActiveStep(2);
+      }else{
+        setProfileVerificationStatus("pending");
+      }
       setIsOtpVerify(true);
-      setProfileVerificationStatus("pending");
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -181,7 +185,7 @@ const HorizontalLinearStepper = () => {
         headers: headers,
       });
       setLoader(false);
-      if(response.data.lastStepForm > 1){
+      if(response.data.lastStepForm > 1 & response.data.lastStepForm < 5){
         setActiveStep(response.data.lastStepForm-1);
         setProfileVerificationStatus(response.data.lastStepStatus);
       }else{
