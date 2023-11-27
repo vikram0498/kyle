@@ -30,10 +30,10 @@ class RedFlagShow extends Component
         $this->buyerId = $buyer_id;
         $this->data = Buyer::find($buyer_id);
 
-        $this->first_name = $this->data->first_name;
-        $this->last_name = $this->data->last_name;
-        $this->email = $this->data->email;
-        $this->phone = $this->data->phone;
+        $this->first_name = $this->data->userDetail->first_name;
+        $this->last_name = $this->data->userDetail->last_name;
+        $this->email = $this->data->userDetail->email;
+        $this->phone = $this->data->userDetail->phone;
     }
 
     public function setUserId($id){
@@ -104,8 +104,9 @@ class RedFlagShow extends Component
             }
 
             if(count($updateDetail) > 0){
-                User::where('id',$buyer->user_id)->update($updateDetail);
+                 User::where('id',$buyer->user_id)->update($updateDetail);
             }
+           
 
             $buyer->save();
 

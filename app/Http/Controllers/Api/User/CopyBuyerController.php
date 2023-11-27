@@ -352,7 +352,6 @@ class CopyBuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
-
     public function isValidateToken($token){
         $tokenExpired = $this->checkTokenValidate($token);
 
