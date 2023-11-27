@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('plan_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('stripe_customer_id')->nullable();
+            $table->unsignedBigInteger('plan_id');
             $table->string('stripe_plan_id')->nullable();
             $table->string('stripe_subscription_id')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('subscription_json')->nullable();
-            $table->unsignedBigInteger('created_by');
+            $table->string('status')->comment('active, canceled'); // 'success', 'failure'
             $table->timestamps();
             $table->softDeletes();
         });

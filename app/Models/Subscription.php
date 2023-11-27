@@ -19,14 +19,15 @@ class Subscription extends Model
     ];
 
     protected $fillable = [
-        'plan_id',
+        'user_id',
         'stripe_customer_id',
+        'plan_id',
         'stripe_plan_id',
         'stripe_subscription_id',
         'start_date',
         'end_date',
         'subscription_json',
-        'created_by',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -34,10 +35,7 @@ class Subscription extends Model
 
     protected static function boot () 
     {
-        parent::boot();
-        static::creating(function(Plan $model) {
-            $model->created_by = auth()->user()->id;
-        });               
+        parent::boot();              
     }
 
     public function plan() {
@@ -45,6 +43,6 @@ class Subscription extends Model
     }
 
     public function user() {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class,'user_id');
     }
 }

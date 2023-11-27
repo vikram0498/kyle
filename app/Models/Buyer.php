@@ -23,6 +23,7 @@ class Buyer extends Model
     protected $fillable = [
         'user_id',
         'buyer_user_id',
+        'is_profile_verified',
         // 'first_name',
         // 'last_name',
         // 'email',
@@ -116,6 +117,11 @@ class Buyer extends Model
     public function userDetail()
     {
         return $this->belongsTo(User::class, 'buyer_user_id', 'id');
+    }
+
+    public function buyerPlan()
+    {
+        return $this->belongsTo(BuyerPlan::class, 'plan_id', 'id');
     }
 
     public function redFlagedData(){

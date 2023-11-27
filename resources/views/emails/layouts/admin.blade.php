@@ -11,7 +11,7 @@
 </head>
 <body style="margin: 0;">
 
-	<div class="mail-template" style="max-width: 800px; margin: 0 auto;">
+	<div class="mail-template" style="max-width: 100%; margin: 0 auto;">
 		<table cellpadding="0" cellspacing="0" width="100%">
 			<thead>
 				<tr>
@@ -20,7 +20,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td style="padding: 89px 66px 257px; border: 1px solid #F5F7F9;">
+					<td style="padding: 40px 30px 40px; border: 1px solid #F5F7F9;">
                         @yield('email-content') 
 					</td>
 				</tr>

@@ -47,9 +47,9 @@
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer_transaction.fields.user')}}
-                        <span wire:click="sortBy('users.name')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'users.name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'users.name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     {{-- <th class="text-gray-500 text-xs">
@@ -66,6 +66,13 @@
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.buyer_transaction.fields.currency')}}</th>
+                    <!-- <th class="text-gray-500 text-xs">{{ __('cruds.buyer_transaction.fields.description')}}</th> -->
+                    <th class="text-gray-500 text-xs">{{ __('cruds.buyer_transaction.fields.description')}}
+                        <span wire:click="sortBy('title')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'title' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'title' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">
                         {{ trans('cruds.buyer_transaction.fields.status') }}
                         <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
@@ -87,13 +94,26 @@
                     @foreach($transactions as $serialNo => $transaction)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ $transaction->user ? ucwords($transaction->user->name) : '' }}</td>
+                        <td> 
+                            @if($transaction->user_json)
+                                @if($transaction->user)
+                                    {{ json_decode($transaction->user_json,true)['name'] }}
+                                @else
+                                    <del>{{ json_decode($transaction->user_json,true)['name'] }}</del> <span class="badge badge-danger">Deleted</span>
+                                @endif
+                            @endif
+                        </td>
                         {{-- <td>
                             {{ $transaction->plan_title ? ucwords($transaction->plan_title) : '' }}
                         </td> --}}
 
                         <td><i class='fa fa-dollar'></i>{{ number_format($transaction->amount,2) }}</td>
                         <td>{{ strtoupper($transaction->currency) }}</td>
+                        <td>
+                            @if($transaction->plan_json)
+                                {{ json_decode($transaction->plan_json,true)['title'] }}
+                            @endif
+                        </td>
                         <td>{{ ucfirst($transaction->status) }}</td>
 
                         <td>{{ convertDateTimeFormat($transaction->created_at,'date') }}</td>

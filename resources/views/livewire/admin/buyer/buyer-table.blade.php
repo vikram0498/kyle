@@ -47,16 +47,16 @@
                     <th class="text-gray-500 text-xs font-medium">{{ trans('global.sno') }}</th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.name')}}
-                        <span wire:click="sortBy('userDetail.name')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'userDetail.name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'userDetail.name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        <span wire:click="sortBy('name')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.status')}}
-                        <span wire:click="sortBy('userDetail.status')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'userDetail.status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'userDetail.status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
@@ -96,7 +96,7 @@
                         <td>{{ $buyer->userDetail ? ucwords($buyer->userDetail->name) : '' }}</td>
                         <td>
                             <label class="toggle-switch">
-                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->userDetail->is_active == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->status == 1 ? 'checked' : '' }}>
                                 <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                             </label>
                         </td>

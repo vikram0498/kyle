@@ -148,7 +148,7 @@ class ProfileController extends Controller
 
         DB::beginTransaction();
         try {
-            if($user->buyerDetail->is_profile_payment){
+            if($user->buyerDetail->is_profile_verified){
               
                 // Start to Update Profile Image
                 if($request->hasFile('profile_image')){
@@ -161,10 +161,13 @@ class ProfileController extends Controller
                     uploadImage($user, $request->file('profile_image'), 'user/profile-images',"profile", 'original', $actionType, $uploadId);
                 }
                 // End to Update Profile Image
-
+                $user->save();
+                DB::commit();
                 //Return Success Response
+                $buyer = User::find($user->id);
                 $responseData = [
                     'status'        => true,
+                    'profile_image' => $buyer->profile_image_url ?? null,
                     'message'       => trans('messages.auth.verification.profile_upload_success'),
                 ];
                 return response()->json($responseData, 200);
@@ -172,7 +175,7 @@ class ProfileController extends Controller
                 //Return Error Response
                 $responseData = [
                     'status'        => false,
-                    'error'         => trans('messages.auth.buyer.upgrade_error'),
+                    'error'         => trans('messages.auth.buyer.verify_profile'),
                 ];
                 return response()->json($responseData, 400);
             }

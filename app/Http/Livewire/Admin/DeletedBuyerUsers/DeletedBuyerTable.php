@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Buyer;
+namespace App\Http\Livewire\Admin\DeletedBuyerUsers;
 
 use App\Models\Buyer;
 use Livewire\Component;
@@ -8,13 +8,13 @@ use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use App\Models\User;
 
-class BuyerTable extends Component
+class DeletedBuyerTable extends Component
 {
     use WithPagination;
 
     public $search = null;
     
-    public $sortColumnName = 'updated_at', $sortDirection = 'desc', $perPage = 10;
+    public $sortColumnName = 'deleted_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
         'refreshTable' =>'render'
@@ -43,16 +43,16 @@ class BuyerTable extends Component
         } else {
             $buyers = $buyers->orderBy($this->sortColumnName, $this->sortDirection);
         }
-        $buyers = $buyers->paginate($this->perPage);
+        $buyers = $buyers->onlyTrashed()->paginate($this->perPage);
 
-        return view('livewire.admin.buyer.buyer-table',compact('buyers'));
+        return view('livewire.admin.deleted-buyer-users.deleted-buyer-table',compact('buyers'));
     }
 
     public function updatedSearch()
     {
         $this->resetPage();
     }
-    
+
     public function sortBy($columnName)
     {
         $this->resetPage();

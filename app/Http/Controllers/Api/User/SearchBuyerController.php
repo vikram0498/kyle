@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchBuyersRequest;
 use Illuminate\Support\Facades\Cache;
+use App\Models\BuyerPlan;
 
 
 class SearchBuyerController extends Controller
@@ -152,7 +153,11 @@ class SearchBuyerController extends Controller
            
             $userId = auth()->user()->id;
             
-            $buyers = Buyer::query()->select('id','user_id','contact_preferance','created_by');
+            // $buyers = Buyer::query()->select('id','user_id','contact_preferance','created_by');
+
+            $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
+
+
             $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
@@ -169,7 +174,7 @@ class SearchBuyerController extends Controller
                 }
             }
 
-            $buyers = $buyers->where('status', 1);
+            $buyers = $buyers->where('buyers.status', 1);
         
             if($request->property_type){
                 $selectedValues = [$request->property_type];
@@ -578,7 +583,11 @@ class SearchBuyerController extends Controller
                 $pagination = 50;
             }
 
-            $buyers = $buyers->orderBy('created_by','desc');
+            $buyers = $buyers
+            // ->orderBy('created_by','desc');
+            // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'asc');
+            ->orderByRaw('ISNULL(plan_position), plan_position ASC');
+            
             $buyers = $buyers->paginate($pagination);
 
             // Get additional buyer
@@ -604,13 +613,17 @@ class SearchBuyerController extends Controller
                 $liked = false;
                 $disliked = false;
                 
-                if(auth()->user()->is_buyer){
-                    $name = $buyer->userDetail->name;
-                }
+                $buyerDetails = $buyer->buyersPurchasedByUser()->first() ?  $buyer->buyersPurchasedByUser()->first()->buyer->userDetail : '';
 
-                if(auth()->user()->is_seller){
-                    $name = $buyer->seller->name;
-                }
+                $name = $buyerDetails->name ?? '';
+
+                // if(auth()->user()->is_buyer){
+                //     $name = $buyer->userDetail->name;
+                // }
+
+                // if(auth()->user()->is_seller){
+                //     $name = $buyer->seller->name;
+                // }
 
                 $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',auth()->user()->id)->where('buyer_id',$buyer->id)->first();
                 if($getrecentaction){
@@ -620,20 +633,13 @@ class SearchBuyerController extends Controller
                 
                 if($request->activeTab){
                     if($request->activeTab == 'my_buyers'){
-                        if(auth()->user()->is_buyer){
-                            $buyer->name =  $name;
-                            $buyer->first_name = $buyer->userDetail->first_name;
-                            $buyer->last_name = $buyer->userDetail->last_name;
-                            $buyer->email = $buyer->userDetail->email;
-                            $buyer->phone = $buyer->userDetail->phone;
-                        }
 
-                        if(auth()->user()->is_seller){
+                        if($buyerDetails){
                             $buyer->name =  $name;
-                            $buyer->first_name = $buyer->seller->first_name;
-                            $buyer->last_name = $buyer->seller->last_name;
-                            $buyer->email = $buyer->seller->email;
-                            $buyer->phone = $buyer->seller->phone;
+                            $buyer->first_name = $buyerDetails->first_name;
+                            $buyer->last_name = $buyerDetails->last_name;
+                            $buyer->email = $buyerDetails->email;
+                            $buyer->phone = $buyerDetails->phone;
                         }
 
                         $buyer->contact_preferance_id = $buyer->contact_preferance;
@@ -646,22 +652,22 @@ class SearchBuyerController extends Controller
                         $buyer->liked = $liked;
                         $buyer->disliked = $disliked;
 
+                        $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
+
+                        $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
+                        $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
+                        $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
+                        $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                        $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
+
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
-                        if(auth()->user()->is_buyer){
-                            $buyer->first_name  =  substr($buyer->userDetail->first_name, 0, 1).str_repeat("X", strlen($buyer->userDetail->first_name)-1);
-                            $buyer->last_name  =  substr($buyer->userDetail->last_name, 0, 1).str_repeat("X", strlen($buyer->userDetail->last_name)-1);
+                        if($buyerDetails){
+                            $buyer->first_name  =  substr($buyerDetails->first_name, 0, 1).str_repeat("X", strlen($buyerDetails->first_name)-1);
+                            $buyer->last_name  =  substr($buyerDetails->last_name, 0, 1).str_repeat("X", strlen($buyerDetails->last_name)-1);
                             $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
-                            $buyer->email =  substr($buyer->userDetail->email, 0, 3).str_repeat("X", strlen($buyer->userDetail->email)-3);
-                            $buyer->phone =  substr($buyer->userDetail->phone, 0, 3).str_repeat("X", strlen($buyer->userDetail->phone)-3);
-                        }
-
-                        if(auth()->user()->is_seller){
-                            $buyer->first_name  =  substr($buyer->seller->first_name, 0, 1).str_repeat("X", strlen($buyer->seller->first_name)-1);
-                            $buyer->last_name  =  substr($buyer->seller->last_name, 0, 1).str_repeat("X", strlen($buyer->seller->last_name)-1);
-                            $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
-                            $buyer->email =  substr($buyer->seller->email, 0, 3).str_repeat("X", strlen($buyer->seller->email)-3);
-                            $buyer->phone =  substr($buyer->seller->phone, 0, 3).str_repeat("X", strlen($buyer->seller->phone)-3);
+                            $buyer->email =  substr($buyerDetails->email, 0, 3).str_repeat("X", strlen($buyerDetails->email)-3);
+                            $buyer->phone =  substr($buyerDetails->phone, 0, 3).str_repeat("X", strlen($buyerDetails->phone)-3);
                         }
 
                         $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
@@ -677,6 +683,14 @@ class SearchBuyerController extends Controller
                         $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
                         $buyer->liked = $liked;
                         $buyer->disliked = $disliked;
+
+                        // $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
+
+                        $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
+                        $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
+                        $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
+                        $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                        $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
                     }
                 }
@@ -717,7 +731,9 @@ class SearchBuyerController extends Controller
             
             if($lastSearchLog){
 
-            $buyers = Buyer::query()->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            // $buyers = Buyer::query()->with(['userDetail'])->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+
+            $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
             if($lastSearchLog->property_type){
@@ -987,7 +1003,11 @@ class SearchBuyerController extends Controller
             }
 
 
-            $buyers = $buyers->orderBy('created_by','desc')->paginate(20);
+            $buyers = $buyers
+                    // ->orderBy('created_by','desc')
+                    // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'asc')
+                    ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                    ->paginate(20);
 
             foreach ($buyers as $key=>$buyer){
                 $liked=false;
@@ -999,25 +1019,28 @@ class SearchBuyerController extends Controller
                     $disliked=$getrecentaction->disliked == 1 ? true : false;
                 }
                 
-                if(auth()->user()->is_buyer){
-                    $name = $buyer->userDetail->first_name.' '.$buyer->userDetail->first_name;
+                // dd($buyer->buyersPurchasedByUser()->first()->buyer->userDetail);
+
+                $buyerDetails = $buyer->buyersPurchasedByUser()->first()->buyer->userDetail;
+                if($buyerDetails){
+                    $name = $buyerDetails->first_name.' '.$buyerDetails->first_name;
                     $buyer->name =  $name;
 
-                    $buyer->first_name = $buyer->userDetail->first_name;
-                    $buyer->last_name = $buyer->userDetail->last_name;
-                    $buyer->email = $buyer->userDetail->email;
-                    $buyer->phone = $buyer->userDetail->phone;
+                    $buyer->first_name = $buyerDetails->first_name;
+                    $buyer->last_name = $buyerDetails->last_name;
+                    $buyer->email = $buyerDetails->email;
+                    $buyer->phone = $buyerDetails->phone;
                 }
 
-                if(auth()->user()->is_seller){
-                    $name = $buyer->seller->first_name.' '.$buyer->seller->first_name;
-                    $buyer->name =  $name;
+                // if(auth()->user()->is_seller){
+                //     $name = $buyer->seller->first_name.' '.$buyer->seller->first_name;
+                //     $buyer->name =  $name;
 
-                    $buyer->first_name = $buyer->seller->first_name;
-                    $buyer->last_name = $buyer->seller->last_name;
-                    $buyer->email = $buyer->seller->email;
-                    $buyer->phone = $buyer->seller->phone;
-                }
+                //     $buyer->first_name = $buyer->seller->first_name;
+                //     $buyer->last_name = $buyer->seller->last_name;
+                //     $buyer->email = $buyer->seller->email;
+                //     $buyer->phone = $buyer->seller->phone;
+                // }
 
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
 
@@ -1029,6 +1052,14 @@ class SearchBuyerController extends Controller
                 $buyer->disliked= $disliked;                
                 $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+
+                $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
+
+                $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
+                $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
+                $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
+                $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
             }
             
             //Return Success Response

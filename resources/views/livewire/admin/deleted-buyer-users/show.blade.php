@@ -22,20 +22,23 @@
         </button>
     </div>
 
+    @php
+      $userDetail =$details->userDetail()->onlyTrashed()->first();
+    @endphp
     
 
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.name')}}</th>
-            <td>{{ $details->userDetail->name  }}</td>
+            <td>{{ $userDetail->name  }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.email')}}</th>
-            <td>{{ $details->userDetail->email }}</td>
+            <td>{{ $userDetail->email }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.phone')}}</th>
-            <td> {{ $details->userDetail->phone ?? 'N/A' }}</td>
+            <td> {{ $userDetail->phone ?? 'N/A' }}</td>
         </tr>
         {{-- <tr>
             <th width="25%">{{ __('cruds.buyer.fields.address')}}</th>
@@ -398,20 +401,12 @@
         <div class="col-12 d-flex headBox-card">
             <h4 class="card-title">{{ __('cruds.buyer.profile_verification.title') }}</h4>
             @php 
-                $phone_verify_uploaded = $details->userDetail->buyerVerification->is_phone_verification;
-                $dl_uploaded = $details->userDetail->buyerVerification->is_driver_license;
-                $pof_uploaded = $details->userDetail->buyerVerification->is_proof_of_funds;
-                $llc_uploaded = $details->userDetail->buyerVerification->is_llc_verification;
-                $payment_uploaded = $details->userDetail->buyerVerification->is_application_process;
+                $phone_verify_uploaded = $userDetail->buyerVerification->is_phone_verification;
+                $dl_uploaded = $userDetail->buyerVerification->is_driver_license;
+                $pof_uploaded = $userDetail->buyerVerification->is_proof_of_funds;
+                $llc_uploaded = $userDetail->buyerVerification->is_llc_verification;
+                $payment_uploaded = $userDetail->buyerVerification->is_application_process;
             @endphp
-
-            @if($phone_verify_uploaded == 1 && $dl_uploaded == 1 && $pof_uploaded == 1 && $llc_uploaded == 1 && $payment_uploaded == 1 )
-                {{--<select id="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->is_profile_verify }}" >
-                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                        <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->is_profile_verify == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                    @endforeach
-                </select>--}}
-            @endif
         </div>
     </div>
 
@@ -422,17 +417,9 @@
         </tr>
         <tr>
             <th rowspan="{{ $dl_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.driver_license') }}</th>
-            <td colspan="2"> 
+            <td colspan="2">
                 @if($dl_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->driver_license_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->driver_license_status }}" data-type="driver_license_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->driver_license_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->driver_license_status) }}
-                    @endif
+                    {{ ucwords($userDetail->buyerVerification->driver_license_status) }}
                 @else 
                     No
                 @endif
@@ -441,12 +428,12 @@
         @if($dl_uploaded == 1)
             <tr>
                 @php 
-                    $frontImageExist = $details->userDetail->uploads()->where('type', 'driver-license-front')->first();
+                    $frontImageExist = $userDetail->uploads()->where('type', 'driver-license-front')->first();
                     $frontImage = '';
                     if(!is_null($frontImageExist) && !empty($frontImageExist) && $frontImageExist){
                         $frontImage = $frontImageExist->file_path;
                     }
-                    $backImageExist = $details->userDetail->uploads()->where('type', 'driver-license-back')->first();
+                    $backImageExist = $userDetail->uploads()->where('type', 'driver-license-back')->first();
                     $backImage = '';
                     if(!is_null($backImageExist) && !empty($backImageExist) && $backImageExist){
                         $backImage = $backImageExist->file_path;
@@ -475,15 +462,9 @@
             <th rowspan="{{ $pof_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.proof_of_funds') }}</th>
             <td colspan="2">
                 @if($pof_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->proof_of_funds_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->proof_of_funds_status }}" data-type="proof_of_funds_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->proof_of_funds_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->proof_of_funds_status) }}
-                    @endif
+                    
+                    {{ ucwords($userDetail->buyerVerification->proof_of_funds_status) }}
+                   
                 @else 
                     No
                 @endif
@@ -492,7 +473,7 @@
         @if($pof_uploaded == 1)
             <tr>
                 @php 
-                    $bankStatementExist = $details->userDetail->uploads()->where('type', 'bank-statement-pdf')->first();
+                    $bankStatementExist = $userDetail->uploads()->where('type', 'bank-statement-pdf')->first();
                     $bankStatementPdf = '';
                     if(!is_null($bankStatementExist) && !empty($bankStatementExist) && $bankStatementExist){
                         $bankStatementPdf = $bankStatementExist->file_path;
@@ -518,7 +499,7 @@
                 <td>
                     <h5>{{ __('cruds.buyer.profile_verification.other_proof_fund') }}</h5>
                     <div >
-                        {{$details->userDetail->buyerVerification->other_proof_of_fund ?? 'N/A'}}
+                        {{$userDetail->buyerVerification->other_proof_of_fund ?? 'N/A'}}
                     </div>
                 </td>
             </tr>
@@ -527,15 +508,9 @@
             <th rowspan="{{ $llc_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.llc_verification') }}</th>
             <td colspan="2"> 
                 @if($llc_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->llc_verification_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->llc_verification_status }}" data-type="llc_verification_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->llc_verification_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->llc_verification_status) }}
-                    @endif
+                    
+                    {{ ucwords($userDetail->buyerVerification->llc_verification_status) }}
+                  
                 @else 
                     No
                 @endif
@@ -544,12 +519,12 @@
         @if($llc_uploaded == 1)
             <tr>
                 @php 
-                    $llcFrontImageExist = $details->userDetail->uploads()->where('type', 'llc-front-image')->first();
+                    $llcFrontImageExist = $userDetail->uploads()->where('type', 'llc-front-image')->first();
                     $llcFrontImage = '';
                     if(!is_null($llcFrontImageExist) && !empty($llcFrontImageExist) && $llcFrontImageExist){
                         $llcFrontImage = $llcFrontImageExist->file_path;
                     }
-                    $llcBackImageExist = $details->userDetail->uploads()->where('type', 'llc-back-image')->first();
+                    $llcBackImageExist = $userDetail->uploads()->where('type', 'llc-back-image')->first();
                     $llcBackImage = '';
                     if(!is_null($llcBackImageExist) && !empty($llcBackImageExist) && $llcBackImageExist){
                         $llcBackImage = $llcBackImageExist->file_path;

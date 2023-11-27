@@ -99,7 +99,13 @@
         var pr = $(this).data('property');
         var pr_vals = $(this).val();
         if(pr == 'build_year_min'){
-            @this.set('state.build_year_min', pr_vals);           
+            var maxYear = $("#build_year_max").val();
+            if(pr_vals > maxYear){
+                $("#build_year_max").val('');
+                @this.set('state.build_year_max', ''); 
+            }
+            $("#build_year_max").datepicker('setStartDate', pr_vals.toString());
+            @this.set('state.build_year_min', pr_vals);
         } else if(pr == 'build_year_max'){
             @this.set('state.build_year_max', pr_vals);        
         }
@@ -191,6 +197,59 @@
             }
         })
     })
+
+    $(document).on('change', '.select_profile_verify_status', function(e){
+        var _this = $(this);
+        var id = _this.data('id');
+        var type = _this.data('type');
+        var old_value = _this.data('old_value');
+        var value = _this.val();
+
+        var data = {
+            id: id,
+            type: type,
+            status: value,
+        }
+        
+        var msg = 'Are you sure you want to change status to '+value+' ?';
+        
+        Swal.fire({
+            title: msg,
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes, change it',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.emit('confirmedToggleActionView', data);
+
+                _this.data('old_value', value);
+                _this.attr('data-old_value', value);
+            } else if (result.isDenied) {
+                _this.val(old_value);
+            }
+        })
+    })
+
+    $(document).on('click', '.modal_image_btn', function(e){
+        e.preventDefault();
+
+        var img_src = $(this).data('src');
+
+        $('#modal_image').attr('src', img_src);
+
+        $('#image_popup_modal').modal('show');
+
+    }); 
+
+    $(document).on('click', '.close-btn', function(e){
+        e.preventDefault();
+
+        $('#modal_image').attr('src', '');
+
+        $('#image_popup_modal').modal('hide');
+
+    });
 
 
     // red flag page events

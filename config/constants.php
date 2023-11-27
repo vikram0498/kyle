@@ -24,11 +24,12 @@ return [
         'email_logo' => 'images/email-logo.png',
     ],
 
-    'profile_image_size' =>'1024', // 1024 = 1 MB
+    'profile_image_size' =>'2048', // 1024 = 1 MB
 
     'owner_email' => env('OWNER_MAIL'),
     'twilio_country_code'=>env('TWILIO_COUNTRY_CODE'),
     'buyer_application_free_price_id'=>env('BUYER_APPLICATION_FEE_PRICE_ID'),
+    'buyer_profile_update_price_id'=>env('BUYER_PROFILE_UPDATE_PRICE_ID'),
 
     // 'owner_email' => 'amitpandey.his@gmail.com',
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
@@ -244,4 +245,9 @@ return [
     'default_country' => 233,
     'video_title_limit' => 50,
 
+    'buyer_profile_verification_status' => [
+        'pending'     => "Pending",
+        'verified'    => "Verified",
+        'rejected'    => "Rejected"
+    ] 
 ];

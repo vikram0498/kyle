@@ -65,13 +65,15 @@ Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFor
 
 Route::get('search-buyer-form-details', [SearchBuyerController::class, 'searchBuyerFormElementValues']);
 
-Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);
-
 Route::post('copy-single-buyer-details/{token}', [CopyBuyerController::class, 'uploadCopyBuyerDetails']);
+
+Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);
 
 Route::get('check-token/{token}', [CopyBuyerController::class, 'isValidateToken']);
 
 Route::get('get-contact-preferance', [SupportController::class, 'getContactPreferance']);
+
+Route::get('check-user-token', [HomeController::class, 'checkUserTokenExpired']);
 
 Route::post('/support', [SupportController::class, 'support']);
 
@@ -138,11 +140,15 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
  
     Route::post('create-upgrade-buyer-session', [PaymentController::class, 'createProfileUpgradeSession']);
 
+    Route::post('create-upgrade-boost-profile-buyer-session', [PaymentController::class, 'createBoostYourProfileUpgradeSession']);
+
     Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
 
     Route::post('/checkout-success', [PaymentController::class, 'checkoutSuccess']);
 
     Route::post('/payment-history', [PaymentController::class, 'paymentHistory']);
+
+    Route::post('update-auto-renew-flag', [PaymentController::class, 'updateAutoRenewFlag']);
 
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 

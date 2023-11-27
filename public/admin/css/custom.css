@@ -966,3 +966,85 @@ body .datepicker .datepicker-years .table-condensed{
 .swal2-modal .swal2-title {
     font-size: 21.5px !important;
 }
+
+/* ----18/11/2023->css--- */
+
+.profileCard-box .headBox-card{
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.profileCard-box .headBox-card h4{
+    margin-bottom: 0;
+}
+
+.profileCard-box .headBox-card select.select_profile_verify_status {
+    padding: 3px 20px 3px 5px;
+    border: 1px solid #212529;
+}
+
+.buyer_profile_verification select.select_profile_verify_status {
+    padding: 3px 20px 3px 5px;
+    border: 1px solid #212529;
+}
+
+.buyer_profile_verification th, .buyer_profile_verification td {
+    border: 1px solid #e5e5e5;
+    padding: 20px;
+}
+
+.buyer_profile_verification td h5 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.buyer_profile_verification td .modal_image_btn {
+    border-radius: 0;
+    width: 100%;
+    display: block;
+}
+
+.buyer_profile_verification td .modal_image_btn {
+    border-radius: 0;
+    width: 100%;
+    display: block;
+}
+
+.buyer_profile_verification td .modal_image_btn img {
+    border-radius: 0;
+    width: 100%;
+    height: 190px;
+    max-width: 100%;
+    object-fit: contain;
+    border: 1px dashed #e5e5e5;
+    padding: 5px;
+}
+
+.viewpdf-btn svg {
+    stroke: #fff;
+}
+
+.viewpdf-btn {
+    width: fit-content !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px !important;
+    gap: 5px;
+    font-weight: 400 !important;
+}
+
+.table-design td  p {
+    white-space: initial;
+}
+
+.buyer_profile_verification tbody th {
+    vertical-align: top;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom:20px;
+}

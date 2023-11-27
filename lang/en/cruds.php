@@ -94,7 +94,7 @@ return [
 
     'buyer' => [
         'title'                 => 'Buyers',
-        'sub_menu_list_title'   => 'List of Buyers',
+        'sub_menu_list_title'   => 'List',
         'sub_menu_flaged_title' => 'Red Flaged Buyers',
         'title_singular'        => 'Buyer',
         'creative_buyer'        => 'Creative Buyer',
@@ -190,6 +190,19 @@ return [
             'heading'   => 'Buyer Red Flag',
             'heading'   => 'Buyer Red Flag',
         ],
+        'profile_verification' => [
+            'title' => 'Profile Verification',
+            'phone_verification'    => 'Phone Verification',
+            'driver_license'        => 'Driver’s License',
+            'proof_of_funds'        => 'Proof of Funds',
+            'llc_verification'      => 'LLC Verification',
+            'application_process'   => 'Application Process',
+            'phone_verification'    => 'Phone Verification',
+            'front_id_photo'        => 'Front ID Photo',
+            'back_id_photo'         => 'Back ID Photo',
+            'bank_statement'        => 'Bank Statement',
+            'other_proof_fund'      => 'Other Proof Of Fund'
+        ]
     ],
 
     'search_log' => [
@@ -266,28 +279,30 @@ return [
 
 
     'buyer_plan' => [
-        'title' => 'Buyer Plans',
-        'title_singular' => 'Buyer Plan',
+        'title' => 'Profile Tags',
+        'title_singular' => 'Profile Tag',
         'fields' => [
-            'title' => 'Plan Name',
+            'title' => 'Tag Name',
             'amount' => 'Amount',
             'type'  => 'Type',
-            'position'  => 'Position',
+            'position'  => 'Rank',
             'description'       => 'Description',
             'image'             => 'Image',          
             'status'            => 'Status', 
+            'user_limit'        => 'User Limit', 
             'created_at'        => 'Created At',
         ],
     ],
 
     'buyer_transaction' => [
-        'title'                 => 'Buyer Transactions',
-        'title_singular'        => 'Buyer Transaction',
+        'title'                 => 'Transactions',
+        'title_singular'        => 'Transaction',
         'fields' => [
             'user'   => 'User',
             'plan'   => 'Plan',
             'amount' => 'Amount',
             'currency' => 'Currency',
+            'description' => 'Description',
             'payment_type'   => 'Payment Type',
             'payment_method' => 'Payment Method',
             'status'         => 'Status',

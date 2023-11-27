@@ -1,14 +1,10 @@
 @extends('emails.layouts.admin')
 
 @section('email-content')
-<tr>
-	<td>
 		<p class="mail-title">
-			<b>Hello {{ ucwords($name) }} </b>,
+			<b>Hello {{ ucwords($name) }},</b>
 		</p>
 		<div class="mail-desc">
-            <p>{!! $replyMessage ?? '' !!}</p>
+            <p style="margin-bottom: 0;font-weight: normal;">{!! $replyMessage ?? '' !!}</p>
 		</div>
-	</td>
-</tr>
 @endsection

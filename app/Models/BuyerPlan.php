@@ -28,6 +28,7 @@ class BuyerPlan extends Model
         'amount',
         'description',
         'status',
+        'user_limit',
         'created_by',
         'created_at',
         'updated_at',
@@ -64,6 +65,11 @@ class BuyerPlan extends Model
             return $this->planImage->file_url;
         }
         return "";
+    }
+
+    public function buyers()
+    {
+        return $this->hasMany(Buyer::class, 'plan_id', 'id');
     }
 
 }

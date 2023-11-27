@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('amount',15,2)->default(0);
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0=> deactive, 1=> active');
+            $table->unsignedBigInteger('user_limit')->default('null')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();

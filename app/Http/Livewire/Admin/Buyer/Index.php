@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Buyer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use App\Models\Buyer;
+use App\Models\ProfileVerification;
 use App\Models\User;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -524,8 +525,8 @@ class Index extends Component
         $type = $data['type'];
 
         $model = Buyer::find($id);
-        $model->userDetail()->update(['is_active'=>!$model->$type]);
-        $model->update([$type => !$model->$type]);
+        // $model->userDetail()->update(['is_active'=>!$model->$type]);
+        $model->update(['status' => !$model->$type]);
         $this->alert('success', trans('messages.change_status_success_message'));
     }
 

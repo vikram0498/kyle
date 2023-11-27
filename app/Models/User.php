@@ -129,7 +129,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsBuyerVerifiedAttribute()
     {
         return $this->buyerVerification()->where('is_phone_verification', 1)
-        ->where('is_proof_of_funds', 1)->where('is_llc_verification',1)
+        ->where('is_driver_license',1)->where('driver_license_status','verified')
+        ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
+        ->where('is_llc_verification',1)->where('llc_verification_status','verified')
         ->where('is_application_process',1)->exists();
     }
 
@@ -246,5 +248,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Transaction::class);
     }
+
+    // public function subscription()
+    // {
+    //     return $this->hasMany(Transaction::class);
+    // }
 
 }

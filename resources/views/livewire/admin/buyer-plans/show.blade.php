@@ -34,6 +34,10 @@
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.buyer_plan.fields.user_limit')}}</th>
+            <td> {{ ($details->user_limit ?? '')  }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
             <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
         </tr>

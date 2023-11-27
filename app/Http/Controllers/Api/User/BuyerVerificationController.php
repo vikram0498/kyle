@@ -149,7 +149,7 @@ class BuyerVerificationController extends Controller
                     }
                 }
 
-                $user->buyerVerification()->update(['is_driver_license'=>1]);
+                $user->buyerVerification()->update(['is_driver_license'=> 1, 'driver_license_status' => 'pending']);
 
                 DB::commit();
 
@@ -207,7 +207,7 @@ class BuyerVerificationController extends Controller
                     }
                 }
 
-                $user->buyerVerification()->update(['other_proof_of_fund'=>$request->other_proof_of_fund,'is_proof_of_funds'=>1]);
+                $user->buyerVerification()->update(['other_proof_of_fund'=>$request->other_proof_of_fund,'is_proof_of_funds'=>1, 'proof_of_funds_status' => 'pending']);
 
                 DB::commit();
 
@@ -277,7 +277,7 @@ class BuyerVerificationController extends Controller
                     }
                 }
 
-                $user->buyerVerification()->update(['is_llc_verification'=>1]);
+                $user->buyerVerification()->update(['is_llc_verification'=>1, 'llc_verification_status' => 'pending']);
  
                 DB::commit();
 
@@ -372,6 +372,7 @@ class BuyerVerificationController extends Controller
 
     public function getLastVerificationForm(){
         $lastStepForm = 0;
+        $statusOfLastStep = 0;
         $user = auth()->user();
 
         if($user->buyerVerification->is_phone_verification){
@@ -380,14 +381,17 @@ class BuyerVerificationController extends Controller
 
         if($user->buyerVerification->is_driver_license){
             $lastStepForm = 2;
+            $statusOfLastStep = $user->buyerVerification->driver_license_status;
         }
 
         if($user->buyerVerification->is_proof_of_funds){
             $lastStepForm = 3;
+            $statusOfLastStep = $user->buyerVerification->proof_of_funds_status;
         }
 
         if($user->buyerVerification->is_llc_verification){
             $lastStepForm = 4;
+            $statusOfLastStep = $user->buyerVerification->llc_verification_status;
         }
 
         if($user->buyerVerification->is_application_process){
@@ -396,8 +400,14 @@ class BuyerVerificationController extends Controller
 
         //Return Success Response
         $responseData = [
-            'status'        => true,
-            'lastStepForm'  => (int)$lastStepForm,
+            'status'                    => true,
+            'lastStepForm'              => (int)$lastStepForm,
+
+            'lastStepStatus'            => $statusOfLastStep
+
+            // 'driver_license_status'     => $user->buyerVerification->driver_license_status,
+            // 'proof_of_funds_status'     => $user->buyerVerification->proof_of_funds_status,
+            // 'llc_verification_status'   => $user->buyerVerification->llc_verification_status,
         ];
         return response()->json($responseData, 200);
     }

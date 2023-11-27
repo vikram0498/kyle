@@ -101,8 +101,7 @@ class LoginRegisterController extends Controller
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
             if($checkUserStatus){
-
-                if(!is_null($checkUserStatus->deleted_at) && $checkUserStatus->roles()->first()->id == 2){
+                if(!is_null($checkUserStatus->deleted_at)){
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
@@ -111,7 +110,7 @@ class LoginRegisterController extends Controller
                     return response()->json($responseData, 401);
                 }
 
-                if(!$checkUserStatus->is_active){
+                if(!$checkUserStatus->is_active && $checkUserStatus->roles()->first()->id == 2){
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
@@ -136,7 +135,7 @@ class LoginRegisterController extends Controller
 
 
             if(Auth::attempt($credentialsOnly, $remember_me)){
-                $user = User::find(Auth::id());
+                $user = Auth::user();
 
                 if(is_null($user->email_verified_at)){
                     $user->NotificationSendToVerifyEmail();
@@ -408,13 +407,24 @@ class LoginRegisterController extends Controller
 
     public function getEmail($userId){
         $user = User::find($userId);
-        if($user){
-            $responseData = [
-                'status'  => true,
-                'message' => 'Here your email',
-                'data'    => $user->email ?? '',
-            ];
-            return response()->json($responseData, 200);
+        if($user ){
+            if(is_null($user->email_verified_at)){
+                $responseData = [
+                    'status'  => true,
+                    'is_verify_email' => false,
+                    'message' => 'Here your email',
+                    'data'    => $user->email ?? '',
+                ];
+                return response()->json($responseData, 200);
+            } else {
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'is_verify_email' => true,
+                    'error'         => trans('Email is aleready verifed! Please login'),
+                ];
+                return response()->json($responseData, 422);
+            }
         }{
             //Return Error Response
             $responseData = [

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 
-class StoreCopyBuyerDetailsRequest extends FormRequest
+class StoreCopyBuyerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

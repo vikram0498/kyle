@@ -22,9 +22,13 @@ class ProfileVerification extends Model
         'other_proof_of_fund',
         'is_phone_verification',
         'is_driver_license',
+        'driver_license_status',
         'is_proof_of_funds',
+        'proof_of_funds_status',
         'is_llc_verification',
+        'llc_verification_status',
         'is_application_process',
+        'is_profile_verify'
     ];
 
     public function uploads()

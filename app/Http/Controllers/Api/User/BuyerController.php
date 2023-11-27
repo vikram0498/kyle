@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 use App\Models\SearchLog;
 use App\Imports\BuyersImport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -24,27 +24,28 @@ use App\Http\Requests\UpdateSingleBuyerDetailsRequest;
 
 class BuyerController extends Controller
 {
-    
-    public function singleBuyerFormElementValues(){
+
+    public function singleBuyerFormElementValues()
+    {
         $elementValues = [];
 
-        try{
+        try {
 
-            if (Cache::has('singleFormElementDetails')){
+            if (Cache::has('singleFormElementDetails')) {
                 $responseData = [
                     'status'        => true,
                     'result'        => Cache::get('singleFormElementDetails'),
                 ];
                 return response()->json($responseData, 200);
-            }else{
+            } else {
 
                 $elementValues['market_preferances'] = collect(config('constants.market_preferances'))->map(function ($label, $value) {
                     return [
                         'value' => $value,
                         'label' => $label,
                     ];
-                })->values()->all();               
-                
+                })->values()->all();
+
                 $elementValues['property_types'] = collect(config('constants.property_types'))->map(function ($label, $value) {
                     return [
                         'value' => $value,
@@ -88,7 +89,7 @@ class BuyerController extends Controller
                 })->values()->all();
 
                 $elementValues['buyer_types'] = collect(config('constants.buyer_types'))->map(function ($label, $value) {
-                    if(in_array($value,array(5,11))){
+                    if (in_array($value, array(5, 11))) {
                         return [
                             'value' => $value,
                             'label' => ucwords(strtolower($label)),
@@ -124,7 +125,7 @@ class BuyerController extends Controller
                     ];
                 })->values()->all();
 
-                $states = DB::table('states')->where('country_id',233)->where('flag','=',1)->orderBy('name','ASC')->pluck('name','id');
+                $states = DB::table('states')->where('country_id', 233)->where('flag', '=', 1)->orderBy('name', 'ASC')->pluck('name', 'id');
 
                 $elementValues['states'] = $states->map(function ($label, $value) {
                     return [
@@ -133,7 +134,7 @@ class BuyerController extends Controller
                     ];
                 })->values()->all();
 
-                Cache::put('singleFormElementDetails',$elementValues);
+                Cache::put('singleFormElementDetails', $elementValues);
 
                 //Return Success Response
                 $responseData = [
@@ -142,10 +143,9 @@ class BuyerController extends Controller
                 ];
                 return response()->json($responseData, 200);
             }
-
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -153,14 +153,14 @@ class BuyerController extends Controller
                 'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 400);
-
         }
     }
 
-    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request){
+    public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request)
+    {
         DB::beginTransaction();
         try {
-            
+
             $isMailSend = false;
             $validatedData = $request->all();
 
@@ -168,14 +168,14 @@ class BuyerController extends Controller
             $userDetails =  [
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
-                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
-                'email'          => $validatedData['email'], 
-                'phone'          => $validatedData['phone'], 
+                'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+                'email'          => $validatedData['email'],
+                'phone'          => $validatedData['phone'],
             ];
             $createUser = User::create($userDetails);
             // End create users table
 
-            if($createUser){
+            if ($createUser) {
                 //Assign buyer role
                 $createUser->roles()->sync(3);
 
@@ -183,77 +183,76 @@ class BuyerController extends Controller
 
                 $validatedData['buyer_user_id'] = $createUser->id;
 
-                $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
-    
+                $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
+
                 // if($request->state){
                 //      $validatedData['state'] = json_encode($request->state);
                 // }
-                
+
                 //  if($request->city){
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
-                
-                if($request->parking){
+
+                if ($request->parking) {
                     $validatedData['parking'] = (int)$request->parking;
                 }
-              
-                if($request->buyer_type){
+
+                if ($request->buyer_type) {
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
                 }
-    
-               
-                if($request->zoning){
+
+
+                if ($request->zoning) {
                     $validatedData['zoning'] = json_encode($request->zoning);
-                }           
-               
-                if($request->permanent_affix){
+                }
+
+                if ($request->permanent_affix) {
                     $validatedData['permanent_affix'] = (int)$request->permanent_affix;
-                } 
-                if($request->park){
+                }
+                if ($request->park) {
                     $validatedData['park'] = (int)$request->park;
-                }  
-                if($request->rooms){
+                }
+                if ($request->rooms) {
                     $validatedData['rooms'] = (int)$request->rooms;
                 }
-                
+
                 // $createdBuyer = Buyer::create($validatedData);
 
-                $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+                $createUser->buyerVerification()->create(['user_id' => $validatedData['user_id']]);
 
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone'])->all();
 
                 $createUser->buyerDetail()->create($validatedData);
 
-                if($createUser->buyerDetail && auth()->user()->is_seller){
+                if ($createUser->buyerDetail && auth()->user()->is_seller) {
                     //Purchased buyer
                     $syncData['buyer_id'] = $createUser->buyerDetail->id;
                     $syncData['created_at'] = Carbon::now();
-                
+
                     auth()->user()->purchasedBuyers()->create($syncData);
 
                     $isMailSend = true;
                 }
 
-                if($isMailSend){
+                if ($isMailSend) {
                     //Verification mail sent
                     $createUser->NotificationSendToBuyerVerifyEmail();
                 }
             }
-            
+
 
             DB::commit();
-            
+
             //Success Response Send
             $responseData = [
                 'status'            => true,
                 'message'           => trans('messages.auth.buyer.register_success_alert'),
             ];
             return response()->json($responseData, 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response   
             $responseData = [
                 'status'        => false,
@@ -263,10 +262,11 @@ class BuyerController extends Controller
         }
     }
 
-    public function edit(){
-        try{
+    public function edit()
+    {
+        try {
             $userId = auth()->user()->id;
-            $buyer = User::with('buyerDetail')->where('id',$userId)->first();
+            $buyer = User::with('buyerDetail')->where('id', $userId)->first();
 
             $buyer->profile_image_url = $buyer->profile_image_url;
 
@@ -278,15 +278,20 @@ class BuyerController extends Controller
                 'phone'      => $buyer->phone ?? null,
                 'profile_image' => $buyer->profile_image_url ?? null,
                 'is_active'  => $buyer->is_active ?? 0,
-                'buyer_search_status'=>  $buyer->buyerDetail->status ?? 0,
-                'contact_value'=>  $buyer->buyerDetail->contact_preferance,
+                'buyer_search_status' =>  $buyer->buyerDetail->status ?? 0,
+                'contact_value' =>  $buyer->buyerDetail ? $buyer->buyerDetail->contact_preferance : null,
+                'email_verified' => $buyer->email_verified_at != null ? true : false,
+                'phone_verified' => $buyer->phone_verified_at != null ? true : false,
+                'profile_tag_name'  => $buyer->buyerDetail->buyerPlan ? $buyer->buyerDetail->buyerPlan->title : null,
+                'profile_tag_image' => $buyer->buyerDetail->buyerPlan ? $buyer->buyerDetail->buyerPlan->image_url : null,
             ];
 
+          
             $buyer_details = collect($buyer_details);
-            $other_details = $buyer->buyerDetail()->select('is_profile_payment','occupation','replacing_occupation','company_name','address','country','state','city','zip_code','price_min','price_max','bedroom_min','bedroom_max','bath_min','bath_max','size_min','size_max','lot_size_min','lot_size_max','build_year_min','build_year_max','arv_min','arv_max','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','buyer_type','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','unit_min','unit_max','building_class','value_add','purchase_method','stories_min','stories_max','zoning','utilities','sewer','market_preferance','contact_preferance','is_ban','permanent_affix','park','rooms')->first();
+            $other_details = $buyer->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
 
             //Start State Column
-            $states = DB::table('states')->where('flag','=',1)->whereIn('id',$other_details->state)->orderBy('name','ASC')->pluck('name','id');
+            $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $other_details->state)->orderBy('name', 'ASC')->pluck('name', 'id');
 
             $other_details->state = $states->map(function ($label, $value) {
                 return [
@@ -297,7 +302,7 @@ class BuyerController extends Controller
             //End State Column
 
             //Start City Column
-            $cities = DB::table('cities')->whereIn('id',$other_details->city)->orderBy('name','ASC')->pluck('name','id');
+            $cities = DB::table('cities')->whereIn('id', $other_details->city)->orderBy('name', 'ASC')->pluck('name', 'id');
 
             $other_details->city = $cities->map(function ($label, $value) {
                 return [
@@ -314,7 +319,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Market Preference (MLS Status) Column
 
             //Start Contact Preference Column
@@ -324,7 +329,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Contact Preference Column
 
             //Start Property Type Column
@@ -334,17 +339,17 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Property Type Column
 
             //Start Purchase Method Column
             $purchase_method_arr = \Arr::only(config('constants.purchase_methods'), $other_details->purchase_method);
             $other_details->purchase_method = collect($purchase_method_arr)->map(function ($label, $value) {
-                 return [
-                     'value' => $value,
-                     'label' => $label,
-                 ];
-            })->values()->all();  
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
             //End Purchase Method Column
 
             //Start Zoning Column
@@ -354,7 +359,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Zoing Column
 
             //Start Utilities Column
@@ -364,7 +369,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Utilities Column
 
             //Start Sewage Column
@@ -374,7 +379,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Sewage Column
 
             //Start Building Class Column
@@ -384,7 +389,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Building Class Column
 
             //Start Parking Column
@@ -394,7 +399,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Parking Column
 
             //Start Buyer Type Column
@@ -404,7 +409,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Buyer Type Column
 
             //Start Park Column
@@ -414,7 +419,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Park Column
 
             //Start Location Flaw Column
@@ -424,7 +429,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => $label,
                 ];
-            })->values()->all();  
+            })->values()->all();
             //End Location Flaw Column
 
             //Start Buyer Verification Details
@@ -438,25 +443,25 @@ class BuyerController extends Controller
                 'buyer'        => $mergedBuyerDetails,
             ];
             return response()->json($responseData, 200);
-
-        }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
             
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 400);
-
         }
     }
 
-    public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request){
-    
+    public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request)
+    {
+
         DB::beginTransaction();
         try {
-            
+
             $authUserId = auth()->user()->id;
 
             $validatedData = $request->all();
@@ -465,68 +470,67 @@ class BuyerController extends Controller
             $userDetails =  [
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
-                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
+                'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
             ];
-        
-            $updateUser = User::where('id',$authUserId)->update($userDetails);
+
+            $updateUser = User::where('id', $authUserId)->update($userDetails);
             // End create users table
 
-            if($updateUser){
-                
-                $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
-    
+            if ($updateUser) {
+
+                $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
+
                 // if($request->state){
                 //      $validatedData['state'] = json_encode($request->state);
                 // }
-                
+
                 //  if($request->city){
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
-                
-                if($request->parking){
+
+                if ($request->parking) {
                     $validatedData['parking'] = (int)$request->parking;
                 }
-              
-                if($request->buyer_type){
+
+                if ($request->buyer_type) {
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
                 }
-    
-               
-                if($request->zoning){
+
+
+                if ($request->zoning) {
                     $validatedData['zoning'] = json_encode($request->zoning);
-                }           
-               
-                if($request->permanent_affix){
+                }
+
+                if ($request->permanent_affix) {
                     $validatedData['permanent_affix'] = (int)$request->permanent_affix;
-                } 
-                if($request->park){
+                }
+                if ($request->park) {
                     $validatedData['park'] = (int)$request->park;
-                }  
-                if($request->rooms){
+                }
+                if ($request->rooms) {
                     $validatedData['rooms'] = (int)$request->rooms;
                 }
-                
+
                 // $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
 
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone'])->all();
 
                 auth()->user()->buyerDetail()->update($validatedData);
-
             }
-            
-            $authUser = User::where('id',$authUserId)->first();
+
+            $authUser = User::where('id', $authUserId)->first();
             $userData          = [
                 'id'           => $authUser->id,
                 'first_name'   => $authUser->first_name ?? '',
                 'last_name'    => $authUser->last_name ?? '',
-                'profile_image'=> $authUser->profile_image_url ?? '',
-                'role'=> $authUser->roles()->first()->id ?? '',
+                'profile_image' => $authUser->profile_image_url ?? '',
+                'role' => $authUser->roles()->first()->id ?? '',
                 'is_verified'  => $authUser->is_buyer_verified ?? false,
                 'total_buyer_uploaded' => $authUser->buyers()->count(),
             ];
 
             DB::commit();
-            
+
             //Success Response Send
             $responseData = [
                 'status'            => true,
@@ -534,11 +538,10 @@ class BuyerController extends Controller
                 'message'           => trans('messages.edit_success_message'),
             ];
             return response()->json($responseData, 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response   
             $responseData = [
                 'status'        => false,
@@ -548,14 +551,15 @@ class BuyerController extends Controller
         }
     }
 
-    public function fetchBuyers(Request $request){
+    public function fetchBuyers(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'property_type'  => 'int',
         ]);
 
-        if($validator->fails()){
-             //Error Response Send
-             $responseData = [
+        if ($validator->fails()) {
+            //Error Response Send
+            $responseData = [
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
@@ -566,19 +570,32 @@ class BuyerController extends Controller
         try {
             $perPage = 10;
             $userId = auth()->user()->id;
+
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
-            $buyers = Buyer::select('id')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->orderBy('created_by','desc')->paginate($perPage);
-        
+
+            /* $buyers = Buyer::select('id')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
+            // ->orderBy('created_by', 'desc')
+            ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'asc')
+            ->paginate($perPage); */
+
+
+            $buyers = Buyer::select(['buyers.id', 'buyer_plans.position as plan_position'])
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+               ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
+                // ->orderByRaw('plan_position ASC, plan_position IS NULL')
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->paginate($perPage);
+
             foreach ($buyers as $buyer) {
                 $buyer->first_name = $buyer->userDetail->first_name;
                 $buyer->last_name = $buyer->userDetail->last_name;
                 $buyer->phone = $buyer->userDetail->phone;
                 $buyer->email = $buyer->userDetail->email;
-                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
-                $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance] : '';
+                $buyer->redFlag = $buyer->redFlagedData()->where('user_id', $userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id', auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
             }
 
@@ -592,11 +609,10 @@ class BuyerController extends Controller
             ];
 
             return response()->json($responseData, 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -604,7 +620,6 @@ class BuyerController extends Controller
             ];
             return response()->json($responseData, 400);
         }
-
     }
 
     public function import(Request $request)
@@ -623,26 +638,24 @@ class BuyerController extends Controller
             $skippedCount       = $totalCount - $insertedRowCount;
 
             // dd($totalCount, $insertedRowCount, $skippedCount);
-            
-            if($insertedRowCount == 0){
+
+            if ($insertedRowCount == 0) {
                 //Return Error Response
                 $responseData = [
                     'status'        => false,
                     'message'       => trans('No rows inserted during the import process.'),
                 ];
                 return response()->json($responseData, 400);
-
-            } else if($skippedCount > 0 && $insertedRowCount > 0){
+            } else if ($skippedCount > 0 && $insertedRowCount > 0) {
                 $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
-            
+
                 //Return Error Response
                 $responseData = [
                     'status'        => true,
                     'message'       => $message,
                 ];
                 return response()->json($responseData, 200);
-
-            } else if($skippedCount == 0) {
+            } else if ($skippedCount == 0) {
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
@@ -650,10 +663,9 @@ class BuyerController extends Controller
                 ];
                 return response()->json($responseData, 200);
             }
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -663,33 +675,34 @@ class BuyerController extends Controller
         }
     }
 
-    public function redFlagBuyer(Request $request){
+    public function redFlagBuyer(Request $request)
+    {
         DB::beginTransaction();
         try {
-           
+
             $validator = Validator::make([
                 'reason' => $request->reason,
-                              
+
             ], [
-                'reason' => ['required'],                
-            ]);            
-                       
+                'reason' => ['required'],
+            ]);
+
             // Check if validation fails
             if ($validator->fails()) {
                 //Error Response Send
-            $responseData = [
-                'status'        => false,
-                'validation_errors' => $validator->errors(),
-            ];
-            return response()->json($responseData, 400);
-            }           
-            
+                $responseData = [
+                    'status'        => false,
+                    'validation_errors' => $validator->errors(),
+                ];
+                return response()->json($responseData, 400);
+            }
+
             $authUserId = auth()->user()->id;
             $redFlagRecord[$authUserId]['reason'] = $request->reason;
             $redFlagRecord[$authUserId]['incorrect_info'] = $request->incorrect_info;
             $buyer = Buyer::find($request->buyer_id);
-           
-            if(!$buyer->redFlagedData()->exists()){
+
+            if (!$buyer->redFlagedData()->exists()) {
                 // $buyer->redFlagedData()->sync($redFlagRecord);
                 $buyer->redFlagedData()->attach($redFlagRecord);
 
@@ -702,20 +715,20 @@ class BuyerController extends Controller
                     'status'        => true,
                     'message'       => 'Flag added successfully!',
                 ];
-                
+
                 return response()->json($responseData, 200);
-            }else{
-                 //Return Error Response
+            } else {
+                //Return Error Response
                 $responseData = [
                     'status'        => false,
                     'error'         => 'Flag already added!',
                 ];
                 return response()->json($responseData, 400);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -725,57 +738,75 @@ class BuyerController extends Controller
         }
     }
 
-    public function unhideBuyer(Request $request){
+    public function unhideBuyer(Request $request)
+    {
         DB::beginTransaction();
         try {
             $authUser = auth()->user();
-            if($authUser->credit_limit > 0 ){
-                $fetchBuyer = Buyer::query()->select('id','user_id','first_name','last_name','email','phone','contact_preferance','created_by')->where('id',$request->buyer_id)->first();
-                if(auth()->user()->is_seller){    
-                    $authUser->credit_limit = !empty($authUser->credit_limit) ? (int)$authUser->credit_limit-1 : 0;
+            if ($authUser->credit_limit > 0) {
+                $fetchBuyer = Buyer::query()->select('id', 'user_id', 'buyer_user_id', 'contact_preferance', 'created_by')->where('id', $request->buyer_id)->first();
+                if (auth()->user()->is_seller) {
+                    $authUser->credit_limit = !empty($authUser->credit_limit) ? (int)$authUser->credit_limit - 1 : 0;
                     $authUser->save();
                     //Purchased buyer
                     $syncData['buyer_id'] = $fetchBuyer->id;
                     $syncData['created_at'] = Carbon::now();
                     auth()->user()->purchasedBuyers()->create($syncData);
                 }
-                
-                $fetchBuyer->name = $fetchBuyer->first_name." ".$fetchBuyer->last_name;
-                $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id',auth()->user()->id)->exists();
+
+                $buyerDetails = $fetchBuyer->buyersPurchasedByUser()->where('user_id',$authUser->id)->first()->buyer->userDetail;
+
+               
+                $fetchBuyer->email = $buyerDetails->email;
+                $fetchBuyer->phone = $buyerDetails->phone;
+                $fetchBuyer->name = $buyerDetails->name;
+                 
+                $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id', auth()->user()->id)->exists();
                 $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
                 $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
-                $fetchBuyer->redFlagShow = $fetchBuyer->buyersPurchasedByUser()->exists();
+                $fetchBuyer->redFlagShow =  $fetchBuyer->redFlagedData()->where('user_id', auth()->user()->id)->where('status','!=',1)->exists();
                 $fetchBuyer->createdByAdmin =  ($fetchBuyer->created_by == 1) ? true : false;
-                $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance]: '';
-                $fetchBuyer->liked=false;
-                $fetchBuyer->disliked=false;
-               
+                $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance] : '';
+                $fetchBuyer->liked = false;
+                $fetchBuyer->disliked = false;
+
+                $tmp['id'] = $fetchBuyer->id;
+                $tmp['user_id'] = $fetchBuyer->user_id;
+                $tmp['name'] = $buyerDetails->name;
+                
+                $tmp['email'] = $buyerDetails->email;
+                $tmp['phone'] = $buyerDetails->phone;
+                $tmp['redFlag'] = $fetchBuyer->redFlag;
+                $tmp['totalBuyerLikes'] = $fetchBuyer->totalBuyerLikes;
+                $tmp['redFlagShow'] = $fetchBuyer->redFlagShow;
+                $tmp['createdByAdmin'] = $fetchBuyer->createdByAdmin;
+                $tmp['contact_preferance'] = $fetchBuyer->contact_preferance;
+                $tmp['liked'] = $fetchBuyer->liked;
+                $tmp['disliked'] = $fetchBuyer->disliked;
+
+                $tmp['buyer_profile_image'] = $fetchBuyer->userDetail->profile_image_url;
+                
                 DB::commit();
 
-                
-    
                 //Success Response Send
                 $responseData = [
                     'status'   => true,
-                    'buyer' => $fetchBuyer,
-                    'credit_limit'=>auth()->user()->credit_limit
+                    'buyer' => $tmp,
+                    'credit_limit' => auth()->user()->credit_limit
                 ];
                 return response()->json($responseData, 200);
-
-            }else{
-                 //Success Response Send
-                 $responseData = [
+            } else {
+                //Success Response Send
+                $responseData = [
                     'status'   => false,
-                    'credit_limit'=>$authUser->credit_limit
+                    'credit_limit' => $authUser->credit_limit
                 ];
                 return response()->json($responseData, 200);
             }
-
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -785,30 +816,32 @@ class BuyerController extends Controller
         }
     }
 
-    public function storeBuyerLikeOrUnlike(Request $request){
+
+    public function storeBuyerLikeOrUnlike(Request $request)
+    {
         $request->validate([
-            'buyer_id' => ['required','numeric'],
-            'like'     => ['required','in:0,1'],
-            'unlike'   => ['required','in:0,1'],
+            'buyer_id' => ['required', 'numeric'],
+            'like'     => ['required', 'in:0,1'],
+            'unlike'   => ['required', 'in:0,1'],
         ]);
 
         DB::beginTransaction();
         try {
             $fetchBuyer = Buyer::find($request->buyer_id);
-            if($fetchBuyer){
-              
+            if ($fetchBuyer) {
+
                 $userId = auth()->user()->id;
                 $flag = false;
 
                 $buyerData['liked']      = (int)$request->like;
                 $buyerData['disliked']   = (int)$request->unlike;
 
-                $entryExists = UserBuyerLikes::where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->exists();
-                if($entryExists){
+                $entryExists = UserBuyerLikes::where('user_id', $userId)->where('buyer_id', $fetchBuyer->id)->exists();
+                if ($entryExists) {
                     $buyerData['updated_at'] = Carbon::now();
-                    UserBuyerLikes::where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->update($buyerData);
+                    UserBuyerLikes::where('user_id', $userId)->where('buyer_id', $fetchBuyer->id)->update($buyerData);
                     $flag = true;
-                }else{
+                } else {
                     $buyerData['user_id']    = $userId;
                     $buyerData['buyer_id']   = $fetchBuyer->id;
                     $buyerData['created_at'] = Carbon::now();
@@ -821,21 +854,21 @@ class BuyerController extends Controller
                 $fetchBuyer->save();
 
                 DB::commit();
-    
-                if($flag){
-                    $liked=false;
-                    $disliked=false;
 
-                    $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',$userId)->where('buyer_id',$fetchBuyer->id)->first();
-                    if($getrecentaction){
-                        $liked=$getrecentaction->liked == 1 ? true : false;
-                        $disliked=$getrecentaction->disliked == 1 ? true : false;    
+                if ($flag) {
+                    $liked = false;
+                    $disliked = false;
+
+                    $getrecentaction = UserBuyerLikes::select('liked', 'disliked')->where('user_id', $userId)->where('buyer_id', $fetchBuyer->id)->first();
+                    if ($getrecentaction) {
+                        $liked = $getrecentaction->liked == 1 ? true : false;
+                        $disliked = $getrecentaction->disliked == 1 ? true : false;
                     }
-                                                          
+
                     $responseData['totalBuyerLikes'] = totalLikes($fetchBuyer->id);
                     $responseData['totalBuyerUnlikes'] = totalUnlikes($fetchBuyer->id);
-                    $responseData['liked']=$liked;
-                    $responseData['disliked']=$disliked;
+                    $responseData['liked'] = $liked;
+                    $responseData['disliked'] = $disliked;
                     //Success Response Send
                     $responseData = [
                         'status'   => true,
@@ -843,8 +876,7 @@ class BuyerController extends Controller
                         'message'  => 'Updated Successfully!'
                     ];
                     return response()->json($responseData, 200);
-
-                }else{
+                } else {
                     //Return Error Response
                     $responseData = [
                         'status'        => false,
@@ -852,12 +884,11 @@ class BuyerController extends Controller
                     ];
                     return response()->json($responseData, 400);
                 }
-               
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -877,29 +908,29 @@ class BuyerController extends Controller
             'user_id' => ['required', 'numeric'],
         ]);
 
-       
+
         DB::beginTransaction();
         try {
             $fetchBuyer = Buyer::find($request->buyer_id);
-            if($fetchBuyer){            
-                
+            if ($fetchBuyer) {
+
                 $fetchBuyer->updated_at = \Carbon\Carbon::now();
 
                 $fetchBuyer->save();
-                
+
                 $flag = false;
-                $entryExists = UserBuyerLikes::where('user_id',$user_id)->where('buyer_id',$buyer_id)->exists();               
-                if($entryExists){                   
-                    UserBuyerLikes::where('user_id',$user_id)->where('buyer_id',$buyer_id)->delete();
+                $entryExists = UserBuyerLikes::where('user_id', $user_id)->where('buyer_id', $buyer_id)->exists();
+                if ($entryExists) {
+                    UserBuyerLikes::where('user_id', $user_id)->where('buyer_id', $buyer_id)->delete();
                     $flag = true;
-                }else{                   
+                } else {
                     $flag = false;
                 }
                 DB::commit();
-    
-                if($flag){
-                    $responseData['totalBuyerLikes']=UserBuyerLikes::where('buyer_id',$buyer_id)->where('liked',1)->count();
-                    $responseData['totalBuyerUnlikes']=UserBuyerLikes::where('buyer_id',$buyer_id)->where('disliked',1)->count();
+
+                if ($flag) {
+                    $responseData['totalBuyerLikes'] = UserBuyerLikes::where('buyer_id', $buyer_id)->where('liked', 1)->count();
+                    $responseData['totalBuyerUnlikes'] = UserBuyerLikes::where('buyer_id', $buyer_id)->where('disliked', 1)->count();
 
                     //Success Response Send
                     $responseData = [
@@ -908,8 +939,7 @@ class BuyerController extends Controller
                         'message'  => 'Updated Successully!'
                     ];
                     return response()->json($responseData, 200);
-
-                }else{
+                } else {
                     //Return Error Response
                     $responseData = [
                         'status'        => false,
@@ -917,12 +947,11 @@ class BuyerController extends Controller
                     ];
                     return response()->json($responseData, 400);
                 }
-               
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -932,57 +961,65 @@ class BuyerController extends Controller
         }
     }
 
-    public function myBuyersList(){
+    public function myBuyersList()
+    {
         try {
-            $radioValues = [0,1];
+            $radioValues = [0, 1];
             $userId = auth()->user()->id;
-            
-            $buyers = Buyer::query()->with(['userDetail'])->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
-            $buyers = $buyers->orderBy('created_by','desc')->paginate(20);
+            // $buyers = Buyer::query()->with(['userDetail'])->select('id', 'user_id','buyer_user_id', 'created_by', 'contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('user_id',$userId);
 
-            foreach ($buyers as $key=>$buyer){
-                $liked=false;
-                $disliked=false;
-                
-                $getrecentaction=UserBuyerLikes::select('liked','disliked')->where('user_id',$userId)->where('buyer_id',$buyer->id)->first();
-                if($getrecentaction){
-                    $liked=$getrecentaction->liked == 1 ? true : false;
-                    $disliked=$getrecentaction->disliked == 1 ? true : false;
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id',
+            ])
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+                ->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
+                // ->orderByRaw('plan_position ASC, plan_position IS NULL')
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->paginate(20);
+
+            /* $buyers = $buyers
+                    ->orderBy('created_at', 'desc')
+                    // ->orderByRaw('ISNULL(buyer_plans.position), buyer_plans.position ASC')
+                    // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'desc')
+                    ->paginate(20); */
+
+            foreach ($buyers as $key => $buyer) {
+                $liked = false;
+                $disliked = false;
+
+                $getrecentaction = UserBuyerLikes::select('liked', 'disliked')->where('user_id', $userId)->where('buyer_id', $buyer->id)->first();
+                if ($getrecentaction) {
+                    $liked = $getrecentaction->liked == 1 ? true : false;
+                    $disliked = $getrecentaction->disliked == 1 ? true : false;
                 }
-                
-                //Buyer login
-                if(auth()->user()->is_buyer){
-                    $buyer->name =  $buyer->userDetail->name;
 
-                    $buyer->first_name = $buyer->userDetail->first_name;
-                    $buyer->last_name = $buyer->userDetail->last_name;
-                    $buyer->email = $buyer->userDetail->email;
-                    $buyer->phone = $buyer->userDetail->phone;    
-                }
+                $buyer->name =  $buyer->userDetail->name;
 
-                //Seller login
-                if(auth()->user()->is_seller){
-                    $buyer->name =  $buyer->seller->name;
+                $buyer->first_name = $buyer->userDetail->first_name;
+                $buyer->last_name = $buyer->userDetail->last_name;
+                $buyer->email = $buyer->userDetail->email;
+                $buyer->phone = $buyer->userDetail->phone;
 
-                    $buyer->first_name = $buyer->seller->first_name;
-                    $buyer->last_name = $buyer->seller->last_name;
-                    $buyer->email = $buyer->seller->email;
-                    $buyer->phone = $buyer->seller->phone;  
-                }
-               
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
 
-                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
-                $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance] : '';
+                $buyer->redFlag = $buyer->redFlagedData()->where('user_id', $userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
                 $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                $buyer->liked= $liked;
-                $buyer->disliked= $disliked;                
-                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
+                $buyer->liked = $liked;
+                $buyer->disliked = $disliked;
+                $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id', auth()->user()->id)->exists();
                 $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+
+                $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
+
+                $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
+                $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
+                $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
+                $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
             }
-            
+
             //Return Success Response
             $responseData = [
                 'status' => true,
@@ -990,86 +1027,87 @@ class BuyerController extends Controller
             ];
 
             return response()->json($responseData, 200);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message').$e->getMessage().'->'.$e->getLine(),
+                'error'         => trans('messages.error_message') . $e->getMessage() . '->' . $e->getLine(),
             ];
             return response()->json($responseData, 400);
         }
     }
 
-    public function searchAddress(Request $request){
+    public function searchAddress(Request $request)
+    {
         // $search = $request->search;
         try {
             // if($search){
-                $buyers = Buyer::query()->select('address','country','state','city','zip_code');
+            $buyers = Buyer::query()->select('address', 'country', 'state', 'city', 'zip_code');
 
-                // $buyers->whereNotNull('address')->where('address','like',$search.'%');
-                $buyers->whereNotNull('address');
-            
-                $buyers = $buyers->get();
+            // $buyers->whereNotNull('address')->where('address','like',$search.'%');
+            $buyers->whereNotNull('address');
 
-                $allBuyers = [];
-                foreach($buyers as $key=>$buyer){
-                    $labels = '';
-                    $labels = $buyer->address;
+            $buyers = $buyers->get();
 
-                    if($buyer->city){
-                        // $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
-                        // $labels .= count($cityArray) > 0 ?  ', '.implode(',',$cityArray) : '';
-                    }
+            $allBuyers = [];
+            foreach ($buyers as $key => $buyer) {
+                $labels = '';
+                $labels = $buyer->address;
 
-                    if($buyer->state){
-                        // $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                        // $labels .= count($stateArray) > 0 ? ', '.implode(', ',$stateArray):'';
-                    }
-
-                    $labels .= $buyer->zip_code ? ', '.$buyer->zip_code : '';
-
-                    $allBuyers[0][$labels]['address'] = '';
-                    $allBuyers[0][$labels]['city'] = '';
-                    $allBuyers[0][$labels]['state'] = '';
-                    $allBuyers[0][$labels]['zip_code'] = '';
-
-                    $allBuyers[0][$labels]['address'] = $buyer->address;
-
-                    if($buyer->city){
-                        $allBuyers[0][$labels]['city'] = collect($buyer->city)->map(function ($id) {
-                            $cityName = DB::table('cities')->where('id',$id)->value('name');
-                            return [
-                                'value' => $id,
-                                'label' => ucfirst(strtolower($cityName)),
-                            ];
-                        })->values()->all();
-                    }
-
-                    if($buyer->state){
-                        $allBuyers[0][$labels]['state'] = collect($buyer->state)->map(function ($id) {
-                            $stateName = DB::table('states')->where('id',$id)->value('name');
-                            return [
-                                'value' => $id,
-                                'label' => ucfirst(strtolower($stateName)),
-                            ];
-                        })->values()->all();
-                    }
-
-                    $allBuyers[0][$labels]['zip_code'] = $buyer->zip_code;
+                if ($buyer->city) {
+                    // $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
+                    // $labels .= count($cityArray) > 0 ?  ', '.implode(',',$cityArray) : '';
                 }
-               
-                //Return Error Response
-                $responseData = [
-                    'status' => true,
-                    'result' => $allBuyers,
-                ];
-                return response()->json($responseData, 200);
+
+                if ($buyer->state) {
+                    // $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
+                    // $labels .= count($stateArray) > 0 ? ', '.implode(', ',$stateArray):'';
+                }
+
+                $labels .= $buyer->zip_code ? ', ' . $buyer->zip_code : '';
+
+                $allBuyers[0][$labels]['address'] = '';
+                $allBuyers[0][$labels]['city'] = '';
+                $allBuyers[0][$labels]['state'] = '';
+                $allBuyers[0][$labels]['zip_code'] = '';
+
+                $allBuyers[0][$labels]['address'] = $buyer->address;
+
+                if ($buyer->city) {
+                    $allBuyers[0][$labels]['city'] = collect($buyer->city)->map(function ($id) {
+                        $cityName = DB::table('cities')->where('id', $id)->value('name');
+                        return [
+                            'value' => $id,
+                            'label' => ucfirst(strtolower($cityName)),
+                        ];
+                    })->values()->all();
+                }
+
+                if ($buyer->state) {
+                    $allBuyers[0][$labels]['state'] = collect($buyer->state)->map(function ($id) {
+                        $stateName = DB::table('states')->where('id', $id)->value('name');
+                        return [
+                            'value' => $id,
+                            'label' => ucfirst(strtolower($stateName)),
+                        ];
+                    })->values()->all();
+                }
+
+                $allBuyers[0][$labels]['zip_code'] = $buyer->zip_code;
+            }
+
+            //Return Error Response
+            $responseData = [
+                'status' => true,
+                'result' => $allBuyers,
+            ];
+            return response()->json($responseData, 200);
             // }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
-            
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
@@ -1077,40 +1115,48 @@ class BuyerController extends Controller
             ];
             return response()->json($responseData, 400);
         }
-
     }
 
-    public function getBuyerPlans(){
-        try{
+    public function getBuyerPlans()
+    {
+        try {
 
-            $buyerPlans = BuyerPlan::where('status',1)->orderBy('position','asc')->get();
-
+            $buyerPlans = BuyerPlan::with('buyers')->where('status', 1)->orderBy('position', 'asc')->get();
+            $loggedBuyerPlan = Buyer::select('plan_id', 'is_plan_auto_renew')->where('buyer_user_id', auth()->user()->id)->first();
             $buyerPlansList = [];
-            foreach($buyerPlans as $key=>$plan){
+            foreach ($buyerPlans as $key => $plan) {
+                $buyerIds = $plan->buyers->pluck('id');
+
+                $buyerPlansList[$key]['id']           = $plan->id;
+                $buyerPlansList[$key]['plan_stripe_id'] = $plan->plan_stripe_id;
                 $buyerPlansList[$key]['title']        = $plan->title;
                 $buyerPlansList[$key]['type']         = $plan->type;
                 $buyerPlansList[$key]['position']     = $plan->position;
                 $buyerPlansList[$key]['amount']       = $plan->amount;
                 $buyerPlansList[$key]['description']  = strip_tags($plan->description);
                 $buyerPlansList[$key]['image_url']    = $plan->image_url;
+                $buyerPlansList[$key]['current_plan'] = ($loggedBuyerPlan && $plan->id == $loggedBuyerPlan->plan_id ? true : false);
+                $buyerPlansList[$key]['is_plan_auto_renew'] = ($loggedBuyerPlan && $plan->id == $loggedBuyerPlan->plan_id && $loggedBuyerPlan->is_plan_auto_renew == 1 ? true : false);
+                $buyerPlansList[$key]['is_user_limit_reached'] = (count($buyerIds) == $plan->user_limit ? true : false);
             }
-
+            
             //Return Success Response
             $responseData = [
                 'status'       => true,
                 'buyer_plans'  => $buyerPlansList,
             ];
             return response()->json($responseData, 200);
-        }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
-            
+        } catch (\Exception $e) {
+
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
             ];
             return response()->json($responseData, 400);
-
         }
     }
+    
+    
+   
 }

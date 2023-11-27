@@ -75,6 +75,13 @@
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
+                        {{ __('cruds.buyer_plan.fields.user_limit')}}
+                        <span wire:click="sortBy('position')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'user_limit' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'user_limit' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer_plan.fields.status')}}
                         <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -100,6 +107,7 @@
                         <td>{{ '$'.number_format($plan->amount,2) }}</td>
                         <td>{{ ucfirst($plan->type) }}</td>
                         <td>{{ $plan->position ?? '' }}</td>
+                        <td>{{ $plan->buyers->count().' / '.$plan->user_limit }}</td>
                         <td>
                             <label class="toggle-switch">
                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$plan->id}}"  {{ $plan->status == 1 ? 'checked' : '' }}>

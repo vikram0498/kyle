@@ -88,17 +88,23 @@ class RedFlagShow extends Component
 
             $buyer = Buyer::find($this->buyerId);
 
+            $updateDetail =[];
             if($this->isNameUpdate){
-                $buyer->first_name = ucwords($this->first_name);
-                $buyer->last_name = ucwords($this->last_name);
+                $updateDetail['first_name'] = ucwords($this->first_name);
+                $updateDetail['last_name'] = ucwords($this->last_name);
+                $updateDetail['name'] = $updateDetail['first_name'].' '.$updateDetail['last_name'];
             }
 
             if($this->isEmailUpdate){
-                $buyer->email = $this->email;
+                $updateDetail['email'] = $this->email;
             }
 
             if($this->isPhoneUpdate){
-                $buyer->phone = $this->phone;
+                $updateDetail['phone'] = $this->phone;
+            }
+
+            if(count($updateDetail) > 0){
+                User::where('id',$buyer->user_id)->update($updateDetail);
             }
 
             $buyer->save();

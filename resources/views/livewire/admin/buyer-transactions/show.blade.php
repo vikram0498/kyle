@@ -21,7 +21,7 @@
 
         @if(is_null($details->plan_id))
         <tr>
-            <th width="25%">Description</th>
+            <th width="25%">{{ __('cruds.buyer_transaction.fields.description')}}</th>
             <td>
                 @if($details->plan_json)
                 {{ json_decode($details->plan_json,true)['title'] }}

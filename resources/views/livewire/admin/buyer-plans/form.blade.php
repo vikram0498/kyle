@@ -1,7 +1,7 @@
 
 <h4 class="card-title">
     {{ $updateMode ? __('global.edit') : __('global.create') }} 
-    {{ strtolower(__('cruds.plan.title_singular'))}}</h4>
+    {{ strtolower(__('cruds.buyer_plan.title_singular'))}}</h4>
 
 <div class="alert alert-warning alert-dismissible warning-alert" role="alert">
     <i class="fas fa-exclamation-triangle mr-2"></i><b>Buyer Plan can't be edited. Please recheck before submitting the details.</b>
@@ -83,6 +83,17 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.buyer_plan.fields.user_limit')}} <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" wire:model.defer="user_limit" placeholder="{{ __('cruds.buyer_plan.fields.user_limit')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Period','NumpadDecimal'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'" min="0" step=".01" autocomplete="off">
+                @error('user_limit') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex justify-content-between"> 
         <button type="submit" wire:loading.attr="disabled" class="btn btn-fill btn-blue  mr-2">
             {{ $updateMode ? __('global.update') : __('global.submit') }}

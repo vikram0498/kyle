@@ -45,8 +45,9 @@
             @php
               $buyerCallapse = (
                 request()->is('admin/buyer') || 
+                request()->is('admin/deleted-buyers') || 
                 request()->is('admin/buyer/import') || 
-                request()->is('admin/buyer-plans')  ||
+                request()->is('admin/profile-tags')  ||
                 request()->is('admin/buyer-transactions')
               ); 
             @endphp          
@@ -64,11 +65,17 @@
                                 <span class="menu-title"> {{ __('cruds.buyer.sub_menu_list_title') }} </span>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->is('admin/deleted-buyers')) ? 'active' : '' }}" href="{{ route('admin.deleted-buyers') }}">
+                                <span class="menu-title"> Deleted Buyers </span>
+                            </a>
+                        </li>
                         @endcan
 
                         @can('buyer_plan_access')
                         <li class="nav-item">
-                            <a class="nav-link {{ (request()->segment(2) === 'buyer-plans') ? 'active' : '' }}" href="{{ route('admin.buyer-plans') }}">
+                            <a class="nav-link {{ (request()->segment(2) === 'profile-tags') ? 'active' : '' }}" href="{{ route('admin.buyer-plans') }}">
                                 <span class="menu-title"> {{ __('cruds.buyer_plan.title') }} </span>
                             </a>
                         </li>

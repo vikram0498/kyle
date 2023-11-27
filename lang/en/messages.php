@@ -22,6 +22,7 @@ return [
             'update_buyer_success_alert'=>'Buyer updated successfully!',
             'update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email with a verification link.',
             'upgrade_error'=>'Please upgrade your account first!',
+            'verify_profile'=> 'Please verify your profile first!',
         ],
         'verification'=>[
             'invalid_otp'         => 'Invalid OTP Number!',

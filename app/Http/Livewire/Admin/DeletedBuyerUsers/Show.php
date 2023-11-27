@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin\Buyer;
+namespace App\Http\Livewire\Admin\DeletedBuyerUsers;
 
 use App\Models\Buyer;
 use App\Models\ProfileVerification;
@@ -41,9 +41,9 @@ class Show extends Component
 
     public function render()
     {
-        $details = Buyer::find($this->buyerId);
+        $details = Buyer::where('id',$this->buyerId)->onlyTrashed()->first();
         // dd($details);
-        return view('livewire.admin.buyer.show', compact('details'));
+        return view('livewire.admin.deleted-buyer-users.show', compact('details'));
     }
 
     public function confirmedToggleActionView($data){

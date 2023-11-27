@@ -25,7 +25,7 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $type, $position, $amount, $description='', $status = 1, $image=null, $viewMode = false,$originalImage, $removeImage=false;
+    public  $title, $type, $position, $amount, $description='', $status = 1,  $user_limit, $image=null, $viewMode = false,$originalImage, $removeImage=false;
 
     public $plan_id =null;
 
@@ -60,11 +60,13 @@ class Index extends Component
                 'position'    => ['required', 'numeric', 'min:0', 'max:99999','unique:buyer_plans,position,NULL,id,deleted_at,NULL'],
                 'description' => ['required', 'without_spaces'],
                 'status'      => 'required',
+                'user_limit'  => ['required', 'integer', 'min: 0' ],
                 'image' => ['required', 'image', 'valid_extensions:svg','max:'.config('constants.img_max_size')],
             ],[
                 'image.valid_extensions' => 'The image must be an SVG file.',
                 'without_spaces' => 'The :attribute field is required'
-            ],['title'  => 'plan name']
+            ],['title'  => 'tag name',
+            'position'  => 'rank']
         );
         
         $validatedData['status'] = $this->status;
@@ -146,7 +148,7 @@ class Index extends Component
           $validatedData = $this->validate($validateArr, [
             'image.valid_extensions' => 'The image must be an SVG file.',
             'without_spaces' => 'The :attribute field is required'
-        ],['title'  => 'plan name']);
+        ],['title'  => 'tag name']);
   
           $validatedData['status'] = $this->status;
   

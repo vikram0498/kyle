@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Illuminate\Support\Facades\DB; 
@@ -52,7 +53,10 @@ class BuyersImport implements ToModel, WithStartRow
                                               
                         $stateId = NULL;
                         $cityId = NULL;
-                        $countryId = 233;
+                        // $countryId = 233;
+
+                        $countryId= config('constants.default_country');
+                        
                         // $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', $statenames)->pluck('id')->toArray();                    
 
                         // if(!empty($stateData)){    
@@ -76,7 +80,8 @@ class BuyersImport implements ToModel, WithStartRow
                         // if(!empty($country) && !empty($city) && !empty($state) && $countryId > 0 && $stateId > 0 && $cityId > 0){
                         if($countryId > 0){
                             
-                            $buyerArr['country'] = $countryId;
+                            // $buyerArr['country'] = $countryId;
+                            $buyerArr['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
                             $buyerArr['city'] = $cityId  ? $cityId->toArray() : NULL;
                             $buyerArr['state'] = $stateId ? $stateId->toArray() : NULL;
@@ -522,19 +527,45 @@ class BuyersImport implements ToModel, WithStartRow
                 $purchaseMethod = $pmArr;
                 $buyerArr['purchase_method'] = $purchaseMethod;
                 $this->insertedCount++;
-               
-                $createdBuyer = Buyer::create($buyerArr);
 
-                if(auth()->user()->is_seller){
-                    //Purchased buyer
-                    $syncData['buyer_id'] = $createdBuyer->id;
-                    $syncData['created_at'] = Carbon::now();
+                // Start create users table
+                $userDetails =  [
+                    'first_name'     => $buyerArr['first_name'],
+                    'last_name'      => $buyerArr['last_name'],
+                    'name'           => ucwords($buyerArr['first_name'].' '.$buyerArr['last_name']),
+                    'email'          => $buyerArr['email'], 
+                    'phone'          => $buyerArr['phone'], 
+                ];
+                $createUser = User::create($userDetails);
+                // End create users table
 
-                    auth()->user()->purchasedBuyers()->create($syncData);
+                if($createUser){
+                    // Buyer verification entry
+                    $createUser->buyerVerification()->create(['user_id'=>$createUser->id]);
+
+                    //Assign buyer role
+                    $createUser->roles()->sync(3);
+
+                    $buyerArr['buyer_user_id'] = $createUser->id;
+
+                    $buyerArr = collect($buyerArr)->except(['first_name', 'last_name','email','phone'])->all();
+                    
+                    $createUser->buyerDetail()->create($buyerArr);
+                    // $createdBuyer = Buyer::create($buyerArr);
+
+                    if($createUser->buyerDetail){
+                        //Purchased buyer
+                        $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                        $syncData['created_at'] = \Carbon\Carbon::now();
+                
+                        auth()->user()->purchasedBuyers()->create($syncData);
+                    }
+
+                    //Verification mail sent
+                    $createUser->NotificationSendToBuyerVerifyEmail();
                 }
                 
-                return $createdBuyer;
-                
+                return true;
             }
         }
     }
