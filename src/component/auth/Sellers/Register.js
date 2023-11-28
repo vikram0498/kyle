@@ -153,7 +153,7 @@ const Register = () => {
           action="#"
           onSubmit={handleSubmit(submitRegisterForm)}
         >
-          <div className="row">
+          <div className="row main-login-form">
             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
               <div className="form-group">
                 <label htmlFor="first_name">
@@ -172,6 +172,7 @@ const Register = () => {
                     name="first_name"
                     id="first_name"
                     className="form-control"
+                    autoComplete="off"
                     //value={first_name}
                     //onChange={handleChangeFirstName}
                     placeholder="First Name"
@@ -214,6 +215,7 @@ const Register = () => {
                     name="last_name"
                     id="last_name"
                     className="form-control"
+                    autoComplete="off"
                     //value={last_name}
                     //onChange={handleChangeLastName}
                     placeholder="Last Name"
@@ -300,6 +302,7 @@ const Register = () => {
                     //value={phone}
                     //onChange={e => setPhone(e.target.value)}
                     placeholder="1234567890"
+                    autoComplete="off"
                     disabled={loading ? "disabled" : ""}
                     {...register("phone", {
                       required: "Phone is required",
@@ -338,6 +341,7 @@ const Register = () => {
                     name="company_name"
                     id="company_name"
                     className="form-control"
+                    autoComplete="off"
                     //value={company_name}
                     //onChange={e => setCompanyName(e.target.value)}
                     placeholder="Enter Company Name"
@@ -374,7 +378,7 @@ const Register = () => {
                     //value={password}
                     //onChange={e => setPassword(e.target.value)}
                     placeholder="Enter Your Password"
-                    autoComplete="new-password"
+                    autoComplete="off"
                     disabled={loading ? "disabled" : ""}
                     {...register("password", {
                       required: "Password is required",
@@ -417,6 +421,7 @@ const Register = () => {
                     name="password_confirmation"
                     id="conpass_log_id"
                     className="form-control"
+                    autoComplete="off"
                     //value={password_confirmation}
                     //onChange={e => setPasswordConfirmation(e.target.value)}
                     placeholder="Enter Your Confirm Password"

@@ -192,7 +192,7 @@ const BuyerProfile = () => {
       <section className="main-section position-relative pt-4 pb-120 buyer-proinner">
         {loader ? (
           <div className="loader" style={{ textAlign: "center" }}>
-            <img src="assets/images/loader.svg" />
+            <img src="/assets/images/loader.svg" />
           </div>
         ) : (
           <div className="container position-relative">
@@ -324,7 +324,7 @@ const BuyerProfile = () => {
                                     </Tooltip>
                                   }
                                 >
-                                <img src='./assets/images/ver-check-blue.svg' className="img-fluid" />
+                                <img src='/assets/images/ver-check-blue.svg' className="img-fluid" />
                               </OverlayTrigger>
                            }
                         </a>
@@ -374,7 +374,7 @@ const BuyerProfile = () => {
                                   </Tooltip>
                                 }
                               >
-                              <img src='./assets/images/ver-check-blue.svg' className="img-fluid" />
+                              <img src='/assets/images/ver-check-blue.svg' className="img-fluid" />
                             </OverlayTrigger>
                           }
                         </a>
@@ -538,8 +538,7 @@ const BuyerProfile = () => {
                               {currentBuyerData.first_name +
                                 " " +
                                 currentBuyerData.last_name}
-                                {
-                                (currentBuyerData.is_buyer_verified) ? 
+                                {(currentBuyerData.is_buyer_verified) ? 
                                 <OverlayTrigger placement="top" style={{ backgroundColor: "green" }} overlay={ <Tooltip> Profile Verified </Tooltip>}>
                                   <img src="/assets/images/p-verfied.svg" className="img-fluid ms-1" alt="" title=""/>
                                 </OverlayTrigger>

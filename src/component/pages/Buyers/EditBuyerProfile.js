@@ -694,7 +694,7 @@ function EditBuyerProfile() {
                       </div>
                     </div>
 
-                    {currentBuyerData.is_profile_verified === 1 ? (
+                    {currentBuyerData.is_buyer_verified ? (
                       <button className="file-upload">
                         <input
                           type="file"

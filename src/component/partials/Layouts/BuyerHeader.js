@@ -69,7 +69,7 @@ function BuyerHeader() {
                             userDetails !== null &&
                             userDetails.profile_image !== ""
                               ? userDetails.profile_image
-                              : "./assets/images/avtar.png"
+                              : "/assets/images/avtar.png"
                           }
                           className="img-fluid user-profile"
                           alt=""
@@ -118,7 +118,7 @@ function BuyerHeader() {
                           My Profile
                         </Link>
                       </li>
-                      {(userDetails !== null && userDetails.is_profile_verified) ? '':
+                      {(userDetails !== null && userDetails.is_verified) ? '':
                       <li className="active">
                         <Link to="/profile-verification" className="dropdown-item">
                           <img
@@ -148,7 +148,7 @@ function BuyerHeader() {
                         >
                           <img
                             alt=""
-                            src="./assets/images/logoutcurve.svg"
+                            src="/assets/images/logoutcurve.svg"
                             className="img-fluid"
                           />
                           Logout

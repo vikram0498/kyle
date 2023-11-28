@@ -96,6 +96,8 @@ const HorizontalLinearStepper = () => {
     try {
       setMiniLoader(true);
       setIsOtpSent(false);
+      document.getElementById('otp_value').value = '';
+      document.querySelectorAll('.otpnumb').forEach(element => element.value = '');
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
@@ -137,7 +139,6 @@ const HorizontalLinearStepper = () => {
     }
   };
   const stepperForm = async (formObject) => {
-    setMiniLoader(true);
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",
@@ -152,19 +153,26 @@ const HorizontalLinearStepper = () => {
         headers: headers,
       }
     );
-    console.log(response.data);
+    console.log(response.data.current_step);
     if (response.data.status) {
       if (parseInt(response.data.current_step) === 5) {
         let url = response.data.session.url;
-        console.log(url, url);
         window.location.href = url;
         return false;
       }
-      if(response.data.current_step === '1'){
-        setActiveStep(2);
+      let currentStep = parseInt(response.data.current_step);
+      if(currentStep === 1){
+        console.log("case 2",response.data.current_step);
+        setActiveStep(1);
       }else{
+        console.log("case 3");
         setProfileVerificationStatus("pending");
       }
+      // if(response.data.current_step > 1 & response.data.current_step < 5){
+      //   setActiveStep(response.data.current_step-1);
+      // }else{
+      //   setActiveStep(response.data.lastStepForm);
+      // }
       setIsOtpVerify(true);
       toast.success(response.data.message, {
         position: toast.POSITION.TOP_RIGHT,
@@ -219,9 +227,9 @@ const HorizontalLinearStepper = () => {
     switch (condition) {
       case 'pending':
         return <PendingPage/>;
-      case 'verify':
+      case 'verified':
         return <ApprorvedPage handleNext={handleNext}/>;
-      case 'reject':
+      case 'rejected':
         return <RejectedPage setProfileVerificationStatus={setProfileVerificationStatus}/>;
       default:
         return null;

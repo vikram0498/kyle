@@ -31,6 +31,9 @@ function Header() {
       if (userData !== null) {
         setUserDetails(userData);
       }
+    }else{
+      console.log("hello!");
+      navigate("/login");
     }
   }, []);
   const getCurrentLimit = async () => {

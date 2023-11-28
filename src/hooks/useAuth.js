@@ -22,12 +22,7 @@ export const useAuth = () => {
     date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
     return date;
   }
-  function setAsLogged(
-    access_token,
-    remember_token = "",
-    remember_me_user_data,
-    userData
-  ) {
+  function setAsLogged(access_token, remember_token = "", remember_me_user_data, userData) {
     const cookie = new Cookies();
     cookie.set("is_auth", true, {
       path: "/",
@@ -196,6 +191,8 @@ export const useAuth = () => {
         const cookie = new Cookies();
         cookie.remove("_token");
         cookie.remove("remember_me_token");
+        document.cookie = "_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        document.cookie = "remember_me_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         localStorage.removeItem("user_data");
         localStorage.removeItem("filter_buyer_fields");
         navigate("/login");
@@ -205,9 +202,12 @@ export const useAuth = () => {
         const cookie = new Cookies();
         cookie.remove("_token");
         cookie.remove("remember_me_token");
+        document.cookie = "_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        document.cookie = "remember_me_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
         localStorage.removeItem("user_data");
         localStorage.removeItem("filter_buyer_fields");
         navigate("/login");
+
       } else {
         toast.error("Something went Wrong! ", {
           position: toast.POSITION.TOP_RIGHT,

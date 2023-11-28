@@ -65,12 +65,6 @@ function Login(props) {
         setLoading(false);
         if (response.data.status) {
           // for buyer login
-          if (response.data.userData.role === 3) {
-            // if (!response.data.userData.is_verified) {
-            //   navigate("/profile-verification");
-            //   return false;
-            // }
-          }
           var access_token = response.data.access_token;
           var remember_me_token = response.data.remember_me_token;
           let remember_me_user_data = {
@@ -241,14 +235,14 @@ function Login(props) {
               </div>
               <ul className="account-with-social social-login-link list-unstyled mb-0">
                 {/* <li>
-                                <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
-                                    <FacebookLoginButton
-                                     apiUrl={apiUrl}
-                                     setLoading={setLoading}
-                                     navigate={navigate}
-                                     setErrors={setErrors}
-                                    />
-                                </li> */}
+                <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
+                    <FacebookLoginButton
+                      apiUrl={apiUrl}
+                      setLoading={setLoading}
+                      navigate={navigate}
+                      setErrors={setErrors}
+                    />
+                </li> */}
                 <li>
                   <Link to="https://google.com">
                     <img
