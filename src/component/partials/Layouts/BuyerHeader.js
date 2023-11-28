@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import { toast } from "react-toastify";
+import axios from "axios";
 import DarkMode from "./DarkMode";
 
 function BuyerHeader() {
@@ -10,15 +12,48 @@ function BuyerHeader() {
   useEffect(() => {
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
-      console.log(userData,'userData');
+      isActiveUser(userData.id);
       if (userData !== null) {
         if (userData.role === 2) {
           navigate("/");
         }
         setUserDetails(userData);
       }
+      
+
     }
   }, []);
+
+  const isActiveUser = async (userId) => {
+    try{
+      const apiUrl = process.env.REACT_APP_API_URL;
+      let headers = {
+        Accept: "application/json",
+        Authorization: "Bearer " + getTokenData().access_token,
+        "auth-token": getTokenData().access_token,
+      };
+      let url = apiUrl + "is-user-status";
+      let response = await axios.post(url, {user_id:userId},{ headers: headers });
+      console.log(response.data,'response');
+      if(response.data.status){
+        if(!response.data.user_status){
+          setLogout();
+        }
+      }
+
+    }catch(error){
+        if (error.response) {
+          if (error.response.status === 401) {
+            setLogout();
+          }
+          if (error.response.data.error) {
+            toast.error(error.response.data.error, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          }
+        }
+    }
+  }
   return (
     <>
       <header className="dashboard-header">

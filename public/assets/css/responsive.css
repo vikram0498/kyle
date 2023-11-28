@@ -436,6 +436,9 @@
   .back-block {
     padding: 10px;
   }
+  .ac-de-feeture:before{
+    top: calc(50% - 1px);
+  }
 }
 @media (max-width: 480px) {
   .account-with-social > li {

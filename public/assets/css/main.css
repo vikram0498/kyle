@@ -5453,31 +5453,41 @@ span.badge.bg-success.purchased-profile {
   line-height: 12px;
 }
 .buyer-blog-area .critera-card{
-  padding-top: 50px;
+  padding-top: 35px;
   position: relative;
   height: 232px;
 }
 .profile-tag-image{
   width: 20px;
 }
- /* body.dark input:-webkit-autofill,
-body.dark input:-webkit-autofill:hover, 
-body.dark input:-webkit-autofill:focus, 
-body.dark input:-webkit-autofill:active{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: #ffffff;
-    transition: background-color 5000s ease-in-out 0s;
-    box-shadow: inset 0 0 20px 20px #23232329;
+.ac-de-feeture {
+  display: table;
+  margin: 0 auto;
+  position: relative;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  color: #464b70;
+  padding-left: 6px;
+  margin-top: 6px;
+  font-family: "Nunito Sans", sans-serif;
 }
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: #000;
-    transition: background-color 5000s ease-in-out 0s;
-    box-shadow: inset 0 0 20px 20px #f6f8fc ;
-}  */
+.ac-de-feeture:before{
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.deactive-feat:before{
+background-color: #f00;
+}
+.active-feat:before{
+background-color: green;
+}
 
 

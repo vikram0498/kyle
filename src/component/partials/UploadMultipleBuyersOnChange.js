@@ -7,7 +7,7 @@ import axios from "axios";
 
 const UploadMultipleBuyersOnChange = () => {
   const { authData } = useContext(AuthContext);
-  const { getTokenData } = useAuth();
+  const { getTokenData, setLogout } = useAuth();
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
@@ -60,10 +60,17 @@ const UploadMultipleBuyersOnChange = () => {
           });
           navigate("/");
         }
-      } catch {
-        toast.error("No rows inserted during the import process", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+      } catch (error) {
+        console.log(error.response,'resss');
+        if (error.response) {
+          if (error.response.status === 401) {
+            setLogout();
+          }else{
+            toast.error("No rows inserted during the import process", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          }
+        }
       }
     }
     if (file != "") {

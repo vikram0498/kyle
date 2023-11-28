@@ -32,13 +32,11 @@ function Header() {
         setUserDetails(userData);
       }
     }else{
-      console.log("hello!");
       navigate("/login");
     }
   }, []);
   const getCurrentLimit = async () => {
     try {
-      console.log(getTokenData().access_token, "tokeen");
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
@@ -64,6 +62,20 @@ function Header() {
       }
     }
   };
+
+  // const handleConfirmation = () => {
+  //   Swal.fire({
+  //     icon: "warning",
+  //     title: 'Are you sure want to logout ?',
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes",
+  //   }).then(async (result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+  //     if (result.isConfirmed) {
+  //       console.log("yesss");
+  //     } 
+  //   });
+  // }
 
   return (
     <>

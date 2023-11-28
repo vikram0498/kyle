@@ -58,6 +58,8 @@ export default function BuyerCard({
               </div>
             }
             <p>Buyer</p>
+
+            <span class={data.status? 'ac-de-feeture active-feat':'ac-de-feeture deactive-feat'}>{data.status? 'Active':'Inactive'}</span>
             {data.createdByAdmin ? (
               <ul className="like-unlike mb-0 list-unstyled 888">
                 <li>

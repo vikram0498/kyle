@@ -89,6 +89,7 @@ const EditRequest = ({
           });
         }
       } catch (error) {
+        setLoading(false);
         if (error.response) {
           if (error.response.status === 401) {
             setLogout();
