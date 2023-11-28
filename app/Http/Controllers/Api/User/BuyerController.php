@@ -702,9 +702,9 @@ class BuyerController extends Controller
             $redFlagRecord[$authUserId]['incorrect_info'] = $request->incorrect_info;
             $buyer = Buyer::find($request->buyer_id);
 
-            if (!$buyer->redFlagedData()->exists()) {
+            if (!$buyer->redFlagedData()->where('user_id',$authUserId)->exists()) {
                 // $buyer->redFlagedData()->sync($redFlagRecord);
-                $buyer->redFlagedData()->attach($redFlagRecord);
+                $buyer->redFlagedData()->where('user_id',$authUserId)->attach($redFlagRecord);
 
                 $buyer->updated_at = \Carbon\Carbon::now();
 

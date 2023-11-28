@@ -104,12 +104,9 @@ class RedFlagShow extends Component
             }
 
             if(count($updateDetail) > 0){
-                 User::where('id',$buyer->user_id)->update($updateDetail);
+                 User::where('id',$buyer->buyer_user_id)->update($updateDetail);
             }
            
-
-            $buyer->save();
-
             $buyer->redFlagedData()->wherePivot('buyer_id', $this->buyerId)->wherePivot('user_id',$this->userId)->update(['status' => 1]);
 
             
