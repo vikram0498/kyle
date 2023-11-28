@@ -89,8 +89,8 @@ class Index extends Component
             'last_name' => ['required'], 
             // 'email' => ['required', 'email', 'unique:buyers,email,NULL,id,deleted_at,NULL'],
             // 'phone' => ['required', 'numeric', 'digits:10'], 
-            'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
-            'phone'       => ['required', 'numeric','digits:10','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'], 
+            'email'       => ['required', 'email', 'unique:users,email,NULL,id'],
+            'phone'       => ['required', 'numeric','digits:10','not_in:-','unique:users,phone,NULL,id'], 
             // 'address' => ['required'], 
             // 'country' => ['required', 'exists:countries,name'], 
             'state' => ['required', /*'exists:states,id'*/], 
@@ -501,13 +501,11 @@ class Index extends Component
     public function deleteConfirm($id) {
         $model = Buyer::find($id);
         $model->userDetail()->delete();
-        // $model->buyersPurchasedByUser()->delete();
+        // $model->buyersPurchasedByUser()->where('buyer_id',$id)->delete();
         $model->delete();
         
         $this->emit('refreshTable');
         
-        $this->emit('refreshLivewireDatatable');
-
         $this->alert('success', trans('messages.delete_success_message'));
     }
     

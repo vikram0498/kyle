@@ -109,7 +109,8 @@
         } else if(pr == 'build_year_max'){
             @this.set('state.build_year_max', pr_vals);        
         }
-        console.log(pr_vals);
+        @this.emit('initializePlugins');
+        // console.log(pr_vals);
     });
     // $(document).on('change','#build_year_min', function (e) {
     //     console.log($(this).val());

@@ -22,7 +22,7 @@ class Index extends Component
         $purchasedBuyers = DB::table('purchased_buyers')
         ->join('buyers', function ($join) {
             $join->on('purchased_buyers.buyer_id', '=', 'buyers.id')
-                 ->where('buyers.user_id', '=', 1);
+                 ->where('buyers.user_id', '=', 1)->where('buyers.deleted_at','=',null);
         })
         ->join('users', 'purchased_buyers.user_id', '=', 'users.id')
         ->join('users AS buyer_user', 'buyers.buyer_user_id', '=', 'buyer_user.id')

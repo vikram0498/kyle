@@ -54,10 +54,15 @@ class Index extends Component
        
         $model = User::where('id',$id)->onlyTrashed()->first();
         if($model){
-            $model->buyers()->onlyTrashed()->where('user_id',$id)->update(['deleted_at'=>null]);
-            PurchasedBuyer::where('user_id',$id)->onlyTrashed()->update(['deleted_at'=>null]);
+          
+            $buyerId = $model->buyerDetail()->onlyTrashed()->first()->id;
+
+            $model->buyerDetail()->where('buyer_user_id',$id)->onlyTrashed()->update(['deleted_at'=>null]);
+          
+            // PurchasedBuyer::where('buyer_id',$buyerId)->onlyTrashed()->update(['deleted_at'=>null]);
             
             $model->deleted_at = null;
+
             $model->save();
             
             $this->emit('refreshTable');
