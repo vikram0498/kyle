@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Models\Plan;
 use App\Models\Addon;
 use App\Models\Video;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupportRequest;
@@ -109,6 +110,23 @@ class HomeController extends Controller
             ];
             return response()->json($responseData, 400);
         }
+    }
+
+    public function isUserStatus(Request $request){
+        $request->validate([
+            'user_id'=>'required',
+        ]);
+
+        $checkUser = User::where('id',$request->user_id)->first();
+        
+        //Success Response Send
+        $responseData = [
+            'status'         => true,
+            'user_status'    => is_null($checkUser->deleted_at) ? true : false,
+            'is_buyer_verified'    => $checkUser->is_buyer_verified,
+
+        ];
+        return response()->json($responseData, 200);
     }
 
 }

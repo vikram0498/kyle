@@ -83,7 +83,7 @@
                         @php 
                           $userDetail = $buyer->userDetail()->onlyTrashed()->first();
                         @endphp
-                        <td>{{ $userDetail->name ? ucwords($userDetail->name) : '' }}</td>
+                        <td>{{ $userDetail ? ucwords($userDetail->name) : '' }}</td>
                         <td>{{ $buyer->likes()->count() ?? 0 }}</td>
                         <td>{{ $buyer->unlikes()->count() ?? 0 }}</td>
                         <td>{{ convertDateTimeFormat($buyer->created_at,'date') }}</td>

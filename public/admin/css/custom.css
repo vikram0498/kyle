@@ -1048,3 +1048,7 @@ body .datepicker .datepicker-years .table-condensed{
   justify-content: space-between;
   margin-bottom:20px;
 }
+
+.remove-white-space{
+    white-space:inherit !important;
+}

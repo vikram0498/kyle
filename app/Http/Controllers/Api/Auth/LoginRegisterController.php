@@ -164,7 +164,7 @@ class LoginRegisterController extends Controller
                         'role'=> $user->roles()->first()->id ?? '',
                         'level_type'   => $user->level_type,
                         'credit_limit' => $user->credit_limit,
-                        'is_verified'  => $user->is_buyer_verified ?? false,
+                        'is_verified'  => $user->is_buyer_verified,
                         'total_buyer_uploaded' => $user->buyers()->count(),
                     ],
                     'remember_me_token' => $user->remember_token,

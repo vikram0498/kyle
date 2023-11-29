@@ -500,7 +500,7 @@ class Index extends Component
 
     public function deleteConfirm($id) {
         $model = Buyer::find($id);
-        $model->userDetail()->delete();
+        $model->userDetail()->where('id',$model->buyer_user_id)->delete();
         // $model->buyersPurchasedByUser()->where('buyer_id',$id)->delete();
         $model->delete();
         

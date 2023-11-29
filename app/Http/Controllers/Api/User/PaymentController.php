@@ -75,10 +75,6 @@ class PaymentController extends Controller
                     'token'=>$token,
                     'type'=>'checkout_token',
                 ]);
-                // $userToken->plan_stripe_id = $planId;
-                // $userToken->token = $token;
-                // $userToken->type = 'checkout_token';
-                // $userToken->save();
             } else {
                 $userToken = UserToken::create([
                     'user_id' => $authUser->id,
@@ -121,10 +117,13 @@ class PaymentController extends Controller
                     'metadata' => $metadata,
                 ];
             } else  if ($request->type == 'boost_your_profile') {
+                $active_subscription = $authUser->subscription()->where('status','active')->first() ? $authUser->subscription()->where('status','active')->first()->stripe_subscription_id : '';
+
                 $metadata = [
                     'user_type' => 'buyer',
                     'product_type' => 'boost-plan',
                     'description'  => 'Boost Plan',
+                    'active_subscription' => $active_subscription,
                 ];
                 $sessionData = [
                     'payment_method_types' => ['card'],
@@ -276,7 +275,7 @@ class PaymentController extends Controller
                                 $isAddon = true;
                             }
         
-                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->exists();
+                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','success')->exists();
                             if (!$transaction) {
                                 if (!is_null($customerId) && !is_null($planId)) {
                                     // Save data to transactions table
@@ -298,29 +297,19 @@ class PaymentController extends Controller
                         }else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
                             $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
 
-                            $buyerTransaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->exists();
+                            $buyerTransaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','success')->exists();
 
                             // return response()->json(['success' => true,'payment_intent'=>$buyerTransaction]);
 
                             if (!$buyerTransaction) {
 
-                                // // Retrieve customer's subscriptions
-                                // $getAllSubscriptions = StripeSubscription::all(['customer' => $user->stripe_customer_id]);
+                                if($metaData->active_subscription){
+                                    $canceledSubscription = StripeSubscription::retrieve($metaData->active_subscription);
 
-                                // // Find the active subscription
-                                // $activeSubscription = null;
-                                // foreach ($getAllSubscriptions as $subscription) {
-                                //     if ($subscription->status === 'active') {
-                                //         $activeSubscription = $subscription;
-                                //         break;
-                                //     }
-                                // }
+                                    $canceledSubscription->cancel();
 
-                                // if($activeSubscription){
-                                //     // Cancel the active subscription
-                                //     $canceledSubscription = StripeSubscription::retrieve($activeSubscription->id);
-                                //     $canceledSubscription->cancel();
-                                // }
+                                    Subscription::where('stripe_subscription_id',$metaData->active_subscription)->update(['status'=>'canceled']);
+                                }
 
                                 $userJson = [
                                     'stripe_customer_id' => $authUser->stripe_customer_id,
@@ -349,7 +338,7 @@ class PaymentController extends Controller
                                 ]);
 
                                 //Start Subscription
-                                $this->subscriptionEntry($authUser,'buyer', 'save', $planJson, $paymentIntent);
+                                 $this->subscriptionEntry($authUser,'buyer', 'save', $planJson, $paymentIntent);
                                 //End Subscription
                             }
 
@@ -383,7 +372,7 @@ class PaymentController extends Controller
                                 $isAddon = true;
                             }
         
-                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->exists();
+                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','failed')->exists();
                             if (!$transaction) {
                                 if (!is_null($customerId) && !is_null($planId)) {
                                     // Save data to transactions table
@@ -404,10 +393,12 @@ class PaymentController extends Controller
                                     $customer->save();
                                 }
                             }
-                        }else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
+                        }
+                        
+                        else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
                             $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
 
-                            $transaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->exists();
+                            $transaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','failed')->exists();
 
                             if (!$transaction) {
 
@@ -705,7 +696,7 @@ class PaymentController extends Controller
             
             DB::rollBack();
 
-            dd($e->getMessage() . '->' . $e->getLine());
+            // dd($e->getMessage() . '->' . $e->getLine());
 
             //Return Error Response
             $responseData = [
@@ -720,7 +711,7 @@ class PaymentController extends Controller
 
         if($userType == 'seller'){
 
-        }elseif($userType == 'buyer'){
+        }else if($userType == 'buyer'){
             
             if($action == 'update'){
 
@@ -742,19 +733,12 @@ class PaymentController extends Controller
                     $canceledSubscription->cancel();
                 }
 
-                // return response()->json(['success' => true,'activeSubscription'=>$activeSubscription]);
-
-                // $subscription = Subscription::where('stripe_subscription_id',$paymentIntent->subscription)->first();
-                // if($subscription){
-                // //   Subscription::where('id',$subscription->id)->update($record);
-                // }
-
             }else{
                 $subscription = Subscription::where('stripe_subscription_id',$paymentIntent->subscription)->exists();
 
                 if(!$subscription){
                     $stripe_subscription = StripeSubscription::retrieve($paymentIntent->subscription); 
-                
+                    
                     $record = [
                         'user_id' => $user->id,
                         'stripe_customer_id' => $paymentIntent->customer,

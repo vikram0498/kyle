@@ -77,6 +77,8 @@ Route::get('check-user-token', [HomeController::class, 'checkUserTokenExpired'])
 
 Route::post('/support', [SupportController::class, 'support']);
 
+Route::post('/is-user-status', [HomeController::class, 'isUserStatus']);
+
 Route::group(['middleware' => ['api','auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);

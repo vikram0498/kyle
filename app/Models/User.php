@@ -249,9 +249,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
-    // public function subscription()
-    // {
-    //     return $this->hasMany(Transaction::class);
-    // }
+    public function subscription()
+    {
+        return $this->hasMany(Subscription::class,'user_id');
+    }
 
 }

@@ -733,7 +733,7 @@ class SearchBuyerController extends Controller
 
             // $buyers = Buyer::query()->with(['userDetail'])->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
-            $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             
             if($lastSearchLog->property_type){
@@ -1090,7 +1090,7 @@ class SearchBuyerController extends Controller
     }
 
     public function lastSearchByUser(){
-        $searchLog = SearchLog::select('address','country','state','city','zip_code','price','bedroom','bath','size','lot_size','build_year','arv','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','purchase_method','stories','zoning','utilities','sewer','market_preferance','contact_preferance','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','total_units','unit_min','unit_max','building_class','value_add')->where('user_id',auth()->user()->id)->orderBy('id','desc')->first();
+        $searchLog = SearchLog::select('address','country','state','city','zip_code','price','bedroom','bath','size','lot_size','build_year','arv','parking','property_type','property_flaw','solar','pool','septic','well','age_restriction','rental_restriction','hoa','tenant','post_possession','building_required','foundation_issues','mold','fire_damaged','rebuild','squatters','purchase_method','stories','zoning','utilities','sewer','market_preferance','contact_preferance','max_down_payment_percentage','max_down_payment_money','max_interest_rate','balloon_payment','total_units','unit_min','unit_max','building_class','value_add','status')->where('user_id',auth()->user()->id)->orderBy('id','desc')->first();
 
         //Success Response Send
          $responseData = [

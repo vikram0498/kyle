@@ -969,12 +969,12 @@ class BuyerController extends Controller
 
             // $buyers = Buyer::query()->with(['userDetail'])->select('id', 'user_id','buyer_user_id', 'created_by', 'contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('user_id',$userId);
 
-            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id',
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
             ])
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
-                ->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
-                // ->orderByRaw('plan_position ASC, plan_position IS NULL')
-                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
+                // ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->orderBy('buyers.created_at', 'desc')
                 ->paginate(20);
 
             /* $buyers = $buyers
@@ -993,10 +993,10 @@ class BuyerController extends Controller
                     $disliked = $getrecentaction->disliked == 1 ? true : false;
                 }
 
-                $buyer->name =  $buyer->userDetail->name;
+                $buyer->name =  ucwords($buyer->userDetail->name);
 
-                $buyer->first_name = $buyer->userDetail->first_name;
-                $buyer->last_name = $buyer->userDetail->last_name;
+                $buyer->first_name = ucwords($buyer->userDetail->first_name);
+                $buyer->last_name = ucwords($buyer->userDetail->last_name);
                 $buyer->email = $buyer->userDetail->email;
                 $buyer->phone = $buyer->userDetail->phone;
 
