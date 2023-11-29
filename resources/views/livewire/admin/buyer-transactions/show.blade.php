@@ -7,7 +7,15 @@
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.buyer_transaction.fields.user')}}</th>
-            <td>{{ $details->user->name ?? ''}}</td>
+            <td>
+                @if($details->user_json)
+                    @if($details->user)
+                        {{ json_decode($details->user_json,true)['name'] }}
+                    @else
+                        <del>{{ json_decode($details->user_json,true)['name'] }}</del> <span class="badge badge-danger">Deleted</span>
+                    @endif
+                @endif
+            </td>
         </tr>
 
         @if($details->plan)

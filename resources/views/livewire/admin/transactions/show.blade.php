@@ -7,7 +7,20 @@
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.transaction.fields.user')}}</th>
-            <td>{{ $details->user->name ?? ''}}</td>
+            <td>
+                @php
+                    $userDetail = $details->user()->withTrashed()->first();
+                @endphp
+                @if($userDetail)
+                    @if(is_null($userDetail->deleted_at))
+                    {{ ucwords($userDetail->name) }}
+                    @else
+                    <del>{{ ucwords($userDetail->name) }}</del> <span class="badge badge-danger">Deleted</span>
+                    @endif
+                @endif
+
+            </td>
+
         </tr>
         <tr>
             <th width="25%">Plan</th>

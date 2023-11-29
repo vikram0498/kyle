@@ -85,9 +85,25 @@
             <tbody>
                 @if($transactions->count() > 0)
                     @foreach($transactions as $serialNo => $transaction)
+                    @php
+                      $userDetail = $transaction->user()->withTrashed()->first();
+                    @endphp
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ $transaction->user ? ucwords($transaction->user->name) : '' }}</td>
+                        
+                        <td>
+                            @if($userDetail)
+                              @if(is_null($userDetail->deleted_at))
+                                {{ ucwords($userDetail->name) }}
+                              @else
+                                <del>{{ ucwords($userDetail->name) }}</del> <span class="badge badge-danger">Deleted</span>
+                              @endif
+                            @endif
+                           
+
+                           
+                        </td>
+
                         <td>
                             @if($transaction->is_addon)
                             {{ $transaction->addon_title ? ucwords($transaction->addon_title) : '' }}

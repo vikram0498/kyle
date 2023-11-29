@@ -117,16 +117,26 @@ class HomeController extends Controller
             'user_id'=>'required',
         ]);
 
-        $checkUser = User::where('id',$request->user_id)->first();
-        
-        //Success Response Send
-        $responseData = [
-            'status'         => true,
-            'user_status'    => is_null($checkUser->deleted_at) ? true : false,
-            'is_buyer_verified'    => $checkUser->is_buyer_verified,
+        $checkUser = User::where('id',$request->user_id)->withTrashed()->first();
+      
+        if($checkUser){
+            //Success Response Send
+            $responseData = [
+                'status'         => true,
+                'user_status'    => is_null($checkUser->deleted_at) ? true : false,
+                'is_buyer_verified'    => $checkUser->is_buyer_verified,
 
-        ];
-        return response()->json($responseData, 200);
+            ];
+            return response()->json($responseData, 200);
+        }else{
+             //Error Response Send
+             $responseData = [
+                'status'         => false,
+                'message'        => 'Something went wrong!'
+            ];
+            return response()->json($responseData, 400);
+        }
+       
     }
 
 }

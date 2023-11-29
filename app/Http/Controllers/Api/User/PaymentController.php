@@ -86,7 +86,7 @@ class PaymentController extends Controller
             //End To Set Token
 
             // Create or retrieve Stripe customer
-            if (!$authUser->stripe_customer_id) {
+            if (is_null($authUser->stripe_customer_id)) {
                 $customer = Customer::create([
                     'name'  => $authUser->name,
                     'email' => $authUser->email,
@@ -299,17 +299,29 @@ class PaymentController extends Controller
 
                             $buyerTransaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','success')->exists();
 
-                            // return response()->json(['success' => true,'payment_intent'=>$buyerTransaction]);
+                            // return response()->json(['success' => true,'payment_intent'=>'test']);
 
                             if (!$buyerTransaction) {
 
-                                if($metaData->active_subscription){
-                                    $canceledSubscription = StripeSubscription::retrieve($metaData->active_subscription);
+                                  // Retrieve customer's subscriptions
+                                    $getAllSubscriptions = StripeSubscription::all(['customer' => $customer_stripe_id]);
 
-                                    $canceledSubscription->cancel();
+                                    // Find the active subscription
+                                    $activeSubscription = isset($getAllSubscriptions['data'][1]) ? $getAllSubscriptions['data'][1] : null;
+                                    
+                                    // return response()->json(['success' => true,'payment_intent'=>$activeSubscription]);
 
-                                    Subscription::where('stripe_subscription_id',$metaData->active_subscription)->update(['status'=>'canceled']);
-                                }
+                                    if($activeSubscription){
+                                        // Cancel the active subscription
+                                        StripeSubscription::update(
+                                            $activeSubscription->id,
+                                            ['cancel_at_period_end' => false]
+                                        );
+                                        $canceledSubscription = StripeSubscription::retrieve($activeSubscription->id);
+                                        $canceledSubscription->cancel();
+                    
+                                        Subscription::where('stripe_subscription_id',$activeSubscription->id)->update(['status'=>'canceled']);
+                                    }
 
                                 $userJson = [
                                     'stripe_customer_id' => $authUser->stripe_customer_id,
@@ -321,13 +333,14 @@ class PaymentController extends Controller
                                     'phone_verified_at' => $authUser->phone_verified_at,
                                 ];
 
-                                $planJson = BuyerPlan::find($authUser->buyerDetail->plan_id);
+                                $planStripeId = $paymentIntent->lines->data[0]->plan->id;
+                                $planJson = BuyerPlan::where('plan_stripe_id',$planStripeId)->first();
 
                                 BuyerTransaction::create([
                                     'user_id' => $authUser->id,
                                     'user_json' => json_encode($userJson),
-                                    'plan_id'   => $planJson->id ?? null,
-                                    'plan_json' =>  $planJson->toJson() ?? null,
+                                    'plan_id'   => $planJson ? $planJson->id : null,
+                                    'plan_json' =>  $planJson ? $planJson->toJson() : null,
                                     'payment_intent_id' => $paymentIntent->payment_intent,
                                     'amount' => (float)$paymentIntent->total / 100,
                                     'currency' => $paymentIntent->currency,
@@ -338,7 +351,7 @@ class PaymentController extends Controller
                                 ]);
 
                                 //Start Subscription
-                                 $this->subscriptionEntry($authUser,'buyer', 'save', $planJson, $paymentIntent);
+                                 $this->subscriptionEntry($authUser,'buyer', 'save', true, $planJson, $paymentIntent);
                                 //End Subscription
                             }
 
@@ -395,7 +408,7 @@ class PaymentController extends Controller
                             }
                         }
                         
-                        else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
+                        /*else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
                             $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
 
                             $transaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','failed')->exists();
@@ -418,7 +431,7 @@ class PaymentController extends Controller
                                     'user_id' => $authUser->id,
                                     'user_json' => json_encode($userJson),
                                     'plan_id'   => $planJson->id ?? null,
-                                    'plan_json' =>  $planJson->toJson() ?? null,
+                                    'plan_json' =>  $planJson ? $planJson->toJson() : null,
                                     'payment_intent_id' => $paymentIntent->payment_intent,
                                     'amount' => (float)$paymentIntent->total / 100,
                                     'currency' => $paymentIntent->currency,
@@ -429,7 +442,7 @@ class PaymentController extends Controller
                                 ]);
 
                             }
-                        }
+                        }*/
                     }
                    
 
@@ -670,7 +683,9 @@ class PaymentController extends Controller
             if($authBuyerUser){
 
                 // Start to cancel subscription on stripe
-                $isCancelSubscription = $this->subscriptionEntry($authUser,'buyer', 'update');
+                $is_auto_renew = $request->is_plan_auto_renew == 1 ? true : false;
+
+                $isCancelSubscription = $this->subscriptionEntry($authUser,'buyer', 'update',$is_auto_renew);
            
                 //End to acncel subscription on stripe
                 if($isCancelSubscription){
@@ -707,7 +722,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function subscriptionEntry($user, $userType='seller', $action='save', $plan=null, $paymentIntent=null){
+    public function subscriptionEntry($user, $userType='seller', $action='save', $is_auto_renew, $plan=null, $paymentIntent=null){
 
         if($userType == 'seller'){
 
@@ -729,8 +744,12 @@ class PaymentController extends Controller
 
                 if($activeSubscription){
                     // Cancel the active subscription
-                    $canceledSubscription = StripeSubscription::retrieve($activeSubscription->id);
-                    $canceledSubscription->cancel();
+                    $canceledSubscription = StripeSubscription::update(
+                        $activeSubscription->id,
+                        ['cancel_at_period_end' => $is_auto_renew]
+                    );
+
+                    Subscription::where('stripe_subscription_id',$activeSubscription->id)->update(['status'=>'canceled']);
                 }
 
             }else{
@@ -742,8 +761,8 @@ class PaymentController extends Controller
                     $record = [
                         'user_id' => $user->id,
                         'stripe_customer_id' => $paymentIntent->customer,
-                        'plan_id'=>$plan->id,
-                        'stripe_plan_id'=>$plan->plan_stripe_id,
+                        'plan_id'=>$plan ? $plan->id : null,
+                        'stripe_plan_id'=>$plan ? $plan->plan_stripe_id : null,
                         'stripe_subscription_id'=>$paymentIntent->subscription,
                         'start_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_start)->format('Y-m-d'),
                         'end_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_end)->format('Y-m-d'),
