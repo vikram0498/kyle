@@ -57,6 +57,8 @@ class StoreCopyBuyerRequest extends FormRequest
             // 'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
             'email'       => ['required', 'email', 'unique:users,email,NULL,id'],
             'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id'],
+            // 'description' => [], 
+
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 

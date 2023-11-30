@@ -276,6 +276,7 @@ class BuyerController extends Controller
                 'name'       => $buyer->name ?? null,
                 'email'      => $buyer->email ?? null,
                 'phone'      => $buyer->phone ?? null,
+                'description'=> $buyer->description ?? null,
                 'profile_image' => $buyer->profile_image_url ?? null,
                 'is_active'  => $buyer->is_active ?? 0,
                 'buyer_search_status' =>  $buyer->buyerDetail->status ?? 0,
@@ -471,6 +472,7 @@ class BuyerController extends Controller
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
                 'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+                'description'    => $validatedData['description'],
             ];
 
             $updateUser = User::where('id', $authUserId)->update($userDetails);
@@ -513,7 +515,7 @@ class BuyerController extends Controller
 
                 // $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
 
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone'])->all();
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
 
                 auth()->user()->buyerDetail()->update($validatedData);
             }

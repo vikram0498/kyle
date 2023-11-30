@@ -40,10 +40,10 @@
             <th width="25%">{{ __('cruds.buyer.fields.phone')}}</th>
             <td class="remove-white-space"> {{ $userDetail ? $userDetail->phone : 'N/A' }}</td>
         </tr>
-        {{-- <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.address')}}</th>
-            <td class="remove-white-space"> {{ $details->address ?? 'N/A' }}</td>
-        </tr> --}}
+        <tr>
+            <th width="25%">Description</th>
+            <td class="remove-white-space"> {{ $userDetail ? $userDetail->description : 'N/A'}}</td>
+        </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.country')}}</th>
             <td class="remove-white-space"> {{ $details->country ?? 'N/A' }}</td>

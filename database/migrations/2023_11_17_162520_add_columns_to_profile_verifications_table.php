@@ -33,7 +33,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('profile_verifications', function (Blueprint $table) {
-            //
+            $table->dropColumn(['driver_license_status','proof_of_funds_status','llc_verification_status','is_profile_verify']);
         });
     }
 };

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('buyers', function (Blueprint $table) {
-            $table->boolean('is_profile_verified')->default(0)->comment('0 => Not Verified, 1 => Verified')->after('is_profile_payment');
+        Schema::table('users', function (Blueprint $table) {
+            $table->text('description')->nullable()->after('phone');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('buyers', function (Blueprint $table) {
-            $table->dropColumn(['is_profile_verified']);
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['description']);
         });
     }
 };

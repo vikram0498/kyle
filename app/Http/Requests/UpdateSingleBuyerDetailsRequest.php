@@ -55,6 +55,7 @@ class UpdateSingleBuyerDetailsRequest extends FormRequest
             'last_name'   => ['required'], 
             'email'       => [],
             'phone'       => [], 
+            'description'       => [], 
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 

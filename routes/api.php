@@ -9,14 +9,14 @@ use App\Http\Controllers\Api\Auth\SocialMediaController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\BuyerController;
 use App\Http\Controllers\Api\User\ProfileController;
-use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\SupportController;
 use App\Http\Controllers\Api\User\CommanController;
 use App\Http\Controllers\Api\User\SearchBuyerController;
 use App\Http\Controllers\Api\User\CopyBuyerController;
 use App\Http\Controllers\Api\User\TwilioController;
 use App\Http\Controllers\Api\User\BuyerVerificationController;
-
+use App\Http\Controllers\Api\User\PaymentController;
+use App\Http\Controllers\Api\User\StripeWebhookController;
 
 
 
@@ -140,8 +140,6 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('config', [PaymentController::class, 'config']);
  
-    Route::post('create-upgrade-buyer-session', [PaymentController::class, 'createProfileUpgradeSession']);
-
     Route::post('create-upgrade-boost-profile-buyer-session', [PaymentController::class, 'createBoostYourProfileUpgradeSession']);
 
     Route::post('/checkout-session', [PaymentController::class, 'createCheckoutSession']);
@@ -157,4 +155,4 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
 });
 
-Route::post('/stripe/webhook', [PaymentController::class, 'handleStripeWebhook']);
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleStripeWebhook']);

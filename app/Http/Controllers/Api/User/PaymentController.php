@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Stripe\PaymentIntent;
+
+use Carbon\Carbon;
 use Stripe\Stripe;
-use Stripe\Event;
 use Stripe\Customer;
 use App\Models\Plan;
 use App\Models\Addon;
@@ -15,14 +15,13 @@ use App\Models\Transaction;
 use App\Models\Buyer;
 use App\Models\BuyerPlan;
 use App\Models\BuyerTransaction;
-use Stripe\Subscription as StripeSubscription;
 use App\Models\Subscription;
 use App\Models\UserToken;
-use Illuminate\Support\Facades\DB;
 use Stripe\Checkout\Session as StripeSession;
+use Stripe\Subscription as StripeSubscription;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -117,6 +116,7 @@ class PaymentController extends Controller
                     'metadata' => $metadata,
                 ];
             } else  if ($request->type == 'boost_your_profile') {
+
                 $active_subscription = $authUser->subscription()->where('status','active')->first() ? $authUser->subscription()->where('status','active')->first()->stripe_subscription_id : '';
 
                 $metadata = [
@@ -134,9 +134,10 @@ class PaymentController extends Controller
                         'metadata' => $metadata,
                     ],
                     'mode' => 'subscription',
-                    'success_url' => env('FRONTEND_URL') . 'buyer-profile/' . $token,
+                    'success_url' => env('FRONTEND_URL') . 'payment-confirm/' . $token,
                     'cancel_url' => env('FRONTEND_URL') . 'cancel',  
                 ];
+
             } else {
                 $metadata['user_type'] = 'seller';
                 $sessionData = [
@@ -166,7 +167,6 @@ class PaymentController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
-
 
     public function checkoutSuccess(Request $request)
     {
@@ -219,360 +219,6 @@ class PaymentController extends Controller
         }
     }
 
-
-    public function handleStripeWebhook(Request $request)
-    {
-        Log::info('Start stripe webhook');
-
-        Stripe::setApiKey(config('app.stripe_secret_key'));
-        $payload = $request->getContent();
-        $stripeSignatureHeader = $request->header('Stripe-Signature');
-
-        $endpointSecret = env('STRIPE_WEBHOOK_SECRET_KEY'); // Replace with the actual signing secret
-
-        try {
-            $event = \Stripe\Webhook::constructEvent(
-                $payload,
-                $stripeSignatureHeader,
-                $endpointSecret
-            );
-        } catch (\UnexpectedValueException $e) {
-            Log::info('Invalid payload!');
-            // Invalid payload
-            return response()->json(['error' => 'Invalid payload'], 400);
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
-            Log::info('Invalid signature!');
-            $data = [
-                'error_message' => $e->getMessage() . '->' . $e->getLine()
-            ];
-            return response()->json(['error' => 'Invalid signature', 'data' => $data], 400);
-        }
-
-        try {
-            // Handle the event based on its type
-            switch ($event->type) {
-                case 'invoice.payment_succeeded':
-
-                    Log::info('Payment successfully!');
-
-                    // Handle successful payment event
-                    $paymentIntent = $event->data->object;
-
-                    $customer_stripe_id = $paymentIntent->customer;
-
-                    $metaData = $paymentIntent->subscription_details->metadata ?? null;
-                    
-                    if ($metaData && $metaData->user_type) {
-
-                        if($metaData->user_type == 'seller'){
-                            $customerId = User::where('stripe_customer_id', $customer_stripe_id)->value('id');
-
-                            $isAddon = false;
-                            $planId = Plan::where('plan_stripe_id', $paymentIntent->lines->data[0]->plan->id)->value('id');
-                            if (!$planId) {
-                                $planId = Addon::where('product_stripe_id', $paymentIntent->lines->data[0]->plan->id)->value('id');
-                                $isAddon = true;
-                            }
-        
-                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','success')->exists();
-                            if (!$transaction) {
-                                if (!is_null($customerId) && !is_null($planId)) {
-                                    // Save data to transactions table
-                                    Transaction::create([
-                                        'user_id' => $customerId,
-                                        'plan_id' => $planId,
-                                        'is_addon' => $isAddon,
-                                        'payment_intent_id' => $paymentIntent->payment_intent,
-                                        'amount' => (float)$paymentIntent->lines->data[0]->amount / 100,
-                                        'currency' => $paymentIntent->lines->data[0]->currency,
-                                        'payment_method' => null,
-                                        'payment_type'   => 'credit',
-                                        'status' => 'success',
-                                        'payment_json' => json_encode($event),
-                                    ]);
-                                }
-                            }
-                            
-                        }else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
-                            $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
-
-                            $buyerTransaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','success')->exists();
-
-                            // return response()->json(['success' => true,'payment_intent'=>'test']);
-
-                            if (!$buyerTransaction) {
-
-                                  // Retrieve customer's subscriptions
-                                    $getAllSubscriptions = StripeSubscription::all(['customer' => $customer_stripe_id]);
-
-                                    // Find the active subscription
-                                    $activeSubscription = isset($getAllSubscriptions['data'][1]) ? $getAllSubscriptions['data'][1] : null;
-                                    
-                                    // return response()->json(['success' => true,'payment_intent'=>$activeSubscription]);
-
-                                    if($activeSubscription){
-                                        // Cancel the active subscription
-                                        StripeSubscription::update(
-                                            $activeSubscription->id,
-                                            ['cancel_at_period_end' => false]
-                                        );
-                                        $canceledSubscription = StripeSubscription::retrieve($activeSubscription->id);
-                                        $canceledSubscription->cancel();
-                    
-                                        Subscription::where('stripe_subscription_id',$activeSubscription->id)->update(['status'=>'canceled']);
-                                    }
-
-                                $userJson = [
-                                    'stripe_customer_id' => $authUser->stripe_customer_id,
-                                    'name'  => $authUser->name,
-                                    'email' => $authUser->email,
-                                    'phone' => $authUser->phone,
-                                    'register_type' => $authUser->register_type,
-                                    'email_verified_at' => $authUser->email_verified_at,
-                                    'phone_verified_at' => $authUser->phone_verified_at,
-                                ];
-
-                                $planStripeId = $paymentIntent->lines->data[0]->plan->id;
-                                $planJson = BuyerPlan::where('plan_stripe_id',$planStripeId)->first();
-
-                                BuyerTransaction::create([
-                                    'user_id' => $authUser->id,
-                                    'user_json' => json_encode($userJson),
-                                    'plan_id'   => $planJson ? $planJson->id : null,
-                                    'plan_json' =>  $planJson ? $planJson->toJson() : null,
-                                    'payment_intent_id' => $paymentIntent->payment_intent,
-                                    'amount' => (float)$paymentIntent->total / 100,
-                                    'currency' => $paymentIntent->currency,
-                                    'payment_method' => $paymentIntent->payment_method_types[0] ?? null,
-                                    'payment_type'   => 'credit',
-                                    'status' => 'success',
-                                    'payment_json' => json_encode($event),
-                                ]);
-
-                                //Start Subscription
-                                 $this->subscriptionEntry($authUser,'buyer', 'save', true, $planJson, $paymentIntent);
-                                //End Subscription
-                            }
-
-                        }
-                    
-                    }
-
-                    break;
-
-                case 'invoice.payment_failed':
-
-                    Log::info('Payment failed!');
-
-                    // Handle successful payment event
-                    $paymentIntent = $event->data->object;
-
-                    $customer_stripe_id = $paymentIntent->customer;
-
-                    $metaData = $paymentIntent->subscription_details->metadata ?? null;
-
-                    if($metaData && $metaData->user_type){
-
-                        if($metaData->user_type == 'seller'){
-                            $customer = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                            $customerId = $customer->id ?? null;
-        
-                            $isAddon = false;
-                            $planId = Plan::where('plan_stripe_id', $paymentIntent->lines->data[0]->plan->id)->value('id');
-                            if (!$planId) {
-                                $planId = Addon::where('product_stripe_id', $paymentIntent->lines->data[0]->plan->id)->value('id');
-                                $isAddon = true;
-                            }
-        
-                            $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','failed')->exists();
-                            if (!$transaction) {
-                                if (!is_null($customerId) && !is_null($planId)) {
-                                    // Save data to transactions table
-                                    Transaction::create([
-                                        'user_id' => $customerId,
-                                        'plan_id' => $planId,
-                                        'is_addon' => $isAddon,
-                                        'payment_intent_id' => $paymentIntent->payment_intent,
-                                        'amount' => (float)$paymentIntent->lines->data[0]->amount / 100,
-                                        'currency' => $paymentIntent->lines->data[0]->currency,
-                                        'payment_method' => null,
-                                        'payment_type'   => 'credit',
-                                        'status' => 'failed',
-                                        'payment_json' => json_encode($event),
-                                    ]);
-        
-                                    $customer->level_type = 1;
-                                    $customer->save();
-                                }
-                            }
-                        }
-                        
-                        /*else if($metaData->product_type == 'boost-plan' && $metaData->user_type == 'buyer'){
-                            $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
-
-                            $transaction = BuyerTransaction::where('user_id', $authUser->id)->where('payment_intent_id', $paymentIntent->payment_intent)->where('status','failed')->exists();
-
-                            if (!$transaction) {
-
-                                $userJson = [
-                                    'stripe_customer_id' => $authUser->stripe_customer_id,
-                                    'name'  => $authUser->name,
-                                    'email' => $authUser->email,
-                                    'phone' => $authUser->phone,
-                                    'register_type' => $authUser->register_type,
-                                    'email_verified_at' => $authUser->email_verified_at,
-                                    'phone_verified_at' => $authUser->phone_verified_at,
-                                ];
-
-                                $planJson = BuyerPlan::find($authUser->buyerDetail->plan_id);
-
-                                BuyerTransaction::create([
-                                    'user_id' => $authUser->id,
-                                    'user_json' => json_encode($userJson),
-                                    'plan_id'   => $planJson->id ?? null,
-                                    'plan_json' =>  $planJson ? $planJson->toJson() : null,
-                                    'payment_intent_id' => $paymentIntent->payment_intent,
-                                    'amount' => (float)$paymentIntent->total / 100,
-                                    'currency' => $paymentIntent->currency,
-                                    'payment_method' => $paymentIntent->payment_method_types[0] ?? null,
-                                    'payment_type'   => 'credit',
-                                    'status' => 'failed',
-                                    'payment_json' => json_encode($event),
-                                ]);
-
-                            }
-                        }*/
-                    }
-                   
-
-                    break;
-
-                case 'checkout.session.completed':
-                    Log::info('Single Payment successfully!');
-
-                    //Start to Handle recursive successful payment
-                    $paymentIntent = $event->data->object;
-
-                    $customer_stripe_id = $paymentIntent->customer;
-
-                    if (isset($paymentIntent->metadata->plan) && $paymentIntent->metadata->user_type == 'seller') {
-                        $customerId = User::where('stripe_customer_id', $customer_stripe_id)->value('id');
-
-                        $planId = Addon::where('price_stripe_id', $paymentIntent->metadata->plan)->value('id');
-
-                        $transaction = Transaction::where('user_id', $customerId)->where('payment_intent_id', $paymentIntent->id)->exists();
-                        if (!$transaction) {
-                            if (!is_null($customerId) && !is_null($planId)) {
-                                // Save data to transactions table
-                                Transaction::create([
-                                    'user_id' => $customerId,
-                                    'plan_id' => $planId,
-                                    'is_addon' => true,
-                                    'payment_intent_id' => $paymentIntent->payment_intent,
-                                    'amount' => (float)$paymentIntent->amount_total / 100,
-                                    'currency' => $paymentIntent->currency,
-                                    'payment_method' => $paymentIntent->payment_method_types[0],
-                                    'payment_type'   => 'credit',
-                                    'status' => 'success',
-                                    'payment_json' => json_encode($event),
-                                ]);
-                            }
-                        }
-                    }
-                    //End to Handle recursive successful payment
-
-                    //Start Single payment
-                    if (isset($paymentIntent->metadata->product_type) && isset($paymentIntent->metadata->user_type)) {
-                        
-                        //Start Application Fee
-                        if ($paymentIntent->metadata->product_type == 'application_fee' && $paymentIntent->metadata->user_type == 'buyer') {
-
-                            $user = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                            $user->buyerVerification()->update(['is_application_process' => 1]);
-
-                            $user->buyerDetail()->update(['is_profile_verified' => 1]);
-
-                            $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                            $userJson = [
-                                'stripe_customer_id' => $authUser->stripe_customer_id,
-                                'name'  => $authUser->name,
-                                'email' => $authUser->email,
-                                'phone' => $authUser->phone,
-                                'register_type' => $authUser->register_type,
-                                'email_verified_at' => $authUser->email_verified_at,
-                                'phone_verified_at' => $authUser->phone_verified_at,
-                            ];
-
-                            BuyerTransaction::create([
-                                'user_id' => $authUser->id,
-                                'user_json' => json_encode($userJson),
-                                'plan_id'   => null,
-                                'plan_json' =>  json_encode(['title' => 'Application Fee']),
-                                'payment_intent_id' => $paymentIntent->payment_intent,
-                                'amount' => (float)$paymentIntent->amount_total / 100,
-                                'currency' => $paymentIntent->currency,
-                                'payment_method' => $paymentIntent->payment_method_types[0],
-                                'payment_type'   => 'credit',
-                                'status' => 'success',
-                                'payment_json' => json_encode($event),
-                            ]);
-                        }
-                        //End Applicatio Fee
-
-                        //Start Profile Upgrade
-                        if ($paymentIntent->metadata->product_type == 'profile_update' && $paymentIntent->metadata->user_type == 'buyer') {
-
-                            $user = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                            $user->buyerDetail()->update(['is_profile_payment' => 1]);
-
-                            $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
-                            $userJson = [
-                                'stripe_customer_id' => $authUser->stripe_customer_id,
-                                'name'  => $authUser->name,
-                                'email' => $authUser->email,
-                                'phone' => $authUser->phone,
-                                'register_type' => $authUser->register_type,
-                                'email_verified_at' => $authUser->email_verified_at,
-                                'phone_verified_at' => $authUser->phone_verified_at,
-                            ];
-
-                            BuyerTransaction::create([
-                                'user_id' => $authUser->id,
-                                'user_json' => json_encode($userJson),
-                                'plan_id'   => null,
-                                'plan_json' =>  json_encode(['title' => 'Profile Fee']),
-                                'payment_intent_id' => $paymentIntent->payment_intent,
-                                'amount' => (float)$paymentIntent->amount_total / 100,
-                                'currency' => $paymentIntent->currency,
-                                'payment_method' => $paymentIntent->payment_method_types[0],
-                                'payment_type'   => 'credit',
-                                'status' => 'success',
-                                'payment_json' => json_encode($event),
-                            ]);
-                        }
-                        //End Profile Upgrade
-
-                    }
-                    //End Single payment
-
-                    break;
-
-                default:
-                    Log::info('Invalid Event fired!');
-            }
-        } catch (\Exception $e) {
-
-            // dd($e->getMessage().'->'.$e->getLine());
-            return response()->json(['error' => $e->getMessage() . '->' . $e->getLine()], 400);
-            // return response()->json(['error' => 'Something went wrong!'], 400);
-        }
-
-        Log::info('End stripe webhook');
-
-        return response()->json(['success' => true]);
-    }
-
     public function paymentHistory()
     {
 
@@ -595,77 +241,6 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             // dd($e->getMessage().'->'.$e->getLine());
             return response()->json(['error' => 'Something went wrong!'], 400);
-        }
-    }
-
-
-    public function createProfileUpgradeSession(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-            $userId = auth()->user()->id;
-            $authUser = User::where('id', $userId)->first();
-            if ($authUser) {
-
-                // Set your Stripe secret key
-                Stripe::setApiKey(config('app.stripe_secret_key'));
-
-                // Create or retrieve Stripe customer
-                if (!$authUser->stripe_customer_id) {
-                    $customer = Customer::create([
-                        'name'  => $authUser->name,
-                        'email' => $authUser->email,
-                    ]);
-                    $authUser->stripe_customer_id = $customer->id;
-                    $authUser->save();
-                } else {
-                    $customer = Customer::retrieve($authUser->stripe_customer_id);
-                }
-
-
-                $metadata = [
-                    'user_type' => 'buyer',
-                    'product_type' => 'profile_update',
-                    'description'  => 'Profile Upgrade Fee Payment',
-                ];
-
-                $sessionData = [
-                    'payment_method_types' => ['card'],
-                    'line_items' => [
-                        [
-                            'price' => config('constants.buyer_profile_update_price_id'),
-                            'quantity' => 1,
-                        ],
-                    ],
-                    'mode' => 'payment',
-                    'metadata' => $metadata,
-                    'success_url' => env('FRONTEND_URL') . 'buyer-profile',
-                    'cancel_url' => env('FRONTEND_URL') . 'profile-verification',
-                ];
-
-
-                // If customer ID is provided, set it in the session data
-                if ($customer) {
-                    $sessionData['customer'] = $customer->id;
-                }
-
-                // Create a Checkout Session
-                $session = StripeSession::create($sessionData);
-
-                DB::commit();
-
-                return response()->json(['status' => true, 'session' => $session], 200);
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
-
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error'         => $e->getMessage() . '->' . $e->getLine(),
-            ];
-            return response()->json($responseData, 400);
         }
     }
 
