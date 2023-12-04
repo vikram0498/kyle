@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\HomeController;
 
 
-Route::get('/', function () {
+
+Route::get('/admin/login', function () {
     return redirect('login');
 });
 // list storage
@@ -34,11 +36,14 @@ Route::get('/cache-clear', function() {
 
 // Auth::routes(['verify' => true]);
 
+Route::get('get-latest-kyc-count', [HomeController::class,'getCountOfLatestKyc'])->name('getCountOfLatestKyc');
+
+
 Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])->name('verification.verify');
 
 Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], function () {    
     // Route::view('signup', 'auth.admin.register')->name('register');
-    Route::view('login', 'auth.admin.login')->name('login');
+    Route::view('/admin/login', 'auth.admin.login')->name('login');
     Route::view('forget-password', 'auth.admin.forget-password')->name('forget-password');
     Route::view('reset-password/{token}/{email}', 'auth.admin.reset-password')->name('reset-password');
  
@@ -55,6 +60,7 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('users', 'admin.seller.index')->name('seller');
         Route::view('deleted-users', 'admin.deleted-users.index')->name('deleted-users');
         Route::view('buyer', 'admin.buyer.index')->name('buyer');    
+        Route::view('new-kyc', 'admin.buyer.new-kyc')->name('new-kyc');    
         Route::view('deleted-buyers', 'admin.deleted-buyer-users.index')->name('deleted-buyers');        
         Route::view('buyer/import', 'admin.buyer.import-buyers')->name('import-buyers');
         Route::view('supports', 'admin.support.index')->name('supports');

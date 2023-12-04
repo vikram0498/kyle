@@ -1052,3 +1052,7 @@ body .datepicker .datepicker-years .table-condensed{
 .remove-white-space{
     white-space:inherit !important;
 }
+.kyc-modal .modal-body>img{
+    max-width: 200px;
+    margin: 0 auto;
+}

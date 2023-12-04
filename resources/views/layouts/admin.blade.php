@@ -67,7 +67,28 @@
 
     <x-livewire-alert::flash />
     
+    <script>
+        // setInterval(fetchData, 1000);
+        fetchData();
+        function fetchData() {
+            $.ajax({
+                url: "{{ route('getCountOfLatestKyc') }}",
+                type: 'GET',
+                success: response => {
+                    // console.log('response',response.kycBuyersCount);
+                    
+                    $('.kyc-buyer-count').html(response.kycBuyersCount);
+                },
+                error: error => {
+                console.log('Error fetching data:', error);
+                }
+            });
+        }
+
+    </script>
+
     @stack('scripts')
+
 
 </body>
 </html>

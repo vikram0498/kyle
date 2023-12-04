@@ -114,6 +114,11 @@ class Buyer extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
     public function userDetail()
     {
         return $this->belongsTo(User::class, 'buyer_user_id', 'id');

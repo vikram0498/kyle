@@ -386,6 +386,12 @@
             <th width="25%">{{ __('cruds.buyer.fields.status')}}</th>
             <td class="remove-white-space"> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
+
+        <tr>
+            <th width="25%">Created By</th>
+            <td class="remove-white-space"> {{ $details->createdByUser ? ucwords($details->createdByUser->name) : null }}</td>
+        </tr>
+        
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
             <td class="remove-white-space"> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>
@@ -404,14 +410,6 @@
                 $llc_uploaded = $details->userDetail->buyerVerification->is_llc_verification;
                 $payment_uploaded = $details->userDetail->buyerVerification->is_application_process;
             @endphp
-
-            @if($phone_verify_uploaded == 1 && $dl_uploaded == 1 && $pof_uploaded == 1 && $llc_uploaded == 1 && $payment_uploaded == 1 )
-                {{--<select id="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->is_profile_verify }}" >
-                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                        <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->is_profile_verify == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                    @endforeach
-                </select>--}}
-            @endif
         </div>
     </div>
 
@@ -424,15 +422,7 @@
             <th rowspan="{{ $dl_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.driver_license') }}</th>
             <td colspan="2"> 
                 @if($dl_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->driver_license_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->driver_license_status }}" data-type="driver_license_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->driver_license_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->driver_license_status) }}
-                    @endif
+                    {{ ucwords($details->userDetail->buyerVerification->driver_license_status) }}
                 @else 
                     No
                 @endif
@@ -475,15 +465,7 @@
             <th rowspan="{{ $pof_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.proof_of_funds') }}</th>
             <td colspan="2">
                 @if($pof_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->proof_of_funds_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->proof_of_funds_status }}" data-type="proof_of_funds_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->proof_of_funds_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->proof_of_funds_status) }}
-                    @endif
+                    {{ ucwords($details->userDetail->buyerVerification->proof_of_funds_status) }}
                 @else 
                     No
                 @endif
@@ -527,15 +509,9 @@
             <th rowspan="{{ $llc_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.llc_verification') }}</th>
             <td colspan="2"> 
                 @if($llc_uploaded == 1)
-                    @if($details->userDetail->buyerVerification->llc_verification_status == 'pending')
-                        <select class="select_profile_verify_status" data-id="{{ $details->userDetail->buyerVerification->id }}" data-old_value="{{ $details->userDetail->buyerVerification->llc_verification_status }}" data-type="llc_verification_status">
-                            @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                <option value="{{ $key }}" {{ ($details->userDetail->buyerVerification->llc_verification_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    @else
-                        {{ ucwords($details->userDetail->buyerVerification->llc_verification_status) }}
-                    @endif
+                    
+                    {{ ucwords($details->userDetail->buyerVerification->llc_verification_status) }}
+                    
                 @else 
                     No
                 @endif
@@ -580,7 +556,7 @@
     </table>
 
     <div>
-        <div class="modal fade" id="image_popup_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade kyc-modal" id="image_popup_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

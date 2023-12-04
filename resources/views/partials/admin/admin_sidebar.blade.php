@@ -48,7 +48,9 @@
                 request()->is('admin/deleted-buyers') || 
                 request()->is('admin/buyer/import') || 
                 request()->is('admin/profile-tags')  ||
-                request()->is('admin/buyer-transactions')
+                request()->is('admin/buyer-transactions') ||
+                request()->is('admin/new-kyc')
+
               ); 
             @endphp          
             <li class="nav-item {{ $buyerCallapse ? 'active' : '' }}">
@@ -63,6 +65,12 @@
                         <li class="nav-item">
                             <a class="nav-link {{ (request()->is('admin/buyer') || request()->is('admin/buyer/import')) ? 'active' : '' }}" href="{{ route('admin.buyer') }}">
                                 <span class="menu-title"> {{ __('cruds.buyer.sub_menu_list_title') }} </span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->is('admin/new-kyc')) ? 'active' : '' }}" href="{{ route('admin.new-kyc') }}">
+                                <span class="menu-title">New Kyc &nbsp;<span class="badge badge-light kyc-buyer-count">0</span></span>
                             </a>
                         </li>
 

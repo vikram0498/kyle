@@ -660,6 +660,19 @@ class SearchBuyerController extends Controller
                         $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
                         $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
+                        //Start Verification status
+                        $buyer->is_phone_verified = $buyer->userDetail->buyerVerification->is_phone_verification ? true : false;
+
+                        $buyer->driver_license_verified = $buyer->userDetail->buyerVerification->driver_license_status == 'verified' ? true : false;
+
+                        $buyer->proof_of_funds_verified = $buyer->userDetail->buyerVerification->proof_of_funds_status == 'verified' ? true : false;
+
+                        $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
+
+                        $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
+                        //End Verification status
+
+
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
                         if($buyerDetails){
@@ -692,6 +705,16 @@ class SearchBuyerController extends Controller
                         $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
                         $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
+
+                        //Start Verification status
+                        $buyer->driver_license_verified = $buyer->userDetail->buyerVerification->driver_license_status == 'verified' ? true : false;
+ 
+                        $buyer->proof_of_funds_verified = $buyer->userDetail->buyerVerification->proof_of_funds_status == 'verified' ? true : false;
+ 
+                        $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
+ 
+                        $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
+                        //End Verification status
                     }
                 }
             }
@@ -1060,6 +1083,17 @@ class SearchBuyerController extends Controller
                 $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
                 $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
                 $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
+
+                //Start Verification status
+                $buyer->driver_license_verified = $buyer->userDetail->buyerVerification->driver_license_status == 'verified' ? true : false;
+
+                $buyer->proof_of_funds_verified = $buyer->userDetail->buyerVerification->proof_of_funds_status == 'verified' ? true : false;
+
+                $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
+
+                $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
+                //End Verification status
+
             }
             
             //Return Success Response
