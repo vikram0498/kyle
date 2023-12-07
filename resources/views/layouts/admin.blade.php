@@ -76,8 +76,9 @@
                 type: 'GET',
                 success: response => {
                     // console.log('response',response.kycBuyersCount);
-                    
-                    $('.kyc-buyer-count').html(response.kycBuyersCount);
+                    if(response.kycBuyersCount){
+                        $('.kyc-buyer-count').html(response.kycBuyersCount);
+                    }
                 },
                 error: error => {
                 console.log('Error fetching data:', error);

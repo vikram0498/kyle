@@ -14,7 +14,7 @@
             <li class="nav-item {{ (request()->is('admin/new-kyc')) ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.new-kyc') }}">
                     <i class="icon-grid menu-icon fa-solid fa-users"></i>
-                    <span class="menu-title">New Kyc &nbsp;<span class="badge badge-light kyc-buyer-count">0</span></span>
+                    <span class="menu-title">Buyer KYC &nbsp;<span class="badge badge-light kyc-buyer-count"></span></span>
                 </a>
             </li>
 
