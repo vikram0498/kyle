@@ -19,8 +19,8 @@ use App\Http\Controllers\HomeController;
 
 
 
-Route::get('/admin/login', function () {
-    return redirect('login');
+Route::get('/', function () {
+    return redirect()->route('auth.login');
 });
 // list storage
 /* Route::get('/storage-link', function () {

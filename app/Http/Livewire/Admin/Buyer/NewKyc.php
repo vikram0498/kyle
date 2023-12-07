@@ -61,11 +61,22 @@ class NewKyc extends Component
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })->whereHas('buyerVerification',function($query){
-            $query->where('is_phone_verification', 0)
-            ->orWhere('is_driver_license',0)->orWhere('driver_license_status','!=','verified')
-            ->orWhere('is_proof_of_funds', 0)->orWhere('proof_of_funds_status','!=','verified')
-            ->orWhere('is_llc_verification',0)->orWhere('llc_verification_status','!=','verified')
-            ->orWhere('is_application_process',0);
+            $query->where('is_phone_verification', 1)
+            ->where(function ($sub_query) {
+                $sub_query->where([
+                    ['is_driver_license', 1],
+                    ['driver_license_status', 'pending']
+                ])
+                ->orWhere([
+                    ['is_proof_of_funds', 1],
+                    ['proof_of_funds_status', 'pending']
+                ])
+                ->orWhere([
+                    ['is_llc_verification', 1],
+                    ['llc_verification_status', 'pending']
+                ]);
+            })
+            ->where('is_application_process', 0);
         })
         ->whereHas('roles',function($query){
             $query->whereIn('id',[3]);
@@ -93,7 +104,8 @@ class NewKyc extends Component
         $userId = $model->user_id;
         $this->details = User::find($userId);
 
-        $this->alert('success', trans('messages.change_status_success_message'));
+        $this->flash('success', trans('messages.change_status_success_message'));
+        return redirect()->route('admin.new-kyc');
     }
     
     public function cancel(){

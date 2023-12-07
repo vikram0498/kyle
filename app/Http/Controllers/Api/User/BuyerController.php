@@ -766,8 +766,11 @@ class BuyerController extends Controller
                 $fetchBuyer->redFlag = $fetchBuyer->redFlagedData()->where('user_id', auth()->user()->id)->exists();
                 $fetchBuyer->totalBuyerLikes = totalLikes($fetchBuyer->id);
                 $fetchBuyer->totalBuyerUnlikes = totalUnlikes($fetchBuyer->id);
-                $fetchBuyer->redFlagShow =  $fetchBuyer->redFlagedData()->where('user_id', auth()->user()->id)->where('status','!=',1)->exists();
+                $fetchBuyer->redFlagShow =  $fetchBuyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
                 $fetchBuyer->createdByAdmin =  ($fetchBuyer->created_by == 1) ? true : false;
+
+                $fetchBuyer->contact_preferance_id = $fetchBuyer->contact_preferance;
+
                 $fetchBuyer->contact_preferance = $fetchBuyer->contact_preferance ? config('constants.contact_preferances')[$fetchBuyer->contact_preferance] : '';
                 $fetchBuyer->liked = false;
                 $fetchBuyer->disliked = false;
@@ -783,6 +786,8 @@ class BuyerController extends Controller
                 $tmp['redFlagShow'] = $fetchBuyer->redFlagShow;
                 $tmp['createdByAdmin'] = $fetchBuyer->createdByAdmin;
                 $tmp['contact_preferance'] = $fetchBuyer->contact_preferance;
+                $tmp['contact_preferance_id'] = $fetchBuyer->contact_preferance_id;
+
                 $tmp['liked'] = $fetchBuyer->liked;
                 $tmp['disliked'] = $fetchBuyer->disliked;
 

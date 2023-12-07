@@ -165,8 +165,9 @@
             @this.emit('initializePlugins');
         } else if(pr == 'parking'){
             @this.emit('initializePlugins');
+        }else if(pr == 'park'){
+            @this.emit('initializePlugins');
         }
-        
 
         
     });

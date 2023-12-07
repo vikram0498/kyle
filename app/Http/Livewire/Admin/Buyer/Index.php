@@ -84,6 +84,7 @@ class Index extends Component
     }
 
     private function rules (){
+       
         $rules = [
             'first_name' => ['required'], 
             'last_name' => ['required'], 
@@ -136,7 +137,8 @@ class Index extends Component
                 // $rules['arv_max'] = ['required', 'numeric', !empty($this->state['arv_max']) ? new CheckMaxValue($this->state['arv_max'], 'arv_max') : ''];
 
         }
-        if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){            
+        
+        if(!isset($this->state['property_type']) || (!empty($this->state['property_type']) && !array_intersect([7,14], $this->state['property_type']))){          
             $rules['stories_min'] = ['required', 'numeric', !empty($this->state['stories_max']) ? new CheckMinValue($this->state['stories_max'], 'stories_max') : ''];
             $rules['stories_max'] = ['required', 'numeric', !empty($this->state['stories_min']) ? new CheckMaxValue($this->state['stories_min'], 'stories_min') : ''];
         }
@@ -163,10 +165,12 @@ class Index extends Component
             $rules['value_add'] = ['required'];
             $rules['building_class'] = ['required','array', 'in:'.implode(',', array_keys($this->buildingClassValue))];
 
-            $rules['rooms'] = ['required'];
-
         }
 
+        if(!empty($this->state['property_type']) && array_intersect([15], $this->state['property_type'])){
+            $rules['rooms'] = ['required'];
+        }
+      
         if(!empty($this->state['property_type']) && array_intersect([14], $this->state['property_type'])){
             $rules['park'] = ['required','in:'.implode(',', array_keys($this->park))];
         }
@@ -202,7 +206,8 @@ class Index extends Component
 
     private function validatiionForm(){
         if(!$this->updateMode){
-            Validator::make($this->state, $this->rules(),[
+          
+            $validator = Validator::make($this->state, $this->rules(),[
                 'phone.required' => 'The contact number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
@@ -216,6 +221,15 @@ class Index extends Component
                 'unit_max'=>'maximum units',
                 'park'=>'park owned/tenant owned',
             ])->validate();
+
+            // if ($validator->fails()) {
+            //     // Get the messages from the Validator instance
+            //     $messages = $validator->messages();
+            
+            //     dd($messages);
+               
+            // }
+
         } else {
             $rules = $this->rules();
 
@@ -291,16 +305,18 @@ class Index extends Component
 
                 if(isset($this->state['state']) && !empty($this->state['state'])){
                     $this->state['state']   =  array_map('intval',$this->state['state']);
-                    // $this->state['state'] = [(int)$this->state['state']];
                 }
 
                 if(isset($this->state['city']) && !empty($this->state['city'])){
                     $this->state['city']    =  array_map('intval',$this->state['city']);
-                    // $this->state['city']       = [(int)$this->state['city']];
                 }
 
                 if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                    $this->state['zoning'] = json_encode($this->state['zoning']);
+                    $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+                }
+    
+                if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
+                    $this->state['building_class'] = array_map('intval',$this->state['building_class']);
                 }
 
                 if(isset($this->state['parking']) && !empty($this->state['parking'])){
@@ -373,7 +389,12 @@ class Index extends Component
         $this->state['phone'] = $buyer->userDetail->phone;
 
         $this->state['zoning'] = json_decode($this->state['zoning'],true);
-         
+        
+
+        if(!empty($this->state['property_type']) && array_intersect([10,11,14,15], $this->state['property_type'])){
+            $this->multiFamilyBuyer = true;
+        }
+
         $countryName = $buyer->country;
         $stateId = $buyer->state;
         $cityId = $buyer->city;
@@ -440,7 +461,11 @@ class Index extends Component
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = json_encode($this->state['zoning']);
+                $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+            }
+
+            if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
+                $this->state['building_class'] = array_map('intval',$this->state['building_class']);
             }
 
             if(isset($this->state['parking']) && !empty($this->state['parking'])){

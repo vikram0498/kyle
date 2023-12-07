@@ -1056,3 +1056,35 @@ body .datepicker .datepicker-years .table-condensed{
     max-width: 200px;
     margin: 0 auto;
 }
+
+/* tablisting  */
+
+.kyclisting_tab {
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #ffffff;
+    padding: 25px 20px 25px;
+    border: none;
+    height: 100%;
+}
+
+.kyclisting_tab .nav-link {
+    padding: 15px 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0A2540;
+    border-color: #eaeceb;
+}
+
+.kyclisting_tab .nav-link.active {
+    background-color: #3f53fe;
+    border-color: #3f53fe;
+}
+
+.kyclisting_tab .tab-content{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #ffffff;
+    padding: 25px 20px 25px;
+    border: none;
+}

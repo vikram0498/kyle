@@ -376,7 +376,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.park')}}<span class="text-danger">*</span> </label>
-                    <select class="form-control" wire:model.defer="state.park">
+                    <select class="form-control" wire:model.defer="state.park" data-property="park" >
                         <option value="null">Select {{ __('cruds.buyer.fields.park')}}</option>
                         @foreach ($park as $key=>$item)
                             <option value="{{$key}}"> {{$item}}</option>

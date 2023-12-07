@@ -613,7 +613,7 @@ class SearchBuyerController extends Controller
                 $liked = false;
                 $disliked = false;
                 
-                $buyerDetails = $buyer->buyersPurchasedByUser()->first() ?  $buyer->buyersPurchasedByUser()->first()->buyer->userDetail : '';
+                $buyerDetails = $buyer->buyersPurchasedByUser()->first() ?  $buyer->buyersPurchasedByUser()->first()->buyer->userDetail : $buyer->userDetail;
 
                 $name = $buyerDetails->name ?? '';
 
@@ -635,9 +635,9 @@ class SearchBuyerController extends Controller
                     if($request->activeTab == 'my_buyers'){
 
                         if($buyerDetails){
-                            $buyer->name =  $name;
-                            $buyer->first_name = $buyerDetails->first_name;
-                            $buyer->last_name = $buyerDetails->last_name;
+                            $buyer->name =  ucwords($name);
+                            $buyer->first_name = ucwords($buyerDetails->first_name);
+                            $buyer->last_name = ucwords($buyerDetails->last_name);
                             $buyer->email = $buyerDetails->email;
                             $buyer->phone = $buyerDetails->phone;
                         }
