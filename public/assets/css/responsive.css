@@ -419,13 +419,13 @@
   }
   .property-critera-block {
     display: block;
+    background-position: 98% 86%;
+    background-size: 85px;
+    padding-bottom: 40px;
   }
   .cornor-block {
     /* position: unset; */
-    margin: 20px 0;
     justify-content: center;
-    bottom: 0;
-    top: 70px;
   }
   .account-in {
     max-width: 100%;

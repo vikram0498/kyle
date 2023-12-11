@@ -287,7 +287,7 @@ const ResultPage = ({ setIsFiltered }) => {
                     </div>
                   </div>
                   <div className="tab-content" id="pills-tabContent">
-                    {showLoader && <Loader />}
+                    {showLoader && <div className="buyer-result-loader"><Loader /></div>}
                     {!showLoader && (
                       <div>
                         <MyBuyersResult

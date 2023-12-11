@@ -6,13 +6,13 @@ const BuyerCardResult = (props) => {
     const {data,index,activeTab,handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag} = props;
     let PreferenceIcons = './assets/images/contact-preferance.svg';
     if(data.contact_preferance_id === 1){
-        PreferenceIcons = './assets/images/Email-Preference.svg';
+        PreferenceIcons = './assets/images/Email-Preference-new.svg';
     }else if(data.contact_preferance_id === 2){
-        PreferenceIcons = './assets/images/Text-Preference.svg';
+        PreferenceIcons = './assets/images/Text-Preference-new.svg';
     }else if(data.contact_preferance_id === 3){
-        PreferenceIcons = './assets/images/Call-Preference.svg';
+        PreferenceIcons = './assets/images/Call-Preference-new.svg';
     }else if(data.contact_preferance_id === 4){
-        PreferenceIcons = './assets/images/1.svg';
+        PreferenceIcons = './assets/images/no-preference-new.svg';
     }
     // const entering = (e) => {
     //     e.children[0].style.borderTopColor = '#3F53FE';
@@ -22,24 +22,24 @@ const BuyerCardResult = (props) => {
   return (
     <div className="col-12 col-lg-6" >
         <div className={"property-critera-block buyer-blog-area property-section-"+data.id}>
+            {data.profile_tag_name &&
+                <OverlayTrigger
+                    placement="top"
+                    style={{ backgroundColor: "green" }}
+                    overlay={ <Tooltip> Profile Tag </Tooltip>}>
+                    <div className="buyer-active-verfiy">
+                        {(data.profile_tag_image) && <img
+                            src={data.profile_tag_image}
+                            className="img-fluid profile-tag-image"
+                            alt=""
+                            title=""
+                            />
+                        }
+                        <span>{data.profile_tag_name}</span>
+                    </div>
+                </OverlayTrigger>
+            }
             <div className="critera-card">
-                {data.profile_tag_name &&
-                    <OverlayTrigger
-                        placement="top"
-                        style={{ backgroundColor: "green" }}
-                        overlay={ <Tooltip> Profile Tag </Tooltip>}>
-                        <div className="buyer-active-verfiy">
-                            {(data.profile_tag_image) && <img
-                                src={data.profile_tag_image}
-                                className="img-fluid profile-tag-image"
-                                alt=""
-                                title=""
-                                />
-                            }
-                            <span>{data.profile_tag_name}</span>
-                        </div>
-                    </OverlayTrigger>
-                }
                 <div className="center-align position-relative">
                 { 
                     (data.buyer_profile_image !='' && data.buyer_profile_image != undefined) ? 
@@ -92,57 +92,121 @@ const BuyerCardResult = (props) => {
                      "")
                     }
                 </div>
+                <div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Premium buyer':'Your buyer' }</div>
             </div>
+           
+
             <div className={"property-critera-details unhide-"+index}>
                 <ul className="list-unstyled mb-0">
                     <li>
-                        <span className="detail-icon"><img alt="user-gradient" src="/assets/images/user-gradient.svg" className="img-fluid" /></span>
-                        <span className="name-dealer">{data.name}</span>
+                        <span className="detail-icon"><img alt="user-gradient" src="/assets/images/uservbox.svg" className="img-fluid" /></span>
+                        <span className="name-dealer">{data.name} </span>
                     </li>
                     <li>
-                        <span className="detail-icon"><img alt="phone-gradient" src="/assets/images/phone-gradient.svg" className="img-fluid" /></span>
+                        <span className="detail-icon">
+                            <img alt="phone-gradient" src="/assets/images/callingbox.svg" className="img-fluid" />
+                            {
+                                data.phone_verified && 
+                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
+                                    <span className="mx-2 verify_icon">
+                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                                    </span>
+                                </OverlayTrigger>
+                            }
+                        </span>
                         {(activeTab ==='more_buyers')? 
                             <span className="name-dealer">{data.phone}</span>
                             :
+                            <>
                             <a href={'tel:+'+data.phone} className="name-dealer">{data.phone}</a>
-                        }
-                    </li>
-                    <li>
-                        <span className="detail-icon"><img alt="email" src="/assets/images/email.svg" className="img-fluid" /></span>
-                        {(activeTab ==='more_buyers')? 
-                            <span className="name-dealer">{data.email}</span>
-                            :
-                            <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+                            </>
                         }
                     </li>
                     <li>
                         <span className="detail-icon">
+                            <img alt="email" src="/assets/images/emailbox.svg" className="img-fluid" />                            
+                                {
+                                data.email_verified && 
+                                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
+                                        <span className="mx-2 verify_icon">
+                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                                        </span>
+                                    </OverlayTrigger>
+                                }
+                           
+                        </span>
+
+                        {(activeTab ==='more_buyers')? 
+                            <span className="name-dealer">{data.email}</span>
+                            :
+                            <>
+                                <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+                            </>
+                        }
+                    </li>
+                    {/* <li>
+                        <span className="detail-icon">
                             <img alt="preference" src={PreferenceIcons} className="img-fluid" />
                         </span>
                         <span className="name-dealer">{data.contact_preferance}</span>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
             <div className="cornor-block">
+                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Contact Preference</Tooltip>} >
+                    <img
+                    src={PreferenceIcons}
+                    className="img-fluid"
+                    />
+                </OverlayTrigger>
+                {(data.driver_license_verified) && 
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
+                        <img
+                        src="/assets/images/drivers -license.svg"
+                        className="img-fluid"
+                        />
+                    </OverlayTrigger>
+                }
+                {(data.llc_verified) && 
+                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Proof of Funds</Tooltip>} >
+                    <img
+                    src="/assets/images/Proof-of-Funds.svg"
+                    className="img-fluid"
+                    />
+                </OverlayTrigger>
+                }
+                {(data.proof_of_funds_verified) && 
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>LLC Verification</Tooltip>} >
+                        <img
+                        src="/assets/images/LLC-verification.svg"
+                        className="img-fluid"
+                        />
+                    </OverlayTrigger>
+                }
                 {
                     (data.createdByAdmin)?
-                        (data.redFlagShow) ? <>
+                        (data.redFlagShow) ? 
+                        <>
                             <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
-                                <img alt="flag" src="/assets/images/red-flag.svg" className="img-fluid" />
+                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
+                                <img
+                                src="/assets/images/red-flag-bg.svg"
+                                className="img-fluid"
+                                />
+                            </OverlayTrigger>
                             </div>
                         </>:
                         <div className="show-hide-data">
                             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
-                                <button type="button" className="unhide-btn" onClick={()=>{handleClickConfirmation(data.id,index)}}>
+                                <div className='pointerswal' onClick={()=>{handleClickConfirmation(data.id,index)}}>
                                     <span className="icon-unhide" >
                                         <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" />
                                     </span>
-                                </button>
+                                </div>
                             </OverlayTrigger>
                         </div>:''
                 }
             </div>
-            <div className={data.createdByAdmin ? 'purchase-buyer':'your-buyer' }>{data.createdByAdmin ? 'Premium buyer':'Your buyer' }</div>
         </div>
     </div>
   )

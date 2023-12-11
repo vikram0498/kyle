@@ -281,6 +281,7 @@ const Support = () => {
                                 <Select
                                   options={contactPreferenceOption}
                                   name={name}
+                                  className="select"
                                   placeholder="Select Contact Preference"
                                   isClearable={true}
                                   onChange={(e) => {

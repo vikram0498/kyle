@@ -21,7 +21,7 @@ const SuccessPage = () => {
                   <div className="col-12 text-center">
                     <div className="heading">Thank you!</div>
                     <div className="subheading my-md-3 my-2">
-                      Your profile has been successfully verfied.
+                      Your profile has been successfully verified.
                     </div>
                     {/* <div className="subheading my-md-3 my-2">
                       Please wait for approval

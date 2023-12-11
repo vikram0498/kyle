@@ -5,13 +5,16 @@ import { toast } from "react-toastify";
 import { useFormError } from "../../../hooks/useFormError";
 import ButtonLoader from "../../partials/MiniLoader";
 import { useParams } from "react-router-dom";
+import LinkExpirePage from "../../pages/Sellers/LinkExpirePage";
 
 const VerifyAndSetPassword = () => {
   const { userId, token } = useParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLinkExpire, setIsLinkExpire] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
   const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
   const [showPassoword, setshowPassoword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -64,6 +67,7 @@ const VerifyAndSetPassword = () => {
   };
   const fetchUserEmail = async () => {
     try {
+      setLoader(true);
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
@@ -74,18 +78,27 @@ const VerifyAndSetPassword = () => {
       if (response.data.status) {
         setEmail(response.data.data);
       }
+      setTimeout(() => {
+        setLoader(false);
+        console.log("hi3");
+      }, 500);
+
     } catch (error) {
       if (error.response) {
         if(error.response.data.is_verify_email){
-          navigate('/login');
+          setIsLinkExpire(true);
+          setTimeout(() => {
+            setLoader(false);
+            console.log("hi");
+          }, 500);
         }
         if (error.response.data.validation_errors) {
           setErrors(error.response.data.validation_errors);
         }
         if (error.response.data.error) {
-          toast.error(error.response.data.error, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          // toast.error(error.response.data.error, {
+          //   position: toast.POSITION.TOP_RIGHT,
+          // });
         }
       }
     }
@@ -94,121 +107,131 @@ const VerifyAndSetPassword = () => {
     fetchUserEmail();
   }, []);
   return (
-    <Layout>
-      <div className="account-in">
-        <div className="center-content">
-          <img src="/assets/images/logo.svg" className="img-fluid" alt="" />
-          <h2>Verify & Set Password</h2>
-        </div>
-        <form method="post" onSubmit={submitSetPasswordForm}>
-          <div className="row">
-            <div className="col-12 col-lg-12">
-              <div className="form-group ">
-                <label>Email</label>
-                <div className="form-group-inner">
-                  <span className="form-icon">
-                    <img
-                      src="/assets/images/mail.svg"
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </span>
-                  <input
-                    type="email"
-                    placeholder="Enter Your Email"
-                    name=""
-                    value={email}
-                    className="form-control"
-                    disabled="disabled"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-lg-12">
-              <div className="form-group">
-                <label>password</label>
-                <div className="form-group-inner">
-                  <span className="form-icon">
-                    <img
-                      src="/assets/images/password.svg"
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </span>
-                  <input
-                    id="pass_log_id"
-                    type={showPassoword ? "text" : "password"}
-                    placeholder="Enter Your Password"
-                    name="password"
-                    className="form-control"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <span
-                    onClick={togglePasswordVisibility}
-                    className={`form-icon-password ${
-                      showPassoword ? "eye-open" : "eye-close"
-                    }`}
-                  >
-                    <img
-                      src="/assets/images/eye.svg"
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </span>
-                </div>
-                {renderFieldError("password")}
-              </div>
-            </div>
-            <div className="col-12 col-lg-12">
-              <div className="form-group mb-0">
-                <label>Confirm password</label>
-                <div className="form-group-inner">
-                  <span className="form-icon">
-                    <img
-                      src="/assets/images/password.svg"
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </span>
-                  <input
-                    id="conpass_log_id"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Enter Your Confirm Password"
-                    name="password_confirmation"
-                    className="form-control"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                  />
-                  <span
-                    onClick={toggleConfirmPasswordVisibility}
-                    className={`form-icon-password toggle-password ${
-                      showConfirmPassword ? "eye-open" : "eye-close"
-                    }`}
-                  >
-                    <img
-                      src="/assets/images/eye.svg"
-                      className="img-fluid"
-                      alt=""
-                    />
-                  </span>
-                </div>
-                {renderFieldError("password_confirmation")}
-              </div>
-            </div>
-            <div className="col-12 col-lg-12">
-              <div className="form-group-btn mb-0">
-                <button
-                  type="submit"
-                  className="btn btn-fill"
-                  disabled={loading ? "disabled" : ""}
-                >
-                  Submit {loading ? <ButtonLoader /> : ""}{" "}
-                </button>
-              </div>
-            </div>
+    <>
+     {loader ? 
+      <div className="loader" style={{ textAlign: "center", marginTop:'25%' }}>
+        <img alt="loader" src="/assets/images/loader.svg" />
+      </div> 
+      :
+      isLinkExpire ? <LinkExpirePage type="buyer-password-verify"/>  :
+      <Layout>
+        <div className="account-in">
+          <div className="center-content">
+            <img src="/assets/images/logo.svg" className="img-fluid" alt="" />
+            <h2>Verify & Set Password</h2>
           </div>
-        </form>
-      </div>
-    </Layout>
+          <form method="post" onSubmit={submitSetPasswordForm}>
+            <div className="row">
+              <div className="col-12 col-lg-12">
+                <div className="form-group ">
+                  <label>Email</label>
+                  <div className="form-group-inner">
+                    <span className="form-icon">
+                      <img
+                        src="/assets/images/mail.svg"
+                        className="img-fluid"
+                        alt=""
+                      />
+                    </span>
+                    <input
+                      type="email"
+                      placeholder="Enter Your Email"
+                      name=""
+                      value={email}
+                      className="form-control"
+                      disabled="disabled"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-lg-12">
+                <div className="form-group">
+                  <label>password</label>
+                  <div className="form-group-inner">
+                    <span className="form-icon">
+                      <img
+                        src="/assets/images/password.svg"
+                        className="img-fluid"
+                        alt=""
+                      />
+                    </span>
+                    <input
+                      id="pass_log_id"
+                      type={showPassoword ? "text" : "password"}
+                      placeholder="Enter Your Password"
+                      name="password"
+                      className="form-control"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span
+                      onClick={togglePasswordVisibility}
+                      className={`form-icon-password ${
+                        showPassoword ? "eye-open" : "eye-close"
+                      }`}
+                    >
+                      <img
+                        src="/assets/images/eye.svg"
+                        className="img-fluid"
+                        alt=""
+                      />
+                    </span>
+                  </div>
+                  {renderFieldError("password")}
+                </div>
+              </div>
+              <div className="col-12 col-lg-12">
+                <div className="form-group mb-0">
+                  <label>Confirm password</label>
+                  <div className="form-group-inner">
+                    <span className="form-icon">
+                      <img
+                        src="/assets/images/password.svg"
+                        className="img-fluid"
+                        alt=""
+                      />
+                    </span>
+                    <input
+                      id="conpass_log_id"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Enter Your Confirm Password"
+                      name="password_confirmation"
+                      className="form-control"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <span
+                      onClick={toggleConfirmPasswordVisibility}
+                      className={`form-icon-password toggle-password ${
+                        showConfirmPassword ? "eye-open" : "eye-close"
+                      }`}
+                    >
+                      <img
+                        src="/assets/images/eye.svg"
+                        className="img-fluid"
+                        alt=""
+                      />
+                    </span>
+                  </div>
+                  {renderFieldError("password_confirmation")}
+                </div>
+              </div>
+              <div className="col-12 col-lg-12">
+                <div className="form-group-btn mb-0">
+                  <button
+                    type="submit"
+                    className="btn btn-fill"
+                    disabled={loading ? "disabled" : ""}
+                  >
+                    Submit {loading ? <ButtonLoader /> : ""}{" "}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Layout>
+    }
+    </>
+
   );
 };
 export default VerifyAndSetPassword;

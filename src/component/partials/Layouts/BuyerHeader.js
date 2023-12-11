@@ -7,12 +7,12 @@ import DarkMode from "./DarkMode";
 
 function BuyerHeader() {
   const navigate = useNavigate();
-  const { setLogout, getTokenData, getLocalStorageUserdata } = useAuth();
+  const { setLogout, getTokenData, getLocalStorageUserdata,setLocalStorageUserdata } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
-      isActiveUser(userData.id);
+      isActiveUser(userData);
       if (userData !== null) {
         if (userData.role === 2) {
           navigate("/");
@@ -24,8 +24,10 @@ function BuyerHeader() {
     }
   }, []);
 
-  const isActiveUser = async (userId) => {
+  const isActiveUser = async (userData) => {
     try{
+      console.log(userData,'userData232');
+      let userId = userData.id;
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
@@ -36,7 +38,10 @@ function BuyerHeader() {
       let response = await axios.post(url, {user_id:userId},{ headers: headers });
       console.log(response.data,'response');
       if(response.data.status){
-        if(!response.data.user_status){
+        if(response.data.user_status){
+          userData.is_verified = response.data.is_buyer_verified;
+          setLocalStorageUserdata(userData);
+        }else{
           setLogout();
         }
       }
@@ -160,7 +165,7 @@ function BuyerHeader() {
                             src="/assets/images/search-log.svg"
                             className="img-fluid"
                           />
-                          Profile verification
+                          Profile Verification
                         </Link>
                       </li>
                       }

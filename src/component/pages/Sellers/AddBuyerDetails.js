@@ -306,6 +306,9 @@ function AddBuyerDetails() {
   const handleCopyToClipBoard = (url) => {
     //console.log(url,'url');
     navigator.clipboard.writeText(url);
+    setTimeout(() => {
+      setCopySuccess(false);
+    }, 1000);
     toast.success("Url Copied Successfully !", {
       position: toast.POSITION.TOP_RIGHT,
     });
@@ -323,25 +326,14 @@ function AddBuyerDetails() {
         let copyUrl = baseURL + "/add-buyer/" + token;
         console.log(copyUrl, "copyUrl");
         setGeneratedUrl(copyUrl);
-        navigator.clipboard
-          .writeText(copyUrl)
-          .then(() => {
-            console.log("case 1");
-            setCopySuccess(true);
-            setCopyLoading(false);
-            toast.success("Url Generated Successfully", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            setTimeout(() => {
-              setCopySuccess(false);
-            }, 5000);
-          })
-          .catch((error) => {
-            setCopyLoading(false);
-            toast.error("Failed to copy URL", {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-          });
+        setCopySuccess(true);
+        setCopyLoading(false);
+        toast.success("Url Generated Successfully", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        // setTimeout(() => {
+        //   setCopySuccess(false);
+        // }, 5000);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -852,6 +844,7 @@ function AddBuyerDetails() {
                                     <Select
                                       options={marketPreferanceOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select MLS Status"
                                       isClearable={true}
                                       onChange={(e) => {
@@ -887,6 +880,7 @@ function AddBuyerDetails() {
                                     <Select
                                       options={contactPreferanceOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select Contact Preference"
                                       isClearable={true}
                                       onChange={(e) => {
@@ -922,6 +916,7 @@ function AddBuyerDetails() {
                                       <Select
                                         options={propertyTypeOption}
                                         name={name}
+                                        className="select"
                                         placeholder="Select Property Type"
                                         setMultiselectOption={
                                           setPropertyTypeValue
@@ -968,6 +963,7 @@ function AddBuyerDetails() {
                                           <Select
                                             options={zoningOption}
                                             name={name}
+                                            className="select"
                                             placeholder="Select zoning"
                                             onChange={(e) => {
                                               onChange(e);
@@ -1011,6 +1007,7 @@ function AddBuyerDetails() {
                                           <Select
                                             options={utilitiesOption}
                                             name={name}
+                                            className="select"
                                             placeholder="Select Utilities"
                                             onChange={(e) => {
                                               onChange(e);
@@ -1053,6 +1050,7 @@ function AddBuyerDetails() {
                                           <Select
                                             options={sewerOption}
                                             name={name}
+                                            className="select"
                                             placeholder="Select Sewage"
                                             onChange={(e) => {
                                               onChange(e);
@@ -1162,6 +1160,7 @@ function AddBuyerDetails() {
                                           <Select
                                             options={buildingClassNamesOption}
                                             name={name}
+                                            className="select"
                                             placeholder="Select Building class"
                                             onChange={(e) => {
                                               onChange(e);
@@ -1257,6 +1256,7 @@ function AddBuyerDetails() {
                                     <Select
                                       options={purchaseMethodsOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select Purchase Method"
                                       setMultiselectOption={
                                         setPurchaseMethodsValue
@@ -2117,6 +2117,7 @@ function AddBuyerDetails() {
                                 <Controller
                                   control={control}
                                   name="parking"
+                                  className="select"
                                   rules={{ required: "Parking is required" }}
                                   render={({
                                     field: { value, onChange, name },
@@ -2124,6 +2125,7 @@ function AddBuyerDetails() {
                                     <Select
                                       options={parkingOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select parking"
                                       setMultiselectOption={setParkingValue}
                                       onChange={(e) => {
@@ -2156,6 +2158,7 @@ function AddBuyerDetails() {
                                   }) => (
                                     <Select
                                       options={buyerTypeOption}
+                                      className="select"
                                       name={name}
                                       placeholder="Select Buyer Type"
                                       setMultiselectOption={setBuyerTypeValue}
@@ -2194,6 +2197,7 @@ function AddBuyerDetails() {
                                       <Select
                                         options={parkOption}
                                         name={name}
+                                        className="select"
                                         placeholder="Select Park Owned/Tenant Owned"
                                         setMultiselectOption={setBuyerTypeValue}
                                         onChange={(e) => {

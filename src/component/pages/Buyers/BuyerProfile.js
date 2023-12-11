@@ -1,7 +1,7 @@
 import React from "react";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
-import { Link,useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -9,12 +9,12 @@ import { useFormError } from "../../../hooks/useFormError";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import Swal from "sweetalert2";
-
+import MiniLoader from "../../partials/MiniLoader";
 const BuyerProfile = () => {
-  const { token } = useParams();
   const { getTokenData, setLogout } = useAuth();
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [loader, setLoader] = useState(true);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const { setErrors } = useFormError();
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -88,6 +88,7 @@ const BuyerProfile = () => {
   };
   const contactPreferanceUpdate = async (data) => {
     try {
+      setButtonLoader(true);
       let response = await axios.post(
         apiUrl + "update-buyer-contact-pref",
         { contact_preference: data },
@@ -98,12 +99,14 @@ const BuyerProfile = () => {
       if (response.data.status) {
         fetchBuyerData();
         setLoader(false);
+        setButtonLoader(false);
         toast.success(response.data.message, {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
     } catch (error) {
       if (error.response) {
+        setButtonLoader(false);
         if (error.response.status === 401) {
           setLogout();
         }
@@ -151,39 +154,7 @@ const BuyerProfile = () => {
       }
     });
   };
-
-  const sendPaymentDetails = async () => {
-    try {
-      let headers = {
-        Accept: "application/json",
-        Authorization: "Bearer " + getTokenData().access_token,
-        "auth-token": getTokenData().access_token,
-      };
-      const response = await axios.post(
-        `${apiUrl}checkout-success`,
-        { token: token },
-        { headers: headers }
-      );
-      if (response.data.status) {
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.errors) {
-          setErrors(error.response.errors);
-        }
-        if (error.response.error) {
-          toast.error(error.response.error, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
-        }
-      }
-    }
-  };
-
   useState(() => {
-    if(token){
-      sendPaymentDetails();
-    }
     fetchBuyerData();
   }, []);
   return (
@@ -208,7 +179,7 @@ const BuyerProfile = () => {
                 <div className="col-12 col-lg-4">
                   <div className="personal-information card-box-inner">
                     <h3 className="text-capitalize">personal information</h3>
-                    <p>Lorem Ipsum is simply dummy text of the .</p>
+                    {/* <p>Lorem Ipsum is simply dummy text of the .</p> */}
                     <div className="contact-update">
                       <div className="contact-update-item">
                         <a href={void 0}>
@@ -546,7 +517,7 @@ const BuyerProfile = () => {
                                 ''}
                             </h3>
                             <p className="mb-0">
-                              Lorem Ipsum is simply dummy text of the .
+                              {currentBuyerData.description}
                             </p>
                           </div>
                         </div>
@@ -682,13 +653,18 @@ const BuyerProfile = () => {
                                         aria-expanded="false"
                                       >
                                         <span className="commentic">
-                                          <img
+                                          {(buttonLoader)? 
+                                            <MiniLoader/>
+                                            :
+                                            <img
                                             src={
-                                              profileIcons[
-                                                currentBuyerData.contact_value
-                                              ]
-                                            }
-                                          />
+                                                profileIcons[
+                                                  currentBuyerData.contact_value
+                                                ]
+                                              }
+                                            />
+                                          }
+                                          
                                         </span>
                                         <span className="dropdown-arr">
                                           <svg

@@ -8,6 +8,7 @@ import Protected from "../util/Protected";
 import BoostYourProfile from "../component/pages/Buyers/BoostYourProfile";
 import BoostYourProfilePurchased from "../component/pages/Buyers/BoostYourProfilePurchased";
 import MultiStepForm from "../component/pages/Buyers/MultiStepForm";
+import PaymentConfirm from "../component/pages/Buyers/PaymentConfirm";
 const Buyers = () => {
   return (
     <Routes>
@@ -29,6 +30,7 @@ const Buyers = () => {
         path="/boost-your-profile"
         element={<Protected Component={BoostYourProfile} />}
       />
+      <Route path="/payment-confirm/:token" element={<PaymentConfirm/>} />
       <Route
         path="/boost-your-profile-purchased"
         element={<Protected Component={BoostYourProfilePurchased} />}

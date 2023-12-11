@@ -1,6 +1,6 @@
 import React from "react";
-
-const LinkExpirePage = () => {
+import {Link } from "react-router-dom";
+const LinkExpirePage = ({type}) => {
     const body = document.querySelector('body');
     body.classList.remove('bg-img');
     return (
@@ -16,8 +16,15 @@ const LinkExpirePage = () => {
                             </div>
                             <div className="col-12 text-center">
                                 <div className="heading">The link has expired</div>
-                                <div className="subheading my-md-3 my-2">Oops! This URL is not valid anymore</div>
+                                {(type === 'buyer-password-verify') ?
+                                    <>
+                                        <div className="subheading my-md-3 my-2">Your Email is already Verified. Please Login</div>
+                                        <Link to='/login'> <button className="btn btn-primary">Login</button></Link>
+                                    </>:
+                                        <div className="subheading my-md-3 my-2">Oops! This URL is not valid anymore</div>
+                                }
                             </div>
+                           
                         </div>
                     </div>
                 </div>

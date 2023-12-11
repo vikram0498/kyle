@@ -744,6 +744,7 @@ function CopyAddBuyer() {
                                   <Select
                                     options={marketPreferanceOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select MLS Status"
                                     isClearable={true}
                                     onChange={(e) => {
@@ -778,6 +779,7 @@ function CopyAddBuyer() {
                                   <Select
                                     options={contactPreferanceOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select Contact Preference"
                                     isClearable={true}
                                     onChange={(e) => {
@@ -830,6 +832,7 @@ function CopyAddBuyer() {
                                     <Select
                                       options={propertyTypeOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select Property Type"
                                       setMultiselectOption={
                                         setPropertyTypeValue
@@ -872,6 +875,7 @@ function CopyAddBuyer() {
                                         <Select
                                           options={zoningOption}
                                           name={name}
+                                          className="select"
                                           placeholder="Select zoning"
                                           onChange={(e) => {
                                             onChange(e);
@@ -915,6 +919,7 @@ function CopyAddBuyer() {
                                         <Select
                                           options={utilitiesOption}
                                           name={name}
+                                          className="select"
                                           placeholder="Select Utilities"
                                           onChange={(e) => {
                                             onChange(e);
@@ -955,6 +960,7 @@ function CopyAddBuyer() {
                                         <Select
                                           options={sewerOption}
                                           name={name}
+                                          className="select"
                                           placeholder="Select Sewage"
                                           onChange={(e) => {
                                             onChange(e);
@@ -1063,6 +1069,7 @@ function CopyAddBuyer() {
                                         <Select
                                           options={buildingClassNamesOption}
                                           name={name}
+                                          className="select"
                                           placeholder="Select Building class"
                                           onChange={(e) => {
                                             onChange(e);
@@ -1158,6 +1165,7 @@ function CopyAddBuyer() {
                                   <Select
                                     options={purchaseMethodsOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select Purchase Method"
                                     setMultiselectOption={
                                       setPurchaseMethodsValue
@@ -2015,6 +2023,7 @@ function CopyAddBuyer() {
                                   <Select
                                     options={parkingOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select parking"
                                     setMultiselectOption={setParkingValue}
                                     onChange={(e) => {
@@ -2048,6 +2057,7 @@ function CopyAddBuyer() {
                                   <Select
                                     options={buyerTypeOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select Buyer Type"
                                     setMultiselectOption={setBuyerTypeValue}
                                     onChange={(e) => {
@@ -2083,6 +2093,7 @@ function CopyAddBuyer() {
                                     field: { value, onChange, name },
                                   }) => (
                                     <Select
+                                      className="select"
                                       options={parkOption}
                                       name={name}
                                       placeholder="Select Park Owned/Tenant Owned"

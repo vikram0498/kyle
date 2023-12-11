@@ -258,6 +258,9 @@ function EditBuyerProfile() {
       }
     } catch (error) {
       if (error.response) {
+        if (error.response.status === 401) {
+          setLogout();
+        }
         if (error.response.data.validation_errors) {
           setErrors(error.response.data.validation_errors);
         }
@@ -699,6 +702,7 @@ function EditBuyerProfile() {
                         <input
                           type="file"
                           className="file-input"
+                          accept="image/png, image/jpg, image/jpeg"
                           onChange={(e) => handleProfileChange(e, 1)}
                         />
                         Upload Your Image {miniProfileLoader ? <MiniLoader /> : ""}{" "}
@@ -728,7 +732,7 @@ function EditBuyerProfile() {
                 <div className="col-12 col-lg-8">
                   <div className="card-box-inner">
                     <h3>Edit Profile</h3>
-                    <p>Lorem Ipsum is simply dummy text of the</p>
+                    {/* <p>Lorem Ipsum is simply dummy text of the</p> */}
                     <form
                       method="post"
                       onSubmit={handleSubmit(submitSingleBuyerForm)}
@@ -833,6 +837,14 @@ function EditBuyerProfile() {
                                 <p className="error">{errors.phone?.message}</p>
                               )}
                               {renderFieldError("phone")}
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-12">
+                            <label>
+                            Description
+                            </label>
+                            <div className="form-group">
+                              <textarea className="form-control" name="description" style={{height:'90px'}} defaultValue={currentBuyerData.description}></textarea>
                             </div>
                           </div>
                           <div className="col-12 col-lg-12">
@@ -949,6 +961,7 @@ function EditBuyerProfile() {
                                     name={name}
                                     placeholder="Select MLS Status"
                                     value={marketPreferance}
+                                    className="select"
                                     isClearable={true}
                                     onChange={(e) => {
                                       onChange(e);
@@ -984,6 +997,7 @@ function EditBuyerProfile() {
                                     name={name}
                                     value={contactPreferance}
                                     placeholder="Select Contact Preference"
+                                    className="select"
                                     isClearable={true}
                                     onChange={(e) => {
                                       onChange(e);
@@ -1019,6 +1033,7 @@ function EditBuyerProfile() {
                                       options={propertyTypeOption}
                                       name={name}
                                       value={propertyType}
+                                      className="select"
                                       placeholder="Select Property Type"
                                       setMultiselectOption={
                                         setPropertyTypeValue
@@ -1061,6 +1076,7 @@ function EditBuyerProfile() {
                                         <Select
                                           options={zoningOption}
                                           value={zoning}
+                                          className="select"
                                           name={name}
                                           placeholder="Select zoning"
                                           onChange={(e) => {
@@ -1098,6 +1114,7 @@ function EditBuyerProfile() {
                                           options={utilitiesOption}
                                           defaultValue={utilities}
                                           name={name}
+                                          className="select"
                                           placeholder="Select Utilities"
                                           onChange={(e) => {
                                             onChange(e);
@@ -1130,6 +1147,7 @@ function EditBuyerProfile() {
                                         <Select
                                           options={sewerOption}
                                           name={name}
+                                          className="select"
                                           defaultValue={sewer}
                                           placeholder="Select Sewage"
                                           onChange={(e) => {
@@ -1237,6 +1255,7 @@ function EditBuyerProfile() {
                                           defaultValue={
                                             currentBuyerData.building_class
                                           }
+                                          className="select"
                                           name={name}
                                           placeholder="Select Building class"
                                           onChange={(e) => {
@@ -1337,6 +1356,7 @@ function EditBuyerProfile() {
                                   <Select
                                     options={purchaseMethodsOption}
                                     name={name}
+                                    className="select"
                                     value={purchaseMethods}
                                     placeholder="Select Purchase Method"
                                     setMultiselectOption={
@@ -2158,6 +2178,7 @@ function EditBuyerProfile() {
                                   <Select
                                     options={parkingOption}
                                     name={name}
+                                    className="select"
                                     placeholder="Select parking"
                                     value={parkingValue}
                                     setMultiselectOption={setParkingValue}
@@ -2192,6 +2213,7 @@ function EditBuyerProfile() {
                                   <Select
                                     options={buyerTypeOption}
                                     name={name}
+                                    className="select"
                                     value={buyerTypeValue}
                                     placeholder="Select Buyer Type"
                                     setMultiselectOption={setBuyerTypeValue}
@@ -2230,6 +2252,7 @@ function EditBuyerProfile() {
                                     <Select
                                       options={parkOption}
                                       name={name}
+                                      className="select"
                                       placeholder="Select Park Owned/Tenant Owned"
                                       setMultiselectOption={setBuyerTypeValue}
                                       onChange={(e) => {

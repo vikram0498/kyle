@@ -387,7 +387,7 @@ const MyProfile = () => {
                       </div>
                       <div className="form-title mt-3">
                         <h5>
-                          Change Password{" "}
+                          Change Password <br/>
                           <span className="msg-passwrd">
                             (Leave blank if you don’t want to update password)
                           </span>

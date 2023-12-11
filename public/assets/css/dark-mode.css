@@ -367,3 +367,33 @@ body.dark .buyer-active-verfiy span{
 body.dark .ac-de-feeture {
   color: #fff;
 }
+body.dark .modal-video-main .modal-content{
+  border: 1px solid #9d9d9d;
+}
+body.dark .modal-video-main .modal-content .modal-header{
+  border-bottom-color: #9d9d9d;
+}
+body.dark .modal-video-main .modal-content .modal-header .btn-close{
+  filter: invert(1);
+  opacity: 1;
+}
+body.dark .your-buyer{
+  color: #1f1f1f;
+}
+
+body.dark .select div[id*="-placeholder"],
+body.dark .multi-select div[id*="-placeholder"],
+body.dark .select input[id*="-input"],
+body.dark .multi-select input[id*="-input"]{
+  color: #fff !important;
+}
+
+body.dark .buyer-blog-area .critera-card .price-img{
+  background-color: #818181;
+}
+.dark .linkExpire .heading {
+  color: #fff;
+}
+.dark .linkExpire .subheading {
+  color: #fff;
+}
