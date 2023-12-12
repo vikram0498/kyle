@@ -357,9 +357,11 @@ body.dark .profile-verification-st .cards .subheading:not(.profile-congtrs .card
 
 body.dark .buyer-active-verfiy::after{
   border-right-color: #4c4c4c;
+  border-left-color: #1f1f1f;
 }
 body.dark .buyer-active-verfiy{
-  background-color: #1f1f1f;
+  /* background-color: #1f1f1f; */
+  background-color: #4c4c4c;
 }
 body.dark .buyer-active-verfiy span{
   color: #fff;
@@ -396,4 +398,16 @@ body.dark .buyer-blog-area .critera-card .price-img{
 }
 .dark .linkExpire .subheading {
   color: #fff;
+}
+
+.dark  span.contact-preference.mx-1 img {
+  background-color: #ffffff;
+  padding: 5px;
+  border-radius: 25px;
+  max-width: 34px;
+}
+
+body.dark .property-critera-block,
+body.dark .cornor-block{
+  box-shadow: 8px 10px 23px 0px rgb(72 72 72 / 32%);
 }

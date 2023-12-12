@@ -14,8 +14,8 @@ const ApprorvedPage = ({handleNext}) => {
                             alt="expire link"
                         />
                     </div>
-                    <div className="heading">Congratulations !</div>
-                    <div className="subheading my-md-3 my-2">
+                    <div className="heading text-black">Congratulations !</div>
+                    <div className="subheading my-md-3 my-2 text-black">
                       Your form request has been Approved.
                     </div>
                     <button className="btn btn-fill" onClick={handleNext}>Okay</button>

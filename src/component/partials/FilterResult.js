@@ -149,7 +149,7 @@ const FilterResult = ({setIsFiltered}) =>{
 															<li>
 																<span className="detail-icon">
 																	<img src="./assets/images/email.svg" className="img-fluid"/></span>
-																<a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+																<a href={'mailto:'+data.email} className="name-dealer email-tag">{data.email}</a>
 															</li>
 														</ul>
 													</div>

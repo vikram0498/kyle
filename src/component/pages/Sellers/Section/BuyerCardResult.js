@@ -6,13 +6,13 @@ const BuyerCardResult = (props) => {
     const {data,index,activeTab,handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag} = props;
     let PreferenceIcons = './assets/images/contact-preferance.svg';
     if(data.contact_preferance_id === 1){
-        PreferenceIcons = './assets/images/Email-Preference-new.svg';
+        PreferenceIcons = './assets/images/Email-Preference-bg.svg';
     }else if(data.contact_preferance_id === 2){
-        PreferenceIcons = './assets/images/Text-Preference-new.svg';
+        PreferenceIcons = './assets/images/Text-Preference-bg.svg';
     }else if(data.contact_preferance_id === 3){
-        PreferenceIcons = './assets/images/Call-Preference-new.svg';
+        PreferenceIcons = './assets/images/Call-Preference-bg.svg';
     }else if(data.contact_preferance_id === 4){
-        PreferenceIcons = './assets/images/no-preference-new.svg';
+        PreferenceIcons = './assets/images/no-preference-bg.svg';
     }
     // const entering = (e) => {
     //     e.children[0].style.borderTopColor = '#3F53FE';
@@ -43,10 +43,10 @@ const BuyerCardResult = (props) => {
                 <div className="center-align position-relative">
                 { 
                     (data.buyer_profile_image !='' && data.buyer_profile_image != undefined) ? 
-                    <img src={data.buyer_profile_image} className="img-fluid price-img" />
+                    <img src={data.buyer_profile_image} className="img-fluid price-img" alt=""/>
                 :
                     <span className="price-img">
-                    <img src='./assets/images/price.svg' className="img-fluid" />
+                    <img src='./assets/images/price.svg' className="img-fluid" alt=""/>
                     </span>
                 }
                     {(data.is_buyer_verified) &&
@@ -55,11 +55,14 @@ const BuyerCardResult = (props) => {
                             placement="top"
                             style={{ backgroundColor: "green" }}
                             overlay={ <Tooltip> Profile Verified </Tooltip>}>
-                            <img src='./assets/images/pcheck.svg' className="img-fluid" />
+                            <img src='./assets/images/pcheck.svg' className="img-fluid" alt=""/>
                             </OverlayTrigger>
                         </div>
                     }
-                    <p>Buyer  </p>
+                    <p>
+                        Buyer  
+                       
+                    </p>
                     {(activeTab ==='more_buyers')?
                     <ul className="like-unlike mb-0 list-unstyled">
                         <li>
@@ -99,8 +102,16 @@ const BuyerCardResult = (props) => {
             <div className={"property-critera-details unhide-"+index}>
                 <ul className="list-unstyled mb-0">
                     <li>
-                        <span className="detail-icon"><img alt="user-gradient" src="/assets/images/uservbox.svg" className="img-fluid" /></span>
-                        <span className="name-dealer">{data.name} </span>
+                        <span className="detail-icon">
+                            {/* <span className="contact-preference mx-4"> */}
+                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Contact Preference</Tooltip>} >
+                                <img src={PreferenceIcons} className="img-fluid" alt=""/>
+                                </OverlayTrigger>
+                            {/* </span> */}
+                            {/* <img alt="user-gradient" src="/assets/images/uservbox.svg" className="img-fluid" /> */}
+                        </span>
+                        <span className="name-dealer b-name">{data.name}  
+                        </span>
                     </li>
                     <li>
                         <span className="detail-icon">
@@ -109,7 +120,7 @@ const BuyerCardResult = (props) => {
                                 data.phone_verified && 
                                 <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
                                     <span className="mx-2 verify_icon">
-                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
                                     </span>
                                 </OverlayTrigger>
                             }
@@ -129,7 +140,7 @@ const BuyerCardResult = (props) => {
                                 data.email_verified && 
                                     <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
                                         <span className="mx-2 verify_icon">
-                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
                                         </span>
                                     </OverlayTrigger>
                                 }
@@ -140,7 +151,7 @@ const BuyerCardResult = (props) => {
                             <span className="name-dealer">{data.email}</span>
                             :
                             <>
-                                <a href={'mailto:'+data.email} className="name-dealer">{data.email}</a>
+                                <a href={'mailto:'+data.email} className="name-dealer email-tag">{data.email}</a>
                             </>
                         }
                     </li>
@@ -152,61 +163,62 @@ const BuyerCardResult = (props) => {
                     </li> */}
                 </ul>
             </div>
-            <div className="cornor-block">
-                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Contact Preference</Tooltip>} >
-                    <img
-                    src={PreferenceIcons}
-                    className="img-fluid"
-                    />
-                </OverlayTrigger>
-                {(data.driver_license_verified) && 
-                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
+            {(data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
+                <div className="cornor-block">
+                    {(data.driver_license_verified) && 
+                        <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
+                            <img
+                            src="/assets/images/drivers -license.svg"
+                            className="img-fluid"
+                            alt=""
+                            />
+                        </OverlayTrigger>
+                    }
+                    {(data.llc_verified) && 
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Proof of Funds</Tooltip>} >
                         <img
-                        src="/assets/images/drivers -license.svg"
+                        src="/assets/images/Proof-of-Funds.svg"
                         className="img-fluid"
+                        alt=""
                         />
                     </OverlayTrigger>
-                }
-                {(data.llc_verified) && 
-                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Proof of Funds</Tooltip>} >
-                    <img
-                    src="/assets/images/Proof-of-Funds.svg"
-                    className="img-fluid"
-                    />
-                </OverlayTrigger>
-                }
-                {(data.proof_of_funds_verified) && 
-                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>LLC Verification</Tooltip>} >
-                        <img
-                        src="/assets/images/LLC-verification.svg"
-                        className="img-fluid"
-                        />
-                    </OverlayTrigger>
-                }
-                {
-                    (data.createdByAdmin)?
-                        (data.redFlagShow) ? 
-                        <>
-                            <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
-                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
-                                <img
-                                src="/assets/images/red-flag-bg.svg"
-                                className="img-fluid"
-                                />
-                            </OverlayTrigger>
-                            </div>
-                        </>:
-                        <div className="show-hide-data">
-                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
-                                <div className='pointerswal' onClick={()=>{handleClickConfirmation(data.id,index)}}>
-                                    <span className="icon-unhide" >
-                                        <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" />
-                                    </span>
+                    }
+                    {(data.proof_of_funds_verified) && 
+                        <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>LLC Verification</Tooltip>} >
+                            <img
+                            src="/assets/images/LLC-verification.svg"
+                            className="img-fluid"
+                            alt=""
+                            />
+                        </OverlayTrigger>
+                    }
+                    {
+                        (data.createdByAdmin)?
+                            (data.redFlagShow) ? 
+                            <>
+                                <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
+                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
+                                    <img
+                                    src="/assets/images/red-flag-bg.svg"
+                                    className="img-fluid"
+                                    alt=""
+                                    />
+                                </OverlayTrigger>
                                 </div>
-                            </OverlayTrigger>
-                        </div>:''
-                }
-            </div>
+                            </>:
+                            <div className="show-hide-data">
+                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
+                                    <div className='pointerswal' onClick={()=>{handleClickConfirmation(data.id,index)}}>
+                                        <span className="icon-unhide" >
+                                            <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" />
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
+                            </div>:''
+                    }
+                </div>:
+                ''
+            }
         </div>
     </div>
   )

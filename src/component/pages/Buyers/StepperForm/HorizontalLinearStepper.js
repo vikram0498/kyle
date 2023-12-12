@@ -35,6 +35,7 @@ const HorizontalLinearStepper = () => {
   const [isOtpSent, setIsOtpSent] =useState(false);
   const [isOtpVerify, setIsOtpVerify] = useState(false);
   const [phoneNumber, setphoneNumber] = useState("");
+  const [rejectMessage, setRejectMessage] = useState("");
   const { getTokenData, setLogout } = useAuth();
   const { setErrors, renderFieldError } = useFormError();
   const [loader, setLoader] = useState(true);
@@ -196,6 +197,7 @@ const HorizontalLinearStepper = () => {
       if(response.data.lastStepForm > 1 & response.data.lastStepForm < 5){
         setActiveStep(response.data.lastStepForm-1);
         setProfileVerificationStatus(response.data.lastStepStatus);
+        setRejectMessage(response.data.reason_content);
       }else{
         setActiveStep(response.data.lastStepForm);
       }
@@ -230,7 +232,7 @@ const HorizontalLinearStepper = () => {
       case 'verified':
         return <ApprorvedPage handleNext={handleNext}/>;
       case 'rejected':
-        return <RejectedPage setProfileVerificationStatus={setProfileVerificationStatus}/>;
+        return <RejectedPage setProfileVerificationStatus={setProfileVerificationStatus} rejectMessage={rejectMessage}/>;
       default:
         return null;
     }

@@ -10,13 +10,13 @@ export default function BuyerCard({
 }) {
   let PreferenceIcons = "./assets/images/contact-preferance.svg";
   if (data.contact_preferance_id === 1) {
-    PreferenceIcons = "./assets/images/Email-Preference-new.svg";
+    PreferenceIcons = "./assets/images/Email-Preference-bg.svg";
   } else if (data.contact_preferance_id === 2) {
-    PreferenceIcons = "./assets/images/Text-Preference-new.svg";
+    PreferenceIcons = "./assets/images/Text-Preference-bg.svg";
   } else if (data.contact_preferance_id === 3) {
-    PreferenceIcons = "./assets/images/Call-Preference-new.svg";
+    PreferenceIcons = "./assets/images/Call-Preference-bg.svg";
   } else if (data.contact_preferance_id === 4) {
-    PreferenceIcons = "./assets/images/no-preference-new.svg";
+    PreferenceIcons = "./assets/images/no-preference-bg.svg";
   }
   return (
     <div className="col-12 col-lg-6">
@@ -41,10 +41,10 @@ export default function BuyerCard({
         <div className="critera-card">
           <div className="center-align position-relative">
             {(data.buyer_profile_image !='') ? 
-              <img src={data.buyer_profile_image} className="img-fluid price-img" />
+              <img src={data.buyer_profile_image} className="img-fluid price-img" alt=""/>
             :
             <span className="price-img">
-              <img src='./assets/images/price.svg' className="img-fluid" />
+              <img src='./assets/images/price.svg' className="img-fluid" alt=""/>
             </span>
             }
             {(data.is_buyer_verified) &&
@@ -53,11 +53,13 @@ export default function BuyerCard({
                   placement="top"
                   style={{ backgroundColor: "green" }}
                   overlay={ <Tooltip> Profile Verified </Tooltip>}>
-                  <img src='./assets/images/pcheck.svg' className="img-fluid" />
+                  <img src='./assets/images/pcheck.svg' className="img-fluid" alt=""/>
                 </OverlayTrigger>
               </div>
             }
-            <p>Buyer</p>
+            <p>
+              Buyer
+            </p>
 
             <span class={data.status? 'ac-de-feeture active-feat':'ac-de-feeture deactive-feat'}>{data.status? 'Active':'Inactive'}</span>
             {data.createdByAdmin ? (
@@ -78,6 +80,7 @@ export default function BuyerCard({
                           : "/assets/images/liked.svg"
                       }
                       className="img-fluid"
+                      alt=""
                     />
                   </span>
                 </li>
@@ -95,6 +98,7 @@ export default function BuyerCard({
                           : "/assets/images/unliked.svg"
                       }
                       className="img-fluid"
+                      alt=""
                     />
                   </span>
                   <span className="numb text-end unlike-span">
@@ -114,12 +118,17 @@ export default function BuyerCard({
           <ul className="list-unstyled mb-0">
             <li>
               <span className="detail-icon">
-                <img
+                  {/* <span className="contact-preference mx-4"> */}
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Contact Preference</Tooltip>} >
+                    <img src={PreferenceIcons} className="img-fluid" alt=""/>
+                    </OverlayTrigger>
+                  {/* </span> */}
+                {/* <img
                   src="./assets/images/uservbox.svg"
                   className="img-fluid"
-                />
+                /> */}
               </span>
-              <span className="name-dealer">
+              <span className="name-dealer b-name">
                 {data.first_name} {data.last_name}
               </span>
             </li>
@@ -128,12 +137,13 @@ export default function BuyerCard({
                 <img
                   src="./assets/images/callingbox.svg"
                   className="img-fluid"
+                  alt=""
                 />
                 {
                   data.phone_verified && 
                   <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
                       <span className="mx-2 verify_icon">
-                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
                       </span>
                   </OverlayTrigger>
                  }
@@ -144,16 +154,16 @@ export default function BuyerCard({
             </li>
             <li>
               <span className="detail-icon">
-                <img src="./assets/images/emailbox.svg" className="img-fluid" />
+                <img src="./assets/images/emailbox.svg" className="img-fluid" alt=""/>
                 {data.email_verified && 
                     <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
                         <span className="mx-2 verify_icon">
-                          <img src="/assets/images/ver-check-blue.svg" class="img-fluid"/>
+                          <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
                         </span>
                     </OverlayTrigger>
                   }
               </span>
-              <a href={"mailto:" + data.email} className="name-dealer">
+              <a href={"mailto:" + data.email} className="name-dealer email-tag">
                 {data.email}
                 <span className="mx-2">
                 </span>
@@ -167,18 +177,14 @@ export default function BuyerCard({
             </li> */}
           </ul>
         </div>
+        {(data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
         <div className="cornor-block">
-          <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Contact Preference</Tooltip>} >
-              <img
-              src={PreferenceIcons}
-              className="img-fluid"
-              />
-          </OverlayTrigger>
           {(data.driver_license_verified) && 
             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
                 <img
                 src="/assets/images/drivers -license.svg"
                 className="img-fluid"
+                alt=""
                 />
             </OverlayTrigger>
           }
@@ -187,6 +193,7 @@ export default function BuyerCard({
               <img
               src="/assets/images/Proof-of-Funds.svg"
               className="img-fluid"
+              alt=""
               />
           </OverlayTrigger>
           }
@@ -195,6 +202,7 @@ export default function BuyerCard({
                 <img
                 src="/assets/images/LLC-verification.svg"
                 className="img-fluid"
+                alt=""
                 />
             </OverlayTrigger>
           }
@@ -211,6 +219,7 @@ export default function BuyerCard({
                     <img
                       src="/assets/images/red-flag-bg.svg"
                       className="img-fluid"
+                      alt=""
                     />
                   </OverlayTrigger>
                 </div>
@@ -221,7 +230,7 @@ export default function BuyerCard({
           ) : (
             ""
           )}
-        </div>
+        </div>:''}
        
       </div>
     </div>
