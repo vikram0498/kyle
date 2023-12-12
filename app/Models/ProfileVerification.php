@@ -28,6 +28,8 @@ class ProfileVerification extends Model
         'is_llc_verification',
         'llc_verification_status',
         'is_application_process',
+        'reason_type',
+        'reason_content',
         'is_profile_verify'
     ];
 

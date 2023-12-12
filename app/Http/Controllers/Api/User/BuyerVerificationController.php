@@ -398,12 +398,28 @@ class BuyerVerificationController extends Controller
             $lastStepForm = 5;
         }
 
+        if($lastStepForm == 3){
+            $reasonType = config('constants.pof_reason_type');
+        }else{
+            $reasonType = config('constants.ids_reason_type');
+        }
+
+        // $reasonMess = 'Your verification has been failed. so the following reason has been given below:';
+        $reasonMess = '';
+        if($user->buyerVerification->reason_type == 'other'){
+             $reasonMess = $user->buyerVerification->reason_content;
+        }elseif(isset($reasonType[$user->buyerVerification->reason_type])){
+            $reasonMess = $reasonType[$user->buyerVerification->reason_type];
+        }
+        
         //Return Success Response
         $responseData = [
             'status'                    => true,
             'lastStepForm'              => (int)$lastStepForm,
 
-            'lastStepStatus'            => $statusOfLastStep
+            'lastStepStatus'            => $statusOfLastStep,
+
+            'reason_content'            => $reasonMess, 
 
             // 'driver_license_status'     => $user->buyerVerification->driver_license_status,
             // 'proof_of_funds_status'     => $user->buyerVerification->proof_of_funds_status,

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','New Kyc')
+@section('title','Buyer Verification')
 
 @section('styles')
 @stop

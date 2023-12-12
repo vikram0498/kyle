@@ -308,4 +308,9 @@ return [
             'status'         => 'Status',
         ],
     ],
+
+    'buyer_verification'=>[
+        'title'           => 'Buyer Verification',
+
+    ]
 ];

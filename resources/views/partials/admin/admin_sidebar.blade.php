@@ -11,10 +11,10 @@
 
             @can('user_access')
 
-            <li class="nav-item {{ (request()->is('admin/new-kyc')) ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.new-kyc') }}">
+            <li class="nav-item {{ (request()->is('admin/buyer-verification')) ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.buyer-verification') }}">
                     <i class="icon-grid menu-icon fa-solid fa-users"></i>
-                    <span class="menu-title">Buyer KYC &nbsp;<span class="badge badge-light kyc-buyer-count"></span></span>
+                    <span class="menu-title">{{__('cruds.buyer_verification.title')}} &nbsp;<span class="badge badge-light kyc-buyer-count"></span></span>
                 </a>
             </li>
 

@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title top-box-set">
-                        <h4 class="card-title-heading">{{ $viewMode ? ucwords($details->name) : 'New Kyc List'}}</h4>
+                        <h4 class="card-title-heading">{{ $viewMode ? ucwords($details->name) : 'Buyer Verification List'}}</h4>
                         
                         <div class="card-top-box-item">
                             @if($viewMode)
@@ -417,6 +417,62 @@
                 </div>
             </div>
         </div>
+
+        <div wire:ignore.self class="modal fade reason-modal" id="reasonModal" tabindex="-1" role="dialog" aria-labelledby="reasonModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+               
+                <form class="forms-sample" wire:submit.prevent="storeReasonForm" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reasonModalLabel">Reason</h5>
+                            <button type="button" wire:click.prevent="closeReasonModal" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="type" class="font-weight-bold">Type <span class="text-danger">*</span> </label>
+                                        <select id="reasonType" wire:model.defer="reason_type" class="form-control">
+                                            <option value="">Select Type</option>
+                                            @if($reasonTypes)
+                                                @foreach($reasonTypes as $key => $value)
+                                                    <option value="{{ $key }}" >{{ $value }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('reason_type') <span class="error text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+
+                                @if($reason_type == 'other')
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="type" class="font-weight-bold">Description<span class="text-danger">*</span> </label>
+                                        <textarea class="form-control" rows="10" wire:model.defer="reason_content"></textarea>
+                                        @error('reason_content') <span class="error text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                                @endif
+
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" wire:click.prevent="closeReasonModal" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                            <button type="submit" wire:loading.attr="disabled" class="btn btn-success mr-2 submit-btn">
+                                Submit
+                                <span wire:loading wire:target="storeReasonForm">
+                                    <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
 </div>
 
 
@@ -484,5 +540,26 @@
         $('#image_popup_modal').modal('hide');
 
     });
+
+    $(document).on('change', '#reasonType', function(e){
+        e.preventDefault();
+        @this.set('reason_type',$(this).val());
+    });
+    
+    document.addEventListener('reInitialize', function(event) {
+        // $('#reasonType').select2({
+        //     placeholder:'Select Type',
+        // });
+    });
+
+    document.addEventListener('openReasonModal', function(event) {
+        $('#reasonModal').modal('show');
+    });
+
+    document.addEventListener('closeReasonModal', function(event) {
+        $('#reasonModal').modal('hide');
+    });
+
+
 </script>
 @endpush

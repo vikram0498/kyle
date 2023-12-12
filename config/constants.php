@@ -249,5 +249,21 @@ return [
         'pending'     => "Pending",
         'verified'    => "Verified",
         'rejected'    => "Rejected"
-    ] 
+    ],
+
+    'ids_reason_type'=>[
+        'invalid id'      => "Invalid ID",
+        'blurry image'    => "Blurry Image",
+        'expired id'      => "Expired ID",
+        'other'           => "Other",
+    ],
+
+    'pof_reason_type'=>[
+        'amount required'           => "Amount/Balance Required",
+        'failed screening'          => "Failed Screening",
+        'name does not match'       => "Name Doesn't Match",
+        'insufficient information'  => "Insufficient Information",
+        'other'                     => "Other",
+    ]
+
 ];

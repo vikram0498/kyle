@@ -262,5 +262,5 @@ return [
     'account'                              => 'Account',
     'update_password'                      => 'Update Password',
     'back'                                => 'Back',
-    'sno'                                  => 'S.No.'
+    'sno'                                  => 'S.No.',
 ];

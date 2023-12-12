@@ -21,7 +21,7 @@ class NewKyc extends Component
 
     public $sortColumnName = 'updated_at', $sortDirection = 'desc', $perPage = 10;
 
-    public $details;
+    public $details,$reasonTypes = null, $verificationId, $reason_column,$reason_type, $reason_content;
 
     protected $listeners = ['refreshTable' =>'render','confirmedToggleActionView'];
 
@@ -98,18 +98,75 @@ class NewKyc extends Component
         $status = $data['status'];
         $type = $data['type'];
 
-        $model = ProfileVerification::find($id);
-        $model->update([$type => $status]);
+        if($status != 'rejected'){
+            $model = ProfileVerification::find($id);
+            $model->update([
+                $type => $status,
+                'reason_type'=>null,
+                'reason_content'=>null,
+            ]);
+    
+            $userId = $model->user_id;
+            $this->details = User::find($userId);
+    
+            $this->flash('success', trans('messages.change_status_success_message'));
+            return redirect()->route('admin.buyer-verification');
+        }else{
 
-        $userId = $model->user_id;
-        $this->details = User::find($userId);
-
-        $this->flash('success', trans('messages.change_status_success_message'));
-        return redirect()->route('admin.new-kyc');
+            $this->verificationId = $id;
+            $this->reason_column = $type;
+            if($type == 'proof_of_funds_status'){
+                $this->reasonTypes = config('constants.pof_reason_type');
+            }else{
+                $this->reasonTypes = config('constants.ids_reason_type');
+            }
+           
+            $this->dispatchBrowserEvent('openReasonModal');
+        }
     }
     
     public function cancel(){
         $this->reset();
+    }
+
+    public function updatedReasonType($type){
+        $this->reason_type = $type;
+    }
+
+    public function storeReasonForm(){
+        $inValidationString = $this->reasonTypes ? '|in:'.implode(',',array_keys($this->reasonTypes)) :'';
+        $validateFields['reason_type'] = 'required'.$inValidationString;
+
+        if($this->reason_type == 'other'){
+            $validateFields['reason_content'] = 'required|string';
+        }
+
+        $this->validate($validateFields,[],[
+            'reason_type'=>'type',
+            'reason_content'=>'description'
+        ]);
+
+        $model = ProfileVerification::find($this->verificationId);
+        if($model){
+            $model->update([
+                $this->reason_column => 'rejected',
+                'reason_type' => $this->reason_type,
+                'reason_content' => $this->reason_content,
+            ]);
+    
+            $this->flash('success', trans('messages.change_status_success_message'));
+            $this->reset();
+            return redirect()->route('admin.buyer-verification');
+        }else{
+            $this->flash('success', trans('messages.error_message'));
+        }
+       
+    }
+
+    public function closeReasonModal(){
+        $this->reset(['verificationId','reason_column','reason_type','reason_content','reasonTypes']);
+        $this->resetValidation();
+        $this->dispatchBrowserEvent('closeReasonModal');
     }
 
 
