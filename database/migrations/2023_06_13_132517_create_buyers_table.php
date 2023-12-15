@@ -24,7 +24,7 @@ return new class extends Migration
             $table->json('state')->nullable();
             $table->json('city')->nullable();
             $table->string('zip_code')->nullable();
-            $table->integer('price_min')->nullable();
+            $table->double('price_min')->nullable();
             $table->integer('bedroom_min')->nullable();
             $table->integer('bedroom_max')->nullable();
             $table->integer('bath_min')->nullable();
@@ -77,6 +77,7 @@ return new class extends Migration
             $table->boolean('is_ban')->default(0)->comment('0=> Not ban, 1=> ban');
             $table->tinyInteger('permanent_affix')->default(0)->comment('1=>Yes, 0=>No');
             $table->integer('park')->nullable();
+            $table->integer('rooms')->nullable();
             $table->boolean('status')->default(1)->comment('0=> deactive, 1=> active');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

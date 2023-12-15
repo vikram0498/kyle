@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('buyers', function (Blueprint $table) {
-            $table->double('price')->nullable()->after('zip_code');
+            // $table->double('price')->nullable()->after('zip_code');
             $table->tinyInteger('squatters')->nullable()->after('rebuild');
 
             
@@ -29,7 +29,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('buyers', function (Blueprint $table) {
-            $table->dropColumn('price');
+            // $table->dropColumn('price');
             $table->dropColumn('squatters');
 
         });
