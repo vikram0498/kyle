@@ -9,6 +9,7 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
+        
         $users = [
             [
                 'id'             => 1,
@@ -36,20 +37,8 @@ class UsersTableSeeder extends Seeder
                 'created_at'     => date('Y-m-d H:i:s'),
                 'updated_at'     => date('Y-m-d H:i:s'),
             ],
-            [
-                'id'             => 3,
-                'first_name'     => 'Developer',
-                'last_name'      => 'Role',
-                'name'           => 'Developer Role',
-                'email'          => 'developer@gmail.com',
-                'password'       => bcrypt('developer@1234'),
-                'remember_token' => null,
-                'level_type'     => 2,
-                'email_verified_at' => date('Y-m-d H:i:s'),
-                'created_at'     => date('Y-m-d H:i:s'),
-                'updated_at'     => date('Y-m-d H:i:s'),
-            ]
         ];
-        User::insert($users);       
+        User::insert($users);     
+        
     }
 }

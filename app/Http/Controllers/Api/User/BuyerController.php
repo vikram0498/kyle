@@ -218,7 +218,7 @@ class BuyerController extends Controller
 
                 // $createdBuyer = Buyer::create($validatedData);
 
-                $createUser->buyerVerification()->create(['user_id' => $validatedData['user_id']]);
+                $createUser->buyerVerification()->create(['user_id' => $validatedData['buyer_user_id']]);
 
                 $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone'])->all();
 
