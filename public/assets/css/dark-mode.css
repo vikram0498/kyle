@@ -411,3 +411,15 @@ body.dark .property-critera-block,
 body.dark .cornor-block{
   box-shadow: 8px 10px 23px 0px rgb(72 72 72 / 32%);
 }
+
+
+body.dark .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #1f1f1f;
+  border-color: #1f1f1f;
+}
+body.dark .page-link {
+  color: #000000;
+  background-color: #f5f7f9;
+}
