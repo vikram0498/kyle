@@ -482,13 +482,25 @@ class BuyerController extends Controller
 
                 $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-                // if($request->state){
-                //      $validatedData['state'] = json_encode($request->state);
-                // }
+                if($request->state){
+                     $validatedData['state'] = array_map('intval',$request->state);
+                }
 
-                //  if($request->city){
-                //      $validatedData['city'] = json_encode($request->city);
-                // }
+                if($request->city){
+                     $validatedData['city'] = array_map('intval',$request->city);
+                }
+                
+                if($request->property_type){
+                    $validatedData['property_type'] = array_map('intval',$request->property_type);
+                }
+
+                if($request->property_flaw){
+                    $validatedData['property_flaw'] = array_map('intval',$request->property_flaw);
+                }
+
+                if($request->purchase_method ){
+                    $validatedData['purchase_method'] = array_map('intval',$request->purchase_method );
+                }
 
                 if ($request->parking) {
                     $validatedData['parking'] = (int)$request->parking;
@@ -502,6 +514,7 @@ class BuyerController extends Controller
                 if ($request->zoning) {
                     $validatedData['zoning'] = json_encode($request->zoning);
                 }
+                 
 
                 if ($request->permanent_affix) {
                     $validatedData['permanent_affix'] = (int)$request->permanent_affix;
