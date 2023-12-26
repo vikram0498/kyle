@@ -209,3 +209,4 @@ if (!function_exists('generateOTP')) {
 		return rand(1000, 9999);
 	}
 }
+

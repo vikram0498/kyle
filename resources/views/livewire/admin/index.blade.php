@@ -113,10 +113,203 @@
       </div>
       
    </div>
+
+   <div class="row">
+      {{-- Start Buyer Metrics chart --}}
+      <div class="col-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Metrics</h5>
+            <div class="card-body border-0" wire:ignore>
+               
+               <select class="float-right" wire:model="buyerLineChartFilter">
+                  <option value="hourly" {{ $buyerLineChartFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
+                  <option value="weekly" {{ $buyerLineChartFilter == 'weekly' ? 'selected':'' }}>Weekly</option>
+                  <option value="monthly" {{ $buyerLineChartFilter == 'monthly' ? 'selected':'' }}>Monthly</option>
+               </select>
+              
+               <canvas id="buyerLineChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End Buyer Metrics chart --}}
+
+      {{-- Start Buyer Metrics chart --}}
+      <div class="col-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Property Metrics</h5>
+            <div class="card-body border-0" wire:ignore>
+
+               <select class="float-right" wire:model="propertyTimeFilter">
+                  <option value="hourly" {{ $propertyTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
+                  <option value="weekly" {{ $propertyTimeFilter == 'weekly' ? 'selected': ''}}>Weekly</option>
+                  <option value="monthly" {{ $propertyTimeFilter == 'monthly' ? 'selected': ''}}>Monthly</option>
+               </select>
+
+               <select class="float-right" wire:model="propertyFilter">
+                  <option value="type" {{ $propertyFilter == 'type' ? 'selected': ''}}>Property Type</option>
+                  <option value="location" {{ $propertyFilter == 'location' ? 'selected': ''}}>Property Location</option>
+               </select>
+               
+               <canvas id="buyerPropertyBarChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End Buyer Metrics chart --}}
+   </div>
+
 </div>
 @push('scripts')
 <!-- Custom js for this page-->
-<!-- <script src="{{ asset('admin/assets/chart.js/Chart.min.js') }}"></script> -->
-<!-- <script src="{{ asset('admin/js/dashboard.js') }}" type="text/javascript"></script> -->
-<!-- <script src="{{ asset('admin/js/Chart.roundedBarCharts.js') }}" type="text/javascript"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="text/javascript"> 
+  
+// Start to render line chart  
+   var buyerLineChartDetails = @json($buyerLineChartRecords);
+   var buyerLineChartCanvas = document.getElementById('buyerLineChart');
+   var buyerLineChartContext = buyerLineChartCanvas.getContext('2d');
+   var lineChart= null;
+
+   renderLineChart(buyerLineChartDetails);
+   
+   document.addEventListener('renderBuyerLineChart', function(event) {
+      renderLineChart(event.detail);
+   });
+// End to render line chart
+
+// Start to render property bar chart
+   var propertyBarChartDetails = @json($propertyBarChartDetails);
+   var buyerPropertyBarChartCanvas = document.getElementById('buyerPropertyBarChart');
+   var buyerPropertyBarChartContext = buyerPropertyBarChartCanvas.getContext('2d');
+   var propertyBarChart= null;
+
+   renderBarChart(propertyBarChartDetails);
+   
+   document.addEventListener('renderBuyerPropertyBarChart', function(event) {
+      renderBarChart(event.detail);
+   });
+// End to render property bar chart  
+   
+   async function renderLineChart(buyerLineChartDetails){
+
+      // Destroy the existing chart if it exists
+      if (lineChart) {
+            lineChart.destroy();
+      }
+
+      lineChart = new Chart(buyerLineChartContext, {
+         type: 'line',
+         data: {
+            labels: buyerLineChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'Active',
+                  data: buyerLineChartDetails.activeUserRecords,
+                  borderColor: '#00AC47',
+                  backgroundColor: '#8ad1a6',
+               },
+               {
+                  label: 'Inactive',
+                  data: buyerLineChartDetails.inactiveUserRecords,
+                  borderColor: '#c10707',
+                  backgroundColor: '#eb6464',
+               }
+            ]
+         },
+         options: {
+            interaction: {
+               mode: 'index',
+               intersect: false,
+            },
+            plugins: {
+               title: {
+                display: true,
+                text: buyerLineChartDetails.topTitle,
+               },
+            },
+            scales: {
+               x: {
+               type: 'category',
+               title: {
+                  display: true,
+                  text: buyerLineChartDetails.xAxisTitle,
+               },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: buyerLineChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+
+   } 
+
+   async function renderBarChart(propertyBarChartDetails){
+      // Destroy the existing chart if it exists
+      if (propertyBarChart) {
+         propertyBarChart.destroy();
+      }
+
+      propertyBarChart = new Chart(buyerPropertyBarChartContext, {
+         type: 'bar',
+         data: {
+            labels: propertyBarChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'Location',
+                  data: propertyBarChartDetails.activeUserRecords,
+                  borderColor: '#00AC47',
+                  backgroundColor: '#8ad1a6',
+               },
+               {
+                  label: 'Type',
+                  data: propertyBarChartDetails.inactiveUserRecords,
+                  borderColor: '#c10707',
+                  backgroundColor: '#eb6464',
+               }
+            ]
+         },
+         options: {
+            interaction: {
+               mode: 'index',
+               intersect: false,
+            },
+            plugins: {
+               title: {
+                display: true,
+                text: propertyBarChartDetails.topTitle,
+               },
+               legend: {
+                  display: false
+               }
+            },
+            scales: {
+               x: {
+               type: 'category',
+               title: {
+                  display: true,
+                  text: propertyBarChartDetails.xAxisTitle,
+               },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: propertyBarChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+   }
+
+</script>
+
+
 @endpush

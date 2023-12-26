@@ -170,6 +170,11 @@ class LoginRegisterController extends Controller
                     'remember_me_token' => $user->remember_token,
                     'access_token'      => $accessToken
                 ];
+
+
+                $user->login_at = now();
+                $user->save();
+                
                 return response()->json($responseData, 200);
 
             } else{

@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'is_active',
         'is_block',
+        'login_at',
         'email_verified_at',
         'phone_verified_at',
     ];
@@ -65,8 +66,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'deleted_at',
         'email_verified_at',
         'phone_verified_at',
+        'login_at',
     ];
-
 
     public function roles()
     {
