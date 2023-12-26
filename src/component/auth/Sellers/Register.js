@@ -32,6 +32,9 @@ const Register = () => {
   const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
   const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;
   const [showPassoword, setshowPassoword] = useState(false);
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+  
   const togglePasswordVisibility = () => {
     setshowPassoword(!showPassoword);
   };
@@ -41,13 +44,6 @@ const Register = () => {
     setshowConfirmPassword(!showConfirmPassword);
   };
 
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [company_name, setCompanyName] = useState("");
-  const [password, setPassword] = useState("");
-  const [password_confirmation, setPasswordConfirmation] = useState("");
 
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [recaptchaError, setRecaptchaError] = useState("");
@@ -55,7 +51,6 @@ const Register = () => {
   const { setErrors, renderFieldError, navigate } = useFormError();
 
   const [loading, setLoading] = useState(false);
-
   function onCaptchaChange(value) {
     if (value) {
       setCaptchaVerified(true);
@@ -121,26 +116,7 @@ const Register = () => {
       setRecaptchaError("Please complete reCAPTCHA verification.");
     }
   };
-  const handleChangeFirstName = (e) => {
-    const regex = /^[a-zA-Z]+$/;
-    const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
-    //console.log(new_value,'new_value ');
-    if (regex.test(new_value)) {
-      setFirstName(new_value);
-    } else {
-      setFirstName("");
-    }
-  };
-  const handleChangeLastName = (e) => {
-    const regex = /^[a-zA-Z]+$/;
-    const new_value = e.target.value.replace(/[^a-zA-Z]/g, "");
-    if (regex.test(new_value)) {
-      //console.log(new_value);
-      setLastName(new_value);
-    } else {
-      setLastName("");
-    }
-  };
+
   return (
     <Layout>
       <div className="account-in">
@@ -499,7 +475,7 @@ const Register = () => {
                     />{" "}
                     With Google
                   </Link>
-                  <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
+                  <GoogleOAuthProvider clientId={googleClientId}>
                     <GoogleLoginComponent
                       apiUrl={apiUrl}
                       setLoading={setLoading}

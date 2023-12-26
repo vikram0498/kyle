@@ -10,12 +10,12 @@ import AuthContext from "../../context/authContext";
 import ButtonLoader from "../partials/MiniLoader";
 import GoogleLoginComponent from "../partials/SocialLogin/GoogleLoginComponent";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import FacebookLoginButton from "../partials/SocialLogin/FacebookLoginButton";
+// import FacebookLoginButton from "../partials/SocialLogin/FacebookLoginButton";
 import Layout from "./Layout";
 
 function Login(props) {
   const { setAsLogged, getRememberMeData, getTokenData } = useAuth();
-  const { authData } = useContext(AuthContext);
+  // const { authData } = useContext(AuthContext);
   const { setErrors, renderFieldError, setMessage, navigate } = useFormError();
 
   const [email, setEmail] = useState("");
@@ -26,13 +26,11 @@ function Login(props) {
   useEffect(() => {
     let login = getTokenData();
     let userData = getRememberMeData();
-    //console.log(userData,'userData',remember);
     if (userData != "" && userData != undefined) {
       setEmail(userData.username);
       setPassword(userData.password);
       setRemember(userData.isRemember);
     }
-    // console.log(login,'loginlogin');
     if (login) {
       navigate("/");
     }
@@ -44,6 +42,7 @@ function Login(props) {
   };
 
   const apiUrl = process.env.REACT_APP_API_URL;
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
   const submitLoginForm = (e) => {
     e.preventDefault();
@@ -253,7 +252,7 @@ function Login(props) {
                     With Google
                   </Link>
                   {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
-                  <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
+                  <GoogleOAuthProvider clientId={googleClientId}>
                     <GoogleLoginComponent
                       apiUrl={apiUrl}
                       setLoading={setLoading}

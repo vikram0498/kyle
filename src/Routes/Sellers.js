@@ -35,13 +35,14 @@ import Cancel from "../component/pages/Sellers/Cancel";
 import LastSearchData from "../component/pages/Sellers/LastSearchData";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const [authData, setAuthData] = useState({
     signedIn: userData.signedIn,
     user: userData.user,
     access_token: userData.access_token,
   });
   return (
-    <GoogleOAuthProvider clientId="228707625591-afemor5re8dlrdjfvb0fht68g0apfjuv.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={googleClientId}>
       <AuthContext.Provider value={{ authData, setAuthData }}>
         <Routes>
           {/* Auth routes */}

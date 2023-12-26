@@ -18,9 +18,7 @@ function BuyerHeader() {
           navigate("/");
         }
         setUserDetails(userData);
-      }
-      
-
+      } 
     }
   }, []);
 
@@ -70,6 +68,7 @@ function BuyerHeader() {
                   <img
                     src="/assets/images/logo.svg"
                     className="img-fluid darkmode-none"
+                    alt=""
                   />
                 </Link>
                 {/* <a href="">
@@ -90,6 +89,7 @@ function BuyerHeader() {
                     <img
                       src="/assets/images/rocket.svg"
                       className="img-fluid"
+                      alt=""
                     />
                   </span>
                   <p>boost your profile</p>
@@ -153,7 +153,7 @@ function BuyerHeader() {
                         <Link to="/buyer-profile" className="dropdown-item">
                           <img
                             src="/assets/images/user-login.svg"
-                            className="img-fluid"
+                            className="img-fluid" alt=""
                           />
                           My Profile
                         </Link>
@@ -163,7 +163,7 @@ function BuyerHeader() {
                         <Link to="/profile-verification" className="dropdown-item">
                           <img
                             src="/assets/images/search-log.svg"
-                            className="img-fluid"
+                            className="img-fluid" alt=""
                           />
                           Profile Verification
                         </Link>
