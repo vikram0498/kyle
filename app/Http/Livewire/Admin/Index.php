@@ -69,7 +69,7 @@ class Index extends Component
             $activeRecords =User::query()->whereHas('roles',function($query){
                 $query->where('id',3);
             })->whereNotNull('login_at')
-            ->where('login_at', '>', now()->subHours(24))
+            ->whereBetween('login_at', [now()->subHours(24),now()])
             ->select('id',
                 DB::raw('DATE_FORMAT(login_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
@@ -403,7 +403,7 @@ class Index extends Component
         if($this->propertyTimeFilter == 'hourly'){
  
             $reqQuery = SearchLog::query()
-            ->where('created_at', '>', now()->subHours(24))
+            ->whereBetween('created_at', [now()->subHours(24),now()])
             ->select(
                 DB::raw('DATE_FORMAT(created_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
@@ -486,7 +486,7 @@ class Index extends Component
         if($this->propertyTimeFilter == 'hourly'){
 
             $reqQuery = SearchLog::query()
-            ->where('created_at', '>', now()->subHours(24))
+            ->whereBetween('created_at', [now()->subHours(24),now()])
             ->select(
                 DB::raw('DATE_FORMAT(created_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
@@ -683,7 +683,7 @@ class Index extends Component
         if($this->profileTimeFilter == 'hourly'){
 
             $reqQuery = Buyer::query()
-            ->where('updated_at', '>', now()->subHours(24))
+            ->whereBetween('updated_at', [now()->subHours(24),now()])
             ->select(
                 DB::raw('DATE_FORMAT(updated_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
@@ -751,7 +751,7 @@ class Index extends Component
         if($this->profileTimeFilter == 'hourly'){
 
             $reqQuery = ProfileVerification::query()
-            ->where('updated_at', '>', now()->subHours(24))
+            ->whereBetween('updated_at', [now()->subHours(24),now()])
             ->select(
                 DB::raw('DATE_FORMAT(updated_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
