@@ -25,7 +25,7 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $type, $position, $amount, $description='', $status = 1,  $user_limit, $image=null, $viewMode = false,$originalImage, $removeImage=false;
+    public  $title, $type, $position, $amount, $description='', $status = 1,  $user_limit,$color, $image=null, $viewMode = false,$originalImage, $removeImage=false;
 
     public $plan_id =null;
 
@@ -61,6 +61,7 @@ class Index extends Component
                 'description' => ['required', 'without_spaces'],
                 'status'      => 'required',
                 'user_limit'  => ['required', 'integer', 'min: 0' ],
+                'color'       => ['required','string'],
                 'image' => ['required', 'image', 'valid_extensions:svg','max:'.config('constants.img_max_size')],
             ],[
                 'image.valid_extensions' => 'The image must be an SVG file.',
@@ -138,6 +139,7 @@ class Index extends Component
               'type'  => 'required|in:monthly,yearly',
               'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
               'description' => 'required|without_spaces',
+              'color'       => ['required','string'],
               'status' => 'required',
           ];
   
@@ -223,14 +225,7 @@ class Index extends Component
     }
 
     private function resetInputFields(){
-        $this->title = '';
-        $this->amount = '';
-        $this->type = '';
-        $this->position = '';
-        $this->description = '';
-        $this->status = 1;
-        $this->image =null;
-        $this->originalImage = '';
+        $this->reset(['title','amount','type','position','description','user_limit','color','status','image','originalImage']);
     }
 
     public function cancel(){

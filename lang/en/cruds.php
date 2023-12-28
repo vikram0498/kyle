@@ -290,6 +290,7 @@ return [
             'image'             => 'Image',          
             'status'            => 'Status', 
             'user_limit'        => 'User Limit', 
+            'color'             => 'Color', 
             'created_at'        => 'Created At',
         ],
     ],

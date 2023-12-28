@@ -4,7 +4,10 @@ namespace App\Http\Livewire\Admin;
 
 use Carbon\Carbon;
 use App\Models\Buyer;
+use App\Models\BuyerPlan;
 use App\Models\PurchasedBuyer;
+use App\Models\ProfileVerification;
+use App\Models\SearchLog;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -16,21 +19,28 @@ class Index extends Component
 
     protected $layout = null;
     
-    public $buyerLineChartFilter='hourly', $buyerFilterArray = ['hourly','weekly','monthly'],$buyerLineChartRecords;
+    public $buyerLineChartFilter='hourly', $timeFilterArray = ['hourly','weekly','monthly'],$buyerLineChartRecords;
 
-    public $propertyBarChartDetails, $propertyTimeFilter='hourly', $propertyFilter='location';
+    public $propertyChartDetails, $propertyTimeFilter='hourly', $propertyFilter='location';
+
+    public $allProfileTags, $profileTimeFilter = 'hourly', $profileFilter = 'profile-tags', $profileChartDetails;
 
     public function mount(){
        
         $this->buyerLineChartRecords = $this->getDetailsBuyerLineChart();
         
-        $this->propertyBarChartDetails = $this->getDetailsPropertyBarChart();
+        $this->propertyChartDetails = $this->getDetailsPropertyChart();
+
+        $this->allProfileTags = BuyerPlan::where('status',1)->get();
+
+        $this->profileChartDetails = $this->getDetailsProfileChart();
+
     }
     
     public function updatedBuyerLineChartFilter($value){
         $this->reset('buyerLineChartRecords');
         
-        if(in_array($value,$this->buyerFilterArray)){
+        if(in_array($value,$this->timeFilterArray)){
             $this->buyerLineChartFilter = $value;
         }else{
             $this->buyerLineChartFilter = 'hourly';
@@ -232,7 +242,6 @@ class Index extends Component
       return $chartRecords;
     }
     
-
     public function render()
     {
         $sellerCount = User::whereHas('roles', function($q){
@@ -262,26 +271,29 @@ class Index extends Component
         ->limit(5)
         ->get();
 
+
+        
         return view('livewire.admin.index', compact('buyerCount', 'sellerCount','purchasedBuyers'));
     }
 
     public function updatedPropertyTimeFilter($value){
-        $this->reset(['propertyBarChartDetails']);
+        $this->reset(['propertyChartDetails']);
 
-        if(in_array($value,['hourly','weekly','monthly'])){
+        if(in_array($value,$this->timeFilterArray)){
             $this->propertyTimeFilter = $value;
         }else{
             $this->propertyTimeFilter = 'hourly';
             $this->alert('error','Invalid Value Selected!');
         }
 
-        $this->propertyBarChartDetails = $this->getDetailsPropertyBarChart();
+        $this->propertyChartDetails = $this->getDetailsPropertyChart();
+        $this->propertyChartDetails['propertyFilter']=$this->propertyFilter;
 
-        $this->dispatchBrowserEvent('renderBuyerPropertyBarChart',$this->propertyBarChartDetails); 
+        $this->dispatchBrowserEvent('renderPropertyChart',$this->propertyChartDetails); 
     }
 
     public function updatedPropertyFilter($value){
-        $this->reset(['propertyBarChartDetails']);
+        $this->reset(['propertyChartDetails']);
 
         if(in_array($value,['location','type'])){
             $this->propertyFilter = $value;
@@ -290,26 +302,41 @@ class Index extends Component
             $this->alert('error','Invalid Value Selected!');
         }
 
-        $this->propertyBarChartDetails = $this->getDetailsPropertyBarChart();
+        $this->propertyChartDetails = $this->getDetailsPropertyChart();
+        $this->propertyChartDetails['propertyFilter']=$this->propertyFilter;
 
-        $this->dispatchBrowserEvent('renderBuyerPropertyBarChart',$this->propertyBarChartDetails); 
+        $this->dispatchBrowserEvent('renderPropertyChart',$this->propertyChartDetails); 
     }
 
-    public function getDetailsPropertyBarChart(){
+    public function getDetailsPropertyChart(){
 
         $chartRecords['bottomLabels'] = [];
         $chartRecords['topTitle'] = 'Property Metric';
         $chartRecords['xAxisTitle'] = '';  
         $chartRecords['yAxisTitle'] = 'Number of search';
-        $chartRecords['activeUserRecords'] =[10,20,30,40,50,60,70,80,100];
-        $chartRecords['inactiveUserRecords'] =[10,20,30,10,20,20,40,50,60]; 
-        $chartRecords['bottomLabels'] = [10,20,30,10,20,20,40,50,60];
-
+       
         if($this->propertyTimeFilter == 'hourly'){
             $chartRecords['xAxisTitle'] = 'Last 24 Hours';  
         
-            $chartRecords['bottomLabels'] = $this->hourlyInterval();
+            $intervals = $this->hourlyInterval();
 
+            $chartRecords['bottomLabels'] = $intervals;
+
+            $dateRange = collect($intervals);
+
+            if($this->propertyFilter == 'type'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyTypeDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->propertyFilter == 'location'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyLocationDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+                
+            }
         }elseif($this->propertyTimeFilter == 'weekly'){
             $chartRecords['xAxisTitle'] = 'Last 7 days';  
 
@@ -319,17 +346,480 @@ class Index extends Component
                 return  Carbon::parse($dateValue)->format('l');
             })->toArray();
 
+            if($this->propertyFilter == 'type'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyTypeDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->propertyFilter == 'location'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyLocationDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }
+
+
         }elseif($this->propertyTimeFilter == 'monthly'){
             $chartRecords['xAxisTitle'] = 'Last 30 days';  
 
-            $chartRecords['bottomLabels'] = $this->monthlyInterval();
+            $dateRange = $this->monthlyInterval();
+
+            $chartRecords['bottomLabels'] = $dateRange;
+
+            if($this->propertyFilter == 'type'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyTypeDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->propertyFilter == 'location'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getPropertyLocationDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }
 
         }
 
-        $filterQuery = Buyer::query();
+        // dd($chartRecords);
 
-        
         return $chartRecords;
+    }
+
+
+    public function getPropertyLocationDetails($dateRange){
+      
+        $chartData['railroad'] = $this->fetchPropertyLocationQuery($dateRange,1);
+        $chartData['major_road'] = $this->fetchPropertyLocationQuery($dateRange,2);
+        $chartData['boarders_non_residential'] = $this->fetchPropertyLocationQuery($dateRange,3);
+
+        return $chartData;
+    }
+
+    public function fetchPropertyLocationQuery($dateRange,$value){
+        if($this->propertyTimeFilter == 'hourly'){
+ 
+            $reqQuery = SearchLog::query()
+            ->where('created_at', '>', now()->subHours(24))
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%H") as hour'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where(function ($query) use ($value) {
+                $query->orWhereJsonContains("property_flaw", $value);
+            })
+            ->whereRaw('EXTRACT(HOUR FROM created_at) % 2 = 0')
+            ->whereNotNull('created_at')
+            ->groupBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'))
+            ->orderBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'), 'asc')
+            ->get();
+
+            $data = $dateRange->map(function ($hour) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('hour', $hour);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+
+        }else if($this->propertyTimeFilter == 'weekly'){
+
+            $sevenDaysAgo = Carbon::now()->subDays(7);
+
+            $reqQuery = SearchLog::query()->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereDate('created_at', '>', $sevenDaysAgo)
+            ->where(function ($query) use ($value) {
+                $query->orWhereJsonContains("property_flaw", $value);
+            })
+            ->groupBy('date')
+            ->orderBy('date')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+             
+        }else if($this->propertyTimeFilter == 'monthly'){
+
+            $current = Carbon::now();
+            $thirtyDaysAgo = $current->copy()->subDays(30);
+
+            $reqQuery = SearchLog::query()->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where(function ($query) use ($value) {
+                $query->orWhereJsonContains("property_flaw", $value);
+            })
+            ->whereDate('created_at', '>', $thirtyDaysAgo)
+            ->groupBy('date')
+            ->orderBy('date','desc')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+        }
+    }
+
+    public function getPropertyTypeDetails($dateRange){
+      
+        $chartData['commercial_retail'] = $this->fetchPropertyTypeQuery($dateRange,3);
+        $chartData['condo'] = $this->fetchPropertyTypeQuery($dateRange,4);
+        $chartData['land'] = $this->fetchPropertyTypeQuery($dateRange,7);
+        $chartData['manufactured'] = $this->fetchPropertyTypeQuery($dateRange,8);
+        $chartData['multi_family_commercial'] = $this->fetchPropertyTypeQuery($dateRange,10);
+        $chartData['multi_family_residential'] = $this->fetchPropertyTypeQuery($dateRange,11);
+        $chartData['single_family'] = $this->fetchPropertyTypeQuery($dateRange,12);
+        $chartData['townhouse'] = $this->fetchPropertyTypeQuery($dateRange,13);
+        $chartData['mobile_home_park'] = $this->fetchPropertyTypeQuery($dateRange,14);
+        $chartData['hotel_motel'] = $this->fetchPropertyTypeQuery($dateRange,15);
+
+        return $chartData;
+    }
+
+    public function fetchPropertyTypeQuery($dateRange,$value){
+
+        if($this->propertyTimeFilter == 'hourly'){
+
+            $reqQuery = SearchLog::query()
+            ->where('created_at', '>', now()->subHours(24))
+            ->select(
+                DB::raw('DATE_FORMAT(created_at, "%H") as hour'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('property_type',$value)
+            ->whereRaw('EXTRACT(HOUR FROM created_at) % 2 = 0')
+            ->whereNotNull('created_at')
+            ->groupBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'))
+            ->orderBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'), 'asc')
+            ->get();
+
+            $data = $dateRange->map(function ($hour) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('hour', $hour);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+
+        }else if($this->propertyTimeFilter == 'weekly'){
+
+            $sevenDaysAgo = Carbon::now()->subDays(7);
+
+            $reqQuery = SearchLog::query()->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereDate('created_at', '>', $sevenDaysAgo)
+            ->where('property_type',$value)
+            ->groupBy('date')
+            ->orderBy('date')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+             
+        }else if($this->propertyTimeFilter == 'monthly'){
+
+            $current = Carbon::now();
+            $thirtyDaysAgo = $current->copy()->subDays(30);
+
+            $reqQuery = SearchLog::query()->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('property_type',$value)
+            ->whereDate('created_at', '>', $thirtyDaysAgo)
+            ->groupBy('date')
+            ->orderBy('date','desc')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+        }
+
+    }
+
+
+    public function updatedProfileTimeFilter($value){
+        $this->reset(['profileChartDetails']);
+
+        if(in_array($value,$this->timeFilterArray)){
+            $this->profileTimeFilter = $value;
+        }else{
+            $this->profileTimeFilter = 'hourly';
+            $this->alert('error','Invalid Value Selected!');
+        }
+
+        $this->profileChartDetails = $this->getDetailsProfileChart();
+        $this->profileChartDetails['profileFilter'] = $this->profileFilter;
+
+        $this->dispatchBrowserEvent('renderProfileChart',$this->profileChartDetails); 
+    }
+
+    public function updatedProfileFilter($value){
+        $this->reset(['profileChartDetails']);
+
+        if(in_array($value,['profile-tags','verification-levels'])){
+            $this->profileFilter = $value;
+        }else{
+            $this->profileFilter = 'profile-tags';
+            $this->alert('error','Invalid Value Selected!');
+        }
+
+        $this->profileChartDetails = $this->getDetailsProfileChart();
+        $this->profileChartDetails['profileFilter']=$this->profileFilter;
+
+        $this->dispatchBrowserEvent('renderProfileChart',$this->profileChartDetails); 
+    }
+
+    public function getDetailsProfileChart(){
+        $chartRecords['bottomLabels'] = [];
+        $chartRecords['topTitle'] = 'Profile Metric';
+        $chartRecords['xAxisTitle'] = '';  
+        $chartRecords['yAxisTitle'] = 'Number of buyers';
+       
+        if($this->profileTimeFilter == 'hourly'){
+            $chartRecords['xAxisTitle'] = 'Last 24 Hours';  
+        
+            $intervals = $this->hourlyInterval();
+
+            $chartRecords['bottomLabels'] = $intervals;
+
+            $dateRange = collect($intervals);
+
+            if($this->profileFilter == 'profile-tags'){
+
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getProfileTagsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->profileFilter == 'verification-levels'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getVerificationLevelsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+                
+            }
+        }elseif($this->profileTimeFilter == 'weekly'){
+            $chartRecords['xAxisTitle'] = 'Last 7 days';  
+
+            $dateRange = $this->weeklyInterval();
+            
+            $chartRecords['bottomLabels'] = $dateRange->map(function($dateValue){
+                return  Carbon::parse($dateValue)->format('l');
+            })->toArray();
+
+            if($this->profileFilter == 'profile-tags'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getProfileTagsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->profileFilter == 'verification-levels'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getVerificationLevelsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }
+
+
+        }elseif($this->profileTimeFilter == 'monthly'){
+            $chartRecords['xAxisTitle'] = 'Last 30 days';  
+
+            $dateRange = $this->monthlyInterval();
+
+            $chartRecords['bottomLabels'] = $dateRange;
+
+            if($this->profileFilter == 'profile-tags'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getProfileTagsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }elseif($this->profileFilter == 'verification-levels'){
+
+                $recordCollection = collect($chartRecords);
+                $newValues = $this->getVerificationLevelsDetails($dateRange);
+                $chartRecords = $recordCollection->merge($newValues);
+
+            }
+
+        }
+
+        // dd($chartRecords);
+        return $chartRecords;
+       
+    }
+
+    public function getProfileTagsDetails($dateRange){
+      
+        if(isset($this->allProfileTags)){
+
+            foreach($this->allProfileTags as $tag){
+                $chartData[$tag->plan_stripe_id] = $this->fetchProfileTagsQuery($dateRange,$tag->id);
+            }
+
+            return $chartData;
+        }
+      
+    }
+
+
+    public function getVerificationLevelsDetails($dateRange){
+      
+        $chartData['verified_user'] = $this->fetchProfileVerificationQuery($dateRange);
+
+        return $chartData;
+    }
+
+    public function fetchProfileTagsQuery($dateRange,$value){
+
+        if($this->profileTimeFilter == 'hourly'){
+
+            $reqQuery = Buyer::query()
+            ->where('updated_at', '>', now()->subHours(24))
+            ->select(
+                DB::raw('DATE_FORMAT(updated_at, "%H") as hour'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('plan_id', $value)
+            ->whereNotNull('plan_id')
+            ->whereRaw('EXTRACT(HOUR FROM updated_at) % 2 = 0')
+            ->whereNotNull('updated_at')
+            ->groupBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'))
+            ->orderBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'), 'asc')
+            ->get();
+
+            $data = $dateRange->map(function ($hour) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('hour', $hour);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+          
+
+        }else if($this->profileTimeFilter == 'weekly'){
+
+            $sevenDaysAgo = Carbon::now()->subDays(7);
+
+            $reqQuery = Buyer::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->whereDate('updated_at', '>', $sevenDaysAgo)
+            ->where('plan_id', $value)
+            ->whereNotNull('plan_id')
+            ->groupBy('date')
+            ->orderBy('date')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+          
+             
+        }else if($this->profileTimeFilter == 'monthly'){
+
+            $current = Carbon::now();
+            $thirtyDaysAgo = $current->copy()->subDays(30);
+
+            $reqQuery = Buyer::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->where('plan_id', $value)
+            ->whereNotNull('plan_id')
+            ->whereDate('updated_at', '>', $thirtyDaysAgo)
+            ->groupBy('date')
+            ->orderBy('date','desc')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+          
+        }
+
+    }
+
+    public function fetchProfileVerificationQuery($dateRange){
+
+        if($this->profileTimeFilter == 'hourly'){
+
+            $reqQuery = ProfileVerification::query()
+            ->where('updated_at', '>', now()->subHours(24))
+            ->select(
+                DB::raw('DATE_FORMAT(updated_at, "%H") as hour'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('is_phone_verification', 1)
+            ->where('is_driver_license',1)->where('driver_license_status','verified')
+            ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
+            ->where('is_llc_verification',1)->where('llc_verification_status','verified')
+            ->where('is_application_process',1)
+            ->whereRaw('EXTRACT(HOUR FROM updated_at) % 2 = 0')
+            ->whereNotNull('updated_at')
+            ->groupBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'))
+            ->orderBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'), 'asc')
+            ->get();
+
+            $data = $dateRange->map(function ($hour) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('hour', $hour);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+          
+
+        }else if($this->profileTimeFilter == 'weekly'){
+
+            $sevenDaysAgo = Carbon::now()->subDays(7);
+
+            $reqQuery = ProfileVerification::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->whereDate('updated_at', '>', $sevenDaysAgo)
+            ->where('is_phone_verification', 1)
+            ->where('is_driver_license',1)->where('driver_license_status','verified')
+            ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
+            ->where('is_llc_verification',1)->where('llc_verification_status','verified')
+            ->where('is_application_process',1)
+            ->groupBy('date')
+            ->orderBy('date')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+          
+             
+        }else if($this->profileTimeFilter == 'monthly'){
+
+            $current = Carbon::now();
+            $thirtyDaysAgo = $current->copy()->subDays(30);
+
+            $reqQuery = ProfileVerification::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
+            ->where('is_phone_verification', 1)
+            ->where('is_driver_license',1)->where('driver_license_status','verified')
+            ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
+            ->where('is_llc_verification',1)->where('llc_verification_status','verified')
+            ->where('is_application_process',1)
+            ->whereDate('updated_at', '>', $thirtyDaysAgo)
+            ->groupBy('date')
+            ->orderBy('date','desc')->get();
+
+            $data = $dateRange->map(function ($dateItem) use ($reqQuery) {
+                $record = $reqQuery->firstWhere('date', $dateItem);
+                return $record ? $record->count : 0;
+            })->toArray();
+
+            return $data;
+        }
+
     }
 
 
@@ -377,6 +867,7 @@ class Index extends Component
 
         return $dateRange;
     }
+
 
 
 

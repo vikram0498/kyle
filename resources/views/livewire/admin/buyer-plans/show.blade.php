@@ -37,6 +37,12 @@
             <th width="25%">{{ __('cruds.buyer_plan.fields.user_limit')}}</th>
             <td> {{ ($details->user_limit ?? '')  }}</td>
         </tr>
+
+        <tr>
+            <th width="25%">{{ __('cruds.buyer_plan.fields.color')}}</th>
+            <td> <span class="badge" style="background:{{ $details->color ?? '#6b7471'}}; width:100px;">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+        </tr>
+
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>
             <td> {{ $details->created_at->format(config('constants.datetime_format')) }}</td>

@@ -134,7 +134,7 @@
       </div>
       {{-- End Buyer Metrics chart --}}
 
-      {{-- Start Buyer Metrics chart --}}
+      {{-- Start Property Metrics chart --}}
       <div class="col-6 col-lg-6">
          <div class="card table-card-box mt-30">
             <h5 class="card-header">Property Metrics</h5>
@@ -151,12 +151,52 @@
                   <option value="location" {{ $propertyFilter == 'location' ? 'selected': ''}}>Property Location</option>
                </select>
                
-               <canvas id="buyerPropertyBarChart"></canvas>
+               <canvas id="propertyChart"></canvas>
 
             </div>
          </div>
       </div>
-      {{-- End Buyer Metrics chart --}}
+      {{-- End Property Metrics chart --}}
+   </div>
+
+   <div class="row">
+      {{-- Start profile tags or verification level chart --}}
+      <div class="col-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Profile Metrics</h5>
+            <div class="card-body border-0" wire:ignore>
+
+               <select class="float-right" wire:model="profileTimeFilter">
+                  <option value="hourly" {{ $profileTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
+                  <option value="weekly" {{ $profileTimeFilter == 'weekly' ? 'selected': ''}}>Weekly</option>
+                  <option value="monthly" {{ $profileTimeFilter == 'monthly' ? 'selected': ''}}>Monthly</option>
+               </select>
+
+               <select class="float-right" wire:model="profileFilter">
+                  <option value="profile-tags" {{ $profileFilter == 'profile-tags' ? 'selected': ''}}>Profile Tags</option>
+                  <option value="verification-levels" {{ $profileFilter == 'verification-levels' ? 'selected': ''}}>Verification Levels</option>
+               </select>
+               
+               <canvas id="profileChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End profile tags or verification level chart --}}
+
+      {{-- Start server technical chart --}}
+      <div class="col-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Server Technical Metrics</h5>
+            <div class="card-body border-0" wire:ignore>
+
+               <canvas id="serverTechnicalChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End server technical chart --}}
+
    </div>
 
 </div>
@@ -180,17 +220,52 @@
 // End to render line chart
 
 // Start to render property bar chart
-   var propertyBarChartDetails = @json($propertyBarChartDetails);
-   var buyerPropertyBarChartCanvas = document.getElementById('buyerPropertyBarChart');
-   var buyerPropertyBarChartContext = buyerPropertyBarChartCanvas.getContext('2d');
-   var propertyBarChart= null;
+   var propertyChartDetails = @json($propertyChartDetails);
+   var propertyChartCanvas = document.getElementById('propertyChart');
+   var propertyChartContext = propertyChartCanvas.getContext('2d');
+   var propertyChart= null;
 
-   renderBarChart(propertyBarChartDetails);
+   renderPropertyLocationChart(propertyChartDetails);
    
-   document.addEventListener('renderBuyerPropertyBarChart', function(event) {
-      renderBarChart(event.detail);
+   document.addEventListener('renderPropertyChart', function(event) { 
+
+      // console.log(event.detail);
+
+      if(event.detail.propertyFilter == 'location'){
+
+         renderPropertyLocationChart(event.detail);
+
+      }else if(event.detail.propertyFilter == 'type'){
+
+         renderPropertyTypeChart(event.detail);
+      }
+
    });
 // End to render property bar chart  
+
+// Start to render profile bar chart
+   var profileChartDetails = @json($profileChartDetails);
+   var profileChartCanvas = document.getElementById('profileChart');
+   var profileChartContext = profileChartCanvas.getContext('2d');
+   var profileChart= null;
+
+   renderProfileTagsChart(profileChartDetails);
+   
+   document.addEventListener('renderProfileChart', function(event) { 
+
+      // console.log(event.detail);
+
+      if(event.detail.profileFilter == 'profile-tags'){
+
+         renderProfileTagsChart(event.detail);
+
+      }else if(event.detail.profileFilter == 'verification-levels'){
+
+         renderVerificationLevelsChart(event.detail);
+      }
+
+   });
+// End to render profile bar chart 
    
    async function renderLineChart(buyerLineChartDetails){
 
@@ -250,28 +325,34 @@
 
    } 
 
-   async function renderBarChart(propertyBarChartDetails){
+   async function renderPropertyLocationChart(propertyChartDetails){
       // Destroy the existing chart if it exists
-      if (propertyBarChart) {
-         propertyBarChart.destroy();
+      if (propertyChart) {
+         propertyChart.destroy();
       }
 
-      propertyBarChart = new Chart(buyerPropertyBarChartContext, {
-         type: 'bar',
+      propertyChart = new Chart(propertyChartContext, {
+         type: 'line',
          data: {
-            labels: propertyBarChartDetails.bottomLabels,
+            labels: propertyChartDetails.bottomLabels,
             datasets: [
                {
-                  label: 'Location',
-                  data: propertyBarChartDetails.activeUserRecords,
-                  borderColor: '#00AC47',
-                  backgroundColor: '#8ad1a6',
+                  label: 'Railroad',
+                  data: propertyChartDetails.railroad,
+                  borderColor: '#003049',
+                  backgroundColor: '#003049',
                },
                {
-                  label: 'Type',
-                  data: propertyBarChartDetails.inactiveUserRecords,
-                  borderColor: '#c10707',
-                  backgroundColor: '#eb6464',
+                  label: 'Major Road',
+                  data: propertyChartDetails.major_road,
+                  borderColor: '#6a994e',
+                  backgroundColor: '#6a994e',
+               },
+               {
+                  label: 'Boarders Non-residential',
+                  data: propertyChartDetails.boarders_non_residential,
+                  borderColor: '#f77f00',
+                  backgroundColor: '#f77f00',
                }
             ]
          },
@@ -283,7 +364,7 @@
             plugins: {
                title: {
                 display: true,
-                text: propertyBarChartDetails.topTitle,
+                text: propertyChartDetails.topTitle,
                },
                legend: {
                   display: false
@@ -294,14 +375,235 @@
                type: 'category',
                title: {
                   display: true,
-                  text: propertyBarChartDetails.xAxisTitle,
+                  text: propertyChartDetails.xAxisTitle,
                },
                },
                y: {
                beginAtZero: true,
                title: {
                   display: true,
-                  text: propertyBarChartDetails.yAxisTitle,
+                  text: propertyChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+   }
+
+   async function renderPropertyTypeChart(propertyChartDetails){
+
+      // Destroy the existing chart if it exists
+      if (propertyChart) {
+         propertyChart.destroy();
+      }
+      propertyChart = new Chart(propertyChartContext, {
+         type: 'line',
+         data: {
+            labels: propertyChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'Commercial - Retail',
+                  data: propertyChartDetails.commercial_retail,
+                  borderColor: '#003f5c',
+                  backgroundColor: '#003f5c',
+               },
+               {
+                  label: 'Condo',
+                  data: propertyChartDetails.condo,
+                  borderColor: '#58508d',
+                  backgroundColor: '#58508d',
+               },
+               {
+                  label: 'Land',
+                  data: propertyChartDetails.land,
+                  borderColor: '#bc5090',
+                  backgroundColor: '#bc5090',
+               },
+               {
+                  label: 'Manufactured',
+                  data: propertyChartDetails.manufactured,
+                  borderColor: '#ff6361',
+                  backgroundColor: '#ff6361',
+               },
+               {
+                  label: 'Multi-Family - Commercial',
+                  data:propertyChartDetails.multi_family_commercial,
+                  borderColor: '#ffa600',
+                  backgroundColor: '#ffa600',
+               },
+               {
+                  label: 'Multi-Family - Residential',
+                  data: propertyChartDetails.multi_family_residential,
+                  borderColor: '#ff7c43',
+                  backgroundColor: '#ff7c43',
+               },
+               {
+                  label: 'Single Family',
+                  data: propertyChartDetails.single_family,
+                  borderColor: '#488f31',
+                  backgroundColor: '#488f31',
+               },
+               {
+                  label: 'Townhouse',
+                  data: propertyChartDetails.townhouse,
+                  borderColor: '#219ebc',
+                  backgroundColor: '#219ebc',
+               },
+               {
+                  label: 'Mobile Home Park',
+                  data: propertyChartDetails.mobile_home_park,
+                  borderColor: '#bc6c25',
+                  backgroundColor: '#bc6c25',
+               },
+               {
+                  label: 'Hotel/Motel',
+                  data: propertyChartDetails.hotel_motel,
+                  borderColor: '#283618',
+                  backgroundColor: '#283618',
+               },
+               
+            ]
+         },
+         options: {
+            interaction: {
+               mode: 'index',
+               intersect: false,
+            },
+            plugins: {
+               title: {
+                display: true,
+                text: propertyChartDetails.topTitle,
+               },
+               legend: {
+                  display: false
+               }
+            },
+            scales: {
+               x: {
+               type: 'category',
+               title: {
+                  display: true,
+                  text: propertyChartDetails.xAxisTitle,
+               },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: propertyChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+   }
+
+
+   async function renderProfileTagsChart(profileChartDetails){
+      // Destroy the existing chart if it exists
+      if (profileChart) {
+         profileChart.destroy();
+      }
+ 
+      profileChart = new Chart(profileChartContext, {
+         type: 'line',
+         data: {
+            labels: profileChartDetails.bottomLabels,
+            datasets: [
+               @if(isset($allProfileTags))
+
+                  @foreach($allProfileTags as $tag)
+                     {
+                        label: "{{ $tag->title }}",
+                        data: profileChartDetails['{{ $tag->plan_stripe_id }}'],
+                        borderColor: '{{ $tag->color ?? "#d88546" }}',
+                        backgroundColor: '{{ $tag->color ?? "#d88546" }}',
+                     },
+                  @endforeach
+                 
+               @endif
+            ]
+         },
+         options: {
+            interaction: {
+               mode: 'index',
+               intersect: false,
+            },
+            plugins: {
+               title: {
+                display: true,
+                text: profileChartDetails.topTitle,
+               },
+               legend: {
+                  display: false
+               }
+            },
+            scales: {
+               x: {
+               type: 'category',
+               title: {
+                  display: true,
+                  text: profileChartDetails.xAxisTitle,
+               },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: profileChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+   }
+
+   async function renderVerificationLevelsChart(profileChartDetails){
+      // Destroy the existing chart if it exists
+      if (profileChart) {
+         profileChart.destroy();
+      }
+
+      profileChart = new Chart(profileChartContext, {
+         type: 'line',
+         data: {
+            labels: profileChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'Verified',
+                  data: profileChartDetails.verified_user,
+                  borderColor: '#6a994e',
+                  backgroundColor: '#6a994e',
+               },
+            ]
+         },
+         options: {
+            interaction: {
+               mode: 'index',
+               intersect: false,
+            },
+            plugins: {
+               title: {
+                display: true,
+                text: profileChartDetails.topTitle,
+               },
+               legend: {
+                  display: false
+               }
+            },
+            scales: {
+               x: {
+               type: 'category',
+               title: {
+                  display: true,
+                  text: profileChartDetails.xAxisTitle,
+               },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: profileChartDetails.yAxisTitle,
                },
                },
             },
