@@ -115,11 +115,26 @@
    </div>
 
    <div class="row">
+      <div class="col-12 col-lg-12">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Server Technical Metrics</h5>
+            <div class="card-body border-0" wire:ignore>
+
+               <iframe style="width:100%;
+               height: 400px;" src="https://cloudwatch.amazonaws.com/dashboard.html?dashboard=ServerTechnical&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTcxNzA1NTA3NDgxMSIsIlUiOiJ1cy1lYXN0LTFfT0plUXN6SzBsIiwiQyI6IjVpZTFucm9nYzFuNmU2OGt2MWJsZ2dxaXYzIiwiSSI6InVzLWVhc3QtMTpjMDA0ZTFmZS03NWIyLTRiMTQtYWRlMi1hZjU0MWU3NjNkNjQiLCJNIjoiUHVibGljIn0=" frameborder="0">
+               </iframe>
+
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="row">
       {{-- Start Buyer Metrics chart --}}
-      <div class="col-6 col-lg-6">
+      <div class="col-12 col-md-6 col-lg-6">
          <div class="card table-card-box mt-30">
             <h5 class="card-header">Metrics</h5>
-            <div class="card-body border-0" wire:ignore>
+            <div class="card-body border-0" wire:ignore wire:key="buyer-metric">
                
                <select class="float-right" wire:model="buyerLineChartFilter">
                   <option value="hourly" {{ $buyerLineChartFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
@@ -135,10 +150,10 @@
       {{-- End Buyer Metrics chart --}}
 
       {{-- Start Property Metrics chart --}}
-      <div class="col-6 col-lg-6">
+      <div class="col-12 col-md-6 col-lg-6">
          <div class="card table-card-box mt-30">
             <h5 class="card-header">Property Metrics</h5>
-            <div class="card-body border-0" wire:ignore>
+            <div class="card-body border-0" wire:ignore wire:key="property-metric">
 
                <select class="float-right" wire:model="propertyTimeFilter">
                   <option value="hourly" {{ $propertyTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
@@ -157,14 +172,12 @@
          </div>
       </div>
       {{-- End Property Metrics chart --}}
-   </div>
-
-   <div class="row">
+  
       {{-- Start profile tags or verification level chart --}}
-      <div class="col-6 col-lg-6">
+      <div class="col-12 col-md-6 col-lg-6">
          <div class="card table-card-box mt-30">
             <h5 class="card-header">Profile Metrics</h5>
-            <div class="card-body border-0" wire:ignore>
+            <div class="card-body border-0" wire:ignore wire:key="profile-metric">
 
                <select class="float-right" wire:model="profileTimeFilter">
                   <option value="hourly" {{ $profileTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
@@ -184,20 +197,9 @@
       </div>
       {{-- End profile tags or verification level chart --}}
 
-      {{-- Start server technical chart --}}
-      <div class="col-6 col-lg-6">
-         <div class="card table-card-box mt-30">
-            <h5 class="card-header">Server Technical Metrics</h5>
-            <div class="card-body border-0" wire:ignore>
-
-               <canvas id="serverTechnicalChart"></canvas>
-
-            </div>
-         </div>
-      </div>
-      {{-- End server technical chart --}}
-
    </div>
+
+  
 
 </div>
 @push('scripts')
@@ -367,7 +369,7 @@
                 text: propertyChartDetails.topTitle,
                },
                legend: {
-                  display: false
+                  display: true
                }
             },
             scales: {
@@ -475,7 +477,7 @@
                 text: propertyChartDetails.topTitle,
                },
                legend: {
-                  display: false
+                  display: true
                }
             },
             scales: {
@@ -535,7 +537,7 @@
                 text: profileChartDetails.topTitle,
                },
                legend: {
-                  display: false
+                  display: true
                }
             },
             scales: {
@@ -570,7 +572,7 @@
             labels: profileChartDetails.bottomLabels,
             datasets: [
                {
-                  label: 'Verified',
+                  label: 'Verified Buyers',
                   data: profileChartDetails.verified_user,
                   borderColor: '#6a994e',
                   backgroundColor: '#6a994e',
@@ -588,7 +590,7 @@
                 text: profileChartDetails.topTitle,
                },
                legend: {
-                  display: false
+                  display: true
                }
             },
             scales: {
@@ -611,6 +613,7 @@
       });
    }
 
+   
 </script>
 
 
