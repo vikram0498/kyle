@@ -1088,3 +1088,9 @@ body .datepicker .datepicker-years .table-condensed{
     padding: 25px 20px 25px;
     border: none;
 }
+
+.border_wrap {
+    border: 1px solid #eaeceb;
+    padding: 4px 20px 4px 4px;
+    font-size: 13px;
+}

@@ -136,7 +136,7 @@
             <h5 class="card-header">Metrics</h5>
             <div class="card-body border-0" wire:ignore wire:key="buyer-metric">
                
-               <select class="float-right" wire:model="buyerLineChartFilter">
+               <select class="float-right border_wrap" wire:model="buyerLineChartFilter">
                   <option value="hourly" {{ $buyerLineChartFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
                   <option value="weekly" {{ $buyerLineChartFilter == 'weekly' ? 'selected':'' }}>Weekly</option>
                   <option value="monthly" {{ $buyerLineChartFilter == 'monthly' ? 'selected':'' }}>Monthly</option>
@@ -155,13 +155,13 @@
             <h5 class="card-header">Property Metrics</h5>
             <div class="card-body border-0" wire:ignore wire:key="property-metric">
 
-               <select class="float-right" wire:model="propertyTimeFilter">
+               <select class="float-right border_wrap" wire:model="propertyTimeFilter">
                   <option value="hourly" {{ $propertyTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
                   <option value="weekly" {{ $propertyTimeFilter == 'weekly' ? 'selected': ''}}>Weekly</option>
                   <option value="monthly" {{ $propertyTimeFilter == 'monthly' ? 'selected': ''}}>Monthly</option>
                </select>
 
-               <select class="float-right" wire:model="propertyFilter">
+               <select class="float-right border_wrap mr-2" wire:model="propertyFilter">
                   <option value="type" {{ $propertyFilter == 'type' ? 'selected': ''}}>Property Type</option>
                   <option value="location" {{ $propertyFilter == 'location' ? 'selected': ''}}>Property Location</option>
                </select>
@@ -179,13 +179,13 @@
             <h5 class="card-header">Profile Metrics</h5>
             <div class="card-body border-0" wire:ignore wire:key="profile-metric">
 
-               <select class="float-right" wire:model="profileTimeFilter">
+               <select class="float-right border_wrap" wire:model="profileTimeFilter">
                   <option value="hourly" {{ $profileTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
                   <option value="weekly" {{ $profileTimeFilter == 'weekly' ? 'selected': ''}}>Weekly</option>
                   <option value="monthly" {{ $profileTimeFilter == 'monthly' ? 'selected': ''}}>Monthly</option>
                </select>
 
-               <select class="float-right" wire:model="profileFilter">
+               <select class="float-right border_wrap mr-2" wire:model="profileFilter">
                   <option value="profile-tags" {{ $profileFilter == 'profile-tags' ? 'selected': ''}}>Profile Tags</option>
                   <option value="verification-levels" {{ $profileFilter == 'verification-levels' ? 'selected': ''}}>Verification Levels</option>
                </select>
@@ -285,13 +285,13 @@
                   label: 'Active',
                   data: buyerLineChartDetails.activeUserRecords,
                   borderColor: '#00AC47',
-                  backgroundColor: '#8ad1a6',
+                  backgroundColor: '#00AC47',
                },
                {
                   label: 'Inactive',
                   data: buyerLineChartDetails.inactiveUserRecords,
                   borderColor: '#c10707',
-                  backgroundColor: '#eb6464',
+                  backgroundColor: '#c10707',
                }
             ]
          },
