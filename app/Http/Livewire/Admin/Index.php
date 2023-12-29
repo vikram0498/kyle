@@ -80,9 +80,14 @@ class Index extends Component
             ->orderBy(DB::raw('EXTRACT(HOUR FROM login_at) % 2 = 0'), 'asc')
             ->get();
 
+            $last24HoursUserId = User::query()->whereHas('roles',function($query){
+                $query->where('id',3);
+            })->whereNotNull('login_at')
+            ->whereBetween('login_at', [now()->subHours(24),now()])->pluck('id')->toArray();
+
             $inactiveRecords = User::query()->whereHas('roles',function($query){
                 $query->where('id',3);
-            })->whereNotIN('id', $activeRecords->pluck('id')->toArray())
+            })->whereNotIn('id',$last24HoursUserId)
             ->select(
                 DB::raw('DATE_FORMAT(login_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
