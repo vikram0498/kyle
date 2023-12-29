@@ -121,7 +121,7 @@
             <div class="card-body border-0" wire:ignore>
 
                <iframe style="width:100%;
-               height: 400px;" src="https://cloudwatch.amazonaws.com/dashboard.html?dashboard=ServerTechnical&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTcxNzA1NTA3NDgxMSIsIlUiOiJ1cy1lYXN0LTFfT0plUXN6SzBsIiwiQyI6IjVpZTFucm9nYzFuNmU2OGt2MWJsZ2dxaXYzIiwiSSI6InVzLWVhc3QtMTpjMDA0ZTFmZS03NWIyLTRiMTQtYWRlMi1hZjU0MWU3NjNkNjQiLCJNIjoiUHVibGljIn0=" frameborder="0">
+               height: 540px;" src="https://cloudwatch.amazonaws.com/dashboard.html?dashboard=ServerTechnical&context=eyJSIjoidXMtZWFzdC0xIiwiRCI6ImN3LWRiLTcxNzA1NTA3NDgxMSIsIlUiOiJ1cy1lYXN0LTFfT0plUXN6SzBsIiwiQyI6IjVpZTFucm9nYzFuNmU2OGt2MWJsZ2dxaXYzIiwiSSI6InVzLWVhc3QtMTpjMDA0ZTFmZS03NWIyLTRiMTQtYWRlMi1hZjU0MWU3NjNkNjQiLCJNIjoiUHVibGljIn0=" frameborder="0">
                </iframe>
 
             </div>
