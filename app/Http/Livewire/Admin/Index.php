@@ -61,6 +61,7 @@ class Index extends Component
         $chartRecords['yAxisTitle'] = 'Number of buyers';
         $chartRecords['activeUserRecords'] =[];
         $chartRecords['inactiveUserRecords'] =[]; 
+        $chartRecords['buyerLineChartFilter']=$this->buyerLineChartFilter;
 
         if($this->buyerLineChartFilter == 'hourly'){
             $chartRecords['xAxisTitle'] = 'Last 24 hour';
@@ -74,7 +75,7 @@ class Index extends Component
                 DB::raw('DATE_FORMAT(login_at, "%H") as hour'),
                 DB::raw('COUNT(*) as count')
             )
-            ->whereRaw('EXTRACT(HOUR FROM login_at) % 2 = 0')
+            // ->whereRaw('EXTRACT(HOUR FROM login_at) % 2 = 0')
             ->whereNotNull('login_at')
             ->groupBy(DB::raw('EXTRACT(HOUR FROM login_at) % 2 = 0'))
             ->orderBy(DB::raw('EXTRACT(HOUR FROM login_at) % 2 = 0'), 'asc')
@@ -142,10 +143,15 @@ class Index extends Component
             ->groupBy('date')
             ->orderBy('date')->get();
 
+            $last7DaysUserId = User::query()->whereHas('roles',function($query){
+                $query->where('id',3);
+            })->whereNotNull('login_at')
+            ->whereDate('login_at', '>', $sevenDaysAgo)->pluck('id')->toArray();
+
             $inactiveRecords = User::query()->whereHas('roles',function($query){
                 $query->where('id',3);
             })->selectRaw('DATE(login_at) as date, COUNT(*) as count')
-            ->whereNotIn('id',$activeRecords->pluck('id')->toArray())
+            ->whereNotIn('id',$last7DaysUserId)
             ->groupBy('date')
             ->orderBy('date')->get();
 
@@ -202,10 +208,15 @@ class Index extends Component
             ->groupBy('date')
             ->orderBy('date','desc')->get();
 
+            $last30DaysUserId = User::query()->whereHas('roles',function($query){
+                $query->where('id',3);
+            })->whereNotNull('login_at')
+            ->whereDate('login_at', '>', $thirtyDaysAgo)->pluck('id')->toArray();
+
             $inactiveRecords = User::query()->whereHas('roles',function($query){
                 $query->where('id',3);
             })->selectRaw('DATE(login_at) as date, COUNT(*) as count')
-            ->whereNotIn('id',$activeRecords->pluck('id')->toArray())
+            ->whereNotIn('id',$last30DaysUserId)
             ->groupBy('date')
             ->orderBy('date','desc')->get();
 
@@ -276,8 +287,6 @@ class Index extends Component
         ->limit(5)
         ->get();
 
-
-        
         return view('livewire.admin.index', compact('buyerCount', 'sellerCount','purchasedBuyers'));
     }
 
@@ -292,8 +301,6 @@ class Index extends Component
         }
 
         $this->propertyChartDetails = $this->getDetailsPropertyChart();
-        $this->propertyChartDetails['propertyFilter']=$this->propertyFilter;
-
         $this->dispatchBrowserEvent('renderPropertyChart',$this->propertyChartDetails); 
     }
 
@@ -308,8 +315,6 @@ class Index extends Component
         }
 
         $this->propertyChartDetails = $this->getDetailsPropertyChart();
-        $this->propertyChartDetails['propertyFilter']=$this->propertyFilter;
-
         $this->dispatchBrowserEvent('renderPropertyChart',$this->propertyChartDetails); 
     }
 
@@ -319,7 +324,9 @@ class Index extends Component
         $chartRecords['topTitle'] = 'Property Metric';
         $chartRecords['xAxisTitle'] = '';  
         $chartRecords['yAxisTitle'] = 'Number of search';
-       
+        $chartRecords['propertyFilter']=$this->propertyFilter;
+        $chartRecords['propertyTimeFilter']=$this->propertyTimeFilter;
+
         if($this->propertyTimeFilter == 'hourly'){
             $chartRecords['xAxisTitle'] = 'Last 24 Hours';  
         
@@ -416,7 +423,6 @@ class Index extends Component
             ->where(function ($query) use ($value) {
                 $query->orWhereJsonContains("property_flaw", $value);
             })
-            ->whereRaw('EXTRACT(HOUR FROM created_at) % 2 = 0')
             ->whereNotNull('created_at')
             ->groupBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'))
             ->orderBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'), 'asc')
@@ -497,7 +503,7 @@ class Index extends Component
                 DB::raw('COUNT(*) as count')
             )
             ->where('property_type',$value)
-            ->whereRaw('EXTRACT(HOUR FROM created_at) % 2 = 0')
+            // ->whereRaw('EXTRACT(HOUR FROM created_at) % 2 = 0')
             ->whereNotNull('created_at')
             ->groupBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'))
             ->orderBy(DB::raw('EXTRACT(HOUR FROM created_at) % 2 = 0'), 'asc')
@@ -560,8 +566,6 @@ class Index extends Component
         }
 
         $this->profileChartDetails = $this->getDetailsProfileChart();
-        $this->profileChartDetails['profileFilter'] = $this->profileFilter;
-
         $this->dispatchBrowserEvent('renderProfileChart',$this->profileChartDetails); 
     }
 
@@ -576,8 +580,6 @@ class Index extends Component
         }
 
         $this->profileChartDetails = $this->getDetailsProfileChart();
-        $this->profileChartDetails['profileFilter']=$this->profileFilter;
-
         $this->dispatchBrowserEvent('renderProfileChart',$this->profileChartDetails); 
     }
 
@@ -586,6 +588,8 @@ class Index extends Component
         $chartRecords['topTitle'] = 'Profile Metric';
         $chartRecords['xAxisTitle'] = '';  
         $chartRecords['yAxisTitle'] = 'Number of buyers';
+        $chartRecords['profileFilter'] = $this->profileFilter;
+        $chartRecords['profileTimeFilter'] = $this->profileTimeFilter;
        
         if($this->profileTimeFilter == 'hourly'){
             $chartRecords['xAxisTitle'] = 'Last 24 Hours';  
@@ -597,7 +601,6 @@ class Index extends Component
             $dateRange = collect($intervals);
 
             if($this->profileFilter == 'profile-tags'){
-
 
                 $recordCollection = collect($chartRecords);
                 $newValues = $this->getProfileTagsDetails($dateRange);
@@ -695,7 +698,6 @@ class Index extends Component
             )
             ->where('plan_id', $value)
             ->whereNotNull('plan_id')
-            ->whereRaw('EXTRACT(HOUR FROM updated_at) % 2 = 0')
             ->whereNotNull('updated_at')
             ->groupBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'))
             ->orderBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'), 'asc')
@@ -766,7 +768,7 @@ class Index extends Component
             ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
             ->where('is_llc_verification',1)->where('llc_verification_status','verified')
             ->where('is_application_process',1)
-            ->whereRaw('EXTRACT(HOUR FROM updated_at) % 2 = 0')
+            // ->whereRaw('EXTRACT(HOUR FROM updated_at) % 2 = 0')
             ->whereNotNull('updated_at')
             ->groupBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'))
             ->orderBy(DB::raw('EXTRACT(HOUR FROM updated_at) % 2 = 0'), 'asc')
@@ -836,7 +838,7 @@ class Index extends Component
         while ($start <= $end) {
           
             $start->format('H');
-            $intervalValue = $start->addHours(2)->format('H');
+            $intervalValue = $start->addHours(1)->format('H');
 
             if($intervalValue != '00'){
                 $intervals[] = $intervalValue;

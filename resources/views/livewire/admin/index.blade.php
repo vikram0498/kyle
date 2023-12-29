@@ -308,11 +308,22 @@
             },
             scales: {
                x: {
-               type: 'category',
-               title: {
-                  display: true,
-                  text: buyerLineChartDetails.xAxisTitle,
-               },
+                  type: 'category',
+                  title: {
+                     display: true,
+                     text: buyerLineChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(buyerLineChartDetails.buyerLineChartFilter == 'hourly'){
+                           // Display even labels, hide odd labels
+                           return index % 2 === 0 ? value : '';
+                        }else{
+                           return buyerLineChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
                },
                y: {
                beginAtZero: true,
@@ -374,11 +385,23 @@
             },
             scales: {
                x: {
-               type: 'category',
-               title: {
-                  display: true,
-                  text: propertyChartDetails.xAxisTitle,
-               },
+                  type: 'category',
+                  position: 'bottom',
+                  title: {
+                     display: true,
+                     text: propertyChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(propertyChartDetails.propertyTimeFilter == 'hourly'){
+                           // Display even labels, hide odd labels
+                           return index % 2 === 0 ? value : '';
+                        }else{
+                           return propertyChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
                },
                y: {
                beginAtZero: true,
@@ -487,6 +510,18 @@
                   display: true,
                   text: propertyChartDetails.xAxisTitle,
                },
+               ticks: {
+                  callback: (value, index)=> {
+                     if(propertyChartDetails.propertyTimeFilter == 'hourly'){
+                        // Display even labels, hide odd labels
+                        return index % 2 === 0 ? value : '';
+                     }else{
+                        return propertyChartDetails.bottomLabels[index];
+                     }
+                  },
+                  
+               },
+               
                },
                y: {
                beginAtZero: true,
@@ -542,11 +577,22 @@
             },
             scales: {
                x: {
-               type: 'category',
-               title: {
-                  display: true,
-                  text: profileChartDetails.xAxisTitle,
-               },
+                  type: 'category',
+                  title: {
+                     display: true,
+                     text: profileChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(profileChartDetails.profileTimeFilter == 'hourly'){
+                           // Display even labels, hide odd labels
+                           return index % 2 === 0 ? value : '';
+                        }else{
+                           return profileChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
                },
                y: {
                beginAtZero: true,
@@ -595,11 +641,22 @@
             },
             scales: {
                x: {
-               type: 'category',
-               title: {
-                  display: true,
-                  text: profileChartDetails.xAxisTitle,
-               },
+                  type: 'category',
+                  title: {
+                     display: true,
+                     text: profileChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(profileChartDetails.profileTimeFilter == 'hourly'){
+                           // Display even labels, hide odd labels
+                           return index % 2 === 0 ? value : '';
+                        }else{
+                           return profileChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
                },
                y: {
                beginAtZero: true,
