@@ -34,6 +34,10 @@ class SearchLogTable extends Component
         return view('livewire.admin.search-log.search-log-table',compact('searchLogs'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

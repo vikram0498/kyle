@@ -42,6 +42,10 @@ class BuyerPlanTable extends Component
 
         return view('livewire.admin.buyer-plans.buyer-plan-table',compact('plans'));
     }
+    
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
 
     public function updatedSearch()
     {

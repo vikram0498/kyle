@@ -56,6 +56,10 @@ class UserTable extends Component
         return view('livewire.admin.seller.user-table',compact('users'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

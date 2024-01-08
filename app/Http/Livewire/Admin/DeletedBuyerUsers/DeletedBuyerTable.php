@@ -48,6 +48,10 @@ class DeletedBuyerTable extends Component
         return view('livewire.admin.deleted-buyer-users.deleted-buyer-table',compact('buyers'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

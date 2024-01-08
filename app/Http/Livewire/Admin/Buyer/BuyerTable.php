@@ -47,6 +47,10 @@ class BuyerTable extends Component
 
         return view('livewire.admin.buyer.buyer-table',compact('buyers'));
     }
+    
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
 
     public function updatedSearch()
     {

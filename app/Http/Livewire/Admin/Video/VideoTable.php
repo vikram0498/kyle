@@ -40,6 +40,10 @@ class VideoTable extends Component
         return view('livewire.admin.video.video-table',compact('videos'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

@@ -71,6 +71,10 @@ class TransactionTable extends Component
         return view('livewire.admin.transactions.transaction-table',compact('transactions'));
     }
     
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();
