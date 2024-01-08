@@ -182,7 +182,7 @@ class LoginRegisterController extends Controller
                 //Error Response Send
                 $responseData = [
                     'status'        => false,
-                    'error'         => 'These credentials do not match our records!',
+                    'error'         => trans('auth.failed'),
                 ];
                 return response()->json($responseData, 401);
             }

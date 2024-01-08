@@ -10,7 +10,7 @@
       </div>
       </div> -->
    <div class="row">
-      <div class="col-12 col-lg-8 col-md-8 transparent">
+      <div class="col-12 col-lg-6 col-md-6 transparent">
          <div class="row">
             <div class="col-12 col-md-6 col-lg-6 stretch-card transparent">
                
@@ -93,23 +93,23 @@
             </div>
          </div>
       </div>
-      <div class="col-12 col-lg-4 col-md-4 stretch-card">
-         <div class="card tale-bg justify-content-end img-box">
-            <div class="weather-info">
-               <div class="d-flex">
-                  <div>
-                     <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                  </div>
-                  <div class="ml-2">
-                     <h4 class="location font-weight-normal">Bangalore</h4>
-                     <h6 class="font-weight-normal">India</h6>
-                  </div>
+      <div class="col-12 col-lg-6 col-md-6 stretch-card">
+            {{-- Start chart of Seller and buyer statistics --}}
+            <div class="card table-card-box">
+               <h5 class="card-header">User Metrics</h5>
+               <div class="card-body border-0" wire:ignore wire:key="user-metric">
+
+                  <select class="float-right border_wrap" wire:model="userTimeFilter">
+                     <option value="hourly" {{ $userTimeFilter == 'hourly' ? 'selected': ''}}>Hourly</option>
+                     <option value="weekly" {{ $userTimeFilter == 'weekly' ? 'selected': ''}}>Weekly</option>
+                     <option value="monthly" {{ $userTimeFilter == 'monthly' ? 'selected': ''}}>Monthly</option>
+                  </select>
+                  
+                  <canvas id="userChart"></canvas>
+
                </div>
             </div>
-            <div class="card-people ">
-               <img src="{{ asset('admin/images/dashboard/people.svg') }}" alt="people">
-            </div>
-         </div>
+           {{-- End chart of Seller and buyer statistics --}}
       </div>
       
    </div>
@@ -130,25 +130,7 @@
    </div>
 
    <div class="row">
-      {{-- Start Buyer Metrics chart --}}
-      <div class="col-12 col-md-6 col-lg-6">
-         <div class="card table-card-box mt-30">
-            <h5 class="card-header">Metrics</h5>
-            <div class="card-body border-0" wire:ignore wire:key="buyer-metric">
-               
-               <select class="float-right border_wrap" wire:model="buyerLineChartFilter">
-                  <option value="hourly" {{ $buyerLineChartFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
-                  <option value="weekly" {{ $buyerLineChartFilter == 'weekly' ? 'selected':'' }}>Weekly</option>
-                  <option value="monthly" {{ $buyerLineChartFilter == 'monthly' ? 'selected':'' }}>Monthly</option>
-               </select>
-              
-               <canvas id="buyerLineChart"></canvas>
-
-            </div>
-         </div>
-      </div>
-      {{-- End Buyer Metrics chart --}}
-
+      
       {{-- Start Property Metrics chart --}}
       <div class="col-12 col-md-6 col-lg-6">
          <div class="card table-card-box mt-30">
@@ -197,6 +179,46 @@
       </div>
       {{-- End profile tags or verification level chart --}}
 
+      
+      {{-- Start Buyer Metrics chart --}}
+      <div class="col-12 col-md-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Buyer Metrics</h5>
+            <div class="card-body border-0" wire:ignore wire:key="buyer-metric">
+               
+               <select class="float-right border_wrap" wire:model="buyerLineChartFilter">
+                  <option value="hourly" {{ $buyerLineChartFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
+                  <option value="weekly" {{ $buyerLineChartFilter == 'weekly' ? 'selected':'' }}>Weekly</option>
+                  <option value="monthly" {{ $buyerLineChartFilter == 'monthly' ? 'selected':'' }}>Monthly</option>
+               </select>
+              
+               <canvas id="buyerLineChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End Buyer Metrics chart --}}
+
+      {{-- Start seller metrics chart --}}
+      <div class="col-12 col-md-6 col-lg-6">
+         <div class="card table-card-box mt-30">
+            <h5 class="card-header">Whole Seller Metrics</h5>
+            <div class="card-body border-0" wire:ignore wire:key="whole-seller-metric">
+               
+               <select class="float-right border_wrap" wire:model="sellerTimeFilter">
+                  <option value="hourly" {{ $sellerTimeFilter == 'hourly' ? 'selected':'' }}>Hourly</option>
+                  <option value="weekly" {{ $sellerTimeFilter == 'weekly' ? 'selected':'' }}>Weekly</option>
+                  <option value="monthly" {{ $sellerTimeFilter == 'monthly' ? 'selected':'' }}>Monthly</option>
+               </select>
+               
+               <canvas id="sellerLineChart"></canvas>
+
+            </div>
+         </div>
+      </div>
+      {{-- End seller metrics chart --}}
+
+
    </div>
 
   
@@ -208,24 +230,40 @@
 
 <script type="text/javascript"> 
   
-// Start to render line chart  
+// Start to render buyer line chart  
    var buyerLineChartDetails = @json($buyerLineChartRecords);
    var buyerLineChartCanvas = document.getElementById('buyerLineChart');
    var buyerLineChartContext = buyerLineChartCanvas.getContext('2d');
    var lineChart= null;
 
-   renderLineChart(buyerLineChartDetails);
+   renderBuyerLineChart(buyerLineChartDetails);
    
    document.addEventListener('renderBuyerLineChart', function(event) {
-      renderLineChart(event.detail);
+      renderBuyerLineChart(event.detail);
    });
-// End to render line chart
+// End to render buyer line chart
+
+// Start to render whole seller line chart  
+   var sellerLineChartDetails = @json($sellerLineChartRecords);
+   var sellerLineChartCanvas = document.getElementById('sellerLineChart');
+   var sellerLineChartContext = sellerLineChartCanvas.getContext('2d');
+   var sellerLineChart= null;
+
+   renderSellerLineChart(sellerLineChartDetails);
+   
+   document.addEventListener('renderSellerLineChart', function(event) {
+      renderSellerLineChart(event.detail);
+   });
+// End to render whole seller line chart
+
 
 // Start to render property bar chart
    var propertyChartDetails = @json($propertyChartDetails);
    var propertyChartCanvas = document.getElementById('propertyChart');
    var propertyChartContext = propertyChartCanvas.getContext('2d');
    var propertyChart= null;
+
+   // renderPropertyTypeChart(propertyChartDetails);
 
    renderPropertyLocationChart(propertyChartDetails);
    
@@ -245,7 +283,7 @@
    });
 // End to render property bar chart  
 
-// Start to render profile bar chart
+// Start to render profile chart
    var profileChartDetails = @json($profileChartDetails);
    var profileChartCanvas = document.getElementById('profileChart');
    var profileChartContext = profileChartCanvas.getContext('2d');
@@ -267,14 +305,49 @@
       }
 
    });
-// End to render profile bar chart 
+// End to render profile chart 
+
+// Start to render user chart
+   var userChartDetails = @json($userChartDetails);
+   var userChartCanvas = document.getElementById('userChart');
+   var userChartContext = userChartCanvas.getContext('2d');
+   var userChart= null;
+
+   renderUserChart(userChartDetails);
    
-   async function renderLineChart(buyerLineChartDetails){
+   document.addEventListener('renderUserChart', function(event) { 
+
+      // console.log(event.detail);
+
+         renderUserChart(event.detail);
+
+   });
+// End to render user chart
+
+
+
+   
+   async function renderBuyerLineChart(buyerLineChartDetails){
 
       // Destroy the existing chart if it exists
       if (lineChart) {
             lineChart.destroy();
       }
+
+      // Function to interpolate NaN values with the previous valid value
+      const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(buyerLineChartDetails.activeUserRecords);
+      interpolateNaN(buyerLineChartDetails.inactiveUserRecords);
+
 
       lineChart = new Chart(buyerLineChartContext, {
          type: 'line',
@@ -296,14 +369,48 @@
             ]
          },
          options: {
-            interaction: {
-               mode: 'index',
-               intersect: false,
-            },
+            
             plugins: {
                title: {
                 display: true,
                 text: buyerLineChartDetails.topTitle,
+               },
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(buyerLineChartDetails.buyerLineChartFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
                },
             },
             scales: {
@@ -316,8 +423,9 @@
                   ticks: {
                      callback: (value, index)=> {
                         if(buyerLineChartDetails.buyerLineChartFilter == 'hourly'){
+                           
                            // Display even labels, hide odd labels
-                           return index % 2 === 0 ? value : '';
+                           return parseInt(buyerLineChartDetails.bottomLabels[index]) % 2 === 0 ? buyerLineChartDetails.bottomLabels[index] : '';
                         }else{
                            return buyerLineChartDetails.bottomLabels[index];
                         }
@@ -338,11 +446,148 @@
 
    } 
 
+   
+   async function renderSellerLineChart(sellerLineChartDetails){
+
+      // Destroy the existing chart if it exists
+      if (sellerLineChart) {
+         sellerLineChart.destroy();
+      }
+
+
+      // Function to interpolate NaN values with the previous valid value
+      const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(sellerLineChartDetails.activeUserRecords);
+      interpolateNaN(sellerLineChartDetails.inactiveUserRecords);
+
+
+      sellerLineChart = new Chart(sellerLineChartContext, {
+         type: 'line',
+         data: {
+            labels: sellerLineChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'Active',
+                  data: sellerLineChartDetails.activeUserRecords,
+                  borderColor: '#00AC47',
+                  backgroundColor: '#00AC47',
+               },
+               {
+                  label: 'Inactive',
+                  data: sellerLineChartDetails.inactiveUserRecords,
+                  borderColor: '#c10707',
+                  backgroundColor: '#c10707',
+               }
+            ]
+         },
+         options: {
+            
+            plugins: {
+               title: {
+               display: true,
+               text: sellerLineChartDetails.topTitle,
+               },
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(sellerLineChartDetails.sellerTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
+               },
+            },
+            scales: {
+               x: {
+                  type: 'category',
+                  title: {
+                     display: true,
+                     text: sellerLineChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(sellerLineChartDetails.sellerTimeFilter == 'hourly'){
+                           
+                           // Display even labels, hide odd labels
+                           return parseInt(sellerLineChartDetails.bottomLabels[index]) % 2 === 0 ? sellerLineChartDetails.bottomLabels[index] : '';
+                        }else{
+                           return sellerLineChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: sellerLineChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+
+   } 
+
    async function renderPropertyLocationChart(propertyChartDetails){
       // Destroy the existing chart if it exists
       if (propertyChart) {
          propertyChart.destroy();
       }
+
+      // Function to interpolate NaN values with the previous valid value
+      const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(propertyChartDetails.railroad);
+      interpolateNaN(propertyChartDetails.major_road);
+      interpolateNaN(propertyChartDetails.boarders_non_residential);
+
 
       propertyChart = new Chart(propertyChartContext, {
          type: 'line',
@@ -381,7 +626,44 @@
                },
                legend: {
                   display: true
-               }
+               },
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(propertyChartDetails.propertyTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
+               },
             },
             scales: {
                x: {
@@ -395,7 +677,7 @@
                      callback: (value, index)=> {
                         if(propertyChartDetails.propertyTimeFilter == 'hourly'){
                            // Display even labels, hide odd labels
-                           return index % 2 === 0 ? value : '';
+                           return parseInt(propertyChartDetails.bottomLabels[index]) % 2 === 0 ? propertyChartDetails.bottomLabels[index] : '';
                         }else{
                            return propertyChartDetails.bottomLabels[index];
                         }
@@ -421,6 +703,30 @@
       if (propertyChart) {
          propertyChart.destroy();
       }
+
+      // Function to interpolate NaN values with the previous valid value
+      const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(propertyChartDetails.commercial_retail);
+      interpolateNaN(propertyChartDetails.condo);
+      interpolateNaN(propertyChartDetails.land);
+      interpolateNaN(propertyChartDetails.manufactured);
+      interpolateNaN(propertyChartDetails.multi_family_commercial);
+      interpolateNaN(propertyChartDetails.multi_family_residential);
+      interpolateNaN(propertyChartDetails.single_family);
+      interpolateNaN(propertyChartDetails.townhouse);
+      interpolateNaN(propertyChartDetails.mobile_home_park);
+      interpolateNaN(propertyChartDetails.hotel_motel);
+
+
       propertyChart = new Chart(propertyChartContext, {
          type: 'line',
          data: {
@@ -501,7 +807,44 @@
                },
                legend: {
                   display: true
-               }
+               },
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(propertyChartDetails.propertyTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
+               },
             },
             scales: {
                x: {
@@ -514,7 +857,8 @@
                   callback: (value, index)=> {
                      if(propertyChartDetails.propertyTimeFilter == 'hourly'){
                         // Display even labels, hide odd labels
-                        return index % 2 === 0 ? value : '';
+                        return parseInt(propertyChartDetails.bottomLabels[index]) % 2 === 0 ? propertyChartDetails.bottomLabels[index] : '';
+
                      }else{
                         return propertyChartDetails.bottomLabels[index];
                      }
@@ -542,6 +886,25 @@
          profileChart.destroy();
       }
  
+       // Function to interpolate NaN values with the previous valid value
+       const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      @if(isset($allProfileTags))
+
+         @foreach($allProfileTags as $tag)
+            interpolateNaN(profileChartDetails['{{ $tag->plan_stripe_id }}']);
+         @endforeach
+                 
+      @endif
+
       profileChart = new Chart(profileChartContext, {
          type: 'line',
          data: {
@@ -573,7 +936,45 @@
                },
                legend: {
                   display: true
-               }
+               },  
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(profileChartDetails.profileTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
+               },
+
             },
             scales: {
                x: {
@@ -586,7 +987,7 @@
                      callback: (value, index)=> {
                         if(profileChartDetails.profileTimeFilter == 'hourly'){
                            // Display even labels, hide odd labels
-                           return index % 2 === 0 ? value : '';
+                           return parseInt(profileChartDetails.bottomLabels[index]) % 2 === 0 ? profileChartDetails.bottomLabels[index] : '';
                         }else{
                            return profileChartDetails.bottomLabels[index];
                         }
@@ -611,6 +1012,19 @@
       if (profileChart) {
          profileChart.destroy();
       }
+
+       // Function to interpolate NaN values with the previous valid value
+       const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            //if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(profileChartDetails.verified_user);
 
       profileChart = new Chart(profileChartContext, {
          type: 'line',
@@ -637,7 +1051,44 @@
                },
                legend: {
                   display: true
-               }
+               },
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(profileChartDetails.profileTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+                           
+                        }
+
+                     }
+                  }
+               },
             },
             scales: {
                x: {
@@ -650,7 +1101,7 @@
                      callback: (value, index)=> {
                         if(profileChartDetails.profileTimeFilter == 'hourly'){
                            // Display even labels, hide odd labels
-                           return index % 2 === 0 ? value : '';
+                           return parseInt(profileChartDetails.bottomLabels[index]) % 2 === 0 ? profileChartDetails.bottomLabels[index] : '';
                         }else{
                            return profileChartDetails.bottomLabels[index];
                         }
@@ -670,7 +1121,126 @@
       });
    }
 
-   
+   async function renderUserChart(userChartDetails){
+      
+      // Destroy the existing chart if it exists
+      if (userChart) {
+         userChart.destroy();
+      }
+
+      // Function to interpolate NaN values with the previous valid value
+      const interpolateNaN = (data) => {
+         for (let i = 1; i < data.length; i++) {
+            // if (isNaN(data[i])) {
+            if (data[i] == 0) {
+               data[i] = data[i - 1];
+            }
+         }
+      };
+
+      // Interpolate NaN values in the yValues array
+      interpolateNaN(userChartDetails.seller_user.sellerUserRecords);
+      interpolateNaN(userChartDetails.buyer_user.buyerUserRecords);
+
+
+      userChart = new Chart(userChartContext, {
+         type: 'line',
+         data: {
+            labels: userChartDetails.bottomLabels,
+            datasets: [
+               {
+                  label: 'whole seller',
+                  data: userChartDetails.seller_user.sellerUserRecords,
+                  borderColor: '#0b4d6b',
+                  backgroundColor: '#0b4d6b',
+               },
+               {
+                  label: 'Buyer',
+                  data: userChartDetails.buyer_user.buyerUserRecords,
+                  borderColor: '#b4538d',
+                  backgroundColor: '#b4538d',
+               }
+            ]
+         },
+         options: {
+            plugins: {
+               title: {
+                display: true,
+                text: userChartDetails.topTitle,
+               },
+
+               tooltip: {
+                  callbacks: {
+                        
+                     label: function(context) {
+                           
+                        // console.log('context',context);
+
+                     },
+                     title:function(context){
+                        // console.log(context[0].label);
+                        
+                        if(userChartDetails.userTimeFilter == 'hourly'){
+                        
+                           if(context[0].label == 0){
+                              // Get the current date and time
+                              var currentDate = new Date();
+
+                              var hours = currentDate.getHours();
+                              var minutes = currentDate.getMinutes();
+                              var seconds = currentDate.getSeconds();
+
+                              // Format the time as HH:MM:SS
+                              var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                              // Display the formatted time
+                              // console.log('Current Time: ' + formattedTime);
+
+                              return 'Current Time: ' + formattedTime;
+                           }else{
+                              return context[0].label+' Hours Ago';
+                           }
+
+                        }
+
+                     }
+                  }
+               },
+            },
+            scales: {
+               x: {
+                  type: 'category',
+                  title: {
+                     display: true,
+                     text: userChartDetails.xAxisTitle,
+                  },
+                  ticks: {
+                     callback: (value, index)=> {
+                        if(userChartDetails.userTimeFilter == 'hourly'){
+                           
+                           // Display even labels, hide odd labels
+                           return parseInt(userChartDetails.bottomLabels[index]) % 2 === 0 ? userChartDetails.bottomLabels[index] : '';
+                        }else{
+                           return userChartDetails.bottomLabels[index];
+                        }
+                     },
+                     
+                  },
+               },
+               y: {
+               beginAtZero: true,
+               title: {
+                  display: true,
+                  text: userChartDetails.yAxisTitle,
+               },
+               },
+            },
+         }
+      });
+
+
+
+   }
 </script>
 
 
