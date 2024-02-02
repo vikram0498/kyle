@@ -139,14 +139,6 @@ export default function BuyerCard({
                   className="img-fluid"
                   alt=""
                 />
-                {
-                  data.phone_verified && 
-                  <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
-                      <span className="mx-2 verify_icon">
-                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
-                      </span>
-                  </OverlayTrigger>
-                 }
               </span>
               <a href={"tel:+" + data.phone} className="name-dealer">
                 {data.phone} 
@@ -155,13 +147,6 @@ export default function BuyerCard({
             <li>
               <span className="detail-icon">
                 <img src="./assets/images/emailbox.svg" className="img-fluid" alt=""/>
-                {data.email_verified && 
-                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
-                        <span className="mx-2 verify_icon">
-                          <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
-                        </span>
-                    </OverlayTrigger>
-                  }
               </span>
               <a href={"mailto:" + data.email} className="name-dealer email-tag">
                 {data.email}
@@ -177,8 +162,18 @@ export default function BuyerCard({
             </li> */}
           </ul>
         </div>
-        {(data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
+        {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
         <div className="cornor-block">
+          {data.phone_verified && 
+          <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
+              <img src="/assets/images/ver-phone-number.svg" class="img-fluid" alt=""/>
+          </OverlayTrigger>
+          }
+          {data.email_verified && 
+            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
+                <img src="/assets/images/ver-email.svg" class="img-fluid" alt=""/>
+            </OverlayTrigger>
+          }
           {(data.driver_license_verified) && 
             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
                 <img

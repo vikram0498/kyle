@@ -21,8 +21,8 @@ import RejectedPage from "./ApplicationStatusPage/RejectedPage";
 
 const steps = [
   "Phone Verification",
-  "ID/Driver’s License",
   "Proof of Funds",
+  "ID/Driver’s License",
   "LLC Verification",
   "Application Process",
 ];
@@ -295,7 +295,7 @@ const HorizontalLinearStepper = () => {
                         )}
 
                         {activeStep === 1 && (
-                          <DriverLicense
+                           <ProofOfFund
                             register={register}
                             errors={errors}
                             renderFieldError={renderFieldError}
@@ -303,7 +303,7 @@ const HorizontalLinearStepper = () => {
                         )}
 
                         {activeStep === 2 && (
-                          <ProofOfFund
+                          <DriverLicense
                             register={register}
                             errors={errors}
                             renderFieldError={renderFieldError}

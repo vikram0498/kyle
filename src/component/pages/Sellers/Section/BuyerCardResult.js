@@ -116,14 +116,6 @@ const BuyerCardResult = (props) => {
                     <li>
                         <span className="detail-icon">
                             <img alt="phone-gradient" src="/assets/images/callingbox.svg" className="img-fluid" />
-                            {
-                                data.phone_verified && 
-                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
-                                    <span className="mx-2 verify_icon">
-                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
-                                    </span>
-                                </OverlayTrigger>
-                            }
                         </span>
                         {(activeTab ==='more_buyers')? 
                             <span className="name-dealer">{data.phone}</span>
@@ -136,15 +128,6 @@ const BuyerCardResult = (props) => {
                     <li>
                         <span className="detail-icon">
                             <img alt="email" src="/assets/images/emailbox.svg" className="img-fluid" />                            
-                                {
-                                data.email_verified && 
-                                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
-                                        <span className="mx-2 verify_icon">
-                                        <img src="/assets/images/ver-check-blue.svg" class="img-fluid" alt=""/>
-                                        </span>
-                                    </OverlayTrigger>
-                                }
-                           
                         </span>
 
                         {(activeTab ==='more_buyers')? 
@@ -163,8 +146,18 @@ const BuyerCardResult = (props) => {
                     </li> */}
                 </ul>
             </div>
-            {(data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
+            {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
                 <div className="cornor-block">
+                    {data.phone_verified && 
+                        <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
+                                <img src="/assets/images/ver-phone-number.svg" class="img-fluid" alt=""/>
+                        </OverlayTrigger>
+                    }
+                    {data.email_verified && 
+                        <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
+                            <img src="/assets/images/ver-email.svg" class="img-fluid" alt=""/>
+                        </OverlayTrigger>
+                    }
                     {(data.driver_license_verified) && 
                         <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>ID/Driver’s License</Tooltip>} >
                             <img
