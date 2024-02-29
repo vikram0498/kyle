@@ -24,6 +24,12 @@ return [
         'email_logo' => 'images/email-logo.png',
     ],
 
+    'roles'=>[
+        'super_admin'   =>  1,
+        'seller'        =>  2,
+        'buyer'         =>  3,
+    ],
+
     'profile_image_size' =>'2048', // 1024 = 1 MB
 
     'owner_email' => env('OWNER_MAIL'),

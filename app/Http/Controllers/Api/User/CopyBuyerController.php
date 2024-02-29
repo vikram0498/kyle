@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCopyBuyerRequest;
+use App\Http\Requests\StoreAddBuyerRequest;
 use Illuminate\Support\Facades\Cache;
 
 class CopyBuyerController extends Controller
@@ -74,6 +75,7 @@ class CopyBuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
+
 
     public function copyBuyerFormElementValues(){
         $elementValues = [];
@@ -352,6 +354,7 @@ class CopyBuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
+
     public function isValidateToken($token){
         $tokenExpired = $this->checkTokenValidate($token);
 
@@ -386,5 +389,110 @@ class CopyBuyerController extends Controller
         }
 
         return $tokenExpired;
+    }
+
+
+    public function addBuyer(StoreAddBuyerRequest $request){
+        DB::beginTransaction();
+        try {
+            
+            $validatedData = $request->all();
+
+            $superAdminUser = User::whereHas('roles',function($query){
+                $query->where('id',config('constants.roles.super_admin'));
+            })->first();
+
+            $validatedData['user_id'] = $superAdminUser->id;
+
+            // Start create users table
+            $userDetails =  [
+                'first_name'     => $validatedData['first_name'],
+                'last_name'      => $validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
+                'email'          => $validatedData['email'], 
+                'phone'          => $validatedData['phone'], 
+            ];
+            $createUser = User::create($userDetails);
+            // End create users table
+
+            if($createUser){
+
+                $createUser->roles()->sync(3);
+
+                $validatedData['buyer_user_id'] = $createUser->id;
+
+                $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
+
+                // if($request->state){
+                //      $validatedData['state'] = json_encode($request->state);
+                // }
+                
+                //  if($request->city){
+                //      $validatedData['city'] = json_encode($request->city);
+                // }
+                
+                if($request->parking){
+                    $validatedData['parking'] = (int)$request->parking;
+                }
+            
+                if($request->buyer_type){
+                    $validatedData['buyer_type'] = (int)$request->buyer_type;
+                }
+
+            
+                if($request->zoning){
+                    $validatedData['zoning'] = json_encode($request->zoning);
+                }           
+            
+                if($request->permanent_affix){
+                    $validatedData['permanent_affix'] = (int)$request->permanent_affix;
+                } 
+                if($request->park){
+                    $validatedData['park'] = (int)$request->park;
+                }  
+                if($request->rooms){
+                    $validatedData['rooms'] = (int)$request->rooms;
+                }
+                
+                
+                $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+                
+                $createUser->buyerDetail()->create($validatedData);
+                
+              
+                //Purchased buyer
+                $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                $syncData['created_at'] = Carbon::now();
+        
+                User::where('id',$validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
+
+                //Verification mail sent
+                $createUser->NotificationSendToBuyerVerifyEmail();
+                
+            }
+
+            DB::commit();
+                
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.auth.buyer.register_success_alert'),
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
+            ];
+            return response()->json($responseData, 500);
+        }
     }
 }
