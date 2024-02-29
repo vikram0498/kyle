@@ -102,6 +102,11 @@ class SearchBuyersRequest extends FormRequest
 
         $rules['building_class'] = ['nullable', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
        
+        
+        $rules['max_down_payment_percentage'] = [];
+        $rules['max_down_payment_money'] = [];
+        $rules['max_interest_rate'] = [];
+        $rules['balloon_payment'] = [];
 
         //property_types :- 3 => Commercial - Retail, 4 => Condo, 7 => Land, 8 => Manufactured, 10 => Multi-Family - Commercial, 11 => Multi-Family - Residential,
         //    12 => Single Family, 13 => Townhouse, 14 => Mobile Home Park, 15 => Hotel/Motel,
@@ -146,7 +151,15 @@ class SearchBuyersRequest extends FormRequest
 
         if(in_array($this->property_type,[15])){
             $rules['rooms']    = ['required','numeric'];
+        }
+
+        //'purchase_methods' = 1 => 'Cash', 2 => 'Hard Money', 3 => 'Private Financing', 4 => 'Conforming Loan', 5 => 'Creative Finance',
         
+        if( array_intersect([5], $this->purchase_method) ){
+            $rules['max_down_payment_percentage']   = ['required','numeric'];
+            $rules['max_down_payment_money']        = ['required','numeric'];
+            $rules['max_interest_rate']             = ['required','numeric'];
+            $rules['balloon_payment']               = ['required'];
         }
     
         return $rules;
@@ -175,6 +188,10 @@ class SearchBuyersRequest extends FormRequest
             'lot_size'    => 'lot size sq Ft',
             'build_year'  => 'year built',
             'park'        => 'park owned/tenant owned',
+            'max_down_payment_percentage' => 'down payment(%)',
+            'max_down_payment_money' => 'down payment($)',
+            'max_interest_rate' => 'interest rate(%)',
+            'balloon_payment' => 'balloon payment',
         ];
     }
 
