@@ -132,7 +132,7 @@ class SearchBuyersRequest extends FormRequest
 
         }
 
-        if(!in_array($this->property_type,[4,7,8,12,13])){
+        if(!in_array($this->property_type,[3,4,7,8,12,13])){
             $rules['total_units']    = ['required','numeric'];
             $rules['building_class'] = ['required', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
 
@@ -185,7 +185,7 @@ class SearchBuyersRequest extends FormRequest
             'property_flaw'     => 'location flaws',
             'bedroom'     => 'bed',
             'size'        => 'sq ft',
-            'lot_size'    => 'lot size sq Ft',
+            'lot_size'    => 'lot size sq ft',
             'build_year'  => 'year built',
             'park'        => 'park owned/tenant owned',
             'max_down_payment_percentage' => 'down payment(%)',

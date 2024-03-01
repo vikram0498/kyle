@@ -147,6 +147,7 @@ class SearchBuyerController extends Controller
     }
 
     public function buyBoxSearch(SearchBuyersRequest $request){
+
         $radioValues = [0,1];
         DB::beginTransaction();
         try {
@@ -198,10 +199,10 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
 
-            // if($request->address){
-            //     $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
-            //     $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            // }
+            if($request->address){
+                $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
+                $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
+            }
 
             // if($request->country){
             //     $country =  DB::table('countries')->where('id',$request->country)->value('name');
@@ -239,10 +240,10 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            // if($request->zip_code){
-            //     $buyers = $buyers->where('zip_code', $request->zip_code);
-            //     $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
-            // }
+            if($request->zip_code){
+                $buyers = $buyers->where('zip_code', $request->zip_code);
+                $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
+            }
 
             if($request->price){
                 $priceValue = $request->price;
@@ -425,9 +426,7 @@ class SearchBuyerController extends Controller
             //     $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
             // }
 
-            /* if($request->building_class){
-                $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
-            } */
+         
 
             if($request->stories && is_numeric($request->stories)){
                 $stories_value = $request->stories;
@@ -740,6 +739,7 @@ class SearchBuyerController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 400);
         }
@@ -770,9 +770,9 @@ class SearchBuyerController extends Controller
 
             }
 
-            // if($lastSearchLog->address){
-            //     $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            // }
+            if($lastSearchLog->address){
+                $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
+            }
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
@@ -796,9 +796,9 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            // if($lastSearchLog->zip_code){
-            //     $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
-            // }
+            if($lastSearchLog->zip_code){
+                $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
+            }
 
             if($lastSearchLog->price){
                 $priceValue = $lastSearchLog->price;
