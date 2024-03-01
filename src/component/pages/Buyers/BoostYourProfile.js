@@ -184,8 +184,7 @@ const BoostYourProfile = () => {
             <div className="card-box boost-box">
               <h3 className="text-center">Boost Your Profile</h3>
               <p className="text-center">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
+              Boost your profile rank! Discover more off-market opportunities and gain an edge in securing exclusive investment properties.
               </p>
               <div className="card-box-inner mt-4">
                 {plans.length > 0

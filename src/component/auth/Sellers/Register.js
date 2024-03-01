@@ -122,7 +122,8 @@ const Register = () => {
       <div className="account-in">
         <div className="center-content">
           <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
-          <h2>Welcome to Inucation!</h2>
+          {/* <h2>Welcome to Inucation!</h2> */}
+          <h2>Register for BuyBoxBot!</h2>
         </div>
         <form
           method="POST"
@@ -458,14 +459,14 @@ const Register = () => {
               </div>
               <ul className="account-with-social list-unstyled mb-0 social-login-link">
                 {/* <li>
-                                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link>
-                                    <FacebookLoginButton
-                                    apiUrl={apiUrl}
-                                    setLoading={setLoading}
-                                    navigate={navigate}
-                                    setErrors={setErrors}
-                                    />
-                                </li> */}
+                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link>
+                    <FacebookLoginButton
+                    apiUrl={apiUrl}
+                    setLoading={setLoading}
+                    navigate={navigate}
+                    setErrors={setErrors}
+                    />
+                </li> */}
                 <li>
                   <Link to="https://google.com">
                     <img

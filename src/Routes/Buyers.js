@@ -9,9 +9,11 @@ import BoostYourProfile from "../component/pages/Buyers/BoostYourProfile";
 import BoostYourProfilePurchased from "../component/pages/Buyers/BoostYourProfilePurchased";
 import MultiStepForm from "../component/pages/Buyers/MultiStepForm";
 import PaymentConfirm from "../component/pages/Buyers/PaymentConfirm";
+import RegisterBuyer from "../component/auth/Buyers/RegisterBuyer";
 const Buyers = () => {
   return (
     <Routes>
+      <Route path="/register-buyer" element={<RegisterBuyer/>} />
       <Route
         path="/verify-and-setpassword/:userId/:token"
         element={<VerifyAndSetPassword />}

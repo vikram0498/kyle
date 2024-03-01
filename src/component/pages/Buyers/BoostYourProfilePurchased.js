@@ -18,10 +18,10 @@ const BoostYourProfilePurchased = () => {
           </div>
           <div className="card-box boost-box purchased">
             <h3 className="text-center">Boost Your Profile</h3>
-            <p className="text-center">
+            {/* <p className="text-center">
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry.
-            </p>
+            </p> */}
             <div className="card-box-inner mt-4">
               <div className="boost-box-block-item selected">
                 <div className="boost-headingwithicon">

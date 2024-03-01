@@ -80,6 +80,7 @@ const MobileHomePark = ({ data }) => {
               value={data.lotSize}
               onChange={(e) => data.setLotSize(e.target.value)}
             />
+           {data.renderFieldError("lot_size")}
           </div>
         </div>
 
@@ -122,6 +123,7 @@ const MobileHomePark = ({ data }) => {
               value={data.totalUnits}
               onChange={(e) => data.setTotalUnits(e.target.value)}
             />
+            {data.renderFieldError("total_units")}
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
@@ -147,7 +149,7 @@ const MobileHomePark = ({ data }) => {
                   name="value_add"
                   value="1"
                   id="value_add_yes"
-                  checked={data.valueAdd === 1 ? "checked" : ""}
+                  checked={data.valueAdd === '1' ? "checked" : ""}
                   onChange={(e) => data.setValueAdd(e.target.value)}
                 />
                 <label className="mb-0" htmlFor="value_add_yes">
@@ -160,7 +162,7 @@ const MobileHomePark = ({ data }) => {
                   name="value_add"
                   value="0"
                   id="value_add_no"
-                  checked={data.valueAdd === 0 ? "checked" : ""}
+                  checked={data.valueAdd === '0' ? "checked" : ""}
                   onChange={(e) => data.setValueAdd(e.target.value)}
                 />
                 <label className="mb-0" htmlFor="value_add_no">
@@ -285,7 +287,7 @@ const MobileHomePark = ({ data }) => {
                       name="balloon_payment"
                       value="1"
                       id="balloon_payment_yes"
-                      checked={data.balloonPayment === 1 ? "checked" : ""}
+                      checked={data.balloonPayment === '1' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_yes">
@@ -298,7 +300,7 @@ const MobileHomePark = ({ data }) => {
                       name="balloon_payment"
                       value="0"
                       id="balloon_payment_no"
-                      checked={data.balloonPayment === 0 ? "checked" : ""}
+                      checked={data.balloonPayment === '0' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_no">
@@ -341,7 +343,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="solar" value="0" id="solar_no" />
+              <input type="radio" name="solar" value="0" id="solar_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="solar_no">
                 No
               </label>
@@ -359,7 +361,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="pool" value="0" id="pool_no" />
+              <input type="radio" name="pool" value="0" id="pool_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="pool_no">
                 No
               </label>
@@ -377,7 +379,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="septic" value="0" id="septic_no" />
+              <input type="radio" name="septic" value="0" id="septic_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="septic_no">
                 No
               </label>
@@ -395,7 +397,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="well" value="0" id="well_no" />
+              <input type="radio" name="well" value="0" id="well_no" defaultChecked ={true} />
               <label className="mb-0" htmlFor="well_no">
                 No
               </label>
@@ -413,7 +415,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="hoa" value="0" id="hoa_no" />
+              <input type="radio" name="hoa" value="0" id="hoa_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="hoa_no">
                 No
               </label>
@@ -441,6 +443,7 @@ const MobileHomePark = ({ data }) => {
                 name="age_restriction"
                 value="0"
                 id="age_restriction_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="age_restriction_no">
                 No
@@ -469,6 +472,7 @@ const MobileHomePark = ({ data }) => {
                 name="rental_restriction"
                 value="0"
                 id="rental_restriction_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="rental_restriction_no">
                 No
@@ -497,6 +501,7 @@ const MobileHomePark = ({ data }) => {
                 name="post_possession"
                 value="0"
                 id="post_possession_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="post_possession_no">
                 No
@@ -515,7 +520,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="tenant" value="0" id="tenant_no" />
+              <input type="radio" name="tenant" value="0" id="tenant_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="tenant_no">
                 No
               </label>
@@ -543,6 +548,7 @@ const MobileHomePark = ({ data }) => {
                 name="squatters"
                 value="0"
                 id="squatters_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="squatters_no">
                 No
@@ -571,6 +577,7 @@ const MobileHomePark = ({ data }) => {
                 name="building_required"
                 value="0"
                 id="building_required_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="building_required_no">
                 No
@@ -589,7 +596,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="rebuild" value="0" id="rebuild_no" />
+              <input type="radio" name="rebuild" value="0" id="rebuild_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="rebuild_no">
                 No
               </label>
@@ -617,6 +624,7 @@ const MobileHomePark = ({ data }) => {
                 name="foundation_issues"
                 value="0"
                 id="foundation_issues_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="foundation_issues_no">
                 No
@@ -635,7 +643,7 @@ const MobileHomePark = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="mold" value="0" id="mold_no" />
+              <input type="radio" name="mold" value="0" id="mold_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="mold_no">
                 No
               </label>
@@ -663,6 +671,7 @@ const MobileHomePark = ({ data }) => {
                 name="fire_damaged"
                 value="0"
                 id="fire_damaged_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="fire_damaged_no">
                 No

@@ -11,7 +11,7 @@ const Land = ({ data }) => {
           <AutoSuggestionAddress data={data} />
         </div>
         <div className="col-12 col-lg-12">
-          <label>State</label>
+          <label>State<span>*</span></label>
           <div className="form-group">
             <Select
               name="state"
@@ -32,7 +32,7 @@ const Land = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-lg-12">
-          <label>City</label>
+          <label>City<span>*</span></label>
           <div className="form-group">
             <Select
               name="city"
@@ -67,7 +67,7 @@ const Land = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Lot Size Sq Ft</label>
+          <label>Lot Size Sq Ft<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -77,10 +77,11 @@ const Land = ({ data }) => {
               value={data.lotSize}
               onChange={(e) => data.setLotSize(e.target.value)}
             />
+            {data.renderFieldError("lot_size")}
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Price</label>
+          <label>Price<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -95,7 +96,7 @@ const Land = ({ data }) => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Zoning</label>
+          <label>Zoning<span>*</span></label>
           <div className="form-group">
             <MultiSelect
               name="zoning"
@@ -108,7 +109,7 @@ const Land = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Utilities</label>
+          <label>Utilities<span>*</span></label>
           <div className="form-group">
             <Select
               name="utilities"
@@ -121,7 +122,7 @@ const Land = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Sewage</label>
+          <label>Sewage<span>*</span></label>
           <div className="form-group">
             <Select
               name="sewer"
@@ -135,7 +136,7 @@ const Land = ({ data }) => {
         </div>
         <div className="col-12 col-lg-6">
           <div className="form-group">
-            <label>Location Flaws</label>
+            <label>Location Flaws<span>*</span></label>
             <div className="form-group">
               <MultiSelect
                 name="property_flaw"
@@ -195,7 +196,7 @@ const Land = ({ data }) => {
           <h5>Creative Financing</h5>
           <div className="row">
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Down Payment (%)</label>
+              <label>Down Payment (%)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -211,7 +212,7 @@ const Land = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Down Payment ($)</label>
+              <label>Down Payment ($)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -225,7 +226,7 @@ const Land = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Interest Rate (%)</label>
+              <label>Interest Rate (%)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -239,7 +240,7 @@ const Land = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Balloon Payment </label>
+              <label>Balloon Payment <span>*</span></label>
               <div className="form-group">
                 <div className="radio-block">
                   <div className="label-container">
@@ -248,7 +249,7 @@ const Land = ({ data }) => {
                       name="balloon_payment"
                       value="1"
                       id="balloon_payment_yes"
-                      checked={data.balloonPayment === 1 ? "checked" : ""}
+                      checked={data.balloonPayment === '1' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_yes">
@@ -261,7 +262,7 @@ const Land = ({ data }) => {
                       name="balloon_payment"
                       value="0"
                       id="balloon_payment_no"
-                      checked={data.balloonPayment === 0 ? "checked" : ""}
+                      checked={data.balloonPayment === '0' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_no">

@@ -233,7 +233,6 @@ function AddBuyerDetails() {
         });
     }
   };
-  console.log(errors, "error");
   const submitSingleBuyerForm = async (data, e) => {
     e.preventDefault();
 

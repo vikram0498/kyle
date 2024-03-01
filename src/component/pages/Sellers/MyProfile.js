@@ -513,6 +513,7 @@ const MyProfile = () => {
                           type="file"
                           className="file-input"
                           name="profile_image"
+                          accept="image/gif, image/jpeg, image/png" 
                           onChange={previewImage}
                         />
                         Change Profile Photo

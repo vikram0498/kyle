@@ -56,7 +56,7 @@ const SellerForm = () => {
   const [downPaymentPercentage, setDownPaymentPercentage] = useState("");
   const [downPaymentMoney, setDownPaymentMoney] = useState("");
   const [interestRate, setInterestRate] = useState("");
-  const [balloonPayment, setBalloonPayment] = useState(null);
+  const [balloonPayment, setBalloonPayment] = useState("0");
   const [zoning, setZoning] = useState([]);
   const [utilities, setUtilities] = useState([]);
   const [sewer, setSewer] = useState([]);
@@ -67,22 +67,22 @@ const SellerForm = () => {
   const [pool, setPool] = useState(null);
   const [septic, setSeptic] = useState(null);
   const [well, setWell] = useState(null);
+  const [hoa, setHoa] = useState(null);
   const [ageRestriction, setAgeRestriction] = useState(null);
   const [rentalRestriction, setRentalRestriction] = useState(null);
-  const [hoa, setHoa] = useState(null);
-  const [tenant, setTenant] = useState(null);
   const [postPossession, setPostPossession] = useState(null);
+  const [tenant, setTenant] = useState(null);
+  const [squatters, setSquatters] = useState(null);
   const [buildingRequired, setBuildingRequired] = useState(null);
+  const [rebuild, setRebuild] = useState(null);
   const [foundationIssues, setFoundationIssues] = useState(null);
   const [mold, setMold] = useState(null);
   const [fireDamaged, setFireDamaged] = useState(null);
   const [permanentlyAffixed, setPermanentlyAffixed] = useState(null);
-  const [rebuild, setRebuild] = useState(null);
-  const [squatters, setSquatters] = useState(null);
 
   const [totalUnits, setTotalUnits] = useState("");
   const [buildingClass, setBuildingClass] = useState("");
-  const [valueAdd, setValueAdd] = useState(null);
+  const [valueAdd, setValueAdd] = useState('0');
 
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
@@ -276,14 +276,14 @@ const SellerForm = () => {
     setPark([]);
     setTotalUnits("");
     setBuildingClass("");
-    setValueAdd(null);
+    setValueAdd('0');
 
     setPurchaseMethod([]);
 
     setDownPaymentPercentage("");
     setDownPaymentMoney("");
     setInterestRate("");
-    setBalloonPayment(null);
+    setBalloonPayment("0");
     setZoning([]);
     setUtilities([]);
     setSewer([]);
@@ -294,20 +294,21 @@ const SellerForm = () => {
 
     setSolar(null);
     setPool(null);
-    setBalloonPayment(null);
     setWell(null);
+    setHoa(null);
     setAgeRestriction(null);
     setRentalRestriction(null);
-    setHoa(null);
-    setTenant(null);
     setPostPossession(null);
+    setTenant(null);
+    setSquatters(null);
     setBuildingRequired(null);
+    setRebuild(null);
     setFoundationIssues(null);
     setMold(null);
     setFireDamaged(null);
     setPermanentlyAffixed(null);
-    setRebuild(null);
-    setSquatters(null);
+
+    setBalloonPayment("0");
     setShowCreativeFinancing(false);
     setLocationFlawsValue([]);
 

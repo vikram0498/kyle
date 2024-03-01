@@ -223,12 +223,14 @@ function Login(props) {
             </div>
             <div className="col-12 col-lg-12">
               <p className="account-now">
+                Register as <Link to="/register">Investor</Link>/<Link to="/register-buyer">Buyer</Link>
+              </p>
+              {/* <p className="account-now">
                 <span style={{ marginRight: "2px" }}>
                   Don’t Have an account?{" "}
                 </span>
                 <Link to="/register"> Sign up now!</Link>
-              </p>
-
+              </p> */}
               <div className="or">
                 <span>OR</span>
               </div>

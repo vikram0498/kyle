@@ -92,8 +92,8 @@ const Development = ({data,landSelected})=>{
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>Stories</label>
 					<div className="form-group">
-						<input type="number" name="of_stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
-						{data.renderFieldError('of_stories') }
+						<input type="number" name="stories" className="form-control" placeholder="Enter Stories" value={data.ofStories}  onChange={ e=>data.setOfStories(e.target.value) }/>
+						{data.renderFieldError('stories') }
 					</div>
 				</div>
 				}

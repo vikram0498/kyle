@@ -16,7 +16,7 @@ const MultiFamilyCommercial = ({ data }) => {
           <AutoSuggestionAddress data={data} />
         </div>
         <div className="col-12 col-lg-12">
-          <label>State</label>
+          <label>State<span>*</span></label>
           <div className="form-group">
             <Select
               name="state"
@@ -37,7 +37,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-lg-12">
-          <label>City</label>
+          <label>City<span>*</span></label>
           <div className="form-group">
             <Select
               name="city"
@@ -73,7 +73,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bed</label>
+          <label>Bed<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -87,7 +87,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Bath</label>
+          <label>Bath<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -102,7 +102,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Sq Ft</label>
+          <label>Sq Ft<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -117,7 +117,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Lot Size Sq Ft</label>
+          <label>Lot Size Sq Ft<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -127,11 +127,12 @@ const MultiFamilyCommercial = ({ data }) => {
               value={data.lotSize}
               onChange={(e) => data.setLotSize(e.target.value)}
             />
+            {data.renderFieldError("lot_size")}
           </div>
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Year Built</label>
+          <label>Year Built<span>*</span></label>
           <div className="form-group">
             <DatePicker
               id="DatePicker"
@@ -154,22 +155,22 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Stories</label>
+          <label>Stories<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
-              name="of_stories"
+              name="stories"
               className="form-control"
               placeholder="Enter Stories"
               value={data.ofStories}
               onChange={(e) => data.setOfStories(e.target.value)}
             />
-            {data.renderFieldError("of_stories")}
+            {data.renderFieldError("stories")}
           </div>
         </div>
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Price</label>
+          <label>Price<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -183,7 +184,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Parking</label>
+          <label>Parking<span>*</span></label>
           <div className="form-group">
             <SingleSelect
               name="parking"
@@ -196,7 +197,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Total Units</label>
+          <label>Total Units<span>*</span></label>
           <div className="form-group">
             <input
               type="number"
@@ -206,10 +207,11 @@ const MultiFamilyCommercial = ({ data }) => {
               value={data.totalUnits}
               onChange={(e) => data.setTotalUnits(e.target.value)}
             />
+            {data.renderFieldError("total_units")}
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Building class</label>
+          <label>Building class<span>*</span></label>
           <div className="form-group">
             <SingleSelect
               name="building_class"
@@ -222,7 +224,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-          <label>Value Add</label>
+          <label>Value Add<span>*</span></label>
           <div className="form-group">
             <div className="radio-block">
               <div className="label-container">
@@ -301,7 +303,7 @@ const MultiFamilyCommercial = ({ data }) => {
           <h5>Creative Financing</h5>
           <div className="row">
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Down Payment (%)</label>
+              <label>Down Payment (%)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -317,7 +319,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Down Payment ($)</label>
+              <label>Down Payment ($)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -331,7 +333,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Interest Rate (%)</label>
+              <label>Interest Rate (%)<span>*</span></label>
               <div className="form-group">
                 <input
                   type="number"
@@ -345,7 +347,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </div>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-              <label>Balloon Payment </label>
+              <label>Balloon Payment <span>*</span></label>
               <div className="form-group">
                 <div className="radio-block">
                   <div className="label-container">
@@ -354,7 +356,7 @@ const MultiFamilyCommercial = ({ data }) => {
                       name="balloon_payment"
                       value="1"
                       id="balloon_payment_yes"
-                      checked={data.balloonPayment === 1 ? "checked" : ""}
+                      checked={data.balloonPayment === '1' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_yes">
@@ -367,7 +369,7 @@ const MultiFamilyCommercial = ({ data }) => {
                       name="balloon_payment"
                       value="0"
                       id="balloon_payment_no"
-                      checked={data.balloonPayment === 0 ? "checked" : ""}
+                      checked={data.balloonPayment === '0' ? "checked" : ""}
                       onChange={(e) => data.setBalloonPayment(e.target.value)}
                     />
                     <label className="mb-0" htmlFor="balloon_payment_no">
@@ -384,7 +386,7 @@ const MultiFamilyCommercial = ({ data }) => {
       <div className="row">
         <div className="col-12 col-lg-12">
           <div className="form-group">
-            <label>Location Flaws</label>
+            <label>Location Flaws<span>*</span></label>
             <div className="form-group">
               <MultiSelect
                 name="property_flaw"
@@ -402,7 +404,7 @@ const MultiFamilyCommercial = ({ data }) => {
       <div className="column--grid">
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Solar</label>
+            <label>Solar<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="solar" value="1" id="solar_yes" />
               <label className="mb-0" htmlFor="solar_yes">
@@ -410,7 +412,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="solar" value="0" id="solar_no" />
+              <input type="radio" name="solar" value="0" id="solar_no" defaultChecked ={true} />
               <label className="mb-0" htmlFor="solar_no">
                 No
               </label>
@@ -420,7 +422,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Pool</label>
+            <label>Pool<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="pool" value="1" id="pool_yes" />
               <label className="mb-0" htmlFor="pool_yes">
@@ -428,7 +430,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="pool" value="0" id="pool_no" />
+              <input type="radio" name="pool" value="0" id="pool_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="pool_no">
                 No
               </label>
@@ -438,7 +440,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Septic</label>
+            <label>Septic<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="septic" value="1" id="septic_yes" />
               <label className="mb-0" htmlFor="septic_yes">
@@ -446,7 +448,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="septic" value="0" id="septic_no" />
+              <input type="radio" name="septic" value="0" id="septic_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="septic_no">
                 No
               </label>
@@ -456,7 +458,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Well</label>
+            <label>Well<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="well" value="1" id="well_yes" />
               <label className="mb-0" htmlFor="well_yes">
@@ -464,7 +466,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="well" value="0" id="well_no" />
+              <input type="radio" name="well" value="0" id="well_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="well_no">
                 No
               </label>
@@ -474,7 +476,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>HOA</label>
+            <label>HOA<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="hoa" value="1" id="hoa_yes" />
               <label className="mb-0" htmlFor="hoa_yes">
@@ -482,7 +484,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="hoa" value="0" id="hoa_no" />
+              <input type="radio" name="hoa" value="0" id="hoa_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="hoa_no">
                 No
               </label>
@@ -492,7 +494,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Age restriction</label>
+            <label>Age restriction<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -510,6 +512,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="age_restriction"
                 value="0"
                 id="age_restriction_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="age_restriction_no">
                 No
@@ -520,7 +523,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Rental Restriction</label>
+            <label>Rental Restriction<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -538,6 +541,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="rental_restriction"
                 value="0"
                 id="rental_restriction_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="rental_restriction_no">
                 No
@@ -548,7 +552,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Post-Possession</label>
+            <label>Post-Possession<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -566,6 +570,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="post_possession"
                 value="0"
                 id="post_possession_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="post_possession_no">
                 No
@@ -576,7 +581,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Tenant Conveys</label>
+            <label>Tenant Conveys<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="tenant" value="1" id="tenant_yes" />
               <label className="mb-0" htmlFor="tenant_yes">
@@ -584,7 +589,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="tenant" value="0" id="tenant_no" />
+              <input type="radio" name="tenant" value="0" id="tenant_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="tenant_no">
                 No
               </label>
@@ -594,7 +599,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Squatters</label>
+            <label>Squatters<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -612,6 +617,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="squatters"
                 value="0"
                 id="squatters_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="squatters_no">
                 No
@@ -622,7 +628,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Building Required</label>
+            <label>Building Required<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -640,6 +646,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="building_required"
                 value="0"
                 id="building_required_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="building_required_no">
                 No
@@ -650,7 +657,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Rebuild</label>
+            <label>Rebuild<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="rebuild" value="1" id="rebuild_yes" />
               <label className="mb-0" htmlFor="rebuild_yes">
@@ -658,7 +665,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="rebuild" value="0" id="rebuild_no" />
+              <input type="radio" name="rebuild" value="0" id="rebuild_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="rebuild_no">
                 No
               </label>
@@ -668,7 +675,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Foundation Issues</label>
+            <label>Foundation Issues<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -686,6 +693,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="foundation_issues"
                 value="0"
                 id="foundation_issues_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="foundation_issues_no">
                 No
@@ -696,7 +704,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Mold</label>
+            <label>Mold<span>*</span></label>
             <div className="label-container">
               <input type="radio" name="mold" value="1" id="mold_yes" />
               <label className="mb-0" htmlFor="mold_yes">
@@ -704,7 +712,7 @@ const MultiFamilyCommercial = ({ data }) => {
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="mold" value="0" id="mold_no" />
+              <input type="radio" name="mold" value="0" id="mold_no" defaultChecked ={true}/>
               <label className="mb-0" htmlFor="mold_no">
                 No
               </label>
@@ -714,7 +722,7 @@ const MultiFamilyCommercial = ({ data }) => {
         </div>
         <div className="grid-template-col">
           <div className="radio-block-group">
-            <label>Fire Damaged</label>
+            <label>Fire Damaged<span>*</span></label>
             <div className="label-container">
               <input
                 type="radio"
@@ -732,6 +740,7 @@ const MultiFamilyCommercial = ({ data }) => {
                 name="fire_damaged"
                 value="0"
                 id="fire_damaged_no"
+                defaultChecked ={true}
               />
               <label className="mb-0" htmlFor="fire_damaged_no">
                 No
