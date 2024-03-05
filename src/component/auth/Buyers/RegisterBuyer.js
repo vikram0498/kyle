@@ -197,6 +197,7 @@ function RegisterBuyer() {
 
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
+    formObject.parking =  parkingValue;
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
@@ -296,7 +297,7 @@ function RegisterBuyer() {
       }
       setPurchaseMethodsValue(selectedValues);
     } else if (name == "parking") {
-      setParkingValue(e);
+      setParkingValue(selectedValues);
     } else if (name == "country") {
       getStates(e);
     } else if (name == "state") {
@@ -306,8 +307,6 @@ function RegisterBuyer() {
       //setCity(e);
     } else if (name == "building_class") {
       setBuildingClassNamesValue(selectedValues);
-    } else if (name == "parking") {
-      setParkingValue(e);
     } else if (name == "buyer_type") {
       setBuyerTypeValue(e);
     } else if (name == "start_date") {
@@ -1983,6 +1982,7 @@ function RegisterBuyer() {
                                       onChange(e);
                                       handleCustum(e, "parking");
                                     }}
+                                    isMulti
                                   />
                                 )}
                               />

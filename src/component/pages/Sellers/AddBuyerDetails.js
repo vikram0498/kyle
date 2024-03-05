@@ -243,7 +243,7 @@ function AddBuyerDetails() {
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
-    //formObject.parking          =  parkingValue;
+    formObject.parking          =  parkingValue;
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     //formObject.buyer_type       =  buyerTypeValue;
@@ -399,7 +399,7 @@ function AddBuyerDetails() {
     } else if (name == "building_class") {
       setBuildingClassNamesValue(selectedValues);
     } else if (name == "parking") {
-      setParkingValue(e);
+      setParkingValue(selectedValues);
     } else if (name == "buyer_type") {
       let value = "";
       if (e) {
@@ -458,7 +458,6 @@ function AddBuyerDetails() {
   return (
     <>
       <Header />
-
       <section className="main-section position-relative pt-4 pb-120">
         {isLoader ? (
           <div className="loader" style={{ textAlign: "center" }}>
@@ -2107,12 +2106,6 @@ function AddBuyerDetails() {
                                 Parking<span>*</span>
                               </label>
                               <div className="form-group">
-                                {/* <MultiSelect
-                                                            name="parking"
-                                                            options={parkingOption}
-                                                            placeholder='Select Parking'
-                                                            setMultiselectOption = {setParkingValue}
-                                                        /> */}
                                 <Controller
                                   control={control}
                                   name="parking"
@@ -2131,6 +2124,7 @@ function AddBuyerDetails() {
                                         onChange(e);
                                         handleCustum(e, "parking");
                                       }}
+                                      isMulti
                                     />
                                   )}
                                 />
