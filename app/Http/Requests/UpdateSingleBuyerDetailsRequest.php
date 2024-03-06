@@ -69,7 +69,7 @@ class UpdateSingleBuyerDetailsRequest extends FormRequest
 
             'lot_size_max' => ['required', 'numeric', !empty($this->lot_size_min) ? new CheckMaxValue($this->lot_size_min, 'lot_size_min') : ''], 
             
-            'parking' => ['required', 'numeric'],
+            'parking' => ['required', 'array','in:'.implode(',', array_keys(config('constants.parking_values')))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_types')))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
             'buyer_type' => ['required','numeric'],

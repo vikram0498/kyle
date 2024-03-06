@@ -110,7 +110,7 @@ class LoginRegisterController extends Controller
                     return response()->json($responseData, 401);
                 }
 
-                if(!$checkUserStatus->is_active && $checkUserStatus->roles()->first()->id == 2){
+                if(!$checkUserStatus->is_active && $checkUserStatus->is_seller){
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
@@ -123,6 +123,22 @@ class LoginRegisterController extends Controller
 
                     $checkUserStatus->NotificationSendToBuyerVerifyEmail();
 
+                    DB::commit();
+
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => 'Your account is not verified! Please check your mail',
+                    ];
+                    return response()->json($responseData, 401);
+                }
+
+                if($checkUserStatus->is_seller && is_null($checkUserStatus->email_verified_at)){
+
+                    $checkUserStatus->NotificationSendToVerifyEmail();
+
+                    DB::commit();
+                    
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
@@ -136,17 +152,6 @@ class LoginRegisterController extends Controller
 
             if(Auth::attempt($credentialsOnly, $remember_me)){
                 $user = Auth::user();
-
-                if(is_null($user->email_verified_at)){
-                    $user->NotificationSendToVerifyEmail();
-
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account is not verified! Please check your mail',
-                    ];
-                    return response()->json($responseData, 401);
-                }
 
                 $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
@@ -194,6 +199,7 @@ class LoginRegisterController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 401);
         }

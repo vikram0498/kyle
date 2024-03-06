@@ -139,14 +139,6 @@
             <th width="25%">{{ __('cruds.buyer.fields.build_year_max')}}</th>
             <td class="remove-white-space"> {{ (!is_null($details->build_year_max) && !empty($details->build_year_max)) ? $details->build_year_max : 'N/A' }}</td>
         </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.arv_min')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->arv_min) && !empty($details->arv_min)) ? $details->arv_min : 'N/A' }}</td>
-        </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.arv_max')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->arv_max) && !empty($details->arv_max)) ? $details->arv_max : 'N/A' }}</td>
-        </tr>
 
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.stories_min')}}</th>
@@ -171,9 +163,9 @@
        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td>
+            {{-- <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td> --}}
 
-            {{-- <td class="remove-white-space"> 
+            <td class="remove-white-space"> 
                 @if(!is_null($details->parking) && !empty($details->parking))
                     @foreach($details->parking as $parking)
                         <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
@@ -181,7 +173,7 @@
                 @else
                     N/A
                 @endif
-            </td> --}}
+            </td>
         </tr>
         
         <tr>

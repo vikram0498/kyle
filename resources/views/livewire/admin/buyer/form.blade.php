@@ -345,7 +345,7 @@
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}}<span class="text-danger">*</span></label>
                     <div wire:ignore>
-                        <select wire:model.defer="state.parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}">
+                        <select wire:model.defer="state.parking" id="parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}" multiple>
                             <option value="">Select {{ __('cruds.buyer.fields.parking')}}</option>
                             @foreach($parkingValues as $key => $value)
                                 <option value="{{ $key }}"> {{ $value }}</option>

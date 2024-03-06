@@ -37,7 +37,7 @@ return new class extends Migration
             $table->integer('build_year_max')->nullable();            
             $table->integer('arv_min')->nullable();
             $table->integer('arv_max')->nullable();
-            $table->integer('parking')->nullable();
+            $table->json('parking')->nullable();
             $table->json('property_type');
             $table->json('property_flaw')->nullable();
 

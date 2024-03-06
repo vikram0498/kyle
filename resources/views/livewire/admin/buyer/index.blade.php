@@ -72,7 +72,7 @@
             theme: "classic"
         });
 
-        $('.country, .parking, .buyer_type').select2();
+        $('.country, .buyer_type').select2();
 
        
         $(document).ready(function () {

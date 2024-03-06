@@ -151,9 +151,9 @@ class BuyersImport implements ToModel, WithStartRow
                                             }
 
                                             // set parking value 
-                                            // $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
+                                            $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
                                         
-                                            $buyerArr = $this->setSingleSelectValues($row[17], 'parking', $buyerArr);
+                                            // $buyerArr = $this->setSingleSelectValues($row[17], 'parking', $buyerArr);
 
                                             // set propert flow value
                                             $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);

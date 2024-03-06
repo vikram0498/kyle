@@ -271,9 +271,9 @@ class CopyBuyerController extends Controller
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
                 
-                if($request->parking){
-                    $validatedData['parking'] = (int)$request->parking;
-                }
+                // if($request->parking){
+                //     $validatedData['parking'] = (int)$request->parking;
+                // }
             
                 if($request->buyer_type){
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
@@ -431,9 +431,9 @@ class CopyBuyerController extends Controller
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
                 
-                if($request->parking){
-                    $validatedData['parking'] = (int)$request->parking;
-                }
+                // if($request->parking){
+                //     $validatedData['parking'] = (int)$request->parking;
+                // }
             
                 if($request->buyer_type){
                     $validatedData['buyer_type'] = (int)$request->buyer_type;

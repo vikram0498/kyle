@@ -348,8 +348,22 @@ class SearchBuyerController extends Controller
             }
 
             if($request->parking){
-                $buyers = $buyers->where('parking', $request->parking);
-                $additionalBuyers = $additionalBuyers->where('parking', $request->parking);
+                // $buyers = $buyers->where('parking', $request->parking);
+                // $additionalBuyers = $additionalBuyers->where('parking', $request->parking);
+
+                $selectedValues = [$request->parking];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
             }
 
             if($request->property_flaw){
@@ -861,7 +875,14 @@ class SearchBuyerController extends Controller
             // }
 
             if($lastSearchLog->parking){
-                $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
+                // $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
+                $selectedValues = [$lastSearchLog->parking];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
             }
 
             if($lastSearchLog->property_flaw){
