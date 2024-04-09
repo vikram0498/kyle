@@ -15,27 +15,106 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
-        /* $settings = [
+        $settings = [
             [
-                'id'     => 1,
-                'key'    => 'website_logo',
-                'value'  => 'default/logo.png',
-                'type'   => 'logo',
+
+                'key'    => 'buyer_video_title',
+                'value'  => 'Main Title...',
+                'type'   => 'text',
+                'display_name'  => 'Title',
+                'group'  => 'upload_buyer_video',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+              
+            ],
+            [
+
+                'key'    => 'buyer_video_sub_title',
+                'value'  => 'uploaded video sub title.........',
+                'type'   => 'text',
+                'display_name'  => 'Sub Title',
+                'group'  => 'upload_buyer_video',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+              
+            ],
+            [
+
+                'key'    => 'buyer_video_description',
+                'value'  => null,
+                'type'   => 'text_area',
+                'display_name'  => 'Description',
+                'group'  => 'upload_buyer_video',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+           
+            ],
+            // [
+
+            //     'key'    => 'buyer_video_image',
+            //     'value'  => null,
+            //     'type'   => 'image',
+            //     'display_name'  => 'Image',
+            //     'group'  => 'upload_buyer_video',
+            //     'details' => null,
+            //     'status' => 1,
+            //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+               
+            // ],
+            [
+
+                'key'    => 'buyer_video',
+                'value'  => null,
+                'type'   => 'video',
+                'display_name'  => 'Video',
+                'group'  => 'upload_buyer_video',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                
+            ],
+
+            [
+
+                'key'    => 'reminder_one_mail_content',
+                'value'  =>  null,
+                'type'   => 'text_area',
+                'display_name'  => 'Reminder 1 Mail Content',
+                'group'  => 'mail',
+                'details' => '[EMAIL], [INVITATION_LINK], [APP_NAME]',
                 'status' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
 
             [
-                'id'     => 2,
-                'key'    => 'facebook',
-                'value'  => 'default/logo.png',
-                'type'   => 'social media',
+
+                'key'    => 'reminder_two_mail_content',
+                'value'  =>  null,
+                'type'   => 'text_area',
+                'display_name'  => 'Reminder 2 Mail Content',
+                'group'  => 'mail',
+                'details' => '[EMAIL], [INVITATION_LINK], [APP_NAME]',
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+
+            [
+
+                'key'    => 'reminder_three_mail_content',
+                'value'  =>  null,
+                'type'   => 'text_area',
+                'display_name'  => 'Reminder 3 Mail Content',
+                'group'  => 'mail',
+                'details' => '[EMAIL], [INVITATION_LINK], [APP_NAME]',
                 'status' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             
         ];
 
-        Setting::insert($settings); */
+        Setting::insert($settings); 
     }
 }

@@ -1,15 +1,17 @@
 <?php
 
-use Illuminate\Support\Str as Str;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Models\Uploads;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Setting;
+use App\Models\Uploads;
+use Illuminate\Http\Request;
 use App\Models\UserBuyerLikes;
+use Illuminate\Support\Str as Str;
 use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
+
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -207,6 +209,59 @@ if (!function_exists('totalUnlikes')) {
 if (!function_exists('generateOTP')) {
 	function generateOTP() {
 		return rand(1000, 9999);
+	}
+}
+
+if (!function_exists('getSetting')) {
+	function getSetting($key)
+	{
+		$result = null;
+		$setting = Setting::where('key',$key)->where('status',1)->first();
+		if($setting){
+			if($setting->type == 'image'){
+				$result = $setting->image_url;
+			}elseif($setting->type == 'video'){
+				$result = $setting->video_url;
+			}else{
+				$result = $setting->value;
+			}
+		}
+		return $result;
+	}
+}
+
+if (!function_exists('getSettingDisplayName')) {
+	function getSettingDisplayName($key)
+	{
+		$result = null;
+		$setting = Setting::where('key',$key)->where('status',1)->first();
+		if($setting){
+			if($setting->type == 'image'){
+				$result = $setting->display_name;
+			}elseif($setting->type == 'video'){
+				$result = $setting->display_name;
+			}else{
+				$result = $setting->display_name;
+			}
+		}
+		
+		return $result;
+	}
+}
+
+if (!function_exists('getSettingDetail')) {
+	function getSettingDetail($key)
+	{
+		$setting = Setting::where('key',$key)->where('status',1)->first();
+		return $setting;
+	}
+}
+
+if (!function_exists('getSettingGroupDetail')) {
+	function getSettingGroupDetail($group)
+	{
+		$setting = Setting::where('group',$group)->where('status',1)->exists();
+		return $setting;
 	}
 }
 

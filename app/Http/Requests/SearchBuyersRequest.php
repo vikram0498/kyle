@@ -155,13 +155,15 @@ class SearchBuyersRequest extends FormRequest
 
         //'purchase_methods' = 1 => 'Cash', 2 => 'Hard Money', 3 => 'Private Financing', 4 => 'Conforming Loan', 5 => 'Creative Finance',
         
-        if( array_intersect([5], $this->purchase_method) ){
-            $rules['max_down_payment_percentage']   = ['required','numeric'];
-            $rules['max_down_payment_money']        = ['required','numeric'];
-            $rules['max_interest_rate']             = ['required','numeric'];
-            $rules['balloon_payment']               = ['required'];
+        if($this->purchase_method){
+            if( array_intersect([5], $this->purchase_method) ){
+                $rules['max_down_payment_percentage']   = ['required','numeric'];
+                $rules['max_down_payment_money']        = ['required','numeric'];
+                $rules['max_interest_rate']             = ['required','numeric'];
+                $rules['balloon_payment']               = ['required'];
+            }
         }
-    
+      
         return $rules;
     }
 

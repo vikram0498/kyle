@@ -12,6 +12,7 @@ use App\Models\Token;
 use Illuminate\Support\Str;
 use App\Models\SearchLog;
 use App\Imports\BuyersImport;
+use App\Imports\ImportBuyerInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 use App\Http\Requests\UpdateSingleBuyerDetailsRequest;
-
+use App\Rules\CsvFileValidationRule;
 
 class BuyerController extends Controller
 {
@@ -638,59 +639,7 @@ class BuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'csvFile' => 'required|mimes:csv,xlsx,xls',
-        ]);
-
-        // Create an array of rules for each column in the CSV sheet.
-        $import = new BuyersImport;
-        Excel::import($import, $request->file('csvFile'));
-
-        try {
-            $totalCount         = $import->totalRowCount();
-            $insertedRowCount   = $import->insertedCount();
-            $skippedCount       = $totalCount - $insertedRowCount;
-
-            // dd($totalCount, $insertedRowCount, $skippedCount);
-
-            if ($insertedRowCount == 0) {
-                //Return Error Response
-                $responseData = [
-                    'status'        => false,
-                    'message'       => trans('No rows inserted during the import process.'),
-                ];
-                return response()->json($responseData, 400);
-            } else if ($skippedCount > 0 && $insertedRowCount > 0) {
-                $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
-
-                //Return Error Response
-                $responseData = [
-                    'status'        => true,
-                    'message'       => $message,
-                ];
-                return response()->json($responseData, 200);
-            } else if ($skippedCount == 0) {
-                //Return Success Response
-                $responseData = [
-                    'status'        => true,
-                    'message'       => 'Buyers imported successfully!',
-                ];
-                return response()->json($responseData, 200);
-            }
-        } catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
-
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
+   
 
     public function redFlagBuyer(Request $request)
     {
@@ -1189,6 +1138,114 @@ class BuyerController extends Controller
         }
     }
     
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csvFile' => ['required','file',new CsvFileValidationRule]
+        ]);
+
+        $uploadedFile = $request->file('csvFile');
+        $csvInfo = $this->getRowColumnInfo($uploadedFile);
+       
+        if(!(count($csvInfo) > 0)){
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.csv_file.empty'),
+            ];
+            return response()->json($responseData, 422);
+        }
+
+        if( $csvInfo['rowCount'] > config('constants.buyer_csv_file_row_limit')){
+             //Return Error Response
+             $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.csv_file.too_many_rows', ['limit' => config('constants.buyer_csv_file_row_limit')]),
+            ];
+            return response()->json($responseData, 422);
+        }
+
+        $importBueryOnlyByEmail = false;
+        if( ($csvInfo['columnCount'] == 1) && (strtolower($csvInfo['columnNames'][0]) == 'email')){
+            $importBueryOnlyByEmail = true;
+        }
+
+        $import = null;
+        // Create an array of rules for each column in the CSV sheet.
+        if($importBueryOnlyByEmail){
+            $import = new ImportBuyerInvitation;
+        }else{
+            $import = new BuyersImport;
+        }
+
+        if($import){
+           
+            try {
+                Excel::import($import, $uploadedFile);
+
+                $totalCount         = $import->totalRowCount();
+                $insertedRowCount   = $import->insertedCount();
+                $skippedCount       = $totalCount - $insertedRowCount;
     
+                if ($insertedRowCount == 0) {
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => false,
+                        'message'       => trans('No rows inserted during the import process.'),
+                    ];
+                    return response()->json($responseData, 400);
+                } else if ($skippedCount > 0 && $insertedRowCount > 0) {
+                    $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+    
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => true,
+                        'message'       => $message,
+                    ];
+                    return response()->json($responseData, 200);
+                } else if ($skippedCount == 0) {
+                    //Return Success Response
+                    $responseData = [
+                        'status'        => true,
+                        'message'       => $importBueryOnlyByEmail ? trans('messages.csv_file.buyer_invitation_success') :trans('messages.csv_file.import_success'),
+                    ];
+                    return response()->json($responseData, 200);
+                }
+            } catch (\Exception $e) {
+                // dd($e->getMessage().'->'.$e->getLine());
+    
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.error_message'),
+                ];
+                return response()->json($responseData, 400);
+            }
+        }
+
+    }
+
+    public function getRowColumnInfo($file)
+    {
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            // Skip the first row
+            $columnNames = fgetcsv($handle, 0, ",");
+    
+            $columnCount = count($columnNames);
+
+            // Count the remaining rows
+            $rowCount = count(file($file)) - 1;
+    
+            fclose($handle);
+    
+             return [
+                'columnNames' => $columnNames,
+                'columnCount' => $columnCount,
+                'rowCount' => $rowCount,
+            ];
+        }
+    }
+
+   
    
 }

@@ -575,7 +575,7 @@ class BuyersImport implements ToModel, WithStartRow
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
-      }
+    }
 
     public function totalRowCount(): int
     {

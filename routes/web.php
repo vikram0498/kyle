@@ -54,9 +54,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
     Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
         Route::view('dashboard', 'admin.index')->name('dashboard');
         Route::view('plan', 'admin.plan.index')->name('plan');
-        Route::view('video', 'admin.video.index')->name('video');
         Route::view('addon', 'admin.addon.index')->name('addon');
-        Route::view('setting', 'admin.setting.index')->name('setting');
+        Route::view('settings', 'admin.setting.index')->name('settings');
         Route::view('users', 'admin.seller.index')->name('seller');
         Route::view('deleted-users', 'admin.deleted-users.index')->name('deleted-users');
         Route::view('buyer', 'admin.buyer.index')->name('buyer');    

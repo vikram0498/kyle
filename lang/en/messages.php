@@ -33,6 +33,13 @@ return [
             'application_process_success'=> 'Application Payment Successfully!',
             'profile_upload_success' => 'Your profile image has been successfully uploaded!',
 
-        ]
+        ],
+    ],
+
+    'csv_file'=>[
+        'empty' => 'The CSV file is empty.',
+        'too_many_rows'  => 'The CSV file contains too many rows. Maximum allowed rows: :limit',
+        'import_success' => 'CSV file has been imported successfully.',
+        'buyer_invitation_success' => 'Invitation Link Sent Successfully!',
     ],
 ];

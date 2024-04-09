@@ -142,25 +142,14 @@
             </li> 
 
             {{-- Settings --}}
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#setting-menu" aria-expanded="false" aria-controls="setting-menu">
+            @can('setting_access')
+            <li class="nav-item {{ request()->is('admin/settings') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.settings') }}">
                     <i class="menu-icon fas fa-cog"></i>
                     <span class="menu-title"> {{ __('cruds.setting.title') }} </span>
-                    <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="setting-menu">
-                    <ul class="nav flex-column sub-menu">
-                        @can('video_access')
-                        <li class="nav-item {{ request()->is('admin/video') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.video') }}">
-                                <span class="menu-title">{{__('cruds.video.title')}}</span>
-                            </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </div>
-            </li> 
-
+            </li>
+            @endcan
 
             @can('support_access')
             <li class="nav-item {{ request()->is('admin/supports') ? 'active' : '' }}">

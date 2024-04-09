@@ -36,13 +36,18 @@ class HomeController extends Controller
 
     public function getVideo($key){
         try{
-            $video = Video::where('video_key','upload_buyer_video')->where('status',1)->first();
-            if( $video ){
-                $video->video_link = $video->video_url;
+            $groupExists = getSettingGroupDetail('upload_buyer_video');
+            if( $groupExists ){
+
+                $videoDetails['title']       = getSetting('buyer_video_title');
+                $videoDetails['sub_title']   = getSetting('buyer_video_sub_title');
+                $videoDetails['description'] = getSetting('buyer_video_description');
+                $videoDetails['video_link']  = getSetting('buyer_video');
+
                 //Success Response Send
                 $responseData = [
                     'status'          => true,
-                    'videoDetails'    => ['is_active'=> true,'video' => $video]
+                    'videoDetails'    => ['is_active'=> true,'video' => $videoDetails]
                 ];
                 return response()->json($responseData, 200);
             }else{

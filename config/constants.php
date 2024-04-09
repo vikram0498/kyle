@@ -270,6 +270,13 @@ return [
         'name does not match'       => "Name Doesn't Match",
         'insufficient information'  => "Insufficient Information",
         'other'                     => "Other",
+    ],
+
+    'buyer_csv_file_row_limit' => 10,
+
+    'invitation_status' => [
+        0 => 'pending',
+        1 => 'accepted',
     ]
 
 ];
