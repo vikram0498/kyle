@@ -313,5 +313,18 @@ return [
     'buyer_verification'=>[
         'title'           => 'Buyer Verification',
 
+    ],
+
+    'buyer_invitation'=>[
+        'title'        => 'Invited List',
+        'remider_btn'  => 'Reminder',
+        'fields' => [
+            'email'              => 'Email',
+            'seller_name'        => 'Seller/Agent Name',
+            'reminder'           => 'Reminder',
+            'last_reminder_sent' => 'Last Reminder Sent',
+            'status'             => 'Status',
+        ]
+
     ]
 ];

@@ -7,6 +7,7 @@ use App\Models\Buyer;
 use App\Models\User;
 use App\Models\UserBuyerLikes;
 use App\Models\PurchasedBuyer;
+use App\Models\BuyerInvitation;
 use App\Models\Token;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -404,6 +405,19 @@ class CopyBuyerController extends Controller
 
             $validatedData['user_id'] = $superAdminUser->id;
 
+            //Start Register by invitation link
+            $buyerRegisteredByInvitationLink = false;
+            if($request->uuid){
+                $buyerInvitation = BuyerInvitation::where('uuid',$request->uuid)->first();
+                if($buyerInvitation){
+                    $validatedData['user_id'] = $buyerInvitation->createdBy()->withTrashed()->value('id');
+                    $validatedData['email'] = $buyerInvitation->email;
+                    $buyerRegisteredByInvitationLink = true;
+                }
+            }
+            //End Register by invitation link
+
+
             // Start create users table
             $userDetails =  [
                 'first_name'     => $validatedData['first_name'],
@@ -473,6 +487,12 @@ class CopyBuyerController extends Controller
                 
             }
 
+            //Start Register by invitation link
+            if($buyerRegisteredByInvitationLink){
+                BuyerInvitation::where('uuid',$request->uuid)->update(['status'=>1]);
+            }
+            //End Register by invitation link
+
             DB::commit();
                 
             //Success Response Send
@@ -494,5 +514,30 @@ class CopyBuyerController extends Controller
             ];
             return response()->json($responseData, 500);
         }
+    }
+
+    public function checkBuyerInvitationLink(Request $request){
+
+        if($request->uuid){
+            $buyerInvitation = BuyerInvitation::where('uuid',$request->uuid)->where('status',0)->first();
+
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'is_valid'          => false,
+            ];
+    
+            if($buyerInvitation){
+                $responseData['is_valid'] = true;
+                $responseData['data']['email'] = $buyerInvitation->email;
+            }
+        }else{
+            $responseData = [
+                'status'            => true,
+                'is_valid'          => null,
+            ];
+        }
+
+        return response()->json($responseData, 200);
     }
 }

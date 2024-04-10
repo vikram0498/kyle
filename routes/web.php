@@ -64,6 +64,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('buyer/import', 'admin.buyer.import-buyers')->name('import-buyers');
         Route::view('supports', 'admin.support.index')->name('supports');
 
+        Route::view('invited-list', 'admin.buyer-invitations.index')->name('buyer-invited-list');
+
         Route::view('search-log', 'admin.search-log.index')->name('search-log');
 
         Route::view('search-buyer', 'admin.buyer.search-buyer')->name('search-buyer-form');

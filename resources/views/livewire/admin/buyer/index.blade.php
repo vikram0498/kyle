@@ -39,11 +39,8 @@
                         </div>                
                         <div class="table-responsive search-table-data">
 
-                           {{--  @livewire('admin.buyer.buyer-datatable') --}}
-
                             @livewire('admin.buyer.buyer-table') 
 
-                        
                         </div>
 
                     @endif

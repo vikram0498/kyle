@@ -42,4 +42,8 @@ return [
         'import_success' => 'CSV file has been imported successfully.',
         'buyer_invitation_success' => 'Invitation Link Sent Successfully!',
     ],
+
+    'no_row_selected' => 'Please select at least one row.',
+    'reminder_sent_success' => 'Reminder Mail Sent Successfully!',
+
 ];

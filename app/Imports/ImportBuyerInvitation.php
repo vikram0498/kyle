@@ -5,6 +5,7 @@ namespace App\Imports;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use App\Models\BuyerInvitation; 
+use App\Models\User; 
 
 class ImportBuyerInvitation implements ToModel, WithStartRow
 {
@@ -20,16 +21,30 @@ class ImportBuyerInvitation implements ToModel, WithStartRow
     public function model(array $row)
     {
         $invitationArr = [];
+        $flag = true;
         $email = $this->modifiedString($row[0]);
         
         if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
             $invitationArr['email'] = $email;
 
-            $emailExists = BuyerInvitation::where('email',$email)->exists();
-            if(!$emailExists){
+            $emailExists = BuyerInvitation::where('email',$email)->first();
+            if($emailExists){
+                $flag = false;
+            }
+
+            $emailExists = User::where('email',$email)->withTrashed()->exists();
+            if($emailExists){
+                $flag = false;
+            }
+
+            if($flag){
                 $createBuyerInvitation = BuyerInvitation::create($invitationArr);
 
                 if($createBuyerInvitation){
+                    $subject = 'Invitation to Register';
+
+                    $createBuyerInvitation->sendInvitationEmail($subject,1);
+
                     $this->insertedCount++;
                 }
             }

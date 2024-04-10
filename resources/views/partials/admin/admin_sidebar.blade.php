@@ -56,7 +56,8 @@
                 request()->is('admin/deleted-buyers') || 
                 request()->is('admin/buyer/import') || 
                 request()->is('admin/profile-tags')  ||
-                request()->is('admin/buyer-transactions')
+                request()->is('admin/buyer-transactions') ||
+                request()->is('admin/invited-list')
               ); 
             @endphp          
             <li class="nav-item {{ $buyerCallapse ? 'active' : '' }}">
@@ -77,6 +78,14 @@
                         <li class="nav-item">
                             <a class="nav-link {{ (request()->is('admin/deleted-buyers')) ? 'active' : '' }}" href="{{ route('admin.deleted-buyers') }}">
                                 <span class="menu-title"> Deleted Buyers </span>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('buyer_invitation_access')
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->segment(2) === 'invited-list') ? 'active' : '' }}" href="{{ route('admin.buyer-invited-list') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer_invitation.title') }} </span>
                             </a>
                         </li>
                         @endcan

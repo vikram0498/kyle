@@ -51,11 +51,12 @@ class StoreAddBuyerRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'uuid'        => ['nullable','exists:buyer_invitations,uuid,deleted_at,NULL'],
             'first_name'  => ['required'], 
             'last_name'   => ['required'], 
             // 'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
             // 'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
-            'email'       => ['required', 'email', 'unique:users,email,NULL,id'],
+        
             'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id'],
             // 'description' => [], 
 
@@ -85,6 +86,10 @@ class StoreAddBuyerRequest extends FormRequest
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 
         ];
+
+        if($this->email){
+            $rules['email'] = ['required', 'email', 'unique:users,email,NULL,id'];
+        }
 
         // if(!empty($this->purchase_method) && in_array(5, $this->purchase_method)){
         //     $rules['max_down_payment_percentage'] = ['required','numeric','between:0,100'];

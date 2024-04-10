@@ -67,6 +67,9 @@ Route::get('search-buyer-form-details', [SearchBuyerController::class, 'searchBu
 
 Route::post('add-buyer', [CopyBuyerController::class, 'addBuyer']);
 
+Route::post('check-invitation-link', [CopyBuyerController::class, 'checkBuyerInvitationLink']);
+
+
 Route::post('copy-single-buyer-details/{token}', [CopyBuyerController::class, 'uploadCopyBuyerDetails']);
 
 Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);

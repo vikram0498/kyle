@@ -41,7 +41,7 @@ return [
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
     
     'date_format' => 'm/d/Y',
-    'datetime_format' => 'm/d/Y h:i:s A',
+    'datetime_format' => 'm/d/Y h:i A',
     'search_datetime_format' => '%m/%d/%Y %H:%i',
     'search_date_format' => '%m/%d/%Y',
     'set_timezone' => 'Asia/kolkata', // set timezone
@@ -277,6 +277,12 @@ return [
     'invitation_status' => [
         0 => 'pending',
         1 => 'accepted',
+    ],
+
+    'reminders' => [
+        1 => 'reminder 1',
+        2 => 'reminder 2',
+        3 => 'reminder 3',
     ]
 
 ];
