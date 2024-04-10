@@ -62,7 +62,6 @@ const BuyerProfile = () => {
           headers: headers,
         }
       );
-      console.log(response.data);
       if (response.data.status) {
         fetchBuyerData();
         setLoader(false);

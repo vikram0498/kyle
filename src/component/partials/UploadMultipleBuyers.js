@@ -106,8 +106,9 @@ const UploadMultipleBuyers = () => {
       <form className="form-container" method="post" onSubmit={submitCsvFile}>
         <div className="outer-heading text-center">
           <h3>Upload Multiple Buyer </h3>
-          <p>
-            <a href="/assets/sample/kyle-sample.csv">Download</a> sample CSV{" "}
+          <p class="mb-0"> Download CSV
+            <a href="/assets/sample/kyle-sample.csv"> Sample 1 ,</a> 
+            <a href="/assets/sample/import-buyer-by-email.csv"> Sample 2</a> 
           </p>
         </div>
         <div className="upload-single-data" style={{ border: border }}>

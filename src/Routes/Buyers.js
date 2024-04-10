@@ -13,7 +13,7 @@ import RegisterBuyer from "../component/auth/Buyers/RegisterBuyer";
 const Buyers = () => {
   return (
     <Routes>
-      <Route path="/register-buyer" element={<RegisterBuyer/>} />
+      <Route path="/register-buyer/:token?" element={<RegisterBuyer/>} />
       <Route
         path="/verify-and-setpassword/:userId/:token"
         element={<VerifyAndSetPassword />}
@@ -37,10 +37,10 @@ const Buyers = () => {
         path="/boost-your-profile-purchased"
         element={<Protected Component={BoostYourProfilePurchased} />}
       />
-      <Route
+      {/* <Route
         path="/stepper-form"
         element={<Protected Component={MultiStepForm} />}
-      />
+      /> */}
     </Routes>
   );
 };
