@@ -21,7 +21,7 @@ class LoginRegisterController extends Controller
             'last_name'                 => 'required',
             // 'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
-            'email'                     => 'required|email:dns|unique:users,email,NULL,id',
+            'email'                     => 'required|email|regex:/^(?!.*[\/]).+@(?!.*[\/]).+\.(?!.*[\/]).+$/i|unique:users,email,NULL,id',
             'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             // 'address'                   => 'required',
             'company_name'              => 'required',
@@ -77,7 +77,7 @@ class LoginRegisterController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email'             => 'required|email',
+            'email'             => 'required|email|regex:/^(?!.*[\/]).+@(?!.*[\/]).+\.(?!.*[\/]).+$/i',
             'password'          => 'required|min:8'
         ]);
         if($validator->fails()){
@@ -100,92 +100,103 @@ class LoginRegisterController extends Controller
 
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
-            if($checkUserStatus){
-                if(!is_null($checkUserStatus->deleted_at)){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been deactivated!',
-                    ];
-                    return response()->json($responseData, 401);
+            if($checkUserStatus->is_buyer || $checkUserStatus->is_seller){
+
+                if($checkUserStatus){
+                    if(!is_null($checkUserStatus->deleted_at)){
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account has been deactivated!',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if(!$checkUserStatus->is_active && $checkUserStatus->is_seller){
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account has been blocked!',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
+
+                        $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+
+                        DB::commit();
+
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account is not verified! Please check your mail',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if($checkUserStatus->is_seller && is_null($checkUserStatus->email_verified_at)){
+
+                        $checkUserStatus->NotificationSendToVerifyEmail();
+
+                        DB::commit();
+                        
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account is not verified! Please check your mail',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
                 }
 
-                if(!$checkUserStatus->is_active && $checkUserStatus->is_seller){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been blocked!',
-                    ];
-                    return response()->json($responseData, 401);
-                }
 
-                if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
+                if(Auth::attempt($credentialsOnly, $remember_me)){
+                    $user = Auth::user();
 
-                    $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+                    $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
                     DB::commit();
 
-                    //Error Response Send
+                    //Success Response Send
                     $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account is not verified! Please check your mail',
+                        'status'            => true,
+                        'message'           => 'You have logged in successfully!',
+                        'userData'          => [
+                            'id'           => $user->id,
+                            'first_name'   => $user->first_name ?? '',
+                            'last_name'    => $user->last_name ?? '',
+                            'profile_image'=> $user->profile_image_url ?? '',
+                            'role'=> $user->roles()->first()->id ?? '',
+                            'level_type'   => $user->level_type,
+                            'credit_limit' => $user->credit_limit,
+                            'is_verified'  => $user->is_buyer_verified,
+                            'total_buyer_uploaded' => $user->buyers()->count(),
+                        ],
+                        'remember_me_token' => $user->remember_token,
+                        'access_token'      => $accessToken
                     ];
-                    return response()->json($responseData, 401);
-                }
 
-                if($checkUserStatus->is_seller && is_null($checkUserStatus->email_verified_at)){
 
-                    $checkUserStatus->NotificationSendToVerifyEmail();
-
-                    DB::commit();
+                    $user->login_at = now();
+                    $user->save();
                     
+                    return response()->json($responseData, 200);
+
+                } else{
+
                     //Error Response Send
                     $responseData = [
                         'status'        => false,
-                        'error'         => 'Your account is not verified! Please check your mail',
+                        'error'         => trans('auth.failed'),
                     ];
                     return response()->json($responseData, 401);
                 }
-
-            }
-
-
-            if(Auth::attempt($credentialsOnly, $remember_me)){
-                $user = Auth::user();
-
-                $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-
-                DB::commit();
-
-                //Success Response Send
-                $responseData = [
-                    'status'            => true,
-                    'message'           => 'You have logged in successfully!',
-                    'userData'          => [
-                        'id'           => $user->id,
-                        'first_name'   => $user->first_name ?? '',
-                        'last_name'    => $user->last_name ?? '',
-                        'profile_image'=> $user->profile_image_url ?? '',
-                        'role'=> $user->roles()->first()->id ?? '',
-                        'level_type'   => $user->level_type,
-                        'credit_limit' => $user->credit_limit,
-                        'is_verified'  => $user->is_buyer_verified,
-                        'total_buyer_uploaded' => $user->buyers()->count(),
-                    ],
-                    'remember_me_token' => $user->remember_token,
-                    'access_token'      => $accessToken
-                ];
-
-
-                $user->login_at = now();
-                $user->save();
                 
-                return response()->json($responseData, 200);
-
-            } else{
-
-                //Error Response Send
-                $responseData = [
+            }else{
+                 //Error Response Send
+                 $responseData = [
                     'status'        => false,
                     'error'         => trans('auth.failed'),
                 ];
