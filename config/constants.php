@@ -272,7 +272,7 @@ return [
         'other'                     => "Other",
     ],
 
-    'buyer_csv_file_row_limit' => 10,
+    'buyer_csv_file_row_limit' => 10000,
 
     'invitation_status' => [
         0 => 'pending',
