@@ -22,7 +22,7 @@ class Index extends Component
     public $tab = 'upload_buyer_video', $state = [], $removeFile = [], $previewVideoValue = [];
 
     protected $listeners = [
-        'changeTab','previewVideo',
+        'changeTab','previewVideo','copyTextAlert',
     ];
 
     public function mount(){
@@ -33,8 +33,6 @@ class Index extends Component
         $this->removeFile['remove_buyer_video'] = false;
         $this->previewVideoValue['buyer_video']['video_url'] = null;
         $this->previewVideoValue['buyer_video']['video_extenstion'] = null;
-
-
     }
 
     public function changeTab($tab){
@@ -222,5 +220,9 @@ class Index extends Component
             $this->alert('warning','"Sorry, this video is currently unavailable.');
         }
 
+    }
+
+    public function copyTextAlert(){
+        $this->alert('success','Copied Successfully!');
     }
 }

@@ -298,6 +298,14 @@
     
         $(document).ready(function(){
     
+            $(document).on('click','.copy-btn',function(event){
+                event.preventDefault();
+                var elementVal = $(this).attr('data-elementVal');
+                // console.log('click on copy btn',elementVal);
+                copyToClipboard(elementVal);
+                Livewire.emit('copyTextAlert');
+            });
+
             $(document).on('change','.section-type',function(){
                 var sectionType = $(this).val();
                 Livewire.emit('changeType',sectionType);
@@ -354,6 +362,25 @@
             } else {
                 console.error("Video element not found in the modal.");
             }
+        }
+
+        function copyToClipboard(value) {
+            // Create a temporary input element
+            var tempInput = document.createElement('input');
+            tempInput.setAttribute('value', value);
+            document.body.appendChild(tempInput);
+
+            // Select the input element's content
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the selected text
+            document.execCommand('copy');
+
+            // Remove the temporary input element
+            document.body.removeChild(tempInput);
+
+            // alert('Link copied to clipboard: ' + url);
         }
 
       

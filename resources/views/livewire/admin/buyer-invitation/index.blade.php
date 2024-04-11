@@ -131,8 +131,14 @@
                                         @if($buyerInvitations->count() > 0)
 
                                           @foreach($buyerInvitations as $row)
+                                            @php
+                                                $isCheckboxDisabled = false;
+                                                if(( $row->reminder_count == count(config('constants.reminders')) ) || ($row->status == 1) ){
+                                                    $isCheckboxDisabled = true;
+                                                }    
+                                            @endphp
                                             <tr>
-                                                <td><input type="checkbox" wire:model="selectedRows" value="{{ $row->id }}" {{ ($row->reminder_count < count(config('constants.reminders'))) ? '' : 'disabled' }}></td>
+                                                <td><input type="checkbox" wire:model="selectedRows" value="{{ $row->id }}" {{ $isCheckboxDisabled ? 'disabled' : '' }}></td>
                                                 <td>{{ $row->email }}</td>
                                                 <td>{{ $row->createdBy->name ?? '' }}</td>
                                                 <td>{{ $row->reminder_count }}</td>

@@ -64,7 +64,7 @@ class Index extends Component
         if ($this->selectAll) {
             
             $totalReminder = count(config('constants.reminders'));
-            $this->selectedRows = BuyerInvitation::where('reminder_count','<=',$totalReminder)->pluck('id')->map(function ($id) {
+            $this->selectedRows = BuyerInvitation::where('reminder_count','<',$totalReminder)->where('status',0)->pluck('id')->map(function ($id) {
                 return (string) $id;
             })->toArray();
 
@@ -118,7 +118,7 @@ class Index extends Component
             $this->alert('warning',trans('messages.no_row_selected'));
        }else{
             foreach($this->selectedRows as $rowId){
-                $buyerInvitation = BuyerInvitation::find($rowId);
+                $buyerInvitation = BuyerInvitation::where('id',$rowId)->where('status',0)->first();
 
                 if($buyerInvitation->reminder_count < 3){
 
