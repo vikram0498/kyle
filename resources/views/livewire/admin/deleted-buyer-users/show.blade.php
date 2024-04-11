@@ -174,17 +174,21 @@
        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td>
+            {{-- <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td> --}}
 
-            {{-- <td class="remove-white-space"> 
-                @if(!is_null($details->parking) && !empty($details->parking))
-                    @foreach($details->parking as $parking)
-                        <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
-                    @endforeach
+           <td class="remove-white-space"> 
+                @if(is_array($details->parking))
+                    @if(!is_null($details->parking) && !empty($details->parking))
+                        @foreach($details->parking as $parking)
+                            <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
+                        @endforeach
+                    @else
+                        N/A
+                    @endif
                 @else
-                    N/A
+                    <span class="badge bg-primary text-white">{{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</span>
                 @endif
-            </td> --}}
+            </td>
         </tr>
         
         <tr>

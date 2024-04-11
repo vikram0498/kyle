@@ -121,6 +121,7 @@ class Index extends Component
         $this->viewMode = false;
         $this->resetInputFields();
         $this->resetValidation();
+        $this->resetPage();
     }
     public function confirmedToggleAction($data)
     {

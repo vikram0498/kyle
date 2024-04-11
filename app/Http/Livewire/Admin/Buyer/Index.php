@@ -543,6 +543,7 @@ class Index extends Component
         $this->redFlagView = false;
         $this->resetInputFields();
         $this->resetValidation();
+        $this->resetPage();
     }
 
     public function confirmedToggleAction($data){
