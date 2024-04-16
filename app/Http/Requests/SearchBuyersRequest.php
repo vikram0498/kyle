@@ -71,7 +71,7 @@ class SearchBuyersRequest extends FormRequest
             'parking' => ['nullable', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
             
             //Location flaws
-            'property_flaw' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
+            'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
     
             'solar'    => [],
             'pool'     => [],

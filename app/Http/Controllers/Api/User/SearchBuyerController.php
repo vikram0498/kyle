@@ -619,6 +619,7 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['park']    =  $request->park;
                 $insertLogRecords['rooms']    =  $request->rooms;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
+                $insertLogRecords['property_flaw']  =  ($request->property_flaw && count($request->property_flaw) > 0) ? $request->property_flaw : null;
                 SearchLog::create($insertLogRecords);
             }
             
