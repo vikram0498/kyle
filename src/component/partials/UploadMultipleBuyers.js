@@ -80,12 +80,12 @@ const UploadMultipleBuyers = () => {
         }
       } catch (error) {
         setLoading(false);
-        console.log(error.response,'resss');
+        // console.log(error.response.data.error,'resss');
         if (error.response) {
           if (error.response.status === 401) {
             setLogout();
           }else{
-            toast.error("No rows inserted during the import process", {
+            toast.error(error.response.data.error, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
@@ -106,7 +106,7 @@ const UploadMultipleBuyers = () => {
       <form className="form-container" method="post" onSubmit={submitCsvFile}>
         <div className="outer-heading text-center">
           <h3>Upload Multiple Buyer </h3>
-          <p class="mb-0"> Download CSV
+          <p className="mb-0"> Download CSV
             <a href="/assets/sample/kyle-sample.csv"> Sample 1 ,</a> 
             <a href="/assets/sample/import-buyer-by-email.csv"> Sample 2</a> 
           </p>

@@ -318,7 +318,7 @@ const Condo = ({ data, manufactureSelected }) => {
       <div className="row">
         <div className="col-12 col-lg-12">
           <div className="form-group">
-            <label>Location Flaws<span>*</span></label>
+            <label>Location Flaws</label>
             <div className="form-group">
               <MultiSelect
                 name="property_flaw"

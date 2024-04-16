@@ -66,7 +66,7 @@ const UploadMultipleBuyersOnChange = () => {
           if (error.response.status === 401) {
             setLogout();
           }else{
-            toast.error("No rows inserted during the import process", {
+            toast.error(error.response.data.error, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
