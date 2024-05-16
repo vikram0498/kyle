@@ -34,6 +34,10 @@ Route::get('/cache-clear', function() {
     return '<h1>All Cache cleared</h1>';
 });
 
+Route::get('/phpinfo',function(){
+	echo phpinfo();
+});
+
 // Auth::routes(['verify' => true]);
 
 Route::get('get-latest-kyc-count', [HomeController::class,'getCountOfLatestKyc'])->name('getCountOfLatestKyc');
