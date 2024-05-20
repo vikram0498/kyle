@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 */
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
-
+use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', function () {
@@ -32,6 +32,23 @@ Route::get('/', function () {
 Route::get('/cache-clear', function() {
     Artisan::call('optimize:clear');
     return '<h1>All Cache cleared</h1>';
+});
+
+Route::get('/send-test-mail', function() {
+    $recipient = 'rohithelpfullinsight@gmail.com';
+    $subject = 'Subject of the email';
+    $message = 'This is a simple text email.';
+    
+    try{
+        Mail::raw($message, function($mail) use ($recipient, $subject) {
+            $mail->to($recipient)
+            ->subject($subject);
+        });
+        
+        return '<h1>Mail Sent Successfully!</h1>';
+    } catch(\Exception $e){
+        dd($e->getMessage().'->'.$e->getLine());
+    }
 });
 
 Route::get('/phpinfo',function(){
