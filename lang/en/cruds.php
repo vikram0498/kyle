@@ -106,7 +106,7 @@ return [
             'last_name'                     => 'Last Name',
             'email'                         => 'Email Address',
             'phone'                         => 'Phone Number',
-            'phone_placeholder'             => 'Eg.9999999999',
+            'phone_placeholder'             => 'Eg.5055325532',
             'occupation'                    => 'Occupation',
             'replacing_occupation'          => 'Replacing Occupation',
             'company_name'                  => 'Company/LLC',
