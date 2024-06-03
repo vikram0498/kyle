@@ -208,7 +208,7 @@ class Index extends Component
         if(!$this->updateMode){
           
             $validator = Validator::make($this->state, $this->rules(),[
-                'phone.required' => 'The contact number field is required',
+                'phone.required' => 'The phone number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
@@ -220,6 +220,8 @@ class Index extends Component
                 'unit_min'=>'minimum units',
                 'unit_max'=>'maximum units',
                 'park'=>'park owned/tenant owned',
+                'state' => strtolower(trans('cruds.buyer.fields.state')),
+                'city' => strtolower(trans('cruds.buyer.fields.city')),
             ])->validate();
 
             // if ($validator->fails()) {
@@ -238,7 +240,7 @@ class Index extends Component
             $rules['phone'] = ['required', 'numeric','digits:10','not_in:-','unique:users,phone,'. $this->buyer_user_id.',id,deleted_at,NULL'];
 
             Validator::make($this->state, $rules,[
-                'phone.required' => 'The contact number field is required',
+                'phone.required' => 'The phone number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
@@ -250,6 +252,8 @@ class Index extends Component
                 'unit_min'=>'minimum units',
                 'unit_max'=>'maximum units',
                 'park'=>'park owned/tenant owned',
+                'state' => strtolower(trans('cruds.buyer.fields.state')),
+                'city' => strtolower(trans('cruds.buyer.fields.city')),
             ])->validate();
 
         }

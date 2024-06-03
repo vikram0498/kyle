@@ -30,7 +30,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label class="font-weight-bold">{{ __('cruds.buyer.fields.phone')}} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" wire:model.defer="state.phone" placeholder="{{ __('cruds.buyer.fields.phone') }}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length < 10 " step="1"  autocomplete="off" />
+                    <input type="text" class="form-control" wire:model.defer="state.phone" placeholder="{{ __('cruds.buyer.fields.phone_placeholder') }}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space' && this.value.length < 10 " step="1"  autocomplete="off" />
                     @error('phone') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>

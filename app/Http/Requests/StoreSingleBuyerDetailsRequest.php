@@ -127,6 +127,8 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
         return [
             'market_preferance' => 'mls status',
             'property_flaw' => 'location flaws',
+            'state' => strtolower(trans('cruds.buyer.fields.state')),
+            'city' => strtolower(trans('cruds.buyer.fields.city')),
         ];
     }
 }
