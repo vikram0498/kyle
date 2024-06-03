@@ -34,9 +34,17 @@ class InvitationReminderMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
+	//invitation-reminder
         return $this->markdown('emails.invitation-reminder', [
             'reminderNo' => $this->reminderNo,
             'invitationLink' => $this->invitationLink,
-        ])->subject($this->subject);
+        ])->subject($this->subject)
+	->withSwiftMessage(function ($message) {
+	    $headers = $message->getHeaders();
+   	    $headers->removeAll('Content-Type');
+   	    $headers->addTextHeader('Content-Type', 'text/html; charset=utf-8');
+   		 \Log::info($headers->toString()); // Log headers to verify
+	});
+
     }
 }

@@ -35,7 +35,7 @@ Route::get('/cache-clear', function() {
 });
 
 Route::get('/send-test-mail', function() {
-    $recipient = 'rohithelpfullinsight@gmail.com';
+    $recipient = 'rakeshjonwal.his@gmail.com';
     $subject = 'Subject of the email';
     $message = 'This is a simple text email.';
     
