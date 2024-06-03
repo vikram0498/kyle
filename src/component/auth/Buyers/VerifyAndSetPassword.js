@@ -6,6 +6,7 @@ import { useFormError } from "../../../hooks/useFormError";
 import ButtonLoader from "../../partials/MiniLoader";
 import { useParams } from "react-router-dom";
 import LinkExpirePage from "../../pages/Sellers/LinkExpirePage";
+import SuccessfullySubmittedPage from "../../pages/Sellers/SuccessfullySubmittedPage";
 
 const VerifyAndSetPassword = () => {
   const { userId, token } = useParams();
@@ -92,6 +93,7 @@ const VerifyAndSetPassword = () => {
             console.log("hi");
           }, 500);
         }
+        
         if (error.response.data.validation_errors) {
           setErrors(error.response.data.validation_errors);
         }
@@ -113,7 +115,7 @@ const VerifyAndSetPassword = () => {
         <img alt="loader" src="/assets/images/loader.svg" />
       </div> 
       :
-      isLinkExpire ? <LinkExpirePage type="buyer-password-verify"/>  :
+      isLinkExpire ? <SuccessfullySubmittedPage isSubmitted={true}/>  :
       <Layout>
         <div className="account-in">
           <div className="center-content">

@@ -80,12 +80,12 @@ const UploadMultipleBuyers = () => {
         }
       } catch (error) {
         setLoading(false);
-        // console.log(error.response.data.error,'resss');
+        console.log(error.response.data.message,'resss');
         if (error.response) {
           if (error.response.status === 401) {
             setLogout();
           }else{
-            toast.error(error.response.data.error, {
+            toast.error(error.response.data.message, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }

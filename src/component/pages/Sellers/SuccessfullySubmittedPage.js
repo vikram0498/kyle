@@ -1,8 +1,9 @@
 import React from "react";
 
-const SuccessfullySubmiitedPage = () => {
+const SuccessfullySubmittedPage = ({isSubmitted}) => {
     const body = document.querySelector('body');
     body.classList.remove('bg-img');
+    console.log(isSubmitted,'isSubmitted');
     return (
     <div className="linkExpire successfull">
         <div className="container h-100">
@@ -15,7 +16,10 @@ const SuccessfullySubmiitedPage = () => {
                             </div>
                             <div className="col-12 text-center">
                                 <div className="heading">Thank you!</div>
-                                <div className="subheading my-md-3 my-2">Your form has been successfully submitted.</div>
+                                {isSubmitted ? 
+                                    <div className="subheading my-md-3 my-2">Account has already been successfully registered.</div>:
+                                    <div className="subheading my-md-3 my-2">Your form has been successfully submitted.</div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -25,4 +29,4 @@ const SuccessfullySubmiitedPage = () => {
     </div>
     )
 }
-export default SuccessfullySubmiitedPage;
+export default SuccessfullySubmittedPage;

@@ -670,7 +670,7 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="phone"
                                   className="form-control"
-                                  placeholder="Phone Number"
+                                  placeholder="Eg. 9890746256"
                                   {...register("phone", {
                                     required: "Phone Number is required",
                                     validate: {
@@ -694,13 +694,13 @@ function AddBuyerDetails() {
 
                             <div className="col-12 col-lg-12">
                               <label>
-                                State<span>*</span>
+                              Buy Box Criteria State (Multi-Select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
                                   control={control}
                                   name="state"
-                                  rules={{ required: "State is required" }}
+                                  rules={{ required: "The buy box criteria state (multi-select) is required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -711,7 +711,7 @@ function AddBuyerDetails() {
                                       closeMenuOnSelect={false}
                                       isClearable={true}
                                       className="select"
-                                      placeholder="Select State"
+                                      placeholder="Select Buy Box Criteria State (Multi-Select)"
                                       onChange={(e) => {
                                         onChange(e);
                                         handleCustum(e, "state");
@@ -730,7 +730,7 @@ function AddBuyerDetails() {
                             </div>
                             <div className="col-12 col-lg-12">
                               <label>
-                                City<span>*</span>
+                                Buy Box Criteria City (Multi-Select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 {/* <Select
@@ -752,7 +752,7 @@ function AddBuyerDetails() {
                                 <Controller
                                   control={control}
                                   name="city"
-                                  rules={{ required: "City is required" }}
+                                  rules={{ required: "The buy box criteria City (multi-select) is required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -763,7 +763,7 @@ function AddBuyerDetails() {
                                       isClearable={true}
                                       closeMenuOnSelect={false}
                                       className="select"
-                                      placeholder="Select City"
+                                      placeholder="Select Buy Box Criteria City (Multi-Select)"
                                       onChange={(e) => {
                                         onChange(e);
                                         handleCityChange(e);
@@ -835,7 +835,7 @@ function AddBuyerDetails() {
                                 <Controller
                                   control={control}
                                   name="market_preferance"
-                                  rules={{ required: "mls status is required" }}
+                                  rules={{ required: "MLS status is required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -863,7 +863,7 @@ function AddBuyerDetails() {
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                               <label>
-                                Contact Preference<span>*</span>
+                                Contact Preference <span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
@@ -899,7 +899,7 @@ function AddBuyerDetails() {
                             <div className="col-12 col-lg-12">
                               <div className="form-group">
                                 <label>
-                                  Property Type<span>*</span>
+                                  Property Type (multi-select)<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   <Controller
@@ -946,7 +946,7 @@ function AddBuyerDetails() {
                                 <div className="row">
                                   <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                     <label>
-                                      Zoning <span>*</span>
+                                      Zoning (multi-select)<span>*</span>
                                     </label>
                                     <div className="form-group">
                                       <Controller
@@ -1136,7 +1136,7 @@ function AddBuyerDetails() {
                                   </div>
                                   <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                     <label>
-                                      Building class<span>*</span>
+                                      Building class (multi-select)<span>*</span>
                                     </label>
                                     <div className="form-group">
                                       {/* <MultiSelect
@@ -1231,7 +1231,7 @@ function AddBuyerDetails() {
                             )}
                             <div className="col-12 col-lg-12">
                               <label>
-                                Purchase Method<span>*</span>
+                                Purchase Method (multi-select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 {/* <MultiSelect
@@ -2103,7 +2103,7 @@ function AddBuyerDetails() {
                             )}
                             <div className="col-6 col-lg-6">
                               <label>
-                                Parking<span>*</span>
+                                Parking (multi-select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
@@ -2211,7 +2211,7 @@ function AddBuyerDetails() {
                             )}
                             <div className="col-12 col-lg-12">
                               <div className="form-group">
-                                <label>Location Flaws</label>
+                                <label>Location Flaws (Multi-Select)</label>
                                 <div className="form-group">
                                   <MultiSelect
                                     name="property_flaw"

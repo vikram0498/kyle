@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import LinkExpirePage from "./LinkExpirePage";
-import SuccessfullySubmiitedPage from "./SuccessfullySubmiitedPage";
+import SuccessfullySubmiitedPage from "./SuccessfullySubmittedPage";
 import { useAuth } from "../../../hooks/useAuth";
 
 function CopyAddBuyer() {
@@ -411,7 +411,8 @@ function CopyAddBuyer() {
         </div>
       ) : isTokenExpire ? (
         <div className="row">
-          {isSubmitted ? <SuccessfullySubmiitedPage /> : <LinkExpirePage />}
+          {/* {isSubmitted ? <SuccessfullySubmiitedPage /> : <LinkExpirePage />} */}
+          <SuccessfullySubmiitedPage isSubmitted={isSubmitted}/>
         </div>
       ) : (
         <section className="main-section position-relative pt-4 pb-120">
@@ -534,7 +535,7 @@ function CopyAddBuyer() {
                                 type="text"
                                 name="phone"
                                 className="form-control"
-                                placeholder="Phone Number"
+                                placeholder="Eg. 9890746256"
                                 {...register("phone", {
                                   required: "Phone is required",
                                   validate: {
@@ -573,7 +574,7 @@ function CopyAddBuyer() {
                                                             </div> */}
                           <div className="col-12 col-lg-12">
                             <label>
-                              State<span>*</span>
+                            Buy Box Criteria State (Multi-Select)<span>*</span>
                             </label>
                             <div className="form-group">
                               {/* <Select
@@ -607,7 +608,7 @@ function CopyAddBuyer() {
                               <Controller
                                 control={control}
                                 name="state"
-                                rules={{ required: "State is required" }}
+                                rules={{ required: "The buy box criteria state (multi-select) is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -617,7 +618,7 @@ function CopyAddBuyer() {
                                     value={state}
                                     isClearable={true}
                                     className="select"
-                                    placeholder="Select State"
+                                    placeholder="Select Buy Box Criteria State (Multi-Select)"
                                     closeMenuOnSelect={false}
                                     onChange={(e) => {
                                       onChange(e);
@@ -635,7 +636,7 @@ function CopyAddBuyer() {
                           </div>
                           <div className="col-12 col-lg-12">
                             <label>
-                              City<span>*</span>
+                            Buy Box Criteria City (Multi-Select) <span>*</span>
                             </label>
                             <div className="form-group">
                               {/* <Select
@@ -673,7 +674,7 @@ function CopyAddBuyer() {
                               <Controller
                                 control={control}
                                 name="city"
-                                rules={{ required: "City is required" }}
+                                rules={{ required: "The buy box criteria city (multi-select) is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -684,7 +685,7 @@ function CopyAddBuyer() {
                                     isClearable={true}
                                     closeMenuOnSelect={false}
                                     className="select"
-                                    placeholder="Select City"
+                                    placeholder="Select Buy Box Criteria City (Multi-Select)"
                                     onChange={(e) => {
                                       onChange(e);
                                       handleCityChange(e);
@@ -735,7 +736,7 @@ function CopyAddBuyer() {
                               <Controller
                                 control={control}
                                 name="market_preferance"
-                                rules={{ required: "mls Status is required" }}
+                                rules={{ required: "MLS Status is required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -815,7 +816,7 @@ function CopyAddBuyer() {
                           <div className="col-12 col-lg-12">
                             <div className="form-group">
                               <label>
-                                Property Type<span>*</span>
+                                Property Type (Multi-Select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
@@ -860,7 +861,7 @@ function CopyAddBuyer() {
                               <div className="row">
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                   <label>
-                                    Zoning<span>*</span>
+                                    Zoning (Multi-Select)<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     <Controller
@@ -1046,7 +1047,7 @@ function CopyAddBuyer() {
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                   <label>
-                                    Building class<span>*</span>
+                                    Building class (Multi-Select)<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     {/* <MultiSelect
@@ -1140,7 +1141,7 @@ function CopyAddBuyer() {
                           )}
                           <div className="col-12 col-lg-12">
                             <label>
-                              Purchase Method<span>*</span>
+                              Purchase Method (Multi-Select)<span>*</span>
                             </label>
                             <div className="form-group">
                               {/* <MultiSelect
@@ -2001,7 +2002,7 @@ function CopyAddBuyer() {
                           )}
                           <div className="col-6 col-lg-6">
                             <label>
-                              Parking<span>*</span>
+                              Parking (Multi-Select)<span>*</span>
                             </label>
                             <div className="form-group">
                               {/* <MultiSelect
@@ -2116,7 +2117,7 @@ function CopyAddBuyer() {
 
                           <div className="col-12 col-lg-12">
                             <div className="form-group">
-                              <label>Location Flaws</label>
+                              <label>Location Flaws  (Multi-Select)</label>
                               <div className="form-group">
                                 <MultiSelect
                                   name="property_flaw"

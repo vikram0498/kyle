@@ -15,13 +15,15 @@ const LinkExpirePage = ({type}) => {
                                 <div className="expireImg"><img src="/assets/images/expire.png" className="w-100" alt="expire link"/></div>
                             </div>
                             <div className="col-12 text-center">
-                                <div className="heading">The link has expired</div>
                                 {(type === 'buyer-password-verify') ?
                                     <>
                                         <div className="subheading my-md-3 my-2">Your Email is already Verified. Please Login</div>
                                         <Link to='/login'> <button className="btn btn-primary">Login</button></Link>
                                     </>:
+                                    <>
+                                        <div className="heading">The link has expired</div>
                                         <div className="subheading my-md-3 my-2">Oops! This URL is not valid anymore</div>
+                                    </>
                                 }
                             </div>
                            

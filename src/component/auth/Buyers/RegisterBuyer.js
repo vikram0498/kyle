@@ -523,7 +523,7 @@ function RegisterBuyer() {
                                     type="text"
                                     name="phone"
                                     className="form-control"
-                                    placeholder="Phone Number"
+                                    placeholder="Eg. 9890746256"
                                     {...register("phone", {
                                       required: "Phone is required",
                                       validate: {
@@ -562,7 +562,7 @@ function RegisterBuyer() {
                                                                 </div> */}
                               <div className="col-12 col-lg-12">
                                 <label>
-                                  State<span>*</span>
+                                Buy Box Criteria State (Multi-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   {/* <Select
@@ -596,7 +596,7 @@ function RegisterBuyer() {
                                   <Controller
                                     control={control}
                                     name="state"
-                                    rules={{ required: "State is required" }}
+                                    rules={{ required: "The buy box criteria state (multi-select) is required" }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -606,7 +606,7 @@ function RegisterBuyer() {
                                         value={state}
                                         isClearable={true}
                                         className="select"
-                                        placeholder="Select State"
+                                        placeholder="Select Buy Box Criteria State (Multi-Select)"
                                         closeMenuOnSelect={false}
                                         onChange={(e) => {
                                           onChange(e);
@@ -623,9 +623,7 @@ function RegisterBuyer() {
                                 </div>
                               </div>
                               <div className="col-12 col-lg-12">
-                                <label>
-                                  City<span>*</span>
-                                </label>
+                                <label> Buy Box Criteria City (Multi-Select)<span>*</span> </label>
                                 <div className="form-group">
                                   {/* <Select
                                                                             name="city"
@@ -662,7 +660,7 @@ function RegisterBuyer() {
                                   <Controller
                                     control={control}
                                     name="city"
-                                    rules={{ required: "City is required" }}
+                                    rules={{ required: "The buy box criteria City (multi-select) is required" }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -673,7 +671,7 @@ function RegisterBuyer() {
                                         isClearable={true}
                                         closeMenuOnSelect={false}
                                         className="select"
-                                        placeholder="Select City"
+                                        placeholder="Select Buy Box Criteria City (Multi-Select)"
                                         onChange={(e) => {
                                           onChange(e);
                                           handleCityChange(e);
@@ -724,7 +722,7 @@ function RegisterBuyer() {
                                   <Controller
                                     control={control}
                                     name="market_preferance"
-                                    rules={{ required: "mls Status is required" }}
+                                    rules={{ required: "MLS Status is required" }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -804,7 +802,7 @@ function RegisterBuyer() {
                               <div className="col-12 col-lg-12">
                                 <div className="form-group">
                                   <label>
-                                    Property Type<span>*</span>
+                                    Property Type (Multi-Select)<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     <Controller
@@ -849,7 +847,7 @@ function RegisterBuyer() {
                                   <div className="row">
                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                       <label>
-                                        Zoning<span>*</span>
+                                        Zoning (Multi-Select)<span>*</span>
                                       </label>
                                       <div className="form-group">
                                         <Controller
@@ -1035,7 +1033,7 @@ function RegisterBuyer() {
                                     </div>
                                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                       <label>
-                                        Building class<span>*</span>
+                                        Building class (Multi-Select)<span>*</span>
                                       </label>
                                       <div className="form-group">
                                         {/* <MultiSelect
@@ -1129,7 +1127,7 @@ function RegisterBuyer() {
                               )}
                               <div className="col-12 col-lg-12">
                                 <label>
-                                  Purchase Method<span>*</span>
+                                  Purchase Method (Multi-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   {/* <MultiSelect
@@ -1990,7 +1988,7 @@ function RegisterBuyer() {
                               )}
                               <div className="col-6 col-lg-6">
                                 <label>
-                                  Parking<span>*</span>
+                                  Parking (Multi-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   {/* <MultiSelect
@@ -2105,7 +2103,7 @@ function RegisterBuyer() {
       
                               <div className="col-12 col-lg-12">
                                 <div className="form-group">
-                                  <label>Location Flaws</label>
+                                  <label>Location Flaws (Multi-Select)</label>
                                   <div className="form-group">
                                     <MultiSelect
                                       name="property_flaw"

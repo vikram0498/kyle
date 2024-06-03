@@ -66,7 +66,7 @@ const UploadMultipleBuyersOnChange = () => {
           if (error.response.status === 401) {
             setLogout();
           }else{
-            toast.error(error.response.data.error, {
+            toast.error(error.response.data.message, {
               position: toast.POSITION.TOP_RIGHT,
             });
           }
