@@ -535,7 +535,7 @@ function CopyAddBuyer() {
                                 type="text"
                                 name="phone"
                                 className="form-control"
-                                placeholder="Eg. 9890746256"
+                                placeholder="Eg. 5055325532"
                                 {...register("phone", {
                                   required: "Phone is required",
                                   validate: {
