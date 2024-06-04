@@ -283,6 +283,7 @@ return [
         1 => 'reminder 1',
         2 => 'reminder 2',
         3 => 'reminder 3',
-    ]
+    ],
 
+    'reminder_mail_subject'=>'Pre-Launch Invite | The Future of Real Estate Investing',
 ];

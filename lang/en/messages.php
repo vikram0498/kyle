@@ -17,9 +17,16 @@ return [
 
     'auth'=>[
         'buyer'=>[
-            'register_success_alert'=>'Buyer register successfully! We\'ve sent an email with a verification link.',
+            // 'register_success_alert'=>'Buyer register successfully! We\'ve sent an email with a verification link.',
+            'admin_register_success_alert'=>'Buyer registered successfully! We\'ve sent an email to finalize their account setup',
+            'register_success_alert'=>'Success! Check your email to finalize your account setup',
             'update_buyer_success_alert'=>'Buyer updated successfully!',
-            'update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email with a verification link.',
+
+            // 'update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email with a verification link.',
+            'admin_update_success_with_mail_sent_alert'=>'Buyer updated successfully! We\'ve sent an email to finalize their account setup',
+
+            'update_success_with_mail_sent_alert'=>'Success! Check your email to finalize your account setup',
+
             'upgrade_error'=>'Please upgrade your account first!',
             'verify_profile'=> 'Please verify your profile first!',
         ],

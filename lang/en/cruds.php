@@ -92,6 +92,7 @@ return [
         ],
     ],
 
+    'multi_select' => '(Multi-Select)',
     'buyer' => [
         'title'                 => 'Buyers',
         'sub_menu_list_title'   => 'List',
@@ -111,9 +112,9 @@ return [
             'replacing_occupation'          => 'Replacing Occupation',
             'company_name'                  => 'Company/LLC',
             'address'                       => 'Address',
-            'city'                          => 'Buy Box Criteria City (Multi-Select)',
+            'city'                          => 'Buy Box Criteria City',
             'country'                       => 'Country',
-            'state'                         => 'Buy Box Criteria State (Multi-Select)',
+            'state'                         => 'Buy Box Criteria State',
             'zip_code'                      => 'Zip',
             'bedroom_min'                   => 'Bedroom (min)',
             'bedroom_max'                   => 'Bedroom (max)',

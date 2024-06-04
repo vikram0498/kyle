@@ -37,7 +37,7 @@
             
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} <span class="text-danger">*</span></label>
+                    <label for="state" class="font-weight-bold">{{ __('cruds.buyer.fields.state')}} {{ __('cruds.multi_select')}}<span class="text-danger">*</span></label>
                    <div wire:ignore> 
                         <select wire:model.defer="state.state" id="state" class="form-control state select2" multiple  data-property="state" data-placeholder="Select {{ __('cruds.buyer.fields.state')}}">
                             <option value="">Select {{ __('cruds.buyer.fields.state')}}</option>
@@ -51,7 +51,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.city')}} {{ __('cruds.multi_select')}}<span class="text-danger">*</span></label>
                     <!-- <div wire:ignore> -->
                     <select wire:model.defer="state.city" id="city" class="form-control city select2" id="city" multiple data-property="city" data-placeholder="Select {{ __('cruds.buyer.fields.city')}}">
                         <option value="">Select {{ __('cruds.buyer.fields.city')}}</option>
@@ -100,7 +100,7 @@
             
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_type')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_type')}} {{ __('cruds.multi_select')}} <span class="text-danger">*</span></label>
                     <div wire:ignore>
                         <select wire:model.defer="state.property_type" id="property_type" class="form-control property_type select2" data-property="property_type" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_type')}}" >
                             @foreach($propertyTypes as $key => $value)
@@ -115,7 +115,7 @@
             @if(isset($state['property_type']) && in_array(7,$state['property_type']))
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}}<span class="text-danger">*</span></label>
+                        <label class="font-weight-bold">{{ __('cruds.buyer.fields.zoning')}} {{ __('cruds.multi_select')}}<span class="text-danger">*</span></label>
                         <select class="form-control zoning select2" wire:model.defer="state.zoning" data-property="zoning" multiple data-placeholder="Select {{ __('cruds.buyer.fields.zoning')}}">
                             @foreach ($zonings as $key=>$item)
                                 <option value="{{$key}}"> {{$item}}</option>
@@ -172,7 +172,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.building_class')}} <span class="text-danger">*</span></label>
+                            <label class="font-weight-bold">{{ __('cruds.buyer.fields.building_class')}} {{ __('cruds.multi_select')}} <span class="text-danger">*</span></label>
                             <div wire:ignore>
                                 <select wire:model.defer="state.building_class" class="form-control building_class select2" data-property="building_class" multiple data-placeholder="Select {{ __('cruds.buyer.fields.building_class')}}" >
                                     @foreach($buildingClassValue as $key => $value)
@@ -199,7 +199,7 @@
 
             <div class="col-md-12">
                 <div class="form-group" >
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.purchase_method')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.purchase_method')}} {{ __('cruds.multi_select')}} <span class="text-danger">*</span></label>
                     <div wire:ignore>
                         <select wire:model.defer="state.purchase_method" class="form-control purchase_method select2" data-property="purchase_method" id="purchase_method" multiple data-placeholder="Select {{ __('cruds.buyer.fields.purchase_method')}}" >
                             @foreach($purchaseMethods as $key => $value)
@@ -343,7 +343,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}}<span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.parking')}} {{ __('cruds.multi_select')}}<span class="text-danger">*</span></label>
                     <div wire:ignore>
                         <select wire:model.defer="state.parking" id="parking" class="form-control parking select2" data-property="parking" data-placeholder="Select {{ __('cruds.buyer.fields.parking')}}" multiple>
                             <option value="">Select {{ __('cruds.buyer.fields.parking')}}</option>
@@ -389,7 +389,7 @@
             
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_flaw')}}</label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_flaw')}} {{ __('cruds.multi_select')}}</label>
                     <div wire:ignore>
                         <select wire:model.defer="state.property_flaw" class="form-control property_flaw select2" data-property="property_flaw" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_flaw')}}">
                             @foreach($propertyFlaws as $key => $value)

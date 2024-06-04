@@ -124,7 +124,7 @@ class Index extends Component
 
                     $reminderNo = (int)$buyerInvitation->reminder_count+1;
 
-                    $subject = 'Reminder : Invitation to Register';
+                    $subject = config('constants.reminder_mail_subject');
 
                     $buyerInvitation->sendInvitationEmail($subject,$reminderNo);
 

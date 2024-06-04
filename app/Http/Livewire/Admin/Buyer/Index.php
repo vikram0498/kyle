@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB; 
 
 class Index extends Component
@@ -280,6 +280,7 @@ class Index extends Component
         $this->initializePlugins();   
         $this->validatiionForm();   
 
+        DB::beginTransaction();
         try {
             // Start create users table
             $userDetails =  [
@@ -315,8 +316,9 @@ class Index extends Component
                     $this->state['city']    =  array_map('intval',$this->state['city']);
                 }
 
+              
                 if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                    $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+                    $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
                 }
     
                 if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
@@ -350,6 +352,9 @@ class Index extends Component
 
                 $this->state = collect($this->state)->except(['first_name', 'last_name','email','phone'])->all();
                 
+
+                // dd($this->state);
+                
                 $createUser->buyerDetail()->create($this->state);
 
                 if($createUser->buyerDetail){
@@ -364,16 +369,21 @@ class Index extends Component
                 //Verification mail sent
                 $createUser->NotificationSendToBuyerVerifyEmail();
 
+                DB::commit();
+
                 $this->formMode = false;
 
                 $this->resetInputFields();
 
-                $this->flash('success',trans('messages.auth.buyer.register_success_alert'));
+                $this->flash('success',trans('messages.auth.buyer.admin_register_success_alert'));
                 
                 return redirect()->route('admin.buyer');
             }
         }catch (\Exception $e) {
+            DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
+
+            Log::error('Livewire -> Buyer-> Index -> Store()'.$e->getMessage().'->'.$e->getLine());
             
             $this->alert('error',trans('messages.error_message'));
         }
@@ -430,6 +440,7 @@ class Index extends Component
         $this->initializePlugins();   
         $this->validatiionForm();
 
+        DB::beginTransaction();
         try {
            
             $isSendMail = false;
@@ -466,7 +477,7 @@ class Index extends Component
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+                $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
             }
 
             if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
@@ -500,16 +511,19 @@ class Index extends Component
            if($isSendMail){
                 //Verification mail sent
                 $user->NotificationSendToBuyerVerifyEmail();
-                $this->flash('success',trans('messages.auth.buyer.update_success_with_mail_sent_alert'));
+                DB::commit();
+                $this->flash('success',trans('messages.auth.buyer.admin_update_success_with_mail_sent_alert'));
            }else{
+                DB::commit();
                 $this->flash('success',trans('messages.auth.buyer.update_buyer_success_alert'));
            }
             
             $this->resetInputFields();
             return redirect()->route('admin.buyer');
         }catch (\Exception $e) {
+            DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
-            
+            Log::error('Livewire -> Buyer-> Index -> Update()'.$e->getMessage().'->'.$e->getLine());
             $this->alert('error',trans('messages.error_message'));
         }
     }
