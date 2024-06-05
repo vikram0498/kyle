@@ -1094,3 +1094,10 @@ body .datepicker .datepicker-years .table-condensed{
     padding: 4px 20px 4px 4px;
     font-size: 13px;
 }
+
+.note-editing-area .note-editable ol{
+  list-style:auto;
+}
+.note-editing-area .note-editable ul{
+    list-style: disc;
+}
