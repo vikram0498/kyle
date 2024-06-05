@@ -41,7 +41,7 @@ class ImportBuyerInvitation implements ToModel, WithStartRow
                 $createBuyerInvitation = BuyerInvitation::create($invitationArr);
 
                 if($createBuyerInvitation){
-                    $subject = 'Invitation to Register';
+                    $subject = config('constants.reminder_mail_subject');
 
                     $createBuyerInvitation->sendInvitationEmail($subject,1);
 
