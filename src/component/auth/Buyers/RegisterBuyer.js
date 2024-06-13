@@ -350,7 +350,6 @@ function RegisterBuyer() {
     setCity(event);
   };
   const handleChangeErrorMessage = (field_name) => {
-    console.log("hello", field_name);
     if (field_name === "bedroom") {
       if (parseInt(bedRoomMax) >= parseInt(bedRoomMin)) {
         clearErrors(["bedroom_min", "bedroom_max"]);
@@ -368,8 +367,7 @@ function RegisterBuyer() {
         clearErrors(["lot_size_min", "lot_size_max"]);
       }
     } else if (field_name === "stories") {
-      console.log(parseInt(storiesMax));
-      console.log(parseInt(storiesMin));
+
       if (parseInt(storiesMax) >= parseInt(storiesMin)) {
         clearErrors(["stories_min", "stories_max"]);
       }
@@ -379,7 +377,6 @@ function RegisterBuyer() {
       }
     }
   };
-  console.log(email,'isValidPage');
   return (
     <>
         <section className="main-section position-relative pt-4 pb-120">
@@ -596,7 +593,7 @@ function RegisterBuyer() {
                                   <Controller
                                     control={control}
                                     name="state"
-                                    rules={{ required: "The buy box criteria state (multi-select) is required" }}
+                                    rules={{ required: "Buy Box Criteria State(s) Required" }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (
@@ -660,7 +657,7 @@ function RegisterBuyer() {
                                   <Controller
                                     control={control}
                                     name="city"
-                                    rules={{ required: "The buy box criteria City (multi-select) is required" }}
+                                    rules={{ required: "Buy Box Criteria City(s) Required" }}
                                     render={({
                                       field: { value, onChange, name },
                                     }) => (

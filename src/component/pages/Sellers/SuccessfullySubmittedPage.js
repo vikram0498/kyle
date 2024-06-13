@@ -3,7 +3,6 @@ import React from "react";
 const SuccessfullySubmittedPage = ({isSubmitted}) => {
     const body = document.querySelector('body');
     body.classList.remove('bg-img');
-    console.log(isSubmitted,'isSubmitted');
     return (
     <div className="linkExpire successfull">
         <div className="container h-100">
@@ -17,7 +16,7 @@ const SuccessfullySubmittedPage = ({isSubmitted}) => {
                             <div className="col-12 text-center">
                                 <div className="heading">Thank you!</div>
                                 {isSubmitted ? 
-                                    <div className="subheading my-md-3 my-2">Account has already been successfully registered.</div>:
+                                    <div className="subheading my-md-3 my-2">Success! Check your email to finalize your account setup</div>:
                                     <div className="subheading my-md-3 my-2">Your form has been successfully submitted.</div>
                                 }
                             </div>

@@ -423,8 +423,8 @@ function CopyAddBuyer() {
                   <div className="card-box-inner">
                     <div className="row">
                       <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                        <h3>Buyer Form</h3>
-                        <p>Fill the below form </p>
+                        <h3>Buy Box Criteria Form</h3>
+                        <p>Real estate deals that match your exact buying criteria</p>
                       </div>
                     </div>
 
@@ -608,7 +608,7 @@ function CopyAddBuyer() {
                               <Controller
                                 control={control}
                                 name="state"
-                                rules={{ required: "The buy box criteria state (multi-select) is required" }}
+                                rules={{ required: "Buy Box Criteria State(s) Required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (
@@ -674,7 +674,7 @@ function CopyAddBuyer() {
                               <Controller
                                 control={control}
                                 name="city"
-                                rules={{ required: "The buy box criteria city (multi-select) is required" }}
+                                rules={{ required: "Buy Box Criteria City(s) Required" }}
                                 render={({
                                   field: { value, onChange, name },
                                 }) => (

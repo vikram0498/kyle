@@ -324,6 +324,7 @@ function AddBuyerDetails() {
         let token = response.data.data.copy_token;
         let copyUrl = baseURL + "/add-buyer/" + token;
         console.log(copyUrl, "copyUrl");
+        navigator.clipboard.writeText(copyUrl);
         setGeneratedUrl(copyUrl);
         setCopySuccess(true);
         setCopyLoading(false);
@@ -700,7 +701,7 @@ function AddBuyerDetails() {
                                 <Controller
                                   control={control}
                                   name="state"
-                                  rules={{ required: "The buy box criteria state (multi-select) is required" }}
+                                  rules={{ required: "Buy Box Criteria State(s) Required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -752,7 +753,7 @@ function AddBuyerDetails() {
                                 <Controller
                                   control={control}
                                   name="city"
-                                  rules={{ required: "The buy box criteria City (multi-select) is required" }}
+                                  rules={{ required: "Buy Box Criteria City(s) Required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
