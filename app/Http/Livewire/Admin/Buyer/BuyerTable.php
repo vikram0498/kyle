@@ -33,6 +33,7 @@ class BuyerTable extends Component
         $buyers = Buyer::query()
         ->where(function ($query) use ($searchValue,$statusSearch) {
             $query->whereRelation('userDetail', 'name', 'like',  ["%{$searchValue}%"])
+            ->orWhereRelation('userDetail', 'email', 'like',  ["%{$searchValue}%"])
             ->orWhereRelation('userDetail', 'is_active', '=',  $statusSearch)
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
