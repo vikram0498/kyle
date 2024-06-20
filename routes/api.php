@@ -74,7 +74,7 @@ Route::post('copy-single-buyer-details/{token}', [CopyBuyerController::class, 'u
 
 Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);
 
-Route::get('check-token/{token}', [CopyBuyerController::class, 'isValidateToken']);
+Route::get('check-token/{type}/{token}', [CopyBuyerController::class, 'isValidateToken']);
 
 Route::get('get-contact-preferance', [SupportController::class, 'getContactPreferance']);
 

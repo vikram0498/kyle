@@ -221,7 +221,7 @@ class CopyBuyerController extends Controller
             if($token){
                 $checkToken = Token::where('token_value',$token)->first();
                 if($checkToken){
-                    if($checkToken->is_used === 1){
+                    if(($checkToken->is_used === 1) && ($request->type == 'private-buyer')){
                         //Return Error Response
                         $responseData = [
                             'status'        => false,
@@ -329,7 +329,7 @@ class CopyBuyerController extends Controller
                     $createUser->NotificationSendToBuyerVerifyEmail();
                 }
 
-                if($token){
+                if($token && ($request->type == 'private-buyer')){
                     Token::where('token_value',$token)->update(['is_used'=>1]);
                 }
             }
@@ -356,38 +356,58 @@ class CopyBuyerController extends Controller
         }
     }
 
-    public function isValidateToken($token){
-        $tokenExpired = $this->checkTokenValidate($token);
+    public function isValidateToken($type,$token){
+        $tokenExpired = $this->checkTokenValidate($type,$token);
 
-        if($tokenExpired){
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error_type'    => 'token_expired',
-                'error'         => 'Token has been expired!',
-            ];
-            return response()->json($responseData, 400);
-        }else{
-            //Success Response Send
-            $responseData = [
-                'status'            => true,
-                'message'           => 'Token is validate!',
-            ];
-            return response()->json($responseData, 200);
+        if($type == 'private-buyer'){
+            if($tokenExpired){
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error_type'    => 'token_expired',
+                    'error'         => 'Token has been expired!',
+                ];
+                return response()->json($responseData, 400);
+            }else{
+                //Success Response Send
+                $responseData = [
+                    'status'            => true,
+                    'message'           => 'Token is validate!',
+                ];
+                return response()->json($responseData, 200);
+            }
+        }elseif($type == 'public-buyer'){
+            if($tokenExpired){
+                //Success Response Send
+                $responseData = [
+                    'status'            => true,
+                    'message'           => 'Token is validate!',
+                ];
+                return response()->json($responseData, 200);
+            }
         }
 
     }
 
-    private function checkTokenValidate($token){
+    private function checkTokenValidate($type,$token){
         $currentDateTime = Carbon::now();
         $tokenExpired = false;
-         $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
-        if($checkToken){
-            $tokenExpired = true;
-            // if($checkToken->token_expired_time > $currentDateTime) {
-            //     $tokenExpired = false;
-            // }
+        
+        if($type == 'private-buyer'){
+            $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
+            if($checkToken){
+                $tokenExpired = true;
+                // if($checkToken->token_expired_time > $currentDateTime) {
+                //     $tokenExpired = false;
+                // }
+            }
+        }elseif($type == 'public-buyer'){
+            $checkToken = Token::where('token_value',$token)->first();
+            if($checkToken){
+                $tokenExpired = true;
+            }
         }
+       
 
         return $tokenExpired;
     }
