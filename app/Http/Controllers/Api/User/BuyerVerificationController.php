@@ -22,10 +22,10 @@ class BuyerVerificationController extends Controller
                 return $this->phoneVerification($request);
             break;
             case 2:
-                return $this->driverLicenseVerification($request);
+                return $this->proofOfFundsVerification($request);
             break;
             case 3:
-                return $this->proofOfFundsVerification($request);
+                return $this->driverLicenseVerification($request);
             break;
             case 4:
                 return $this->LLCVerification($request);
@@ -379,14 +379,15 @@ class BuyerVerificationController extends Controller
             $lastStepForm = 1;
         }
 
-        if($user->buyerVerification->is_driver_license){
+    
+        if($user->buyerVerification->is_proof_of_funds){
             $lastStepForm = 2;
-            $statusOfLastStep = $user->buyerVerification->driver_license_status;
+            $statusOfLastStep = $user->buyerVerification->proof_of_funds_status;
         }
 
-        if($user->buyerVerification->is_proof_of_funds){
+        if($user->buyerVerification->is_driver_license){
             $lastStepForm = 3;
-            $statusOfLastStep = $user->buyerVerification->proof_of_funds_status;
+            $statusOfLastStep = $user->buyerVerification->driver_license_status;
         }
 
         if($user->buyerVerification->is_llc_verification){
