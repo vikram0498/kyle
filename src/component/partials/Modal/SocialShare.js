@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from 'react-share';
 
 const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal}) => {
   const handleClose = () => {
     SetOpenSocialShareModal(false);
   };
-
+  const url = 'http://localhost:3006/add-buyer/OQ0VIYG2N1eJQxuhxdA598rFtytwz1K6';
+  const text = 'Check out this page!';
   return (
     <div>
       <Modal
@@ -20,20 +29,17 @@ const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal}) => {
           <h5>Social Share</h5>
         </Modal.Header>
         <Modal.Body>
-            <ul className="share_social">
-              <li><a href="javascript:void(0)"><img src="/assets/images/whatsapp-fill-icon.svg"/></a></li>
-              <li><a href="javascript:void(0)"><img src="/assets/images/facebook-fill-icon.svg"/></a></li>
-              <li><a href="javascript:void(0)"><img src="/assets/images/twitter-fill-icon.svg"/></a></li>
-            </ul>
-            <div id="" className="invite-page modal-invite-link">
-              <input id="link" value="" />
-              <div id="copy">
-                <i
-                  className="fa-solid fa-copy"
-                  aria-hidden="true"
-                ></i>
-              </div>
-            </div>
+        <div>
+          <FacebookShareButton url={url} quote={text}>
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+          <TwitterShareButton url={url} title={text}>
+            <TwitterIcon size={32} round />
+          </TwitterShareButton>
+          <WhatsappShareButton url={url} title={text}>
+            <WhatsappIcon size={32} round />
+          </WhatsappShareButton>
+        </div>
         </Modal.Body>
       </Modal>
     </div>

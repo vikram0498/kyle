@@ -2802,8 +2802,8 @@ function AddBuyerDetails() {
               </div>
             </div>
             <SocialShare
-            SetOpenSocialShareModal ={SetOpenSocialShareModal} 
-            openSocialShareModal ={openSocialShareModal} 
+              SetOpenSocialShareModal ={SetOpenSocialShareModal} 
+              openSocialShareModal ={openSocialShareModal} 
             />        
             <WatchVideo
               isLoader={isLoader}
