@@ -399,7 +399,7 @@ class BuyerVerificationController extends Controller
             $lastStepForm = 5;
         }
 
-        if($lastStepForm == 3){
+        if($lastStepForm == 2){
             $reasonType = config('constants.pof_reason_type');
         }else{
             $reasonType = config('constants.ids_reason_type');
