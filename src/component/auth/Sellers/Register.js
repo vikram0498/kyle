@@ -429,7 +429,7 @@ const Register = () => {
               </div>
             </div>
             <div className="col-12 col-lg-12">
-              <div className="form-group mb-0">
+              <div className="form-group mb-0 register-recaptcha">
                 <ReCAPTCHA sitekey={capchaSiteKey} onChange={onCaptchaChange} />
                 {recaptchaError && (
                   <span className="invalid-feedback" role="alert">

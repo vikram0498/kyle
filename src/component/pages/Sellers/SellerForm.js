@@ -569,7 +569,7 @@ const SellerForm = () => {
           <ResultPage setIsFiltered={setIsFiltered} />
         ) : (
           <>
-            <div className="container position-relative">
+            <div className="container position-relative pat-40">
               <div className="back-block">
                 <Link to="/" className="back">
                   <svg

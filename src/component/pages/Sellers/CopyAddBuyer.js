@@ -415,7 +415,7 @@ function CopyAddBuyer() {
           <SuccessfullySubmiitedPage isSubmitted={isSubmitted}/>
         </div>
       ) : (
-        <section className="main-section position-relative pt-4 pb-120">
+        <section className="main-section position-relative pt-4">
           <div className="container position-relative">
             <div className="card-box">
               <div className="row">
@@ -2000,7 +2000,7 @@ function CopyAddBuyer() {
                                 </div> */}
                             </>
                           )}
-                          <div className="col-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                             <label>
                               Parking (Multi-Select)<span>*</span>
                             </label>
@@ -2042,7 +2042,7 @@ function CopyAddBuyer() {
                               {renderFieldError("parking")}
                             </div>
                           </div>
-                          <div className="col-6 col-lg-6">
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                             <label>
                               Buyer Type<span>*</span>
                             </label>

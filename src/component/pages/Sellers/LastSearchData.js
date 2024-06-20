@@ -239,7 +239,7 @@ const LastSearchData = () => {
             <img src="assets/images/loader.svg" />
           </div>
         ) : (
-          <div className="container position-relative">
+          <div className="container position-relative pat-40">
             <div className="back-block">
               <div className="row align-items-center">
                 <div className="col-12 col-sm-4 col-md-4 col-lg-4">

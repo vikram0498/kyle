@@ -1750,7 +1750,7 @@ section.main-section {
   position: fixed;
 
   width: 100%;
-
+  z-index: 3;
   bottom: 0;
 }
 
@@ -2213,49 +2213,40 @@ text-transform: capitalize;
 }
 
 /*-------- Single Buyer ----------*/
-
-.copy-link {
-  background: transparent;
-
-  border: 1px solid #e1e3e7;
-
-  border-radius: 5px;
-
-  padding: 10px;
-
+.add_buyer-right{
   display: flex;
-
-  align-items: center;
-
-  color: #121639;
-
-  font-family: "Nunito Sans", sans-serif !important;
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  margin-left: auto;
-
-  margin-top: 15px;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  -webkit-justify-content: flex-end;
+  gap: 6px;
+  -webkit-gap: 6px;
 }
-
-.copy-link .link-icon {
-  background: #f5f7f9;
-
-  width: 35px;
-
-  height: 35px;
-
-  display: inline-flex;
-
+.copy-link,
+.share_btn{
+  background: transparent;
+  border: 1px solid #e1e3e7;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
   align-items: center;
-
+  color: #121639;
+  font-family: "Nunito Sans", sans-serif !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+.copy-link .link-icon,
+.share_btn .link-icon{
+  background: #f5f7f9;
+  width: 35px;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-
   border-radius: 100%;
-
   margin-right: 7px;
+}
+.share_btn:hover{
+  color: #121639;
 }
 
 /*-------- My Profile ----------*/
@@ -2928,30 +2919,18 @@ li.page-item {
   cursor: pointer;
 }
 
-#inviteCode.invite-page {
+#inviteCode.invite-page,.modal-invite-link {
   box-sizing: border-box;
-
   display: flex;
-
   flex-direction: row;
-
   background-color: #fff;
-
   border: 1px solid #e1e3e7;
-
   padding: 10px;
-
   margin-bottom: 10px;
-
   border-radius: 5px;
-
   justify-content: space-between;
-
   width: 100%;
-
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.07);
-
-  .form-control {
   }
 
   #link {
@@ -5550,5 +5529,38 @@ span.contact-preference.mx-2 img {
 }
 .text-black{
   color:#2f2f2f !important;
+}
+.contact-desc-box label{
+  font-weight: 600;
+}
+.contact-desc-box .row>*{
+  margin-bottom: 14px;
+}
 
+
+/* 13-06-2024 */
+
+@media screen and (max-width: 575px){
+  .main-login-form .register-recaptcha{
+    overflow: hidden;
+  }
+  .main-login-form .register-recaptcha iframe{
+    transform: scale(0.75);
+    -webkit-transform: scale(0.75);
+    transform-origin: left;
+    -webkit-transform-origin: left;
+  }
+  .main-login-form .register-recaptcha>div>div>*{
+    width: auto !important;
+    height: auto !important;
+  }
+  .main-login-form .form-icon{
+    left: 10px;
+  }
+  .main-login-form .form-control{
+    padding: 17px 0 17px 44px !important;
+  }
+  .main-login-form .form-icon-password{
+    right: 10px;
+  }
 }

@@ -14,6 +14,7 @@ import UploadMultipleBuyers from "../../partials/UploadMultipleBuyers";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import WatchVideo from "../../partials/Modal/WatchVideo";
+import SocialShare from "../../partials/Modal/SocialShare";
 
 function AddBuyerDetails() {
   const {
@@ -28,6 +29,7 @@ function AddBuyerDetails() {
   const [isLoader, setIsLoader] = useState(true);
   const [generatedUrl, setGeneratedUrl] = useState("");
   const [openVideoModal, SetOpenVideoModal] = useState(false);
+  const [openSocialShareModal, SetOpenSocialShareModal] = useState(false);
   const { setErrors, renderFieldError } = useFormError();
 
   const [videoUrl, setVideoUrl] = useState("");
@@ -466,7 +468,7 @@ function AddBuyerDetails() {
           </div>
         ) : (
           <>
-            <div className="container position-relative">
+            <div className="container position-relative pat-40">
               <div className="back-block">
                 <Link to="/" className="back">
                   <svg
@@ -504,45 +506,55 @@ function AddBuyerDetails() {
                           <p>Fill the below form OR send link to the buyer</p>
                         </div>
                         <div className="col-12 col-sm-5 col-md-6 col-lg-6">
-                          <button
-                            type="button"
-                            className="copy-link"
-                            onClick={copyAddBuyerLink}
-                            disabled={copyLoading ? <MiniLoader /> : ""}
-                          >
-                            <span className="link-icon">
-                              <svg
-                                width="18"
-                                height="17"
-                                viewBox="0 0 18 17"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <g clipPath="url(#clip0_270_17734)">
-                                  <path
-                                    d="M7.5 9.20823C7.82209 9.6149 8.23302 9.9514 8.70491 10.1949C9.17681 10.4384 9.69863 10.5832 10.235 10.6195C10.7713 10.6557 11.3097 10.5827 11.8135 10.4052C12.3173 10.2277 12.7748 9.9499 13.155 9.59073L15.405 7.46573C16.0881 6.79776 16.4661 5.90313 16.4575 4.97451C16.449 4.0459 16.0546 3.15761 15.3593 2.50095C14.664 1.8443 13.7235 1.47183 12.7403 1.46376C11.757 1.45569 10.8098 1.81267 10.1025 2.45781L8.8125 3.66906"
-                                    stroke="#121639"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d="M10.5001 7.79162C10.1781 7.38495 9.76713 7.04845 9.29524 6.80496C8.82334 6.56146 8.30152 6.41667 7.76516 6.38039C7.2288 6.34411 6.69046 6.4172 6.18664 6.59469C5.68282 6.77219 5.22531 7.04995 4.84515 7.40912L2.59515 9.53412C1.91206 10.2021 1.53408 11.0967 1.54262 12.0253C1.55117 12.9539 1.94555 13.8422 2.64083 14.4989C3.33611 15.1556 4.27666 15.528 5.2599 15.5361C6.24313 15.5442 7.19039 15.1872 7.89765 14.542L9.18015 13.3308"
-                                    stroke="#121639"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </g>
-                                <defs>
-                                  <clipPath id="clip0_270_17734">
-                                    <rect width="18" height="17" fill="white" />
-                                  </clipPath>
-                                </defs>
-                              </svg>
-                            </span>
-                            Copy Form Link {copyLoading ? <MiniLoader /> : ""}
-                          </button>
+                          <div className="add_buyer-right">
+                            <button
+                              type="button"
+                              className="copy-link"
+                              onClick={copyAddBuyerLink}
+                              disabled={copyLoading ? <MiniLoader /> : ""}
+                            >
+                              <span className="link-icon">
+                                <svg
+                                  width="18"
+                                  height="17"
+                                  viewBox="0 0 18 17"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g clipPath="url(#clip0_270_17734)">
+                                    <path
+                                      d="M7.5 9.20823C7.82209 9.6149 8.23302 9.9514 8.70491 10.1949C9.17681 10.4384 9.69863 10.5832 10.235 10.6195C10.7713 10.6557 11.3097 10.5827 11.8135 10.4052C12.3173 10.2277 12.7748 9.9499 13.155 9.59073L15.405 7.46573C16.0881 6.79776 16.4661 5.90313 16.4575 4.97451C16.449 4.0459 16.0546 3.15761 15.3593 2.50095C14.664 1.8443 13.7235 1.47183 12.7403 1.46376C11.757 1.45569 10.8098 1.81267 10.1025 2.45781L8.8125 3.66906"
+                                      stroke="#121639"
+                                      strokeWidth="1.5"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M10.5001 7.79162C10.1781 7.38495 9.76713 7.04845 9.29524 6.80496C8.82334 6.56146 8.30152 6.41667 7.76516 6.38039C7.2288 6.34411 6.69046 6.4172 6.18664 6.59469C5.68282 6.77219 5.22531 7.04995 4.84515 7.40912L2.59515 9.53412C1.91206 10.2021 1.53408 11.0967 1.54262 12.0253C1.55117 12.9539 1.94555 13.8422 2.64083 14.4989C3.33611 15.1556 4.27666 15.528 5.2599 15.5361C6.24313 15.5442 7.19039 15.1872 7.89765 14.542L9.18015 13.3308"
+                                      stroke="#121639"
+                                      strokeWidth="1.5"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_270_17734">
+                                      <rect width="18" height="17" fill="white" />
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                              </span>
+                              Copy Form Link {copyLoading ? <MiniLoader /> : ""}
+                            </button>
+                            <button className="share_btn" onClick={()=>SetOpenSocialShareModal(true)}>
+                              <span className="link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                  <path d="M13.8805 12.1076C13.0181 12.1076 12.2411 12.48 11.7018 13.0725L6.8512 10.0683C6.9807 9.73675 7.05252 9.37667 7.05252 8.99998C7.05252 8.62315 6.9807 8.26308 6.8512 7.9317L11.7018 4.92736C12.2411 5.51979 13.0181 5.89237 13.8805 5.89237C15.5051 5.89237 16.8268 4.57072 16.8268 2.94612C16.8268 1.32152 15.5051 0 13.8805 0C12.2559 0 10.9343 1.32165 10.9343 2.94625C10.9343 3.32295 11.0062 3.68302 11.1356 4.01453L6.28513 7.01874C5.74584 6.4263 4.96883 6.05373 4.10641 6.05373C2.48181 6.05373 1.16016 7.37552 1.16016 8.99998C1.16016 10.6246 2.48181 11.9462 4.10641 11.9462C4.96883 11.9462 5.74584 11.5738 6.28513 10.9812L11.1356 13.9854C11.0062 14.3169 10.9343 14.677 10.9343 15.0538C10.9343 16.6783 12.2559 18 13.8805 18C15.5051 18 16.8268 16.6783 16.8268 15.0538C16.8268 13.4292 15.5051 12.1076 13.8805 12.1076ZM12.0086 2.94625C12.0086 1.91409 12.8483 1.07432 13.8805 1.07432C14.9127 1.07432 15.7524 1.91409 15.7524 2.94625C15.7524 3.97842 14.9127 4.81818 13.8805 4.81818C12.8483 4.81818 12.0086 3.97842 12.0086 2.94625ZM4.10641 10.8719C3.07411 10.8719 2.23434 10.0321 2.23434 8.99998C2.23434 7.96782 3.07411 7.12805 4.10641 7.12805C5.13857 7.12805 5.9782 7.96782 5.9782 8.99998C5.9782 10.0321 5.13857 10.8719 4.10641 10.8719ZM12.0086 15.0537C12.0086 14.0215 12.8483 13.1818 13.8805 13.1818C14.9127 13.1818 15.7524 14.0215 15.7524 15.0537C15.7524 16.0859 14.9127 16.9256 13.8805 16.9256C12.8483 16.9256 12.0086 16.0859 12.0086 15.0537Z" fill="#121639"/>
+                                </svg>
+                              </span>
+                              Share
+                            </button>
+                          </div>
                         </div>
                       </div>
                       {copySuccess && generatedUrl != "" ? (
@@ -2102,7 +2114,7 @@ function AddBuyerDetails() {
                                                         </div> */}
                               </>
                             )}
-                            <div className="col-6 col-lg-6">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                               <label>
                                 Parking (multi-select)<span>*</span>
                               </label>
@@ -2138,7 +2150,7 @@ function AddBuyerDetails() {
                                 {renderFieldError("parking")}
                               </div>
                             </div>
-                            <div className="col-6 col-lg-6">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                               <label>
                                 Buyer Type<span>*</span>
                               </label>
@@ -2173,7 +2185,7 @@ function AddBuyerDetails() {
                               </div>
                             </div>
                             {mobileHomeParkSelected && (
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>
                                   Park Owned/Tenant Owned <span>*</span>
                                 </label>
@@ -2789,7 +2801,10 @@ function AddBuyerDetails() {
                 </div>
               </div>
             </div>
-
+            <SocialShare
+            SetOpenSocialShareModal ={SetOpenSocialShareModal} 
+            openSocialShareModal ={openSocialShareModal} 
+            />        
             <WatchVideo
               isLoader={isLoader}
               videoUrl={videoUrl}
@@ -2819,6 +2834,7 @@ function AddBuyerDetails() {
           </>
         )}
       </section>
+
 
       <Footer />
     </>

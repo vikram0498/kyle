@@ -246,7 +246,7 @@ const HorizontalLinearStepper = () => {
         </div>
       ) : (
         <div className="container position-relative">
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%" }} className="pat-40">
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
                 const stepProps = {};

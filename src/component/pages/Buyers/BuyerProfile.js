@@ -764,31 +764,31 @@ const BuyerProfile = () => {
                   </div>
                   <div className="contact-desc-box">
                     <div className="row">
-                      <div className="col-12 col-lg-4">States</div>
+                      <div className="col-12 col-lg-4"><label>States</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.state)}
                       </div>
-                      <div className="col-12 col-lg-4">Cities</div>
+                      <div className="col-12 col-lg-4"><label>Cities</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.city)}
                       </div>
-                      <div className="col-12 col-lg-4">Company/LLC</div>
+                      <div className="col-12 col-lg-4"><label>Company/LLC</label></div>
                       <div className="col-12 col-lg-8">
                         {currentBuyerData.company_name}
                       </div>
-                      <div className="col-12 col-lg-4">MLS Status</div>
+                      <div className="col-12 col-lg-4"><label>MLS Status</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.market_preferance)}
                       </div>
-                      <div className="col-12 col-lg-4">Contact Preference</div>
+                      <div className="col-12 col-lg-4"><label>Contact Preference</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.contact_preferance)}
                       </div>
-                      <div className="col-12 col-lg-4">Property Type</div>
+                      <div className="col-12 col-lg-4"><label>Property Type</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.property_type)}
                       </div>
-                      <div className="col-12 col-lg-4">Purchase Method</div>
+                      <div className="col-12 col-lg-4"><label>Purchase Method</label></div>
                       <div className="col-12 col-lg-8">
                         {getLabelValue(currentBuyerData.purchase_method)}
                       </div>

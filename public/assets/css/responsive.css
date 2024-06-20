@@ -98,7 +98,7 @@
 
 @media (max-width: 991px) {
   .account-in {
-    padding: 25px;
+    padding: 15px;
     margin-top: 20px;
   }
   .center-content h2 {
@@ -127,9 +127,9 @@
   .modal-form-main .modal-dialog {
     max-width: 95% !important;
   }
-  .card-box-blocks .row {
+  /* .card-box-blocks .row {
     row-gap: 18px;
-  }
+  } */
   .personal-information {
     margin-bottom: 25px;
   }
@@ -197,6 +197,13 @@
   }
   .inner-call-box .dropdown button::before{
     width: 152px;
+  }
+  .profile-varification .main-card-area .row .col-12:first-child{
+    margin-bottom: 15px;
+  }
+  .renew-wrapper{
+    border-left: none;
+    padding-left: 0;
   }
 }
 @media (max-width: 767px) {
@@ -454,6 +461,15 @@
   .upload-buyer.bg-green {
     display: none;
   }
+  .dashboard-header .block-session .modetype{
+    margin-right: 0;
+    position: absolute;
+    top: 70px;
+    z-index: 9;
+  }
+  .pat-40{
+    padding-top: 40px;
+  }
 }
 
 @media screen and (max-width: 400px) {
@@ -462,9 +478,6 @@
   }
   .dashboard-header .block-session {
     gap: 10px;
-  }
-  .dashboard-header .block-session .modetype {
-    margin-right: 0;
   }
   .header-logo img {
     max-width: 105px;
