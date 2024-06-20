@@ -32,11 +32,9 @@ const BuyerProfile = () => {
         setLoader(false);
         let responseData = response.data.buyer;
         setCurrentBuyerData(responseData);
-        console.log(responseData, "responseData");
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response,'sssss');
         if (error.response.status === 401) {
           setLogout();
         }
@@ -123,7 +121,6 @@ const BuyerProfile = () => {
   const getLabelValue = (data) => {
     if (data !== undefined) {
       const selectedBuildingClass = data.map((item) => item.label);
-      console.log(selectedBuildingClass.join(","));
       return selectedBuildingClass.join(", ");
     }
   };

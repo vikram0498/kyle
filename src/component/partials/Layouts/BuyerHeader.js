@@ -24,7 +24,6 @@ function BuyerHeader() {
 
   const isActiveUser = async (userData) => {
     try{
-      console.log(userData,'userData232');
       let userId = userData.id;
       const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
@@ -34,7 +33,6 @@ function BuyerHeader() {
       };
       let url = apiUrl + "is-user-status";
       let response = await axios.post(url, {user_id:userId},{ headers: headers });
-      console.log(response.data,'response');
       if(response.data.status){
         if(response.data.user_status){
           userData.is_verified = response.data.is_buyer_verified;

@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useFormError } from "../../hooks/useFormError";
 import { useAuth } from "../../hooks/useAuth";
-import AuthContext from "../../context/authContext";
 
 import ButtonLoader from "../partials/MiniLoader";
 import GoogleLoginComponent from "../partials/SocialLogin/GoogleLoginComponent";

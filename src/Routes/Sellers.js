@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import { Routes, Route,useLocation  } from "react-router-dom";
 
 // Import your components for each route
 
@@ -41,6 +41,16 @@ const Seller = () => {
     user: userData.user,
     access_token: userData.access_token,
   });
+  const location = useLocation();
+  useEffect(() => {
+    let routeArray = ['/login','/forget-password','/register','/register-buyer'];
+    if(routeArray.includes(location.pathname)){
+      document.body.classList.add('pb-0');
+    }else{
+      document.body.classList.remove('pb-0');
+    }
+  }, [location]);
+
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
       <AuthContext.Provider value={{ authData, setAuthData }}>

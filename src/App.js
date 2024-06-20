@@ -9,6 +9,7 @@ import "./App.css";
 import Seller from "./Routes/Sellers";
 import Buyers from "./Routes/Buyers";
 class App extends Component {
+  
   render() {
     return (
       <BrowserRouter>
