@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation } from "react-router-dom";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import Select from "react-select";
 import { useFormError } from "../../../hooks/useFormError";
@@ -11,13 +11,15 @@ import Swal from "sweetalert2";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import LinkExpirePage from "./LinkExpirePage";
-import SuccessfullySubmiitedPage from "./SuccessfullySubmittedPage";
+import SuccessfullySubmittedPage from "./SuccessfullySubmittedPage";
 import { useAuth } from "../../../hooks/useAuth";
 
-function CopyAddBuyer() {
+function CopyAddBuyer({urlType}) {
   const { token } = useParams();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [isLoader, setIsLoader] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [startDate, setStartDate] = useState("");
@@ -32,7 +34,6 @@ function CopyAddBuyer() {
     formState: { errors },
     clearErrors,
   } = useForm();
-
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
@@ -104,12 +105,11 @@ function CopyAddBuyer() {
   const checkTokenExpire = () => {
     try {
       axios
-        .get(`${apiUrl}check-token/${token}`, { headers: headers })
+        .get(`${apiUrl}check-token/${urlType}/${token}`, { headers: headers })
         .then((response) => {
           if (response.data.status) {
             setIsTokenExpire(false);
             getOptionsValues();
-
             setIsLoader(false);
           }
         })
@@ -118,7 +118,6 @@ function CopyAddBuyer() {
             if (error.response.data.error) {
               // toast.error(error.response.data.error, {position: toast.POSITION.TOP_RIGHT});
               setIsTokenExpire(true);
-
               setIsLoader(false);
             }
           }
@@ -264,7 +263,7 @@ function CopyAddBuyer() {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
     }
-
+     formObject.type = urlType;
     axios
       .post(`${apiUrl}copy-single-buyer-details/${token}`, formObject, {
         headers: headers,
@@ -279,7 +278,7 @@ function CopyAddBuyer() {
             text: "Buyer data saved successfully",
           });
           // toast.success(response.data.message, {position: toast.POSITION.TOP_RIGHT});
-          navigate("/add-buyer/" + token);
+          navigate(location.pathname);
           setIsTokenExpire(true);
         }
       })
@@ -412,7 +411,7 @@ function CopyAddBuyer() {
       ) : isTokenExpire ? (
         <div className="row">
           {/* {isSubmitted ? <SuccessfullySubmiitedPage /> : <LinkExpirePage />} */}
-          <SuccessfullySubmiitedPage isSubmitted={isSubmitted}/>
+          <SuccessfullySubmittedPage isSubmitted={isSubmitted}/>
         </div>
       ) : (
         <section className="main-section position-relative pt-4">

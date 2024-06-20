@@ -99,6 +99,8 @@ function AddBuyerDetails() {
 
   const [copyLoading, setCopyLoading] = useState(false);
 
+  const [copySocialLoading, setCopySocialLoading] = useState(false);
+
   const baseURL = window.location.origin;
 
   useEffect(() => {
@@ -266,7 +268,6 @@ function AddBuyerDetails() {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
     }
-    console.log(formObject, "formObject");
     try {
       let response = await axios.post(
         apiUrl + "upload-single-buyer-details",
@@ -324,7 +325,6 @@ function AddBuyerDetails() {
       if (response.data.status) {
         let token = response.data.data.copy_token;
         let copyUrl = baseURL + "/add-buyer/" + token;
-        console.log(copyUrl, "copyUrl");
         navigator.clipboard.writeText(copyUrl);
         setGeneratedUrl(copyUrl);
         setCopySuccess(true);
@@ -348,6 +348,33 @@ function AddBuyerDetails() {
       }
     }
   };
+
+  const copySocialShareLink = async () => {
+    setCopySocialLoading(true);
+    setGeneratedUrl("");
+    try{
+      let response = await axios.get(apiUrl + "copy-single-buyer-form-link", {
+        headers: headers,
+      });
+      if (response.data.status) {
+        let token = response.data.data.copy_token;
+        let copyUrl = baseURL + "/social-share-add-buyer/" + token;
+        setGeneratedUrl(copyUrl);
+        setCopySocialLoading(false);
+      }
+      SetOpenSocialShareModal(true);
+    }catch(error){
+        if (error.response && error.response.status === 401) {
+          setLogout();
+          navigate("/login");
+        } else {
+          console.log(error);
+          toast.error("An error occurred", {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+    }
+  }
   const handleCustum = (e, name) => {
     const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     //console.log(selectedValues,'selectedValues',name);
@@ -545,13 +572,13 @@ function AddBuyerDetails() {
                               </span>
                               Copy Form Link {copyLoading ? <MiniLoader /> : ""}
                             </button>
-                            <button className="share_btn" onClick={()=>SetOpenSocialShareModal(true)}>
+                            <button className="share_btn" onClick={copySocialShareLink}>
                               <span className="link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                   <path d="M13.8805 12.1076C13.0181 12.1076 12.2411 12.48 11.7018 13.0725L6.8512 10.0683C6.9807 9.73675 7.05252 9.37667 7.05252 8.99998C7.05252 8.62315 6.9807 8.26308 6.8512 7.9317L11.7018 4.92736C12.2411 5.51979 13.0181 5.89237 13.8805 5.89237C15.5051 5.89237 16.8268 4.57072 16.8268 2.94612C16.8268 1.32152 15.5051 0 13.8805 0C12.2559 0 10.9343 1.32165 10.9343 2.94625C10.9343 3.32295 11.0062 3.68302 11.1356 4.01453L6.28513 7.01874C5.74584 6.4263 4.96883 6.05373 4.10641 6.05373C2.48181 6.05373 1.16016 7.37552 1.16016 8.99998C1.16016 10.6246 2.48181 11.9462 4.10641 11.9462C4.96883 11.9462 5.74584 11.5738 6.28513 10.9812L11.1356 13.9854C11.0062 14.3169 10.9343 14.677 10.9343 15.0538C10.9343 16.6783 12.2559 18 13.8805 18C15.5051 18 16.8268 16.6783 16.8268 15.0538C16.8268 13.4292 15.5051 12.1076 13.8805 12.1076ZM12.0086 2.94625C12.0086 1.91409 12.8483 1.07432 13.8805 1.07432C14.9127 1.07432 15.7524 1.91409 15.7524 2.94625C15.7524 3.97842 14.9127 4.81818 13.8805 4.81818C12.8483 4.81818 12.0086 3.97842 12.0086 2.94625ZM4.10641 10.8719C3.07411 10.8719 2.23434 10.0321 2.23434 8.99998C2.23434 7.96782 3.07411 7.12805 4.10641 7.12805C5.13857 7.12805 5.9782 7.96782 5.9782 8.99998C5.9782 10.0321 5.13857 10.8719 4.10641 10.8719ZM12.0086 15.0537C12.0086 14.0215 12.8483 13.1818 13.8805 13.1818C14.9127 13.1818 15.7524 14.0215 15.7524 15.0537C15.7524 16.0859 14.9127 16.9256 13.8805 16.9256C12.8483 16.9256 12.0086 16.0859 12.0086 15.0537Z" fill="#121639"/>
                                 </svg>
                               </span>
-                              Share
+                              Share {copySocialLoading ? <MiniLoader /> : ""}
                             </button>
                           </div>
                         </div>
@@ -2804,6 +2831,8 @@ function AddBuyerDetails() {
               SetOpenSocialShareModal ={SetOpenSocialShareModal} 
               openSocialShareModal ={openSocialShareModal} 
               handleCopyToClipBoard={handleCopyToClipBoard}
+              generatedUrl={generatedUrl}
+              copyLoading={copyLoading}
             />        
             <WatchVideo
               isLoader={isLoader}

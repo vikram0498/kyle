@@ -66,8 +66,8 @@ const Seller = () => {
           <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
           <Route path="/support" element={<Support />} />
           {/* add buyer link */}
-          <Route path="/add-buyer/:token" element={<CopyAddBuyer />} />
-
+          <Route path="/add-buyer/:token" element={<CopyAddBuyer urlType={'private-buyer'}/>} />
+          <Route path="/social-share-add-buyer/:token" element={<CopyAddBuyer urlType={'public-buyer'} />} />
           {/* App routes */}
 
           <Route path="/" element={<Protected Component={Home} />} />
