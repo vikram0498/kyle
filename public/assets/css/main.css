@@ -2919,7 +2919,8 @@ li.page-item {
   cursor: pointer;
 }
 
-#inviteCode.invite-page,.modal-invite-link {
+#inviteCode.invite-page,
+.modal-invite-link{
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -2931,6 +2932,8 @@ li.page-item {
   justify-content: space-between;
   width: 100%;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.07);
+
+  .form-control {
   }
 
   #link {
@@ -5537,6 +5540,25 @@ span.contact-preference.mx-2 img {
   margin-bottom: 14px;
 }
 
+.modal-socialshare-main .modal-header h5{
+  margin: 0;
+}
+.social-share-btn{
+  padding: 20px;
+  background: #f5f7f9;
+  border-radius: 5px;
+}
+.social-share-list{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  gap: 8px;
+  -webkit-gap: 8px;
+}
+.modal-invite-link{
+  margin: 14px 0 0;
+}
 
 /* 13-06-2024 */
 

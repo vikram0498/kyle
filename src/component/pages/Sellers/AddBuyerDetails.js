@@ -321,7 +321,6 @@ function AddBuyerDetails() {
       let response = await axios.get(apiUrl + "copy-single-buyer-form-link", {
         headers: headers,
       });
-      console.log(response.data);
       if (response.data.status) {
         let token = response.data.data.copy_token;
         let copyUrl = baseURL + "/add-buyer/" + token;
@@ -2804,6 +2803,7 @@ function AddBuyerDetails() {
             <SocialShare
               SetOpenSocialShareModal ={SetOpenSocialShareModal} 
               openSocialShareModal ={openSocialShareModal} 
+              handleCopyToClipBoard={handleCopyToClipBoard}
             />        
             <WatchVideo
               isLoader={isLoader}
