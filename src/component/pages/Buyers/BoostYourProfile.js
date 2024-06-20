@@ -144,7 +144,7 @@ const BoostYourProfile = () => {
             <img src="assets/images/loader.svg" />
           </div>
         ) : (
-          <div className="container position-relative">
+          <div className="container position-relative pat-40">
             <div className="back-block">
               <div className="row">
                 <div className="col-4 col-sm-4 col-md-4 col-lg-4">

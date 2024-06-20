@@ -223,7 +223,7 @@ const MultiFamilyResidential = ({ data }) => {
             {data.renderFieldError("building_class")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>Value Add<span>*</span></label>
           <div className="form-group">
             <div className="radio-block">

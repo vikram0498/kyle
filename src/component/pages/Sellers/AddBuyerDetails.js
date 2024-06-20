@@ -527,11 +527,11 @@ function AddBuyerDetails() {
                   <div className="col-12 col-lg-8 w-70">
                     <div className="card-box-inner">
                       <div className="row">
-                        <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                        <div className="col-12 col-md-6 col-lg-6">
                           <h3>Upload Single Buyer Detail</h3>
                           <p>Fill the below form OR send link to the buyer</p>
                         </div>
-                        <div className="col-12 col-sm-5 col-md-6 col-lg-6">
+                        <div className="col-12 col-md-6 col-lg-6">
                           <div className="add_buyer-right">
                             <button
                               type="button"
@@ -2140,7 +2140,7 @@ function AddBuyerDetails() {
                                                         </div> */}
                               </>
                             )}
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 Parking (multi-select)<span>*</span>
                               </label>
@@ -2176,7 +2176,7 @@ function AddBuyerDetails() {
                                 {renderFieldError("parking")}
                               </div>
                             </div>
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 Buyer Type<span>*</span>
                               </label>

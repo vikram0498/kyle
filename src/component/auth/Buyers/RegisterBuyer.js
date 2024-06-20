@@ -394,7 +394,7 @@ function RegisterBuyer() {
                       <div className="card-box-inner">
                         <div className="row">
                           <div className="col-12 col-sm-7 col-md-12 col-lg-12">
-                            <div className="center-content mb-5">
+                            <div className="center-content mb-3 md:mb-5">
                               <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
                               {/* <h2>Welcome to Inucation!</h2> */}
                               <h2>Register for BuyBoxBot!</h2>
@@ -1983,7 +1983,7 @@ function RegisterBuyer() {
                                     </div> */}
                                 </>
                               )}
-                              <div className="col-6 col-lg-6">
+                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label>
                                   Parking (Multi-Select)<span>*</span>
                                 </label>
@@ -2025,7 +2025,7 @@ function RegisterBuyer() {
                                   {renderFieldError("parking")}
                                 </div>
                               </div>
-                              <div className="col-6 col-lg-6">
+                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label>
                                   Buyer Type<span>*</span>
                                 </label>

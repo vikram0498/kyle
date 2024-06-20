@@ -205,6 +205,9 @@
     border-left: none;
     padding-left: 0;
   }
+  .contact-desc-box .row>.col-12.col-lg-4{
+    margin-bottom: 0;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -257,6 +260,10 @@
   }
   .card-box {
     padding: 20px;
+  }
+  .container>.card-box{
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .feature-item-content {
     margin-bottom: 12px;
@@ -339,6 +346,11 @@
   .profile-verification-st .cards{
     padding: 20px;
   }
+  .add_buyer-right{
+    justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+    margin-bottom: 10px;
+  }
 }
 
 @media (max-width: 575px) {
@@ -388,7 +400,7 @@
   }
   .copy-link {
     margin-top: 0;
-    margin-bottom: 18px;
+    margin-bottom: 0;
     margin-left: unset;
   }
   .card-box-inner p {

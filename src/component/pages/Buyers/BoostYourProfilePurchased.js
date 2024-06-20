@@ -6,7 +6,7 @@ const BoostYourProfilePurchased = () => {
     <>
       <BuyerHeader />
       <section className="main-section position-relative pt-4 pb-120">
-        <div className="container position-relative">
+        <div className="container position-relative pat-40">
           <div className="back-block">
             <div className="row">
               <div className="col-12 col-lg-12">

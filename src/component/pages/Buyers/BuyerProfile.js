@@ -162,7 +162,7 @@ const BuyerProfile = () => {
             <img src="/assets/images/loader.svg" />
           </div>
         ) : (
-          <div className="container position-relative">
+          <div className="container position-relative pat-40">
             <div className="back-block">
               <div className="row">
                 <div className="col-12 col-lg-12">

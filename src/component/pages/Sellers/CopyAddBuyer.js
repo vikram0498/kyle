@@ -404,17 +404,18 @@ function CopyAddBuyer({urlType}) {
   };
   return (
     <>
-      {isLoader ? (
-        <div className="loader" style={{ textAlign: "center" }}>
-          <img src="/assets/images/loader.svg" />
-        </div>
-      ) : isTokenExpire ? (
-        <div className="row">
-          {/* {isSubmitted ? <SuccessfullySubmiitedPage /> : <LinkExpirePage />} */}
-          <SuccessfullySubmittedPage isSubmitted={isSubmitted}/>
-        </div>
-      ) : (
+      
         <section className="main-section position-relative pt-4">
+            {isLoader ? (
+            <div className="loader" style={{ textAlign: "center" }}>
+              <img src="/assets/images/loader.svg" />
+            </div>
+          ) : isTokenExpire ? (
+            <div className="row">
+              {/* {isSubmitted ? <SuccessfullySubmittedPage /> : <LinkExpirePage />} */}
+              <SuccessfullySubmittedPage isSubmitted={isSubmitted}/>
+            </div>
+          ) : (
           <div className="container position-relative">
             <div className="card-box">
               <div className="row">
@@ -1999,7 +2000,7 @@ function CopyAddBuyer({urlType}) {
                                 </div> */}
                             </>
                           )}
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                             <label>
                               Parking (Multi-Select)<span>*</span>
                             </label>
@@ -2041,7 +2042,7 @@ function CopyAddBuyer({urlType}) {
                               {renderFieldError("parking")}
                             </div>
                           </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                             <label>
                               Buyer Type<span>*</span>
                             </label>
@@ -2652,8 +2653,8 @@ function CopyAddBuyer({urlType}) {
               </div>
             </div>
           </div>
+          )}
         </section>
-      )}
     </>
   );
 }

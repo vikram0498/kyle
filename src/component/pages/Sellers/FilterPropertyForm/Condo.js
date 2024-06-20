@@ -162,7 +162,7 @@ const Condo = ({ data, manufactureSelected }) => {
             {data.renderFieldError("stories")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>Price<span>*</span></label>
           <div className="form-group">
             <input
@@ -189,7 +189,7 @@ const Condo = ({ data, manufactureSelected }) => {
             {data.renderFieldError("parking")}
           </div>
         </div>
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label>
             Purchase Method <span>*</span>
           </label>

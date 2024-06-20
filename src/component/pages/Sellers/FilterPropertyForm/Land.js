@@ -134,7 +134,7 @@ const Land = ({ data }) => {
             {data.renderFieldError("sewer")}
           </div>
         </div>
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <div className="form-group">
             <label>Location Flaws</label>
             <div className="form-group">
@@ -150,7 +150,7 @@ const Land = ({ data }) => {
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <label>
             Purchase Method<span>*</span>
           </label>
@@ -167,7 +167,7 @@ const Land = ({ data }) => {
             {data.renderFieldError("purchase_method")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <label>
             MLS Status<span>*</span>
           </label>

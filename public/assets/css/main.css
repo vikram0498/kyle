@@ -2919,8 +2919,7 @@ li.page-item {
   cursor: pointer;
 }
 
-#inviteCode.invite-page,
-.modal-invite-link{
+#inviteCode.invite-page{
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -5558,7 +5557,43 @@ span.contact-preference.mx-2 img {
 }
 .modal-invite-link{
   margin: 14px 0 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  border: 1px solid #e1e3e7;
+  padding: 10px;
+  border-radius: 5px;
+  justify-content: space-between;
+  width: 100%;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.07);
 }
+.modal-invite-link input{
+  font-family: "Nunito Sans", sans-serif;
+  box-shadow: none;
+  align-self: center;
+  font-size: 14px;
+  color: #464b70;
+  font-weight: bold;
+  flex-grow: 2;
+  background-color: #fff;
+  border: none;
+}
+.modal-invite-link #copy{
+  width: 30px;
+  height: 30px;
+  margin-left: 20px;
+  border: 1px solid #e1e3e7;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3f53fe;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+
 
 /* 13-06-2024 */
 

@@ -229,7 +229,9 @@ body.dark .name-dealer,
 body.dark .modal-form-main .btn-close,
 body.dark .profile-account label,
 body.dark .modal-form label,
-body.dark .msg-passwrd {
+body.dark .msg-passwrd,
+body.dark .share_btn,
+body.dark .share_btn:hover{
   color: #fff !important;
 }
 
@@ -240,7 +242,8 @@ body.dark .form-icon-password:before {
 
 body.dark .upload-multiple-data,
 body.dark .upload-single-data,
-body.dark #inviteCode.invite-page {
+body.dark #inviteCode.invite-page ,
+body.dark .modal-invite-link{
   background: #1f1f1f;
   border-color: rgb(255 255 255 / 20%) !important;
 }
@@ -271,7 +274,8 @@ body.dark .support-account .card-box-blocks {
 body.dark .card-box-blocks .css-1dimb5e-singleValue {
   color: #fff !important;
 }
-body.dark #inviteCode.invite-page input#link {
+body.dark #inviteCode.invite-page input#link,
+body.dark .social-share-btn .modal-invite-link input#link{
   outline: 0 !important;
   background: transparent !important;
   color: #fff !important;
@@ -344,7 +348,8 @@ body.dark .inswittcher label{
   color: #fff;
 }
 
-body.dark .profile-verification-st{
+body.dark .profile-verification-st,
+body.dark .or span{
   background-color: #1f1f1f;
 }
 body.dark .profile-verification-st .cards{
@@ -363,7 +368,8 @@ body.dark .buyer-active-verfiy{
   /* background-color: #1f1f1f; */
   background-color: #4c4c4c;
 }
-body.dark .buyer-active-verfiy span{
+body.dark .buyer-active-verfiy span,
+body.dark .or span{
   color: #fff;
 }
 body.dark .ac-de-feeture {
@@ -422,4 +428,12 @@ body.dark .page-item.active .page-link {
 body.dark .page-link {
   color: #000000;
   background-color: #f5f7f9;
+}
+body.dark .modal-social-share-main .modal-header .btn-close{
+  filter: invert(1);
+  opacity: 1;
+}
+
+body.dark .social-share-btn{
+  background: #313131;
 }
