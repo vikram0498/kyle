@@ -1191,7 +1191,8 @@ class BuyerController extends Controller
                     //Return Error Response
                     $responseData = [
                         'status'        => false,
-                        'message'       => trans('No rows inserted during the import process.'),
+                        // 'message'       => trans('No rows inserted during the import process.'),
+                        'message'          => "All emails are duplicates, so no new rows were inserted during the import process.",
                     ];
                     return response()->json($responseData, 400);
                 } else if ($skippedCount > 0 && $insertedRowCount > 0) {

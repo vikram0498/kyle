@@ -100,6 +100,15 @@ class LoginRegisterController extends Controller
 
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
+            if(!$checkUserStatus){
+                //Error Response Send
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('auth.failed'),
+                ];
+                return response()->json($responseData, 401);
+            }
+
             if($checkUserStatus->is_buyer || $checkUserStatus->is_seller){
 
                 if($checkUserStatus){
