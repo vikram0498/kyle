@@ -140,6 +140,7 @@ const HorizontalLinearStepper = () => {
     }
   };
   const stepperForm = async (formObject) => {
+    console.log(formObject,'formObject');
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",

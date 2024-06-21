@@ -46,7 +46,7 @@ const PhoneVerification = ({
       <div className="card-box-blocks">
         <div className="lic-detail-area">
           <div className="row align-items-end">
-            <div className="col-12 col-lg-8">
+            <div className="col-12 col-md-8">
               <label>Phone Number</label>
               <div className="form-group mb-0">
                 <input
@@ -73,7 +73,7 @@ const PhoneVerification = ({
                 />
               </div>
             </div>
-            <div className="col-12 col-sm- col-md-6 col-lg-2">
+            <div className="col-12 col-sm-4 mt-2 mt-md-0 col-md-4">
               <div className={isOtpSent ? "sent-btn" : "send-btn"}>
                 {/* <button type="submit" className="btn btn-fill">
                   Send

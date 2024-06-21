@@ -33,7 +33,7 @@ const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal,handleCopyToC
         <Modal.Body>
         <div className="social-share-btn">
           <div className="social-share-list">
-            <FacebookShareButton url={generatedUrl} quote={text}>
+            <FacebookShareButton url={generatedUrl} title={text}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
 

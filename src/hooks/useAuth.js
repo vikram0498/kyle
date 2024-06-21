@@ -53,7 +53,6 @@ export const useAuth = () => {
     cookie.set("_token", JSON.stringify({ access_token: access_token }), {
       expires: twoHoursLater,
     });
-    console.log(userData, "userData");
     setLocalStorageUserdata(userData);
     if (userData.role === 3) {
       if (userData.is_verified) {

@@ -5,6 +5,8 @@ import MiniLoader from "./MiniLoader";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
 const UploadMultipleBuyers = () => {
   const { authData } = useContext(AuthContext);
   const { getTokenData, setLogout } = useAuth();
@@ -107,8 +109,8 @@ const UploadMultipleBuyers = () => {
         <div className="outer-heading text-center">
           <h3>Upload Multiple Buyer </h3>
           <p className="mb-0"> Download CSV
-            <a href="/assets/sample/kyle-sample.csv"> Sample 1 ,</a> 
-            <a href="/assets/sample/import-buyer-by-email.csv"> Sample 2</a> 
+            <a href="/assets/sample/kyle-sample.csv" data-tooltip-id="my-tooltip-1"> Sample 1 ,</a> 
+            <a href="/assets/sample/import-buyer-by-email.csv" data-tooltip-id="my-tooltip-2"> Sample 2</a> 
           </p>
         </div>
         <div className="upload-single-data" style={{ border: border }}>
@@ -180,6 +182,14 @@ const UploadMultipleBuyers = () => {
           </p>
         )}
       </form>
+      <ReactTooltip
+        id="my-tooltip-1"
+        place="top"
+        content="Upload buyer with complete details"/>
+      <ReactTooltip
+        id="my-tooltip-2"
+        place="top"
+        content="Upload buyer with only email"/>
     </>
   );
 };
