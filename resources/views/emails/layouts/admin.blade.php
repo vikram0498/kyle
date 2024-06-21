@@ -443,7 +443,7 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
               <td class="email-masthead">
-                {{config('app.name')}}
+                <b>{{config('app.name')}}</b>
               </td>
             </tr>
             <!-- Email Body -->
