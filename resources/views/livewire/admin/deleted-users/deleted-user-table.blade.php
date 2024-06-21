@@ -81,7 +81,11 @@
                     @foreach($users as $serialNo => $user)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ ucwords($user->name) }}</td>
+                        <td>
+                            {{ ucwords($user->name) }}<br>
+
+                            <span class="mt-2 d-block">{{ $user->email }}</span>
+                        </td>
                     
                         <td>{{  $user->buyers_count ?? 0 }}</td>
 

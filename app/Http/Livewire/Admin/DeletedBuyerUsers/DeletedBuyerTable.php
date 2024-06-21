@@ -31,9 +31,15 @@ class DeletedBuyerTable extends Component
         }
 
         $buyers = Buyer::query()
+        ->onlyTrashed()
         ->where(function ($query) use ($searchValue,$statusSearch) {
-            $query->whereRelation('userDetail', 'name', 'like',  ["%{$searchValue}%"])
-            ->orWhereRelation('userDetail', 'is_active', '=',  $statusSearch)
+
+            $query->whereHas('userDetail', function($query) use ($searchValue, $statusSearch) {
+                $query->where('name', 'like', "%{$searchValue}%")
+                      ->orWhere('email', 'like', "%{$searchValue}%")
+                      ->orWhere('is_active', '=', $statusSearch)
+                      ->onlyTrashed();
+            })
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         });
@@ -43,7 +49,7 @@ class DeletedBuyerTable extends Component
         } else {
             $buyers = $buyers->orderBy($this->sortColumnName, $this->sortDirection);
         }
-        $buyers = $buyers->onlyTrashed()->paginate($this->perPage);
+        $buyers = $buyers->paginate($this->perPage);
 
         return view('livewire.admin.deleted-buyer-users.deleted-buyer-table',compact('buyers'));
     }
