@@ -66,7 +66,7 @@
             
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.company_name')}} <span class="text-danger">*</span> </label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.company_name')}} </label>
                     <input type="text" class="form-control" wire:model.defer="state.company_name" placeholder="{{ __('cruds.buyer.fields.company_name')}}" autocomplete="off" >
                     @error('company_name') <span class="error text-danger">{{ $message }}</span>@enderror
                 </div>
