@@ -96,7 +96,7 @@ class Index extends Component
             // 'country' => ['required', 'exists:countries,name'], 
             'state' => ['required', /*'exists:states,id'*/], 
             'city' => ['required', /*'exists:cities,id'*/], 
-            'company_name' => ['required'], 
+            'company_name' => [], 
 
             // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
             'lot_size_min' => ['required','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 

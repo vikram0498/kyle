@@ -63,7 +63,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 
             'state'       => ['required',/*'exists:cities,id'*/], 
-            'company_name'   => ['required'], 
+            'company_name'   => [], 
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->price_min) ? new CheckMaxValue($this->price_min, 'price_min') : ''], 
