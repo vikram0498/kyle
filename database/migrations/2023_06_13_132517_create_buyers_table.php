@@ -41,20 +41,20 @@ return new class extends Migration
             $table->json('property_type');
             $table->json('property_flaw')->nullable();
 
-            $table->tinyInteger('solar')->nullable();
-            $table->tinyInteger('pool')->nullable();
-            $table->tinyInteger('septic')->nullable();
-            $table->tinyInteger('well')->nullable();
-            $table->tinyInteger('age_restriction')->nullable();
-            $table->tinyInteger('rental_restriction')->nullable();
-            $table->tinyInteger('hoa')->nullable();
-            $table->tinyInteger('tenant')->nullable();
-            $table->tinyInteger('post_possession')->nullable();
-            $table->tinyInteger('building_required')->nullable();
-            $table->tinyInteger('foundation_issues')->nullable();
-            $table->tinyInteger('mold')->nullable();
-            $table->tinyInteger('fire_damaged')->nullable();
-            $table->tinyInteger('rebuild')->nullable();
+            $table->tinyInteger('solar')->default(0);
+            $table->tinyInteger('pool')->default(0);
+            $table->tinyInteger('septic')->default(0);
+            $table->tinyInteger('well')->default(0);
+            $table->tinyInteger('age_restriction')->default(0);
+            $table->tinyInteger('rental_restriction')->default(0);
+            $table->tinyInteger('hoa')->default(0);
+            $table->tinyInteger('tenant')->default(0);
+            $table->tinyInteger('post_possession')->default(0);
+            $table->tinyInteger('building_required')->default(0);
+            $table->tinyInteger('foundation_issues')->default(0);
+            $table->tinyInteger('mold')->default(0);
+            $table->tinyInteger('fire_damaged')->default(0);
+            $table->tinyInteger('rebuild')->default(0);
 
             $table->integer('buyer_type')->nullable();
 

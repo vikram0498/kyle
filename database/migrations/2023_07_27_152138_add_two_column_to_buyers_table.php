@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('buyers', function (Blueprint $table) {
             // $table->double('price')->nullable()->after('zip_code');
-            $table->tinyInteger('squatters')->nullable()->after('rebuild');
+            $table->tinyInteger('squatters')->default(0)->after('rebuild');
 
             
         });
