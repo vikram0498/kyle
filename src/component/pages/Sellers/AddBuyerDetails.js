@@ -246,9 +246,9 @@ function AddBuyerDetails() {
 
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
-
     formObject.parking          =  parkingValue;
-    formObject.property_type = propertyTypeValue;
+    formObject.property_type =  [parseInt(formObject.property_type)];
+    // formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     //formObject.buyer_type       =  buyerTypeValue;
     formObject.purchase_method = purchaseMethodsValue;
@@ -268,6 +268,8 @@ function AddBuyerDetails() {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
     }
+    console.log(formObject,"formObject");
+  
     try {
       let response = await axios.post(
         apiUrl + "upload-single-buyer-details",
@@ -730,7 +732,89 @@ function AddBuyerDetails() {
                                 {renderFieldError("phone")}
                               </div>
                             </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                              <label>
+                                Company/LLC
+                              </label>
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="company_name"
+                                  placeholder="Company LLC"
+                                />
+                                {renderFieldError("company_name")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                              <label>
+                                Contact Preference <span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <Controller
+                                  control={control}
+                                  name="contact_preferance"
+                                  rules={{
+                                    required: "Contact Preference is required",
+                                  }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={contactPreferanceOption}
+                                      name={name}
+                                      className="select"
+                                      placeholder="Select Contact Preference"
+                                      isClearable={true}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "contact_preferance");
+                                      }}
+                                    />
+                                  )}
+                                />
+                                {errors.contact_preferance && (
+                                  <p className="error">
+                                    {errors.contact_preferance?.message}
+                                  </p>
+                                )}
+                                {renderFieldError("contact_preferance")}
+                              </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                              <label>
+                                Buyer Type<span>*</span>
+                              </label>
+                              <div className="form-group">
+                                <Controller
+                                  control={control}
+                                  name="buyer_type"
+                                  rules={{ required: "Buyer Type is required" }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={buyerTypeOption}
+                                      className="select"
+                                      name={name}
+                                      placeholder="Select Buyer Type"
+                                      setMultiselectOption={setBuyerTypeValue}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "buyer_type");
+                                      }}
+                                    />
+                                  )}
+                                />
+                                {errors.buyer_type && (
+                                  <p className="error">
+                                    {errors.buyer_type?.message}
+                                  </p>
+                                )}
 
+                                {renderFieldError("buyer_type")}
+                              </div>
+                            </div>    
                             <div className="col-12 col-lg-12">
                               <label>
                               Buy Box Criteria State (Multi-Select)<span>*</span>
@@ -839,34 +923,7 @@ function AddBuyerDetails() {
                                                         {renderFieldError('zip_code') }
                                                     </div>
                                                 </div> */}
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-                              <label>
-                                Company/LLC<span>*</span>
-                              </label>
-                              <div className="form-group">
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  name="company_name"
-                                  placeholder="Company LLC"
-                                  {...register("company_name", {
-                                    required: "Company/LLC is required",
-                                    validate: {
-                                      maxLength: (v) =>
-                                        v.length <= 50 ||
-                                        "The Company/LLC should have at most 50 characters",
-                                    },
-                                  })}
-                                />
-                                {errors.company_name && (
-                                  <p className="error">
-                                    {errors.company_name?.message}
-                                  </p>
-                                )}
-                                {renderFieldError("company_name")}
-                              </div>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 MLS Status<span>*</span>
                               </label>
@@ -900,45 +957,47 @@ function AddBuyerDetails() {
                                 {renderFieldError("market_preferance")}
                               </div>
                             </div>
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
-                                Contact Preference <span>*</span>
+                                Parking (multi-select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
                                   control={control}
-                                  name="contact_preferance"
-                                  rules={{
-                                    required: "Contact Preference is required",
-                                  }}
+                                  name="parking"
+                                  className="select"
+                                  rules={{ required: "Parking is required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
                                     <Select
-                                      options={contactPreferanceOption}
+                                      options={parkingOption}
                                       name={name}
                                       className="select"
-                                      placeholder="Select Contact Preference"
-                                      isClearable={true}
+                                      placeholder="Select parking"
+                                      setMultiselectOption={setParkingValue}
                                       onChange={(e) => {
                                         onChange(e);
-                                        handleCustum(e, "contact_preferance");
+                                        handleCustum(e, "parking");
                                       }}
+                                      isMulti
                                     />
                                   )}
                                 />
-                                {errors.contact_preferance && (
+                                {errors.parking && (
                                   <p className="error">
-                                    {errors.contact_preferance?.message}
+                                    {errors.parking?.message}
                                   </p>
                                 )}
-                                {renderFieldError("contact_preferance")}
+
+                                {renderFieldError("parking")}
                               </div>
                             </div>
                             <div className="col-12 col-lg-12">
                               <div className="form-group">
                                 <label>
-                                  Property Type (multi-select)<span>*</span>
+                                  {/* Property Type (Multi-Select)<span>*</span> */}
+                                  Property Type<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   <Controller
@@ -965,7 +1024,7 @@ function AddBuyerDetails() {
                                           onChange(e);
                                           handleCustum(e, "property_type");
                                         }}
-                                        isMulti
+                                        // isMulti
                                         closeMenuOnSelect={false}
                                       />
                                     )}
@@ -1226,7 +1285,7 @@ function AddBuyerDetails() {
                                           <input
                                             type="radio"
                                             name="value_add"
-                                            value="0"
+                                            value="1"
                                             id="value_add_yes"
                                             {...register("value_add", {
                                               required: "Value Add is required",
@@ -1243,7 +1302,7 @@ function AddBuyerDetails() {
                                           <input
                                             type="radio"
                                             name="value_add"
-                                            value="1"
+                                            value="0"
                                             id="value_add_no"
                                             {...register("value_add", {
                                               required: "Value Add is required",
@@ -2140,76 +2199,6 @@ function AddBuyerDetails() {
                                                         </div> */}
                               </>
                             )}
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                              <label>
-                                Parking (multi-select)<span>*</span>
-                              </label>
-                              <div className="form-group">
-                                <Controller
-                                  control={control}
-                                  name="parking"
-                                  className="select"
-                                  rules={{ required: "Parking is required" }}
-                                  render={({
-                                    field: { value, onChange, name },
-                                  }) => (
-                                    <Select
-                                      options={parkingOption}
-                                      name={name}
-                                      className="select"
-                                      placeholder="Select parking"
-                                      setMultiselectOption={setParkingValue}
-                                      onChange={(e) => {
-                                        onChange(e);
-                                        handleCustum(e, "parking");
-                                      }}
-                                      isMulti
-                                    />
-                                  )}
-                                />
-                                {errors.parking && (
-                                  <p className="error">
-                                    {errors.parking?.message}
-                                  </p>
-                                )}
-
-                                {renderFieldError("parking")}
-                              </div>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                              <label>
-                                Buyer Type<span>*</span>
-                              </label>
-                              <div className="form-group">
-                                <Controller
-                                  control={control}
-                                  name="buyer_type"
-                                  rules={{ required: "Buyer Type is required" }}
-                                  render={({
-                                    field: { value, onChange, name },
-                                  }) => (
-                                    <Select
-                                      options={buyerTypeOption}
-                                      className="select"
-                                      name={name}
-                                      placeholder="Select Buyer Type"
-                                      setMultiselectOption={setBuyerTypeValue}
-                                      onChange={(e) => {
-                                        onChange(e);
-                                        handleCustum(e, "buyer_type");
-                                      }}
-                                    />
-                                  )}
-                                />
-                                {errors.buyer_type && (
-                                  <p className="error">
-                                    {errors.buyer_type?.message}
-                                  </p>
-                                )}
-
-                                {renderFieldError("buyer_type")}
-                              </div>
-                            </div>
                             {mobileHomeParkSelected && (
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>

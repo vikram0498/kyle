@@ -381,7 +381,8 @@ function EditBuyerProfile() {
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
-    formObject.property_type = propertyTypeValue;
+    // formObject.property_type = propertyTypeValue;
+    formObject.property_type = [parseInt(formObject.property_type)];
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
@@ -1043,7 +1044,7 @@ function EditBuyerProfile() {
                                         onChange(e);
                                         handleCustum(e, "property_type");
                                       }}
-                                      isMulti
+                                      // isMulti
                                       closeMenuOnSelect={false}
                                     />
                                   )}

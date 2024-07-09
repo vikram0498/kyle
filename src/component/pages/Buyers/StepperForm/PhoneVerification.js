@@ -24,7 +24,6 @@ const PhoneVerification = ({
     inputField.value = inputValue;
     if (elmnt.key === "Delete" || elmnt.key === "Backspace") {
       const next = elmnt.target.tabIndex - 2;
-      console.log(next);
       if (next > -1) {
         elmnt.target.form.elements[next].focus();
         let tabIndex = elmnt.target.tabIndex - 1;
@@ -34,7 +33,6 @@ const PhoneVerification = ({
     } else {
       const next = elmnt.target.tabIndex;
       if (next < 4) {
-        console.log(next, "next");
         let tabIndex = next + 1;
         const element = document.querySelector(`[tabIndex="${tabIndex}"]`);
         element.focus();
@@ -95,7 +93,7 @@ const PhoneVerification = ({
               </div>
             </div>
             {isOtpSent ? (
-              <div className="col-12 col-sm- col-md-6 col-lg-2">
+              <div className="col-12 col-sm- col-md-6 col-lg-2 mt-2">
                 <div className="resend-btn">
                   <button
                     className="btn btn-outline"

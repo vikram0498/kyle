@@ -221,7 +221,8 @@ function RegisterBuyer() {
       formObject.uuid = token;
     }
     formObject.parking =  parkingValue;
-    formObject.property_type = propertyTypeValue;
+    formObject.property_type = [parseInt(formObject.property_type)];
+    // formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
@@ -865,7 +866,8 @@ function RegisterBuyer() {
                               <div className="col-12 col-lg-12">
                                 <div className="form-group">
                                   <label>
-                                    Property Type (Multi-Select)<span>*</span>
+                                    {/* Property Type (Multi-Select)<span>*</span> */}
+                                    Property Type<span>*</span>
                                   </label>
                                   <div className="form-group">
                                     <Controller
@@ -890,7 +892,7 @@ function RegisterBuyer() {
                                             onChange(e);
                                             handleCustum(e, "property_type");
                                           }}
-                                          isMulti
+                                          // isMulti
                                           closeMenuOnSelect={false}
                                         />
                                       )}
@@ -1099,12 +1101,6 @@ function RegisterBuyer() {
                                         Building class (Multi-Select)<span>*</span>
                                       </label>
                                       <div className="form-group">
-                                        {/* <MultiSelect
-                                                                                        name="building_class"
-                                                                                        options={buildingClassNamesOption}
-                                                                                        placeholder='Select Option'
-                                                                                        setMultiselectOption = {setBuildingClassNamesValue}
-                                                                                    /> */}
                                         <Controller
                                           control={control}
                                           name="building_class"
@@ -1146,7 +1142,7 @@ function RegisterBuyer() {
                                             <input
                                               type="radio"
                                               name="value_add"
-                                              value="0"
+                                              value="1"
                                               id="value_add_yes"
                                               {...register("value_add", {
                                                 required: "Value Add is required",
@@ -1163,7 +1159,7 @@ function RegisterBuyer() {
                                             <input
                                               type="radio"
                                               name="value_add"
-                                              value="1"
+                                              value="0"
                                               id="value_add_no"
                                               {...register("value_add", {
                                                 required: "Value Add is required",
