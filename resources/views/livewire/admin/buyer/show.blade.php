@@ -98,7 +98,7 @@
             <th width="25%">{{ __('cruds.buyer.fields.replacing_occupation')}}</th>
             <td class="remove-white-space"> {{ (!is_null($details->replacing_occupation) && !empty($details->replacing_occupation)) ? $details->replacing_occupation : 'N/A' }}</td>
         </tr>
-        
+        --}}
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.bedroom_min')}}</th>
             <td class="remove-white-space"> {{ $details->bedroom_min ?? 'N/A' }}</td>
@@ -107,7 +107,7 @@
             <th width="25%">{{ __('cruds.buyer.fields.bedroom_max')}}</th>
             <td class="remove-white-space"> {{ $details->bedroom_max ?? 'N/A' }}</td>
         </tr>
-	--}}
+	
 	<tr>
             <th width="25%">{{ __('cruds.buyer.fields.rooms')}}</th>
             <td class="remove-white-space"> {{ $details->rooms ?? 'N/A' }}</td>
