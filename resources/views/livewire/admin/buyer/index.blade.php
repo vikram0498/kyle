@@ -140,6 +140,18 @@
         })
     })
 
+    /* 09-07-2024 Start */
+     $(document).on('change','.property_type',function(){
+        var pr = $(this).data('property');
+        var pr_vals = $(this).val();
+        // @this.set('state.'+pr, pr_vals);
+
+        console.log(pr,pr_vals);
+        
+        @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
+     });
+    /* 09-07-2024 End */
+    
     $(document).on('change','.select2', function(e){
         var pr = $(this).data('property');
         var pr_vals = $(this).val();

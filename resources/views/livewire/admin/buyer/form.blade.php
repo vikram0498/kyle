@@ -100,9 +100,14 @@
             
             <div class="col-md-12">
                 <div class="form-group">
-                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_type')}} {{ __('cruds.multi_select')}} <span class="text-danger">*</span></label>
+                    <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_type')}} <span class="text-danger">*</span></label>
+
+                    {{-- <label class="font-weight-bold">{{ __('cruds.buyer.fields.property_type')}} {{ __('cruds.multi_select')}} <span class="text-danger">*</span></label> --}}
                     <div wire:ignore>
-                        <select wire:model.defer="state.property_type" id="property_type" class="form-control property_type select2" data-property="property_type" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_type')}}" >
+                        {{-- <select wire:model.defer="state.property_type" id="property_type" class="form-control property_type select2" data-property="property_type" multiple data-placeholder="Select {{ __('cruds.buyer.fields.property_type')}}" > --}}
+                            
+                        <select wire:model.defer="state.property_type" id="property_type" class="form-control property_type" data-property="property_type" data-placeholder="Select {{ __('cruds.buyer.fields.property_type')}}" >
+                            <option value="null">Select {{ __('cruds.buyer.fields.property_type')}}</option>
                             @foreach($propertyTypes as $key => $value)
                                 <option value="{{ $key }}"> {{ $value }}</option>
                             @endforeach

@@ -192,6 +192,15 @@ class Index extends Component
         if(isset($data['property'])){
             $this->state[$data['property']] = $data['pr_vals'];
             if($data['property'] == 'property_type'){
+
+                
+                //09-07-2024
+                $cleanedString = str_replace('"', '', $data['pr_vals']);
+                $data['pr_vals'] = [(int) $cleanedString];
+                
+                $this->state[$data['property']] = $data['pr_vals'];
+                //end 
+
                 if(in_array(10, $data['pr_vals']) || in_array(11, $data['pr_vals']) || in_array(2, $data['pr_vals']) || in_array(14, $data['pr_vals']) || in_array(15, $data['pr_vals'])){
                     $this->multiFamilyBuyer = true;
                 } else {
