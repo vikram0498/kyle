@@ -245,8 +245,7 @@ function CopyAddBuyer({urlType}) {
     let formObject = Object.fromEntries(data.entries());
 
     formObject.parking =  parkingValue;
-    formObject.property_type = [parseInt(formObject.property_type)];
-    // formObject.property_type = propertyTypeValue;
+    formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     // formObject.buyer_type       =  buyerTypeValue;
     formObject.purchase_method = purchaseMethodsValue;
@@ -301,8 +300,9 @@ function CopyAddBuyer({urlType}) {
       });
   };
   const handleCustum = (e, name) => {
-    const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
+    let selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
+      selectedValues = [e.value];
       if (
         selectedValues.includes(2) ||
         selectedValues.includes(10) ||
@@ -912,7 +912,7 @@ function CopyAddBuyer({urlType}) {
                                         handleCustum(e, "property_type");
                                       }}
                                       // isMulti
-                                      closeMenuOnSelect={false}
+                                      closeMenuOnSelect={true}
                                     />
                                   )}
                                 />

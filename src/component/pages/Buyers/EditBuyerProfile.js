@@ -64,11 +64,13 @@ function EditBuyerProfile() {
   const [propertyType, setPropertyType] = useState([]);
   const [purchaseMethods, setPurchaseMethods] = useState([]);
   const [locationFlaws, setLocationFlaws] = useState([]);
+  const [parking, setParking] = useState([]);
   const [marketPreferance, setMarketPreferance] = useState([]);
   const [contactPreferance, setContactPreferance] = useState([]);
   const [zoning, setZoning] = useState([]);
   const [sewer, setSewer] = useState([]);
   const [utilities, setUtilities] = useState([]);
+
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -141,7 +143,7 @@ function EditBuyerProfile() {
       if (response.data.status) {
         let responseData = response.data.buyer;
         if (responseData.profile_image != "")
-          setPreviewImageUrl(responseData.profile_image);
+        setPreviewImageUrl(responseData.profile_image);
         setCurrentBuyerData(responseData);
         setState(responseData.state);
         setCity(responseData.city);
@@ -195,6 +197,10 @@ function EditBuyerProfile() {
         );
         setPurchaseMethodsValue(selectedPurchaseMethods);
         setValue("purchase_method", responseData.purchase_method);
+        
+        const selectedParking = responseData.parking.map((item) => item.value);
+        setParking(selectedParking);
+        setValue("parking", selectedParking);
 
         const selectedLocationFlaws = responseData.property_flaw.map(
           (item) => item.value
@@ -205,7 +211,6 @@ function EditBuyerProfile() {
         setValue("market_preferance", responseData.market_preferance);
         setValue("contact_preferance", responseData.contact_preferance);
         setValue("buyer_type", responseData.buyer_type);
-        setValue("parking", responseData.parking);
         setValue("build_year_max", responseData.build_year_max);
         setValue("build_year_min", responseData.build_year_min);
 
@@ -381,8 +386,7 @@ function EditBuyerProfile() {
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
-    // formObject.property_type = propertyTypeValue;
-    formObject.property_type = [parseInt(formObject.property_type)];
+    formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
@@ -399,7 +403,9 @@ function EditBuyerProfile() {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
     }
-
+    if (formObject.hasOwnProperty("parking")) {
+      formObject.parking = parking ;
+    }
     axios
       .post(`${apiUrl}update-single-buyer-details`, formObject, {
         headers: headers,
@@ -448,8 +454,10 @@ function EditBuyerProfile() {
       });
   };
   const handleCustum = (e, name) => {
-    const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
+    console.log(e, 'event',name,'name');
+    let selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
+      selectedValues = [e.value];
       setPropertyTypeValue(selectedValues);
       setPropertyType(e);
       if (
@@ -492,6 +500,8 @@ function EditBuyerProfile() {
       }
       setPurchaseMethodsValue(selectedValues);
     } else if (name == "parking") {
+      console.log(selectedValues,'selectedValues');
+      setParking(selectedValues);
       setParkingValue(e);
     } else if (name == "country") {
       getStates(e);
@@ -1045,7 +1055,7 @@ function EditBuyerProfile() {
                                         handleCustum(e, "property_type");
                                       }}
                                       // isMulti
-                                      closeMenuOnSelect={false}
+                                      closeMenuOnSelect={true}
                                     />
                                   )}
                                 />
@@ -2165,39 +2175,44 @@ function EditBuyerProfile() {
                             </div>
                           </div>
                           <div className="col-6 col-lg-6">
-                            <label>
-                              Parking<span>*</span>
-                            </label>
-                            <div className="form-group">
-                              <Controller
-                                control={control}
-                                name="parking"
-                                rules={{ required: "Parking is required" }}
-                                render={({
-                                  field: { value, onChange, name },
-                                }) => (
-                                  <Select
-                                    options={parkingOption}
-                                    name={name}
-                                    className="select"
-                                    placeholder="Select parking"
-                                    value={parkingValue}
-                                    setMultiselectOption={setParkingValue}
-                                    onChange={(e) => {
-                                      onChange(e);
-                                      handleCustum(e, "parking");
-                                    }}
-                                  />
+                            <label> Parking<span>*</span></label>
+                              <div className="form-group">
+                                <Controller
+                                  control={control}
+                                  name="parking"
+                                  rules={{
+                                    required: "Parking is required",
+                                  }}
+                                  render={({
+                                    field: { value, onChange, name },
+                                  }) => (
+                                    <Select
+                                      options={parkingOption}
+                                      name={name}
+                                      className="select"
+                                      value={parkingValue}
+                                      placeholder="Select parking"
+                                      setMultiselectOption={
+                                        setParkingValue
+                                      }
+                                      showCreative={''}
+                                      onChange={(e) => {
+                                        onChange(e);
+                                        handleCustum(e, "parking");
+                                      }}
+                                      closeMenuOnSelect={false}
+                                      isMulti
+                                    />
+                                  )}
+                                />
+                                {errors.parking && (
+                                  <p className="error">
+                                    {errors.parking?.message}
+                                  </p>
                                 )}
-                              />
-                              {errors.parking && (
-                                <p className="error">
-                                  {errors.parking?.message}
-                                </p>
-                              )}
 
-                              {renderFieldError("parking")}
-                            </div>
+                                {renderFieldError("parking")}
+                              </div>
                           </div>
                           <div className="col-6 col-lg-6">
                             <label>

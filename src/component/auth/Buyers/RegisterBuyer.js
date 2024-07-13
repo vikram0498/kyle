@@ -221,8 +221,7 @@ function RegisterBuyer() {
       formObject.uuid = token;
     }
     formObject.parking =  parkingValue;
-    formObject.property_type = [parseInt(formObject.property_type)];
-    // formObject.property_type = propertyTypeValue;
+    formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
@@ -278,8 +277,9 @@ function RegisterBuyer() {
     }
   };
   const handleCustum = (e, name) => {
-    const selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
+    let selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
+      selectedValues = [e.value];
       if (
         selectedValues.includes(2) ||
         selectedValues.includes(10) ||
@@ -893,8 +893,8 @@ function RegisterBuyer() {
                                             handleCustum(e, "property_type");
                                           }}
                                           // isMulti
-                                          closeMenuOnSelect={false}
-                                        />
+                                          closeMenuOnSelect={true}
+                                          />
                                       )}
                                     />
                                     {errors.property_type && (
