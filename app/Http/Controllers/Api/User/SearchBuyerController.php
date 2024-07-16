@@ -778,6 +778,7 @@ class SearchBuyerController extends Controller
                 $selectedValues = [$lastSearchLog->property_type];
 
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
+	
                     foreach ($selectedValues as $value) {
                         $query->orWhereJsonContains("property_type", (int)$value);
                     }
@@ -907,13 +908,15 @@ class SearchBuyerController extends Controller
             }
 
             if($lastSearchLog->zoning){
-                $selectedValues = $lastSearchLog->zoning;
-
+                //$selectedValues = $lastSearchLog->zoning;
+		$selectedValues = json_decode($lastSearchLog->zoning,true);
+		if($selectedValues){
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     foreach ($selectedValues as $value) {
                         $query->orWhereJsonContains("zoning", $value);
                     }
                 });
+		}
             }
 
             if($lastSearchLog->utilities){
@@ -1134,12 +1137,13 @@ class SearchBuyerController extends Controller
                 return response()->json($responseData, 200);
          }
         }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+           // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+		'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 400);
         }
