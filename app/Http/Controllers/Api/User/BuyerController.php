@@ -944,8 +944,8 @@ class BuyerController extends Controller
             ])
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
                 ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
-                // ->orderByRaw('ISNULL(plan_position), plan_position ASC')
-                ->orderBy('buyers.created_at', 'desc')
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+               // ->orderBy('buyers.created_at', 'desc')
                 ->paginate(20);
 
             /* $buyers = $buyers
