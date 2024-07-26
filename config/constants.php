@@ -32,6 +32,7 @@ return [
 
     'profile_image_size' =>'2048', // 1024 = 1 MB
 
+    'owner_name' => env('OWNER_NAME','Administrator'),
     'owner_email' => env('OWNER_MAIL'),
     'twilio_country_code'=>env('TWILIO_COUNTRY_CODE'),
     'buyer_application_free_price_id'=>env('BUYER_APPLICATION_FEE_PRICE_ID'),

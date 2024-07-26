@@ -69,6 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'login_at',
     ];
 
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+    
     public function roles()
     {
         return $this->belongsToMany(Role::class);

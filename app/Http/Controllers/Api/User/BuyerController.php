@@ -938,22 +938,40 @@ class BuyerController extends Controller
             $radioValues = [0, 1];
             $userId = auth()->user()->id;
 
-            // $buyers = Buyer::query()->with(['userDetail'])->select('id', 'user_id','buyer_user_id', 'created_by', 'contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('user_id',$userId);
-
-            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
+            /*$buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
             ])
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
                 ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
                 ->orderByRaw('ISNULL(plan_position), plan_position ASC')
-               // ->orderBy('buyers.created_at', 'desc')
+                ->paginate(20);*/
+
+
+            /** Update query 26-07-2024 */
+
+            // Subquery to calculate verification count
+            $verificationSubquery = DB::table('profile_verifications')
+            ->select(DB::raw("
+                SUM(
+                    CASE WHEN is_phone_verification = 1 THEN 1 ELSE 0 END +
+                    CASE WHEN is_driver_license = 1 AND driver_license_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_proof_of_funds = 1 AND proof_of_funds_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_llc_verification = 1 AND llc_verification_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_application_process = 1 THEN 1 ELSE 0 END
+                ) AS verification_count
+            "))
+            ->whereColumn('user_id', 'buyers.buyer_user_id')
+            ->toSql();
+
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status', DB::raw("($verificationSubquery) as verification_count"),])
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
+                ->withCount(['likes as likes_count'])
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->orderBy('verification_count', 'desc') 
+                ->orderBy('likes_count', 'desc')
                 ->paginate(20);
 
-            /* $buyers = $buyers
-                    ->orderBy('created_at', 'desc')
-                    // ->orderByRaw('ISNULL(buyer_plans.position), buyer_plans.position ASC')
-                    // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'desc')
-                    ->paginate(20); */
-
+         
             foreach ($buyers as $key => $buyer) {
                 $liked = false;
                 $disliked = false;
@@ -1014,7 +1032,8 @@ class BuyerController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message') . $e->getMessage() . '->' . $e->getLine(),
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage() . '->' . $e->getLine()
             ];
             return response()->json($responseData, 400);
         }
