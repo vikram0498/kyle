@@ -964,7 +964,7 @@ class BuyerController extends Controller
 
             $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status', DB::raw("($verificationSubquery) as verification_count"),])
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
-                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
+                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
                 ->withCount(['likes as likes_count'])
                 ->orderByRaw('ISNULL(plan_position), plan_position ASC')
                 ->orderBy('verification_count', 'desc') 
