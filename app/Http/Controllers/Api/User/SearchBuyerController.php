@@ -148,7 +148,7 @@ class SearchBuyerController extends Controller
 
     public function buyBoxSearch(SearchBuyersRequest $request){
 
-        $radioValues = [0,1];
+        $radioValues = [1];
         DB::beginTransaction();
         try {
            
@@ -776,8 +776,9 @@ class SearchBuyerController extends Controller
 
     public function lastSearchBuyers(){
         try {
-            $radioValues = [0,1];
-            $userId = auth()->user()->id;
+           // $radioValues = [0,1];
+            $radioValues = [1];
+	    $userId = auth()->user()->id;
             $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             
             if($lastSearchLog){
