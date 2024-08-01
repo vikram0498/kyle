@@ -47,6 +47,7 @@ const SellerForm = () => {
   const [size, setSize] = useState("");
   const [lotSize, setLotSize] = useState("");
   const [yearBuild, setYearBuild] = useState("");
+
   const [arv, setArv] = useState("");
 
   const [parking, setParking] = useState([]);
@@ -63,22 +64,22 @@ const SellerForm = () => {
   const [marketPreferance, setMarketPreferance] = useState([]);
   const [contactPreferance, setContactPreferance] = useState([]);
 
-  const [solar, setSolar] = useState(null);
-  const [pool, setPool] = useState(null);
-  const [septic, setSeptic] = useState(null);
-  const [well, setWell] = useState(null);
-  const [hoa, setHoa] = useState(null);
-  const [ageRestriction, setAgeRestriction] = useState(null);
-  const [rentalRestriction, setRentalRestriction] = useState(null);
-  const [postPossession, setPostPossession] = useState(null);
-  const [tenant, setTenant] = useState(null);
-  const [squatters, setSquatters] = useState(null);
-  const [buildingRequired, setBuildingRequired] = useState(null);
-  const [rebuild, setRebuild] = useState(null);
-  const [foundationIssues, setFoundationIssues] = useState(null);
-  const [mold, setMold] = useState(null);
-  const [fireDamaged, setFireDamaged] = useState(null);
-  const [permanentlyAffixed, setPermanentlyAffixed] = useState(null);
+  const [solar, setSolar] = useState('0');
+  const [pool, setPool] = useState('0');
+  const [septic, setSeptic] = useState('0');
+  const [well, setWell] = useState('0');
+  const [hoa, setHoa] = useState('0');
+  const [ageRestriction, setAgeRestriction] = useState('0');
+  const [rentalRestriction, setRentalRestriction] = useState('0');
+  const [postPossession, setPostPossession] = useState('0');
+  const [tenant, setTenant] = useState('0');
+  const [squatters, setSquatters] = useState('0');
+  const [buildingRequired, setBuildingRequired] = useState('0');
+  const [rebuild, setRebuild] = useState('0');
+  const [foundationIssues, setFoundationIssues] = useState('0');
+  const [mold, setMold] = useState('0');
+  const [fireDamaged, setFireDamaged] = useState('0');
+  const [permanentlyAffixed, setPermanentlyAffixed] = useState('0');
 
   const [totalUnits, setTotalUnits] = useState("");
   const [buildingClass, setBuildingClass] = useState("");
@@ -257,6 +258,7 @@ const SellerForm = () => {
     }
   };
   const makeStateBlank = () => {
+    console.log("enter !!");
     setAddress("");
     setCountry("");
     setState("");
@@ -292,23 +294,24 @@ const SellerForm = () => {
 
     setLocationFlaw([]);
 
-    setSolar(null);
-    setPool(null);
-    setWell(null);
-    setHoa(null);
-    setAgeRestriction(null);
-    setRentalRestriction(null);
-    setPostPossession(null);
-    setTenant(null);
-    setSquatters(null);
-    setBuildingRequired(null);
-    setRebuild(null);
-    setFoundationIssues(null);
-    setMold(null);
-    setFireDamaged(null);
-    setPermanentlyAffixed(null);
+    setSolar('0');
+    setPool('0');
+    setSeptic('0');
+    setWell('0');
+    setHoa('0');
+    setAgeRestriction('0');
+    setRentalRestriction('0');
+    setPostPossession('0');
+    setTenant('0');
+    setSquatters('0');
+    setBuildingRequired('0');
+    setRebuild('0');
+    setFoundationIssues('0');
+    setMold('0');
+    setFireDamaged('0');
+    setPermanentlyAffixed('0');
 
-    setBalloonPayment("0");
+    setBalloonPayment('0');
     setShowCreativeFinancing(false);
     setLocationFlawsValue([]);
 
@@ -318,6 +321,7 @@ const SellerForm = () => {
   };
 
   const handlePropertyTypeChange = (value) => {
+    console.log('s44444olar');
     makeStateBlank();
     setErrors(null);
     if (value === null) {
@@ -329,7 +333,7 @@ const SellerForm = () => {
       setIsSearchForm(propValue);
     }
   };
-
+  console.log(solar,'solar');
   const submitSearchBuyerForm = (e) => {
     e.preventDefault();
 

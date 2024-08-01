@@ -135,7 +135,7 @@ const SingleFamily = ({ data }) => {
               type="string"
               maxDate={new Date()}
               className="text-primary text-center form-control"
-              selected={startDate}
+              selected={data.yearBuild}
               name="build_year"
               autoComplete="off"
               showYearPicker
@@ -143,7 +143,7 @@ const SingleFamily = ({ data }) => {
               yearItemNumber={9}
               placeholderText="Year Built"
               onChange={(e) => {
-                setStartDate(e);
+                data.setYearBuild(e);
               }}
             />
             {data.renderFieldError("build_year")}
@@ -339,13 +339,14 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Solar<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="solar" value="1" id="solar_yes" />
+              <input type="radio" name="solar" value="1" id="solar_yes" checked={data.solar === '1'} onChange={(e)=>data.setSolar(e.target.value)}/>
               <label className="mb-0" htmlFor="solar_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="solar" value="0" id="solar_no" defaultChecked ={true}/>
+              <input type="radio" name="solar" value="0" id="solar_no" checked={data.solar === '0'} onChange={(e)=>data.setSolar(e.target.value)}
+              />
               <label className="mb-0" htmlFor="solar_no">
                 No
               </label>
@@ -357,13 +358,13 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Pool<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="pool" value="1" id="pool_yes" />
+              <input type="radio" name="pool" value="1" id="pool_yes" checked={data.pool === '1'} onChange={(e)=>data.setPool(e.target.value)}/>
               <label className="mb-0" htmlFor="pool_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="pool" value="0" id="pool_no" defaultChecked ={true}/>
+              <input type="radio" name="pool" value="0" id="pool_no" checked={data.pool === '0'} onChange={(e)=>data.setPool(e.target.value)}/>
               <label className="mb-0" htmlFor="pool_no">
                 No
               </label>
@@ -375,13 +376,13 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Septic<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="septic" value="1" id="septic_yes" />
+              <input type="radio" name="septic" value="1" id="septic_yes" checked={data.septic === '1'} onChange={(e)=>data.setSeptic(e.target.value)}/>
               <label className="mb-0" htmlFor="septic_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="septic" value="0" id="septic_no" defaultChecked ={true}/>
+              <input type="radio" name="septic" value="0" id="septic_no" checked={data.septic === '0'} onChange={(e)=>data.setSeptic(e.target.value)}/>
               <label className="mb-0" htmlFor="septic_no">
                 No
               </label>
@@ -393,13 +394,13 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Well<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="well" value="1" id="well_yes" />
+              <input type="radio" name="well" value="1" id="well_yes" checked={data.well === '1'} onChange={(e)=>data.setWell(e.target.value)}/>
               <label className="mb-0" htmlFor="well_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="well" value="0" id="well_no" defaultChecked ={true} />
+              <input type="radio" name="well" value="0" id="well_no" checked={data.well === '0'} onChange={(e)=>data.setWell(e.target.value)}/>
               <label className="mb-0" htmlFor="well_no">
                 No
               </label>
@@ -411,13 +412,13 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>HOA<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="hoa" value="1" id="hoa_yes" />
+              <input type="radio" name="hoa" value="1" id="hoa_yes" checked={data.hoa === '1'} onChange={(e)=>data.setHoa(e.target.value)}/>
               <label className="mb-0" htmlFor="hoa_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="hoa" value="0" id="hoa_no" defaultChecked ={true}/>
+              <input type="radio" name="hoa" value="0" id="hoa_no" checked={data.hoa === '0'} onChange={(e)=>data.setHoa(e.target.value)}/>
               <label className="mb-0" htmlFor="hoa_no">
                 No
               </label>
@@ -434,6 +435,7 @@ const SingleFamily = ({ data }) => {
                 name="age_restriction"
                 value="1"
                 id="age_restriction_yes"
+                checked={data.ageRestriction === '1'} onChange={(e)=>data.setAgeRestriction(e.target.value)}
               />
               <label className="mb-0" htmlFor="age_restriction_yes">
                 Yes
@@ -445,7 +447,7 @@ const SingleFamily = ({ data }) => {
                 name="age_restriction"
                 value="0"
                 id="age_restriction_no"
-                defaultChecked ={true}
+                checked={data.ageRestriction === '0'} onChange={(e)=>data.setAgeRestriction(e.target.value)}
               />
               <label className="mb-0" htmlFor="age_restriction_no">
                 No
@@ -463,6 +465,7 @@ const SingleFamily = ({ data }) => {
                 name="rental_restriction"
                 value="1"
                 id="rental_restriction_yes"
+                checked={data.rentalRestriction === '1'} onChange={(e)=>data.setRentalRestriction(e.target.value)}
               />
               <label className="mb-0" htmlFor="rental_restriction_yes">
                 Yes
@@ -474,7 +477,7 @@ const SingleFamily = ({ data }) => {
                 name="rental_restriction"
                 value="0"
                 id="rental_restriction_no"
-                defaultChecked ={true}
+                checked={data.rentalRestriction === '0'} onChange={(e)=>data.setRentalRestriction(e.target.value)}
               />
               <label className="mb-0" htmlFor="rental_restriction_no">
                 No
@@ -492,6 +495,7 @@ const SingleFamily = ({ data }) => {
                 name="post_possession"
                 value="1"
                 id="post_possession_yes"
+                checked={data.postPossession === '1'} onChange={(e)=>data.setPostPossession(e.target.value)}
               />
               <label className="mb-0" htmlFor="post_possession_yes">
                 Yes
@@ -503,7 +507,7 @@ const SingleFamily = ({ data }) => {
                 name="post_possession"
                 value="0"
                 id="post_possession_no"
-                defaultChecked ={true}
+                checked={data.postPossession === '0'} onChange={(e)=>data.setPostPossession(e.target.value)}
               />
               <label className="mb-0" htmlFor="post_possession_no">
                 No
@@ -516,13 +520,14 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Tenant Conveys<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="tenant" value="1" id="tenant_yes" />
-              <label className="mb-0" htmlFor="tenant_yes">
+              <input type="radio" name="tenant" value="1" id="tenant_yes" checked={data.tenant === '1'} onChange={(e)=>data.setTenant(e.target.value)}
+              />
+              <label className="mb-0" htmlFor="tenant_yes" >
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="tenant" value="0" id="tenant_no" defaultChecked ={true}/>
+              <input type="radio" name="tenant" value="0" id="tenant_no" checked={data.tenant === '0'} onChange={(e)=>data.setTenant(e.target.value)} />
               <label className="mb-0" htmlFor="tenant_no">
                 No
               </label>
@@ -539,6 +544,8 @@ const SingleFamily = ({ data }) => {
                 name="squatters"
                 value="1"
                 id="squatters_yes"
+                checked={data.squatters === '1'} 
+                onChange={(e)=>data.setSquatters(e.target.value)} 
               />
               <label className="mb-0" htmlFor="squatters_yes">
                 Yes
@@ -550,8 +557,8 @@ const SingleFamily = ({ data }) => {
                 name="squatters"
                 value="0"
                 id="squatters_no"
-                defaultChecked ={true}
-              />
+                checked={data.squatters === '0'} 
+                onChange={(e)=>data.setSquatters(e.target.value)}               />
               <label className="mb-0" htmlFor="squatters_no">
                 No
               </label>
@@ -568,6 +575,8 @@ const SingleFamily = ({ data }) => {
                 name="building_required"
                 value="1"
                 id="building_required_yes"
+                checked={data.buildingRequired === '1'} 
+                onChange={(e)=>data.setBuildingRequired(e.target.value)}
               />
               <label className="mb-0" htmlFor="building_required_yes">
                 Yes
@@ -579,7 +588,8 @@ const SingleFamily = ({ data }) => {
                 name="building_required"
                 value="0"
                 id="building_required_no"
-                defaultChecked ={true}
+                checked={data.buildingRequired === '0'} 
+                onChange={(e)=>data.setBuildingRequired(e.target.value)}
               />
               <label className="mb-0" htmlFor="building_required_no">
                 No
@@ -592,13 +602,19 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Rebuild<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="rebuild" value="1" id="rebuild_yes" />
+              <input type="radio" name="rebuild" value="1" id="rebuild_yes" 
+              checked={data.rebuild === '1'} 
+              onChange={(e)=>data.setRebuild(e.target.value)}
+              />
               <label className="mb-0" htmlFor="rebuild_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="rebuild" value="0" id="rebuild_no" defaultChecked ={true}/>
+              <input type="radio" name="rebuild" value="0" id="rebuild_no" 
+              checked={data.rebuild === '0'} 
+              onChange={(e)=>data.setRebuild(e.target.value)}
+              />
               <label className="mb-0" htmlFor="rebuild_no">
                 No
               </label>
@@ -615,6 +631,8 @@ const SingleFamily = ({ data }) => {
                 name="foundation_issues"
                 value="1"
                 id="foundation_issues_yes"
+                checked={data.foundationIssues === '1'} 
+                onChange={(e)=>data.setFoundationIssues(e.target.value)}
               />
               <label className="mb-0" htmlFor="foundation_issues_yes">
                 Yes
@@ -626,7 +644,8 @@ const SingleFamily = ({ data }) => {
                 name="foundation_issues"
                 value="0"
                 id="foundation_issues_no"
-                defaultChecked ={true}
+                checked={data.foundationIssues === '0'} 
+                onChange={(e)=>data.setFoundationIssues(e.target.value)}
               />
               <label className="mb-0" htmlFor="foundation_issues_no">
                 No
@@ -639,13 +658,19 @@ const SingleFamily = ({ data }) => {
           <div className="radio-block-group">
             <label>Mold<span>*</span></label>
             <div className="label-container">
-              <input type="radio" name="mold" value="1" id="mold_yes" />
+              <input type="radio" name="mold" value="1" id="mold_yes" 
+                checked={data.mold === '1'} 
+                onChange={(e)=>data.setMold(e.target.value)}
+                />
               <label className="mb-0" htmlFor="mold_yes">
                 Yes
               </label>
             </div>
             <div className="label-container">
-              <input type="radio" name="mold" value="0" id="mold_no" defaultChecked ={true}/>
+              <input type="radio" name="mold" value="0" id="mold_no" 
+                checked={data.mold === '0'} 
+                onChange={(e)=>data.setMold(e.target.value)}
+                />
               <label className="mb-0" htmlFor="mold_no">
                 No
               </label>
@@ -662,6 +687,8 @@ const SingleFamily = ({ data }) => {
                 name="fire_damaged"
                 value="1"
                 id="fire_damaged_yes"
+                checked={data.fireDamaged === '1'} 
+                onChange={(e)=>data.setFireDamaged(e.target.value)}
               />
               <label className="mb-0" htmlFor="fire_damaged_yes">
                 Yes
@@ -673,7 +700,8 @@ const SingleFamily = ({ data }) => {
                 name="fire_damaged"
                 value="0"
                 id="fire_damaged_no"
-                defaultChecked ={true}
+                checked={data.fireDamaged === '0'} 
+                onChange={(e)=>data.setFireDamaged(e.target.value)}
               />
               <label className="mb-0" htmlFor="fire_damaged_no">
                 No
