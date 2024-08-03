@@ -486,15 +486,18 @@ class Index extends Component
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
+                $this->state['zoning'] = $this->state['zoning'] ? json_encode(array_map('intval',$this->state['zoning'])): null;
+            }else{
+                $this->state['zoning'] = null;
             }
 
             if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
                 $this->state['building_class'] = array_map('intval',$this->state['building_class']);
+            }else{
+                $this->state['building_class'] = null;
             }
 
             if(isset($this->state['parking']) && !empty($this->state['parking'])){
-                // $this->state['parking'] = (int)$this->state['parking'];
                 $this->state['parking'] = array_map('intval', $this->state['parking']);
             }
 
@@ -510,6 +513,11 @@ class Index extends Component
                 $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
             }
 
+            $this->state['utilities'] = (isset($this->state['utilities']) && !empty($this->state['utilities'])) ? $this->state['utilities'] : null;
+            $this->state['sewer'] = (isset($this->state['sewer']) && !empty($this->state['sewer'])) ? $this->state['sewer'] : null;
+            $this->state['park'] = (isset($this->state['park']) && !empty($this->state['park'])) ? (int)$this->state['park'] : null;
+
+            $this->state['rooms'] = (isset($this->state['rooms']) && !empty($this->state['rooms'])) ? (int)$this->state['rooms'] : null;
 
             $buyer = Buyer::find($this->buyer_id);
             $buyer->update($this->state);

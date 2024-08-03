@@ -461,112 +461,102 @@ class BuyerController extends Controller
     public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request)
     {
 
-        DB::beginTransaction();
-        try {
+    	  DB::beginTransaction();
+    	  try {
 
-            $authUserId = auth()->user()->id;
+        	$authUserId = auth()->user()->id;
 
-            $validatedData = $request->all();
+        	$validatedData = $request->all();
 
-            // Start create users table
-            $userDetails =  [
-                'first_name'     => $validatedData['first_name'],
-                'last_name'      => $validatedData['last_name'],
-                'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
-                'description'    => $validatedData['description'],
-            ];
+       		 // Start update users table
+        	$userDetails =  [
+            		'first_name'     => $validatedData['first_name'],
+           		'last_name'      => $validatedData['last_name'],
+            		'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+            		'description'    => $validatedData['description'],
+        	];
 
-            $updateUser = User::where('id', $authUserId)->update($userDetails);
-            // End create users table
-
-            if ($updateUser) {
-
-                $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
-
-                if($request->state){
-                     $validatedData['state'] = array_map('intval',$request->state);
-                }
-
-                if($request->city){
-                     $validatedData['city'] = array_map('intval',$request->city);
-                }
-                
-                if($request->property_type){
-                    $validatedData['property_type'] = array_map('intval',$request->property_type);
-                }
-
-                if($request->property_flaw){
-                    $validatedData['property_flaw'] = array_map('intval',$request->property_flaw);
-                }
-
-                if($request->purchase_method ){
-                    $validatedData['purchase_method'] = array_map('intval',$request->purchase_method );
-                }
-
-                if ($request->parking) {
-                    // $validatedData['parking'] = (int)$request->parking;
-                    $validatedData['parking'] = array_map('intval',$request->parking);
-
-                }
-
-                if ($request->buyer_type) {
-                    $validatedData['buyer_type'] = (int)$request->buyer_type;
-                }
+        	$updateUser = User::where('id', $authUserId)->update($userDetails);
+        	// End update users table
 
 
-                if ($request->zoning) {
-                    $validatedData['zoning'] = json_encode($request->zoning);
-                }
-                 
+        	$validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-                if ($request->permanent_affix) {
-                    $validatedData['permanent_affix'] = (int)$request->permanent_affix;
-                }
-                if ($request->park) {
-                    $validatedData['park'] = (int)$request->park;
-                }
-                if ($request->rooms) {
-                    $validatedData['rooms'] = (int)$request->rooms;
-                }
+        	if($request->state){
+                  	$validatedData['state'] = array_map('intval',$request->state);
+        	}
 
-                // $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+       		if($request->city){
+                	$validatedData['city'] = array_map('intval',$request->city);
+        	}
+        
+        	if($request->property_type){
+           		 $validatedData['property_type'] = array_map('intval',$request->property_type);
+        	}
 
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
+        	if($request->property_flaw){
+            		$validatedData['property_flaw'] = array_map('intval',$request->property_flaw);
+        	}
 
-                auth()->user()->buyerDetail()->update($validatedData);
-            }
+        	if($request->purchase_method ){
+            		$validatedData['purchase_method'] = array_map('intval',$request->purchase_method );
+        	}
 
-            $authUser = User::where('id', $authUserId)->first();
-            $userData          = [
-                'id'           => $authUser->id,
-                'first_name'   => $authUser->first_name ?? '',
-                'last_name'    => $authUser->last_name ?? '',
-                'profile_image' => $authUser->profile_image_url ?? '',
-                'role' => $authUser->roles()->first()->id ?? '',
-                'is_verified'  => $authUser->is_buyer_verified ?? false,
-                'total_buyer_uploaded' => $authUser->buyers()->count(),
-            ];
+        	if ($request->parking) {
+            		$validatedData['parking'] = array_map('intval',$request->parking);
+        	}
 
-            DB::commit();
+        	if ($request->buyer_type) {
+            		$validatedData['buyer_type'] = (int)$request->buyer_type;
+        	}
 
-            //Success Response Send
-            $responseData = [
-                'status'            => true,
-                'userData'          => $userData,
-                'message'           => trans('messages.edit_success_message'),
-            ];
-            return response()->json($responseData, 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
 
-            //Return Error Response   
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
+        	$validatedData['zoning'] = $request->zoning ? array_map('intval', $request->zoning) : null;
+        	$validatedData['utilities'] = $request->utilities ? $request->utilities : null;
+        	$validatedData['sewer'] = $request->sewer ? $request->sewer : null;
+        	$validatedData['park'] = $request->park ? (int)$request->park : null;
+        	$validatedData['permanent_affix'] = $request->permanent_affix ? (int)$request->permanent_affix : 0;
+        	$validatedData['rooms'] = $request->rooms ? (int)$request->rooms : null;
+
+
+        	// $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+        	$validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
+
+        	auth()->user()->buyerDetail()->update($validatedData);
+    
+        	$authUser = User::where('id', $authUserId)->first();
+        	$userData          = [
+            		'id'           => $authUser->id,
+            		'first_name'   => $authUser->first_name ?? '',
+            		'last_name'    => $authUser->last_name ?? '',
+            		'profile_image' => $authUser->profile_image_url ?? '',
+            		'role' => $authUser->roles()->first()->id ?? '',
+            		'is_verified'  => $authUser->is_buyer_verified ?? false,
+            		'total_buyer_uploaded' => $authUser->buyers()->count(),
+        	];
+
+        	DB::commit();
+
+        	//Success Response Send
+        	$responseData = [
+            		'status'            => true,
+            		'userData'          => $userData,
+            		'message'           => trans('messages.edit_success_message'),
+        	];
+        	return response()->json($responseData, 200);
+    	} catch (\Exception $e) {
+        	DB::rollBack();
+        	//  dd($e->getMessage().'->'.$e->getLine());
+
+        	//Return Error Response   
+        	$responseData = [
+            		'status'        => false,
+            		'error'         => trans('messages.error_message'),
+            		'error_details' => $e->getMessage()
+        	];
+        	return response()->json($responseData, 400);
+    	}
     }
 
     public function fetchBuyers(Request $request)
