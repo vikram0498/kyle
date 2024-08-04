@@ -486,15 +486,11 @@ class Index extends Component
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = $this->state['zoning'] ? json_encode(array_map('intval',$this->state['zoning'])): null;
-            }else{
-                $this->state['zoning'] = null;
+                $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
             }
 
             if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
                 $this->state['building_class'] = array_map('intval',$this->state['building_class']);
-            }else{
-                $this->state['building_class'] = null;
             }
 
             if(isset($this->state['parking']) && !empty($this->state['parking'])){
@@ -513,12 +509,54 @@ class Index extends Component
                 $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
             }
 
-            $this->state['utilities'] = (isset($this->state['utilities']) && !empty($this->state['utilities'])) ? $this->state['utilities'] : null;
-            $this->state['sewer'] = (isset($this->state['sewer']) && !empty($this->state['sewer'])) ? $this->state['sewer'] : null;
-            $this->state['park'] = (isset($this->state['park']) && !empty($this->state['park'])) ? (int)$this->state['park'] : null;
+	    if(isset($this->state['property_type'])){
 
-            $this->state['rooms'] = (isset($this->state['rooms']) && !empty($this->state['rooms'])) ? (int)$this->state['rooms'] : null;
+                if(!in_array(7,$this->state['property_type'])){
+                    $this->state['zoning'] = null;
+                    $this->state['utilities'] = null;
+                    $this->state['sewer'] =  null;
+                }
 
+                if(in_array(7, $this->state['property_type']) || in_array(14, $this->state['property_type'])){
+                    $this->state['stories_min'] = null;
+                    $this->state['stories_max'] = null;
+                }
+
+		if(!in_array(8,$this->state['property_type'])){
+                    $this->state['permanent_affix'] = 0;
+                }
+
+		if((!in_array(10,$this->state['property_type'])) &&  (!in_array(11,$this->state['property_type'])) && (!in_array(14,$this->state['property_type'])) && (!in_array(15,$this->state['property_type'])) ){
+                    $this->state['unit_min'] = null;
+                    $this->state['unit_max'] = null;
+                    $this->state['building_class'] = null;
+                    $this->state['value_add'] = null;
+                }
+
+		if(in_array(14, $this->state['property_type']) || in_array(15, $this->state['property_type'])){
+                    $this->state['bedroom_min'] = null;
+                    $this->state['bedroom_max'] = null;
+                    $this->state['bath_min'] = null;
+                    $this->state['bath_max'] = null;
+                }
+
+                if(in_array(14, $this->state['property_type'])){
+                    $this->state['size_min'] = null;
+                    $this->state['size_max'] = null;
+                    $this->state['build_year_min'] = null;
+                    $this->state['build_year_max'] = null;
+                }
+                
+                if(!in_array(14,$this->state['property_type'])){
+                    $this->state['park'] = null;
+                }
+
+                if(!in_array(15,$this->state['property_type'])){
+                    $this->state['rooms'] = null;
+                }
+            }
+
+            
             $buyer = Buyer::find($this->buyer_id);
             $buyer->update($this->state);
     
@@ -539,7 +577,7 @@ class Index extends Component
             return redirect()->route('admin.buyer');
         }catch (\Exception $e) {
             DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             Log::error('Livewire -> Buyer-> Index -> Update()'.$e->getMessage().'->'.$e->getLine());
             $this->alert('error',trans('messages.error_message'));
         }

@@ -511,13 +511,30 @@ class BuyerController extends Controller
         	}
 
 
+        	$validatedData['bedroom_min'] = $request->bedroom_min ? $request->bedroom_min : null;
+        	$validatedData['bedroom_max'] = $request->bedroom_max ? $request->bedroom_max : null;
+        	$validatedData['bath_min']    = $request->bath_min ? $request->bath_min : null;
+        	$validatedData['bath_max']    = $request->bath_max ? $request->bath_max : null;
+        	$validatedData['size_min']    = $request->size_min ? $request->size_min : null;
+        	$validatedData['size_max']    = $request->size_max ? $request->size_max : null;
+        	$validatedData['build_year_min']    = $request->build_year_min ? $request->build_year_min : null;
+        	$validatedData['build_year_max']    = $request->build_year_max ? $request->build_year_max : null;
+        	$validatedData['stories_min'] = $request->stories_min ? $request->stories_min : null;
+        	$validatedData['stories_max'] = $request->stories_max ? $request->stories_max : null;
+
+
+        	$validatedData['unit_min']    = $request->unit_min ? $request->unit_min : null;
+        	$validatedData['unit_max']    = $request->unit_max ? $request->unit_max : null;
+		$validatedData['building_class']    = $request->building_class ? array_map('intval', $request->building_class) : null;
+        	$validatedData['value_add']    = isset($request->value_add) ? $request->value_add : null;
+
+
         	$validatedData['zoning'] = $request->zoning ? array_map('intval', $request->zoning) : null;
         	$validatedData['utilities'] = $request->utilities ? $request->utilities : null;
         	$validatedData['sewer'] = $request->sewer ? $request->sewer : null;
         	$validatedData['park'] = $request->park ? (int)$request->park : null;
         	$validatedData['permanent_affix'] = $request->permanent_affix ? (int)$request->permanent_affix : 0;
         	$validatedData['rooms'] = $request->rooms ? (int)$request->rooms : null;
-
 
         	// $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
 
