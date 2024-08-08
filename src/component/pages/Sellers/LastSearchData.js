@@ -14,6 +14,7 @@ import BuyerCard from "./Section/BuyerCard";
 const LastSearchData = () => {
   const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
   const [buyerData, setBuyerData] = useState([]);
+  const [addressValue, setAddressValue] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [isLoader, setIsLoader] = useState(true);
   const [totalRecord, setTotalRecord] = useState(0);
@@ -51,6 +52,7 @@ const LastSearchData = () => {
       setIsLoader(false);
       if (response.data.status) {
         setBuyerData(response.data.buyers.data);
+        setAddressValue(response.data.address_value);
         setCurrentRecord(response.data.buyers.data.length);
         setTotalRecord(response.data.buyers.total);
         setTotalPage(response.data.buyers.last_page);
@@ -230,6 +232,7 @@ const LastSearchData = () => {
       }
     }
   };
+
   return (
     <>
       <Header />
@@ -271,7 +274,7 @@ const LastSearchData = () => {
                 </div>
                 <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                   <h6 className="center-head fs-3 text-center mb-0">
-                    My Recent Search
+                    My Recent Search {addressValue ? `(${addressValue})` : ''}
                   </h6>
                 </div>
                 <div className="col-12 col-sm-4 col-md-4 col-lg-4">

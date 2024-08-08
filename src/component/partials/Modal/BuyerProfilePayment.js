@@ -45,9 +45,8 @@ const BuyerProfilePayment = ({ setModalOpen, modalOpen }) => {
             {/* <div className="pricehard">$100</div> */}
             <h3>Please complete your profile verification to upload image</h3>
             <p className="mb-0">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has the industry's standard dummy text ever
-              since the 1500s,
+              To unlock this feature, complete your phone verification, proof of funds verification, and ID verification. Make your profile stand out from the crowd! <br/>
+              -Change avatar unlock level to ID verification.
             </p>
             <div className="process-payment-btn">
               {/* <button

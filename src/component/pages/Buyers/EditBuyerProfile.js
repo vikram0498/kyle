@@ -192,6 +192,10 @@ function EditBuyerProfile() {
           setValue("building_class", responseData.building_class);
           setValue("value_add", responseData.value_add);
         }
+        if (selectedProperty.includes(14)) {
+          setMobileHomeParkSelected(true)
+        }
+        
         const selectedPurchaseMethods = responseData.purchase_method.map(
           (item) => item.value
         );
@@ -406,6 +410,10 @@ function EditBuyerProfile() {
     if (formObject.hasOwnProperty("parking")) {
       formObject.parking = parking ;
     }
+    if (formObject.hasOwnProperty("permanent_affix")) {
+      formObject.permanent_affix = permanentAffix ;
+    }
+    
     axios
       .post(`${apiUrl}update-single-buyer-details`, formObject, {
         headers: headers,
@@ -453,6 +461,7 @@ function EditBuyerProfile() {
         }
       });
   };
+  console.log(mobileHomeParkSelected , 'sdfsdfsdf', hotelMotelSelected)
   const handleCustum = (e, name) => {
     console.log(e, 'event',name,'name');
     let selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
@@ -481,6 +490,7 @@ function EditBuyerProfile() {
       } else {
         setManufacturedSelected(false);
       }
+      console.log(selectedValues,"selectedValues");
       if (selectedValues.includes(14)) {
         setMobileHomeParkSelected(true);
       } else {
@@ -2924,7 +2934,7 @@ function EditBuyerProfile() {
                             {manufactureSelected && (
                               <div className="grid-template-col">
                                 <div className="radio-block-group">
-                                  <label>Permanently affixed </label>
+                                  <label>Permanently affixed</label>
                                   <div className="label-container">
                                     <input
                                       type="radio"
@@ -2932,11 +2942,9 @@ function EditBuyerProfile() {
                                       value="1"
                                       id="permanent_affix_yes"
                                       onChange={(e) =>
-                                        setPermanentAffix(e.target.value())
+                                        setPermanentAffix(e.target.value) // Removed parentheses
                                       }
-                                      checked={
-                                        permanentAffix === "1" ? "checked" : ""
-                                      }
+                                      checked={permanentAffix === "1"}
                                     />
                                     <label
                                       className="mb-0"
@@ -2952,11 +2960,9 @@ function EditBuyerProfile() {
                                       value="0"
                                       id="permanent_affix_no"
                                       onChange={(e) =>
-                                        setPermanentAffix(e.target.value())
+                                        setPermanentAffix(e.target.value) // Removed parentheses
                                       }
-                                      checked={
-                                        permanentAffix === "0" ? "checked" : ""
-                                      }
+                                      checked={permanentAffix === "0"}
                                     />
                                     <label
                                       className="mb-0"

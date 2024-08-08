@@ -212,7 +212,7 @@ const BoostYourProfile = () => {
                           <div className="purchase-btn p-0">
                             {!data.current_plan ?  data.is_user_limit_reached ? 
                                 <span className="badge success-btn">
-                                      Plan Limit Exceed
+                                       Badge Sold Out
                                 </span>
                                     :(
                              

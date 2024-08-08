@@ -98,24 +98,24 @@ function Header() {
                 <div className="modetype">
                   <DarkMode />
                 </div>
-                {userDetails !== null &&
-                userDetails.level_type !== 1 &&
-                userDetails.credit_limit < 5 ? (
-                  <Link to="/additional-credits">
-                    <div className="upload-buyer bg-green">
-                      <span className="upload-buyer-icon d-flex">
-                        <img
-                          alt="coin"
-                          src="./assets/images/coin.svg"
-                          className="img-fluid"
-                        />
-                      </span>
-                      <p>More Credits</p>
-                    </div>
-                  </Link>
-                ) : (
-                  ""
-                )}
+                  {/* {userDetails !== null &&
+                  userDetails.level_type !== 1 &&
+                  userDetails.credit_limit < 5 ? (
+                    <Link to="/additional-credits">
+                      <div className="upload-buyer bg-green">
+                        <span className="upload-buyer-icon d-flex">
+                          <img
+                            alt="coin"
+                            src="./assets/images/coin.svg"
+                            className="img-fluid"
+                          />
+                        </span>
+                        <p>More Credits</p>
+                      </div>
+                    </Link>
+                  ) : (
+                    ""
+                  )} */}
                 <div className="upload-buyer">
                   <span className="upload-buyer-icon d-flex">
                     <img
@@ -124,18 +124,21 @@ function Header() {
                       className="img-fluid"
                     />
                   </span>
-                  <p>
-                    uploaded Buyer Data :{" "}
-                    <b>
-                      {creditLimit !== null ? (
-                        creditLimit.total_buyer_uploaded
-                      ) : (
-                        <MiniLoader />
-                      )}
-                    </b>
-                  </p>
+                  <Link to="/my-buyers">
+                    <p>
+                      uploaded Buyer Data :{" "}
+                      <b>
+                        {creditLimit !== null ? (
+                          creditLimit.total_buyer_uploaded
+                        ) : (
+                          <MiniLoader />
+                        )}
+                      </b>
+                    </p>
+                  </Link>
                 </div>
                 {userDetails !== null && userDetails.level_type !== 1 ? (
+                  <>
                   <div className="upload-buyer">
                     <span className="upload-buyer-icon d-flex">
                       <img
@@ -155,10 +158,22 @@ function Header() {
                       </b>
                     </p>
                   </div>
+                  <Link to="/additional-credits">
+                  <div className="upload-buyer bg-green">
+                    <span className="upload-buyer-icon d-flex">
+                      <img
+                        alt="coin"
+                        src="./assets/images/coin.svg"
+                        className="img-fluid"
+                      />
+                    </span>
+                    <p>Buy Credits</p>
+                  </div>
+                </Link>
+                  </>
                 ) : (
                   ""
                 )}
-
                 <div className="dropdown user-dropdown">
                   <button
                     className="btn dropdown-toggle ms-auto"

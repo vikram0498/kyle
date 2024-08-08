@@ -24,6 +24,7 @@ function AddBuyerDetails() {
     formState: { errors },
     clearErrors,
   } = useForm();
+
   const { getTokenData, setLogout } = useAuth();
   const navigate = useNavigate();
   const [isLoader, setIsLoader] = useState(true);
@@ -602,16 +603,11 @@ function AddBuyerDetails() {
                       ) : (
                         ""
                       )}
-                      <form
-                        method="post"
-                        onSubmit={handleSubmit(submitSingleBuyerForm)}
-                      >
+                      <form method="post" onSubmit={handleSubmit(submitSingleBuyerForm)}>
                         <div className="card-box-blocks">
                           <div className="row">
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                              <label>
-                                First Name<span>*</span>
-                              </label>
+                              <label>First Name<span>*</span></label>
                               <div className="form-group">
                                 <input
                                   type="text"
@@ -630,7 +626,6 @@ function AddBuyerDetails() {
                                     },
                                   })}
                                 />
-
                                 {errors.first_name && (
                                   <p className="error">
                                     {errors.first_name?.message}
@@ -640,8 +635,7 @@ function AddBuyerDetails() {
                               </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                              <label>
-                                Last Name<span>*</span>
+                              <label>Last Name<span>*</span>
                               </label>
                               <div className="form-group">
                                 <input
