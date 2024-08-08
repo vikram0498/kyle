@@ -217,10 +217,10 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
 
-            if($request->address){
+           /* if($request->address){
                 $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            }
+            }*/
 
             if($request->state){
                 $selectedValues = $request->state;
@@ -800,9 +800,9 @@ class SearchBuyerController extends Controller
 
             }
 
-            if($lastSearchLog->address){
+            /*if($lastSearchLog->address){
                 $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            }
+            }*/
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
@@ -882,16 +882,9 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            // if($lastSearchLog->arv && is_numeric($lastSearchLog->arv)){
-            //     $arvValue = $lastSearchLog->arv;
-            //     $buyers = $buyers->where(function ($query) use ($arvValue) {
-            //         $query->where('arv_min', '<=', $arvValue)
-            //               ->where('arv_max', '>=', $arvValue);
-            //     });
-            // }
+   
 
             if($lastSearchLog->parking){
-                // $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
                 $selectedValues = [$lastSearchLog->parking];
 
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
@@ -1064,6 +1057,7 @@ class SearchBuyerController extends Controller
                 $buyers = $buyers->where('permanent_affix',$permanent_affixValue);
             }
 
+	    $addressValue = $lastSearchLog->address ? ucwords($lastSearchLog->address) : '';
 
             $buyers = $buyers
                     // ->orderBy('created_by','desc')
@@ -1105,7 +1099,6 @@ class SearchBuyerController extends Controller
                 // }
 
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
-
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
@@ -1138,6 +1131,7 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status' => true,
+		'address_value'=>$addressValue,
                 'buyers' => $buyers,
             ];
 
