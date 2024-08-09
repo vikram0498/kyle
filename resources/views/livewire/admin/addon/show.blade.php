@@ -17,6 +17,10 @@
             <td> {{ $details->credit ?? 'N/A' }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.buyer_plan.fields.position')}}</th>
+            <td> {{ $details->position ?? 'N/A' }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.addon.fields.status')}}</th>
             <td> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
         </tr>
