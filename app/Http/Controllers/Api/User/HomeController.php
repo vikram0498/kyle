@@ -25,7 +25,7 @@ class HomeController extends Controller
    }
 
    public function getAdditionalCredits(){
-        $additionalCredits = Addon::where('status',1)->get();
+        $additionalCredits = Addon::where('status',1)->orderBy('position')->get();
         //Success Response Send
         $responseData = [
             'status'   => true,

@@ -24,6 +24,7 @@ class Addon extends Model
         'title',
         'price',
         'credit',
+        'position',
         'product_json',
         'price_json',
         'status',
