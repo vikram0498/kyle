@@ -146,6 +146,21 @@ const BuyerCardResult = (props) => {
                     </li> */}
                 </ul>
             </div>
+            {
+            (data.createdByAdmin)?
+                (data.redFlagShow) ? 
+                '':
+                <div className="show-hide-data purchase_btn_class">
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
+                        <div className='pointerswal' onClick={()=>{handleClickConfirmation(data.id,index)}}>
+                            <span className="icon-unhide" >
+                                Purchase
+                                {/* <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" /> */}
+                            </span>
+                        </div>
+                    </OverlayTrigger>
+                </div>:''
+        }
             {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
                 <div className="cornor-block">
                     {data.phone_verified && 
@@ -186,9 +201,7 @@ const BuyerCardResult = (props) => {
                         </OverlayTrigger>
                     }
                     {
-                        (data.createdByAdmin)?
-                            (data.redFlagShow) ? 
-                            <>
+                        data.createdByAdmin && data.redFlagShow && 
                                 <div className="red-flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
                                 <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
                                     <img
@@ -198,16 +211,6 @@ const BuyerCardResult = (props) => {
                                     />
                                 </OverlayTrigger>
                                 </div>
-                            </>:
-                            <div className="show-hide-data">
-                                <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Click here to unlock the complete details of this buyer</Tooltip>} >
-                                    <div className='pointerswal' onClick={()=>{handleClickConfirmation(data.id,index)}}>
-                                        <span className="icon-unhide" >
-                                            <img alt="unhide-icon" src="/assets/images/unhide-icon.svg" className="img-fluid" />
-                                        </span>
-                                    </div>
-                                </OverlayTrigger>
-                            </div>:''
                     }
                 </div>:
                 ''

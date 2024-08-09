@@ -177,7 +177,7 @@ const AdditionalCreadits = () => {
                                     />
                                     <div className="feature-item-content">
                                       <div className="feature-item-title">
-                                        {data.credit} Credit Plans
+                                        {data.credit} Credit
                                       </div>
                                       <span className="price-pc">
                                         ${data.price}
