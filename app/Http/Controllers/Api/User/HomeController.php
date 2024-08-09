@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
    public function getPlans(){
-        $plans = Plan::where('status',1)->get();
+        $plans = Plan::where('status',1)->orderBy('position')->get();
         //Success Response Send
         $responseData = [
             'status'   => true,

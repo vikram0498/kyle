@@ -26,7 +26,7 @@ class Index extends Component
 
     protected $plans = null;
 
-    public  $title, $price, $type, $credits, $status = 1, $description='',$image=null, $viewMode = false,$originalImage;
+    public  $title, $price, $type, $credits,$position, $status = 1, $description='',$image=null, $viewMode = false,$originalImage;
 
     public $plan_id =null;
 
@@ -54,18 +54,18 @@ class Index extends Component
     }
 
     public function store()
-    {
-        
+    {        
         $validatedData = $this->validate(
             [
                 'title'       => ['required'],
                 'price'       => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'type'        => ['required', 'in:monthly,yearly'],
+                'position'    => ['required', 'numeric', 'min:0', 'max:99999','unique:plans,position,NULL,id,deleted_at,NULL'],
                 'credits'     => ['required', 'numeric', 'min:0', 'max:99999999.99'],
                 'description' => ['required', 'without_spaces'],
                 'status'      => 'required',
                 'image' => ['required', 'image', 'max:'.config('constants.img_max_size')],
-            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'credits']
+            ],['without_spaces' => 'The :attribute field is required'],['title'  => 'plan name', 'credits' => 'credits','position'  => 'rank']
         );
         
         $validatedData['status'] = $this->status;
@@ -111,6 +111,7 @@ class Index extends Component
         $this->title  = $plan->title;
         $this->price  = $plan->price;
         $this->type   = $plan->type;
+        $this->position = $plan->position;
         $this->credits = $plan->credits;
         $this->description = $plan->description;
         $this->status = $plan->status;
@@ -129,6 +130,7 @@ class Index extends Component
             'title' => 'required',
             'price' => 'required|numeric|min:0|max:99999999.99',
             'type'  => 'required|in:monthly,yearly',
+            'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
             'credits' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
             'description' => 'required|without_spaces',
             'status' => 'required',
@@ -219,6 +221,7 @@ class Index extends Component
         $this->title = '';
         $this->price = '';
         $this->type = '';
+        $this->position = '';
         $this->credits = '';
         $this->description = '';
         $this->status = 1;

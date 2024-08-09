@@ -252,10 +252,10 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            if($request->zip_code){
-                $buyers = $buyers->where('zip_code', $request->zip_code);
-                $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
-            }
+            // if($request->zip_code){
+            //     $buyers = $buyers->where('zip_code', $request->zip_code);
+            //     $additionalBuyers = $additionalBuyers->where('zip_code', $request->zip_code);
+            // }
 
             if($request->price){
                 $priceValue = $request->price;
