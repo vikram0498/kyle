@@ -5593,6 +5593,14 @@ span.contact-preference.mx-2 img {
   cursor: pointer;
   transition: all 0.3s ease-in;
 }
+.radio-item-features .feature-item-content{
+  transition: all 350ms ease-in-out;
+}
+.radio-item-features .feature-item-content:hover{
+  box-shadow: 0 0 22px rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0 0 22px rgba(0,0,0,0.15);
+  border-color: #3f53fe;
+}
 
 
 /* 13-06-2024 */
