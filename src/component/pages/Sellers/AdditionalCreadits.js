@@ -145,8 +145,9 @@ const AdditionalCreadits = () => {
                   <div className="inner-page-title text-center">
                     <h3 className="text-center">Buy Additional Credits</h3>
                     <p className="mb-0">
-                      You can purchase it accordingly Monthly, Yearly or require
-                      more data then here is another plan for you.
+                      Invest in credits to add investors to your database who are actively wanting to buy the exact property you have to offer. 
+                      <br/>
+                      Credits will substantially boost your chances of closing deals.
                     </p>
                   </div>
                   <div className="card-box-light">

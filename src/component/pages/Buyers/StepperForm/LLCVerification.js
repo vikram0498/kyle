@@ -34,7 +34,7 @@ const LLCVerification = ({ register, errors }) => {
           <div className="row align-items-end">
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area">
-                <label>Front ID Photo</label>
+                <label>LLC Articles of Organization</label>
                 <div className="file-upload-choosen licenses-wrapper">
                   <div className="upload-photo">
                     <div className="containers">
@@ -68,7 +68,7 @@ const LLCVerification = ({ register, errors }) => {
                           previewImage(e, "llc_front_image");
                         }}
                       />
-                      Upload Front Id Photo
+                      Upload LLC articles of organization
                     </button>
                   </div>
                   {errors.llc_front_image && (
@@ -79,7 +79,7 @@ const LLCVerification = ({ register, errors }) => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area">
-                <label>Back ID Photo</label>
+                <label>LLC Operating Agreement</label>
                 <div className="file-upload-choosen licenses-wrapper">
                   <div className="upload-photo">
                     <div className="containers">
@@ -113,7 +113,7 @@ const LLCVerification = ({ register, errors }) => {
                           previewImage(e, "llc_back_image");
                         }}
                       />
-                      Upload Back Id Photo
+                     Upload LLC operating agreement
                     </button>
                   </div>
                   {errors.llc_back_image && (
