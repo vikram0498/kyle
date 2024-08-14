@@ -9,11 +9,9 @@ const ApplicationProcess = ({ miniLoader }) => {
         <div className="card-box-blocks">
           <div className="application-process">
             <div className="pricehard">$100</div>
-            <h3>Please Pay for complete Your application</h3>
+            <h3>Please Submit Your Application Fee</h3>
             <p className="mb-0">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has the industry's standard dummy text ever
-              since the 1500s,
+              You will be redirected to schedule your virtual verification meeting. Please be on-time for your meeting as the application fee is non-refundable.
             </p>
             <div className="process-payment-btn">
               <button type="submit" className="btn btn-fill">

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ApprorvedPage = ({handleNext}) => {
+const ApprorvedPage = ({handleNext,stepNameData}) => {
     return (
         <>
           <div className="linkExpire successfull profile-verification-st profile-congtrs">
@@ -16,7 +16,7 @@ const ApprorvedPage = ({handleNext}) => {
                     </div>
                     <div className="heading text-black">Congratulations !</div>
                     <div className="subheading my-md-3 my-2 text-black">
-                      Your form request has been Approved.
+                      {stepNameData}
                     </div>
                     <button className="btn btn-fill" onClick={handleNext}>Okay</button>
                   </div>

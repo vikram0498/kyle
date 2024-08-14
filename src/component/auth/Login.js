@@ -222,7 +222,7 @@ function Login(props) {
             </div>
             <div className="col-12 col-lg-12">
               <p className="account-now">
-                Register as <Link to="/register">Investor</Link>/<Link to="/register-buyer">Buyer</Link>
+                Register as <Link to="/register">Wholesaler</Link>/<Link to="/register-buyer">Buyer</Link>
               </p>
               {/* <p className="account-now">
                 <span style={{ marginRight: "2px" }}>

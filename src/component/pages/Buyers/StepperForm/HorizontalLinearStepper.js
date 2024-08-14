@@ -23,10 +23,17 @@ const steps = [
   "Phone Verification",
   "Proof of Funds",
   "ID/Driver’s License",
-  "LLC Verification",
+  "Business Verification",
   "Application Process",
 ];
 
+const stepMessages = [
+  "You Are Now Phone Verified! ",
+  "You Are Now Proof of Funds Verified!",
+  "You Are Now ID/Drivers License Verified!",
+  "Your Business is Now Verified!",
+  "You Are Now Fully Verified!"
+]
 const HorizontalLinearStepper = () => {
   const [miniLoader, setMiniLoader] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -39,6 +46,7 @@ const HorizontalLinearStepper = () => {
   const { getTokenData, setLogout } = useAuth();
   const { setErrors, renderFieldError } = useFormError();
   const [loader, setLoader] = useState(true);
+  const [stepNameData, setStepNameData] = useState("");
   const {
     register,
     handleSubmit,
@@ -72,7 +80,6 @@ const HorizontalLinearStepper = () => {
       await stepperForm(formObject);
     } catch (error) {
       if (error.response) {
-        console.log(error.response, "response");
         if (error.response.status === 401) {
           setLogout();
         }
@@ -140,7 +147,6 @@ const HorizontalLinearStepper = () => {
     }
   };
   const stepperForm = async (formObject) => {
-    console.log(formObject,'formObject');
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",
@@ -155,7 +161,6 @@ const HorizontalLinearStepper = () => {
         headers: headers,
       }
     );
-    console.log(response.data.current_step);
     if (response.data.status) {
       if (parseInt(response.data.current_step) === 5) {
         let url = response.data.session.url;
@@ -164,10 +169,8 @@ const HorizontalLinearStepper = () => {
       }
       let currentStep = parseInt(response.data.current_step);
       if(currentStep === 1){
-        console.log("case 2",response.data.current_step);
         setActiveStep(1);
       }else{
-        console.log("case 3");
         setProfileVerificationStatus("pending");
       }
       // if(response.data.current_step > 1 & response.data.current_step < 5){
@@ -194,7 +197,10 @@ const HorizontalLinearStepper = () => {
       let response = await axios.get(apiUrl + "last-form-step", {
         headers: headers,
       });
+
       setLoader(false);
+      setStepNameData(stepMessages[response.data.lastStepForm-1]);
+
       if(response.data.lastStepForm > 1 & response.data.lastStepForm < 5){
         setActiveStep(response.data.lastStepForm-1);
         setProfileVerificationStatus(response.data.lastStepStatus);
@@ -231,7 +237,7 @@ const HorizontalLinearStepper = () => {
       case 'pending':
         return <PendingPage/>;
       case 'verified':
-        return <ApprorvedPage handleNext={handleNext}/>;
+        return <ApprorvedPage handleNext={handleNext} stepNameData={stepNameData}/>;
       case 'rejected':
         return <RejectedPage setProfileVerificationStatus={setProfileVerificationStatus} rejectMessage={rejectMessage}/>;
       default:

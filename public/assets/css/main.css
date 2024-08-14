@@ -685,7 +685,7 @@ input[type="radio"]:checked:before {
 .account-now {
   text-align: center;
 
-  font-size: 14px;
+  font-size: 20px;
 
   color: #464b70;
 
@@ -5378,7 +5378,7 @@ span.badge.bg-success.purchased-profile {
   border-radius: 5px;
 }
 .profile-verification-st .cards{
-  max-width: 410px;
+  max-width: 430px;
   margin: 0 auto;
   padding: 50px 40px;
   border-radius: 10px;

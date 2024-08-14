@@ -10,11 +10,12 @@ const PendingPage = () => {
                   <div className="cards">
                         <div className="expireImg mx-auto">
                             <img
-                                src="/assets/images/pending.svg"
+                                src="/assets/images/Check.svg"
                                 alt="expire link"
+                                style={{marginLeft: '-8px',marginTop: '-10px'}}
                             />
                         </div>
-                        <div className="heading">Your application is submitted</div>
+                        <div className="heading">Submission Received</div>
                         {/* <div className="subheading my-md-3 my-2">
                           Your form has been in Pending status.
                         </div> */}

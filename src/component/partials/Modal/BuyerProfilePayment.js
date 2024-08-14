@@ -46,7 +46,6 @@ const BuyerProfilePayment = ({ setModalOpen, modalOpen }) => {
             <h3>Please complete your profile verification to upload image</h3>
             <p className="mb-0">
               To unlock this feature, complete your phone verification, proof of funds verification, and ID verification. Make your profile stand out from the crowd! <br/>
-              -Change avatar unlock level to ID verification.
             </p>
             <div className="process-payment-btn">
               {/* <button

@@ -34,7 +34,7 @@ const LLCVerification = ({ register, errors }) => {
           <div className="row align-items-end">
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area">
-                <label>LLC Articles of Organization</label>
+                <label>Articles of Organization</label>
                 <div className="file-upload-choosen licenses-wrapper">
                   <div className="upload-photo">
                     <div className="containers">
@@ -42,7 +42,7 @@ const LLCVerification = ({ register, errors }) => {
                         {LLCPreviewFrontUrl == "" ? (
                           <img
                             className="image"
-                            src="./assets/images/front-licenses.svg"
+                            src="./assets/images/doc-file.svg"
                           />
                         ) : (
                           <img
@@ -68,7 +68,7 @@ const LLCVerification = ({ register, errors }) => {
                           previewImage(e, "llc_front_image");
                         }}
                       />
-                      Upload LLC articles of organization
+                      Upload Articles of Organization
                     </button>
                   </div>
                   {errors.llc_front_image && (
@@ -79,7 +79,7 @@ const LLCVerification = ({ register, errors }) => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area">
-                <label>LLC Operating Agreement</label>
+                <label>Operating Agreement</label>
                 <div className="file-upload-choosen licenses-wrapper">
                   <div className="upload-photo">
                     <div className="containers">
@@ -87,7 +87,7 @@ const LLCVerification = ({ register, errors }) => {
                         {LLCPreviewBackUrl == "" ? (
                           <img
                             className="image"
-                            src="./assets/images/back-licenses.svg"
+                            src="./assets/images/doc-file.svg"
                           />
                         ) : (
                           <img
@@ -113,7 +113,7 @@ const LLCVerification = ({ register, errors }) => {
                           previewImage(e, "llc_back_image");
                         }}
                       />
-                     Upload LLC operating agreement
+                     Upload Operating Agreement
                     </button>
                   </div>
                   {errors.llc_back_image && (

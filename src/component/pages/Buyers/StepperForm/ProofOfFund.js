@@ -24,7 +24,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
           <div className="row">
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area">
-                <label>Bank Statement</label>
+                <label>Proof of Funds</label>
                 <div className="file-upload-choosen licenses-wrapper">
                   <div className="upload-photo">
                     <div className="containers">
@@ -49,7 +49,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
                           previewImage(e, "bank_statement_pdf");
                         }}
                       />
-                      Upload Bank Statement
+                      Upload Proof of Funds
                     </button>
                   </div>
                   {errors.bank_statement_pdf && (
@@ -63,12 +63,12 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
             </div>
             <div className="col-12 col-lg-6">
               <div className="lic-detail-area oth-proof-right">
-                <label>Other Proof of fund</label>
+                <label>Proof of Funds Name</label>
                 <div className="form-group other-prooff">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter other proof of fund"
+                    placeholder="Enter Proof of Funds Name"
                     name="other_proof_of_fund"
                     {...register("other_proof_of_fund", {
                       required: "This Field is required",
