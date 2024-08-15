@@ -47,6 +47,7 @@ const Register = () => {
 
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [recaptchaError, setRecaptchaError] = useState("");
+  const [privacyLink, setPrivacyLink] = useState({});
 
   const { setErrors, renderFieldError, navigate } = useFormError();
 
@@ -79,7 +80,7 @@ const Register = () => {
       // };
       var data = new FormData(e.target);
       let payload = Object.fromEntries(data.entries());
-      //console.log(payload,'formData');
+
       let headers = {
         Accept: "application/json",
       };
@@ -117,6 +118,31 @@ const Register = () => {
     }
   };
 
+  const getPrivacyLink = async () => {
+    try {
+      let headers = {
+        Accept: "application/json",
+      };
+      let response = await axios.get(`${apiUrl}get-links`,{ headers: headers });
+      console.log(response.data.result.links,"response")
+      setPrivacyLink(response.data.result.links);
+    } catch (error) {
+        if (error.response) {
+          if (error.response.data.validation_errors) {
+            setErrors(error.response.data.validation_errors);
+          }
+          if (error.response.data.error) {
+            toast.error(error.response.data.error, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+          }
+        }
+    }
+  }
+
+  useEffect(()=>{
+    getPrivacyLink();
+  },[])
   return (
     <Layout>
       <div className="account-in">
@@ -426,6 +452,20 @@ const Register = () => {
                   </p>
                 )}
                 {renderFieldError("password_confirmation")}
+              </div>
+            </div>
+            <div className="col-12 col-lg-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+                  required: "This field is required",
+                })}/>
+                <label class="form-check-label text-transform-none" for="privacy-policy">
+                  <p>I have read and agree to the <Link target="_blank"  to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}>Privacy Policy </Link> 
+                   and <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
+                </label>
+                {errors.terms_accepted && (
+                  <p className="error error_space">{errors.terms_accepted?.message}</p>
+                )}
               </div>
             </div>
             <div className="col-12 col-lg-12">

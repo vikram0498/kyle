@@ -700,7 +700,9 @@ input[type="radio"]:checked:before {
 .account-now a:first-letter {
   text-transform: capitalize;
 }
-
+.text-transform-none{
+  text-transform: none !important;
+}
 .account-now a {
   font-weight: 700;
 
@@ -3583,6 +3585,11 @@ form > * {
 
 .linkExpire .cards .cardBody {
   gap: 45px;
+}
+
+.error_space{
+  margin-top: -12px;
+  margin-bottom: 18px !important;
 }
 
 @media screen and (max-width: 1199.98px) {

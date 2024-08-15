@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { Link, useNavigate,useParams } from "react-router-dom";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import Select from "react-select";
 import { useFormError } from "../../../hooks/useFormError";
@@ -93,6 +93,7 @@ function RegisterBuyer() {
   /* min max value states end */
 
   const [loading, setLoading] = useState(false);
+  const [privacyLink, setPrivacyLink] = useState({});
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -138,6 +139,8 @@ function RegisterBuyer() {
             setSewerOption(result.sewers);
             setUtilitiesOption(result.utilities);
             setIsLoader(false);
+            setPrivacyLink(result.links);
+
           }
         });
     } catch (error) {
@@ -2604,6 +2607,21 @@ function RegisterBuyer() {
                                   </div>
                                 )}
                               </div>
+                              <div className="col-12 col-lg-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+                                      required: "This field is required",
+                                    })}/>
+                                    <label class="form-check-label text-transform-none" for="privacy-policy">
+                                      <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy</Link> 
+                                       and 
+                                       <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
+                                    </label>
+                                    {errors.terms_accepted && (
+                                      <p className="error error_space">{errors.terms_accepted?.message}</p>
+                                    )}
+                                  </div>
+                            </div>
                             </div>
       
                             <div className="submit-btn">
