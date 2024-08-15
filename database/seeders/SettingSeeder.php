@@ -112,6 +112,28 @@ class SettingSeeder extends Seeder
                 'status' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
+	    [
+
+                'key'    => 'privacy_policy_link',
+                'value'  =>  null,
+                'type'   => 'text',
+                'display_name'  => 'Privacy Policy Link',
+                'group'  => 'links',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
+
+                'key'    => 'terms_services_link',
+                'value'  =>  null,
+                'type'   => 'text',
+                'display_name'  => 'Terms & Services Link',
+                'group'  => 'links',
+                'details' => null,
+                'status' => 1,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
             
         ];
 

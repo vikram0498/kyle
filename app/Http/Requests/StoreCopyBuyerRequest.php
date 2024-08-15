@@ -84,6 +84,7 @@ class StoreCopyBuyerRequest extends FormRequest
             'sewer' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
             'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
+	    'terms_accepted'  => ['required'], 
 
         ];
 

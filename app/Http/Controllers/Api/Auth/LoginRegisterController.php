@@ -27,6 +27,7 @@ class LoginRegisterController extends Controller
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
+	    'terms_accepted'  		=> 'required', 
         ],[
             'phone.required'=>'The mobile number field is required',
             'phone.digits' =>'The mobile number must be 10 digits',
@@ -466,4 +467,17 @@ class LoginRegisterController extends Controller
         }
         
     }
+
+public function getLinks(){
+    $responseData['links']['terms_services_link'] = getSetting('terms_services_link');
+    $responseData['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
+
+ 
+    //Return Success Response
+    $response = [
+        'status'        => true,
+        'result'        => $responseData,
+    ];
+    return response()->json($response, 200);
+}
 }

@@ -186,6 +186,9 @@ class CopyBuyerController extends Controller
                     ];
                 })->values()->all();
 
+		$elementValues['links']['terms_services_link'] = getSetting('terms_services_link');
+		$elementValues['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
+
                 Cache::put('copyFormElementDetails',$elementValues);
 
                 //Return Success Response

@@ -46,6 +46,8 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::post('verify-set-password', 'verifyBuyerEmailAndSetPassword');
 
     Route::get('get-email/{id}', 'getEmail');
+
+    Route::get('get-links','getLinks');
     
 });
 
