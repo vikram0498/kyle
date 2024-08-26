@@ -222,9 +222,9 @@ class User extends Authenticatable implements MustVerifyEmail
         
         $url = config('constants.front_end_url').'email/verify/'.$user->id.'/'.sha1($user->email);
 
-        $subject = 'Verify Email Address';
+        $subject = "Welcome to ".config('app.name').", ".$user->first_name."! Verify Your Email to Access Your Account.";
 
-        Mail::to($user->email)->queue(new VerifyEmailMail($user->name, $url, $subject));
+        Mail::to($user->email)->queue(new VerifyEmailMail($user->first_name, $url, $subject));
     }
 
     public function NotificationSendToBuyerVerifyEmail(){
@@ -232,9 +232,9 @@ class User extends Authenticatable implements MustVerifyEmail
         
         $url = config('constants.front_end_url').'verify-and-setpassword/'.$user->id.'/'.sha1($user->email);
 
-        $subject = 'Verify Email Address And Set Password';
+        $subject = "Welcome to ".config('app.name').", ".$user->first_name."! Verify Your Email to Access Your Account.";
 
-        Mail::to($user->email)->queue(new VerifyBuyerEmailMail($user->name, $url, $subject));
+        Mail::to($user->email)->queue(new VerifyBuyerEmailMail($user->first_name, $url, $subject));
     }
 
 
