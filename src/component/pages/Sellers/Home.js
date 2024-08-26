@@ -129,7 +129,7 @@ function Home({ userDetails }) {
                     alt=""
                   />
                 </div>
-                <h3>Upload Buyer</h3>
+                <h3>Upload Buyers</h3>
               </Link>
             </div>
             <div className="col-12 col-sm-6 col-md-6 col-lg-3">
