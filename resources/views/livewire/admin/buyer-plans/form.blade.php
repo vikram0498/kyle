@@ -92,6 +92,14 @@
                 @error('user_limit') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
+   
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.buyer_plan.fields.color')}} <span class="text-danger">*</span></label>
+                <input type="color" class="form-control" wire:model.defer="color" placeholder="{{ __('cruds.buyer_plan.fields.color')}}" autocomplete="off">
+                @error('color') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
     </div>
 
     <div class="d-flex justify-content-between"> 

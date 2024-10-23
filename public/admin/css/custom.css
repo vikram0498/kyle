@@ -1,3 +1,21 @@
+
+.kyc-modal .modal-dialog {
+    max-width: calc(100% - 50px);
+    margin: 0 auto;
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+@media(max-width:575px){   
+ .modal-dialog-centered {
+        min-height: calc(100% - 60px);
+    }
+}
+.kyc-modal .modal-body>img {
+    max-width: 950px !important;
+    margin: 0 auto;
+}
 .toggle-switch {
     position: relative;
     display: inline-block;
@@ -1087,4 +1105,17 @@ body .datepicker .datepicker-years .table-condensed{
     background-color: #ffffff;
     padding: 25px 20px 25px;
     border: none;
+}
+
+.border_wrap {
+    border: 1px solid #eaeceb;
+    padding: 4px 20px 4px 4px;
+    font-size: 13px;
+}
+
+.note-editing-area .note-editable ol{
+  list-style:auto;
+}
+.note-editing-area .note-editable ul{
+    list-style: disc;
 }

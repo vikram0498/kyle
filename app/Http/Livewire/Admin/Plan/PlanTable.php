@@ -43,6 +43,10 @@ class PlanTable extends Component
         return view('livewire.admin.plan.plan-table',compact('plans'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

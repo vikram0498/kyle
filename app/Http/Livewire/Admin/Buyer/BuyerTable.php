@@ -33,6 +33,7 @@ class BuyerTable extends Component
         $buyers = Buyer::query()
         ->where(function ($query) use ($searchValue,$statusSearch) {
             $query->whereRelation('userDetail', 'name', 'like',  ["%{$searchValue}%"])
+            ->orWhereRelation('userDetail', 'email', 'like',  ["%{$searchValue}%"])
             ->orWhereRelation('userDetail', 'is_active', '=',  $statusSearch)
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
@@ -46,6 +47,10 @@ class BuyerTable extends Component
         $buyers = $buyers->paginate($this->perPage);
 
         return view('livewire.admin.buyer.buyer-table',compact('buyers'));
+    }
+    
+    public function updatedPerPage(){
+          $this->resetPage();
     }
 
     public function updatedSearch()

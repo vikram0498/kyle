@@ -147,15 +147,34 @@ class SearchBuyerController extends Controller
     }
 
     public function buyBoxSearch(SearchBuyersRequest $request){
-        $radioValues = [0,1];
+
+        $radioValues = [1];
         DB::beginTransaction();
         try {
            
             $userId = auth()->user()->id;
             
-            // $buyers = Buyer::query()->select('id','user_id','contact_preferance','created_by');
-
+            /*
             $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
+            */
+
+            /** Update query 26-07-2024 */
+
+            // Subquery to calculate verification count
+            $verificationSubquery = DB::table('profile_verifications')
+            ->select(DB::raw("
+                SUM(
+                    CASE WHEN is_phone_verification = 1 THEN 1 ELSE 0 END +
+                    CASE WHEN is_driver_license = 1 AND driver_license_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_proof_of_funds = 1 AND proof_of_funds_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_llc_verification = 1 AND llc_verification_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_application_process = 1 THEN 1 ELSE 0 END
+                ) AS verification_count
+            "))
+            ->whereColumn('user_id', 'buyers.buyer_user_id')
+            ->toSql();
+
+            $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id',DB::raw("($verificationSubquery) as verification_count")])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
 
 
             $additionalBuyers = Buyer::query();
@@ -198,16 +217,10 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
 
-            // if($request->address){
-            //     $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
-            //     $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            // }
-
-            // if($request->country){
-            //     $country =  DB::table('countries')->where('id',$request->country)->value('name');
-            //     $buyers = $buyers->where('country', $country);
-            //     $additionalBuyers = $additionalBuyers->where('country', $country);
-            // }
+           /* if($request->address){
+                $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
+                $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
+            }*/
 
             if($request->state){
                 $selectedValues = $request->state;
@@ -347,8 +360,22 @@ class SearchBuyerController extends Controller
             }
 
             if($request->parking){
-                $buyers = $buyers->where('parking', $request->parking);
-                $additionalBuyers = $additionalBuyers->where('parking', $request->parking);
+                // $buyers = $buyers->where('parking', $request->parking);
+                // $additionalBuyers = $additionalBuyers->where('parking', $request->parking);
+
+                $selectedValues = [$request->parking];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
+
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
             }
 
             if($request->property_flaw){
@@ -425,9 +452,7 @@ class SearchBuyerController extends Controller
             //     $additionalBuyers = $additionalBuyers->where('contact_preferance', $request->contact_preferance);
             // }
 
-            /* if($request->building_class){
-                $buyers = $buyers->whereJsonContains('building_class', $request->building_class);
-            } */
+         
 
             if($request->stories && is_numeric($request->stories)){
                 $stories_value = $request->stories;
@@ -584,9 +609,10 @@ class SearchBuyerController extends Controller
             }
 
             $buyers = $buyers
-            // ->orderBy('created_by','desc');
-            // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'asc');
-            ->orderByRaw('ISNULL(plan_position), plan_position ASC');
+            ->withCount(['likes as likes_count'])
+            ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+            ->orderBy('verification_count', 'desc') 
+            ->orderBy('likes_count', 'desc');
             
             $buyers = $buyers->paginate($pagination);
 
@@ -606,6 +632,7 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['park']    =  $request->park;
                 $insertLogRecords['rooms']    =  $request->rooms;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
+                $insertLogRecords['property_flaw']  =  ($request->property_flaw && count($request->property_flaw) > 0) ? $request->property_flaw : null;
                 SearchLog::create($insertLogRecords);
             }
             
@@ -740,6 +767,7 @@ class SearchBuyerController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 400);
         }
@@ -748,8 +776,9 @@ class SearchBuyerController extends Controller
 
     public function lastSearchBuyers(){
         try {
-            $radioValues = [0,1];
-            $userId = auth()->user()->id;
+           // $radioValues = [0,1];
+            $radioValues = [1];
+	    $userId = auth()->user()->id;
             $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             
             if($lastSearchLog){
@@ -763,6 +792,7 @@ class SearchBuyerController extends Controller
                 $selectedValues = [$lastSearchLog->property_type];
 
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
+	
                     foreach ($selectedValues as $value) {
                         $query->orWhereJsonContains("property_type", (int)$value);
                     }
@@ -770,9 +800,9 @@ class SearchBuyerController extends Controller
 
             }
 
-            // if($lastSearchLog->address){
-            //     $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            // }
+            /*if($lastSearchLog->address){
+                $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
+            }*/
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
@@ -796,9 +826,9 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            // if($lastSearchLog->zip_code){
-            //     $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
-            // }
+            if($lastSearchLog->zip_code){
+                $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
+            }
 
             if($lastSearchLog->price){
                 $priceValue = $lastSearchLog->price;
@@ -852,16 +882,16 @@ class SearchBuyerController extends Controller
                 });
             }
 
-            // if($lastSearchLog->arv && is_numeric($lastSearchLog->arv)){
-            //     $arvValue = $lastSearchLog->arv;
-            //     $buyers = $buyers->where(function ($query) use ($arvValue) {
-            //         $query->where('arv_min', '<=', $arvValue)
-            //               ->where('arv_max', '>=', $arvValue);
-            //     });
-            // }
+   
 
             if($lastSearchLog->parking){
-                $buyers = $buyers->whereJsonContains('parking', intval($lastSearchLog->parking));
+                $selectedValues = [$lastSearchLog->parking];
+
+                $buyers = $buyers->where(function ($query) use ($selectedValues) {
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("parking", (int)$value);
+                    }
+                });
             }
 
             if($lastSearchLog->property_flaw){
@@ -885,13 +915,15 @@ class SearchBuyerController extends Controller
             }
 
             if($lastSearchLog->zoning){
-                $selectedValues = $lastSearchLog->zoning;
-
+                //$selectedValues = $lastSearchLog->zoning;
+		$selectedValues = json_decode($lastSearchLog->zoning,true);
+		if($selectedValues){
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     foreach ($selectedValues as $value) {
                         $query->orWhereJsonContains("zoning", $value);
                     }
                 });
+		}
             }
 
             if($lastSearchLog->utilities){
@@ -1025,6 +1057,7 @@ class SearchBuyerController extends Controller
                 $buyers = $buyers->where('permanent_affix',$permanent_affixValue);
             }
 
+	    $addressValue = $lastSearchLog->address ? ucwords($lastSearchLog->address) : '';
 
             $buyers = $buyers
                     // ->orderBy('created_by','desc')
@@ -1066,7 +1099,6 @@ class SearchBuyerController extends Controller
                 // }
 
                 $buyer->contact_preferance_id = $buyer->contact_preferance;
-
                 $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                 $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
                 $buyer->totalBuyerLikes = totalLikes($buyer->id);
@@ -1099,6 +1131,7 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status' => true,
+		'address_value'=>$addressValue,
                 'buyers' => $buyers,
             ];
 
@@ -1112,12 +1145,13 @@ class SearchBuyerController extends Controller
                 return response()->json($responseData, 200);
          }
         }catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+           // dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+		'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 400);
         }

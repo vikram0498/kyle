@@ -12,6 +12,9 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BuyerVerificationMail;
+
 
 class BuyerVerificationController extends Controller
 {
@@ -22,10 +25,10 @@ class BuyerVerificationController extends Controller
                 return $this->phoneVerification($request);
             break;
             case 2:
-                return $this->driverLicenseVerification($request);
+                return $this->proofOfFundsVerification($request);
             break;
             case 3:
-                return $this->proofOfFundsVerification($request);
+                return $this->driverLicenseVerification($request);
             break;
             case 4:
                 return $this->LLCVerification($request);
@@ -150,8 +153,10 @@ class BuyerVerificationController extends Controller
                 }
 
                 $user->buyerVerification()->update(['is_driver_license'=> 1, 'driver_license_status' => 'pending']);
-
+              
                 DB::commit();
+
+                $this->sendVerificationMailToAdmin($user);
 
                 //Return Success Response
                 $responseData = [
@@ -210,6 +215,8 @@ class BuyerVerificationController extends Controller
                 $user->buyerVerification()->update(['other_proof_of_fund'=>$request->other_proof_of_fund,'is_proof_of_funds'=>1, 'proof_of_funds_status' => 'pending']);
 
                 DB::commit();
+
+                $this->sendVerificationMailToAdmin($user);
 
                 //Return Success Response
                 $responseData = [
@@ -280,6 +287,8 @@ class BuyerVerificationController extends Controller
                 $user->buyerVerification()->update(['is_llc_verification'=>1, 'llc_verification_status' => 'pending']);
  
                 DB::commit();
+
+                $this->sendVerificationMailToAdmin($user);
 
                 //Return Success Response
                 $responseData = [
@@ -379,14 +388,15 @@ class BuyerVerificationController extends Controller
             $lastStepForm = 1;
         }
 
-        if($user->buyerVerification->is_driver_license){
+    
+        if($user->buyerVerification->is_proof_of_funds){
             $lastStepForm = 2;
-            $statusOfLastStep = $user->buyerVerification->driver_license_status;
+            $statusOfLastStep = $user->buyerVerification->proof_of_funds_status;
         }
 
-        if($user->buyerVerification->is_proof_of_funds){
+        if($user->buyerVerification->is_driver_license){
             $lastStepForm = 3;
-            $statusOfLastStep = $user->buyerVerification->proof_of_funds_status;
+            $statusOfLastStep = $user->buyerVerification->driver_license_status;
         }
 
         if($user->buyerVerification->is_llc_verification){
@@ -398,7 +408,7 @@ class BuyerVerificationController extends Controller
             $lastStepForm = 5;
         }
 
-        if($lastStepForm == 3){
+        if($lastStepForm == 2){
             $reasonType = config('constants.pof_reason_type');
         }else{
             $reasonType = config('constants.ids_reason_type');
@@ -426,5 +436,13 @@ class BuyerVerificationController extends Controller
             // 'llc_verification_status'   => $user->buyerVerification->llc_verification_status,
         ];
         return response()->json($responseData, 200);
+    }
+
+    public function sendVerificationMailToAdmin($user){
+        /** Send mail to administrator */
+        $subject = 'Buyer Verification Request';
+        $adminEmail = config('constants.owner_email');
+        $adminName = config('constants.owner_name');
+        Mail::to($adminEmail)->queue(new BuyerVerificationMail($subject,$adminName,$user));
     }
 }

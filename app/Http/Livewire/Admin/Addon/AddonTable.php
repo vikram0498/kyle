@@ -42,6 +42,10 @@ class AddonTable extends Component
         return view('livewire.admin.addon.addon-table',compact('addonPlans'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

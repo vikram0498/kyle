@@ -26,7 +26,7 @@ class Index extends Component
 
     protected $addons = null;
 
-    public  $title, $price, $credit, $status = 1, $viewMode = false;
+    public  $title, $price, $credit,$position, $status = 1, $viewMode = false;
 
     public $addon_id =null;
 
@@ -57,8 +57,9 @@ class Index extends Component
             'title'  => 'required',
             'price' => 'required|numeric|min:0|max:99999999.99',
             'credit' => 'required|numeric',
+            'position'    => ['required', 'numeric', 'min:0', 'max:99999','unique:addons,position,NULL,id,deleted_at,NULL'],
             'status' => 'required',
-        ],[],['title' => 'name']);
+        ],[],['title' => 'name','position'  => 'rank']);
         
         $validatedData['status'] = $this->status;
 
@@ -110,6 +111,7 @@ class Index extends Component
         $this->title  = $addon->title;
         $this->price = $addon->price;
         $this->credit = $addon->credit;
+        $this->position = $addon->position;
         $this->status = $addon->status;
 
         $this->formMode = true;
@@ -124,6 +126,7 @@ class Index extends Component
             'title' => 'required',
             'price' => 'required|numeric|min:0|max:99999999.99',
             'credit' => 'required|numeric',
+            'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
             'status' => 'required',
         ],[],['title' => 'name']);
   

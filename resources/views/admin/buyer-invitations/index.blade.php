@@ -1,13 +1,11 @@
 @extends('layouts.admin')
-@section('title','Video')
+@section('title','Invited List')
 
 @section('styles')
 @stop
 
 @section('content')
-
-    @livewire('admin.video.index')
-
+    @livewire('admin.buyer-invitation.index')
 @stop
 
 @section('script')

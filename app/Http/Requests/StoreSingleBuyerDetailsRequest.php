@@ -63,7 +63,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 
             'state'       => ['required',/*'exists:cities,id'*/], 
-            'company_name'   => ['required'], 
+            'company_name'   => [], 
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->price_min) ? new CheckMaxValue($this->price_min, 'price_min') : ''], 
@@ -72,7 +72,7 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
 
             'lot_size_max' => ['required', 'numeric', !empty($this->lot_size_min) ? new CheckMaxValue($this->lot_size_min, 'lot_size_min') : ''], 
             
-            'parking' => ['required', 'numeric'],
+            'parking' => ['required', 'array','in:'.implode(',', array_keys(config('constants.parking_values')))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys(config('constants.property_types')))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys(config('constants.property_flaws')))],
             'buyer_type' => ['required','numeric'],
@@ -127,6 +127,8 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
         return [
             'market_preferance' => 'mls status',
             'property_flaw' => 'location flaws',
+            'state' => strtolower(trans('cruds.buyer.fields.state')),
+            'city' => strtolower(trans('cruds.buyer.fields.city')),
         ];
     }
 }

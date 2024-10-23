@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             CountryTableSeeder::class,
             StateTableSeeder::class,
             CityTableSeeder::class,
-            VideoTableSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

@@ -7,12 +7,14 @@ use App\Models\Buyer;
 use App\Models\User;
 use App\Models\UserBuyerLikes;
 use App\Models\PurchasedBuyer;
+use App\Models\BuyerInvitation;
 use App\Models\Token;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCopyBuyerRequest;
+use App\Http\Requests\StoreAddBuyerRequest;
 use Illuminate\Support\Facades\Cache;
 
 class CopyBuyerController extends Controller
@@ -74,6 +76,7 @@ class CopyBuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
+
 
     public function copyBuyerFormElementValues(){
         $elementValues = [];
@@ -183,6 +186,9 @@ class CopyBuyerController extends Controller
                     ];
                 })->values()->all();
 
+		$elementValues['links']['terms_services_link'] = getSetting('terms_services_link');
+		$elementValues['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
+
                 Cache::put('copyFormElementDetails',$elementValues);
 
                 //Return Success Response
@@ -218,7 +224,7 @@ class CopyBuyerController extends Controller
             if($token){
                 $checkToken = Token::where('token_value',$token)->first();
                 if($checkToken){
-                    if($checkToken->is_used === 1){
+                    if(($checkToken->is_used === 1) && ($request->type == 'private-buyer')){
                         //Return Error Response
                         $responseData = [
                             'status'        => false,
@@ -269,9 +275,9 @@ class CopyBuyerController extends Controller
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
                 
-                if($request->parking){
-                    $validatedData['parking'] = (int)$request->parking;
-                }
+                // if($request->parking){
+                //     $validatedData['parking'] = (int)$request->parking;
+                // }
             
                 if($request->buyer_type){
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
@@ -326,7 +332,7 @@ class CopyBuyerController extends Controller
                     $createUser->NotificationSendToBuyerVerifyEmail();
                 }
 
-                if($token){
+                if($token && ($request->type == 'private-buyer')){
                     Token::where('token_value',$token)->update(['is_used'=>1]);
                 }
             }
@@ -352,39 +358,209 @@ class CopyBuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
-    public function isValidateToken($token){
-        $tokenExpired = $this->checkTokenValidate($token);
 
-        if($tokenExpired){
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error_type'    => 'token_expired',
-                'error'         => 'Token has been expired!',
-            ];
-            return response()->json($responseData, 400);
-        }else{
-            //Success Response Send
-            $responseData = [
-                'status'            => true,
-                'message'           => 'Token is validate!',
-            ];
-            return response()->json($responseData, 200);
+    public function isValidateToken($type,$token){
+        $tokenExpired = $this->checkTokenValidate($type,$token);
+
+        if($type == 'private-buyer'){
+            if($tokenExpired){
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error_type'    => 'token_expired',
+                    'error'         => 'Token has been expired!',
+                ];
+                return response()->json($responseData, 400);
+            }else{
+                //Success Response Send
+                $responseData = [
+                    'status'            => true,
+                    'message'           => 'Token is validate!',
+                ];
+                return response()->json($responseData, 200);
+            }
+        }elseif($type == 'public-buyer'){
+            if($tokenExpired){
+                //Success Response Send
+                $responseData = [
+                    'status'            => true,
+                    'message'           => 'Token is validate!',
+                ];
+                return response()->json($responseData, 200);
+            }
         }
 
     }
 
-    private function checkTokenValidate($token){
+    private function checkTokenValidate($type,$token){
         $currentDateTime = Carbon::now();
         $tokenExpired = false;
-         $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
-        if($checkToken){
-            $tokenExpired = true;
-            // if($checkToken->token_expired_time > $currentDateTime) {
-            //     $tokenExpired = false;
-            // }
+        
+        if($type == 'private-buyer'){
+            $checkToken = Token::where('token_value',$token)->where('is_used',1)->first();
+            if($checkToken){
+                $tokenExpired = true;
+                // if($checkToken->token_expired_time > $currentDateTime) {
+                //     $tokenExpired = false;
+                // }
+            }
+        }elseif($type == 'public-buyer'){
+            $checkToken = Token::where('token_value',$token)->first();
+            if($checkToken){
+                $tokenExpired = true;
+            }
         }
+       
 
         return $tokenExpired;
+    }
+
+
+    public function addBuyer(StoreAddBuyerRequest $request){
+        DB::beginTransaction();
+        try {
+            
+            $validatedData = $request->all();
+
+            $superAdminUser = User::whereHas('roles',function($query){
+                $query->where('id',config('constants.roles.super_admin'));
+            })->first();
+
+            $validatedData['user_id'] = $superAdminUser->id;
+
+            //Start Register by invitation link
+            $buyerRegisteredByInvitationLink = false;
+            if($request->uuid){
+                $buyerInvitation = BuyerInvitation::where('uuid',$request->uuid)->first();
+                if($buyerInvitation){
+                    $validatedData['user_id'] = $buyerInvitation->createdBy()->withTrashed()->value('id');
+                    $validatedData['email'] = $buyerInvitation->email;
+                    $buyerRegisteredByInvitationLink = true;
+                }
+            }
+            //End Register by invitation link
+
+
+            // Start create users table
+            $userDetails =  [
+                'first_name'     => $validatedData['first_name'],
+                'last_name'      => $validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
+                'email'          => $validatedData['email'], 
+                'phone'          => $validatedData['phone'], 
+            ];
+            $createUser = User::create($userDetails);
+            // End create users table
+
+            if($createUser){
+
+                $createUser->roles()->sync(3);
+
+                $validatedData['buyer_user_id'] = $createUser->id;
+
+                $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
+
+                // if($request->state){
+                //      $validatedData['state'] = json_encode($request->state);
+                // }
+                
+                //  if($request->city){
+                //      $validatedData['city'] = json_encode($request->city);
+                // }
+                
+                // if($request->parking){
+                //     $validatedData['parking'] = (int)$request->parking;
+                // }
+            
+                if($request->buyer_type){
+                    $validatedData['buyer_type'] = (int)$request->buyer_type;
+                }
+
+            
+                if($request->zoning){
+                    $validatedData['zoning'] = json_encode($request->zoning);
+                }           
+            
+                if($request->permanent_affix){
+                    $validatedData['permanent_affix'] = (int)$request->permanent_affix;
+                } 
+                if($request->park){
+                    $validatedData['park'] = (int)$request->park;
+                }  
+                if($request->rooms){
+                    $validatedData['rooms'] = (int)$request->rooms;
+                }
+                
+                
+                $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
+                
+                $createUser->buyerDetail()->create($validatedData);
+                
+              
+                //Purchased buyer
+                $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                $syncData['created_at'] = Carbon::now();
+        
+                User::where('id',$validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
+
+                //Verification mail sent
+                $createUser->NotificationSendToBuyerVerifyEmail();
+                
+            }
+
+            //Start Register by invitation link
+            if($buyerRegisteredByInvitationLink){
+                BuyerInvitation::where('uuid',$request->uuid)->update(['status'=>1]);
+            }
+            //End Register by invitation link
+
+            DB::commit();
+                
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.auth.buyer.register_success_alert'),
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function checkBuyerInvitationLink(Request $request){
+
+        if($request->uuid){
+            $buyerInvitation = BuyerInvitation::where('uuid',$request->uuid)->where('status',0)->first();
+
+            //Success Response Send
+            $responseData = [
+                'status'            => true,
+                'is_valid'          => false,
+            ];
+    
+            if($buyerInvitation){
+                $responseData['is_valid'] = true;
+                $responseData['data']['email'] = $buyerInvitation->email;
+            }
+        }else{
+            $responseData = [
+                'status'            => true,
+                'is_valid'          => null,
+            ];
+        }
+
+        return response()->json($responseData, 200);
     }
 }

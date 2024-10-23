@@ -56,7 +56,8 @@
                 request()->is('admin/deleted-buyers') || 
                 request()->is('admin/buyer/import') || 
                 request()->is('admin/profile-tags')  ||
-                request()->is('admin/buyer-transactions')
+                request()->is('admin/buyer-transactions') ||
+                request()->is('admin/invited-list')
               ); 
             @endphp          
             <li class="nav-item {{ $buyerCallapse ? 'active' : '' }}">
@@ -77,6 +78,14 @@
                         <li class="nav-item">
                             <a class="nav-link {{ (request()->is('admin/deleted-buyers')) ? 'active' : '' }}" href="{{ route('admin.deleted-buyers') }}">
                                 <span class="menu-title"> Deleted Buyers </span>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('buyer_invitation_access')
+                        <li class="nav-item">
+                            <a class="nav-link {{ (request()->segment(2) === 'invited-list') ? 'active' : '' }}" href="{{ route('admin.buyer-invited-list') }}">
+                                <span class="menu-title"> {{ __('cruds.buyer_invitation.title') }} </span>
                             </a>
                         </li>
                         @endcan
@@ -142,25 +151,14 @@
             </li> 
 
             {{-- Settings --}}
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#setting-menu" aria-expanded="false" aria-controls="setting-menu">
+            @can('setting_access')
+            <li class="nav-item {{ request()->is('admin/settings') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.settings') }}">
                     <i class="menu-icon fas fa-cog"></i>
                     <span class="menu-title"> {{ __('cruds.setting.title') }} </span>
-                    <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="setting-menu">
-                    <ul class="nav flex-column sub-menu">
-                        @can('video_access')
-                        <li class="nav-item {{ request()->is('admin/video') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('admin.video') }}">
-                                <span class="menu-title">{{__('cruds.video.title')}}</span>
-                            </a>
-                        </li>
-                        @endcan
-                    </ul>
-                </div>
-            </li> 
-
+            </li>
+            @endcan
 
             @can('support_access')
             <li class="nav-item {{ request()->is('admin/supports') ? 'active' : '' }}">

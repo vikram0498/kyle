@@ -24,10 +24,6 @@ class Buyer extends Model
         'user_id',
         'buyer_user_id',
         'is_profile_verified',
-        // 'first_name',
-        // 'last_name',
-        // 'email',
-        // 'phone',
         'occupation',
         'replacing_occupation',
         'company_name',
@@ -146,5 +142,11 @@ class Buyer extends Model
     public function unlikes()
     {
         return $this->hasMany(UserBuyerLikes::class, 'buyer_id')->where('disliked',1);
+    }
+
+    public function profileVerification(){
+       
+        return $this->hasOne(ProfileVerification::class, 'user_id', 'buyer_user_id');
+    
     }
 }

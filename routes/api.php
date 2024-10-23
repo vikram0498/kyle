@@ -46,6 +46,8 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::post('verify-set-password', 'verifyBuyerEmailAndSetPassword');
 
     Route::get('get-email/{id}', 'getEmail');
+
+    Route::get('get-links','getLinks');
     
 });
 
@@ -65,11 +67,16 @@ Route::get('single-buyer-form-details', [BuyerController::class, 'singleBuyerFor
 
 Route::get('search-buyer-form-details', [SearchBuyerController::class, 'searchBuyerFormElementValues']);
 
+Route::post('add-buyer', [CopyBuyerController::class, 'addBuyer']);
+
+Route::post('check-invitation-link', [CopyBuyerController::class, 'checkBuyerInvitationLink']);
+
+
 Route::post('copy-single-buyer-details/{token}', [CopyBuyerController::class, 'uploadCopyBuyerDetails']);
 
 Route::get('copy-buyer-form-details', [CopyBuyerController::class, 'copyBuyerFormElementValues']);
 
-Route::get('check-token/{token}', [CopyBuyerController::class, 'isValidateToken']);
+Route::get('check-token/{type}/{token}', [CopyBuyerController::class, 'isValidateToken']);
 
 Route::get('get-contact-preferance', [SupportController::class, 'getContactPreferance']);
 

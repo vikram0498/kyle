@@ -82,7 +82,11 @@
                     @foreach($users as $serialNo => $user)
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ ucwords($user->name) }}</td>
+                        <td>
+                            {{ ucwords($user->name) }}<br>
+
+                            <span class="mt-2 d-block">{{ $user->email }}</span>
+                        </td>
                         <td>
                            <label class="toggle-switch">
                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="is_active"  data-id="{{$user->id}}"  {{ $user->is_active == 1 ? 'checked' : '' }}>

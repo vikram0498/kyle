@@ -256,6 +256,16 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
+            [
+                'title'      => 'buyer_invitation_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'buyer_invitation_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
         ];
 
         Permission::insert($permissions);

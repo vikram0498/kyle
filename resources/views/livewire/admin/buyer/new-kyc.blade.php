@@ -49,12 +49,12 @@
                                     {{ __('cruds.buyer.profile_verification.phone_verification') }}
                                 </a>
 
-                                <a class="nav-link {{ ($activeTab == 'driver_license') ? 'active' : ''}}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-                                    {{ __('cruds.buyer.profile_verification.driver_license') }}
-                                </a>
-
                                 <a class="nav-link {{ ($activeTab == 'proof_of_funds') ? 'active' : ''}}" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
                                     {{ __('cruds.buyer.profile_verification.proof_of_funds') }}
+                                </a>
+
+                                <a class="nav-link {{ ($activeTab == 'driver_license') ? 'active' : ''}}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                                    {{ __('cruds.buyer.profile_verification.driver_license') }}
                                 </a>
 
                                 <a class="nav-link {{ ($activeTab == 'llc_verification') ? 'active' : ''}}" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">

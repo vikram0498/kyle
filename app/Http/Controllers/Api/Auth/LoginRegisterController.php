@@ -21,12 +21,13 @@ class LoginRegisterController extends Controller
             'last_name'                 => 'required',
             // 'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
-            'email'                     => 'required|email:dns|unique:users,email,NULL,id',
+            'email'                     => 'required|email|regex:/^(?!.*[\/]).+@(?!.*[\/]).+\.(?!.*[\/]).+$/i|unique:users,email,NULL,id',
             'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             // 'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
+	    'terms_accepted'  		=> 'required', 
         ],[
             'phone.required'=>'The mobile number field is required',
             'phone.digits' =>'The mobile number must be 10 digits',
@@ -77,7 +78,7 @@ class LoginRegisterController extends Controller
 
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
-            'email'             => 'required|email',
+            'email'             => 'required|email|regex:/^(?!.*[\/]).+@(?!.*[\/]).+\.(?!.*[\/]).+$/i',
             'password'          => 'required|min:8'
         ]);
         if($validator->fails()){
@@ -100,84 +101,114 @@ class LoginRegisterController extends Controller
 
             $checkUserStatus = User::where('email',$request->email)->withTrashed()->first();
 
-            if($checkUserStatus){
-                if(!is_null($checkUserStatus->deleted_at)){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been deactivated!',
-                    ];
-                    return response()->json($responseData, 401);
-                }
-
-                if(!$checkUserStatus->is_active && $checkUserStatus->roles()->first()->id == 2){
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account has been blocked!',
-                    ];
-                    return response()->json($responseData, 401);
-                }
-
-                if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
-
-                    $checkUserStatus->NotificationSendToBuyerVerifyEmail();
-
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account is not verified! Please check your mail',
-                    ];
-                    return response()->json($responseData, 401);
-                }
-
-            }
-
-
-            if(Auth::attempt($credentialsOnly, $remember_me)){
-                $user = Auth::user();
-
-                if(is_null($user->email_verified_at)){
-                    $user->NotificationSendToVerifyEmail();
-
-                    //Error Response Send
-                    $responseData = [
-                        'status'        => false,
-                        'error'         => 'Your account is not verified! Please check your mail',
-                    ];
-                    return response()->json($responseData, 401);
-                }
-
-                $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
-
-                DB::commit();
-
-                //Success Response Send
-                $responseData = [
-                    'status'            => true,
-                    'message'           => 'You have logged in successfully!',
-                    'userData'          => [
-                        'id'           => $user->id,
-                        'first_name'   => $user->first_name ?? '',
-                        'last_name'    => $user->last_name ?? '',
-                        'profile_image'=> $user->profile_image_url ?? '',
-                        'role'=> $user->roles()->first()->id ?? '',
-                        'level_type'   => $user->level_type,
-                        'credit_limit' => $user->credit_limit,
-                        'is_verified'  => $user->is_buyer_verified,
-                        'total_buyer_uploaded' => $user->buyers()->count(),
-                    ],
-                    'remember_me_token' => $user->remember_token,
-                    'access_token'      => $accessToken
-                ];
-                return response()->json($responseData, 200);
-
-            } else{
-
+            if(!$checkUserStatus){
                 //Error Response Send
                 $responseData = [
                     'status'        => false,
-                    'error'         => 'These credentials do not match our records!',
+                    'error'         => trans('auth.failed'),
+                ];
+                return response()->json($responseData, 401);
+            }
+
+            if($checkUserStatus->is_buyer || $checkUserStatus->is_seller){
+
+                if($checkUserStatus){
+                    if(!is_null($checkUserStatus->deleted_at)){
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account has been deactivated!',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if(!$checkUserStatus->is_active && $checkUserStatus->is_seller){
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account has been blocked!',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if($checkUserStatus->is_buyer && is_null($checkUserStatus->email_verified_at)){
+
+                        $checkUserStatus->NotificationSendToBuyerVerifyEmail();
+
+                        DB::commit();
+
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account is not verified! Please check your mail',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                    if($checkUserStatus->is_seller && is_null($checkUserStatus->email_verified_at)){
+
+                        $checkUserStatus->NotificationSendToVerifyEmail();
+
+                        DB::commit();
+                        
+                        //Error Response Send
+                        $responseData = [
+                            'status'        => false,
+                            'error'         => 'Your account is not verified! Please check your mail',
+                        ];
+                        return response()->json($responseData, 401);
+                    }
+
+                }
+
+
+                if(Auth::attempt($credentialsOnly, $remember_me)){
+                    $user = Auth::user();
+
+                    $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
+
+                    DB::commit();
+
+                    //Success Response Send
+                    $responseData = [
+                        'status'            => true,
+                        'message'           => 'You have logged in successfully!',
+                        'userData'          => [
+                            'id'           => $user->id,
+                            'first_name'   => $user->first_name ?? '',
+                            'last_name'    => $user->last_name ?? '',
+                            'profile_image'=> $user->profile_image_url ?? '',
+                            'role'=> $user->roles()->first()->id ?? '',
+                            'level_type'   => $user->level_type,
+                            'credit_limit' => $user->credit_limit,
+                            'is_verified'  => $user->is_buyer_verified,
+                            'total_buyer_uploaded' => $user->buyers()->count(),
+                        ],
+                        'remember_me_token' => $user->remember_token,
+                        'access_token'      => $accessToken
+                    ];
+
+
+                    $user->login_at = now();
+                    $user->save();
+                    
+                    return response()->json($responseData, 200);
+
+                } else{
+
+                    //Error Response Send
+                    $responseData = [
+                        'status'        => false,
+                        'error'         => trans('auth.failed'),
+                    ];
+                    return response()->json($responseData, 401);
+                }
+                
+            }else{
+                 //Error Response Send
+                 $responseData = [
+                    'status'        => false,
+                    'error'         => trans('auth.failed'),
                 ];
                 return response()->json($responseData, 401);
             }
@@ -189,6 +220,7 @@ class LoginRegisterController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine(),
             ];
             return response()->json($responseData, 401);
         }
@@ -435,4 +467,17 @@ class LoginRegisterController extends Controller
         }
         
     }
+
+public function getLinks(){
+    $responseData['links']['terms_services_link'] = getSetting('terms_services_link');
+    $responseData['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
+
+ 
+    //Return Success Response
+    $response = [
+        'status'        => true,
+        'result'        => $responseData,
+    ];
+    return response()->json($response, 200);
+}
 }

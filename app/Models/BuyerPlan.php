@@ -29,6 +29,7 @@ class BuyerPlan extends Model
         'description',
         'status',
         'user_limit',
+        'color',
         'created_by',
         'created_at',
         'updated_at',

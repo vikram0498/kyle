@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 */
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
-
+use Illuminate\Support\Facades\Mail;
 
 
 Route::get('/', function () {
@@ -32,6 +32,27 @@ Route::get('/', function () {
 Route::get('/cache-clear', function() {
     Artisan::call('optimize:clear');
     return '<h1>All Cache cleared</h1>';
+});
+
+Route::get('/send-test-mail', function() {
+    $recipient = 'rakeshjonwal.his@gmail.com';
+    $subject = 'Subject of the email';
+    $message = 'This is a simple text email.';
+    
+    try{
+        Mail::raw($message, function($mail) use ($recipient, $subject) {
+            $mail->to($recipient)
+            ->subject($subject);
+        });
+        
+        return '<h1>Mail Sent Successfully!</h1>';
+    } catch(\Exception $e){
+        dd($e->getMessage().'->'.$e->getLine());
+    }
+});
+
+Route::get('/phpinfo',function(){
+	echo phpinfo();
 });
 
 // Auth::routes(['verify' => true]);
@@ -54,9 +75,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
     Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
         Route::view('dashboard', 'admin.index')->name('dashboard');
         Route::view('plan', 'admin.plan.index')->name('plan');
-        Route::view('video', 'admin.video.index')->name('video');
         Route::view('addon', 'admin.addon.index')->name('addon');
-        Route::view('setting', 'admin.setting.index')->name('setting');
+        Route::view('settings', 'admin.setting.index')->name('settings');
         Route::view('users', 'admin.seller.index')->name('seller');
         Route::view('deleted-users', 'admin.deleted-users.index')->name('deleted-users');
         Route::view('buyer', 'admin.buyer.index')->name('buyer');    
@@ -64,6 +84,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('deleted-buyers', 'admin.deleted-buyer-users.index')->name('deleted-buyers');        
         Route::view('buyer/import', 'admin.buyer.import-buyers')->name('import-buyers');
         Route::view('supports', 'admin.support.index')->name('supports');
+
+        Route::view('invited-list', 'admin.buyer-invitations.index')->name('buyer-invited-list');
 
         Route::view('search-log', 'admin.search-log.index')->name('search-log');
 

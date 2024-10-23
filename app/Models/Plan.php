@@ -23,6 +23,7 @@ class Plan extends Model
         'title',
         'price',
         'type',
+        'position',
         'credits',
         'description',
         'plan_json',

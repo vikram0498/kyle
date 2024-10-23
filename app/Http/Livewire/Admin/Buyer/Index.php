@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB; 
 
 class Index extends Component
@@ -96,7 +96,7 @@ class Index extends Component
             // 'country' => ['required', 'exists:countries,name'], 
             'state' => ['required', /*'exists:states,id'*/], 
             'city' => ['required', /*'exists:cities,id'*/], 
-            'company_name' => ['required'], 
+            'company_name' => [], 
 
             // 'zip_code' => ['nullable', 'regex:/^[0-9]*$/'],
             'lot_size_min' => ['required','numeric', !empty($this->state['lot_size_max']) ? new CheckMinValue($this->state['lot_size_max'], 'lot_size_max') : ''], 
@@ -105,7 +105,7 @@ class Index extends Component
             'price_min' => ['required','numeric', !empty($this->state['price_max']) ? new CheckMinValue($this->state['price_max'], 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->state['price_min']) ? new CheckMaxValue($this->state['price_min'], 'price_min') : ''], 
 
-            'parking' => ['required','numeric','in:'.implode(',', array_keys($this->parkingValues))],
+            'parking' => ['required','array','in:'.implode(',', array_keys($this->parkingValues))],
             'property_type' => ['required','array', 'in:'.implode(',', array_keys($this->propertyTypes))],
             'property_flaw' => ['nullable','array', 'in:'.implode(',', array_keys($this->propertyFlaws))],
             'buyer_type' => ['required','numeric', 'in:'.implode(',', array_keys($this->buyerTypes))],
@@ -192,6 +192,15 @@ class Index extends Component
         if(isset($data['property'])){
             $this->state[$data['property']] = $data['pr_vals'];
             if($data['property'] == 'property_type'){
+
+                
+                //09-07-2024
+                $cleanedString = str_replace('"', '', $data['pr_vals']);
+                $data['pr_vals'] = [(int) $cleanedString];
+                
+                $this->state[$data['property']] = $data['pr_vals'];
+                //end 
+
                 if(in_array(10, $data['pr_vals']) || in_array(11, $data['pr_vals']) || in_array(2, $data['pr_vals']) || in_array(14, $data['pr_vals']) || in_array(15, $data['pr_vals'])){
                     $this->multiFamilyBuyer = true;
                 } else {
@@ -208,7 +217,7 @@ class Index extends Component
         if(!$this->updateMode){
           
             $validator = Validator::make($this->state, $this->rules(),[
-                'phone.required' => 'The contact number field is required',
+                'phone.required' => 'The phone number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
@@ -220,6 +229,8 @@ class Index extends Component
                 'unit_min'=>'minimum units',
                 'unit_max'=>'maximum units',
                 'park'=>'park owned/tenant owned',
+                'state' => strtolower(trans('cruds.buyer.fields.state')),
+                'city' => strtolower(trans('cruds.buyer.fields.city')),
             ])->validate();
 
             // if ($validator->fails()) {
@@ -238,7 +249,7 @@ class Index extends Component
             $rules['phone'] = ['required', 'numeric','digits:10','not_in:-','unique:users,phone,'. $this->buyer_user_id.',id,deleted_at,NULL'];
 
             Validator::make($this->state, $rules,[
-                'phone.required' => 'The contact number field is required',
+                'phone.required' => 'The phone number field is required',
                 'size_min.required' => 'The sq ft min field is required',
                 'size_max.required' => 'The sq ft max field is required',
                 'lot_size_min.required' => 'The lot size sq ft (min) field is required',
@@ -250,6 +261,8 @@ class Index extends Component
                 'unit_min'=>'minimum units',
                 'unit_max'=>'maximum units',
                 'park'=>'park owned/tenant owned',
+                'state' => strtolower(trans('cruds.buyer.fields.state')),
+                'city' => strtolower(trans('cruds.buyer.fields.city')),
             ])->validate();
 
         }
@@ -276,6 +289,7 @@ class Index extends Component
         $this->initializePlugins();   
         $this->validatiionForm();   
 
+        DB::beginTransaction();
         try {
             // Start create users table
             $userDetails =  [
@@ -311,8 +325,9 @@ class Index extends Component
                     $this->state['city']    =  array_map('intval',$this->state['city']);
                 }
 
+              
                 if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                    $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+                    $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
                 }
     
                 if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
@@ -320,7 +335,8 @@ class Index extends Component
                 }
 
                 if(isset($this->state['parking']) && !empty($this->state['parking'])){
-                    $this->state['parking'] = (int)$this->state['parking'];
+                    // $this->state['parking'] = (int)$this->state['parking'];
+                    $this->state['parking'] = array_map('intval', $this->state['parking']);
                 }
 
                 if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
@@ -345,6 +361,9 @@ class Index extends Component
 
                 $this->state = collect($this->state)->except(['first_name', 'last_name','email','phone'])->all();
                 
+
+                // dd($this->state);
+                
                 $createUser->buyerDetail()->create($this->state);
 
                 if($createUser->buyerDetail){
@@ -359,16 +378,21 @@ class Index extends Component
                 //Verification mail sent
                 $createUser->NotificationSendToBuyerVerifyEmail();
 
+                DB::commit();
+
                 $this->formMode = false;
 
                 $this->resetInputFields();
 
-                $this->flash('success',trans('messages.auth.buyer.register_success_alert'));
+                $this->flash('success',trans('messages.auth.buyer.admin_register_success_alert'));
                 
                 return redirect()->route('admin.buyer');
             }
         }catch (\Exception $e) {
+            DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
+
+            Log::error('Livewire -> Buyer-> Index -> Store()'.$e->getMessage().'->'.$e->getLine());
             
             $this->alert('error',trans('messages.error_message'));
         }
@@ -425,6 +449,7 @@ class Index extends Component
         $this->initializePlugins();   
         $this->validatiionForm();
 
+        DB::beginTransaction();
         try {
            
             $isSendMail = false;
@@ -461,7 +486,7 @@ class Index extends Component
             }
 
             if(isset($this->state['zoning']) && !empty($this->state['zoning'])){
-                $this->state['zoning'] = array_map('intval',$this->state['zoning']);
+                $this->state['zoning'] = json_encode(array_map('intval',$this->state['zoning']));
             }
 
             if(isset($this->state['building_class']) && !empty($this->state['building_class'])){
@@ -469,7 +494,7 @@ class Index extends Component
             }
 
             if(isset($this->state['parking']) && !empty($this->state['parking'])){
-                $this->state['parking'] = (int)$this->state['parking'];
+                $this->state['parking'] = array_map('intval', $this->state['parking']);
             }
 
             if(isset($this->state['buyer_type']) && !empty($this->state['buyer_type'])){
@@ -484,7 +509,54 @@ class Index extends Component
                 $this->state['purchase_method'] = array_map('intval', $this->state['purchase_method']);
             }
 
+	    if(isset($this->state['property_type'])){
 
+                if(!in_array(7,$this->state['property_type'])){
+                    $this->state['zoning'] = null;
+                    $this->state['utilities'] = null;
+                    $this->state['sewer'] =  null;
+                }
+
+                if(in_array(7, $this->state['property_type']) || in_array(14, $this->state['property_type'])){
+                    $this->state['stories_min'] = null;
+                    $this->state['stories_max'] = null;
+                }
+
+		if(!in_array(8,$this->state['property_type'])){
+                    $this->state['permanent_affix'] = 0;
+                }
+
+		if((!in_array(10,$this->state['property_type'])) &&  (!in_array(11,$this->state['property_type'])) && (!in_array(14,$this->state['property_type'])) && (!in_array(15,$this->state['property_type'])) ){
+                    $this->state['unit_min'] = null;
+                    $this->state['unit_max'] = null;
+                    $this->state['building_class'] = null;
+                    $this->state['value_add'] = null;
+                }
+
+		if(in_array(14, $this->state['property_type']) || in_array(15, $this->state['property_type'])){
+                    $this->state['bedroom_min'] = null;
+                    $this->state['bedroom_max'] = null;
+                    $this->state['bath_min'] = null;
+                    $this->state['bath_max'] = null;
+                }
+
+                if(in_array(14, $this->state['property_type'])){
+                    $this->state['size_min'] = null;
+                    $this->state['size_max'] = null;
+                    $this->state['build_year_min'] = null;
+                    $this->state['build_year_max'] = null;
+                }
+                
+                if(!in_array(14,$this->state['property_type'])){
+                    $this->state['park'] = null;
+                }
+
+                if(!in_array(15,$this->state['property_type'])){
+                    $this->state['rooms'] = null;
+                }
+            }
+
+            
             $buyer = Buyer::find($this->buyer_id);
             $buyer->update($this->state);
     
@@ -494,16 +566,19 @@ class Index extends Component
            if($isSendMail){
                 //Verification mail sent
                 $user->NotificationSendToBuyerVerifyEmail();
-                $this->flash('success',trans('messages.auth.buyer.update_success_with_mail_sent_alert'));
+                DB::commit();
+                $this->flash('success',trans('messages.auth.buyer.admin_update_success_with_mail_sent_alert'));
            }else{
+                DB::commit();
                 $this->flash('success',trans('messages.auth.buyer.update_buyer_success_alert'));
            }
             
             $this->resetInputFields();
             return redirect()->route('admin.buyer');
         }catch (\Exception $e) {
-            //  dd($e->getMessage().'->'.$e->getLine());
-            
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            Log::error('Livewire -> Buyer-> Index -> Update()'.$e->getMessage().'->'.$e->getLine());
             $this->alert('error',trans('messages.error_message'));
         }
     }
@@ -541,6 +616,7 @@ class Index extends Component
         $this->redFlagView = false;
         $this->resetInputFields();
         $this->resetValidation();
+        $this->resetPage();
     }
 
     public function confirmedToggleAction($data){

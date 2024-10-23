@@ -6,7 +6,7 @@
       </div>
 
       <div class="my-4 sm:my-0">
-        <div class="lg:hidden">
+        <div class="d-lg-none">
           <div class="flex justify-between">
               <!-- Previous Page Link -->
               @if ($paginator->onFirstPage())
@@ -37,7 +37,7 @@
               </div>
           </div>
 
-          <div class="justify-center hidden lg:flex">
+          <div class="justify-center d-none  d-lg-flex">
           <div class="flex overflow-hidden border border-gray-300 divide-x divide-gray-300 rounded pagination">
               <!-- Previous Page Link -->
               @if ($paginator->onFirstPage())

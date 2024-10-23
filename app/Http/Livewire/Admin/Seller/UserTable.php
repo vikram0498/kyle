@@ -43,6 +43,7 @@ class UserTable extends Component
 
         $users = User::query()->withCount(['purchasedBuyers','buyers'])->where(function ($query) use($searchValue,$statusSearch,$levelTypeSearch) {
             $query->where('name', 'like', '%'.$searchValue.'%')
+            ->orWhere('email', 'like', '%'.$searchValue.'%')
             ->orWhere('level_type', $levelTypeSearch)
             ->orWhere('is_active', $statusSearch)
             ->orWhereRaw("date_format(created_at, '".config('constants.search_date_format')."') like ?", ['%'.$searchValue.'%']);
@@ -56,6 +57,10 @@ class UserTable extends Component
         return view('livewire.admin.seller.user-table',compact('users'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

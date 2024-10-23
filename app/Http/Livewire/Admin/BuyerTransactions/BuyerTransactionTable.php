@@ -66,6 +66,10 @@ class BuyerTransactionTable extends Component
         return view('livewire.admin.buyer-transactions.buyer-transaction-table',compact('transactions'));
     }
     
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();

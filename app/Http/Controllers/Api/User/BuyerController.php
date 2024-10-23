@@ -12,6 +12,7 @@ use App\Models\Token;
 use Illuminate\Support\Str;
 use App\Models\SearchLog;
 use App\Imports\BuyersImport;
+use App\Imports\ImportBuyerInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 use App\Http\Requests\UpdateSingleBuyerDetailsRequest;
-
+use App\Rules\CsvFileValidationRule;
 
 class BuyerController extends Controller
 {
@@ -193,9 +194,9 @@ class BuyerController extends Controller
                 //      $validatedData['city'] = json_encode($request->city);
                 // }
 
-                if ($request->parking) {
-                    $validatedData['parking'] = (int)$request->parking;
-                }
+                // if ($request->parking) {
+                //     $validatedData['parking'] = (int)$request->parking;
+                // }
 
                 if ($request->buyer_type) {
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
@@ -460,97 +461,119 @@ class BuyerController extends Controller
     public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request)
     {
 
-        DB::beginTransaction();
-        try {
+    	  DB::beginTransaction();
+    	  try {
 
-            $authUserId = auth()->user()->id;
+        	$authUserId = auth()->user()->id;
 
-            $validatedData = $request->all();
+        	$validatedData = $request->all();
 
-            // Start create users table
-            $userDetails =  [
-                'first_name'     => $validatedData['first_name'],
-                'last_name'      => $validatedData['last_name'],
-                'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
-                'description'    => $validatedData['description'],
-            ];
+       		 // Start update users table
+        	$userDetails =  [
+            		'first_name'     => $validatedData['first_name'],
+           		'last_name'      => $validatedData['last_name'],
+            		'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+            		'description'    => $validatedData['description'],
+        	];
 
-            $updateUser = User::where('id', $authUserId)->update($userDetails);
-            // End create users table
-
-            if ($updateUser) {
-
-                $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
-
-                // if($request->state){
-                //      $validatedData['state'] = json_encode($request->state);
-                // }
-
-                //  if($request->city){
-                //      $validatedData['city'] = json_encode($request->city);
-                // }
-
-                if ($request->parking) {
-                    $validatedData['parking'] = (int)$request->parking;
-                }
-
-                if ($request->buyer_type) {
-                    $validatedData['buyer_type'] = (int)$request->buyer_type;
-                }
+        	$updateUser = User::where('id', $authUserId)->update($userDetails);
+        	// End update users table
 
 
-                if ($request->zoning) {
-                    $validatedData['zoning'] = json_encode($request->zoning);
-                }
+        	$validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-                if ($request->permanent_affix) {
-                    $validatedData['permanent_affix'] = (int)$request->permanent_affix;
-                }
-                if ($request->park) {
-                    $validatedData['park'] = (int)$request->park;
-                }
-                if ($request->rooms) {
-                    $validatedData['rooms'] = (int)$request->rooms;
-                }
+        	if($request->state){
+                  	$validatedData['state'] = array_map('intval',$request->state);
+        	}
 
-                // $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+       		if($request->city){
+                	$validatedData['city'] = array_map('intval',$request->city);
+        	}
+        
+        	if($request->property_type){
+           		 $validatedData['property_type'] = array_map('intval',$request->property_type);
+        	}
 
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
+        	if($request->property_flaw){
+            		$validatedData['property_flaw'] = array_map('intval',$request->property_flaw);
+        	}
 
-                auth()->user()->buyerDetail()->update($validatedData);
-            }
+        	if($request->purchase_method ){
+            		$validatedData['purchase_method'] = array_map('intval',$request->purchase_method );
+        	}
 
-            $authUser = User::where('id', $authUserId)->first();
-            $userData          = [
-                'id'           => $authUser->id,
-                'first_name'   => $authUser->first_name ?? '',
-                'last_name'    => $authUser->last_name ?? '',
-                'profile_image' => $authUser->profile_image_url ?? '',
-                'role' => $authUser->roles()->first()->id ?? '',
-                'is_verified'  => $authUser->is_buyer_verified ?? false,
-                'total_buyer_uploaded' => $authUser->buyers()->count(),
-            ];
+        	if ($request->parking) {
+            		$validatedData['parking'] = array_map('intval',$request->parking);
+        	}
 
-            DB::commit();
+        	if ($request->buyer_type) {
+            		$validatedData['buyer_type'] = (int)$request->buyer_type;
+        	}
 
-            //Success Response Send
-            $responseData = [
-                'status'            => true,
-                'userData'          => $userData,
-                'message'           => trans('messages.edit_success_message'),
-            ];
-            return response()->json($responseData, 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
 
-            //Return Error Response   
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
+        	$validatedData['bedroom_min'] = $request->bedroom_min ? $request->bedroom_min : null;
+        	$validatedData['bedroom_max'] = $request->bedroom_max ? $request->bedroom_max : null;
+        	$validatedData['bath_min']    = $request->bath_min ? $request->bath_min : null;
+        	$validatedData['bath_max']    = $request->bath_max ? $request->bath_max : null;
+        	$validatedData['size_min']    = $request->size_min ? $request->size_min : null;
+        	$validatedData['size_max']    = $request->size_max ? $request->size_max : null;
+        	$validatedData['build_year_min']    = $request->build_year_min ? $request->build_year_min : null;
+        	$validatedData['build_year_max']    = $request->build_year_max ? $request->build_year_max : null;
+        	$validatedData['stories_min'] = $request->stories_min ? $request->stories_min : null;
+        	$validatedData['stories_max'] = $request->stories_max ? $request->stories_max : null;
+
+
+        	$validatedData['unit_min']    = $request->unit_min ? $request->unit_min : null;
+        	$validatedData['unit_max']    = $request->unit_max ? $request->unit_max : null;
+		$validatedData['building_class']    = $request->building_class ? array_map('intval', $request->building_class) : null;
+        	$validatedData['value_add']    = isset($request->value_add) ? $request->value_add : null;
+
+
+        	$validatedData['zoning'] = $request->zoning ? array_map('intval', $request->zoning) : null;
+        	$validatedData['utilities'] = $request->utilities ? $request->utilities : null;
+        	$validatedData['sewer'] = $request->sewer ? $request->sewer : null;
+        	$validatedData['park'] = $request->park ? (int)$request->park : null;
+        	$validatedData['permanent_affix'] = $request->permanent_affix ? (int)$request->permanent_affix : 0;
+        	$validatedData['rooms'] = $request->rooms ? (int)$request->rooms : null;
+
+        	// $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+
+        	$validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
+
+        	auth()->user()->buyerDetail()->update($validatedData);
+    
+        	$authUser = User::where('id', $authUserId)->first();
+        	$userData          = [
+            		'id'           => $authUser->id,
+            		'first_name'   => $authUser->first_name ?? '',
+            		'last_name'    => $authUser->last_name ?? '',
+            		'profile_image' => $authUser->profile_image_url ?? '',
+            		'role' => $authUser->roles()->first()->id ?? '',
+            		'is_verified'  => $authUser->is_buyer_verified ?? false,
+            		'total_buyer_uploaded' => $authUser->buyers()->count(),
+        	];
+
+        	DB::commit();
+
+        	//Success Response Send
+        	$responseData = [
+            		'status'            => true,
+            		'userData'          => $userData,
+            		'message'           => trans('messages.edit_success_message'),
+        	];
+        	return response()->json($responseData, 200);
+    	} catch (\Exception $e) {
+        	DB::rollBack();
+        	//  dd($e->getMessage().'->'.$e->getLine());
+
+        	//Return Error Response   
+        	$responseData = [
+            		'status'        => false,
+            		'error'         => trans('messages.error_message'),
+            		'error_details' => $e->getMessage()
+        	];
+        	return response()->json($responseData, 400);
+    	}
     }
 
     public function fetchBuyers(Request $request)
@@ -623,59 +646,7 @@ class BuyerController extends Controller
             return response()->json($responseData, 400);
         }
     }
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'csvFile' => 'required|mimes:csv,xlsx,xls',
-        ]);
-
-        // Create an array of rules for each column in the CSV sheet.
-        $import = new BuyersImport;
-        Excel::import($import, $request->file('csvFile'));
-
-        try {
-            $totalCount         = $import->totalRowCount();
-            $insertedRowCount   = $import->insertedCount();
-            $skippedCount       = $totalCount - $insertedRowCount;
-
-            // dd($totalCount, $insertedRowCount, $skippedCount);
-
-            if ($insertedRowCount == 0) {
-                //Return Error Response
-                $responseData = [
-                    'status'        => false,
-                    'message'       => trans('No rows inserted during the import process.'),
-                ];
-                return response()->json($responseData, 400);
-            } else if ($skippedCount > 0 && $insertedRowCount > 0) {
-                $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
-
-                //Return Error Response
-                $responseData = [
-                    'status'        => true,
-                    'message'       => $message,
-                ];
-                return response()->json($responseData, 200);
-            } else if ($skippedCount == 0) {
-                //Return Success Response
-                $responseData = [
-                    'status'        => true,
-                    'message'       => 'Buyers imported successfully!',
-                ];
-                return response()->json($responseData, 200);
-            }
-        } catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
-
-            //Return Error Response
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
+   
 
     public function redFlagBuyer(Request $request)
     {
@@ -974,22 +945,40 @@ class BuyerController extends Controller
             $radioValues = [0, 1];
             $userId = auth()->user()->id;
 
-            // $buyers = Buyer::query()->with(['userDetail'])->select('id', 'user_id','buyer_user_id', 'created_by', 'contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('user_id',$userId);
-
-            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
+            /*$buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
             ])
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
                 ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
-                // ->orderByRaw('ISNULL(plan_position), plan_position ASC')
-                ->orderBy('buyers.created_at', 'desc')
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->paginate(20);*/
+
+
+            /** Update query 26-07-2024 */
+
+            // Subquery to calculate verification count
+            $verificationSubquery = DB::table('profile_verifications')
+            ->select(DB::raw("
+                SUM(
+                    CASE WHEN is_phone_verification = 1 THEN 1 ELSE 0 END +
+                    CASE WHEN is_driver_license = 1 AND driver_license_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_proof_of_funds = 1 AND proof_of_funds_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_llc_verification = 1 AND llc_verification_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_application_process = 1 THEN 1 ELSE 0 END
+                ) AS verification_count
+            "))
+            ->whereColumn('user_id', 'buyers.buyer_user_id')
+            ->toSql();
+
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status', DB::raw("($verificationSubquery) as verification_count"),])
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
+                ->withCount(['likes as likes_count'])
+                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->orderBy('verification_count', 'desc') 
+                ->orderBy('likes_count', 'desc')
                 ->paginate(20);
 
-            /* $buyers = $buyers
-                    ->orderBy('created_at', 'desc')
-                    // ->orderByRaw('ISNULL(buyer_plans.position), buyer_plans.position ASC')
-                    // ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'desc')
-                    ->paginate(20); */
-
+         
             foreach ($buyers as $key => $buyer) {
                 $liked = false;
                 $disliked = false;
@@ -1050,7 +1039,8 @@ class BuyerController extends Controller
             //Return Error Response
             $responseData = [
                 'status'        => false,
-                'error'         => trans('messages.error_message') . $e->getMessage() . '->' . $e->getLine(),
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage() . '->' . $e->getLine()
             ];
             return response()->json($responseData, 400);
         }
@@ -1174,6 +1164,116 @@ class BuyerController extends Controller
         }
     }
     
+    public function import(Request $request)
+    {
+        $request->validate([
+            'csvFile' => ['required','file',new CsvFileValidationRule]
+        ]);
+
+        $uploadedFile = $request->file('csvFile');
+        $csvInfo = $this->getRowColumnInfo($uploadedFile);
+       
+        if(!(count($csvInfo) > 0)){
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.csv_file.empty'),
+            ];
+            return response()->json($responseData, 422);
+        }
+
+        if( $csvInfo['rowCount'] > config('constants.buyer_csv_file_row_limit')){
+             //Return Error Response
+             $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.csv_file.too_many_rows', ['limit' => config('constants.buyer_csv_file_row_limit')]),
+            ];
+            return response()->json($responseData, 422);
+        }
+
+        $importBueryOnlyByEmail = false;
+        if( ($csvInfo['columnCount'] == 1) && (strtolower($csvInfo['columnNames'][0]) == 'email')){
+            $importBueryOnlyByEmail = true;
+        }
+
+        $import = null;
+        // Create an array of rules for each column in the CSV sheet.
+        if($importBueryOnlyByEmail){
+            $import = new ImportBuyerInvitation;
+        }else{
+            $import = new BuyersImport;
+        }
+
+        if($import){
+           
+            try {
+                Excel::import($import, $uploadedFile);
+
+                $totalCount         = $import->totalRowCount();
+                $insertedRowCount   = $import->insertedCount();
+                $skippedCount       = $totalCount - $insertedRowCount;
     
+                if ($insertedRowCount == 0) {
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => false,
+                        // 'message'       => trans('No rows inserted during the import process.'),
+                        'message'          => "All emails are duplicates, so no new rows were inserted during the import process.",
+                    ];
+                    return response()->json($responseData, 400);
+                } else if ($skippedCount > 0 && $insertedRowCount > 0) {
+                    $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+    
+                    //Return Error Response
+                    $responseData = [
+                        'status'        => true,
+                        'message'       => $message,
+                    ];
+                    return response()->json($responseData, 200);
+                } else if ($skippedCount == 0) {
+                    //Return Success Response
+                    $responseData = [
+                        'status'        => true,
+                        'message'       => $importBueryOnlyByEmail ? trans('messages.csv_file.buyer_invitation_success') :trans('messages.csv_file.import_success'),
+                    ];
+                    return response()->json($responseData, 200);
+                }
+            } catch (\Exception $e) {
+                // dd($e->getMessage().'->'.$e->getLine());
+    
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.error_message'),
+                    'error_details' => $e->getMessage().'->'.$e->getLine(),
+                ];
+                return response()->json($responseData, 400);
+            }
+        }
+
+    }
+
+    public function getRowColumnInfo($file)
+    {
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            // Skip the first row
+            $columnNames = fgetcsv($handle, 0, ",");
+    
+            $columnCount = count($columnNames);
+
+            // Count the remaining rows
+            $rowCount = count(file($file)) - 1;
+    
+            fclose($handle);
+    
+             return [
+                'columnNames' => $columnNames,
+                'columnCount' => $columnCount,
+                'rowCount' => $rowCount,
+            ];
+        }
+    }
+
+   
    
 }

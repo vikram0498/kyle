@@ -24,8 +24,15 @@ return [
         'email_logo' => 'images/email-logo.png',
     ],
 
+    'roles'=>[
+        'super_admin'   =>  1,
+        'seller'        =>  2,
+        'buyer'         =>  3,
+    ],
+
     'profile_image_size' =>'2048', // 1024 = 1 MB
 
+    'owner_name' => env('OWNER_NAME','Administrator'),
     'owner_email' => env('OWNER_MAIL'),
     'twilio_country_code'=>env('TWILIO_COUNTRY_CODE'),
     'buyer_application_free_price_id'=>env('BUYER_APPLICATION_FEE_PRICE_ID'),
@@ -34,10 +41,10 @@ return [
     // 'owner_email' => 'amitpandey.his@gmail.com',
     // 'owner_email' => 'rohithelpfullinsight@gmail.com',
     
-    'date_format' => 'm/d/Y',
-    'datetime_format' => 'm/d/Y h:i:s A',
-    'search_datetime_format' => '%m/%d/%Y %H:%i',
-    'search_date_format' => '%m/%d/%Y',
+    'date_format' => 'd-m-Y',
+    'datetime_format' => 'd-m-Y h:i A',
+    'search_datetime_format' => '%d-%m-%Y %H:%i',
+    'search_date_format' => '%d-%m-%Y',
     'set_timezone' => 'Asia/kolkata', // set timezone
     
     'logo_min_width' => '250', // logo min width
@@ -264,6 +271,20 @@ return [
         'name does not match'       => "Name Doesn't Match",
         'insufficient information'  => "Insufficient Information",
         'other'                     => "Other",
-    ]
+    ],
 
+    'buyer_csv_file_row_limit' => 10000,
+
+    'invitation_status' => [
+        0 => 'pending',
+        1 => 'accepted',
+    ],
+
+    'reminders' => [
+        1 => 'reminder 1',
+        2 => 'reminder 2',
+        3 => 'reminder 3',
+    ],
+
+    'reminder_mail_subject'=>'Pre-Launch Invite | The Future of Real Estate Investing',
 ];

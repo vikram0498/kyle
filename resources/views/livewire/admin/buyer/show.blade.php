@@ -107,6 +107,11 @@
             <th width="25%">{{ __('cruds.buyer.fields.bedroom_max')}}</th>
             <td class="remove-white-space"> {{ $details->bedroom_max ?? 'N/A' }}</td>
         </tr>
+	
+	<tr>
+            <th width="25%">{{ __('cruds.buyer.fields.rooms')}}</th>
+            <td class="remove-white-space"> {{ $details->rooms ?? 'N/A' }}</td>
+        </tr>
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.bath_min')}}</th>
             <td class="remove-white-space"> {{ (!is_null($details->bath_min) && !empty($details->bath_min)) ? $details->bath_min : 'N/A' }}</td>
@@ -139,14 +144,6 @@
             <th width="25%">{{ __('cruds.buyer.fields.build_year_max')}}</th>
             <td class="remove-white-space"> {{ (!is_null($details->build_year_max) && !empty($details->build_year_max)) ? $details->build_year_max : 'N/A' }}</td>
         </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.arv_min')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->arv_min) && !empty($details->arv_min)) ? $details->arv_min : 'N/A' }}</td>
-        </tr>
-        <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.arv_max')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->arv_max) && !empty($details->arv_max)) ? $details->arv_max : 'N/A' }}</td>
-        </tr>
 
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.stories_min')}}</th>
@@ -171,17 +168,22 @@
        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.parking')}}</th>
-            <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td>
+            {{-- <td class="remove-white-space"> {{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</td> --}}
 
-            {{-- <td class="remove-white-space"> 
-                @if(!is_null($details->parking) && !empty($details->parking))
-                    @foreach($details->parking as $parking)
-                        <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
-                    @endforeach
+            <td class="remove-white-space"> 
+                @if(is_array($details->parking))
+                    @if(!is_null($details->parking) && !empty($details->parking))
+                        @foreach($details->parking as $parking)
+                            <span class="badge bg-primary text-white"> {{ $parkingValues[$parking] }} </span>
+                        @endforeach
+                    @else
+                        N/A
+                    @endif
                 @else
-                    N/A
+                    <span class="badge bg-primary text-white">{{ (!is_null($details->parking) && !empty($details->parking)) ? $parkingValues[$details->parking] : 'N/A' }}</span>
                 @endif
-            </td> --}}
+
+            </td>
         </tr>
         
         <tr>

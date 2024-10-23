@@ -92,6 +92,7 @@ return [
         ],
     ],
 
+    'multi_select' => '(Multi-Select)',
     'buyer' => [
         'title'                 => 'Buyers',
         'sub_menu_list_title'   => 'List',
@@ -106,13 +107,14 @@ return [
             'last_name'                     => 'Last Name',
             'email'                         => 'Email Address',
             'phone'                         => 'Phone Number',
+            'phone_placeholder'             => 'Eg.5055325532',
             'occupation'                    => 'Occupation',
             'replacing_occupation'          => 'Replacing Occupation',
             'company_name'                  => 'Company/LLC',
             'address'                       => 'Address',
-            'city'                          => 'City',
+            'city'                          => 'Buy Box Criteria City',
             'country'                       => 'Country',
-            'state'                         => 'State',
+            'state'                         => 'Buy Box Criteria State',
             'zip_code'                      => 'Zip',
             'bedroom_min'                   => 'Bedroom (min)',
             'bedroom_max'                   => 'Bedroom (max)',
@@ -290,6 +292,7 @@ return [
             'image'             => 'Image',          
             'status'            => 'Status', 
             'user_limit'        => 'User Limit', 
+            'color'             => 'Color', 
             'created_at'        => 'Created At',
         ],
     ],
@@ -311,6 +314,19 @@ return [
 
     'buyer_verification'=>[
         'title'           => 'Buyer Verification',
+
+    ],
+
+    'buyer_invitation'=>[
+        'title'        => 'Invited List',
+        'remider_btn'  => 'Reminder',
+        'fields' => [
+            'email'              => 'Email',
+            'seller_name'        => 'Seller/Agent Name',
+            'reminder'           => 'Reminder',
+            'last_reminder_sent' => 'Last Reminder Sent',
+            'status'             => 'Status',
+        ]
 
     ]
 ];

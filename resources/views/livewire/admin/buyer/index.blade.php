@@ -39,11 +39,8 @@
                         </div>                
                         <div class="table-responsive search-table-data">
 
-                           {{--  @livewire('admin.buyer.buyer-datatable') --}}
-
                             @livewire('admin.buyer.buyer-table') 
 
-                        
                         </div>
 
                     @endif
@@ -72,7 +69,7 @@
             theme: "classic"
         });
 
-        $('.country, .parking, .buyer_type').select2();
+        $('.country, .buyer_type').select2();
 
        
         $(document).ready(function () {
@@ -143,6 +140,18 @@
         })
     })
 
+    /* 09-07-2024 Start */
+     $(document).on('change','.property_type',function(){
+        var pr = $(this).data('property');
+        var pr_vals = $(this).val();
+        // @this.set('state.'+pr, pr_vals);
+
+        console.log(pr,pr_vals);
+        
+        @this.emit('updateProperty', {property: pr, pr_vals: pr_vals});
+     });
+    /* 09-07-2024 End */
+    
     $(document).on('change','.select2', function(e){
         var pr = $(this).data('property');
         var pr_vals = $(this).val();

@@ -52,43 +52,21 @@ class SearchBuyersRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'property_type'  => ['required','int'],
+            'property_type'  => ['required','numeric'],
             'address'     => [], 
             'country'     => [],
-            'city'        => [], 
-            'state'       => [], 
-            'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
-            'price'       => ['nullable','numeric'],
+            'city'        => ['required'], 
+            'state'       => ['required'], 
+            'zip_code'    => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
+            'price'       => ['required','numeric'],
 
             'bedroom'      => ['nullable','numeric'],
             'bath'         => ['nullable','numeric'],
             'size'         => ['nullable','numeric'],
-            'lot_size'     => ['nullable','numeric'],
+            'lot_size'     => ['required','numeric'],
             'build_year'   => ['nullable','numeric'],
             'arv'          => ['nullable','numeric'],
             'stories'   => ['nullable','numeric','max:3'],
-
-
-            // 'bedroom_min' => [/*'required',*/ !empty($this->bedroom_max) ? new CheckMinValue($this->bedroom_max, 'bedroom_max') : ''],
-            // 'bedroom_max' => [/*'required',*/ !empty($this->bedroom_min) ? new CheckMaxValue($this->bedroom_min, 'bedroom_min') : ''], 
-
-            // 'bath_min' => ['nullable', !empty($this->bath_max) ? new CheckMinValue($this->bath_max, 'bath_max') : ''], 
-            // 'bath_max' => ['nullable', !empty($this->bath_min) ? new CheckMaxValue($this->bath_min, 'bath_min') : ''], 
-    
-            // 'size_min' => [/*'required',*/ !empty($this->size_max) ? new CheckMinValue($this->size_max, 'size_max') : ''], 
-            // 'size_max' => [/*'required',*/ !empty($this->size_min) ? new CheckMaxValue($this->size_min, 'size_min') : ''], 
-
-            // 'lot_size_min' => ['nullable', !empty($this->lot_size_max) ? new CheckMinValue($this->lot_size_max, 'lot_size_max') : ''], 
-
-            // 'lot_size_max' => ['nullable', !empty($this->lot_size_min) ? new CheckMaxValue($this->lot_size_min, 'lot_size_min') : ''], 
-
-            // 'build_year_min' => ['nullable', !empty($this->build_year_max) ? new CheckMinValue($this->build_year_max, 'build_year_max') : ''], 
-
-            // 'build_year_max' => ['nullable', !empty($this->build_year_min) ? new CheckMaxValue($this->build_year_min, 'build_year_min') : ''], 
-
-            // 'arv_min' => ['nullable', !empty($this->arv_max) ? new CheckMinValue($this->arv_max, 'arv_max') : ''], 
-            // 'arv_max' => ['nullable', !empty($this->arv_min) ? new CheckMaxValue($this->arv_min, 'arv_min') : ''], 
-
 
             'parking' => ['nullable', 'in:'.implode(',', array_keys(config('constants.parking_values')))],
             
@@ -120,20 +98,72 @@ class SearchBuyersRequest extends FormRequest
 
         ];
 
-        // $rules['buyer_type'] = [/*'required',*/'array', 'in:'.implode(',', array_keys(config('constants.buyer_types')))];
-
         $rules['purchase_method'] = ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))];
 
+        $rules['building_class'] = ['nullable', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
+       
+        
         $rules['max_down_payment_percentage'] = [];
         $rules['max_down_payment_money'] = [];
         $rules['max_interest_rate'] = [];
         $rules['balloon_payment'] = [];
 
-        // $rules['unit_min'] = [];
-        // $rules['unit_max'] = [];
-        $rules['building_class'] = ['nullable', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
-        $rules['value_add'] = [];
+        //property_types :- 3 => Commercial - Retail, 4 => Condo, 7 => Land, 8 => Manufactured, 10 => Multi-Family - Commercial, 11 => Multi-Family - Residential,
+        //    12 => Single Family, 13 => Townhouse, 14 => Mobile Home Park, 15 => Hotel/Motel,
+    
 
+        if(!in_array($this->property_type,[7])){
+
+            $rules['parking'] = ['required', 'in:'.implode(',', array_keys(config('constants.parking_values')))];
+
+        }
+
+        if(!in_array($this->property_type,[7,14,15])){
+          
+            $rules['bedroom'] = ['required','numeric'];
+            $rules['bath'] = ['required','numeric'];
+        
+        }
+
+        if(!in_array($this->property_type,[7,14])){
+            $rules['size'] = ['required','numeric'];
+            $rules['build_year'] = ['required','numeric'];
+            $rules['stories']    = ['required','numeric'];
+
+        }
+
+        if(!in_array($this->property_type,[3,4,7,8,12,13])){
+            $rules['total_units']    = ['required','numeric'];
+            $rules['building_class'] = ['required', 'in:'.implode(',', array_keys(config('constants.building_class_values')))];
+
+            $rules['value_add'] = ['required'];
+        }
+
+        if(in_array($this->property_type,[7])){
+            $rules['zoning'] = ['required', 'array', 'in:'.implode(',', array_keys(config('constants.zonings')))];
+            $rules['utilities'] = ['required', 'in:'.implode(',', array_keys(config('constants.utilities')))];
+            $rules['sewer'] = ['required', 'in:'.implode(',', array_keys(config('constants.sewers')))];
+        }
+
+        if(in_array($this->property_type,[14])){
+            $rules['park'] = ['required', 'in:'.implode(',', array_keys(config('constants.park')))];
+        }
+
+        if(in_array($this->property_type,[15])){
+            $rules['rooms']    = ['required','numeric'];
+        }
+
+        //'purchase_methods' = 1 => 'Cash', 2 => 'Hard Money', 3 => 'Private Financing', 4 => 'Conforming Loan', 5 => 'Creative Finance',
+        
+        if($this->purchase_method){
+            if( array_intersect([5], $this->purchase_method) ){
+                $rules['max_down_payment_percentage']   = ['required','numeric'];
+                $rules['max_down_payment_money']        = ['required','numeric'];
+                $rules['max_interest_rate']             = ['required','numeric'];
+                $rules['balloon_payment']               = ['required'];
+            }
+        }
+      
         return $rules;
     }
 
@@ -154,7 +184,16 @@ class SearchBuyersRequest extends FormRequest
     {
         return [
             'market_preferance' => 'mls status',
-            'property_flaw' => 'location flaws',
+            'property_flaw'     => 'location flaws',
+            'bedroom'     => 'bed',
+            'size'        => 'sq ft',
+            'lot_size'    => 'lot size sq ft',
+            'build_year'  => 'year built',
+            'park'        => 'park owned/tenant owned',
+            'max_down_payment_percentage' => 'down payment(%)',
+            'max_down_payment_money' => 'down payment($)',
+            'max_interest_rate' => 'interest rate(%)',
+            'balloon_payment' => 'balloon payment',
         ];
     }
 

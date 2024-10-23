@@ -29,6 +29,13 @@
                 @error('credit') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.buyer_plan.fields.position')}} <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" wire:model.defer="position" placeholder="{{ __('cruds.buyer_plan.fields.position')}}" onkeydown="javascript: return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.code) ? true : !isNaN(Number(event.key)) && event.code!=='Space'"  min="0" autocomplete="off">
+                @error('position') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
     </div>    
     <div class="row">
         <div class="col-md-12">

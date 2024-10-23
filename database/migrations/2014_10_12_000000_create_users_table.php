@@ -17,13 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->nullable()->default(null);
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('company_name')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable()->default(null);
+	    $table->tinyInteger('terms_accepted')->default(0)->comment('0=>Not Accepted, 1=>Accepted');
             $table->rememberToken();
             $table->tinyInteger('level_type')->default(1)->comment('1=>Level 1, 2=>Level 2, 3=>Level 3');
             $table->boolean('is_active')->default(1)->comment('1=> active, 0=>deactive');

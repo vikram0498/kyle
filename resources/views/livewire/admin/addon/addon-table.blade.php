@@ -68,6 +68,13 @@
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
+                        {{ __('cruds.buyer_plan.fields.position')}}
+                        <span wire:click="sortBy('position')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'position' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'position' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    <th class="text-gray-500 text-xs">
                         {{ __('cruds.addon.fields.status')}}
                         <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -91,6 +98,7 @@
                         <td>{{ ucwords($plan->title) }}</td>
                         <td>{{ '$'.number_format($plan->price,2) }}</td>
                         <td>{{ $plan->credit ?? 0 }}</td>
+                        <td>{{ $plan->position }}</td>
                         <td>
                             <label class="toggle-switch">
                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$plan->id}}"  {{ $plan->status == 1 ? 'checked' : '' }}>

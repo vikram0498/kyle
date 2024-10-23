@@ -22,21 +22,18 @@ class Setting extends Model
         'key',
         'value',
         'type',
+        'display_name',
+        'details',
+        'group',
         'status',
         'created_at',
-        'created_by',
         'updated_at',
-        'updated_by',
         'deleted_at',
-        'deleted_by',
     ];
 
     protected static function boot () 
     {
-        parent::boot();
-        static::creating(function(Setting $model) {
-            $model->created_by = auth()->user()->id;
-        });     
+        parent::boot();  
                 
     }
 
@@ -46,9 +43,30 @@ class Setting extends Model
         return $this->morphMany(Uploads::class, 'uploadsable');
     }
 
-    public function createdBy()
+    public function image()
     {
-        return $this->belongsTo(User::class, 'created_by', 'id');
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','setting');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if($this->image){
+            return $this->image->file_url;
+        }
+        return "";
+    }
+
+    public function video()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','setting');
+    }
+
+    public function getVideoUrlAttribute()
+    {
+        if($this->video){
+            return $this->video->file_url;
+        }
+        return "";
     }
 
    

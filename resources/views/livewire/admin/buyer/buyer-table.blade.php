@@ -93,7 +93,11 @@
                      @endphp
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
-                        <td>{{ $buyer->userDetail ? ucwords($buyer->userDetail->name) : '' }}</td>
+                        <td>
+                            {{ $buyer->userDetail ? ucwords($buyer->userDetail->name) : '' }}<br>
+
+                            <span class="mt-2 d-block">{{ $buyer->userDetail ? $buyer->userDetail->email : '' }}</span>
+                        </td>
                         <td>
                             <label class="toggle-switch">
                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->status == 1 ? 'checked' : '' }}>

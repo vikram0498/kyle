@@ -33,6 +33,10 @@ class SupportTable extends Component
         return view('livewire.admin.support.support-table',compact('supports'));
     }
 
+    public function updatedPerPage(){
+          $this->resetPage();
+    }
+    
     public function updatedSearch()
     {
         $this->resetPage();
