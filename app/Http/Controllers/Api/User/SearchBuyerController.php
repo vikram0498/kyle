@@ -633,7 +633,13 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['rooms']    =  $request->rooms;
                 $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
                 $insertLogRecords['property_flaw']  =  ($request->property_flaw && count($request->property_flaw) > 0) ? $request->property_flaw : null;
-                SearchLog::create($insertLogRecords);
+                $insertLogRecords['picture_link'] =  $request->picture_link;
+                $searchLog = SearchLog::create($insertLogRecords);
+                if (isset($request->attachments) && count($request->attachments) > 0) {                   
+                    foreach ($request->input('attachments', []) as $key => $file) {
+                        $uploadedImage = uploadImage($searchLog, $file, 'search-log/attachments/',"search-log", 'original', 'save', null);
+                    }
+                }
             }
             
             foreach ($buyers as $key=>$buyer){

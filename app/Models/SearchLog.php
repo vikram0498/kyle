@@ -72,6 +72,7 @@ class SearchLog extends Model
         'park',
         'rooms',
         'status',
+        'picture_link',
         'created_by',
         'created_at',
         'updated_at',
@@ -89,5 +90,10 @@ class SearchLog extends Model
     public function seller()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function uploads()
+    {
+        return $this->morphMany(Uploads::class, 'uploadsable')->where('type','search-log');;
     }
 }
