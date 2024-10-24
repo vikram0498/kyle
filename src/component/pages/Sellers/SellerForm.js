@@ -21,6 +21,7 @@ import TownHouse from "./FilterPropertyForm/TownHouse";
 import MobileHomePark from "./FilterPropertyForm/MobileHomePark";
 import HotelMotel from "./FilterPropertyForm/HotelMotel";
 
+
 const SellerForm = () => {
   const { getTokenData, setLogout } = useAuth();
   const [isLoader, setIsLoader] = useState(true);
@@ -561,6 +562,8 @@ const SellerForm = () => {
     }
   };
 
+  
+
   return (
     <>
       <Header />
@@ -635,7 +638,7 @@ const SellerForm = () => {
                               </div>
                             </div>
                           </div>
-
+                          
                           {isSearchForm === 3 && (
                             <CommercialRetail data={dataObj} />
                           )}
@@ -653,6 +656,7 @@ const SellerForm = () => {
                           {isSearchForm === 12 && (
                             <SingleFamily data={dataObj} />
                           )}
+                          
                           {isSearchForm === 13 && <TownHouse data={dataObj} />}
                           {isSearchForm === 14 && (
                             <MobileHomePark data={dataObj} />

@@ -351,6 +351,10 @@
     -webkit-justify-content: flex-start;
     margin-bottom: 10px;
   }
+  .modetype,
+  .buyer_seller_toggle{
+    margin-right: 0;
+  }
 }
 
 @media (max-width: 575px) {

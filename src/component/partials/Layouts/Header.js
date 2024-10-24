@@ -98,6 +98,13 @@ function Header() {
                 <div className="modetype">
                   <DarkMode />
                 </div>
+                <div className="buyer_seller_toggle">
+                  <input type="checkbox" />
+                  <label>
+                    <span>Seller</span>
+                    <span>Buyer</span>
+                  </label>
+                </div>
                   {/* {userDetails !== null &&
                   userDetails.level_type !== 1 &&
                   userDetails.credit_limit < 5 ? (
