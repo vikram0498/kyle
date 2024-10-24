@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useLoadScript } from "@react-google-maps/api";
 
@@ -56,8 +56,11 @@ const AutocompleteInput = ({
     }
   }, [address, setValue]);
 
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [isVisible, setIsVisible] = useState(false);
   const handleSelect = async (selectedAddress) => {
     setValue(selectedAddress, false);
+    setIsVisible(true);
     setAddress(selectedAddress);
     clearSuggestions();
 
@@ -89,25 +92,53 @@ const AutocompleteInput = ({
   const handleChangeAddress = (e) => {
     setValue(e.target.value);
     setAddress(e.target.value);
+    setHighlightedIndex(-1);
+  };
+
+  // Handle keydown events to select a suggestion using the Enter key
+  const handleKeyDown = (e) => {
+    setIsVisible(false);
+    if (status === "OK") {
+      if (e.key === "ArrowDown") {
+        setHighlightedIndex((prevIndex) => Math.min(prevIndex + 1, data.length - 1));
+      } else if (e.key === "ArrowUp") {
+        setHighlightedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+      } else if (e.key === "Enter") {
+        if (highlightedIndex >= 0) {
+          handleSelect(data[highlightedIndex].description);
+        } else {
+          clearSuggestions();
+        }
+        e.preventDefault();
+      }
+    }
   };
 
   return (
     <>
       <div className="col-12 col-lg-12">
         <label>Address<span>*</span></label>
-        <div className="form-group">
+        <div className="form-group position-relative">
           <input
             type="text"
             value={value} // Use value from usePlacesAutocomplete hook
             onChange={handleChangeAddress}
+            onKeyDown={handleKeyDown}
             disabled={!ready}
             placeholder="Type your location"
             className="form-control"
           />
-          {status === "OK" && (
-            <ul>
-              {data.map(({ place_id, description }) => (
-                <li key={place_id} onClick={() => handleSelect(description)}>
+          {(status === "OK" && !isVisible) && (
+            <ul className="auto_address_list">
+              {data.map(({ place_id, description }, index) => (
+                <li
+                  key={place_id}
+                  onClick={() => handleSelect(description)}
+                  className={index === highlightedIndex ? "highlighted" : ""}
+                  style={{
+                    backgroundColor: index === highlightedIndex ? "#e1e2f1" : "",
+                  }}
+                >
                   {description}
                 </li>
               ))}

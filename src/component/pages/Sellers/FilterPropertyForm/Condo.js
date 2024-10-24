@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import GoogleMapAutoAddress from "../../../partials/GoogleMapAutoAddress";
+import PropertyAttachments from "../../../partials/PropertyAttachments";
 const Condo = ({ data, manufactureSelected }) => {
   const [startDate, setStartDate] = useState("");
   console.log(data.state, "state");
@@ -335,6 +336,7 @@ const Condo = ({ data, manufactureSelected }) => {
           </div>
         </div>
       </div>
+      <PropertyAttachments />
       <div className="column--grid">
         <div className="grid-template-col">
           <div className="radio-block-group">

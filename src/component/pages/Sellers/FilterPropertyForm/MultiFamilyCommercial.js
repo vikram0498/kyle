@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 // import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
 import GoogleMapAutoAddress from "../../../partials/GoogleMapAutoAddress";
+import PropertyAttachments from "../../../partials/PropertyAttachments";
 
 const MultiFamilyCommercial = ({ data }) => {
   const [startDate, setStartDate] = useState("");
@@ -403,6 +404,7 @@ const MultiFamilyCommercial = ({ data }) => {
           </div>
         </div>
       </div>
+      <PropertyAttachments />
       <div className="column--grid">
         <div className="grid-template-col">
           <div className="radio-block-group">

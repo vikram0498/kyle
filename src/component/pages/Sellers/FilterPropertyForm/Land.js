@@ -3,6 +3,7 @@ import Select from "react-select";
 import MultiSelect from "../../../partials/Select2/MultiSelect";
 // import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import GoogleMapAutoAddress from "../../../partials/GoogleMapAutoAddress";
+import PropertyAttachments from "../../../partials/PropertyAttachments";
 
 const Land = ({ data }) => {
   return (
@@ -193,6 +194,7 @@ const Land = ({ data }) => {
           </div>
         </div>
       </div>
+      <PropertyAttachments />
       {data.showCreativeFinancing && (
         <div className="block-divide">
           <h5>Creative Financing</h5>

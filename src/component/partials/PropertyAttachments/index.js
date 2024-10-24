@@ -33,9 +33,6 @@ const PropertyAttachments = () => {
                 <input type="url" placeholder="Url" className="form-control" />
                 </div>
             </div>
-        </div>
-
-        <div className="row">
             <div className="col-12 col-lg-12">
                 <div className="form-group">
                 <label>
