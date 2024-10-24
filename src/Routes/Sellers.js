@@ -33,6 +33,7 @@ import Payment from "../component/pages/Sellers/Payment";
 import Completion from "../component/pages/Sellers/Completion";
 import Cancel from "../component/pages/Sellers/Cancel";
 import LastSearchData from "../component/pages/Sellers/LastSearchData";
+import PropertyDealResult from "../component/pages/Sellers/PropertyDealResult";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -120,6 +121,7 @@ const Seller = () => {
           <Route path="/submit-modal" element={<SentRequest />} />
           <Route path="/completion/:token" element={<Completion />} />
           <Route path="/cancel" element={<Cancel />} />
+          <Route path="/property-deal-result" element={<PropertyDealResult />} />
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>
       </AuthContext.Provider>
