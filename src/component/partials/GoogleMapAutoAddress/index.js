@@ -90,6 +90,11 @@ const AutocompleteInput = ({
   };
 
   const handleChangeAddress = (e) => {
+    if(e.target.value.trim() == ""){
+      setZipCode("");
+      setState("");
+      setCity("");
+    }
     setValue(e.target.value);
     setAddress(e.target.value);
     setHighlightedIndex(-1);

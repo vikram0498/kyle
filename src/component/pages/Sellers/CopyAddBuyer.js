@@ -15,6 +15,7 @@ import SuccessfullySubmittedPage from "./SuccessfullySubmittedPage";
 import { useAuth } from "../../../hooks/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
+import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
 
 function CopyAddBuyer({urlType}) {
   const { token } = useParams();
@@ -566,7 +567,9 @@ function CopyAddBuyer({urlType}) {
                               {renderFieldError("email")}
                             </div>
                           </div>
-                          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                          <PhoneNumberWithOTPVerify register={register} errors={errors.phone} renderFieldError={renderFieldError}/>
+
+                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                             <label>
                               Phone Number<span>*</span>
                             </label>
@@ -592,7 +595,7 @@ function CopyAddBuyer({urlType}) {
                               )}
                               {renderFieldError("phone")}
                             </div>
-                          </div>
+                          </div> */}
                           {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                                                 <label>Address<span>*</span></label>
                                                                 <div className="form-group">

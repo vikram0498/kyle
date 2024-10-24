@@ -14,7 +14,6 @@ const CommercialRetail = ({
   hotelMotelSelected,
 }) => {
   const [startDate, setStartDate] = useState("");
-  console.log( data,"ssssssssssssss");
   return (
     <>
       <div className="row">
