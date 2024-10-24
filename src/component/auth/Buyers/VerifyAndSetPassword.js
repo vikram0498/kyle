@@ -81,7 +81,6 @@ const VerifyAndSetPassword = () => {
       }
       setTimeout(() => {
         setLoader(false);
-        console.log("hi3");
       }, 500);
 
     } catch (error) {
@@ -90,7 +89,6 @@ const VerifyAndSetPassword = () => {
           setIsLinkExpire(true);
           setTimeout(() => {
             setLoader(false);
-            console.log("hi");
           }, 500);
         }
         

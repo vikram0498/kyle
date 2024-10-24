@@ -15,15 +15,20 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import WatchVideo from "../../partials/Modal/WatchVideo";
 import SocialShare from "../../partials/Modal/SocialShare";
+import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 
 function AddBuyerDetails() {
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
     clearErrors,
+    watch,
   } = useForm();
+
+  const phoneValue = watch("phone", ""); // Watch the phone input value
 
   const { getTokenData, setLogout } = useAuth();
   const navigate = useNavigate();
@@ -32,6 +37,9 @@ function AddBuyerDetails() {
   const [openVideoModal, SetOpenVideoModal] = useState(false);
   const [openSocialShareModal, SetOpenSocialShareModal] = useState(false);
   const { setErrors, renderFieldError } = useFormError();
+
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState("");
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
@@ -245,9 +253,15 @@ function AddBuyerDetails() {
 
     setLoading(true);
 
+    setRecaptchaError("");
+    if(!captchaVerified){
+      setLoading(false);
+      setRecaptchaError("Please complete reCAPTCHA verification.");
+      return false;
+    }
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
-    formObject.parking          =  parkingValue;
+    formObject.parking      =  parkingValue;
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     //formObject.buyer_type       =  buyerTypeValue;
@@ -268,8 +282,10 @@ function AddBuyerDetails() {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
     }
-    console.log(formObject,"formObject");
-  
+    if (formObject.hasOwnProperty("phone")) {
+      let phoneNumber = formObject.phone.replace(/-/g, "");
+      formObject.phone = phoneNumber;
+    }
     try {
       let response = await axios.post(
         apiUrl + "upload-single-buyer-details",
@@ -486,6 +502,24 @@ function AddBuyerDetails() {
       }
     }
   };
+
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-789 (up to 9 digits)
+    return cleaned
+      .substring(0, 9) // Limit the length to 9 digits
+      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
+        [g1, g2, g3].filter(Boolean).join("-")
+      );
+  };
+
+  // Update the form value whenever the phoneValue changes
+  useEffect(() => {
+    const formattedValue = formatInput(phoneValue);
+    setValue("phone", formattedValue); // Update the field with the formatted phone number
+  }, [phoneValue, setValue]);
 
   return (
     <>
@@ -705,16 +739,15 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="phone"
                                   className="form-control"
-                                  placeholder="Eg. 5055325532"
+                                  placeholder="Eg. 123-456-789"
                                   {...register("phone", {
                                     required: "Phone Number is required",
                                     validate: {
                                       matchPattern: (v) =>
-                                        /^[0-9]\d*$/.test(v) ||
-                                        "Please enter valid phone number",
+                                        /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                       maxLength: (v) =>
-                                        (v.length <= 15 && v.length >= 5) ||
-                                        "The phone number should be more than 4 digit and less than equal 15",
+                                        (v.length <= 12 && v.length >= 9) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                        "The phone number should be between 9 to 12 characters",
                                     },
                                   })}
                                 />
@@ -2758,7 +2791,7 @@ function AddBuyerDetails() {
                               )}
                             </div>
                           </div>
-
+                          <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
                           <div className="submit-btn">
                             <button
                               type="submit"

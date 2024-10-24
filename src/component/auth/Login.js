@@ -9,7 +9,7 @@ import { useAuth } from "../../hooks/useAuth";
 import ButtonLoader from "../partials/MiniLoader";
 import GoogleLoginComponent from "../partials/SocialLogin/GoogleLoginComponent";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-// import FacebookLoginButton from "../partials/SocialLogin/FacebookLoginButton";
+import FacebookLoginButton from "../partials/SocialLogin/FacebookLoginButton";
 import Layout from "./Layout";
 
 function Login(props) {
@@ -234,7 +234,7 @@ function Login(props) {
                 <span>OR</span>
               </div>
               <ul className="account-with-social social-login-link list-unstyled mb-0">
-                {/* <li>
+                 <li>
                 <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
                     <FacebookLoginButton
                       apiUrl={apiUrl}
@@ -242,7 +242,7 @@ function Login(props) {
                       navigate={navigate}
                       setErrors={setErrors}
                     />
-                </li> */}
+                </li> 
                 <li>
                   <Link to="https://google.com">
                     <img

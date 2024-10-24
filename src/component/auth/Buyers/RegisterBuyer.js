@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/useAuth";
 import InvalidPage from "../../pages/Sellers/InvalidPage";
+import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 
 
 function RegisterBuyer() {
@@ -22,20 +23,27 @@ function RegisterBuyer() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const { getTokenData, setLogout } = useAuth();
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState("");
+
   const { token } = useParams();
 
   const { setErrors, renderFieldError } = useFormError();
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     formState: { errors },
     clearErrors,
+    watch,
   } = useForm();
 
   useEffect(() => {
     getOptionsValues();
   }, [navigate /*authData*/]);
+
+  const phoneValue = watch("phone", ""); // Watch the phone input value
 
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
@@ -217,7 +225,13 @@ function RegisterBuyer() {
     e.preventDefault();
     setErrors(null);
     setLoading(true);
-
+    
+    setRecaptchaError("");
+    if(!captchaVerified){
+      setLoading(false);
+      setRecaptchaError("Please complete reCAPTCHA verification.");
+      return false;
+    }
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
     if(token !== undefined){
@@ -242,6 +256,10 @@ function RegisterBuyer() {
     if (formObject.hasOwnProperty("city")) {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
+    }
+    if (formObject.hasOwnProperty("phone")) {
+      let phoneNumber = formObject.phone.replace(/-/g, "");
+      formObject.phone = phoneNumber;
     }
     try {
       let response = await axios.post(
@@ -381,6 +399,24 @@ function RegisterBuyer() {
       }
     }
   };
+
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-789 (up to 9 digits)
+    return cleaned
+      .substring(0, 9) // Limit the length to 9 digits
+      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
+        [g1, g2, g3].filter(Boolean).join("-")
+      );
+  };
+
+  // Update the form value whenever the phoneValue changes
+  useEffect(() => {
+    const formattedValue = formatInput(phoneValue);
+    setValue("phone", formattedValue); // Update the field with the formatted phone number
+  }, [phoneValue, setValue]);
   return (
     <>
         <section className="main-section position-relative pt-4 pb-120">
@@ -524,16 +560,15 @@ function RegisterBuyer() {
                                     type="text"
                                     name="phone"
                                     className="form-control"
-                                    placeholder="Eg. 5055325532"
+                                    placeholder="Eg. 123-456-789"
                                     {...register("phone", {
-                                      required: "Phone is required",
+                                      required: "Phone Number is required",
                                       validate: {
                                         matchPattern: (v) =>
-                                          /^[0-9]\d*$/.test(v) ||
-                                          "Please enter valid phone number",
+                                          /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                         maxLength: (v) =>
-                                          (v.length <= 15 && v.length >= 5) ||
-                                          "The phone number should be more than 4 digit and less than equal 15",
+                                          (v.length <= 12 && v.length >= 9) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                          "The phone number should be between 9 to 12 characters",
                                       },
                                     })}
                                   />
@@ -2607,6 +2642,7 @@ function RegisterBuyer() {
                                   </div>
                                 )}
                               </div>
+                              <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
                               <div className="col-12 col-lg-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {

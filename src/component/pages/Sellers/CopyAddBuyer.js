@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import LinkExpirePage from "./LinkExpirePage";
 import SuccessfullySubmittedPage from "./SuccessfullySubmittedPage";
 import { useAuth } from "../../../hooks/useAuth";
+import ReCAPTCHA from "react-google-recaptcha";
+import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 
 function CopyAddBuyer({urlType}) {
   const { token } = useParams();
@@ -31,9 +33,16 @@ function CopyAddBuyer({urlType}) {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
     clearErrors,
+    watch,
   } = useForm();
+  const phoneValue = watch("phone", ""); // Watch the phone input value
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
+  const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;
+
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
@@ -94,13 +103,12 @@ function CopyAddBuyer({urlType}) {
   const [loading, setLoading] = useState(false);
 
   const [privacyLink, setPrivacyLink] = useState({});
-
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState("");
 
   useEffect(() => {
     checkTokenExpire();
   }, [navigate]);
-
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   let headers = {
     Accept: "application/json",
@@ -242,9 +250,13 @@ function CopyAddBuyer({urlType}) {
   const submitSingleBuyerForm = (data, e) => {
     e.preventDefault();
     setErrors(null);
-
     setLoading(true);
 
+    if(!captchaVerified){
+      setLoading(false);
+      setRecaptchaError("Please complete reCAPTCHA verification.");
+      return false;
+    }
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
 
@@ -266,6 +278,10 @@ function CopyAddBuyer({urlType}) {
     if (formObject.hasOwnProperty("city")) {
       //formObject.city =  cityValue;
       formObject.city = cityValue.length > 0 ? cityValue : "";
+    }
+    if (formObject.hasOwnProperty("phone")) {
+      let phoneNumber = formObject.phone.replace(/-/g, "");
+      formObject.phone = phoneNumber;
     }
      formObject.type = urlType;
     axios
@@ -407,6 +423,25 @@ function CopyAddBuyer({urlType}) {
       }
     }
   };
+
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-789 (up to 9 digits)
+    return cleaned
+      .substring(0, 9) // Limit the length to 9 digits
+      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
+        [g1, g2, g3].filter(Boolean).join("-")
+      );
+  };
+
+  // Update the form value whenever the phoneValue changes
+  useEffect(() => {
+    const formattedValue = formatInput(phoneValue);
+    setValue("phone", formattedValue); // Update the field with the formatted phone number
+  }, [phoneValue, setValue]);
+
   return (
     <>
       
@@ -540,16 +575,15 @@ function CopyAddBuyer({urlType}) {
                                 type="text"
                                 name="phone"
                                 className="form-control"
-                                placeholder="Eg. 5055325532"
+                                placeholder="Eg. 123-456-789"
                                 {...register("phone", {
-                                  required: "Phone is required",
+                                  required: "Phone Number is required",
                                   validate: {
                                     matchPattern: (v) =>
-                                      /^[0-9]\d*$/.test(v) ||
-                                      "Please enter valid phone number",
+                                      /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                     maxLength: (v) =>
-                                      (v.length <= 15 && v.length >= 5) ||
-                                      "The phone number should be more than 4 digit and less than equal 15",
+                                      (v.length <= 12 && v.length >= 9) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                      "The phone number should be between 9 to 12 characters",
                                   },
                                 })}
                               />
@@ -2633,6 +2667,8 @@ function CopyAddBuyer({urlType}) {
                               </div>
                             )}
                           </div>
+
+                          <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
                           <div className="col-12 col-lg-12">
                             <div class="form-check">
                               <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
