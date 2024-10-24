@@ -1,24 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useLoadScript } from "@react-google-maps/api";
 
 const libraries = ["places"];
 
-const GoogleMapAutoAddress = () => {
+const GoogleMapAutoAddress = ({ dataObj }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY, // Replace with your API key
     libraries,
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return <AutocompleteInput />;
+
+  return (
+    <AutocompleteInput
+      address={dataObj.address}
+      setAddress={dataObj.setAddress}
+      city={dataObj.city}
+      setCity={dataObj.setCity}
+      state={dataObj.state}
+      setState={dataObj.setState}
+      zipCode={dataObj.zipCode}
+      setZipCode={dataObj.setZipCode}
+    />
+  );
 };
 
-const AutocompleteInput = () => {
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [pinCode, setPinCode] = useState("");
-
+const AutocompleteInput = ({
+  address,
+  setAddress,
+  city,
+  setCity,
+  state,
+  setState,
+  zipCode,
+  setZipCode,
+}) => {
   const {
     ready,
     value,
@@ -28,18 +45,24 @@ const AutocompleteInput = () => {
   } = usePlacesAutocomplete({
     requestOptions: {
       types: ["address"], // Broaden search to include full addresses
-      // Uncomment this line to restrict to India
-      // componentRestrictions: { country: "IN" },
     },
     debounce: 300,
   });
 
-  const handleSelect = async (address) => {
-    setValue(address, false);
+  // Initialize the address input field with the value from dataObj.address
+  useEffect(() => {
+    if (address) {
+      setValue(address); // Use setValue from the hook
+    }
+  }, [address, setValue]);
+
+  const handleSelect = async (selectedAddress) => {
+    setValue(selectedAddress, false);
+    setAddress(selectedAddress);
     clearSuggestions();
 
     try {
-      const results = await getGeocode({ address });
+      const results = await getGeocode({ address: selectedAddress });
       const { lat, lng } = await getLatLng(results[0]);
       console.log("Coordinates:", { lat, lng });
 
@@ -57,57 +80,60 @@ const AutocompleteInput = () => {
 
       setCity(cityComponent?.long_name || "");
       setState(stateComponent?.long_name || "");
-      setPinCode(pinComponent?.long_name || "");
+      setZipCode(pinComponent?.long_name || "");
     } catch (error) {
       console.error("Error getting geocode data:", error);
     }
   };
 
+  const handleChangeAddress = (e) => {
+    setValue(e.target.value);
+    setAddress(e.target.value);
+  };
+
   return (
     <>
-        <div className="col-12 col-lg-12">
-          <label>Address<span>*</span></label>
-          <div className="form-group">
-           <input
-              type="text"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              disabled={!ready}
-              placeholder="Type your location"
-              className="form-control"
-            />
-            {/* Render suggestions */}
-              {status === "OK" && (
-                <ul>
-                  {data.map(({ place_id, description }) => (
-                    <li key={place_id} onClick={() => handleSelect(description)}>
-                      {description}
-                    </li>
-                  ))}
-                </ul>
-              )}
-          </div>
+      <div className="col-12 col-lg-12">
+        <label>Address<span>*</span></label>
+        <div className="form-group">
+          <input
+            type="text"
+            value={value} // Use value from usePlacesAutocomplete hook
+            onChange={handleChangeAddress}
+            disabled={!ready}
+            placeholder="Type your location"
+            className="form-control"
+          />
+          {status === "OK" && (
+            <ul>
+              {data.map(({ place_id, description }) => (
+                <li key={place_id} onClick={() => handleSelect(description)}>
+                  {description}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>State</label>
-            <div className="form-group">
-              <input type="text" value={state} readOnly className="form-control" />
-            </div>
+      </div>
+      <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        <label>State</label>
+        <div className="form-group">
+          <input type="text" value={state} readOnly className="form-control" />
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>City</label>
-            <div className="form-group">
-              <input type="text" value={city} readOnly className="form-control" />
-            </div>
+      </div>
+      <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        <label>City</label>
+        <div className="form-group">
+          <input type="text" value={city} readOnly className="form-control" />
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
-          <label>Pin Code</label>
-            <div className="form-group">
-              <input type="text" value={pinCode} readOnly className="form-control" />
-            </div>
+      </div>
+      <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        <label>Pin Code</label>
+        <div className="form-group">
+          <input type="text" value={zipCode} readOnly className="form-control" />
         </div>
+      </div>
     </>
-
   );
 };
 

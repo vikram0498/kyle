@@ -13,11 +13,11 @@ const CommercialRetail = ({
   hotelMotelSelected,
 }) => {
   const [startDate, setStartDate] = useState("");
-  console.log( data.solar,"ssssssssssssss");
+  console.log( data,"ssssssssssssss");
   return (
     <>
       <div className="row">
-        <GoogleMapAutoAddress data={data} />
+        <GoogleMapAutoAddress dataObj={data} />
         {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div> */}

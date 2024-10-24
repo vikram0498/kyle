@@ -13,7 +13,7 @@ const MultiFamilyCommercial = ({ data }) => {
   return (
     <>
       <div className="row">
-        <GoogleMapAutoAddress data={data} />
+        <GoogleMapAutoAddress dataObj={data} />
         {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div>
