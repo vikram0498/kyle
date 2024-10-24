@@ -4,7 +4,7 @@ import { useLoadScript } from "@react-google-maps/api";
 
 const libraries = ["places"];
 
-const LocationAutoSuggest = () => {
+const GoogleMapAutoAddress = () => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY, // Replace with your API key
     libraries,
@@ -64,12 +64,11 @@ const AutocompleteInput = () => {
   };
 
   return (
-    <section className="main-section position-relative pt-4 pb-120">
-      <div className="container position-relative">
-        <div className="back-block">
-          <div className="row">
-            <label>Location:</label>
-            <input
+    <>
+        <div className="col-12 col-lg-12">
+          <label>Address<span>*</span></label>
+          <div className="form-group">
+           <input
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -78,35 +77,38 @@ const AutocompleteInput = () => {
               className="form-control"
             />
             {/* Render suggestions */}
-            {status === "OK" && (
-              <ul>
-                {data.map(({ place_id, description }) => (
-                  <li key={place_id} onClick={() => handleSelect(description)}>
-                    {description}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="form-group">
-              <label>City:</label>
-              <input type="text" value={city} readOnly className="form-control" />
-            </div>
-
-            <div className="form-group">
-              <label>State:</label>
-              <input type="text" value={state} readOnly className="form-control" />
-            </div>
-
-            <div className="form-group">
-              <label>Pin Code:</label>
-              <input type="text" value={pinCode} readOnly className="form-control" />
-            </div>
+              {status === "OK" && (
+                <ul>
+                  {data.map(({ place_id, description }) => (
+                    <li key={place_id} onClick={() => handleSelect(description)}>
+                      {description}
+                    </li>
+                  ))}
+                </ul>
+              )}
           </div>
         </div>
-      </div>
-    </section>
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+          <label>State</label>
+            <div className="form-group">
+              <input type="text" value={state} readOnly className="form-control" />
+            </div>
+        </div>
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+          <label>City</label>
+            <div className="form-group">
+              <input type="text" value={city} readOnly className="form-control" />
+            </div>
+        </div>
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+          <label>Pin Code</label>
+            <div className="form-group">
+              <input type="text" value={pinCode} readOnly className="form-control" />
+            </div>
+        </div>
+    </>
+
   );
 };
 
-export default LocationAutoSuggest;
+export default GoogleMapAutoAddress;

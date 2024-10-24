@@ -3,8 +3,9 @@ import Select from "react-select";
 import MultiSelect from "../../../partials/Select2/MultiSelect";
 import SingleSelect from "../../../partials/Select2/SingleSelect";
 import DatePicker from "react-datepicker";
-import AutoSuggestionAddress from "./AutoSuggestionAddress";
+// import AutoSuggestionAddress from "./AutoSuggestionAddress";
 import "react-datepicker/dist/react-datepicker.css";
+import GoogleMapAutoAddress from "../../../partials/GoogleMapAutoAddress";
 
 const MultiFamilyResidential = ({ data }) => {
   const [startDate, setStartDate] = useState("");
@@ -12,7 +13,8 @@ const MultiFamilyResidential = ({ data }) => {
   return (
     <>
       <div className="row">
-        <div className="col-12 col-lg-12">
+        <GoogleMapAutoAddress data={data} />
+        {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div>
         <div className="col-12 col-lg-12">
@@ -70,7 +72,7 @@ const MultiFamilyResidential = ({ data }) => {
             />
             {data.renderFieldError("zip_code")}
           </div>
-        </div>
+        </div> */}
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Bed<span>*</span></label>

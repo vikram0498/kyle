@@ -33,7 +33,7 @@ import Payment from "../component/pages/Sellers/Payment";
 import Completion from "../component/pages/Sellers/Completion";
 import Cancel from "../component/pages/Sellers/Cancel";
 import LastSearchData from "../component/pages/Sellers/LastSearchData";
-import GoogleMap from "../component/partials/GoogleMap";
+// import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -120,7 +120,7 @@ const Seller = () => {
           <Route path="/submit-modal" element={<SentRequest />} />
           <Route path="/completion/:token" element={<Completion />} />
           <Route path="/cancel" element={<Cancel />} />
-          <Route path="/google-api" element={<GoogleMap />} />
+          {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>
       </AuthContext.Provider>
     </GoogleOAuthProvider>

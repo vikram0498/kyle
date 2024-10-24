@@ -1,16 +1,18 @@
 import React from 'react';
 import Select from 'react-select';
 import MultiSelect from "../../partials/Select2/MultiSelect";
-import AutoSuggestionAddress from './AutoSuggestionAddress';
+// import AutoSuggestionAddress from './AutoSuggestionAddress';
+import GoogleMapAutoAddress from '../../../partials/GoogleMapAutoAddress';
 
 const Development = ({data,landSelected})=>{
 	
  	return (
 		<>
 			<div className="row">
-				<div className="col-12 col-lg-12">
+				<GoogleMapAutoAddress data={data} />
+				{/* <div className="col-12 col-lg-12">
                    <AutoSuggestionAddress data={data}/>
-                </div>
+                </div> */}
 				{/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
 					<label>Country</label>
 					<div className="form-group">
@@ -33,7 +35,7 @@ const Development = ({data,landSelected})=>{
 						{data.renderFieldError('country') }
 					</div>
 				</div> */}
-				<div className="col-12 col-lg-12">
+				{/* <div className="col-12 col-lg-12">
 					<label>State</label>
 					<div className="form-group">
 						<Select
@@ -81,7 +83,7 @@ const Development = ({data,landSelected})=>{
 						<input type="text" name="zip_code" className="form-control" placeholder="Zip Code" value={data.zipCode} onChange={ e=>data.setZipCode(e.target.value) } />
 						{data.renderFieldError('zip_code') }
 					</div>
-				</div>
+				</div> */}
 				<div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
 					<label>Lot Size Sq Ft</label>
 					<div className="form-group">
