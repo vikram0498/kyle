@@ -10,7 +10,7 @@ class SearchLog extends Model
 {
     use SoftDeletes;
 
-    protected $casts = ['property_flaw' => 'array', 'purchase_method' => 'array','state' => 'array','city' => 'array'];
+    protected $casts = ['property_flaw' => 'array', 'purchase_method' => 'array'];
 
     public $table = 'search_logs';
 

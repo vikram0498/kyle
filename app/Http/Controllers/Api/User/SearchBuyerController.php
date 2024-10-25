@@ -222,7 +222,7 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
             }*/
 
-            if($request->state){
+            /* if($request->state){
                 $selectedValues = $request->state;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     foreach ($selectedValues as $value) {
@@ -250,6 +250,15 @@ class SearchBuyerController extends Controller
                         $query->orWhereJsonContains("city", $value);
                     }
                 });
+            } */
+
+            if($request->state){
+                $buyers = $buyers->where('state', $request->state);
+                $additionalBuyers = $additionalBuyers->where('state', $request->state);
+            }
+            if($request->city){
+                $buyers = $buyers->where('city', $request->city);
+                $additionalBuyers = $additionalBuyers->where('city', $request->city);
             }
 
             // if($request->zip_code){
@@ -814,7 +823,7 @@ class SearchBuyerController extends Controller
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
             // }
 
-            if($lastSearchLog->state){
+            /* if($lastSearchLog->state){
                 $selectedValues = $lastSearchLog->state;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     foreach ($selectedValues as $value) {
@@ -830,6 +839,12 @@ class SearchBuyerController extends Controller
                         $query->orWhereJsonContains("city", $value);
                     }
                 });
+            } */
+            if($lastSearchLog->state){
+                $buyers = $buyers->where('state', $lastSearchLog->state);
+            }
+            if($lastSearchLog->city){
+                $buyers = $buyers->where('city', $lastSearchLog->city);
             }
 
             if($lastSearchLog->zip_code){

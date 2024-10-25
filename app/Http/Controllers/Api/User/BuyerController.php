@@ -470,10 +470,10 @@ class BuyerController extends Controller
 
        		 // Start update users table
         	$userDetails =  [
-            		'first_name'     => $validatedData['first_name'],
-           		'last_name'      => $validatedData['last_name'],
-            		'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
-            		'description'    => $validatedData['description'],
+                'first_name'     => $validatedData['first_name'],
+                'last_name'      => $validatedData['last_name'],
+                'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+                'description'    => $validatedData['description'] ?? '',
         	];
 
         	$updateUser = User::where('id', $authUserId)->update($userDetails);
@@ -482,13 +482,13 @@ class BuyerController extends Controller
 
         	$validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-        	if($request->state){
+        	/* if($request->state){
                   	$validatedData['state'] = array_map('intval',$request->state);
         	}
 
        		if($request->city){
                 	$validatedData['city'] = array_map('intval',$request->city);
-        	}
+        	} */
         
         	if($request->property_type){
            		 $validatedData['property_type'] = array_map('intval',$request->property_type);
