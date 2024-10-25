@@ -53,7 +53,7 @@ class SearchBuyersRequest extends FormRequest
     {
         $rules = [
             'property_type'  => ['required','numeric'],
-            'address'     => [], 
+            'address'     => ['required', 'string'], 
             'country'     => [],
             'city'        => ['required'], 
             'state'       => ['required'], 
@@ -96,6 +96,10 @@ class SearchBuyersRequest extends FormRequest
             'market_preferance' => ['required','in:'.implode(',', array_keys(config('constants.market_preferances')))],
             // 'contact_preferance' => ['required','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 
+            'picture_link' => ['required', 'url'],
+
+            'attachments' => ['required', 'array'],
+            'attachments.*' => ['image', 'mimes:jpeg,png,jpg,svg', 'max:'.config('constants.profile_image_size')],
         ];
 
         $rules['purchase_method'] = ['required','array', 'in:'.implode(',', array_keys(config('constants.purchase_methods')))];
