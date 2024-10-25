@@ -56,7 +56,7 @@ const PropertyDealResult = () => {
                                         </div>
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
-                                            <ul>
+                                            <ul className='deal_info_list'>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -89,9 +89,9 @@ const PropertyDealResult = () => {
                                     </div>
                                 </Col>
                                 <Col lg={3} className='text-center'>
-                                    <Link to="#" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
-                                        <path d="M1 6.5L15 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
+                                        <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </Link>
                                 </Col>
@@ -106,7 +106,7 @@ const PropertyDealResult = () => {
                                         </div>
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
-                                            <ul>
+                                            <ul className='deal_info_list'>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -139,9 +139,9 @@ const PropertyDealResult = () => {
                                     </div>
                                 </Col>
                                 <Col lg={3} className='text-center'>
-                                    <Link to="#" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
-                                        <path d="M1 6.5L15 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
+                                        <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </Link>
                                 </Col>
@@ -156,7 +156,7 @@ const PropertyDealResult = () => {
                                         </div>
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
-                                            <ul>
+                                            <ul className='deal_info_list'>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -189,9 +189,9 @@ const PropertyDealResult = () => {
                                     </div>
                                 </Col>
                                 <Col lg={3} className='text-center'>
-                                    <Link to="#" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
-                                        <path d="M1 6.5L15 6.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
+                                        <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </Link>
                                 </Col>

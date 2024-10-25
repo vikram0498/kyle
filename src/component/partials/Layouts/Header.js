@@ -5,6 +5,7 @@ import MiniLoader from "../MiniLoader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DarkMode from "./DarkMode";
+import { Image } from "react-bootstrap";
 
 function Header() {
   const navigate = useNavigate();
@@ -95,6 +96,14 @@ function Header() {
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">
               <div className="block-session">
+                <div className="top_icons_list">
+                  <ul>
+                    <li><Link to="/property-deal-result" className="position-relative"><Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">5</span></Link></li>
+                    <li><Link to="#" className="position-relative"><Image src='/assets/images/user-top.svg' alt='' /><span className="list_numbers">2</span></Link></li>
+                    <li><Link to="/message" className="position-relative"><Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">6</span></Link></li>
+                    <li><Link to="/property-deal-result" className="position-relative"><Image src='/assets/images/home-top-check.svg' alt='' /><span className="list_numbers">9</span></Link></li>
+                  </ul>
+                </div>
                 <div className="modetype">
                   <DarkMode />
                 </div>

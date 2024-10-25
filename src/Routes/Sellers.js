@@ -34,6 +34,9 @@ import Completion from "../component/pages/Sellers/Completion";
 import Cancel from "../component/pages/Sellers/Cancel";
 import LastSearchData from "../component/pages/Sellers/LastSearchData";
 import PropertyDealResult from "../component/pages/Sellers/PropertyDealResult";
+import PropertyDealDetails from "../component/pages/Sellers/PropertyDealDetails";
+import DealNotifications from "../component/pages/Sellers/DealNotifications";
+import Message from "../component/pages/Sellers/Message";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -122,6 +125,9 @@ const Seller = () => {
           <Route path="/completion/:token" element={<Completion />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/property-deal-result" element={<PropertyDealResult />} />
+          <Route path="/property-deal-details" element={<PropertyDealDetails />} />
+          <Route path="/deal-notifications" element={<DealNotifications />} />
+          <Route path="/message" element={<Message />} />
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>
       </AuthContext.Provider>
