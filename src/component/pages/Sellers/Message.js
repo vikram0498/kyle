@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
 import ChatSidebar from '../../partials/ChatSidebar';
+import ChatMessagePanel from '../../partials/ChatMessagePanel';
 
 const Message = () => {
   return (
@@ -52,7 +53,7 @@ const Message = () => {
                                 <ChatSidebar />
                             </Col>
                             <Col lg="8">
-
+                                <ChatMessagePanel />
                             </Col>
                         </Row>
                     </div>

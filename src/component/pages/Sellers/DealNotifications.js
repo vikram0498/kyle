@@ -5,18 +5,26 @@ import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
 
 const DealNotifications = () => {
+    // const [dealConfirmation, setDealConfirmation] = useState(false);
+    // useEffect(() => {
+    //     let timer;
+    //     if (dealConfirmation) {
+    //         timer = setTimeout(() => {
+    //             setDealConfirmation(false);
+    //         }, 3000);
+    //     }
+    //     return () => {
+    //         if (timer) clearTimeout(timer);
+    //     };
+    // }, [dealConfirmation]);
+
+    // Common Modal for want-to-buy, interested and not-interested
     const [dealConfirmation, setDealConfirmation] = useState(false);
-    useEffect(() => {
-        let timer;
-        if (dealConfirmation) {
-            timer = setTimeout(() => {
-                setDealConfirmation(false);
-            }, 3000);
-        }
-        return () => {
-            if (timer) clearTimeout(timer);
-        };
-    }, [dealConfirmation]);
+    const [modalContent, setModalContent] = useState('');
+    const handleOpenModal = (content) => {
+        setModalContent(content);
+        setDealConfirmation(true);
+    };
 
   return (
     <>
@@ -90,11 +98,11 @@ const DealNotifications = () => {
                                     </div>
                                 </div>
                                 <div className='deal_notifications_right flex_auto_column'>
-                                    <ul>
-                                        <li><Button className='outline_btn' onClick={() => setDealConfirmation(true)}><Image src='/assets/images/want_buy.svg' alt='' /> want to buy</Button></li>
-                                        <li><Button className='outline_btn' onClick={() => setDealConfirmation(true)}><Image src='/assets/images/interested_icon.svg' alt='' /> Interested</Button></li>
+                                    <ul className='deal_notifications_btn'>
+                                        <li><Button className='outline_btn' onClick={() => handleOpenModal('want-to-buy')}><Image src='/assets/images/want_buy.svg' alt='' /> want to buy</Button></li>
+                                        <li><Button className='outline_btn' onClick={() => handleOpenModal('interested')}><Image src='/assets/images/interested_icon.svg' alt='' /> Interested</Button></li>
                                         <li>
-                                            <Button className='text_btn' onClick={() => setDealConfirmation(true)}>
+                                            <Button className='text_btn' onClick={() => handleOpenModal('not-interested')}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                     <path d="M11 1L1 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                     <path d="M1 1L11 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -135,7 +143,7 @@ const DealNotifications = () => {
                                     </div>
                                 </div>
                                 <div className='deal_notifications_right flex_auto_column'>
-                                    <ul>
+                                    <ul className='deal_notifications_btn'>
                                         <li><Button className='outline_btn'><Image src='/assets/images/want_buy.svg' alt='' /> want to buy</Button></li>
                                         <li><Button className='outline_btn'><Image src='/assets/images/interested_icon.svg' alt='' /> Interested</Button></li>
                                         <li>
@@ -155,14 +163,44 @@ const DealNotifications = () => {
             </section>
         <Footer />
         <Modal show={dealConfirmation} onHide={() => setDealConfirmation(false)} centered className='radius_30 max-648'>
+            <Modal.Header closeButton className='new_modal_close'></Modal.Header>
             <Modal.Body className='space_modal'>
                 <div className='modal_inner_content'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
+                    {modalContent === 'want-to-buy' && (
+                        <>
+                            <div className='buy_modal_icon light_green_bg ps-2'><Image src='/assets/images/home-dollar2.svg' alt='' /></div>
+                            <h3>Let’s Connect With Us</h3>
+                            <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
+                            <ul className='deal_notifications_btn'>
+                                <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li>
+                                <li><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></li>
+                            </ul>
+                        </>
+                    )}
+                    {modalContent === 'interested' && (
+                        <>
+                            <div className='buy_modal_icon light_blue_bg'><Image src='/assets/images/home-interested.svg' alt='' /></div>
+                            <h3>Let’s Connect With Us</h3>
+                            <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
+                            <ul className='deal_notifications_btn'>
+                                <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li>
+                                <li><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></li>
+                            </ul>
+                        </>
+                    )}
+                    {modalContent === 'not-interested' && (
+                        <>
+                            <div className='buy_modal_icon light_gray_bg'><Image src='/assets/images/like-vector.svg' alt='' /></div>
+                            <h3>Thank you for your feedback</h3>
+                            <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
+                        </>
+                    )}
+                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
                         <circle cx="50" cy="50" r="50" fill="#00D859"/>
                         <path d="M74 36L43.0625 67L29 52.9091" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <h3>Successfully Send Deal Notifications</h3>
-                    <p className='mb-0'>Upload your buyer’s criteria and use the Buybox Search to find the right buyers for your deals.</p>
+                    <p className='mb-0'>Upload your buyer’s criteria and use the Buybox Search to find the right buyers for your deals.</p> */}
                 </div>
             </Modal.Body>
         </Modal>
