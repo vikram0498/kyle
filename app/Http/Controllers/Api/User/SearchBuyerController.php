@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchBuyersRequest;
+use App\Models\BuyerDeal;
 use Illuminate\Support\Facades\Cache;
-use App\Models\BuyerPlan;
-
+use App\Models\User;
+use App\Notifications\SendNotification;
+use Illuminate\Support\Facades\Notification;
 
 class SearchBuyerController extends Controller
 {
@@ -633,6 +635,7 @@ class SearchBuyerController extends Controller
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
 
+            $searchLogId = 0;
             if(isset($request->filterType) && $request->filterType == 'search_page'){
                 $insertLogRecords['country'] =  233;
                 $insertLogRecords['state']   =  $request->state ?? null;
@@ -644,6 +647,7 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['property_flaw']  =  ($request->property_flaw && count($request->property_flaw) > 0) ? $request->property_flaw : null;
                 $insertLogRecords['picture_link'] =  $request->picture_link;
                 $searchLog = SearchLog::create($insertLogRecords);
+                $searchLogId = $searchLog->id;
                 if (isset($request->attachments) && count($request->attachments) > 0) {                   
                     foreach ($request->input('attachments', []) as $key => $file) {
                         $uploadedImage = uploadImage($searchLog, $file, 'search-log/attachments/',"search-log", 'original', 'save', null);
@@ -764,6 +768,7 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status'        => true,
+                'search_log_id' => $searchLogId,
                 'buyers'        => $buyers,
                 'activeTab'     => $request->activeTab,
                 'additional_buyers_count' => $additionalBuyers->count(),
@@ -789,12 +794,35 @@ class SearchBuyerController extends Controller
 
     }
 
-    public function lastSearchBuyers(){
+    public function lastSearchBuyers(Request $request){
         try {
            // $radioValues = [0,1];
             $radioValues = [1];
-	    $userId = auth()->user()->id;
-            $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
+	        $userId = auth()->user()->id;
+            
+            // Get Last 5 Search logs
+            $searchLogData = SearchLog::where('user_id',$userId)->select('id', 'address')->orderBy('id','desc')->take(5)->get()
+            ->map(function($searchLog){
+                return [
+                    'value' => $searchLog->id,
+                    'label' => $searchLog->address,
+                ];
+            });
+
+            // Get Interest status
+            $buyerInterestStatus = collect(config('constants.buyer_interest_status'))->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+
+            if($request->has('search_log_id') && !empty($request->query('search_log_id'))){
+                $lastSearchLog = SearchLog::where('id',$request->query('search_log_id'))->first();
+            } else {
+                $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
+            }
+
             
             if($lastSearchLog){
 
@@ -1152,7 +1180,10 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status' => true,
-		'address_value'=>$addressValue,
+		        'address_value'=>$addressValue,
+                'current_search_address' => $lastSearchLog->id,
+                'status' => $buyerInterestStatus,
+                'last_searches' => $searchLogData,
                 'buyers' => $buyers,
             ];
 
@@ -1190,4 +1221,112 @@ class SearchBuyerController extends Controller
         return response()->json($responseData, 200);
     }
 
+    public function sendDealToBuyers(Request $request){
+        $request->validate([
+            'search_log_id'     => ['required', 'exists:search_logs,id'],
+            'buyer_user_ids'    => ['required', 'array'],
+            'buyer_user_ids.*'  => ['integer', 'exists:users,id'],
+            'message'           => ['required', 'string', 'max:255']
+        ]);
+
+        DB::beginTransaction();
+        try {
+            foreach($request->buyer_user_ids as $buyerId){
+                $buyerDeal = BuyerDeal::create([
+                    'buyer_user_id' => $buyerId,
+                    'search_log_id' => $request->search_log_id,
+                    'message' => $request->message,
+                ]);
+
+                // Send Notification to Selected buyers
+                $buyerUser = User::find($buyerId);
+                $notificationData = [
+                    'title'     => trans('notification_messages.buyer_deal.title'),
+                    'message'   => $request->message,
+                    'module'    => "buyer_deal",
+                    'type'      => "send_deal",
+                    'module_id' => $buyerDeal->id
+                ];
+                Notification::send($buyerUser, new SendNotification($notificationData));
+            }
+
+            
+            DB::commit();
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'message'   => trans('messages.buyer_deal.success_send_deal'),
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    public function updateBuyerDealStatus(Request $request){
+        $request->validate([
+            'buyer_deal_id' => ['required', 'exists:buyer_deals,id'],
+            'status' => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_interest_status')))]
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $dealStatus = config('constants.buyer_interest_status');
+            $buyerDeal = BuyerDeal::where('buyer_user_id', auth()->id())->whereId($request->buyer_deal_id)->first();
+            if(!$buyerDeal){
+                $responseData = [
+                    'status' => false,
+                    'error'  => trans('messages.buyer_deal.not_found'),
+                ];
+                return response()->json($responseData, 400);
+            }
+            if(!is_null($buyerDeal->status)){
+                $responseData = [
+                    'status' => false,
+                    'error'  => trans('messages.buyer_deal.already_updated', ['status' => $dealStatus[$buyerDeal->status]]),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            $buyerDealId = $buyerDeal->id;
+            $createdByUser = $buyerDeal->createdBy;
+            $isUpdated = $buyerDeal->update([
+                "status" => $request->status
+            ]);
+
+            // Send Notification to seller after deal status update
+            if($isUpdated && $createdByUser){
+                $notificationData = [
+                    'title'     => trans('notification_messages.buyer_deal.update_deal_status_title'),
+                    'message'   => trans('notification_messages.buyer_deal.update_deal_status_message', ['status' => $dealStatus[$request->status]]),
+                    'module'    => "buyer_deal",
+                    'type'      => "update_status",
+                    'module_id' => $buyerDealId
+                ];
+                Notification::send($createdByUser, new SendNotification($notificationData));
+            }
+            
+            DB::commit();
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'message'   => trans('messages.update_status', ['module_name' => "Deal"]),
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
 }

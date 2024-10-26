@@ -159,6 +159,11 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 
+    // Send Notification to buyers
+    Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
+
+    // Change status by Buyer
+    Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
 
 });
 

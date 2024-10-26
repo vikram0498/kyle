@@ -53,4 +53,14 @@ return [
     'no_row_selected' => 'Please select at least one row.',
     'reminder_sent_success' => 'Reminder Mail Sent Successfully!',
 
+    'buyer_deal' => [
+        'success_send_deal' => "Deal sent successfully to all selected buyers.",
+        'already_updated' => "Deal status is already updated to :status",
+        'not_found' => "Deal not found"
+    ],
+
+    'update_status' => ":module_name status updated successfully"
+
+
+    
 ];
