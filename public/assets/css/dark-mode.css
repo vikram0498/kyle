@@ -440,6 +440,31 @@ body.dark .social-share-btn{
 
 
 /* Phase3 pages */
+body.dark .top_icons_list .dropdown .dropdown-menu{
+  background: #1f1f1f;
+  border: 1px solid rgb(255 255 255 / 20%);
+}
+body.dark .top_icons_list .dropdown .dropdown-menu::after{
+  border-bottom-color: #1f1f1f;
+}
+body.dark .top_icons_list .dropdown .dropdown-menu::before{
+  border-bottom-color: rgb(255 255 255 / 20%);
+  filter: none;
+  -webkit-filter: none;
+  top: -11px;
+}
+body.dark .top_icons_list .dropdown ul>li{
+  background: rgb(255 255 255 / 10%);
+}
+body.dark .dropdown_end,
+body.dark .deal_property_content ul>li,
+body.dark .buyer_top_select{
+  color: #cacaca;
+}
+body.dark .dropdown_end svg path{
+  stroke: #fff;
+}
+
 body.dark .chat_sidebar,
 body.dark .chat_box,
 body.dark .scrollbar_design::-webkit-scrollbar-thumb{
@@ -448,7 +473,9 @@ body.dark .scrollbar_design::-webkit-scrollbar-thumb{
 body.dark .chat_user_info>span,
 body.dark .chat_header_user>div span,
 body.dark .msg_send_footer>input:not(input[type="submit"]),
-body.dark .msg_content{
+body.dark .msg_content,
+body.dark .send_deal_form .form-label,
+body.dark .buyer_top_select label{
   color: #fff;
 }
 body.dark .chat_header_action button svg path{

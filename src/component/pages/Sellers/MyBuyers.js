@@ -25,6 +25,8 @@ const MyBuyer = () => {
   const [likeCount, setLikeCount] = useState(50);
   const [sendDealShow, setSendDealShow] = useState(false);
 
+  const sendDealClose = () => setSendDealShow(false);
+
   useEffect(() => {
     getBuyerLists();
   }, []);
@@ -351,12 +353,12 @@ const MyBuyer = () => {
         <Modal.Body className=''>
             <div className="send_deal_modal">
               <Row>
-                <Col lg={4}>
+                <Col lg={5}>
                   <div className="deal_property_img">
                     <Image src='/assets/images/property-img.png' alt='' />
                   </div>
                 </Col>
-                <Col lg={8}>
+                <Col lg={7} className="align-self-center">
                   <div className="deal_property_content">
                     <h2>real estate company that prioritizes Property</h2>
                     <p><Image src="/assets/images/map_pin.svg" alt="" />4517 Washington Ave. Manchester, Kentucky 39495..</p>
@@ -373,7 +375,7 @@ const MyBuyer = () => {
                       <Form.Control as="textarea" placeholder="enter Message" />
                     </Form.Group>
                     <Form.Group className="both_btn_group m-0">
-                      <Button className="light_bg_btn">
+                      <Button className="light_bg_btn" onClick={sendDealClose}>
                         Cancel
                       </Button>
                       <Button className="btn btn-fill" type="submit">

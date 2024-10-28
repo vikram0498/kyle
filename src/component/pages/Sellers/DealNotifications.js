@@ -5,19 +5,6 @@ import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
 
 const DealNotifications = () => {
-    // const [dealConfirmation, setDealConfirmation] = useState(false);
-    // useEffect(() => {
-    //     let timer;
-    //     if (dealConfirmation) {
-    //         timer = setTimeout(() => {
-    //             setDealConfirmation(false);
-    //         }, 3000);
-    //     }
-    //     return () => {
-    //         if (timer) clearTimeout(timer);
-    //     };
-    // }, [dealConfirmation]);
-
     // Common Modal for want-to-buy, interested and not-interested
     const [dealConfirmation, setDealConfirmation] = useState(false);
     const [modalContent, setModalContent] = useState('');
@@ -195,12 +182,6 @@ const DealNotifications = () => {
                             <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
                         </>
                     )}
-                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
-                        <circle cx="50" cy="50" r="50" fill="#00D859"/>
-                        <path d="M74 36L43.0625 67L29 52.9091" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <h3>Successfully Send Deal Notifications</h3>
-                    <p className='mb-0'>Upload your buyer’s criteria and use the Buybox Search to find the right buyers for your deals.</p> */}
                 </div>
             </Modal.Body>
         </Modal>
