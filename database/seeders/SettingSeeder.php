@@ -17,7 +17,7 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             [
-
+                'user_id' => 1,
                 'key'    => 'buyer_video_title',
                 'value'  => 'Main Title...',
                 'type'   => 'text',
@@ -29,7 +29,7 @@ class SettingSeeder extends Seeder
               
             ],
             [
-
+                'user_id' => 1,
                 'key'    => 'buyer_video_sub_title',
                 'value'  => 'uploaded video sub title.........',
                 'type'   => 'text',
@@ -41,7 +41,7 @@ class SettingSeeder extends Seeder
               
             ],
             [
-
+                'user_id' => 1,
                 'key'    => 'buyer_video_description',
                 'value'  => null,
                 'type'   => 'text_area',
@@ -65,7 +65,7 @@ class SettingSeeder extends Seeder
                
             // ],
             [
-
+                'user_id' => 1,
                 'key'    => 'buyer_video',
                 'value'  => null,
                 'type'   => 'video',
@@ -78,7 +78,7 @@ class SettingSeeder extends Seeder
             ],
 
             [
-
+                'user_id' => 1,
                 'key'    => 'reminder_one_mail_content',
                 'value'  =>  null,
                 'type'   => 'text_area',
@@ -90,7 +90,7 @@ class SettingSeeder extends Seeder
             ],
 
             [
-
+                'user_id' => 1,
                 'key'    => 'reminder_two_mail_content',
                 'value'  =>  null,
                 'type'   => 'text_area',
@@ -102,7 +102,7 @@ class SettingSeeder extends Seeder
             ],
 
             [
-
+                'user_id' => 1,
                 'key'    => 'reminder_three_mail_content',
                 'value'  =>  null,
                 'type'   => 'text_area',
@@ -112,8 +112,8 @@ class SettingSeeder extends Seeder
                 'status' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
-	    [
-
+	        [
+                'user_id' => 1,
                 'key'    => 'privacy_policy_link',
                 'value'  =>  null,
                 'type'   => 'text',
@@ -124,7 +124,7 @@ class SettingSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
-
+                'user_id' => 1,
                 'key'    => 'terms_services_link',
                 'value'  =>  null,
                 'type'   => 'text',

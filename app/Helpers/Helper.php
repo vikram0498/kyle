@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\NotificationSetting;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Role;
@@ -265,3 +266,48 @@ if (!function_exists('getSettingGroupDetail')) {
 	}
 }
 
+if (!function_exists('getUserSetting')) {
+	function getUserSetting($key, $loginAsBuyer)
+	{
+		$result = null;
+		$authUser = auth()->user();
+
+		$userType = "seller";
+		if($loginAsBuyer && $authUser->is_seller){
+			$userType = "buyer";
+		} else if($authUser->is_buyer){
+			$userType = "buyer";
+		} else if($authUser->is_seller){
+			$userType = "seller";
+		}
+
+		$setting = Setting::whereGroup('api')->whereKey($key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
+		if($setting){
+			$result = $setting->value;
+		}
+		return $result;
+	}
+}
+
+if (!function_exists('getUserNotificationSetting')) {
+	function getUserNotificationSetting($key, $loginAsBuyer)
+	{
+		$result = null;
+		$authUser = auth()->user();
+
+		$userType = "seller";
+		if($loginAsBuyer && $authUser->is_seller){
+			$userType = "buyer";
+		} else if($authUser->is_buyer){
+			$userType = "buyer";
+		} else if($authUser->is_seller){
+			$userType = "seller";
+		}
+
+		$setting = NotificationSetting::whereKey($key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
+		if($setting){
+			$result = $setting->value;
+		}
+		return $result;
+	}
+}

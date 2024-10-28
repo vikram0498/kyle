@@ -293,7 +293,7 @@ class BuyerController extends Controller
             $other_details = $buyer->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
 
             //Start State Column
-            $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $other_details->state)->orderBy('name', 'ASC')->pluck('name', 'id');
+            /* $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $other_details->state)->orderBy('name', 'ASC')->pluck('name', 'id');
 
             $other_details->state = $states->map(function ($label, $value) {
                 return [
@@ -311,7 +311,7 @@ class BuyerController extends Controller
                     'value' => $value,
                     'label' => ucwords(strtolower($label)),
                 ];
-            })->values()->all();
+            })->values()->all(); */
             //End City Column
 
             //Start Market Preference (MLS Status) Column

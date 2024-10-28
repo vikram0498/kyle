@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('search_log_id');
 
             $table->text('message')->nullable();
+            $table->text('buyer_feedback')->nullable();
             $table->enum('status', ['want_to_buy', 'interested', 'not_interested'])->nullable();
 
             $table->unsignedBigInteger('created_by')->nullable();

@@ -45,7 +45,7 @@ class Index extends Component
     public function render()
     {
         $settings = Setting::where('group',$this->tab)->where('status',1)->get();
-        $allSettingType = Setting::groupBy('group')->where('status',1)->pluck('group');
+        $allSettingType = Setting::groupBy('group')->whereIn('group', ['upload_buyer_video', 'mail', 'links'])->where('status',1)->pluck('group');
 
         return view('livewire.admin.setting.index',compact('allSettingType','settings'));
     }

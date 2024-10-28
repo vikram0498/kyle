@@ -23,6 +23,7 @@ class BuyerDeal extends Model
         'buyer_user_id',
         'search_log_id',
         'message',
+        'buyer_feedback',
         'status',
         'created_by',
         'created_at',

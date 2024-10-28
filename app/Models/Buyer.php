@@ -149,4 +149,8 @@ class Buyer extends Model
         return $this->hasOne(ProfileVerification::class, 'user_id', 'buyer_user_id');
     
     }
+
+    public function buyerDeals(){
+        return $this->hasMany(BuyerDeal::class, 'buyer_user_id', 'id');
+    }
 }

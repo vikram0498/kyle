@@ -16,9 +16,10 @@ use App\Http\Controllers\Api\User\CopyBuyerController;
 use App\Http\Controllers\Api\User\TwilioController;
 use App\Http\Controllers\Api\User\BuyerVerificationController;
 use App\Http\Controllers\Api\User\PaymentController;
+use App\Http\Controllers\Api\User\SettingController;
 use App\Http\Controllers\Api\User\StripeWebhookController;
 
-
+use function JmesPath\search;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,11 +160,16 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 
-    // Send Notification to buyers
-    Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
 
-    // Change status by Buyer
+    // Buyer Deals
+    Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
     Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
+    Route::get('buyer-deals/list', [SearchBuyerController::class, 'buyerDealsList']);
+    Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
+
+    // Settings
+    Route::get('settings', [SettingController::class, 'index']);
+    Route::get('notification-settings', [SettingController::class, 'notificationSettings']);
 
 });
 

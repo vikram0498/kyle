@@ -96,4 +96,22 @@ class SearchLog extends Model
     {
         return $this->morphMany(Uploads::class, 'uploadsable')->where('type','search-log');;
     }
+
+    public function getSearchLogImageUrlsAttribute()
+    {
+        $searchLogImages = [];
+        if ($this->uploads) {
+            foreach($this->uploads()->get() as $searchLogImage){
+                if(!empty($searchLogImage->file_url)){
+                    $searchLogImages[] = $searchLogImage->file_url;
+                }
+            }
+            return $searchLogImages;
+        }
+        return "";
+    }
+
+    public function buyerDeals(){
+        return $this->hasMany(BuyerDeal::class, 'search_log_id', 'id');
+    }
 }

@@ -19,12 +19,14 @@ class Setting extends Model
 
 
     protected $fillable = [
+        'user_id',
         'key',
         'value',
         'type',
         'display_name',
         'details',
         'group',
+        'user_type',
         'status',
         'created_at',
         'updated_at',

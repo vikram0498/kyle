@@ -292,5 +292,32 @@ return [
         'want_to_buy'      => "Want to Buy",
         "interested"        => "Interested",
         "not_interested"    => "Not Interested",
+    ],
+
+    "user_settings" => [
+        "deal_custom_message" => [
+            'value' => "",
+            'type'  => "textarea",
+            'display_name' => "Deal Custom Message"
+        ]
+    ],
+
+    "user_notification_settings" => [
+        "deal_notification" => [
+            'value' => "enable",
+            'display_name' => "Deal Notifications"
+        ],
+        "interest_notification" => [
+            'value' => "enable",
+            'display_name' => "Interest Notifications"
+        ],
+        "new_buyer_notification" => [
+            'value' => "enable",
+            'display_name' => "New Buyers Notification"
+        ],
+        "dm_notification" => [
+            'value' => "enable",
+            'display_name' => "DM Notifications"
+        ],
     ]
 ];

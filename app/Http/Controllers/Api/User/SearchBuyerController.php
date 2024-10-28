@@ -219,10 +219,10 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
 
-           /* if($request->address){
+            if($request->address){
                 $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            }*/
+            }
 
             /* if($request->state){
                 $selectedValues = $request->state;
@@ -823,6 +823,10 @@ class SearchBuyerController extends Controller
                 $lastSearchLog = SearchLog::where('user_id',$userId)->orderBy('id','desc')->first();
             }
 
+            if($request->has('status') && !empty($request->query('status'))){
+                $dealStatus = $request->query('status');
+                $dealReactedBuyerIds = $lastSearchLog->buyerDeals()->whereStatus($dealStatus)->pluck('buyer_user_id')->toArray();
+            }
             
             if($lastSearchLog){
 
@@ -830,6 +834,9 @@ class SearchBuyerController extends Controller
 
             $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
+            if(isset($dealReactedBuyerIds) && !empty($dealReactedBuyerIds)){
+                $buyers = $buyers->whereIn('buyer_user_id', $dealReactedBuyerIds);
+            }
             
             if($lastSearchLog->property_type){
                 $selectedValues = [$lastSearchLog->property_type];
@@ -843,9 +850,9 @@ class SearchBuyerController extends Controller
 
             }
 
-            /*if($lastSearchLog->address){
+            if($lastSearchLog->address){
                 $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            }*/
+            }
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
@@ -1181,8 +1188,7 @@ class SearchBuyerController extends Controller
             $responseData = [
                 'status' => true,
 		        'address_value'=>$addressValue,
-                'current_search_address' => $lastSearchLog->id,
-                'status' => $buyerInterestStatus,
+                'deal_status' => $buyerInterestStatus,
                 'last_searches' => $searchLogData,
                 'buyers' => $buyers,
             ];
@@ -1221,12 +1227,15 @@ class SearchBuyerController extends Controller
         return response()->json($responseData, 200);
     }
 
+    /**
+     * Send Deal to selected buyer's who is selected from searched buyer list
+     */
     public function sendDealToBuyers(Request $request){
         $request->validate([
             'search_log_id'     => ['required', 'exists:search_logs,id'],
             'buyer_user_ids'    => ['required', 'array'],
             'buyer_user_ids.*'  => ['integer', 'exists:users,id'],
-            'message'           => ['required', 'string', 'max:255']
+            'message'           => ['nullable', 'string']
         ]);
 
         DB::beginTransaction();
@@ -1235,14 +1244,14 @@ class SearchBuyerController extends Controller
                 $buyerDeal = BuyerDeal::create([
                     'buyer_user_id' => $buyerId,
                     'search_log_id' => $request->search_log_id,
-                    'message' => $request->message,
+                    'message' => $request->message ?? null,
                 ]);
 
                 // Send Notification to Selected buyers
                 $buyerUser = User::find($buyerId);
                 $notificationData = [
-                    'title'     => trans('notification_messages.buyer_deal.title'),
-                    'message'   => $request->message,
+                    'title'     => trans('notification_messages.buyer_deal.send_deal_title'),
+                    'message'     => trans('notification_messages.buyer_deal.send_deal_message'),
                     'module'    => "buyer_deal",
                     'type'      => "send_deal",
                     'module_id' => $buyerDeal->id
@@ -1269,10 +1278,90 @@ class SearchBuyerController extends Controller
         }
     }
 
+    
+
+    /**
+     * Get Deal list for login buyer 
+     */
+    public function buyerDealsList(){        
+        try {
+            $user = auth()->user();
+            $propertyTypes = config('constants.property_types');
+
+            $dealLists = BuyerDeal::with(['searchLog', 'createdBy'])->where("buyer_user_id", $user->id)
+                ->latest()
+                ->paginate(20);
+
+                $dealLists->getCollection()->transform(function ($buyerDeal) use ($propertyTypes) {
+                    $searchLog = $buyerDeal->searchLog ?? null;
+                    $propertType = $searchLog && $searchLog->property_type && $propertyTypes[$searchLog->property_type] ? $propertyTypes[$searchLog->property_type] : '';
+                    return [
+                        'id'                => $buyerDeal->id,
+                        'search_log_id'     => $searchLog->id ?? '',
+                        'title'             => "Real Estate Company That Prioritizes Property",
+                        'address'           => $searchLog && $searchLog->address ? $searchLog->address : '' ,
+                        'property_type'     => $propertType,
+                        'property_images'   => $searchLog && $searchLog->uploads ? $searchLog->search_log_image_urls : '',
+                        'status'            => $buyerDeal->status,
+                    ];
+                });
+
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'deals'     => $dealLists,
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    /**
+     * Get Single Deal Detail
+     */
+    public function buyerDealDetail($id){
+        try {
+            $buyerDeal = BuyerDeal::with(['searchLog', 'createdBy'])->where("id", $id)->first();
+            if(!$buyerDeal){
+                $responseData = [
+                    'status' => false,
+                    'error'  => trans('messages.buyer_deal.not_found'),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'data'     => $buyerDeal
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    /**
+     * Update deal status by buyer 
+     */
     public function updateBuyerDealStatus(Request $request){
         $request->validate([
-            'buyer_deal_id' => ['required', 'exists:buyer_deals,id'],
-            'status' => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_interest_status')))]
+            'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
+            'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_interest_status')))],
+            'buyer_feedback'    => ['required_if:status,not_interested', 'string']
+        ],[],[
+            "buyer_feedback" => "feedback"
         ]);
 
         DB::beginTransaction();
@@ -1296,9 +1385,15 @@ class SearchBuyerController extends Controller
 
             $buyerDealId = $buyerDeal->id;
             $createdByUser = $buyerDeal->createdBy;
-            $isUpdated = $buyerDeal->update([
+
+            $buyerDealUpdateData = [
                 "status" => $request->status
-            ]);
+            ];
+
+            if($request->status == 'not_interested' && $request->has('buyer_feedback') && !empty($request->buyer_feedback)){
+                $buyerDealUpdateData['buyer_feedback'] = $request->buyer_feedback;
+            }
+            $isUpdated = $buyerDeal->update($buyerDealUpdateData);
 
             // Send Notification to seller after deal status update
             if($isUpdated && $createdByUser){
