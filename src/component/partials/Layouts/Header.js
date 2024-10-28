@@ -83,8 +83,8 @@ function Header() {
       <header className="dashboard-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-6 col-sm-6 col-md-4 col-lg-3">
-              <div className="header-logo">
+            <div className="col-2 col-md-4 col-lg-3 col-xxl-2">
+              <div className="header-logo d-none d-md-block">
                 <Link to="/">
                   <img
                     alt="logo"
@@ -93,8 +93,17 @@ function Header() {
                   />
                 </Link>
               </div>
+              <div className="header-logo d-md-none">
+                <Link to="/">
+                  <img
+                    alt="logo"
+                    src="./assets/images/mobile-logo.svg"
+                    className="img-fluid"
+                  />
+                </Link>
+              </div>
             </div>
-            <div className="col-6 col-sm-6 col-md-8 col-lg-9">
+            <div className="col-10 col-md-8 col-lg-9 col-xxl-10">
               <div className="block-session">
                 <div className="modetype">
                   <DarkMode />
@@ -106,7 +115,7 @@ function Header() {
                     <span>Buyer</span>
                   </label>
                 </div>
-                <div className="top_icons_list">
+                <div className="top_icons_list d-none d-xxl-block">
                   <ul>
                     <li>
                       <Dropdown>
@@ -417,6 +426,91 @@ function Header() {
                     </li>
                   </ul>
                 </div>
+                {/* Mobile Notifications */}
+                <div className="top_icons_list d-xxl-none">
+                  <ul>
+                    <li>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                          <Image src='/assets/images/mobile_notification.svg' alt='' /><span className="list_numbers"></span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <h5>Notifications</h5>
+                          <ul>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Property Name</h6>
+                                <p>Buyer want to buy you property...</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/user-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/interested-buyer-drop.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                          </ul>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </li>
+                  </ul>
+                </div>
                   {/* {userDetails !== null &&
                   userDetails.level_type !== 1 &&
                   userDetails.credit_limit < 5 ? (
@@ -447,7 +541,7 @@ function Header() {
                     <p>Buy Credits</p>
                   </div>
                 </Link>
-                <div className="upload-buyer">
+                <div className="upload-buyer d-none d-lg-flex">
                   <span className="upload-buyer-icon d-flex">
                     <img
                       alt="folder"
@@ -470,7 +564,7 @@ function Header() {
                 </div>
                 {userDetails !== null && userDetails.level_type !== 1 ? (
                   <>
-                  <div className="upload-buyer">
+                  <div className="upload-buyer d-none d-lg-flex">
                     <span className="upload-buyer-icon d-flex">
                       <img
                         alt="wallet"
@@ -550,6 +644,54 @@ function Header() {
                     className="dropdown-menu"
                     aria-labelledby="dropdownMenuButton1"
                   >
+                    <div className="mobile_drop_top d-flex d-lg-none">
+                      <div className="upload-buyer">
+                        <span className="upload-buyer-icon d-flex">
+                          <img
+                            alt="folder"
+                            src="./assets/images/folder.svg"
+                            className="img-fluid"
+                          />
+                        </span>
+                        <Link to="/my-buyers">
+                          <p>
+                            uploaded Buyer Data{" "}
+                            <b>
+                              {creditLimit !== null ? (
+                                creditLimit.total_buyer_uploaded
+                              ) : (
+                                <MiniLoader />
+                              )}
+                            </b>
+                          </p>
+                        </Link>
+                      </div>
+                      {userDetails !== null && userDetails.level_type !== 1 ? (
+                        <>
+                        <div className="upload-buyer">
+                          <span className="upload-buyer-icon d-flex">
+                            <img
+                              alt="wallet"
+                              src="./assets/images/wallet.svg"
+                              className="img-fluid"
+                            />
+                          </span>
+                          <p>
+                            Credits Points{" "}
+                            <b className="credit_limit">
+                              {creditLimit !== null ? (
+                                creditLimit.credit_limit
+                              ) : (
+                                <MiniLoader />
+                              )}
+                            </b>
+                          </p>
+                        </div>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                     <ul className="list-unstyled mb-0">
                       <li>
                         <Link className="dropdown-item" to="/my-profile">

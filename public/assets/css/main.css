@@ -6394,6 +6394,10 @@ body.dark .notification_pro_deal>li:last-child{
 .modal_inner_content .deal_notifications_btn li+li{
   margin: 0;
 }
+.modal_inner_content .deal_notifications_btn li .btn img{
+  width: 36px;
+  height: 36px;
+}
 .light_green_bg{
   background-color: #E6FBEF;
 }
