@@ -39,4 +39,12 @@ class HomeController extends Controller
         ];
         return response()->json($responseData, 200);
     }
+    
+    
+    public function apiVerificationStatus(Request $request)
+    {
+           return response()->json([
+            "success"=> true],
+            200);
+    }
 }

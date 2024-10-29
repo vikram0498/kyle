@@ -57,6 +57,8 @@ Route::get('/phpinfo',function(){
 
 // Auth::routes(['verify' => true]);
 
+Route::post('get-document-verification-status', [HomeController::class,'apiVerificationStatus'])->name('apiVerificationStatus');
+
 Route::get('get-latest-kyc-count', [HomeController::class,'getCountOfLatestKyc'])->name('getCountOfLatestKyc');
 
 

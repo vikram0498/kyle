@@ -390,32 +390,34 @@ class SearchBuyerController extends Controller
             }
 
             if($request->property_flaw){
-                $selectedValues = $request->property_flaw;
+                // $selectedValues = $request->property_flaw;
+                $propertyFlows = array_map('intval', $request->property_flaw);
 
-                $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $buyers = $buyers->where(function ($query) use ($propertyFlows) {
+                    foreach ($propertyFlows as $value) {
                         $query->orWhereJsonContains("property_flaw", $value);
                     }
                 });
 
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($propertyFlows) {
+                    foreach ($propertyFlows as $value) {
                         $query->orWhereJsonContains("property_flaw", $value);
                     }
                 });
             }
 
             if($request->purchase_method){
-                $selectedValues = $request->purchase_method;
+                // $selectedValues = $request->purchase_method;
+                $purchaseMethods = array_map('intval', $request->purchase_method);
 
-                $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $buyers = $buyers->where(function ($query) use ($purchaseMethods) {
+                    foreach ($purchaseMethods as $value) {
                         $query->orWhereJsonContains("purchase_method", $value);
                     }
                 });
                 
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($purchaseMethods) {
+                    foreach ($purchaseMethods as $value) {
                         $query->orWhereJsonContains("purchase_method", $value);
                     }
                 });
@@ -423,16 +425,17 @@ class SearchBuyerController extends Controller
             }
 
             if($request->zoning){
-                $selectedValues = $request->zoning;
+                // $selectedValues = $request->zoning;
+                $zonings = array_map('intval', $request->zoning);
 
-                $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $buyers = $buyers->where(function ($query) use ($zonings) {
+                    foreach ($zonings as $value) {
                         $query->orWhereJsonContains("zoning", $value);
                     }
                 });
 
-                $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
+                $additionalBuyers = $additionalBuyers->where(function ($query) use ($zonings) {
+                    foreach ($zonings as $value) {
                         $query->orWhereJsonContains("zoning", $value);
                     }
                 });
@@ -643,16 +646,17 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['permanent_affix'] =  (!is_null($request->permanent_affix))?$request->permanent_affix : 0;
                 $insertLogRecords['park']    =  $request->park;
                 $insertLogRecords['rooms']    =  $request->rooms;
-                $insertLogRecords['zoning']  =  ($request->zoning && count($request->zoning) > 0) ? json_encode($request->zoning) : null;
-                $insertLogRecords['property_flaw']  =  ($request->property_flaw && count($request->property_flaw) > 0) ? $request->property_flaw : null;
+                $insertLogRecords['zoning']  =  ( isset($zonings) && $zonings && count($zonings) > 0) ? json_encode($zonings) : null;
+                $insertLogRecords['property_flaw']  =  (isset($propertyFlows) && $propertyFlows && count($propertyFlows) > 0) ? $propertyFlows : null;
+                $insertLogRecords['purchase_method']  =  (isset($purchaseMethods) && $purchaseMethods && count($purchaseMethods) > 0) ? $purchaseMethods : null;
                 $insertLogRecords['picture_link'] =  $request->picture_link;
                 $searchLog = SearchLog::create($insertLogRecords);
                 $searchLogId = $searchLog->id;
-                if (isset($request->attachments) && count($request->attachments) > 0) {                   
-                    foreach ($request->input('attachments', []) as $key => $file) {
-                        $uploadedImage = uploadImage($searchLog, $file, 'search-log/attachments/',"search-log", 'original', 'save', null);
+                    if ($request->hasFile('attachments')) {                   
+                        foreach ($request->file('attachments') as $file) {
+                            $uploadedImage = uploadImage($searchLog, $file, 'search-log/attachments', "search-log", 'original', 'save', null);
+                        }
                     }
-                }
             }
             
             foreach ($buyers as $key=>$buyer){
