@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { useFormError } from "../../../hooks/useFormError";
 import { Link, useNavigate } from "react-router-dom";
 
-const ResultPage = ({ setIsFiltered }) => {
+const ResultPage = ({ setIsFiltered,filterFormData }) => {
   const [buyerId, setBuyerId] = useState(0);
   const [buyerStatus, setBuyerStatus] = useState(true);
   const [filterType, setFilterType] = useState("search_page");
@@ -38,21 +38,18 @@ const ResultPage = ({ setIsFiltered }) => {
     getFilterResult();
   }, [activeTab, buyerType, pageNumber]);
 
-  const getFilterResult = async (
-    page = pageNumber,
-    active_tab = activeTab,
-    buyer_type = buyerType
-  ) => {
-    console.log(activeTab, "activeTab");
+  const getFilterResult = async ( page = pageNumber, active_tab = activeTab,buyer_type = buyerType) => {
     try {
       setShowLoader(true);
       const apiUrl = process.env.REACT_APP_API_URL;
-      let searchFields = JSON.parse(
-        localStorage.getItem("filter_buyer_fields")
-      );
-      searchFields.activeTab = active_tab == null ? "my_buyers" : activeTab;
-      searchFields.buyer_type = buyer_type;
-      searchFields.filterType = "";
+      let searchFields = filterFormData
+      searchFields.delete("active_tab");
+      searchFields.delete("buyer_type");
+      searchFields.delete("filterType");
+      let newTab = active_tab == null ? "my_buyers" : activeTab;
+      searchFields.append("activeTab", newTab);
+      searchFields.append("buyer_type",buyer_type);
+      searchFields.append("filterType","");
       let headers = {
         Accept: "application/json",
         Authorization: "Bearer " + getTokenData().access_token,
@@ -118,6 +115,7 @@ const ResultPage = ({ setIsFiltered }) => {
     //console.log(activeTab,'activeTab1',pageNumber);
   };
   const handleClickMoreBuyers = () => {
+    console.log('first')
     setActiveTab("more_buyers");
     setPageNumber(1);
     setBuyerType("");

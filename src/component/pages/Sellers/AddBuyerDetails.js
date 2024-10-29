@@ -16,6 +16,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import WatchVideo from "../../partials/Modal/WatchVideo";
 import SocialShare from "../../partials/Modal/SocialShare";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
+import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
 
 function AddBuyerDetails() {
   const {
@@ -51,6 +52,8 @@ function AddBuyerDetails() {
   const [country, setCountry] = useState([]);
   const [state, setState] = useState([]);
   const [city, setCity] = useState([]);
+  const [zipCode, setZipCode] = useState("");
+  const [address, setAddress] = useState("");
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -275,12 +278,10 @@ function AddBuyerDetails() {
 
     // change city state value string to array
     if (formObject.hasOwnProperty("state")) {
-      //formObject.states =  stateValue;
-      formObject.state = stateValue.length > 0 ? stateValue : "";
+      formObject.state = state;
     }
     if (formObject.hasOwnProperty("city")) {
-      //formObject.city =  cityValue;
-      formObject.city = cityValue.length > 0 ? cityValue : "";
+      formObject.city = city;
     }
     if (formObject.hasOwnProperty("phone")) {
       let phoneNumber = formObject.phone.replace(/-/g, "");
@@ -520,6 +521,18 @@ function AddBuyerDetails() {
     const formattedValue = formatInput(phoneValue);
     setValue("phone", formattedValue); // Update the field with the formatted phone number
   }, [phoneValue, setValue]);
+
+  
+  let dataObj = {
+    setState,
+    setCity,
+    setAddress,
+    setZipCode,
+    address,
+    zipCode,
+    city,
+    state
+  }
 
   return (
     <>
@@ -841,8 +854,9 @@ function AddBuyerDetails() {
 
                                 {renderFieldError("buyer_type")}
                               </div>
-                            </div>    
-                            <div className="col-12 col-lg-12">
+                            </div>
+                            <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
+                            {/* <div className="col-12 col-lg-12">
                               <label>
                               Buy Box Criteria State (Multi-Select)<span>*</span>
                               </label>
@@ -883,22 +897,6 @@ function AddBuyerDetails() {
                                 Buy Box Criteria City (Multi-Select)<span>*</span>
                               </label>
                               <div className="form-group">
-                                {/* <Select
-                                                            name="city"
-                                                            defaultValue=''
-                                                            options={cityOptions}
-                                                            onChange={handleCityChange}
-                                                            className="select"
-                                                            isClearable={true}
-                                                            isSearchable={true}
-                                                            isDisabled={false}
-                                                            isLoading={false}
-                                                            value={city}
-                                                            isRtl={false}
-                                                            placeholder="Select City"
-                                                            closeMenuOnSelect={false}
-                                                            isMulti
-                                                        /> */}
                                 <Controller
                                   control={control}
                                   name="city"
@@ -930,26 +928,7 @@ function AddBuyerDetails() {
 
                                 {renderFieldError("city")}
                               </div>
-                            </div>
-                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                    <label>Zip<span>*</span></label>
-                                                    <div className="form-group">
-                                                        <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
-                                                            ...register("zip_code", {
-                                                                required: "Zip Code is required",
-                                                                validate: {
-                                                                    matchPattern: (v) =>
-                                                                    /^[0-9]\d*$/.test(v) ||
-                                                                    "The zip code format is invalid",
-                                                                    maxLength: (v) =>
-                                                                    v.length < 10 || "The digit should be less than 10",
-                                                                },
-                                                            })
-                                                        } />
-                                                         {errors.zip_code && <p className="error">{errors.zip_code?.message}</p>}
-                                                        {renderFieldError('zip_code') }
-                                                    </div>
-                                                </div> */}
+                            </div> */}
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 MLS Status<span>*</span>

@@ -9,7 +9,7 @@ import GoogleMapAutoAddress from "../../../partials/GoogleMapAutoAddress";
 import PropertyAttachments from "../../../partials/PropertyAttachments";
 const Condo = ({ data, manufactureSelected }) => {
   const [startDate, setStartDate] = useState("");
-  console.log(data.state, "state");
+  console.log(data, "state");
   return (
     <>
       <div className="row">
@@ -336,7 +336,7 @@ const Condo = ({ data, manufactureSelected }) => {
           </div>
         </div>
       </div>
-      <PropertyAttachments />
+      <PropertyAttachments data={data}/>
       <div className="column--grid">
         <div className="grid-template-col">
           <div className="radio-block-group">

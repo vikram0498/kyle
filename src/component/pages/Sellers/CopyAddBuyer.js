@@ -16,6 +16,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
+import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
 
 function CopyAddBuyer({urlType}) {
   const { token } = useParams();
@@ -44,9 +45,12 @@ function CopyAddBuyer({urlType}) {
   const capchaSiteKey = process.env.REACT_APP_RECAPTCHA_SITE_KEY;
   const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;
 
-  const [country, setCountry] = useState([]);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [address, setAddress] = useState("");
+
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -443,6 +447,16 @@ function CopyAddBuyer({urlType}) {
     setValue("phone", formattedValue); // Update the field with the formatted phone number
   }, [phoneValue, setValue]);
 
+  let dataObj = {
+    setState,
+    setCity,
+    setAddress,
+    setZipCode,
+    address,
+    zipCode,
+    city,
+    state
+  }
   return (
     <>
       
@@ -528,7 +542,6 @@ function CopyAddBuyer({urlType}) {
                                   },
                                 })}
                               />
-
                               {errors.last_name && (
                                 <p className="error">
                                   {errors.last_name?.message}
@@ -702,39 +715,11 @@ function CopyAddBuyer({urlType}) {
                               {renderFieldError("buyer_type")}
                             </div>
                           </div>
-                          <div className="col-12 col-lg-12">
+                          {/* <div className="col-12 col-lg-12">
                             <label>
                             Buy Box Criteria State (Multi-Select)<span>*</span>
                             </label>
                             <div className="form-group">
-                              {/* <Select
-                                                                    name="state"
-                                                                    defaultValue=''
-                                                                    options={stateOptions}
-                                                                    onChange={(item) => getCities(item)}
-                                                                    className="select"
-                                                                    isClearable={true}
-                                                                    isSearchable={true}
-                                                                    placeholder="Select State"
-                                                                    closeMenuOnSelect={false}
-                                                                    isMulti
-                                                                />
-                                                                    {renderFieldError('state') } */}
-                              {/* <Select
-                                                                        name="state"
-                                                                        defaultValue=''
-                                                                        options={stateOptions}
-                                                                        onChange={(item) => getCities(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        value={state}
-                                                                        isRtl={false}
-                                                                        placeholder="Select State"
-                                                                        closeMenuOnSelect={true}
-                                                                    /> */}
                               <Controller
                                 control={control}
                                 name="state"
@@ -769,38 +754,6 @@ function CopyAddBuyer({urlType}) {
                             Buy Box Criteria City (Multi-Select) <span>*</span>
                             </label>
                             <div className="form-group">
-                              {/* <Select
-                                                                        name="city"
-                                                                        defaultValue=''
-                                                                        options={cityOptions}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        onChange={handleCityChange}
-                                                                        isRtl={false}
-                                                                        value={city}
-                                                                        placeholder="Select City"
-                                                                        closeMenuOnSelect={false}
-                                                                        isMulti
-                                                                    />
-                                                                    {renderFieldError('city') } */}
-                              {/* <Select
-                                                                        name="city"
-                                                                        defaultValue=''
-                                                                        options={cityOptions}
-                                                                        onChange={(item) => setCity(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        isDisabled={false}
-                                                                        isLoading={false}
-                                                                        value={city}
-                                                                        isRtl={false}
-                                                                        placeholder="Select City"
-                                                                        closeMenuOnSelect={true}
-                                                                    /> */}
                               <Controller
                                 control={control}
                                 name="city"
@@ -830,7 +783,8 @@ function CopyAddBuyer({urlType}) {
 
                               {renderFieldError("city")}
                             </div>
-                          </div>
+                          </div> */}
+                          <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
                           <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                             <label>
                               MLS Status<span>*</span>
@@ -906,22 +860,22 @@ function CopyAddBuyer({urlType}) {
                               {renderFieldError("parking")}
                             </div>
                           </div>
-                          {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                <label>Zip<span>*</span></label>
-                                                                <div className="form-group">
-                                                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
-                                                                        ...register("zip_code", {
-                                                                            required: "Zip Code is required",
-                                                                            validate: {
-                                                                                maxLength: (v) =>
-                                                                                v.length <= 10 || "The digit should be less than equal 10",
-                                                                            },
-                                                                        })
-                                                                    } />
-                                                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
-                                                                    {renderFieldError('zip_code') }
-                                                                </div>
-                                                            </div> */}
+                            {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                                <label>Zip<span>*</span></label>
+                                <div className="form-group">
+                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                        ...register("zip_code", {
+                                            required: "Zip Code is required",
+                                            validate: {
+                                                maxLength: (v) =>
+                                                v.length <= 10 || "The digit should be less than equal 10",
+                                            },
+                                        })
+                                    } />
+                                    {errors.address && <p className="error">{errors.zip_code?.message}</p>}
+                                    {renderFieldError('zip_code') }
+                                </div>
+                            </div> */}
 
                           <div className="col-12 col-lg-12">
                             <div className="form-group">

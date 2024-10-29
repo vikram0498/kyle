@@ -4,7 +4,7 @@ import { useLoadScript } from "@react-google-maps/api";
 
 const libraries = ["places"];
 
-const GoogleMapAutoAddress = ({ dataObj }) => {
+const GoogleMapAutoAddress = ({ dataObj , register = '', errors=''}) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY, // Replace with your API key
     libraries,
@@ -22,6 +22,9 @@ const GoogleMapAutoAddress = ({ dataObj }) => {
       setState={dataObj.setState}
       zipCode={dataObj.zipCode}
       setZipCode={dataObj.setZipCode}
+      register={register}
+      serverError ={dataObj.renderFieldError || ''}
+      errors={errors}
     />
   );
 };
@@ -35,6 +38,9 @@ const AutocompleteInput = ({
   setState,
   zipCode,
   setZipCode,
+  register,
+  serverError,
+  errors,
 }) => {
   const {
     ready,
@@ -54,7 +60,7 @@ const AutocompleteInput = ({
     if (address) {
       setValue(address); // Use setValue from the hook
     }
-  }, [address, setValue]);
+  }, [address]);
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [isVisible, setIsVisible] = useState(false);
@@ -118,7 +124,6 @@ const AutocompleteInput = ({
       }
     }
   };
-
   return (
     <>
       <div className="col-12 col-lg-12">
@@ -126,12 +131,14 @@ const AutocompleteInput = ({
         <div className="form-group position-relative">
           <input
             type="text"
+            name="address"
             value={value} // Use value from usePlacesAutocomplete hook
-            onChange={handleChangeAddress}
-            onKeyDown={handleKeyDown}
             disabled={!ready}
             placeholder="Type your location"
             className="form-control"
+            {...(register ? register("address", { required: "Address is required" }) : {})}
+            onChange={handleChangeAddress}
+            onKeyDown={handleKeyDown}
           />
           {(status === "OK" && !isVisible) && (
             <ul className="auto_address_list">
@@ -149,24 +156,27 @@ const AutocompleteInput = ({
               ))}
             </ul>
           )}
+          {errors.address && (<p className="error">{errors.address?.message}</p>)}
+          {serverError && serverError('address')}
+          
         </div>
       </div>
       <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
         <label>State</label>
         <div className="form-group">
-          <input type="text" value={state} readOnly className="form-control" />
+          <input type="text" value={state} name="state" readOnly className="form-control" />
         </div>
       </div>
       <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
         <label>City</label>
         <div className="form-group">
-          <input type="text" value={city} readOnly className="form-control" />
+          <input type="text" value={city} name="city" readOnly className="form-control" />
         </div>
       </div>
       <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
         <label>Pin Code</label>
         <div className="form-group">
-          <input type="text" value={zipCode} readOnly className="form-control" />
+          <input type="text" value={zipCode} name="zip_code" readOnly className="form-control" />
         </div>
       </div>
     </>

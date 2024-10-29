@@ -291,8 +291,8 @@ const MyBuyer = () => {
                     </div>
                   ) : (
                     <div className="card-box-inner">
-                      {/* <h3 className="text-center">Property Criteria Match With {totalRecord} Buyers </h3> */}
-                      {/* <h3 className="text-center">Your Purchased Buyer Details</h3> */}
+                      {/* <h3 className="text-center">Property Criteria Match With {totalRecord} Buyers </h3>
+                      <h3 className="text-center">Your Purchased Buyer Details</h3> */}
                       <div className="property-critera">
                         <div className="row cust-row">
                           {buyerData.map((data, index) => {

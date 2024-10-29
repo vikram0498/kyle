@@ -336,7 +336,7 @@ const Manufactured = ({ data }) => {
           </div>
         </div>
       </div>
-      <PropertyAttachments />
+      <PropertyAttachments data={data}/>
       <div className="column--grid">
         <div className="grid-template-col">
           <div className="radio-block-group">

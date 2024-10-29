@@ -194,7 +194,7 @@ const Land = ({ data }) => {
           </div>
         </div>
       </div>
-      <PropertyAttachments />
+      <PropertyAttachments data={data}/>
       {data.showCreativeFinancing && (
         <div className="block-divide">
           <h5>Creative Financing</h5>

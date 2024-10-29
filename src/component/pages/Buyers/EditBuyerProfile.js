@@ -13,6 +13,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
 import BuyerProfilePayment from "../../partials/Modal/BuyerProfilePayment";
+import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
 
 function EditBuyerProfile() {
   const navigate = useNavigate();
@@ -59,8 +60,11 @@ function EditBuyerProfile() {
   /* previous form data end */
   const [currentBuyerData, setCurrentBuyerData] = useState({});
   const [country, setCountry] = useState([]);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [address, setAddress] = useState("");
+
   const [propertyType, setPropertyType] = useState([]);
   const [purchaseMethods, setPurchaseMethods] = useState([]);
   const [locationFlaws, setLocationFlaws] = useState([]);
@@ -654,6 +658,18 @@ function EditBuyerProfile() {
     }
     return true;
   };
+
+  let dataObj = {
+    setState,
+    setCity,
+    setAddress,
+    setZipCode,
+    address,
+    zipCode,
+    city,
+    state
+  }
+
   return (
     <>
       <BuyerHeader />
@@ -868,7 +884,8 @@ function EditBuyerProfile() {
                               <textarea className="form-control" name="description" style={{height:'90px'}} defaultValue={currentBuyerData.description}></textarea>
                             </div>
                           </div>
-                          <div className="col-12 col-lg-12">
+                          <GoogleMapAutoAddress dataObj={dataObj} />
+                          {/* <div className="col-12 col-lg-12">
                             <label>
                               State<span>*</span>
                             </label>
@@ -936,7 +953,7 @@ function EditBuyerProfile() {
 
                               {renderFieldError("city")}
                             </div>
-                          </div>
+                          </div> */}
                           <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                             <label>
                               Company/LLC<span>*</span>

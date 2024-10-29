@@ -64,6 +64,9 @@ const SellerForm = () => {
   const [sewer, setSewer] = useState([]);
   const [marketPreferance, setMarketPreferance] = useState([]);
   const [contactPreferance, setContactPreferance] = useState([]);
+  const [attachments,setAttachments] = useState([]);
+  const [url,setUrl] = useState("");
+
 
   const [solar, setSolar] = useState('0');
   const [pool, setPool] = useState('0');
@@ -112,7 +115,7 @@ const SellerForm = () => {
   const [purchaseMethodsValue, setPurchaseMethodsValue] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
+  const [filterFormData, setFilterFormData] = useState([]);
   useEffect(() => {
     // redirect from payment completed page
     const paramsObject = decodeURI(window.location.search).replace("?", "");
@@ -137,7 +140,6 @@ const SellerForm = () => {
       });
       if (response.data.status) {
         let result = response.data.result;
-        console.log(result.property_types);
         setPurchaseMethodsOption(result.purchase_methods);
         setLocationFlawsOption(result.location_flaws);
         setParkingOption(result.parking_values);
@@ -294,6 +296,8 @@ const SellerForm = () => {
     setContactPreferance([]);
 
     setLocationFlaw([]);
+    setAttachments([]);
+    setUrl("");
 
     setSolar('0');
     setPool('0');
@@ -322,7 +326,6 @@ const SellerForm = () => {
   };
 
   const handlePropertyTypeChange = (value) => {
-    console.log('s44444olar');
     makeStateBlank();
     setErrors(null);
     if (value === null) {
@@ -334,34 +337,44 @@ const SellerForm = () => {
       setIsSearchForm(propValue);
     }
   };
-  console.log(solar,'solar');
   const submitSearchBuyerForm = (e) => {
     e.preventDefault();
 
     setErrors(null);
-
     setLoading(true);
 
-    var data = new FormData(e.target);
-    let formObject = Object.fromEntries(data.entries());
+    const data = new FormData(e.target);
 
-    if (formObject.hasOwnProperty("property_flaw")) {
-      formObject.property_flaw = locationFlaw;
-    }
-    if (formObject.hasOwnProperty("purchase_method")) {
-      formObject.purchase_method = purchaseMethod;
-    }
-    if (formObject.hasOwnProperty("zoning")) {
-      formObject.zoning = zoning;
-    }
-    formObject.city = data.get("city") !== "" ? [Number(data.get("city"))] : "";
-    formObject.state =
-      data.get("state") !== "" ? [Number(data.get("state"))] : "";
+    // Manually add `property_flaw` as an array to FormData
+    locationFlaw.forEach((item) => {
+        data.append("property_flaw[]", item);  // Using "[]" to denote array
+    });
 
-    formObject.filterType = "search_page";
-    formObject.activeTab = "my_buyers";
-    buyBoxSearch(formObject);
-  };
+    // Manually add `purchase_method` as an array to FormData
+    purchaseMethod.forEach((item) => {
+        data.append("purchase_method[]", item);
+    });
+
+    // Manually add `zoning` as an array to FormData (if it's an array)
+    if (Array.isArray(zoning)) {
+        zoning.forEach((item) => {
+            data.append("zoning[]", item);
+        });
+    }
+    // Append any other fields that aren't arrays or files
+    data.append("filterType", "search_page");
+    data.append("activeTab", "my_buyers");
+
+    // Add attachments if you have a file array, such as selectedImages
+    attachments.forEach((file, index) => {
+        data.append("attachments[]", file);
+    });
+    setFilterFormData(data);
+    // Submit FormData directly to the endpoint
+    buyBoxSearch(data);  // Ensure `buyBoxSearch` can handle FormData
+};
+
+
 
   const dataObj = {
     address,
@@ -425,6 +438,10 @@ const SellerForm = () => {
     setContactPreferance,
     locationFlaw,
     setLocationFlaw,
+    attachments,
+    setAttachments,
+    url,
+    setUrl,
 
     solar,
     setSolar,
@@ -500,6 +517,7 @@ const SellerForm = () => {
     try {
       let response = await axios.post(apiUrl + "buy-box-search", formObject, {
         headers: headers,
+        "Content-Type": "multipart/form-data",
       });
       if (response) {
         setLoading(false);
@@ -540,7 +558,6 @@ const SellerForm = () => {
       });
       if (response.data.status) {
         let result = response.data.data.searchLog;
-        console.log(result);
         buyBoxSearch(result);
         setIsLoader(false);
       }
@@ -561,9 +578,6 @@ const SellerForm = () => {
       }
     }
   };
-
-  
-
   return (
     <>
       <Header />
@@ -573,7 +587,7 @@ const SellerForm = () => {
             <img alt="" src="assets/images/loader.svg" />
           </div>
         ) : isFiltered ? (
-          <ResultPage setIsFiltered={setIsFiltered} />
+          <ResultPage setIsFiltered={setIsFiltered} filterFormData={filterFormData}/>
         ) : (
           <>
             <div className="container position-relative pat-40">
@@ -609,7 +623,7 @@ const SellerForm = () => {
                   <div className="col-12 col-lg-12">
                     <div className="card-box-inner">
                       <h3>Buybox Search</h3>
-                      <form method="post" onSubmit={submitSearchBuyerForm}>
+                      <form method="post" onSubmit={submitSearchBuyerForm} >
                         <div className="card-box-blocks">
                           <div className="row">
                             <div className="col-12 col-lg-12">

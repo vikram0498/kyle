@@ -26,14 +26,18 @@ const LastSearchData = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [sentOpen, setSentOpen] = useState(false);
   const [buyerId, setBuyerId] = useState("");
-
+  const [recentSearchedAddress, setRecentSearchedAddress] = useState([]);
+  const [dealStatus, setDealStatus] = useState([]);
+  const [searchLogId, setSearchLogId] = useState("");
+  const [status, setStatus] = useState("");
+  const [isFilter, setIsFilter] = useState(false);
   const { setErrors, renderFieldError } = useFormError();
 
   const [likeCount, setLikeCount] = useState(50);
 
   useEffect(() => {
     getBuyerLists();
-  }, []);
+  }, [isFilter]);
 
   const getBuyerLists = async (page = "") => {
     try {
@@ -44,9 +48,9 @@ const LastSearchData = () => {
         Authorization: "Bearer " + getTokenData().access_token,
         "auth-token": getTokenData().access_token,
       };
-      let url = apiUrl + "last-search-buyer";
+      let url = `${apiUrl}last-search-buyer?search_log_id=${searchLogId}&status=${status}`;
       if (page > 1) {
-        url = apiUrl + "last-search-buyer?page=" + page;
+        url = `${url}&page=${page}`;
       }
       let response = await axios.post(url, {}, { headers: headers });
       setIsLoader(false);
@@ -59,6 +63,8 @@ const LastSearchData = () => {
         setCurrentPageNo(response.data.buyers.current_page);
         setFromRecord(response.data.buyers.from);
         setToRecord(response.data.buyers.to);
+        setRecentSearchedAddress(response.data.last_searches);
+        setDealStatus(response.data.deal_status);
       }
     } catch (error) {
       if (error.response) {
@@ -286,6 +292,38 @@ const LastSearchData = () => {
             </div>
             <div className="card-box bg-white-gradient pt-0">
               <div className="row">
+                <div className="filter">
+                  <div className="row">
+                      <div className="col-12 col-sm-6 col-md-5 col-lg-5 col-xl-5">
+                        <label>Search Log</label>
+                        <div className="form-group">
+                          <select class="form-select" aria-label="Default select example" onChange={(e) => setSearchLogId(e.target.value)}
+                          >
+                            <option selected>Select Option</option>
+                            {recentSearchedAddress.map((data,index)=>{
+                              return(<option value={data.value}>{data.label}</option>)
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-sm-6 col-md-5 col-lg-5 col-xl-5">
+                        <label>Status</label>
+                        <div className="form-group">
+                          <select class="form-select" aria-label="Default select example" onChange={(e) => setStatus(e.target.value)}>
+                            {dealStatus.map((data,index)=>{
+                              return(<option value={data.value}>{data.label}</option>)
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+                        <label>&nbsp;</label>
+                        <div className="form-group">
+                          <button className="btn btn-primary" onClick={(e)=>{setIsFilter(!isFilter)}}>Submit</button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
                 <div className="col-12 col-lg-12">
                   {totalRecord == 0 ? (
                     <div className="card-box-inner">
