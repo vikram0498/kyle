@@ -168,8 +168,10 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
 
     // Settings
-    Route::get('settings', [SettingController::class, 'index']);
-    Route::get('notification-settings', [SettingController::class, 'notificationSettings']);
+    Route::get('settings', [SettingController::class, 'userSettings']);
+    Route::post('settings/update', [SettingController::class, 'updateUserSettings']);
+    Route::get('notification-settings', [SettingController::class, 'userNotificationSettings']);
+    Route::post('notification-settings/update', [SettingController::class, 'updateUserNotificationSettings']);
 
 });
 

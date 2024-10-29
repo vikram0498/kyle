@@ -277,11 +277,9 @@ if (!function_exists('getUserSetting')) {
 			$userType = "buyer";
 		} else if($authUser->is_buyer){
 			$userType = "buyer";
-		} else if($authUser->is_seller){
-			$userType = "seller";
 		}
 
-		$setting = Setting::whereGroup('api')->whereKey($key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
+		$setting = Setting::whereGroup('api')->where('key', $key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
 		if($setting){
 			$result = $setting->value;
 		}
@@ -300,11 +298,9 @@ if (!function_exists('getUserNotificationSetting')) {
 			$userType = "buyer";
 		} else if($authUser->is_buyer){
 			$userType = "buyer";
-		} else if($authUser->is_seller){
-			$userType = "seller";
 		}
 
-		$setting = NotificationSetting::whereKey($key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
+		$setting = NotificationSetting::where('key', $key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
 		if($setting){
 			$result = $setting->value;
 		}

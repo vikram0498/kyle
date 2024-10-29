@@ -298,26 +298,31 @@ return [
         "deal_custom_message" => [
             'value' => "",
             'type'  => "textarea",
-            'display_name' => "Deal Custom Message"
+            'display_name' => "Deal Custom Message",
+            'setting_for'  => ['seller']
         ]
     ],
 
     "user_notification_settings" => [
         "deal_notification" => [
             'value' => "enable",
-            'display_name' => "Deal Notifications"
+            'display_name' => "Deal Notifications",
+            'setting_for'  => ['buyer']
         ],
         "interest_notification" => [
             'value' => "enable",
-            'display_name' => "Interest Notifications"
+            'display_name' => "Interest Notifications",
+            'setting_for'  => ['seller']
         ],
         "new_buyer_notification" => [
             'value' => "enable",
-            'display_name' => "New Buyers Notification"
+            'display_name' => "New Buyers Notification",
+            'setting_for'  => ['seller']
         ],
         "dm_notification" => [
             'value' => "enable",
-            'display_name' => "DM Notifications"
+            'display_name' => "DM Notifications",
+            'setting_for'  => ['seller', 'buyer']
         ],
     ]
 ];
