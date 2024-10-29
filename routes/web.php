@@ -96,7 +96,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('buyer-transactions', 'admin.buyer-transactions.index')->name('buyer-transactions'); 
         
         Route::view('profile-tags', 'admin.buyer-plans.index')->name('buyer-plans');    
-        
+
+        Route::view('campaigns', 'admin.campaigns.index')->name('campaigns');
         
 
     });
