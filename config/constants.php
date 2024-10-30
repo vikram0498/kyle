@@ -288,7 +288,7 @@ return [
 
     'reminder_mail_subject'=>'Pre-Launch Invite | The Future of Real Estate Investing',
 
-    "buyer_interest_status" => [
+    "buyer_deal_status" => [
         'want_to_buy'      => "Want to Buy",
         "interested"        => "Interested",
         "not_interested"    => "Not Interested",

@@ -1232,7 +1232,7 @@ class SearchBuyerController extends Controller
     }
 
     /**
-     * Send Deal to selected buyer's who is selected from searched buyer list
+     * Send Deal to selected buyer's who is selected from searched buyer list Login Seller
      */
     public function sendDealToBuyers(Request $request){
         $request->validate([
@@ -1240,6 +1240,9 @@ class SearchBuyerController extends Controller
             'buyer_user_ids'    => ['required', 'array'],
             'buyer_user_ids.*'  => ['integer', 'exists:users,id'],
             'message'           => ['nullable', 'string']
+        ],[],[
+            'buyer_user_ids' => 'buyer',
+            'buyer_user_ids.*' => 'buyer',
         ]);
 
         DB::beginTransaction();
@@ -1258,7 +1261,8 @@ class SearchBuyerController extends Controller
                     'message'     => trans('notification_messages.buyer_deal.send_deal_message'),
                     'module'    => "buyer_deal",
                     'type'      => "send_deal",
-                    'module_id' => $buyerDeal->id
+                    'module_id' => $buyerDeal->id,
+                    'notification_type' => 'deal_notification'
                 ];
                 Notification::send($buyerUser, new SendNotification($notificationData));
             }
@@ -1282,8 +1286,6 @@ class SearchBuyerController extends Controller
         }
     }
 
-    
-
     /**
      * Get Deal list for login buyer 
      */
@@ -1299,11 +1301,12 @@ class SearchBuyerController extends Controller
                 $dealLists->getCollection()->transform(function ($buyerDeal) use ($propertyTypes) {
                     $searchLog = $buyerDeal->searchLog ?? null;
                     $propertType = $searchLog && $searchLog->property_type && $propertyTypes[$searchLog->property_type] ? $propertyTypes[$searchLog->property_type] : '';
+                    $address = $searchLog && $searchLog->address ? $searchLog->address : '';
                     return [
                         'id'                => $buyerDeal->id,
                         'search_log_id'     => $searchLog->id ?? '',
-                        'title'             => "Real Estate Company That Prioritizes Property",
-                        'address'           => $searchLog && $searchLog->address ? $searchLog->address : '' ,
+                        'title'             => $address,
+                        'address'           => $address,
                         'property_type'     => $propertType,
                         'property_images'   => $searchLog && $searchLog->uploads ? $searchLog->search_log_image_urls : '',
                         'status'            => $buyerDeal->status,
@@ -1327,7 +1330,7 @@ class SearchBuyerController extends Controller
     }
 
     /**
-     * Get Single Deal Detail
+     * Get Single Deal Detail for Login Buyer
      */
     public function buyerDealDetail($id){
         try {
@@ -1420,6 +1423,130 @@ class SearchBuyerController extends Controller
             return response()->json($responseData, 200);
         } catch (\Exception $e) {
             DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    /**
+     * Get List of Deals for Seller with Selected status count
+     */
+    public function sellerDealResultList(){
+        try {
+            $authUser = auth()->user();
+
+            $seachLogDeals = SearchLog::with(['buyerDeals'])->whereHas('buyerDeals')
+            ->where('user_id', $authUser->id)
+            ->withCount([
+                'buyerDeals as want_to_buy_count' => function ($query) {
+                    $query->where('status', 'want_to_buy');
+                },
+                'buyerDeals as interested_count' => function ($query) {
+                    $query->where('status', 'interested');
+                },
+                'buyerDeals as not_interested_count' => function ($query) {
+                    $query->where('status', 'not_interested');
+                }
+            ])
+            ->latest()->paginate(20);
+
+            $seachLogDeals->getCollection()->transform(function ($seachLogDeal) {            
+                $address = $seachLogDeal && $seachLogDeal->address ? $seachLogDeal->address : '';
+                return [
+                    'id'                => $seachLogDeal->id,
+                    'title'             => $address,
+                    'address'           => $address,
+                    'property_images'   => $seachLogDeal->uploads ? $seachLogDeal->search_log_image_urls : '',
+
+                    'want_to_buy_count' => $seachLogDeal->want_to_buy_count,
+                    'interested_count'  => $seachLogDeal->interested_count,
+                    'not_interested_count' => $seachLogDeal->not_interested_count,
+                ];
+            });
+
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'deals'     => $seachLogDeals
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Throwable $th) {
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $th->getMessage().'->'.$th->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    /**
+     * Get Single Deal Detail for Login Buyer
+     */
+    public function sellerDealDetail($id, $status=''){
+        try {
+            $dealStatus = array_keys(config('constants.buyer_deal_status'));
+            if(empty($status) || !in_array($status, $dealStatus)){
+                $status = "want_to_buy";
+            }            
+
+            $searchLog = SearchLog::with(['buyerDeals'])->where("id", $id)            
+            ->withCount([
+                'buyerDeals as want_to_buy_count' => function ($query) {
+                    $query->where('status', 'want_to_buy');
+                },
+                'buyerDeals as interested_count' => function ($query) {
+                    $query->where('status', 'interested');
+                },
+                'buyerDeals as not_interested_count' => function ($query) {
+                    $query->where('status', 'not_interested');
+                }
+            ])
+            ->first();
+
+            
+            $searchlogBuyerDeals = $searchLog->buyerDeals()->with(['buyerUser'])->where('status', $status)
+            ->latest()->paginate(20);
+            $searchlogBuyerDeals->getCollection()->transform(function ($searchlogBuyerDeal) {
+                $buyerUser = $searchlogBuyerDeal->buyerUser;
+                return [
+                    'deal_id'           => $searchlogBuyerDeal->id,
+                    'buyer_user_id'     => $searchlogBuyerDeal->buyer_user_id,                    
+
+                    'buyer_name'        => $buyerUser->name,
+                    'buyer_email'       => $buyerUser->email,
+                    'buyer_phone'       => $buyerUser->phone,
+                ];
+            });
+            
+            $address = $searchLog && $searchLog->address ? $searchLog->address : '';
+            $propertyImages = $searchLog->uploads ? $searchLog->search_log_image_urls : '';
+            $dealData = [
+                "id"                    => $id,
+                'title'                 => $address,
+                'address'               => $address,
+                'property_images'       => $propertyImages,
+
+                "total_buyer"           => $searchLog->buyerDeals()->count(),
+                'want_to_buy_count'     => $searchLog->want_to_buy_count,
+                'interested_count'      => $searchLog->interested_count,
+                'not_interested_count'  => $searchLog->not_interested_count,
+
+                // buyer listing with status filter
+                "buyers"                => $searchlogBuyerDeals
+            ];
+
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'data'     => $dealData
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
