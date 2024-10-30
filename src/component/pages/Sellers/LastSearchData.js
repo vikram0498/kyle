@@ -10,6 +10,7 @@ import { useFormError } from "../../../hooks/useFormError";
 import { toast, dismiss } from "react-toastify";
 import axios from "axios";
 import BuyerCard from "./Section/BuyerCard";
+import Select from "react-select";
 
 const LastSearchData = () => {
   const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
@@ -28,7 +29,7 @@ const LastSearchData = () => {
   const [buyerId, setBuyerId] = useState("");
   const [recentSearchedAddress, setRecentSearchedAddress] = useState([]);
   const [dealStatus, setDealStatus] = useState([]);
-  const [searchLogId, setSearchLogId] = useState("");
+  const [searchLog, setSearchLog] = useState("");
   const [status, setStatus] = useState("");
   const [isFilter, setIsFilter] = useState(false);
   const { setErrors, renderFieldError } = useFormError();
@@ -48,7 +49,15 @@ const LastSearchData = () => {
         Authorization: "Bearer " + getTokenData().access_token,
         "auth-token": getTokenData().access_token,
       };
-      let url = `${apiUrl}last-search-buyer?search_log_id=${searchLogId}&status=${status}`;
+      let logId = '';
+      let statusId = '';
+      if(searchLog){
+        logId = searchLog.value
+      }
+      if(status){
+        statusId = status.value
+      }
+      let url = `${apiUrl}last-search-buyer?search_log_id=${logId}&status=${statusId}`;
       if (page > 1) {
         url = `${url}&page=${page}`;
       }
@@ -297,24 +306,45 @@ const LastSearchData = () => {
                       <div className="col-12 col-sm-6 col-md-5 col-lg-5 col-xl-5">
                         <label>Search Log</label>
                         <div className="form-group">
-                          <select class="form-select" aria-label="Default select example" onChange={(e) => setSearchLogId(e.target.value)}
-                          >
-                            <option selected>Select Option</option>
-                            {recentSearchedAddress.map((data,index)=>{
-                              return(<option value={data.value}>{data.label}</option>)
-                            })}
-                          </select>
+                        <Select
+                          name="property_type"
+                          defaultValue=""
+                          options={recentSearchedAddress}
+                          onChange={(item) =>
+                            setSearchLog(item)
+                          }
+                          className="select"
+                          isClearable={true}
+                          isSearchable={true}
+                          isDisabled={false}
+                          isLoading={false}
+                          value={searchLog}
+                          isRtl={false}
+                          placeholder="Select Property Type"
+                          closeMenuOnSelect={true}
+                        />
                         </div>
                       </div>
                       <div className="col-12 col-sm-6 col-md-5 col-lg-5 col-xl-5">
-                        <label>Status</label>
-                        <div className="form-group">
-                          <select class="form-select" aria-label="Default select example" onChange={(e) => setStatus(e.target.value)}>
-                            {dealStatus.map((data,index)=>{
-                              return(<option value={data.value}>{data.label}</option>)
-                            })}
-                          </select>
-                        </div>
+                      <label>Status</label>
+                        <Select
+                          name="property_type"
+                          defaultValue=""
+                          options={dealStatus}
+                          onChange={(item) =>
+                            setStatus(item)
+                          }
+                          className="select"
+                          isClearable={true}
+                          isSearchable={true}
+                          isDisabled={false}
+                          isLoading={false}
+                          value={status}
+                          isRtl={false}
+                          placeholder="Select Property Type"
+                          closeMenuOnSelect={true}
+                        />
+                        
                       </div>
                       <div className="col-12 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                         <label>&nbsp;</label>

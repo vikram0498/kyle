@@ -15,6 +15,8 @@ const MyBuyersResult = ({
   activeTab,
   pageNumber,
   getFilterResult,
+  selectedDeals,
+  handleCheckboxChange
 }) => {
   const { setErrors, renderFieldError } = useFormError();
 
@@ -303,6 +305,8 @@ const MyBuyersResult = ({
                       handleDisikeClick={handleDisikeClick}
                       handleClickConfirmation={handleClickConfirmation}
                       handleClickEditFlag={handleClickEditFlag}
+                      selectedDeals={selectedDeals}
+                      handleCheckboxChange={handleCheckboxChange}
                     />
                   );
                 })}

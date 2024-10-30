@@ -194,7 +194,7 @@ function Header() {
                               </div>
                             </li>
                           </ul>
-                          <Link to="#">View All</Link>
+                          <Link to="/property-deal-result">View All</Link>
                         </Dropdown.Menu>
                       </Dropdown>
                     </li>
@@ -216,7 +216,7 @@ function Header() {
                                 <p>New buy added in your buyer list....</p>
                               </div>
                               <div className="dropdown_end align-self-center">
-                                <Link to="#">
+                                <Link to="/deal-notifications">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
                                     <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
@@ -250,7 +250,7 @@ function Header() {
                                 <p>New buy added in your buyer list....</p>
                               </div>
                               <div className="dropdown_end align-self-center">
-                                <Link to="#">
+                                <Link to="/deal-notifications">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
                                     <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
@@ -276,7 +276,7 @@ function Header() {
                               </div>
                             </li>
                           </ul>
-                          <Link to="#">View All</Link>
+                          <Link to="/deal-notifications">View All</Link>
                         </Dropdown.Menu>
                       </Dropdown>
                     </li>
@@ -377,7 +377,7 @@ function Header() {
                                 <p>New buy added in your buyer list....</p>
                               </div>
                               <div className="dropdown_end align-self-center">
-                                <Link to="#">
+                                <Link to="/property-deal-result">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
                                     <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
@@ -420,7 +420,7 @@ function Header() {
                               </div>
                             </li>
                           </ul>
-                          <Link to="#">View All</Link>
+                          <Link to="/property-deal-result">View All</Link>
                         </Dropdown.Menu>
                       </Dropdown>
                     </li>

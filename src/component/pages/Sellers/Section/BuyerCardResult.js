@@ -3,7 +3,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const BuyerCardResult = (props) => {
     console.log('re render 22');
-    const {data,index,activeTab,handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag} = props;
+    const {data,index,activeTab,handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag,selectedDeals,handleCheckboxChange} = props;
     let PreferenceIcons = './assets/images/contact-preferance.svg';
     if(data.contact_preferance_id === 1){
         PreferenceIcons = './assets/images/Email-Preference-bg.svg';
@@ -21,6 +21,7 @@ const BuyerCardResult = (props) => {
     //onEntering={entering}
   return (
     <div className="col-12 col-lg-6" >
+        {(activeTab ==='my_buyers')&&<input type="checkbox" value={data.buyer_user_id} className='deal-check-box' checked={selectedDeals.includes(data.buyer_user_id)} onChange={() => handleCheckboxChange(data.buyer_user_id)}/>}
         <div className={"property-critera-block buyer-blog-area property-section-"+data.id}>
             {data.profile_tag_name &&
                 <OverlayTrigger

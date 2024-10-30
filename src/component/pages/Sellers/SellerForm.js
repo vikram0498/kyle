@@ -29,7 +29,7 @@ const SellerForm = () => {
   const [videoUrl, setVideoUrl] = useState("");
 
   const [isFiltered, setIsFiltered] = useState(false);
-
+  const [lastSearchedLogId, setLastSearchedLogId] = useState('');
   const [isSearchForm, setIsSearchForm] = useState("");
 
   const { setErrors, renderFieldError } = useFormError();
@@ -522,6 +522,7 @@ const SellerForm = () => {
       if (response) {
         setLoading(false);
         if (response.data.status) {
+          setLastSearchedLogId(response.data.search_log_id);
           localStorage.setItem(
             "filter_buyer_fields",
             JSON.stringify(formObject)
@@ -587,7 +588,7 @@ const SellerForm = () => {
             <img alt="" src="assets/images/loader.svg" />
           </div>
         ) : isFiltered ? (
-          <ResultPage setIsFiltered={setIsFiltered} filterFormData={filterFormData}/>
+          <ResultPage setIsFiltered={setIsFiltered} filterFormData={filterFormData} lastSearchedLogId={lastSearchedLogId}/>
         ) : (
           <>
             <div className="container position-relative pat-40">

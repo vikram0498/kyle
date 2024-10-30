@@ -10,6 +10,7 @@ import BoostYourProfilePurchased from "../component/pages/Buyers/BoostYourProfil
 import MultiStepForm from "../component/pages/Buyers/MultiStepForm";
 import PaymentConfirm from "../component/pages/Buyers/PaymentConfirm";
 import RegisterBuyer from "../component/auth/Buyers/RegisterBuyer";
+import DealNotifications from "../component/pages/Sellers/DealNotifications";
 const Buyers = () => {
   return (
     <Routes>
@@ -36,6 +37,10 @@ const Buyers = () => {
       <Route
         path="/boost-your-profile-purchased"
         element={<Protected Component={BoostYourProfilePurchased} />}
+      />
+       <Route
+        path="/deal-notifications"
+        element={<Protected Component={DealNotifications} />}
       />
       {/* <Route
         path="/stepper-form"

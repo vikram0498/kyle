@@ -126,7 +126,7 @@ const Seller = () => {
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/property-deal-result" element={<PropertyDealResult />} />
           <Route path="/property-deal-details" element={<PropertyDealDetails />} />
-          <Route path="/deal-notifications" element={<DealNotifications />} />
+          {/* <Route path="/deal-notifications" element={<DealNotifications />} /> */}
           <Route path="/message" element={<Message />} />
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>

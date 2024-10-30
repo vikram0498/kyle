@@ -3,19 +3,44 @@ import { Button, Col, Container, Image, Modal, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
+import { useAuth } from "../../../hooks/useAuth";
+
+import axios from 'axios';
+import BuyerHeader from '../../partials/Layouts/BuyerHeader';
 
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
+    const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
     const [dealConfirmation, setDealConfirmation] = useState(false);
     const [modalContent, setModalContent] = useState('');
+    const [dealData, setDealData] = useState([]);
     const handleOpenModal = (content) => {
         setModalContent(content);
         setDealConfirmation(true);
     };
 
+    useEffect(()=>{
+        const fetchDeal = async ()=>{
+            try {
+                let headers = {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + getTokenData().access_token,
+                    "auth-token": getTokenData().access_token,
+                };
+                const apiUrl = process.env.REACT_APP_API_URL;
+                let response = await axios.get(`${apiUrl}buyer-deals/list`,{headers:headers});
+                setDealData(response.data.deals.data)
+            } catch (error) {
+                
+            }
+        }
+        fetchDeal();
+    },[]);
+
   return (
     <>
-        <Header />
+            {/* <Header /> */}
+            <BuyerHeader />
             <section className='main-section position-relative pt-4 pb-120'>
                 <Container className='position-relative'>
                     <div className="back-block">
@@ -55,96 +80,73 @@ const DealNotifications = () => {
                         </div>
                     </div>
                     <div className='card-box column_bg_space'>
-                        <div className='deal_column'>
-                            <div className='deal_left_column notifications_deal_column border-end-0'>
-                                <div className='deal_notifications_left flex_1column align-items-center'>
-                                    <div className='pro_img'>
-                                        <Image src='/assets/images/property-img.png' alt='' />
+                        {dealData.map((data, index) => {
+                            // Destructure first image and remaining images from data.property_images
+                            const [firstImage, ...remainingImages] = data.property_images || []; 
+                            return (
+                            <div className='deal_column' key={index}>
+                                <div className='deal_left_column notifications_deal_column border-end-0'>
+                                    <div className='deal_notifications_left flex_1column align-items-center'>
+                                        
+                                        {/* Profile Image Section */}
+                                        <div className='pro_img'>
+                                        {/* Display first image or fallback if no images available */}
+                                        {firstImage ? (
+                                            <Image src={firstImage} alt='Property Image' width={200} height={200} />
+                                        ) : (
+                                            <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
+                                        )}
+                                        
+                                        {/* Remaining Images Section */}
                                         <div className='deal_img_group'>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
+                                            {remainingImages.map((imgUrl, i) => (
+                                            <div key={i}>
+                                                <Image src={imgUrl} alt={`Deal Image ${i + 1}`} width={100} height={100} />
                                             </div>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
-                                            </div>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
-                                            </div>
+                                            ))}
                                         </div>
-                                    </div>
-                                    <div className='pro_details'>
-                                        <h3>real easte company that prioritizes Property</h3>
+                                        </div>
+                                        
+                                        {/* Property Details Section */}
+                                        <div className='pro_details'>
+                                        <h3>{data.title}</h3>
                                         <ul className='notification_pro_deal'>
                                             <li>
-                                                <Image src='/assets/images/home_retail.svg' alt='' /> Commercial - Retail
+                                            <Image src='/assets/images/home_retail.svg' alt='Property Type Icon' /> {data.property_type}
                                             </li>
                                             <li>
-                                                <Image src='/assets/images/map_pin.svg' alt='' /> 4517 Washington Ave. Manchester, Kentucky 39495..
+                                            <Image src='/assets/images/map_pin.svg' alt='Location Icon' /> {data.address}
+                                            </li>
+                                        </ul>
+                                        </div>
+                                    </div>
+                                    {/* Buttons Section */}
+                                    <div className='deal_notifications_right flex_auto_column'>
+                                        <ul className='deal_notifications_btn'>
+                                            <li>
+                                                <Button className='outline_btn' onClick={() => handleOpenModal('want-to-buy')}>
+                                                <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy
+                                                </Button>
+                                            </li>
+                                            <li>
+                                                <Button className='outline_btn' onClick={() => handleOpenModal('interested')}>
+                                                <Image src='/assets/images/interested_icon.svg' alt='' /> Interested
+                                                </Button>
+                                            </li>
+                                            <li>
+                                                <Button className='text_btn' onClick={() => handleOpenModal('not-interested')}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                    <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                </svg> Not Interested
+                                                </Button>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div className='deal_notifications_right flex_auto_column'>
-                                    <ul className='deal_notifications_btn'>
-                                        <li><Button className='outline_btn' onClick={() => handleOpenModal('want-to-buy')}><Image src='/assets/images/want_buy.svg' alt='' /> want to buy</Button></li>
-                                        <li><Button className='outline_btn' onClick={() => handleOpenModal('interested')}><Image src='/assets/images/interested_icon.svg' alt='' /> Interested</Button></li>
-                                        <li>
-                                            <Button className='text_btn' onClick={() => handleOpenModal('not-interested')}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                    <path d="M11 1L1 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M1 1L11 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg> Not interested
-                                            </Button>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
-                        </div>
-                        <div className='deal_column'>
-                            <div className='deal_left_column notifications_deal_column border-end-0'>
-                                <div className='deal_notifications_left flex_1column align-items-center'>
-                                    <div className='pro_img'>
-                                        <Image src='/assets/images/property-img.png' alt='' />
-                                        <div className='deal_img_group'>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
-                                            </div>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
-                                            </div>
-                                            <div>
-                                                <Image src='/assets/images/property-img.png' alt='' />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='pro_details'>
-                                        <h3>real easte company that prioritizes Property</h3>
-                                        <ul className='notification_pro_deal'>
-                                            <li>
-                                                <Image src='/assets/images/home_retail.svg' alt='' /> Commercial - Retail
-                                            </li>
-                                            <li>
-                                                <Image src='/assets/images/map_pin.svg' alt='' /> 4517 Washington Ave. Manchester, Kentucky 39495..
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className='deal_notifications_right flex_auto_column'>
-                                    <ul className='deal_notifications_btn'>
-                                        <li><Button className='outline_btn'><Image src='/assets/images/want_buy.svg' alt='' /> want to buy</Button></li>
-                                        <li><Button className='outline_btn'><Image src='/assets/images/interested_icon.svg' alt='' /> Interested</Button></li>
-                                        <li>
-                                            <Button className='text_btn'>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                    <path d="M11 1L1 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M1 1L11 11" stroke="#E21B1B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg> Not interested
-                                            </Button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                            );
+                        })}
                     </div>
                 </Container>
             </section>

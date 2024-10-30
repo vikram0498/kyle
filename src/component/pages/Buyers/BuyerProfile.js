@@ -119,6 +119,7 @@ const BuyerProfile = () => {
     }
   };
   const getLabelValue = (data) => {
+    console.log('data', data)
     if (data !== undefined) {
       const selectedBuildingClass = data.map((item) => item.label);
       return selectedBuildingClass.join(", ");
@@ -764,13 +765,21 @@ const BuyerProfile = () => {
                   </div>
                   <div className="contact-desc-box">
                     <div className="row">
+                      <div className="col-12 col-lg-4"><label>Address</label></div>
+                      <div className="col-12 col-lg-8">
+                        {currentBuyerData.address}
+                      </div>
                       <div className="col-12 col-lg-4"><label>States</label></div>
                       <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.state)}
+                        {currentBuyerData.state}
                       </div>
                       <div className="col-12 col-lg-4"><label>Cities</label></div>
                       <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.city)}
+                        {currentBuyerData.city}
+                      </div>
+                      <div className="col-12 col-lg-4"><label>Zip Code</label></div>
+                      <div className="col-12 col-lg-8">
+                        {currentBuyerData.zip_code}
                       </div>
                       <div className="col-12 col-lg-4"><label>Company/LLC</label></div>
                       <div className="col-12 col-lg-8">

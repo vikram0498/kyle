@@ -63,6 +63,17 @@ const PropertyDealDetails = () => {
                                                             <Image src='/assets/images/home_buy.svg' alt='' />
                                                         </div>
                                                         <div className='list_content'>
+                                                            <span>69</span>
+                                                            <p>Total Buyer</p>
+                                                        </div>
+                                                    </Nav.Link>
+                                                </Nav.Item>
+                                                <Nav.Item>
+                                                    <Nav.Link eventKey="first">
+                                                        <div className='list_icon'>
+                                                            <Image src='/assets/images/home_buy.svg' alt='' />
+                                                        </div>
+                                                        <div className='list_content'>
                                                             <span>23</span>
                                                             <p>Want To Buy</p>
                                                         </div>
@@ -108,6 +119,7 @@ const PropertyDealDetails = () => {
                                                     <th>Phone Number</th>
                                                     <th>Email Address</th>
                                                     <th>documents</th>
+                                                    <th>Status</th>
                                                     <th>Chat</th>
                                                 </tr>
                                             </thead>
@@ -118,12 +130,6 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
-                                                    <td>+91123456789</td>
-                                                    <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
@@ -131,6 +137,15 @@ const PropertyDealDetails = () => {
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
@@ -145,6 +160,7 @@ const PropertyDealDetails = () => {
                                                     <th>Phone Number</th>
                                                     <th>Email Address</th>
                                                     <th>documents</th>
+                                                    <th>Status</th>
                                                     <th>Chat</th>
                                                 </tr>
                                             </thead>
@@ -155,12 +171,6 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
-                                                    <td>+91123456789</td>
-                                                    <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
@@ -168,6 +178,15 @@ const PropertyDealDetails = () => {
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
@@ -182,6 +201,7 @@ const PropertyDealDetails = () => {
                                                     <th>Phone Number</th>
                                                     <th>Email Address</th>
                                                     <th>documents</th>
+                                                    <th>Status</th>
                                                     <th>Chat</th>
                                                 </tr>
                                             </thead>
@@ -192,12 +212,6 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
-                                                    <td>+91123456789</td>
-                                                    <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
@@ -205,6 +219,15 @@ const PropertyDealDetails = () => {
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>

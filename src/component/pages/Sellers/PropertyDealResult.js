@@ -49,7 +49,7 @@ const PropertyDealResult = () => {
                     <div className='card-box column_bg_space'>
                         <div className='deal_column'>
                             <Row className='align-items-center'>
-                                <Col lg={9}>
+                                <Col lg={10}>
                                     <div className='deal_left_column'>
                                         <div className='pro_img'>
                                             <Image src='/assets/images/property-img.png' alt='' />
@@ -57,6 +57,15 @@ const PropertyDealResult = () => {
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
                                             <ul className='deal_info_list'>
+                                                <li>
+                                                    <div className='list_icon'>
+                                                        <Image src='/assets/images/home_buy.svg' alt='' />
+                                                    </div>
+                                                    <div className='list_content'>
+                                                        <span>69</span>
+                                                        <p>Total Buyer</p>
+                                                    </div>
+                                                </li>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -88,7 +97,7 @@ const PropertyDealResult = () => {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col lg={3} className='text-center'>
+                                <Col lg={2} className='text-center'>
                                     <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
                                         <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -99,7 +108,7 @@ const PropertyDealResult = () => {
                         </div>
                         <div className='deal_column'>
                             <Row className='align-items-center'>
-                                <Col lg={9}>
+                                <Col lg={10}>
                                     <div className='deal_left_column'>
                                         <div className='pro_img'>
                                             <Image src='/assets/images/property-img.png' alt='' />
@@ -107,6 +116,15 @@ const PropertyDealResult = () => {
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
                                             <ul className='deal_info_list'>
+                                                <li>
+                                                    <div className='list_icon'>
+                                                        <Image src='/assets/images/home_buy.svg' alt='' />
+                                                    </div>
+                                                    <div className='list_content'>
+                                                        <span>69</span>
+                                                        <p>Total Buyer</p>
+                                                    </div>
+                                                </li>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -138,7 +156,7 @@ const PropertyDealResult = () => {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col lg={3} className='text-center'>
+                                <Col lg={2} className='text-center'>
                                     <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
                                         <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -149,7 +167,7 @@ const PropertyDealResult = () => {
                         </div>
                         <div className='deal_column'>
                             <Row className='align-items-center'>
-                                <Col lg={9}>
+                                <Col lg={10}>
                                     <div className='deal_left_column'>
                                         <div className='pro_img'>
                                             <Image src='/assets/images/property-img.png' alt='' />
@@ -157,6 +175,15 @@ const PropertyDealResult = () => {
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
                                             <ul className='deal_info_list'>
+                                                <li>
+                                                    <div className='list_icon'>
+                                                        <Image src='/assets/images/home_buy.svg' alt='' />
+                                                    </div>
+                                                    <div className='list_content'>
+                                                        <span>69</span>
+                                                        <p>Total Buyer</p>
+                                                    </div>
+                                                </li>
                                                 <li>
                                                     <div className='list_icon'>
                                                         <Image src='/assets/images/home_buy.svg' alt='' />
@@ -188,7 +215,7 @@ const PropertyDealResult = () => {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col lg={3} className='text-center'>
+                                <Col lg={2} className='text-center'>
                                     <Link to="/property-deal-details" className='btn btn-fill btn-w-icon'>View Details<svg xmlns="http://www.w3.org/2000/svg" width="16" height="13" viewBox="0 0 16 13" fill="none">
                                         <path d="M1 6.5L15 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                         <path d="M10.1 1.5L15 6.5L10.1 11.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
