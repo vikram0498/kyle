@@ -1840,7 +1840,7 @@ border-top: 2px solid #3F53FE;
 .property-critera-outer input[type="checkbox"]:checked + .property-critera-block .cornor-block {
   border: 2px solid #3F53FE;
 }
-.property-critera-outer input[type="checkbox"]:checked + .property-critera-block .buyer-active-verfiy:before,
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block .buyer-notifaction:before,
 .property-critera-outer input[type="checkbox"]:checked + .property-critera-block:before {
   content: "";
   background: url('data:image/svg+xml,<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="11" fill="%233F53FE"/><path d="M14.6667 9L10.0833 13.5833L8 11.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
@@ -1849,6 +1849,9 @@ border-top: 2px solid #3F53FE;
   position: absolute;
   left: -29px;
   top: 4px;
+}
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block .buyer-notifaction .top_buyer_btn {
+  display: none;
 }
 .buyer-blog-sent:before {
   content: "";
@@ -1860,8 +1863,8 @@ border-top: 2px solid #3F53FE;
   top: 10px;
 }
 .property-critera-outer input[type="checkbox"]:checked + .property-critera-block:before{
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   left: auto;
 }
 .property-critera-block {
@@ -5448,9 +5451,7 @@ span.badge.bg-success.purchased-profile {
   top: 65px;
 }
 .buyer-active-verfiy{
-  position: absolute;
-  right: 0;
-  top: 10px;
+  position: relative;
   background-color: #E5F6FE;
   display: flex;
   align-items: center;
@@ -6359,6 +6360,12 @@ body.dark .outline_btn{
   cursor: not-allowed !important;
   background: #ffffff;
   border: none;
+  pointer-events: none;
+}
+.disabled-btn button span svg {
+  width: 15px;
+  margin-left: 5px;
+  height: auto;
 }
 .disabled-btn li:nth-child(1) button:hover, .disabled-btn li:nth-child(2) button:hover, .disabled-btn li:nth-child(1) button:active, .disabled-btn li:nth-child(2) button:active{
   background-color: #c5c5c5 !important;
@@ -7069,6 +7076,63 @@ span.status.not-interested{
 span.status.interested {
   background: #E4F5FF;
   color: #3C75FF;
+}
+
+.buyer-notifaction {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  display: flex;
+}
+.buyer-notifaction .top_buyer_btn {
+  background: #F5F7F9;
+  border-color: #F5F7F9;
+  padding: 3px 21px 3px 3px;
+  margin-right: 10px;
+}
+.buyer-notifaction .top_buyer_btn>span {
+  width: 22px;
+  height: 22px;
+  line-height: 18px;
+  border: solid 1px #D2E1F0;
+}
+
+.arrow {
+  transform: rotate(-90deg);
+  cursor: pointer;
+  margin-left: 8px;
+}
+.arrow span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1px solid #3f53fe;
+  border-right: 1px solid #3f53fe;
+  transform: rotate(45deg);
+  margin: -6px -1px;
+  animation: animate 2s infinite;
+}
+
+.arrow span:nth-child(2) {
+  animation-delay: -0.2s;
+}
+
+.arrow span:nth-child(3) {
+  animation-delay: -0.4s;
+}
+
+@keyframes animate {
+  0% {
+      opacity: 0;
+      transform: rotate(45deg) translate(-10px, -10px);
+  }
+  50% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+      transform: rotate(45deg) translate(10px, 10px);
+  }
 }
 
 @media screen and (max-width: 575px){
