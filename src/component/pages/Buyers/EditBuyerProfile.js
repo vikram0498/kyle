@@ -2313,7 +2313,6 @@ function EditBuyerProfile() {
                               </div>
                             </div>
                           )}
-
                           <div className="col-12 col-lg-12">
                             <div className="form-group">
                               <label>Location Flaws</label>

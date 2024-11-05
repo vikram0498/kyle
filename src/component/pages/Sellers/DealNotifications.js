@@ -118,26 +118,26 @@ const DealNotifications = () => {
                                             
                                             {/* Profile Image Section */}
                                             <div className='pro_img'>
-                                            {/* Display first image or fallback if no images available */}
-                                            {firstImage ? (
-                                                <Image src={firstImage} alt='Property Image' width={200} height={200} />
-                                            ) : (
-                                                <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
-                                            )}
-                                            
-                                            {/* Remaining Images Section */}
-                                            <div className='deal_img_group'>
-                                                {remainingImages.map((imgUrl, i) => (
-                                                <div key={i}>
-                                                    <Image src={imgUrl} alt={`Deal Image ${i + 1}`} width={100} height={100} />
-                                                </div>
-                                                ))}
-                                                <Link to={data.picture_link}>
-                                                    <div className='align-items-center mt-2 cursor-pointer'>
-                                                        More..
+                                                {/* Display first image or fallback if no images available */}
+                                                {firstImage ? (
+                                                    <Image src={firstImage} alt='Property Image' width={200} height={200} />
+                                                ) : (
+                                                    <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
+                                                )}
+                                                
+                                                {/* Remaining Images Section */}
+                                                <div className='deal_img_group'>
+                                                    {remainingImages.map((imgUrl, i) => (
+                                                    <div key={i}>
+                                                        <Image src={imgUrl} alt={`Deal Image ${i + 1}`} width={100} height={100} />
                                                     </div>
-                                                </Link>
-                                            </div>
+                                                    ))}
+                                                    <Link to={data.picture_link}>
+                                                        <div className='align-items-center mt-2 cursor-pointer'>
+                                                            More..
+                                                        </div>
+                                                    </Link>
+                                                </div>
                                             </div>
                                             
                                             {/* Property Details Section */}
@@ -155,23 +155,38 @@ const DealNotifications = () => {
                                         </div>
                                         {/* Buttons Section */}
                                         <div className='deal_notifications_right flex_auto_column'>
-                                            <ul className='deal_notifications_btn'>
+                                            <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
                                                 <li>
-                                                    <Button className='outline_btn' onClick={() => updateDealStatus('want-to-buy',data.id)}>
-                                                    <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy
+                                                    <Button className='outline_btn' onClick={data.status === null ? () => updateDealStatus('want-to-buy', data.id) : null}>
+                                                    <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
+                                                    {data.status == 'want_to_buy' &&
+                                                     <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
+                                                     </span>
+                                                     }
                                                     </Button>
                                                 </li>
                                                 <li>
-                                                    <Button className='outline_btn' onClick={() => updateDealStatus('interested',data.id)}>
+                                                    <Button className='outline_btn' onClick={data.status === null ? () => updateDealStatus('interested',data.id) : null}>
                                                     <Image src='/assets/images/interested_icon.svg' alt='' /> Interested
+                                                    {data.status == 'interested' &&
+                                                     <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
+                                                     </span>
+                                                     }
                                                     </Button>
                                                 </li>
                                                 <li>
-                                                    <Button className='text_btn' onClick={() => handleOpenModal('not-interested',data.id)}>
+                                                    <Button className='text_btn' onClick={data.status === null ? () => handleOpenModal('not-interested',data.id) : null}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                         <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                         <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                     </svg> Not Interested
+                                                    {data.status == 'not_interested' &&
+                                                     <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
+                                                     </span>
+                                                     }
                                                     </Button>
                                                 </li>
                                             </ul>

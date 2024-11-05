@@ -6312,6 +6312,14 @@ body.dark .outline_btn{
   background-color: #3F53FE;
   box-shadow: none;
 }
+.disabled-btn button {
+  cursor: not-allowed !important;
+  background: #ffffff;
+  border: none;
+}
+.disabled-btn li:nth-child(1) button:hover, .disabled-btn li:nth-child(2) button:hover, .disabled-btn li:nth-child(1) button:active, .disabled-btn li:nth-child(2) button:active{
+  background-color: #c5c5c5 !important;
+}
 .deal_notifications_btn>li:last-child .text_btn{
   color: #E21B1B;
 }

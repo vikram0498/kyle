@@ -5,11 +5,14 @@
   import { useAuth } from "../../../hooks/useAuth";
   import { Link } from "react-router-dom";
   import axios from "axios";
+import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 
   const Settings = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const {getTokenData} = useAuth();
+    const { getTokenData, getLocalStorageUserdata } = useAuth();
     const [notificationData, setNotificationData] = useState([]);
+    const [userRole, setUserRole] = useState(0);
+
     useEffect(()=>{
       const fetchUserSetting = async () => {
         try {
@@ -25,11 +28,19 @@
         }
       }
       fetchUserSetting();
-    },[])
-    console.log('notificationData', notificationData)
+    },[]);
+
+    useEffect(() => {
+      if (getTokenData().access_token && userRole == 0) {
+          const userData = getLocalStorageUserdata();
+          setUserRole(userData.role);
+      }
+  }, []);
+
     return (
       <>
-        <Header />
+        {userRole == 3 && <BuyerHeader /> }
+        {userRole == 2 && <Header /> }
         <section className="main-section position-relative pt-4 pb-120">
           <Container className='position-relative'>
             <div className="back-block">

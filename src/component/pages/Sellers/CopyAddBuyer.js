@@ -474,6 +474,28 @@ function CopyAddBuyer({urlType}) {
           <div className="container position-relative">
             <div className="card-box">
               <div className="row">
+                <div className="col-2 col-md-4 col-lg-3 col-xxl-2">
+                  <div className="header-logo d-none d-md-block">
+                    <Link to="/">
+                      <img
+                        alt="logo"
+                        src="/assets/images/logo.svg"
+                        className="img-fluid"
+                      />
+                    </Link>
+                  </div>
+                  <div className="header-logo d-md-none">
+                    <Link to="/">
+                      <img
+                        alt="logo"
+                        src="/assets/images/mobile-logo.svg"
+                        className="img-fluid"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
                 <div className="col-12 col-lg-12">
                   <div className="card-box-inner">
                     <div className="row">

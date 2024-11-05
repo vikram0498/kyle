@@ -36,8 +36,8 @@ const PropertyAttachments = ({data}) => {
                         Url<span>*</span>
                     </label>
                     <input type="url" placeholder="Url" className="form-control" value={data.url} name="picture_link" onChange={(e)=>{data.setUrl(e.target.value)}}/>
+                    {data.renderFieldError("picture_link")}
                 </div>
-                {data.renderFieldError("picture_link")}
             </div>
             <div className="col-12 col-lg-12">
                 <div className="form-group">
@@ -60,6 +60,7 @@ const PropertyAttachments = ({data}) => {
                             ))}
                         </div>
                     </div>
+                    {data.renderFieldError("attachments")}
                 </div>
             </div>
         </div>
