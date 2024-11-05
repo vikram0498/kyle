@@ -60,7 +60,7 @@ const PropertyDealDetails = () => {
                                                 <Nav.Item>
                                                     <Nav.Link eventKey="first">
                                                         <div className='list_icon'>
-                                                            <Image src='/assets/images/home_buy.svg' alt='' />
+                                                            <Image src='/assets/images/total-buyer.svg' alt='' />
                                                         </div>
                                                         <div className='list_content'>
                                                             <span>69</span>

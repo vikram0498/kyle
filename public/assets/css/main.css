@@ -1820,7 +1820,41 @@ section.main-section {
 .property-critera {
   margin-top: 40px;
 }
-
+.property-critera-outer input[type="checkbox"] {
+  position: absolute;
+  border: 0px;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block{
+  border: 2px solid #3F53FE;
+}
+.property-critera-outer input[type="checkbox"]:checked + .buyer-blog-area .critera-card{
+border-top: 2px solid #3F53FE;
+}
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block .cornor-block {
+  border: 2px solid #3F53FE;
+}
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block .buyer-active-verfiy:before,
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block:before {
+  content: "";
+  background: url('data:image/svg+xml,<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="11" fill="%233F53FE"/><path d="M14.6667 9L10.0833 13.5833L8 11.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  height: 22px;
+  width: 22px;
+  position: absolute;
+  left: -29px;
+  top: 4px;
+}
+.property-critera-outer input[type="checkbox"]:checked + .property-critera-block:before{
+  top: 10px;
+  right: 10px;
+  left: autopro_details;
+}
 .property-critera-block {
   background: #ffffff;
   border-radius: 10px;
@@ -1956,7 +1990,7 @@ text-transform: capitalize;
 
 .cornor-block {
   position: absolute;
-  right: 33px;
+  left: 246px; 
   bottom: -20px;
   display: flex;
   align-items: center;
@@ -5407,7 +5441,7 @@ span.badge.bg-success.purchased-profile {
 .buyer-active-verfiy{
   position: absolute;
   right: 0;
-  top: 15px;
+  top: 10px;
   background-color: #E5F6FE;
   display: flex;
   align-items: center;
