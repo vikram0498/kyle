@@ -17,6 +17,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
 import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
+import GoogleFacebookLogin from "../../partials/GoogleFacebookLogin";
 
 function CopyAddBuyer({urlType}) {
   const { token } = useParams();
@@ -502,6 +503,9 @@ function CopyAddBuyer({urlType}) {
                       <div className="col-12 col-sm-7 col-md-6 col-lg-6">
                         <h3>Buy Box Criteria Form</h3>
                         <p>Real estate deals that match your exact buying criteria</p>
+                      </div>
+                      <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                         <GoogleFacebookLogin/>
                       </div>
                     </div>
 
