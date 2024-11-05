@@ -131,7 +131,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -139,7 +139,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status not-interested'>Not Interested</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -147,7 +147,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status interested'>Interested</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                             </tbody>
                                         </Table>
@@ -172,7 +172,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -180,7 +180,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -188,7 +188,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                             </tbody>
                                         </Table>
@@ -213,7 +213,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -221,7 +221,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
@@ -229,7 +229,7 @@ const PropertyDealDetails = () => {
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
                                                     <td><span className='status want-by'>Want To Buy</span></td>
-                                                    <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
                                                 </tr>
                                             </tbody>
                                         </Table>

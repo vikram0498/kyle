@@ -6366,6 +6366,11 @@ body.dark .outline_btn{
 .deal_notifications_btn>li:last-child .text_btn{
   color: #E21B1B;
 }
+span.max-image {
+  font-size: 10px;
+  color: #727592 !important;
+  font-weight: 200;
+}
 .notification_pro_deal{
   padding: 0;
   margin: 0;
@@ -7065,7 +7070,6 @@ span.status.interested {
   background: #E4F5FF;
   color: #3C75FF;
 }
-.buyer-notifaction
 
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{

@@ -64,7 +64,6 @@ const DealNotifications = () => {
             }
         }
     }
-    console.log('errors', errors)
   return (
     <>
             {/* <Header /> */}

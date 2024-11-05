@@ -1376,6 +1376,7 @@ function EditBuyerProfile() {
                               </div>
                             </div>
                           )}
+                          
                           <div className="col-12 col-lg-12">
                             <label>
                               Purchase Method<span>*</span>

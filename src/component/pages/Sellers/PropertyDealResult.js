@@ -118,7 +118,7 @@ const PropertyDealResult = () => {
                                             <ul className='deal_info_list'>
                                                 <li>
                                                     <div className='list_icon'>
-                                                        <Image src='/assets/images/home_buy.svg' alt='' />
+                                                        <Image src='/assets/images/total-buyer.svg' alt='' />
                                                     </div>
                                                     <div className='list_content'>
                                                         <span>69</span>
@@ -177,7 +177,7 @@ const PropertyDealResult = () => {
                                             <ul className='deal_info_list'>
                                                 <li>
                                                     <div className='list_icon'>
-                                                        <Image src='/assets/images/home_buy.svg' alt='' />
+                                                        <Image src='/assets/images/total-buyer.svg' alt='' />
                                                     </div>
                                                     <div className='list_content'>
                                                         <span>69</span>
