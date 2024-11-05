@@ -737,7 +737,7 @@ function Header() {
                         <Link className="dropdown-item" to="/settings">
                           <img
                             alt=""
-                            src="./assets/images/messages.svg"
+                            src="./assets/images/setting-1.svg"
                             className="img-fluid"
                           />
                           Settings

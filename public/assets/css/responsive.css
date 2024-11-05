@@ -500,7 +500,21 @@
   .block-session .modetype .checkbox-label .togglecontent span.sun-icon{
     left: 1px;
   }
-
+  [data-notifications]::before {
+    content: attr(data-notifications) " ";
+  }
+  .settings .buyer_seller_toggle {
+    display: flex;
+    gap: 20px;
+    margin: 15px 0 0;
+    justify-content: space-between;
+    align-items: center;
+}
+.settings .deal_left_column {
+    border-right: none;
+    border-bottom: 1px solid #D0DEE7;
+    padding-bottom: 15px;
+}
 }
 
 @media (max-width: 575px) {
@@ -640,5 +654,20 @@
   }
   .header-logo img {
     max-width: 105px;
+  }
+  .settings .list_icon {
+      max-width: 35px;
+  }
+  .settings .list_icon img{
+      max-width: 100%;
+  }
+  .settings .pro_details {
+      padding-left: 15px;
+  }
+  .settings .pro_details h3 {
+      font-size: 16px;
+  }
+  [data-notifications]::before {
+    font-size: 14px;
   }
 }

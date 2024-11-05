@@ -6988,7 +6988,10 @@ body.dark .notification_pro_deal>li:last-child{
   font-size: 14px;
   font-weight: 600;
 }
-
+.settings .buyer_seller_toggle label {
+  width: 84px;
+  background-color: #ffffff;
+}
 
 
 

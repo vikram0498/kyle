@@ -69,50 +69,50 @@
               </div>
             </div>
             <div className='card-box column_bg_space'>
-                <div className='deal_column'>
-                  <Row className='  '>
-                    <Col lg={8}>
+                <div className='deal_column d-none d-md-block'>
+                  <Row className='align-items-center'>
+                    <Col lg={8} md={6}>
                       <div className='deal_left_column'>
                           <div className='list_icon'>
                               {/* <Image src='/assets/images/home_buy.svg' alt='' /> */}
                           </div>
                           <div className='pro_details'>
-                              <h3>Settings</h3>
+                              <h3 className="mb-0">Settings</h3>
                           </div>
                       </div>
                     </Col>
-                    <Col lg={2}>
+                    <Col lg={2} md={3}>
                       <div class=""><label><span>Push Notifications</span></label></div>
                     </Col>
-                    <Col lg={2}>
+                    <Col lg={2} md={3}>
                       <div class=""><label><span>Email Notifications</span></label></div>
                     </Col>
                   </Row>
                 </div>
                 { notificationData.length > 0 ? (
                   notificationData.map((data, index) => (
-                    <div key={index} className="deal_column">
-                      <Row>
-                        <Col lg={8}>
+                    <div key={index} className="deal_column settings">
+                      <Row className="align-items-center">
+                        <Col lg={8} md={6}>
                           <div className="deal_left_column">
                             <div className="list_icon">
                               <Image src="/assets/images/home_buy.svg" alt="" />
                             </div>
                             <div className="pro_details">
-                              <h3>{data.display_name}</h3>
+                              <h3 className="mb-0">{data.display_name}</h3>
                             </div>
                           </div>
                         </Col>
-                        <Col lg={2}>
-                          <div className="buyer_seller_toggle">
+                        <Col lg={2} md={3}>
+                          <div className="buyer_seller_toggle" data-notifications="Push Notifications">
                             <input type="checkbox" name={data.key} defaultChecked={data.value} />
                             <label>
                               <span>Disable</span><span>Enable</span>
                             </label>
                           </div>
                         </Col>
-                        <Col lg={2}>
-                          <div className="buyer_seller_toggle">
+                        <Col lg={2} md={3}>
+                          <div className="buyer_seller_toggle" data-notifications="Email Notifications">
                             <input type="checkbox" />
                             <label>
                               <span>Disable</span><span>Enable</span>
