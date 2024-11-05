@@ -4,11 +4,24 @@ import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
 import ChatSidebar from '../../partials/ChatSidebar';
 import ChatMessagePanel from '../../partials/ChatMessagePanel';
+import { useAuth } from "../../../hooks/useAuth";
+import { useEffect, useState } from 'react';
+import BuyerHeader from '../../partials/Layouts/BuyerHeader';
 
 const Message = () => {
-  return (
-    <>
-        <Header />
+    const { getTokenData, getLocalStorageUserdata } = useAuth();
+    const [userRole, setUserRole] = useState(0);
+
+    useEffect(() => {
+        if (getTokenData().access_token && userRole == 0) {
+            const userData = getLocalStorageUserdata();
+            setUserRole(userData.role);
+        }
+    }, []); // Empty dependency array to run only once
+    return (
+        <>
+            {userRole == 3 && <BuyerHeader /> }
+            {userRole == 2 && <Header /> }
             <section className='main-section position-relative pt-4 pb-120'>
                 <Container className='position-relative'>
                     <div className="back-block">
@@ -16,26 +29,25 @@ const Message = () => {
                             <div className="col-4 col-sm-4 col-md-4 col-lg-4">
                                 <Link to="/" className="back">
                                     <svg
-                                    width="16"
-                                    height="12"
-                                    viewBox="0 0 16 12"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="12"
+                                        viewBox="0 0 16 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
-                                    <path
-                                        d="M15 6H1"
-                                        stroke="#0A2540"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                    <path
-                                        d="M5.9 11L1 6L5.9 1"
-                                        stroke="#0A2540"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
+                                        <path
+                                            d="M15 6H1"
+                                            stroke="#0A2540"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                        <path
+                                            d="M5.9 11L1 6L5.9 1"
+                                            stroke="#0A2540"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                        />
                                     </svg>
                                     Back
                                 </Link>
@@ -59,8 +71,9 @@ const Message = () => {
                     </div>
                 </Container>
             </section>
-        <Footer />
-    </>
-  );
+            <Footer />
+        </>
+    );
 };
+
 export default Message;

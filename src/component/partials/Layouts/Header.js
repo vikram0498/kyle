@@ -734,6 +734,16 @@ function Header() {
                         </Link>
                       </li>
                       <li>
+                        <Link className="dropdown-item" to="/settings">
+                          <img
+                            alt=""
+                            src="./assets/images/messages.svg"
+                            className="img-fluid"
+                          />
+                          Settings
+                        </Link>
+                      </li>
+                      <li>
                         <a
                           href={void 0}
                           className="dropdown-item"

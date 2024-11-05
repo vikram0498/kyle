@@ -32,7 +32,7 @@ function EditBuyerProfile() {
     setValue,
   } = useForm();
   /* previous form data start*/
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [miniLoader, setMiniLoader] = useState(false);
   const [miniProfileLoader, setMiniProfileLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -465,9 +465,8 @@ function EditBuyerProfile() {
         }
       });
   };
-  console.log(mobileHomeParkSelected , 'sdfsdfsdf', hotelMotelSelected)
+
   const handleCustum = (e, name) => {
-    console.log(e, 'event',name,'name');
     let selectedValues = Array.isArray(e) ? e.map((x) => x.value) : [];
     if (name == "property_type") {
       selectedValues = [e.value];

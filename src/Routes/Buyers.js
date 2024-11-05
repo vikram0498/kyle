@@ -11,6 +11,7 @@ import MultiStepForm from "../component/pages/Buyers/MultiStepForm";
 import PaymentConfirm from "../component/pages/Buyers/PaymentConfirm";
 import RegisterBuyer from "../component/auth/Buyers/RegisterBuyer";
 import DealNotifications from "../component/pages/Sellers/DealNotifications";
+import Message from "../component/pages/Sellers/Message";
 const Buyers = () => {
   return (
     <Routes>

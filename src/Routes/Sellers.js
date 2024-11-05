@@ -37,6 +37,7 @@ import PropertyDealResult from "../component/pages/Sellers/PropertyDealResult";
 import PropertyDealDetails from "../component/pages/Sellers/PropertyDealDetails";
 import DealNotifications from "../component/pages/Sellers/DealNotifications";
 import Message from "../component/pages/Sellers/Message";
+import Settings from "../component/pages/Sellers/Settings";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -115,6 +116,10 @@ const Seller = () => {
             path="/my-profile"
             element={<Protected Component={MyProfile} />}
           />
+          <Route
+            path="/settings"
+            element={<Protected Component={Settings} />}
+          />
           {/* <Route path="/result-page" element={<Protected Component={ResultPage} type={'result'}/>} /> */}
           <Route path="/payment" element={<Protected Component={Payment} />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -127,7 +132,8 @@ const Seller = () => {
           <Route path="/property-deal-result" element={<PropertyDealResult />} />
           <Route path="/property-deal-details" element={<PropertyDealDetails />} />
           {/* <Route path="/deal-notifications" element={<DealNotifications />} /> */}
-          <Route path="/message" element={<Message />} />
+          <Route path="/message" element={<Protected Component={Message} />} />
+
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>
       </AuthContext.Provider>

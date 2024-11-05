@@ -3589,7 +3589,9 @@ form > * {
   margin-top: -12px;
   margin-bottom: 18px !important;
 }
-
+.cursor-pointer {
+  cursor: pointer;
+}
 @media screen and (max-width: 1199.98px) {
   .linkExpire .heading {
     font-size: 28px;

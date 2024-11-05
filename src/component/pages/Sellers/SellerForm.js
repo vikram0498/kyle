@@ -20,6 +20,7 @@ import SingleFamily from "./FilterPropertyForm/SingleFamily";
 import TownHouse from "./FilterPropertyForm/TownHouse";
 import MobileHomePark from "./FilterPropertyForm/MobileHomePark";
 import HotelMotel from "./FilterPropertyForm/HotelMotel";
+import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 
 
 const SellerForm = () => {
@@ -27,6 +28,9 @@ const SellerForm = () => {
   const [isLoader, setIsLoader] = useState(true);
 
   const [videoUrl, setVideoUrl] = useState("");
+
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState("");
 
   const [isFiltered, setIsFiltered] = useState(false);
   const [lastSearchedLogId, setLastSearchedLogId] = useState('');
@@ -340,6 +344,12 @@ const SellerForm = () => {
   const submitSearchBuyerForm = (e) => {
     e.preventDefault();
 
+    if(!captchaVerified){
+      setLoading(false);
+      setRecaptchaError("Please complete reCAPTCHA verification.");
+      return false;
+    }
+
     setErrors(null);
     setLoading(true);
 
@@ -579,6 +589,7 @@ const SellerForm = () => {
       }
     }
   };
+  
   return (
     <>
       <Header />
@@ -677,6 +688,10 @@ const SellerForm = () => {
                             <MobileHomePark data={dataObj} />
                           )}
                           {isSearchForm === 15 && <HotelMotel data={dataObj} />}
+
+                          <div className="row mb-2">
+                            <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
+                          </div>
 
                           <div className="submit-btn">
                             <button

@@ -4,6 +4,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import axios from "axios";
 import DarkMode from "./DarkMode";
+import { Dropdown, Image } from "react-bootstrap";
 
 function BuyerHeader() {
   const navigate = useNavigate();
@@ -79,6 +80,152 @@ function BuyerHeader() {
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">
               <div className="block-session">
+              <div className="top_icons_list d-none d-xxl-block">
+                  <ul>
+                    <li>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                          <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">5</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <h5>New Deals</h5>
+                          <ul>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Property Name</h6>
+                                <p>Buyer want to buy you property...</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Property Name</h6>
+                                <p>Buyer want to buy you property...</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Property Name</h6>
+                                <p>Buyer want to buy you property...</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Property Name</h6>
+                                <p>Buyer want to buy you property...</p>
+                              </div>
+                              <div className="dropdown_end align-self-center">
+                                <Link to="#">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </Link>
+                              </div>
+                            </li>
+                          </ul>
+                          <Link to="/deal-notifications">View All</Link>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </li>
+                    <li>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">6</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <h5>New Messages</h5>
+                          <ul>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end">
+                                2m ago
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end">
+                                2m ago
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end">
+                                2m ago
+                              </div>
+                            </li>
+                            <li>
+                              <div className="dropdown_start">
+                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                              </div>
+                              <div className="dropdown_middle">
+                                <h6>Brooklyn Simmons</h6>
+                                <p>New buy added in your buyer list....</p>
+                              </div>
+                              <div className="dropdown_end">
+                                2m ago
+                              </div>
+                            </li>
+                          </ul>
+                          <Link to="/message">View All</Link>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </li>
+                  </ul>
+                </div>
                 <div className="modetype">
                   <DarkMode />
                 </div>
