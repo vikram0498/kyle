@@ -24,23 +24,25 @@ const BuyerCardResult = (props) => {
         <div className='position-relative property-critera-outer'>
             {(activeTab ==='my_buyers')&&<input type="checkbox" id={data.buyer_user_id} value={data.buyer_user_id} className='deal-check-box' checked={selectedDeals.includes(data.buyer_user_id)} onChange={() => handleCheckboxChange(data.buyer_user_id)}/>}
             <label className={"property-critera-block buyer-blog-area property-section-"+data.id} for={data.buyer_user_id}>
-                {data.profile_tag_name &&
-                    <OverlayTrigger
-                        placement="top"
-                        style={{ backgroundColor: "green" }}
-                        overlay={ <Tooltip> Profile Tag </Tooltip>}>
-                        <div className="buyer-active-verfiy">
-                            {(data.profile_tag_image) && <img
-                                src={data.profile_tag_image}
-                                className="img-fluid profile-tag-image"
-                                alt=""
-                                title=""
-                                />
-                            }
-                            <span>{data.profile_tag_name}</span>
-                        </div>
-                    </OverlayTrigger>
-                }
+                <div className='buyer-notifaction'>
+                    {data.profile_tag_name &&
+                        <OverlayTrigger
+                            placement="top"
+                            style={{ backgroundColor: "green" }}
+                            overlay={ <Tooltip> Profile Tag </Tooltip>}>
+                            <div className="buyer-active-verfiy">
+                                {(data.profile_tag_image) && <img
+                                    src={data.profile_tag_image}
+                                    className="img-fluid profile-tag-image"
+                                    alt=""
+                                    title=""
+                                    />
+                                }
+                                <span>{data.profile_tag_name}</span>
+                            </div>
+                        </OverlayTrigger>
+                    }
+                </div>
                 <div className="critera-card">
                     <div className="center-align position-relative">
                     { 

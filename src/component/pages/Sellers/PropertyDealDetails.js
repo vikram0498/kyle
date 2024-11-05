@@ -130,7 +130,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -138,7 +138,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status not-interested'>Not Interested</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -146,7 +146,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status interested'>Interested</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                             </tbody>
@@ -171,7 +171,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -179,7 +179,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -187,7 +187,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                             </tbody>
@@ -212,7 +212,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -220,7 +220,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                                 <tr>
@@ -228,7 +228,7 @@ const PropertyDealDetails = () => {
                                                     <td>+91123456789</td>
                                                     <td>Devidmiller@gmail.com</td>
                                                     <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
-                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
                                                     <td><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></td>
                                                 </tr>
                                             </tbody>
