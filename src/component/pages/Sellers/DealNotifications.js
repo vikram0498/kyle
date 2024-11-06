@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Image, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Image, Modal, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/useAuth";
 
 import axios from 'axios';
 import BuyerHeader from '../../partials/Layouts/BuyerHeader';
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
@@ -16,6 +17,7 @@ const DealNotifications = () => {
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);
+    const [isDealDocumentVerified, setIsDealDocumentVerified] = useState(false);
     const [dealFeedback, setDealFeedback] = useState("");
     const handleOpenModal = (content,id=0) => {
         setModalContent(content);
@@ -155,16 +157,33 @@ const DealNotifications = () => {
                                         {/* Buttons Section */}
                                         <div className='deal_notifications_right flex_auto_column'>
                                             <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
-                                                <li>
+                                            <li>
+                                                {data.is_proof_of_fund_verified ? 
                                                     <Button className='outline_btn' onClick={data.status === null ? () => updateDealStatus('want-to-buy', data.id) : null}>
-                                                    <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
-                                                    {data.status == 'want_to_buy' &&
-                                                     <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
-                                                     </span>
-                                                     }
+                                                        <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
+                                                        {data.status === 'want_to_buy' &&
+                                                            <span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path>
+                                                                </svg>
+                                                            </span>
+                                                        }
                                                     </Button>
-                                                </li>
+                                                :
+                                                    <div data-tooltip-id="my-tooltip-1">
+                                                        <Button className='outline_btn' disabled>
+                                                            <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
+                                                            {data.status === 'want_to_buy' &&
+                                                                <span>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                                                        <path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path>
+                                                                    </svg>
+                                                                </span>
+                                                            }
+                                                        </Button>
+                                                    </div>
+                                                }
+                                            </li>
                                                 <li>
                                                     <Button className='outline_btn' onClick={data.status === null ? () => updateDealStatus('interested',data.id) : null}>
                                                     <Image src='/assets/images/interested_icon.svg' alt='' /> Interested
@@ -218,10 +237,22 @@ const DealNotifications = () => {
                             <div className='buy_modal_icon light_blue_bg'><Image src='/assets/images/home-interested.svg' alt='' /></div>
                             <h3>Let’s Connect With Us</h3>
                             <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
-                            <ul className='deal_notifications_btn'>
-                                <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li>
-                                <li><Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
-                            </ul>
+                            {isDealDocumentVerified ?  
+                                <ul className='deal_notifications_btn'>
+                                    <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li>
+                                    <li><Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
+                                </ul>
+                                :
+                                <div className='row upload-document-section'>
+                                    <Form.Group controlId="formFile" className="mb-3">
+                                        <Form.Control type="file" />
+                                    </Form.Group>
+                                    <div className='col-md-12'>
+                                        <button type="button" className="btn btn-primary" onClick={()=>{setIsDealDocumentVerified(true)}}>Submit</button>
+                                    </div>
+                                </div>
+
+                            }
                         </>
                     )}
                     {modalContent === 'not-interested' && (
@@ -251,6 +282,10 @@ const DealNotifications = () => {
                 </div>
             </Modal.Body>
         </Modal>
+        <ReactTooltip
+        id="my-tooltip-1"
+        place="top"
+        content="Please verify your proof of funds to enable this feature."/>
     </>
   );
 };
