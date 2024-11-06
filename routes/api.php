@@ -101,6 +101,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('update-buyer-profile-image', [ProfileController::class, 'updateBuyerProfileImage']);
 
+    Route::post('update-user-role', [ProfileController::class, 'updateUserRole']);
+
     Route::get('last-form-step', [BuyerVerificationController::class, 'getLastVerificationForm']);
 
     Route::post('buyer-profile-verification', [BuyerVerificationController::class, 'index']);

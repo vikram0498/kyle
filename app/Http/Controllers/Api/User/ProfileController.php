@@ -231,5 +231,37 @@ class ProfileController extends Controller
         
     }
 
+    public function updateUserRole(Request $request){
+
+        try {
+            DB::beginTransaction();
+
+            $authUser = auth()->user();
+
+            $roleId = config('constants.roles.seller');
+            if($authUser->is_seller){
+                $roleId = config('constants.roles.buyer');
+            }
+            
+            $authUser->roles()->sync($roleId);
+
+            DB::commit();
+
+            $responseData = [
+                'status'    => true,
+                'message'   => "Role Updated Successfully!"
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $th->getMessage().'->'.$th->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+
+    }
     
 }
