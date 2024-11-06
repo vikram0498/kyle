@@ -76,10 +76,15 @@ class SettingController extends Controller
             foreach(config('constants.user_notification_settings') as $userSettingKey => $userSetting){
                 if(in_array($userType, $userSetting['setting_for'])){
                     $userSetting['key'] = $userSettingKey;
-                    $setting = getUserNotificationSetting($userSettingKey, $loginAsBuyer) ?? $userSetting['value'];
-                    $userSetting['value'] = $setting->value == 'enable' ? true : false;
-                    $userSetting['push_notification'] = $setting->push_notification ? true : false;
-                    $userSetting['email_notification'] = $setting->email_notification ? true : false;
+                    $setting = getUserNotificationSetting($userSettingKey, $loginAsBuyer) ?? null;
+                    if($setting){
+                        $userSetting['value'] = $setting->value == 'enable' ? true : false;
+                        $userSetting['push_notification'] = $setting->push_notification ? true : false;
+                        $userSetting['email_notification'] = $setting->email_notification ? true : false;
+                    }else{
+                         $userSetting['value'] = $userSetting['value'] == 'enable' ? true : false;
+                    }
+                   
                     $notificationSettings[] = $userSetting;
                 }
             }
