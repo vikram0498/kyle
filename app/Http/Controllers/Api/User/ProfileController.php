@@ -249,7 +249,18 @@ class ProfileController extends Controller
 
             $responseData = [
                 'status'    => true,
-                'message'   => "Role Updated Successfully!"
+                'message'   => "Role Updated Successfully!",
+                'userData'          => [
+                    'id'           => $authUser->id,
+                    'first_name'   => $authUser->first_name ?? '',
+                    'last_name'    => $authUser->last_name ?? '',
+                    'profile_image'=> $authUser->profile_image_url ?? '',
+                    'role'=> $authUser->roles()->first()->id ?? '',
+                    'level_type'   => $authUser->level_type,
+                    'credit_limit' => $authUser->credit_limit,
+                    'is_verified'  => $authUser->is_buyer_verified,
+                    'total_buyer_uploaded' => $authUser->buyers()->count(),
+                ],
             ];
             return response()->json($responseData, 200);
         } catch (\Throwable $th) {

@@ -79,8 +79,8 @@ class SettingController extends Controller
                     $setting = getUserNotificationSetting($userSettingKey, $loginAsBuyer) ?? null;
                     if($setting){
                         $userSetting['value'] = $setting->value == 'enable' ? true : false;
-                        $userSetting['push_notification'] = $setting->push_notification ? true : false;
-                        $userSetting['email_notification'] = $setting->email_notification ? true : false;
+                        $userSetting['push']['enabled'] = $setting->push_notification ? true : false;
+                        $userSetting['email']['enabled'] = $setting->email_notification ? true : false;
                     }else{
                          $userSetting['value'] = $userSetting['value'] == 'enable' ? true : false;
                     }
@@ -162,26 +162,37 @@ class SettingController extends Controller
                 }
                 if(!is_null($settingValue)){
                     if($settingType == 'notification'){
-                        NotificationSetting::whereUserId($authUser->id)->where('key', $userSettingKey)->whereUserType($userType)->whereStatus(1)
-                        ->update([
-                            'push_notification'    => isset($userSettingValue['push']) && $userSettingValue['push'] == true ? 1 : 0,
-                            'email_notification'   => isset($userSettingValue['email']) && $userSettingValue['email'] == true ? 1 : 0,
-                        ]);
+                        $notificationRecord = [];
+                        
+                        if(isset($userSettingValue['push'])){
+                            $notificationRecord['push_notification'] = $userSettingValue['push'] == true ? 1 : 0;
+                        }elseif(isset($userSettingValue['email'])){
+                            $notificationRecord['email_notification'] = $userSettingValue['email'] == true ? 1 : 0;
+                        }
+                        
+                        if(count($notificationRecord) > 0){
+                             NotificationSetting::whereUserId($authUser->id)->where('key', $userSettingKey)->whereUserType($userType)->whereStatus(1)->update($notificationRecord);
+                        }
+                       
                     } else {
                         Setting::whereUserId($authUser->id)->where('key', $userSettingKey)->whereUserType($userType)->whereStatus(1)->update(['value' => $userSettingValue]);
                     }
                 } else {
 
-                    // dd($settingData);
                     $settingCreateData = [
                         'user_id'              => $authUser->id,
                         'key'                  => $userSettingKey,
                         'display_name'         => $settingData['display_name'],
                         'user_type'            => $userType,
-                        'push_notification'    => isset($userSettingValue['push']) && $userSettingValue['push'] == true ? 1 : 0,
-                        'email_notification'   => isset($userSettingValue['email']) && $userSettingValue['email'] == true ? 1 : 0,
                         'status'               => 1,
                     ];
+                    
+                    if(isset($userSettingValue['push'])){
+                        $settingCreateData['push_notification'] = $userSettingValue['push'] == true ? 1 : 0;
+                    }elseif(isset($userSettingValue['email'])){
+                        $settingCreateData['email_notification'] = $userSettingValue['email'] == true ? 1 : 0;
+                    }
+                    
                     if($settingType == 'notification'){
                         $settingCreateData['value'] = $userSettingValue ? 'enable' : 'disable';                        
                         NotificationSetting::create($settingCreateData);
