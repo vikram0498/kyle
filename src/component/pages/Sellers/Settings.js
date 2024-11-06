@@ -5,14 +5,49 @@
   import { useAuth } from "../../../hooks/useAuth";
   import { Link } from "react-router-dom";
   import axios from "axios";
-import BuyerHeader from "../../partials/Layouts/BuyerHeader";
+  import BuyerHeader from "../../partials/Layouts/BuyerHeader";
+  import { toast } from "react-toastify";
 
   const Settings = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const { getTokenData, getLocalStorageUserdata } = useAuth();
+    const { getTokenData, getLocalStorageUserdata, setLogout } = useAuth();
     const [notificationData, setNotificationData] = useState([]);
     const [userRole, setUserRole] = useState(0);
 
+    const handleNotificationStatus = async (notificationKey, type, isEnabled) => {
+      try {
+          const headers = {
+              Accept: "application/json",
+              Authorization: `Bearer ${getTokenData().access_token}`,
+              "auth-token": getTokenData().access_token,
+          };
+
+          // Constructing formData with the desired nested structure
+          const formData = {
+              [notificationKey]: {
+                  [type]: isEnabled
+              }
+          };
+
+          // Send formData to the server
+          const response = await axios.post(
+              `${apiUrl}notification-settings/update`,
+              formData,
+              { headers }
+          );
+          toast.success(response.data.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+          // Update local notification data state after success
+          setNotificationData(prevData => 
+              prevData.map(data => data.key === notificationKey ? { ...data,[type]: { ...data[type], enabled: isEnabled }}: data)
+          );
+
+      } catch (error) {
+          console.error("Error updating notification status:", error);
+      }
+  };
+  
     useEffect(()=>{
       const fetchUserSetting = async () => {
         try {
@@ -23,8 +58,11 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
             }
             let response = await axios.get(`${apiUrl}notification-settings/`, { headers: headers });
             setNotificationData(response.data.data);
+
         } catch (error) {
-          
+          if (error.response.status === 401) {
+            setLogout();
+          }
         }
       }
       fetchUserSetting();
@@ -36,6 +74,7 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
           setUserRole(userData.role);
       }
   }, []);
+  console.log('notificationData', notificationData);
 
     return (
       <>
@@ -93,10 +132,10 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
                       </div>
                     </Col>
                     <Col lg={2} md={3}>
-                      <div class=""><label><span>Push Notifications</span></label></div>
+                      <div className=""><label><span>Push Notifications</span></label></div>
                     </Col>
                     <Col lg={2} md={3}>
-                      <div class=""><label><span>Email Notifications</span></label></div>
+                      <div className=""><label><span>Email Notifications</span></label></div>
                     </Col>
                   </Row>
                 </div>
@@ -116,7 +155,7 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
                         </Col>
                         <Col lg={2} md={3}>
                           <div className="buyer_seller_toggle" data-notifications="Push Notifications">
-                            <input type="checkbox" name={data.key} defaultChecked={data.value} />
+                            <input type="checkbox" checked={data.push.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'push', e.target.checked)}/>
                             <label>
                               <span>Disable</span><span>Enable</span>
                             </label>
@@ -124,8 +163,7 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
                         </Col>
                         <Col lg={2} md={3}>
                           <div className="buyer_seller_toggle" data-notifications="Email Notifications">
-                            <input type="checkbox" />
-                            <label>
+                          <input type="checkbox" checked={data.email.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'email', e.target.checked)}/>                          <label>
                               <span>Disable</span><span>Enable</span>
                             </label>
                           </div>
