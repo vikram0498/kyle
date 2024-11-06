@@ -12,8 +12,8 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
     const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
-    const [dealConfirmation, setDealConfirmation] = useState(false);
-    const [modalContent, setModalContent] = useState('');
+    const [dealConfirmation, setDealConfirmation] = useState(true);
+    const [modalContent, setModalContent] = useState('not-interested');
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);
@@ -270,8 +270,8 @@ const DealNotifications = () => {
                                 <div className="col-12 col-md-12 col-lg-12">
                                     <div className="form-group">
                                         <textarea className="form-control-form h-50" rows="3" onChange={(e)=>{setDealFeedback(e.target.value)}}>{dealFeedback}</textarea>
+                                        {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
                                     </div>
-                                    {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
                                     <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>updateDealStatus('not-interested-submitted')}>Submit</button>
                                 </div>
                             </div>

@@ -529,6 +529,9 @@ body.dark .seller-notification-card h3 {
 body.dark .seller-notification-list::-webkit-scrollbar-track {
   background-color: #2f2f2f;
 }
+body.dark .deal_img_group a {
+  color: #49d8a3;
+}
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{
     background-color: #fff !important;

@@ -6363,7 +6363,7 @@ body.dark .outline_btn{
 }
 .disabled-btn button {
   cursor: not-allowed !important;
-  background: #ffffff;
+  background: transparent;
   border: none;
   pointer-events: none;
 }
