@@ -1366,7 +1366,7 @@ class SearchBuyerController extends Controller
     public function updateBuyerDealStatus(Request $request){
         $request->validate([
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
-            'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_interest_status')))],
+            'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
             'buyer_feedback'    => ['required_if:status,not_interested', 'string']
         ],[],[
             "buyer_feedback" => "feedback"
@@ -1374,7 +1374,7 @@ class SearchBuyerController extends Controller
 
         DB::beginTransaction();
         try {
-            $dealStatus = config('constants.buyer_interest_status');
+            $dealStatus = config('constants.buyer_deal_status');
             $buyerDeal = BuyerDeal::where('buyer_user_id', auth()->id())->whereId($request->buyer_deal_id)->first();
             if(!$buyerDeal){
                 $responseData = [
