@@ -238,13 +238,35 @@ class ProfileController extends Controller
 
             $authUser = auth()->user();
 
-            $roleId = config('constants.roles.seller');
-            if($authUser->is_seller){
-                $roleId = config('constants.roles.buyer');
+            if($authUser->level_type == 2){
+                $responseData = [
+                    'status'    => true,
+                    'message'   => "Your account should level 2 type user!",
+                ];
+                return response()->json($responseData, 403);
             }
-            
-            $authUser->roles()->sync($roleId);
 
+            // Define role IDs for seller and buyer
+            $sellerRoleId = config('constants.roles.seller');
+            $buyerRoleId = config('constants.roles.buyer');
+
+            // Determine the target role based on the user's current role
+            $targetRoleId = $authUser->roles()->wherePivot('role_id', $sellerRoleId)->exists() 
+                ? $buyerRoleId 
+                : $sellerRoleId;
+
+            // Detach both roles to ensure only one role is active
+            $authUser->roles()->detach([$sellerRoleId, $buyerRoleId]);
+
+            // Attach the target role
+            $authUser->roles()->attach($targetRoleId);
+
+            if($targetRoleId == $buyerRoleId){
+                $authUser->is_switch_role = 1;
+            }else{
+                $authUser->is_switch_role = 0;
+            }
+           
             DB::commit();
 
             $responseData = [
@@ -259,6 +281,7 @@ class ProfileController extends Controller
                     'level_type'   => $authUser->level_type,
                     'credit_limit' => $authUser->credit_limit,
                     'is_verified'  => $authUser->is_buyer_verified,
+                    'is_switch_role' => $authUser->is_switch_role,
                     'total_buyer_uploaded' => $authUser->buyers()->count(),
                 ],
             ];

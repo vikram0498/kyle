@@ -183,6 +183,7 @@ class LoginRegisterController extends Controller
                             'credit_limit' => $user->credit_limit,
                             'is_verified'  => $user->is_buyer_verified,
                             'total_buyer_uploaded' => $user->buyers()->count(),
+                            'is_switch_role' => $user->is_switch_role,
                         ],
                         'remember_me_token' => $user->remember_token,
                         'access_token'      => $accessToken

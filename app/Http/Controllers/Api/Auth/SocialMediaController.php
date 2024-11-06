@@ -50,6 +50,7 @@ class SocialMediaController extends Controller
                             'credit_limit' => $isUser->credit_limit,
                             'is_verified'  => $isUser->is_buyer_verified ?? false,
                             'total_buyer_uploaded' => $isUser->buyers()->count(),
+                            'is_switch_role' => $isUser->is_switch_role,
                         ],
                         'remember_me_token' => $isUser->remember_token,
                         'access_token'      => $accessToken
@@ -96,6 +97,8 @@ class SocialMediaController extends Controller
                         'credit_limit' => $newUser->credit_limit,
                         'is_verified'  => $newUser->is_buyer_verified ?? false,
                         'total_buyer_uploaded' => $newUser->buyers()->count(),
+                        'is_switch_role' => $newUser->is_switch_role,
+
                     ],
                     'remember_me_token' => $newUser->remember_token,
                     'access_token'      => $accessToken
@@ -150,6 +153,8 @@ class SocialMediaController extends Controller
                             'level_type'   => $isUser->level_type,
                             'credit_limit' => $isUser->credit_limit,
                             'total_buyer_uploaded' => $isUser->buyers()->count(),
+                            'is_switch_role' => $isUser->is_switch_role,
+
                         ],
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
@@ -192,6 +197,7 @@ class SocialMediaController extends Controller
                         'level_type'   => $newUser->level_type,
                         'credit_limit' => $newUser->credit_limit,
                         'total_buyer_uploaded' => $newUser->buyers()->count(),
+                        'is_switch_role' => $newUser->is_switch_role,
                     ],
                     'message'       => 'Login successfully!',
                     'access_token'  => $accessToken
