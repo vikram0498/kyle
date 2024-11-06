@@ -302,7 +302,7 @@ if (!function_exists('getUserNotificationSetting')) {
 
 		$setting = NotificationSetting::where('key', $key)->whereUserId($authUser->id)->whereUserType($userType)->whereStatus(1)->first();
 		if($setting){
-			$result = $setting->value;
+			$result = $setting;
 		}
 		return $result;
 	}

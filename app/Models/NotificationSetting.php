@@ -24,6 +24,8 @@ class NotificationSetting extends Model
         'value',
         'display_name',
         'user_type',
+        'push_notification',
+        'email_notification',
         'status',
         'created_at',
         'updated_at',

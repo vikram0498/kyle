@@ -23,6 +23,9 @@ return new class extends Migration
             
             $table->enum('user_type', ['admin', 'seller', 'buyer'])->nullable()->default("admin");
             
+            $table->tinyInteger('push_notification')->default(0);
+            $table->tinyInteger('email_notification')->default(0);
+            
             $table->boolean('status')->default(1)->comment('0=> inactive, 1=> active');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(Null)->nullable();

@@ -307,22 +307,46 @@ return [
         "deal_notification" => [
             'value' => "enable",
             'display_name' => "Deal Notifications",
-            'setting_for'  => ['buyer']
+            'setting_for'  => ['buyer'],
+            'push' => [
+                'enabled' => false,
+            ],
+            'email' => [
+                'enabled' => false,
+            ],
         ],
         "interest_notification" => [
             'value' => "enable",
             'display_name' => "Interest Notifications",
-            'setting_for'  => ['seller']
+            'setting_for'  => ['seller'],
+            'push' => [
+                'enabled' => false,
+            ],
+            'email' => [
+                'enabled' => false,
+            ],
         ],
         "new_buyer_notification" => [
             'value' => "enable",
             'display_name' => "New Buyers Notification",
-            'setting_for'  => ['seller']
+            'setting_for'  => ['seller'],
+            'push' => [
+                'enabled' => false,
+            ],
+            'email' => [
+                'enabled' => false,
+            ],
         ],
         "dm_notification" => [
             'value' => "enable",
             'display_name' => "DM Notifications",
-            'setting_for'  => ['seller', 'buyer']
+            'setting_for'  => ['seller', 'buyer'],
+            'push' => [
+                'enabled' => false,
+            ],
+            'email' => [
+                'enabled' => false,
+            ],
         ],
     ]
 ];
