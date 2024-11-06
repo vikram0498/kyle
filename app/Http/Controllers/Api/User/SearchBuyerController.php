@@ -1309,6 +1309,7 @@ class SearchBuyerController extends Controller
                         'address'           => $address,
                         'property_type'     => $propertType,
                         'property_images'   => $searchLog && $searchLog->uploads ? $searchLog->search_log_image_urls : '',
+                        'picture_link'      => $searchLog && $searchLog->picture_link ? $searchLog->picture_link : '',
                         'status'            => $buyerDeal->status,
                     ];
                 });
