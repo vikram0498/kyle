@@ -11,8 +11,8 @@ import BuyerHeader from '../../partials/Layouts/BuyerHeader';
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
     const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
-    const [dealConfirmation, setDealConfirmation] = useState(false);
-    const [modalContent, setModalContent] = useState('');
+    const [dealConfirmation, setDealConfirmation] = useState(true);
+    const [modalContent, setModalContent] = useState('interested');
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);
@@ -132,7 +132,7 @@ const DealNotifications = () => {
                                                     </div>
                                                     ))}
                                                     <Link to={data.picture_link}>
-                                                        <div className='align-items-center mt-2 cursor-pointer'>
+                                                        <div className='align-items-center cursor-pointer'>
                                                             More..
                                                         </div>
                                                     </Link>

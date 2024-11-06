@@ -5457,6 +5457,11 @@ span.badge.bg-success.purchased-profile {
   align-items: center;
   padding: 5px 15px 5px 20px;
 }
+.buyer-blog-new .buyer-active-verfiy {
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
 .buyer-active-verfiy::after{
   content: "";
   position: absolute;
@@ -6416,15 +6421,28 @@ body.dark .notification_pro_deal>li:last-child{
   -webkit-flex-wrap: wrap;
   gap: 9px;
   margin-top: 9px;
+  align-items: center;
 }
 .deal_img_group>*{
   flex: 0 0 calc(33.33% - 6px);
   -webkit-flex: 0 0 calc(33.33% - 6px);
 }
+.deal_img_group a {
+  color: #3F53FE;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Barlow", sans-serif;
+  line-height: 16px;
+  text-align: center;
+}
 .deal_img_group img{
   height: 49px;
 }
-
+.deal_notifications_left>.pro_details {
+  flex: 0 0 calc(100% - 225px);
+  max-width: calc(100% - 225px);
+  padding-right: 20px;
+}
 .radius_30 .modal-content{
   border-radius: 30px;
   border: none;
@@ -7133,6 +7151,14 @@ span.status.interested {
       opacity: 0;
       transform: rotate(45deg) translate(10px, 10px);
   }
+}
+
+/*notification card */
+.seller-notification-card {
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #F5F7F9;
+  margin: 60px 0 0;
 }
 
 @media screen and (max-width: 575px){

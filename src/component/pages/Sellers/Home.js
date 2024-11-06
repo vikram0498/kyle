@@ -8,6 +8,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import axios from "axios";
 import UploadMultipleBuyersOnChange from "../../partials/UploadMultipleBuyersOnChange";
 import WatchVideo from "../../partials/Modal/WatchVideo";
+import Notification from "./Notification/Notification";
 
 function Home({ userDetails }) {
   //const {authData} = useContext(AuthContext);
@@ -160,6 +161,8 @@ function Home({ userDetails }) {
               <UploadMultipleBuyersOnChange />
             </div>
           </div>
+          <Notification />
+          
         </div>
       </section>
       <Footer />

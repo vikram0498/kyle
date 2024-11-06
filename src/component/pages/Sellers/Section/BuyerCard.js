@@ -20,7 +20,7 @@ export default function BuyerCard({
   }
   return (
     <div className="col-12 col-lg-6">
-      <div className="property-critera-block buyer-blog-area">
+      <div className="property-critera-block buyer-blog-area buyer-blog-new">
       {data.profile_tag_name &&
           <OverlayTrigger
               placement="top"
