@@ -1302,6 +1302,8 @@ class SearchBuyerController extends Controller
                     $searchLog = $buyerDeal->searchLog ?? null;
                     $propertType = $searchLog && $searchLog->property_type && $propertyTypes[$searchLog->property_type] ? $propertyTypes[$searchLog->property_type] : '';
                     $address = $searchLog && $searchLog->address ? $searchLog->address : '';
+
+                    $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
                     return [
                         'id'                => $buyerDeal->id,
                         'search_log_id'     => $searchLog->id ?? '',
@@ -1311,6 +1313,7 @@ class SearchBuyerController extends Controller
                         'property_images'   => $searchLog && $searchLog->uploads ? $searchLog->search_log_image_urls : '',
                         'picture_link'      => $searchLog && $searchLog->picture_link ? $searchLog->picture_link : '',
                         'status'            => $buyerDeal->status,
+                        'is_proof_of_fund_verified'  => $is_proof_of_fund_verified,
                     ];
                 });
 
