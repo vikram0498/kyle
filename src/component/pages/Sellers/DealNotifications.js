@@ -12,8 +12,8 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
     const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
-    const [dealConfirmation, setDealConfirmation] = useState(true);
-    const [modalContent, setModalContent] = useState('interested');
+    const [dealConfirmation, setDealConfirmation] = useState(false);
+    const [modalContent, setModalContent] = useState('');
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);
@@ -236,7 +236,7 @@ const DealNotifications = () => {
                         <>
                             <div className='buy_modal_icon light_blue_bg'><Image src='/assets/images/home-interested.svg' alt='' /></div>
                             <h3>Let’s Connect With Us</h3>
-                            <p className='mb-0'>Please keep an eye on next available options which can match your criteria.</p>
+                            <p className='mb-5'>Please keep an eye on next available options which can match your criteria.</p>
                             {isDealDocumentVerified ?  
                                 <ul className='deal_notifications_btn'>
                                     <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li>
@@ -244,11 +244,17 @@ const DealNotifications = () => {
                                 </ul>
                                 :
                                 <div className='row upload-document-section'>
-                                    <Form.Group controlId="formFile" className="mb-3">
-                                        <Form.Control type="file" />
-                                    </Form.Group>
+                                   
+                                   <div className='col-md-12'>
+
+                                    <span className="browse-files position-relative">
+                                        <input id='formFile' type="file" className="default-file-input"/>
+                                        <span className="d-block upload-file">PDF-Name.pdf</span>
+                                        <span className="browse-files-text">browse Now</span>
+                                    </span>
+                                    </div>
                                     <div className='col-md-12'>
-                                        <button type="button" className="btn btn-primary" onClick={()=>{setIsDealDocumentVerified(true)}}>Submit</button>
+                                        <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>{setIsDealDocumentVerified(true)}}>Submit</button>
                                     </div>
                                 </div>
 
@@ -259,16 +265,15 @@ const DealNotifications = () => {
                         <>
                             <div className='buy_modal_icon light_gray_bg'><Image src='/assets/images/like-vector.svg' alt='' /></div>
                             <h3>Please Share Your Feedback</h3>
-                            <p className='mb-0'>Please share your experience with us.</p>
+                            <p className='mb-4'>Please share your experience with us.</p>
                             <div className='row'>
                                 <div className="col-12 col-md-12 col-lg-12">
                                     <div className="form-group">
                                         <textarea className="form-control-form h-50" rows="3" onChange={(e)=>{setDealFeedback(e.target.value)}}>{dealFeedback}</textarea>
                                     </div>
-                                    {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>
-}
+                                    {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
+                                    <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>updateDealStatus('not-interested-submitted')}>Submit</button>
                                 </div>
-                                <button type="button" className="btn btn-primary" onClick={()=>updateDealStatus('not-interested-submitted')}>Submit</button>
                             </div>
                         </>
                     )}

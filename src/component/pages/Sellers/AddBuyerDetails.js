@@ -17,6 +17,7 @@ import WatchVideo from "../../partials/Modal/WatchVideo";
 import SocialShare from "../../partials/Modal/SocialShare";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
+import { Image } from "react-bootstrap";
 
 function AddBuyerDetails() {
   const {
@@ -2818,6 +2819,11 @@ function AddBuyerDetails() {
                     ) : (
                       ""
                     )}
+                    <div className="advertisement">
+                      <Link>
+                        <Image src="./assets/images/add-1.svg" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

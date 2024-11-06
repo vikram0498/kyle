@@ -511,7 +511,24 @@ body.dark .column_bg_space>.deal_column {
   background: #1f1f1f;
   color: #fff;
 }
-
+body.dark .seller-notification-card {
+  background-color: #1f1f1f;
+}
+body.dark .seller-notification-box {
+  background-color: #2f2f2f;
+}
+body.dark .seller-notification-box .seller-notification-list .seller-notification-col {
+  border-left: solid 1px  rgb(255 255 255 / 10%);
+}
+body.dark .seller-notification-box .seller-notification-list .seller-notification-col:last-child{
+  border-right: solid 1px  rgb(255 255 255 / 10%);
+}
+body.dark .seller-notification-card h3 {
+  border-bottom: solid 1px #363636;
+}
+body.dark .seller-notification-list::-webkit-scrollbar-track {
+  background-color: #2f2f2f;
+}
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{
     background-color: #fff !important;

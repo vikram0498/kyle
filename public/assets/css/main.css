@@ -1016,7 +1016,7 @@ section.main-section {
 .heading-title {
   text-align: center;
 
-  margin-bottom: 80px;
+  margin-bottom: 50px;
 }
 
 .heading-title h2 {
@@ -6450,8 +6450,8 @@ body.dark .notification_pro_deal>li:last-child{
 .max-648 .modal-dialog{
   max-width: 648px;
 }
-.space_modal{
-  padding: 60px 98px;
+.space_modal {
+  padding: 60px 50px 50px;
 }
 .modal_inner_content{
   text-align: center;
@@ -7157,10 +7157,155 @@ span.status.interested {
 .seller-notification-card {
   padding: 30px;
   border-radius: 10px;
-  background-color: #F5F7F9;
+  background-color: #fff;
   margin: 60px 0 0;
 }
+.seller-notification-card h3 {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: solid 1px #D0DEE7;
+}
+.seller-notification-box {
+  display: flex;
+  background-color: #F5F7F9;
+  border-radius: 5px;
+  padding: 10px;
+  padding-left: 32px;
+  position: relative;
+}
+.seller-notification-box::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  background-color: #3F53FE;
+  border-radius: 50%;
+}
+.seller-notification-box h4 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0 0 3px;
+}
+.seller-notification-box  p {
+  margin: 0;
+  font-family: "Barlow", sans-serif;
+  font-size: 12px;
+  line-height: normal;
+}
+.seller-notification-box .seller-notification-title {
+  width: 40%;
+  align-self: center;
+}
+.seller-notification-box .seller-notification-view {
+  width: 135px;
+  align-self: center;
+}
+.seller-notification-box .seller-notification-list {
+  width: calc(60% - 135px);
+  display: flex;
+}
+.seller-notification-box .seller-notification-view .btn-fill {
+  padding: 12px 15px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+  border: 1px solid #3f53fe;
+  margin-right: 0;
+}
+.seller-notification-box .seller-notification-list .seller-notification-col {
+  width: 33.33%;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  border-left: solid 1px #D0DEE7;
+  justify-content: center;
+  gap: 10px;
+}
+.seller-notification-box .seller-notification-list .seller-notification-col:last-child{
+  border-right: solid 1px #D0DEE7;
+}
+.seller-notification-list .seller-notification-box:not(:last-child) {
+  margin: 0 0 15px;
+}
+.seller-notification-list {
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: auto;
+  width: calc(100% + 15px);
+  padding-right: 10px;
+}
+.seller-notification-list::-webkit-scrollbar {
+  width: 5px;
+}
 
+/* Track */
+.seller-notification-list::-webkit-scrollbar-track {
+  background-color: #F5F7F9;
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.seller-notification-list::-webkit-scrollbar-thumb {
+  background: #3F53FE; 
+  border-radius: 10px;
+}
+.watch-video.home-video {
+  padding: 10px 20px;
+  background: #fff;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.watch-video.home-video p {
+  margin: 0 0 5px;
+}
+.mb-60 {
+  margin-bottom: 60px;
+}
+.advertisement {
+  margin: 30px 0 0px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.advertisement img {
+  max-width: 100%;
+  width: 100%;
+}
+.upload-document-section .browse-files {
+  border-radius: 5px;
+  border: solid 1px #E1E3E7;
+  padding: 5px 5px 5px 18px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 30px;
+}
+.upload-document-section .browse-files .browse-files-text {
+  background: #3F53FE;
+  line-height: normal;
+  display: block;
+  border-radius: 5px;
+  padding: 14px 35px;
+  text-transform: capitalize;
+  color: #fff;
+  font-weight: 600;
+  font-family: "Nunito Sans", sans-serif;
+}
+.upload-document-section  .d-block.upload-file {
+  margin-left: 0;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  color: #464b70;
+}
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{
     overflow: hidden;
