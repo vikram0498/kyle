@@ -12,10 +12,11 @@ function Header() {
 
   const [userDetails, setUserDetails] = useState(null);
   const [creditLimit, setCreditLimit] = useState(null);
-  const { setLogout, getTokenData, getLocalStorageUserdata } = useAuth();
+  const { setLogout, getTokenData, getLocalStorageUserdata, setLocalStorageUserdata } = useAuth();
 
   const location = useLocation();
   const isNotSearchPage = location.pathname !== "/sellers-form";
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   if (isNotSearchPage) {
     localStorage.removeItem("filter_buyer_fields");
@@ -38,7 +39,6 @@ function Header() {
   }, []);
   const getCurrentLimit = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
         Authorization: "Bearer " + getTokenData().access_token,
@@ -50,7 +50,7 @@ function Header() {
       if (response.data.status) {
         console.log(response.data.is_active);
         if (!response.data.is_active) {
-          toast.error("Your account has been blocked! ", {
+          toast.error("Your account has been blocked!", {
             position: toast.POSITION.TOP_RIGHT,
           });
           setLogout();
@@ -77,7 +77,24 @@ function Header() {
   //     } 
   //   });
   // }
+  const handleToggleSeller = async () => {
+    try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+        };
+        let response = await axios.post(`${apiUrl}update-user-role`,{},{headers});
+        if(response.data.status){
+          setLocalStorageUserdata(response.data.userData);
+          navigate('/buyer-profile');
+        }
 
+    } catch (error) {
+      if (error.response.status === 401) {
+        setLogout();
+      }    
+    }
+  }
   return (
     <>
       <header className="dashboard-header">
@@ -109,7 +126,7 @@ function Header() {
                   <DarkMode />
                 </div>
                 <div className="buyer_seller_toggle">
-                  <input type="checkbox" />
+                  <input type="checkbox" onChange={handleToggleSeller}/>
                   <label>
                     <span>Seller</span>
                     <span>Buyer</span>

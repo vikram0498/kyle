@@ -12,8 +12,8 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
     const { getTokenData, setLogout, getLocalStorageUserdata } = useAuth();
-    const [dealConfirmation, setDealConfirmation] = useState(true);
-    const [modalContent, setModalContent] = useState('not-interested');
+    const [dealConfirmation, setDealConfirmation] = useState(false);
+    const [modalContent, setModalContent] = useState('');
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);

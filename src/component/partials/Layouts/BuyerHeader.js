@@ -10,6 +10,8 @@ function BuyerHeader() {
   const navigate = useNavigate();
   const { setLogout, getTokenData, getLocalStorageUserdata,setLocalStorageUserdata } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
@@ -54,6 +56,25 @@ function BuyerHeader() {
             });
           }
         }
+    }
+  }
+
+  const handleToggleSeller = async () => {
+    try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+        };
+        let response = await axios.post(`${apiUrl}update-user-role`,{},{headers});
+        if(response.data.status){
+          setLocalStorageUserdata(response.data.userData);
+          navigate('/');
+        }
+
+    } catch (error) {
+      if (error.response.status === 401) {
+        setLogout();
+      } 
     }
   }
   return (
@@ -226,6 +247,16 @@ function BuyerHeader() {
                     </li>
                   </ul>
                 </div>
+                {userDetails?.is_switch_role == 1 && 
+                <div className="buyer_seller_toggle">
+                  <input type="checkbox" onChange={handleToggleSeller} defaultChecked={true}/>
+                  <label>
+                    <span>Seller</span>
+                    <span>Buyer</span>
+                  </label>
+                </div>
+                }
+                
                 <div className="modetype">
                   <DarkMode />
                 </div>
