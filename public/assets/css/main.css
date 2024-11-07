@@ -6007,11 +6007,21 @@ body.dark .deal_left_column{
 body.dark .pro_img{
   background-color: rgb(255 255 255 / 10%);
 }
-.pro_img img{
+.pro_img .pro_img-main {
   width: 100%;
   height: 125px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pro_img img{
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 8px;
+  transition: all 0.35s ease-in-out;
+}
+.pro_img .pro_img-main:hover img{
+  transform: scale(1.2);
 }
 .pro_details{
   padding-left: 20px;

@@ -120,11 +120,13 @@ const DealNotifications = () => {
                                             {/* Profile Image Section */}
                                             <div className='pro_img'>
                                                 {/* Display first image or fallback if no images available */}
+                                                <div className='pro_img-main'>
                                                 {firstImage ? (
                                                     <Image src={firstImage} alt='Property Image' width={200} height={200} />
                                                 ) : (
                                                     <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
                                                 )}
+                                                </div>
                                                 
                                                 {/* Remaining Images Section */}
                                                 <div className='deal_img_group'>
