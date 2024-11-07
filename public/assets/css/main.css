@@ -33,7 +33,7 @@ a {
 a:hover {
   color: #3f53fe;
 }
-
+img{max-width: 100%;}
 h1,
 h2,
 h3,
@@ -350,7 +350,11 @@ input[type="radio"]:checked:before {
 
   justify-content: center;
 }
-
+.img-user .user-profile {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
 .welcome-user {
   margin-right: 12px;
 }
@@ -1834,9 +1838,6 @@ section.main-section {
 .property-critera-outer input[type="checkbox"]:checked + .property-critera-block{
   border: 2px solid #3F53FE;
 }
-.property-critera-outer input[type="checkbox"]:checked + .buyer-blog-area .critera-card{
-border-top: 2px solid #3F53FE;
-}
 .property-critera-outer input[type="checkbox"]:checked + .property-critera-block .cornor-block {
   border: 2px solid #3F53FE;
 }
@@ -1896,7 +1897,7 @@ border-top: 2px solid #3F53FE;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: -15px;
+  margin-top: -13px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -6399,6 +6400,10 @@ span.max-image {
   color: #464B70;
   font-family: "Nunito Sans", sans-serif;
   gap: 6px;
+}
+.deal_notifications_left .notification_pro_deal>li {
+    flex-wrap: nowrap;
+    line-height: normal;
 }
 body.dark .notification_pro_deal>li{
   color: #fff;

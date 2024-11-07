@@ -45,7 +45,10 @@
     padding-bottom: 50px;
   }
   .heading-title {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+  }
+  .mb-60 {
+      margin-bottom: 40px;
   }
   .grid-block-view {
     padding: 25px;
@@ -121,6 +124,37 @@
   }
   .block-session>.upload-buyer p{
     display: none;
+  }
+  .deal_notifications_right {
+      width: 100%;
+      margin: 20px 0 0;
+  }
+  .deal_notifications_right .deal_notifications_btn {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+  }
+  .deal_notifications_right .deal_notifications_btn > li {
+      margin: 0;
+  }
+  .pro_details h3 {
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 15px;
+  }
+  .outline_btn{
+    min-width: auto;
+  }
+  .seller-notification-box .seller-notification-title {
+    width: calc(100% - 600px)
+  }
+  .seller-notification-box .seller-notification-list {
+      width: 500px;
+  }
+  .seller-notification-box .seller-notification-view {
+    width: 100px;
   }
 }
 
@@ -276,6 +310,36 @@
   .top_icons_list .dropdown .dropdown-menu::after,
   .top_icons_list .dropdown .dropdown-menu::before{
     left: calc(100% - 30px);
+  }
+  .ad {
+    margin: 0 0 10px;
+  }
+  .seller-notification-box {
+    flex-wrap: wrap;
+  }
+  .seller-notification-box::before{display: none;}
+  .seller-notification-box .seller-notification-title {
+      width: 100%;
+      position: relative;
+  }
+  .seller-notification-box .seller-notification-list {
+      width: calc(100% - 140px);
+      margin: 20px 0 0;
+  }
+  .seller-notification-box .seller-notification-view {
+      width: 140px;
+  }
+  .seller-notification-box .seller-notification-title::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    background-color: #3F53FE;
+    border-radius: 50%;
   }
 }
 @media (max-width: 767px) {
@@ -472,10 +536,6 @@
     background-color: #fff;
     margin-right: 5px;
   }
-  .user-dropdown .img-user>img{
-    height: 21px;
-    width: auto;
-  }
   .user-dropdown .dropdown-data .welcome-user,
   .block-session .modetype .checkbox-label .txtmode{
     display: none !important;
@@ -515,6 +575,80 @@
     border-bottom: 1px solid #D0DEE7;
     padding-bottom: 15px;
 }
+.deal_notifications_left>.pro_details {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+  padding-top: 15px;
+}
+.pro_img {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+.deal_notifications_left .pro_img>img {
+  height: 160px;
+}
+.deal_notifications_right {
+  padding: 10px;
+}
+.space_modal {
+  padding: 30px 20px;
+}
+.modal_inner_content h3 {
+  font-size: 25px;
+  line-height: 34px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+.buy_modal_icon {
+  width: 70px;
+  height: 70px;
+  line-height: 65px;
+}
+.buy_modal_icon img {
+  max-width: 35px;
+}
+.seller-notification-box .seller-notification-list .seller-notification-col {
+  width: auto;
+  border-left: none;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
+  -webkit-box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
+  padding: 5px 10px;
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  align-items: center;
+  -webkit-align-items: center;
+  gap: 5px;
+  min-width: auto;
+}
+.seller-notification-box{padding: 10px;}
+.seller-notification-box .seller-notification-list {
+  width: 100%;
+  margin: 15px 0;
+  gap: 10px;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.seller-notification-box .seller-notification-view .btn-fill {
+  margin-right: auto;
+  margin-left: 0;
+}
+.seller-notification-box .seller-notification-list .seller-notification-col:last-child{border-right: none;}
+.seller-notification-box .seller-notification-title::before{display: none;}
+.seller-notification-card {
+  padding: 15px;
+  margin: 50px 0 0;
+}
+.seller-notification-list {
+  width: calc(100% + 10px);
+  padding-right: 5px;
+}
 }
 
 @media (max-width: 575px) {
@@ -546,11 +680,6 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-  }
-  .img-user .user-profile {
-    height: 100%;
-    width: 100%;
-    object-fit: contain;
   }
   .link-pass {
     justify-content: left;
