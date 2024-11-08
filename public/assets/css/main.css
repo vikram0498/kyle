@@ -7324,7 +7324,7 @@ span.status.interested {
 .card-box.setting-card {
   padding: 0;
 }
-.pro_details {
+.setting-card .pro_details {
   padding-left: 0;
 }
 .column_bg_space.setting-card>.deal_column.setting-card-head {
