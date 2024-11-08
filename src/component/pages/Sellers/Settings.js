@@ -125,62 +125,44 @@
                   </div>
               </div>
             </div>
-            <div className='card-box column_bg_space'>
-                <div className='deal_column d-none d-md-block'>
-                  <Row className='align-items-center'>
-                    <Col lg={8} md={6}>
-                      <div className='deal_left_column'>
-                          <div className='list_icon'>
-                              {/* <Image src='/assets/images/home_buy.svg' alt='' /> */}
-                          </div>
-                          <div className='pro_details'>
-                              <h3 className="mb-0">Settings</h3>
-                          </div>
+            <div className='card-box column_bg_space setting-card'>
+                <div className='deal_column setting-card-head'>
+                  <div className='deal_left_column'>
+                      <div className='pro_details'>
+                          <h3 className="mb-0">Settings</h3>
                       </div>
-                    </Col>
-                    <Col lg={2} md={3}>
-                      <div className=""><label><span>Push Notifications</span></label></div>
-                    </Col>
-                    <Col lg={2} md={3}>
-                      <div className=""><label><span>Email Notifications</span></label></div>
-                    </Col>
-                  </Row>
+                  </div>
+                  <div className="setting-card-head-right">
+                    <div className="setting-card-head-title">Push Notifications</div>
+                    <div className="setting-card-head-title">Email Notifications</div>
+                  </div>
                 </div>
-                { notificationData.length > 0 ? (
-                  notificationData.map((data, index) => (
-                    <div key={index} className="deal_column settings">
-                      <Row className="align-items-center">
-                        <Col lg={8} md={6}>
-                          <div className="deal_left_column">
-                            <div className="list_icon">
-                              <Image src="/assets/images/home_buy.svg" alt="" />
+                <div className="setting-card-body">                  
+                  { notificationData.length > 0 ? (
+                    notificationData.map((data, index) => (
+                      <div key={index} className="deal_column settings">
+                            <div className="deal_left_column">
+                              <div className="pro_details">
+                                <h3>{data.display_name}</h3>
+                                <p>Allow notifications for interested property</p>
+                              </div>
                             </div>
-                            <div className="pro_details">
-                              <h3 className="mb-0">{data.display_name}</h3>
+                            <div className="setting-card-head-right">
+                              <div className="buyer_seller_toggle" data-notifications="Push Notifications">
+                                <input type="checkbox" checked={data.push.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'push', e.target.checked)}/>
+                                <label></label>
+                              </div>
+                              <div className="buyer_seller_toggle" data-notifications="Email Notifications">
+                              <input type="checkbox" checked={data.email.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'email', e.target.checked)}/>
+                                <label></label>
+                              </div>
                             </div>
-                          </div>
-                        </Col>
-                        <Col lg={2} md={3}>
-                          <div className="buyer_seller_toggle" data-notifications="Push Notifications">
-                            <input type="checkbox" checked={data.push.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'push', e.target.checked)}/>
-                            <label>
-                              <span>Disable</span><span>Enable</span>
-                            </label>
-                          </div>
-                        </Col>
-                        <Col lg={2} md={3}>
-                          <div className="buyer_seller_toggle" data-notifications="Email Notifications">
-                          <input type="checkbox" checked={data.email.enabled} onChange={(e) =>handleNotificationStatus(data.key, 'email', e.target.checked)}/>                          <label>
-                              <span>Disable</span><span>Enable</span>
-                            </label>
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  ))
-                ) : (
-                  <p>No notifications found.</p>
-                )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No notifications found.</p>
+                  )}
+                </div>
             </div>
           </Container>
           }

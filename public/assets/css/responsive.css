@@ -566,15 +566,28 @@
   .settings .buyer_seller_toggle {
     display: flex;
     gap: 20px;
-    margin: 15px 0 0;
+    margin: 0;
     justify-content: space-between;
     align-items: center;
-}
+    width: 100%;
+  }
 .settings .deal_left_column {
     border-right: none;
-    border-bottom: 1px solid #D0DEE7;
-    padding-bottom: 15px;
+    width: 100%;
+  }
+  .setting-card-body .setting-card-head-right {
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: #f5f7f9;
+    border-radius: 10px;
+    margin: 15px 0 0;
+    gap: 10px;
 }
+.setting-card-body {
+  padding: 20px;
+}
+.setting-card-body .setting-card-head-right:before{display: none;}
 .deal_notifications_left>.pro_details {
   flex: 0 0 100%;
   max-width: 100%;
@@ -648,6 +661,18 @@
 .seller-notification-list {
   width: calc(100% + 10px);
   padding-right: 5px;
+}
+.column_bg_space.setting-card>.deal_column.setting-card-head .setting-card-head-right {
+  display: none;
+}
+.setting-card-body .deal_column.settings {
+  flex-wrap: wrap;
+}
+.column_bg_space.setting-card>.deal_column.setting-card-head {
+  padding: 20px;
+}
+.container>.card-box.setting-card {
+  padding: 0;
 }
 }
 
@@ -789,9 +814,6 @@
   }
   .settings .list_icon img{
       max-width: 100%;
-  }
-  .settings .pro_details {
-      padding-left: 15px;
   }
   .settings .pro_details h3 {
       font-size: 16px;

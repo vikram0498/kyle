@@ -5992,7 +5992,6 @@ body.dark .btn-w-icon:hover svg path{
   -webkit-flex-wrap: wrap;
   align-items: center;
   -webkit-align-items: center;
-  border-right: 1px solid #D0DEE7;
 }
 body.dark .deal_left_column{
   border-right-color: rgb(255 255 255 / 20%);
@@ -6026,15 +6025,19 @@ body.dark .pro_img{
 .pro_details{
   padding-left: 20px;
 }
-.pro_details h3{
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 20px;
+.pro_details h3,
+.setting-card-head-title{
+  font-size: 18px;
   line-height: 24px;
-  color: #1D2246;
-  font-weight: 700;
+  color: #1D2246;    
+  font-family: "Barlow", sans-serif;
+  font-weight: 600;
   text-transform: capitalize;
-  margin-bottom: 20px;
 }
+.setting-card-head-title {
+  text-align: center;
+}
+
 .pro_details .deal_info_list{
   padding: 0;
   margin: 0;
@@ -7084,10 +7087,7 @@ body.dark .notification_pro_deal>li:last-child{
   font-size: 14px;
   font-weight: 600;
 }
-.settings .buyer_seller_toggle label {
-  width: 84px;
-  background-color: #ffffff;
-}
+
 
 span.status {
   font-size: 12px;
@@ -7320,6 +7320,86 @@ span.status.interested {
   font-weight: 400;
   line-height: normal;
   color: #464b70;
+}
+.card-box.setting-card {
+  padding: 0;
+}
+.pro_details {
+  padding-left: 0;
+}
+.column_bg_space.setting-card>.deal_column.setting-card-head {
+  padding: 20px 30px;
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #EAECEB;
+}
+.setting-card-body {
+  padding: 20px 30px;
+}
+.setting-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.setting-card-head-right {
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  position: relative;
+}
+.setting-card-head-right:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: #EAECEB;
+}
+
+.setting-card-body .deal_column.settings {
+  display: flex;
+  justify-content: space-between;
+}
+.setting-card-body .deal_column.settings:not(:last-child) {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: solid 1px #EAECEB;
+}
+.setting-card-body .deal_column.settings .deal_left_column h3 {
+  font-weight: 500;
+  margin: 0 0 2px;
+  line-height: 20px;
+}
+.setting-card-body .deal_column.settings .pro_details p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+}
+.setting-card-head-right .buyer_seller_toggle {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+.setting-card-body .setting-card-head-right {
+  justify-content: space-around;
+}
+.setting-card-head-right .buyer_seller_toggle label {
+  width: 41px;
+  height: 20px;
+  border: solid 1px #E5E5E5;
+  background-color: #F2F2F2;
+}
+.setting-card-head-right .buyer_seller_toggle label::before {
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 2px -1px rgb(51 51 51 / 30%);
+}
+.setting-card-head-right .buyer_seller_toggle>input:checked + label::before {
+  left: calc(100% - 17px);
 }
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{

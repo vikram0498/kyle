@@ -558,6 +558,25 @@ body.dark .account-with-social a {
   border: 1px solid #626262;
   color: #ffffff;
 }
+body.dark .column_bg_space.setting-card>.deal_column.setting-card-head {
+  background: #444444;
+  border-bottom: 1px solid #606060;
+}
+body.dark .setting-card-head-right .buyer_seller_toggle label {
+  border: solid 1px #555555;
+  background-color: #2f2f2f;
+}
+body.dark .setting-card-body .deal_column.settings:not(:last-child){
+  border-bottom: 1px solid #606060;
+}
+body.dark .buyer_seller_toggle>input:checked + label {
+    background-color: #3f53fe;
+}
+body.dark .setting-card-head-right:before {
+  background: #606060;
+}
+body.dark .pro_details h3, 
+body.dark .setting-card-head-title,
 body.dark .list_content>span{color: #fff;}
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{
@@ -577,4 +596,16 @@ body.dark .list_content>span{color: #fff;}
     box-shadow: 6px 6px 20px rgb(61 61 61);
     -webkit-box-shadow: 6px 6px 20px rgb(61 61 61);
   }
+  body.dark .setting-card-body .setting-card-head-right {
+    background: #2f2f2f;
+  }
+  
+  body.dark  .setting-card-body .deal_column.settings:not(:last-child) {
+    border-bottom: solid 1px #606060;
+  }
+  
+body.dark .setting-card-head-right .buyer_seller_toggle label {
+  border: solid 1px #525252;
+  background-color: #444444;
+}
 }
