@@ -125,7 +125,7 @@ function EditBuyerProfile() {
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
   /* min max value states end */
-
+  
   useEffect(() => {
     getOptionsValues();
     fetchBuyerData();

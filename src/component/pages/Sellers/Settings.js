@@ -13,6 +13,7 @@
     const { getTokenData, getLocalStorageUserdata, setLogout } = useAuth();
     const [notificationData, setNotificationData] = useState([]);
     const [userRole, setUserRole] = useState(0);
+    const [isLoader, setIsLoader] = useState(false);
 
     const handleNotificationStatus = async (notificationKey, type, isEnabled) => {
       try {
@@ -51,15 +52,18 @@
     useEffect(()=>{
       const fetchUserSetting = async () => {
         try {
+            setIsLoader(true);
             let headers = {
               Accept: "application/json",
               Authorization: "Bearer " + getTokenData().access_token,
               "auth-token": getTokenData().access_token,
             }
             let response = await axios.get(`${apiUrl}notification-settings/`, { headers: headers });
+            setIsLoader(false);
             setNotificationData(response.data.data);
 
         } catch (error) {
+          setIsLoader(false);
           if (error.response.status === 401) {
             setLogout();
           }
@@ -74,13 +78,16 @@
           setUserRole(userData.role);
       }
   }, []);
-  console.log('notificationData', notificationData);
 
     return (
       <>
         {userRole == 3 && <BuyerHeader /> }
         {userRole == 2 && <Header /> }
         <section className="main-section position-relative pt-4 pb-120">
+        {isLoader ? 
+          <div className="loader" style={{ textAlign: "center" }}>
+            <img src="assets/images/loader.svg" />
+          </div>:
           <Container className='position-relative'>
             <div className="back-block">
               <div className="row">
@@ -173,9 +180,10 @@
                   ))
                 ) : (
                   <p>No notifications found.</p>
-            )}
+                )}
             </div>
           </Container>
+          }
         </section>
         <Footer />
       </>
