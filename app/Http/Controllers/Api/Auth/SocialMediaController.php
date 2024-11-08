@@ -7,11 +7,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB; 
+
 
 class SocialMediaController extends Controller
 {
     public function handleGoogle(Request $request){
         try {
+            DB::beginTransaction();
             $social_id = 'google_'.$request->sub;
             $isUser = User::where('email', $request->email)->withTrashed()->first();
             if($isUser){
@@ -37,6 +40,7 @@ class SocialMediaController extends Controller
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                    DB::commit();
                     //Success Response Send
                     $responseData = [
                         'status'            => true,
@@ -80,10 +84,19 @@ class SocialMediaController extends Controller
                 // Assign Reviewer Role
                 $newUser->roles()->sync(2);
 
+                //Start Store as buyers
+                $buyerData['user_id']       = $newUser->id;
+                $buyerData['buyer_user_id'] = $newUser->id;
+                $buyerData['country']       =  DB::table('countries')->where('id', 233)->value('name');
+                $newUser->buyerVerification()->create(['user_id' => $buyerData['buyer_user_id']]);
+                $newUser->buyerDetail()->create($buyerData);
+                //End Store as buyers
+
                 Auth::login($newUser);
 
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                DB::commit();
                 //Success Response Send
                 $responseData = [
                     'status'            => true,
@@ -105,12 +118,13 @@ class SocialMediaController extends Controller
                 ];
                 return response()->json($responseData, 200);
             }
-        
         } catch (\Exception $e) {
+            DB::rollBack();
             //  dd($e->getMessage());
             $responseData = [
                 'status'        => false,
-                'message'       => 'Something went wrong!->'.$e->getMessage(),
+                'message'       => 'Something went wrong!',
+                'error_details' => $e->getMessage()
             ];
             return response()->json($responseData, 401);
         }
@@ -118,6 +132,7 @@ class SocialMediaController extends Controller
 
     public function handleFacebook(Request $request){
         try {
+            DB::beginTransaction();
             $social_id = 'facebook_'.$request->id;
             $isUser = User::where('social_id', $social_id)->orWhere('email',$request->email)->withTrashed()->first();
     
@@ -144,6 +159,7 @@ class SocialMediaController extends Controller
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                    DB::commit();
                     $responseData = [
                         'status'        => true,
                         'userData'          => [
@@ -184,10 +200,20 @@ class SocialMediaController extends Controller
                 // Assign Reviewer Role
                 $newUser->roles()->sync(2);
 
+                //Start Store as buyers
+                $buyerData['user_id']       = $newUser->id;
+                $buyerData['buyer_user_id'] = $newUser->id;
+                $buyerData['country']       =  DB::table('countries')->where('id', 233)->value('name');
+                $newUser->buyerVerification()->create(['user_id' => $buyerData['buyer_user_id']]);
+                $newUser->buyerDetail()->create($buyerData);
+                //End Store as buyers
+
+
                 Auth::login($newUser);
 
                 $accessToken = $newUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
                 
+                DB::commit();
                 $responseData = [
                     'status'        => true,
                     'userData'      => [
@@ -205,10 +231,12 @@ class SocialMediaController extends Controller
                 return response()->json($responseData, 200);
             }
         }catch (\Exception $e) {
+            DB::rollBack();
             // dd($e->getMessage().' - '.$e->getLine());
             $responseData = [
                 'status'        => false,
                 'message'       => 'Something went wrong!',
+                'error_details' => $e->getMessage().' - '.$e->getLine()
             ];
             return response()->json($responseData, 401);
         }

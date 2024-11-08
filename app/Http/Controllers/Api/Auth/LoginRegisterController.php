@@ -27,7 +27,7 @@ class LoginRegisterController extends Controller
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
-	    'terms_accepted'  		=> 'required', 
+	        'terms_accepted'  		    => 'required', 
         ],[
             'phone.required'=>'The mobile number field is required',
             'phone.digits' =>'The mobile number must be 10 digits',
@@ -42,26 +42,44 @@ class LoginRegisterController extends Controller
             return response()->json($responseData, 401);
         }
 
-        DB::beginTransaction();
         try {
-            $input = $request->all();
+            DB::beginTransaction();
+            $input = $request->except(['terms_accepted','password_confirmation']);  
             $input['name'] = $input['first_name'].' '.$input['last_name'];
             $input['password'] = bcrypt($input['password']);
+
             $user = User::create($input);
 
-            //Verification mail sent
-            $user->NotificationSendToVerifyEmail();
-
-            $user->roles()->sync(2);
+            if($user){
+                //Start Store as buyers
+                $buyerData['user_id']       = $user->id;
+                $buyerData['buyer_user_id'] = $user->id;
+                $buyerData['country']       =  DB::table('countries')->where('id', 233)->value('name');
+                $user->buyerVerification()->create(['user_id' => $buyerData['buyer_user_id']]);
+                $user->buyerDetail()->create($buyerData);
+                //End Store as buyers
             
-            DB::commit();
+                //Verification mail sent
+                $user->NotificationSendToVerifyEmail();
 
-            //Success Response Send
+                $user->roles()->sync(2);
+                
+                DB::commit();
+
+                //Success Response Send
+                $responseData = [
+                    'status'        => true,
+                    'message'       => 'Register successfully!',
+                ];  
+                return response()->json($responseData, 200);
+            }
+
+            //Return Error Response
             $responseData = [
-                'status'        => true,
-                'message'       => 'Register successfully!',
-            ];  
-            return response()->json($responseData, 200);
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 404);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -71,6 +89,7 @@ class LoginRegisterController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().' - '.$e->getLine()
             ];
             return response()->json($responseData, 401);
         }
