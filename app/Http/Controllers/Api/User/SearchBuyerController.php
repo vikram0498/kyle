@@ -1245,8 +1245,8 @@ class SearchBuyerController extends Controller
             'buyer_user_ids.*' => 'buyer',
         ]);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             foreach($request->buyer_user_ids as $buyerId){
                 $buyerDeal = BuyerDeal::create([
                     'buyer_user_id' => $buyerId,
@@ -1258,16 +1258,15 @@ class SearchBuyerController extends Controller
                 $buyerUser = User::find($buyerId);
                 $notificationData = [
                     'title'     => trans('notification_messages.buyer_deal.send_deal_title'),
-                    'message'     => trans('notification_messages.buyer_deal.send_deal_message'),
+                    'message'   => trans('notification_messages.buyer_deal.send_deal_message'),
                     'module'    => "buyer_deal",
                     'type'      => "send_deal",
                     'module_id' => $buyerDeal->id,
                     'notification_type' => 'deal_notification'
                 ];
-                Notification::send($buyerUser, new SendNotification($notificationData));
+                $buyerUser->notify(new SendNotification($notificationData));
             }
 
-            
             DB::commit();
             //Return Success Response
             $responseData = [

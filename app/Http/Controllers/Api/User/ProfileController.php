@@ -238,13 +238,13 @@ class ProfileController extends Controller
 
             $authUser = auth()->user();
 
-            /*if($authUser->level_type == 2){
+            if(!($authUser->level_type == 2)){
                 $responseData = [
-                    'status'    => true,
+                    'status'    => false,
                     'message'   => "Your account should level 2 type user!",
                 ];
                 return response()->json($responseData, 403);
-            }*/
+            }
 
             // Define role IDs for seller and buyer
             $sellerRoleId = config('constants.roles.seller');
@@ -266,6 +266,8 @@ class ProfileController extends Controller
             }else{
                 $authUser->is_switch_role = 0;
             }
+
+            $authUser->save();
            
             DB::commit();
 
