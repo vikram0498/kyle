@@ -12,7 +12,9 @@ use Illuminate\Support\Str as Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
-
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -305,5 +307,40 @@ if (!function_exists('getUserNotificationSetting')) {
 			$result = $setting;
 		}
 		return $result;
+	}
+}
+
+if (!function_exists('SendPushNotification')) {
+	function SendPushNotification($userId, $title, $message)
+	{
+		$fcmTokens = [];
+
+		$configJsonFile = config('constants.firebase_json_file');
+		
+		$firebase = (new Factory)->withServiceAccount($configJsonFile);
+		$messaging = $firebase->createMessaging();
+
+		// Define the FCM tokens you want to send the message to
+		$fcmTokens = User::where('id', $userId)->whereNotNull('device_token')->pluck('device_token')->toArray();
+
+		// Create the notification
+		$notification = Notification::create()
+			->withTitle($title)
+			->withBody($message);
+
+		// Create the message
+		$messageData = CloudMessage::new()->withNotification($notification); // Optional: Add custom data
+
+		// Send the message to the FCM tokens
+		try {
+			$messaging->sendMulticast($messageData, $fcmTokens);
+			// \Log::info('Push Notification Sent Successfully!');
+		} catch (\Kreait\Firebase\Exception\MessagingException $e) {
+		  //  \Log::info('Error sending firebase message:', ['MessagingException' => $e->getMessage()]);
+
+		} catch (\Kreait\Firebase\Exception\FirebaseException $e) {
+		
+			//\Log::info('Firebase error:', ['FirebaseException' => $e->getMessage()]);
+		}
 	}
 }

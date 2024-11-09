@@ -303,6 +303,8 @@ return [
         ]
     ],
 
+    "firebase_json_file" => storage_path('app/firebase-auth.json'),
+
     "user_notification_settings" => [
         "deal_notification" => [
             'value' => "enable",

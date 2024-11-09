@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Channels\DatabaseChannel;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -75,6 +78,10 @@ class AppServiceProvider extends ServiceProvider
             } else {
               return strlen($cleanValue) > 0;
             }
+        });
+
+        Notification::extend('database', function ($app) {
+            return new DatabaseChannel();
         });
 
     }

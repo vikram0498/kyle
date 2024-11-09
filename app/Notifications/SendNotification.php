@@ -6,12 +6,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Mail\DealMail;
 
 class SendNotification extends Notification
 {
     use Queueable;
 
-    private $data;
+    public $data;
 
     /**
      * Create a new notification instance.
@@ -21,6 +22,7 @@ class SendNotification extends Notification
     public function __construct($data)
     {
         $this->data = $data;
+        $this->data['task_type'] = 'cron';
     }
 
     /**
@@ -31,7 +33,12 @@ class SendNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'/* , 'mail' */];
+        if($notifiable->notificationSetting){
+            if($notifiable->notificationSetting->email_notification){
+                return ['database', 'mail'];
+            }
+        }
+        return ['database'];
     }
 
     /**
@@ -40,13 +47,18 @@ class SendNotification extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    /* public function toMail($notifiable)
+    public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    } */
+        $subject  = $this->data['title'];
+        $userName = $notifiable->name;
+        $message  = $this->data['message'];
+
+        if( isset($this->data['notification_type']) && in_array($this->data['notification_type'], array('deal_notification')) ){
+
+            return (new DealMail($subject, $userName, $message))->to($notifiable->email);
+
+        }
+    }
 
     /**
      * Get the array representation of the notification.
@@ -56,6 +68,9 @@ class SendNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        return $this->data;
+        return [
+            'title'   => $this->data['title'],
+            'message' => $this->data['message'],
+        ];
     }
 }
