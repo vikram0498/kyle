@@ -2,11 +2,9 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
 const PropertyAttachments = ({ data }) => {
-    console.log('data', data)
     const [maxImagesWarning, setMaxImagesWarning] = useState("");
 
     const onDrop = useCallback((acceptedFiles) => {
-        console.log('data.attachments.length', data.attachments.length)
         if (data.attachments.length >= 3) {
             setMaxImagesWarning("You can only upload a maximum of 3 images.");
             return;
@@ -35,7 +33,6 @@ const PropertyAttachments = ({ data }) => {
         name: "attachments"
     });
 
-    console.log('maxImagesWarning', maxImagesWarning)
     return (
         <>
             <div className="row">

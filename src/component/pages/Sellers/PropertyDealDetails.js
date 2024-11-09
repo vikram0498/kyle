@@ -69,7 +69,7 @@ const PropertyDealDetails = () => {
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 <Nav.Item>
-                                                    <Nav.Link eventKey="first">
+                                                    <Nav.Link eventKey="second">
                                                         <div className='list_icon'>
                                                             <Image src='/assets/images/home_buy.svg' alt='' />
                                                         </div>
@@ -80,7 +80,7 @@ const PropertyDealDetails = () => {
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 <Nav.Item>
-                                                    <Nav.Link eventKey="second">
+                                                    <Nav.Link eventKey="third">
                                                         <div className='list_icon'>
                                                             <Image src='/assets/images/home_check.svg' alt='' />
                                                         </div>
@@ -91,7 +91,7 @@ const PropertyDealDetails = () => {
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 <Nav.Item>
-                                                    <Nav.Link eventKey="third">
+                                                    <Nav.Link eventKey="four">
                                                         <div className='list_icon'>
                                                             <Image src='/assets/images/home_close.svg' alt='' />
                                                         </div>
@@ -194,6 +194,47 @@ const PropertyDealDetails = () => {
                                         </Table>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="third">
+                                        <Table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Buyer Name</th>
+                                                    <th>Phone Number</th>
+                                                    <th>Email Address</th>
+                                                    <th>documents</th>
+                                                    <th>Status</th>
+                                                    <th>Chat</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td colspan="5"></td></tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span><span className='deal_user_img_block'><Image src='/assets/images/user-img1.png' className='deal_user_img' alt='' /> <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' /></span> Brooklyn Simmons</span></td>
+                                                    <td>+91123456789</td>
+                                                    <td>Devidmiller@gmail.com</td>
+                                                    <td><span><Image src='/assets/images/folder-zip.svg' className='' alt='' /> Documents.zip</span></td>
+                                                    <td><span className='status want-by'>Want To Buy</span></td>
+                                                    <td><Link to='/message'><span><Image src='/assets/images/chat-icon.svg' className='' alt='' /> Chat With Buyer</span></Link></td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="four">
                                         <Table>
                                             <thead>
                                                 <tr>

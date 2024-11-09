@@ -15,7 +15,7 @@ const GoogleReCaptcha = ({setCaptchaVerified,recaptchaError}) => {
     return(
         <>
         <div className="col-12 col-lg-12">
-            <div className="form-group mb-0 register-recaptcha">
+            <div className="form-group mb-3 register-recaptcha">
             <ReCAPTCHA sitekey={captchaSiteKey} onChange={onCaptchaChange} />
             {recaptchaError && (
                 <span className="invalid-feedback" role="alert">

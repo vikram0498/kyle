@@ -33,6 +33,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
   const [toRecord, setToRecord] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
   const [currentPageNo, setCurrentPageNo] = useState(1);
+  const [currentBuyerId, setCurrentBuyerId] = useState('');
   const [showLoader, setShowLoader] = useState(true);
   const { setErrors, renderFieldError } = useFormError();
 
@@ -157,6 +158,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
     }
   };
   const checkSelectedDeals = () => {
+    setCurrentBuyerId("");
     if(selectedDeals.length == 0){
       Swal.fire({
         title: "No Deal Selected",
@@ -168,6 +170,9 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
     setSendDealShow(true)
   }
   const handleSendDealNotification = async (e) => {
+    console.log(currentBuyerId,"currentBuyerId")
+    console.log(selectedDeals,"selectedDeals")
+    return false;
     e.preventDefault();
     let message = e.target.message.value.trim();
     try {
@@ -178,7 +183,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
         };
         let payload = {
             search_log_id : lastSearchedLogId,
-            buyer_user_ids : selectedDeals,
+            buyer_user_ids : currentBuyerId || selectedDeals,
             message : message
         }
         let response = await axios.post(`${apiUrl}search-buyers/send-deal`,payload, {headers:headers});
@@ -387,6 +392,8 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
                     {!showLoader && (
                       <div>
                         <MyBuyersResult
+                          checkSelectedDeals={checkSelectedDeals}
+                          setCurrentBuyerId={setCurrentBuyerId}
                           setBuyerData={setBuyerData}
                           buyerData={buyerData}
                           getFilterResult={getFilterResult}
@@ -395,6 +402,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId }) => {
                           buyerType={buyerType}
                           selectedDeals={selectedDeals}
                           handleCheckboxChange={handleCheckboxChange}
+                          setSendDealShow={setSendDealShow}
                         />
                         {/* <MoreBuyersResult buyerData={buyerData}/>
                                                 <HedgeFundResult buyerData={buyerData}/>

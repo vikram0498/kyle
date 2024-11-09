@@ -63,7 +63,7 @@ const AutocompleteInput = ({
   }, [address]);
 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const handleSelect = async (selectedAddress) => {
     setValue(selectedAddress, false);
     setIsVisible(true);

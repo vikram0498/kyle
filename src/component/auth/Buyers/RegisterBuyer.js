@@ -1455,7 +1455,7 @@ function RegisterBuyer() {
                                               "Please enter valid number",
                                             maxLength: (v) =>
                                               v.length <= 10 ||
-                                              "The digit should be less than equal 10",
+                                              `The digit should be less than equal 10`,
                                             positiveNumber: (v) =>
                                               parseFloat(v) <= bedRoomMax ||
                                               "The Bedroom (min) should be less than or equal Bedroom (max)",

@@ -11,12 +11,15 @@ import BuyerCardResult from "./Section/BuyerCardResult";
 const MyBuyersResult = ({
   buyerData,
   setBuyerData,
+  checkSelectedDeals,
   buyerType,
   activeTab,
   pageNumber,
   getFilterResult,
   selectedDeals,
-  handleCheckboxChange
+  handleCheckboxChange,
+  setCurrentBuyerId,
+  setSendDealShow
 }) => {
   const { setErrors, renderFieldError } = useFormError();
 
@@ -297,6 +300,8 @@ const MyBuyersResult = ({
                 {buyerData.map((data, index) => {
                   return (
                     <BuyerCardResult
+                      checkSelectedDeals={checkSelectedDeals}
+                      setCurrentBuyerId={setCurrentBuyerId}
                       key={data.id}
                       data={data}
                       index={index}
@@ -307,6 +312,7 @@ const MyBuyersResult = ({
                       handleClickEditFlag={handleClickEditFlag}
                       selectedDeals={selectedDeals}
                       handleCheckboxChange={handleCheckboxChange}
+                      setSendDealShow={setSendDealShow}
                     />
                   );
                 })}

@@ -265,7 +265,6 @@ const SellerForm = () => {
     }
   };
   const makeStateBlank = () => {
-    console.log("enter !!");
     setAddress("");
     setCountry("");
     setState("");

@@ -127,6 +127,7 @@ function EditBuyerProfile() {
   /* min max value states end */
   
   useEffect(() => {
+    console.log("first")
     getOptionsValues();
     fetchBuyerData();
   }, [navigate]);
@@ -146,11 +147,21 @@ function EditBuyerProfile() {
       });
       if (response.data.status) {
         let responseData = response.data.buyer;
-        if (responseData.profile_image != "")
-        setPreviewImageUrl(responseData.profile_image);
+  
+        // Correct iteration over object properties
+        for (let key in responseData) {
+          setValue(key, responseData[key]);
+        }
+  
+        if (responseData.profile_image !== "") {
+          setPreviewImageUrl(responseData.profile_image);
+        }
+  
         setCurrentBuyerData(responseData);
         setState(responseData.state);
         setCity(responseData.city);
+        setAddress(responseData.address);
+        setZipCode(responseData.zip_code);
         setPropertyType(responseData.property_type);
         setPurchaseMethods(responseData.purchase_method);
         setParkingValue(responseData.parking);
@@ -161,95 +172,64 @@ function EditBuyerProfile() {
         setZoning(responseData.zoning);
         setSewer(responseData.sewer);
         setUtilities(responseData.utilities);
+        console.log("seconf 11")
 
-        // set form value and react-hook-form validation value
-        const selectedStates = responseData.state.map((item) => item.value);
-        setStatevalue(selectedStates);
-        setValue("state", responseData.state);
+        // Set form values for multi-select fields
 
-        const selectedCity = responseData.city.map((item) => item.value);
-        setCityvalue(selectedCity);
-        setValue("city", responseData.city);
-
-        const selectedProperty = responseData.property_type.map(
-          (item) => item.value
-        );
+        setStatevalue(responseData.state);
+        setCityvalue(responseData.city);
+  
+        const selectedProperty = responseData.property_type.map((item) => item.value);
         setPropertyTypeValue(selectedProperty);
-        setValue("property_type", responseData.property_type);
 
         if (selectedProperty.includes(7)) {
           setIsLandSelected(true);
           const selectedZoning = responseData.zoning.map((item) => item.value);
           setZoningValue(selectedZoning);
-          setValue("zoning", responseData.zoning);
-          setValue("utilities", responseData.utilities);
-          setValue("sewer", responseData.sewer);
         }
-
+  
         if (selectedProperty.includes(10)) {
           setMultiFamilyBuyerSelected(true);
-          const selectedBuildingClass = responseData.building_class.map(
-            (item) => item.value
-          );
+          const selectedBuildingClass = responseData.building_class.map((item) => item.value);
           setBuildingClassNamesValue(selectedBuildingClass);
           setValueAdd(String(responseData.value_add));
-          setValue("building_class", responseData.building_class);
-          setValue("value_add", responseData.value_add);
         }
+  
         if (selectedProperty.includes(14)) {
-          setMobileHomeParkSelected(true)
+          setMobileHomeParkSelected(true);
         }
-        
-        const selectedPurchaseMethods = responseData.purchase_method.map(
-          (item) => item.value
-        );
+        console.log("seconf 13")
+
+        const selectedPurchaseMethods = responseData.purchase_method.map((item) => item.value);
         setPurchaseMethodsValue(selectedPurchaseMethods);
-        setValue("purchase_method", responseData.purchase_method);
-        
+  
         const selectedParking = responseData.parking.map((item) => item.value);
         setParking(selectedParking);
-        setValue("parking", selectedParking);
-
-        const selectedLocationFlaws = responseData.property_flaw.map(
-          (item) => item.value
-        );
+  
+        const selectedLocationFlaws = responseData.property_flaw.map((item) => item.value);
         setLocationFlawsValue(selectedLocationFlaws);
-        setValue("property_flaw", responseData.property_flaw);
-
-        setValue("market_preferance", responseData.market_preferance);
-        setValue("contact_preferance", responseData.contact_preferance);
-        setValue("buyer_type", responseData.buyer_type);
-        setValue("build_year_max", responseData.build_year_max);
-        setValue("build_year_min", responseData.build_year_min);
-
-        /*  update min max value */
+        // Update min/max values
         setBedRoomMin(responseData.bedroom_min);
         setBedRoomMax(responseData.bedroom_max);
-
         setBathMin(responseData.bath_min);
         setBathMax(responseData.bath_max);
-
         setSqFtMin(responseData.size_min);
         setSqFtMax(responseData.size_max);
-
         setlotSizesqFtMin(responseData.lot_size_min);
         setlotSizesqFtMax(responseData.lot_size_max);
-
         setStoriesMin(responseData.stories_min);
         setStoriesMax(responseData.stories_max);
-
         setPriceMin(responseData.price_min);
         setPriceMax(responseData.price_max);
-
+  
         if (responseData.build_year_min) {
           setStartDate(new Date(responseData.build_year_min, 0, 1, 0, 0, 0));
         }
         if (responseData.build_year_max) {
           setEndDate(new Date(responseData.build_year_max, 0, 1, 0, 0, 0));
         }
-        /*  update min max value */
-
-        /** updated checked box value */
+  
+        // Update checkbox values
         setSolar(String(responseData.solar));
         setPool(String(responseData.pool));
         setSeptic(String(responseData.septic));
@@ -266,11 +246,11 @@ function EditBuyerProfile() {
         setMold(String(responseData.mold));
         setFireDamaged(String(responseData.fire_damaged));
         setPermanentAffix(String(responseData.permanent_affix));
-
         setLoader(false);
       }
     } catch (error) {
       if (error.response) {
+        console.log(error)
         if (error.response.status === 401) {
           setLogout();
         }
@@ -668,7 +648,7 @@ function EditBuyerProfile() {
     city,
     state
   }
-
+  console.log('bedRoomMax :>> ', bedRoomMax);
   return (
     <>
       <BuyerHeader />
@@ -1228,8 +1208,8 @@ function EditBuyerProfile() {
                                             /^[0-9]\d*$/.test(v) ||
                                             "Please enter valid number",
                                           maxLength: (v) =>
-                                            v.length <= 10 ||
-                                            "The digit should be less than equal 10",
+                                            v.toString().length <= 10 ||
+                                            `The digit should be less than equal 10`,
                                         },
                                       })}
                                     />
@@ -1260,7 +1240,7 @@ function EditBuyerProfile() {
                                             /^[0-9]\d*$/.test(v) ||
                                             "Please enter valid number",
                                           maxLength: (v) =>
-                                            v.length <= 10 ||
+                                            v.toString().length <= 10 ||
                                             "The digit should be less than equal 10",
                                         },
                                       })}
@@ -1583,9 +1563,7 @@ function EditBuyerProfile() {
                           {!mobileHomeParkSelected && !hotelMotelSelected && (
                             <>
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                <label>
-                                  Bedroom (min)<span>*</span>
-                                </label>
+                                <label> Bedroom (min)<span>*</span></label>
                                 <div className="form-group">
                                   <input
                                     type="text"
@@ -1603,11 +1581,11 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
-                                          "The digit should be less than equal 10",
+                                          v.toString().length <= 10 ||
+                                          `The digit should be less than equal 10`,
                                         positiveNumber: (v) =>
                                           parseFloat(v) <= bedRoomMax ||
-                                          "The Bedroom (min) should be less than or equal Bedroom (max)",
+                                          `The Bedroom (min) should be less than or equal Bedroom (max)`,
                                       },
                                     })}
                                     onKeyUp={() => {
@@ -1644,7 +1622,7 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
+                                          v.toString().length <= 10 ||
                                           "The digit should be less than equal 10",
                                         positiveNumber: (v) =>
                                           parseFloat(v) >= bedRoomMin ||
@@ -1684,7 +1662,7 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
+                                          v.toString().length <= 10 ||
                                           "The digit should be less than equal 10",
                                         positiveNumber: (v) =>
                                           parseFloat(v) <= bathMax ||
@@ -1724,7 +1702,7 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
+                                          v.toString().length <= 10 ||
                                           "The digit should be less than equal 10",
                                         positiveNumber: (v) =>
                                           parseFloat(v) >= bathMin ||
@@ -1769,7 +1747,7 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
+                                          v.toString().length <= 10 ||
                                           "The digit should be less than equal 10",
                                         positiveNumber: (v) =>
                                           parseFloat(v) <= sqFtMax ||
@@ -1810,7 +1788,7 @@ function EditBuyerProfile() {
                                           /^[0-9]\d*$/.test(v) ||
                                           "Please enter valid number",
                                         maxLength: (v) =>
-                                          v.length <= 10 ||
+                                          v.toString().length <= 10 ||
                                           "The digit should be less than equal 10",
                                         positiveNumber: (v) =>
                                           parseFloat(v) >= sqFtMin ||
@@ -1886,7 +1864,7 @@ function EditBuyerProfile() {
                                       /^[0-9]\d*$/.test(v) ||
                                       "Please enter valid number",
                                     maxLength: (v) =>
-                                      v.length <= 10 ||
+                                      v.toString().length <= 10 ||
                                       "The digit should be less than equal 10",
                                     positiveNumber: (v) =>
                                       parseFloat(v) <= lotSizesqFtMax ||
@@ -1927,7 +1905,7 @@ function EditBuyerProfile() {
                                       /^[0-9]\d*$/.test(v) ||
                                       "Please enter valid number",
                                     maxLength: (v) =>
-                                      v.length <= 10 ||
+                                      v.toString().length <= 10 ||
                                       "The digit should be less than equal 10",
                                     positiveNumber: (v) =>
                                       parseFloat(v) >= lotSizesqFtMin ||
@@ -2140,7 +2118,7 @@ function EditBuyerProfile() {
                                       /^[0-9]\d*$/.test(v) ||
                                       "Please enter valid number",
                                     maxLength: (v) =>
-                                      v.length <= 10 ||
+                                      v.toString().length <= 10 ||
                                       "The digit should be less than equal 10",
                                     positiveNumber: (v) =>
                                       parseFloat(v) <= priceMax ||
@@ -2181,7 +2159,7 @@ function EditBuyerProfile() {
                                       /^[0-9]\d*$/.test(v) ||
                                       "Please enter valid number",
                                     maxLength: (v) =>
-                                      v.length <= 10 ||
+                                      v.toString().length <= 10 ||
                                       "The digit should be less than equal 10",
                                     positiveNumber: (v) =>
                                       parseFloat(v) >= priceMin ||
