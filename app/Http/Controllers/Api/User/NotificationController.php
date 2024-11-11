@@ -19,7 +19,11 @@ class NotificationController extends Controller
 
         try{
             $perPage = $request->per_page ?? 10;
-            $records = NotificationModel::paginate($perPage);   
+            $records = NotificationModel::whereJsonContains('data->notification_type', $type)->paginate($perPage);   
+
+            $records->getCollection()->transform(function ($notificationData) {
+                return $notificationData->data;
+            });
 
             //Return Success Response
             $responseData = [

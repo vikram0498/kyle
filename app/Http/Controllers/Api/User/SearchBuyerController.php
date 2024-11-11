@@ -1428,7 +1428,8 @@ class SearchBuyerController extends Controller
                     'message'   => trans('notification_messages.buyer_deal.update_deal_status_message', ['status' => $dealStatus[$request->status]]),
                     'module'    => "buyer_deal",
                     'type'      => "update_status",
-                    'module_id' => $buyerDealId
+                    'module_id' => $buyerDealId,
+                    'notification_type' => 'deal_notification'
                 ];
                 Notification::send($createdByUser, new SendNotification($notificationData));
             }
@@ -1523,7 +1524,6 @@ class SearchBuyerController extends Controller
                 }
             ])
             ->first();
-
             
             $searchlogBuyerDeals = $searchLog->buyerDeals()->with(['buyerUser']);
 
