@@ -15,14 +15,15 @@ use Illuminate\Support\Facades\Notification;
 class NotificationController extends Controller
 {
 
-    public function index(Request $request,$type){
+    public function index(Request $request){
 
         try{
-            $perPage = $request->per_page ?? 10;
-            $records = NotificationModel::whereJsonContains('data->notification_type', $type)->paginate($perPage);   
+            $records = NotificationModel::orderBy('created_at','desc')->limit(5)->get();   
 
-            $records->getCollection()->transform(function ($notificationData) {
-                return $notificationData->data;
+            $records->transform(function ($notificationData) {
+                if(isset($notificationData->data['notification_type'])){
+                    return $notificationData[$notificationData->data['notification_type']] = $notificationData->data;
+                }
             });
 
             //Return Success Response

@@ -488,16 +488,73 @@ class LoginRegisterController extends Controller
         
     }
 
-public function getLinks(){
-    $responseData['links']['terms_services_link'] = getSetting('terms_services_link');
-    $responseData['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
+    public function getLinks(){
+        $responseData['links']['terms_services_link'] = getSetting('terms_services_link');
+        $responseData['links']['privacy_policy_link'] = getSetting('privacy_policy_link');
 
- 
-    //Return Success Response
-    $response = [
-        'status'        => true,
-        'result'        => $responseData,
-    ];
-    return response()->json($response, 200);
-}
+        //Return Success Response
+        $response = [
+            'status'        => true,
+            'result'        => $responseData,
+        ];
+        return response()->json($response, 200);
+    }
+
+   /* public function sendOTP(Request $request){
+
+    }
+
+    public function verifyOTP(){
+       
+        $rules['phone'] = ['required', 'numeric','not_in:-','unique:users,phone,'.$userId.',id,deleted_at,NULL'];
+        $rules['otp'] = ['required','numeric','digits:4','not_in:-'];
+
+        $request->validate($rules,[
+            'otp.required' => 'Please enter the OTP.',
+            'otp.digits' => 'The OTP must be exactly 4 digits.',
+        ],[]);
+
+        DB::beginTransaction();
+        try {
+            $otpNumber = (int)$request->otp1.$request->otp2.$request->otp3.$request->otp4;
+            
+            $otpVerify = User::where('id',$userId)->where('otp',$otpNumber)->first();
+            if($otpVerify){
+                $otpVerify->otp = null;
+                $otpVerify->phone = $request->phone;
+                $otpVerify->phone_verified_at = date('Y-m-d H:i:s');
+                $otpVerify->save();
+                $otpVerify->buyerVerification()->update(['is_phone_verification'=>1]);
+
+                DB::commit();
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'current_step'  => $request->step,
+                    'message'       => trans('messages.auth.verification.phone_verify_success'),
+                ];
+                return response()->json($responseData, 200);
+            }else{
+                //Return Error Response
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.auth.verification.invalid_otp'),
+                ];
+                return response()->json($responseData, 400);
+            }
+        }catch (\Exception $e) {
+            DB::rollBack();
+            //  dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+  */
+
+
 }

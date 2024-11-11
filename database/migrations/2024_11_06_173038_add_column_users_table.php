@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('country_code', 5)->nullable()->after('email');
             $table->tinyInteger('is_switch_role')->default(null)->after('level_type');
         });
     }
@@ -26,6 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('country_code', 5)->nullable()->after('email');
             $table->tinyInteger('is_switch_role')->default(null)->after('level_type');
         });
     }

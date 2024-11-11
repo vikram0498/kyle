@@ -192,7 +192,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('notification-settings/update', [SettingController::class, 'updateUserNotificationSettings']);
 
     //Notifictions 
-    Route::post('get-notifications/{type}', [NotificationController::class, 'index']);
+    Route::get('get-notifications', [NotificationController::class, 'index']);
 
 });
 
