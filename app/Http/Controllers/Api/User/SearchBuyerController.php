@@ -1542,6 +1542,8 @@ class SearchBuyerController extends Controller
                     'buyer_name'        => $buyerUser->name,
                     'buyer_email'       => $buyerUser->email,
                     'buyer_phone'       => $buyerUser->phone,
+                    'profile_image'     => $buyerUser->profile_image_url,
+                    'status'            => $searchlogBuyerDeal->status ? config('constants.buyer_deal_status')[$searchlogBuyerDeal->status] : '',
                 ];
             });
             
