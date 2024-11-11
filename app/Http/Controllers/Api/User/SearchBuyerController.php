@@ -1369,8 +1369,11 @@ class SearchBuyerController extends Controller
         $request->validate([
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
             'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
-            'buyer_feedback'    => ['required_if:status,not_interested', 'string']
-        ],[],[
+            'buyer_feedback'    => ['required_if:status,not_interested', 'string'],
+            'pdf_file'          => ['required_if:status,interested','mimes:pdf','max:'.config('constants.interested_pdf_size')]
+        ],[
+            'pdf_file.mimes'    => 'The file must be a PDF document',
+        ],[
             "buyer_feedback" => "feedback"
         ]);
 
@@ -1403,7 +1406,20 @@ class SearchBuyerController extends Controller
             if($request->status == 'not_interested' && $request->has('buyer_feedback') && !empty($request->buyer_feedback)){
                 $buyerDealUpdateData['buyer_feedback'] = $request->buyer_feedback;
             }
+
             $isUpdated = $buyerDeal->update($buyerDealUpdateData);
+
+            $uploadedPdfFile = $request->file('pdf_file');
+            if($request->status == 'interested' && $uploadedPdfFile){
+                $uploadId = null;
+                $actionType = 'save';
+                if($uploadedDealPdf = $buyerDeal->interestedDealPdf){
+                    $uploadId = $uploadedDealPdf->id;
+                    $actionType = 'update';
+                }
+
+                uploadImage($buyerDeal, $uploadedPdfFile, 'buyer-deals/interested', "interested-deal-pdf", 'original', $actionType, $uploadId);
+            }
 
             // Send Notification to seller after deal status update
             if($isUpdated && $createdByUser){
@@ -1464,7 +1480,7 @@ class SearchBuyerController extends Controller
                     'title'             => $address,
                     'address'           => $address,
                     'property_images'   => $seachLogDeal->uploads ? $seachLogDeal->search_log_image_urls : '',
-
+                    "total_buyer"       => $seachLogDeal->buyerDeals()->count(),
                     'want_to_buy_count' => $seachLogDeal->want_to_buy_count,
                     'interested_count'  => $seachLogDeal->interested_count,
                     'not_interested_count' => $seachLogDeal->not_interested_count,
@@ -1493,9 +1509,6 @@ class SearchBuyerController extends Controller
     public function sellerDealDetail($id, $status=''){
         try {
             $dealStatus = array_keys(config('constants.buyer_deal_status'));
-            if(empty($status) || !in_array($status, $dealStatus)){
-                $status = "want_to_buy";
-            }            
 
             $searchLog = SearchLog::with(['buyerDeals'])->where("id", $id)            
             ->withCount([
@@ -1512,8 +1525,14 @@ class SearchBuyerController extends Controller
             ->first();
 
             
-            $searchlogBuyerDeals = $searchLog->buyerDeals()->with(['buyerUser'])->where('status', $status)
-            ->latest()->paginate(20);
+            $searchlogBuyerDeals = $searchLog->buyerDeals()->with(['buyerUser']);
+
+            if($status){
+                $searchlogBuyerDeals = $searchlogBuyerDeals->where('status', $status);
+            }
+
+            $searchlogBuyerDeals = $searchlogBuyerDeals->latest()->paginate(20);
+
             $searchlogBuyerDeals->getCollection()->transform(function ($searchlogBuyerDeal) {
                 $buyerUser = $searchlogBuyerDeal->buyerUser;
                 return [

@@ -41,6 +41,11 @@ class BuyerDeal extends Model
         });               
     }
 
+    public function uploads()
+    {
+        return $this->morphMany(Uploads::class, 'uploadsable');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by', 'id')->withTrashed();
@@ -52,5 +57,18 @@ class BuyerDeal extends Model
 
     public function buyerUser(){
         return $this->belongsTo(User::class,'buyer_user_id', 'id');
+    }
+
+    public function interestedDealPdf()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','interested-deal-pdf');
+    }
+
+    public function getInterestedDealPdfUrlAttribute()
+    {
+        if($this->interestedDealPdf){
+            return $this->interestedDealPdf->file_url;
+        }
+        return "";
     }
 }

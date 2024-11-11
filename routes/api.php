@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\User\BuyerVerificationController;
 use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\SettingController;
 use App\Http\Controllers\Api\User\StripeWebhookController;
+use App\Http\Controllers\Api\User\NotificationController;
 
 use function JmesPath\search;
 
@@ -163,21 +164,35 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 
 
-    // Property Deals (For Seller)
-    Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
-    Route::get('deals/result-list', [SearchBuyerController::class, 'sellerDealResultList']);
-    Route::get('deals/show/{id}/{status?}', [SearchBuyerController::class, 'sellerDealDetail']);
+    // For Seller
+    Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {
+
+        // Property Deals
+        Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
+        Route::get('deals/result-list', [SearchBuyerController::class, 'sellerDealResultList']);
+        Route::get('deals/show/{id}/{status?}', [SearchBuyerController::class, 'sellerDealDetail']);
+
+    });
     
-    // Property Deals (For Buyer)
-    Route::get('buyer-deals/list', [SearchBuyerController::class, 'buyerDealsList']);
-    Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
-    Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
+    // For Buyer
+    Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.buyer')])]], function () {
+ 
+        // Property Deals
+        Route::get('buyer-deals/list', [SearchBuyerController::class, 'buyerDealsList']);
+        Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
+        Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
+        
+    });
+   
 
     // Settings
     Route::get('settings', [SettingController::class, 'userSettings']);
     Route::post('settings/update', [SettingController::class, 'updateUserSettings']);
     Route::get('notification-settings', [SettingController::class, 'userNotificationSettings']);
     Route::post('notification-settings/update', [SettingController::class, 'updateUserNotificationSettings']);
+
+    //Notifictions 
+    Route::post('get-notifications/{type}', [NotificationController::class, 'index']);
 
 });
 

@@ -350,5 +350,7 @@ return [
                 'enabled' => false,
             ],
         ],
-    ]
+    ],
+
+    'interested_pdf_size' => '102400' // 102400 KB => 100MB
 ];

@@ -42,7 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_at',
         'updated_at',
         'deleted_at',
-	'terms_accepted',
+	    'terms_accepted',
         'remember_token',
         'level_type',
         'is_switch_role',
