@@ -64,7 +64,7 @@ class BuyerDeal extends Model
         return $this->morphOne(Uploads::class, 'uploadsable')->where('type','want-to-buy-deal-pdf');
     }
 
-    public function getInterestedDealPdfUrlAttribute()
+    public function getWantToBuyDealPdfUrlAttribute()
     {
         if($this->wantToBuyDealPdf){
             return $this->wantToBuyDealPdf->file_url;
