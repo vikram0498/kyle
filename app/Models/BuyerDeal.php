@@ -59,15 +59,15 @@ class BuyerDeal extends Model
         return $this->belongsTo(User::class,'buyer_user_id', 'id');
     }
 
-    public function interestedDealPdf()
+    public function wantToBuyDealPdf()
     {
-        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','interested-deal-pdf');
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','want-to-buy-deal-pdf');
     }
 
     public function getInterestedDealPdfUrlAttribute()
     {
-        if($this->interestedDealPdf){
-            return $this->interestedDealPdf->file_url;
+        if($this->wantToBuyDealPdf){
+            return $this->wantToBuyDealPdf->file_url;
         }
         return "";
     }

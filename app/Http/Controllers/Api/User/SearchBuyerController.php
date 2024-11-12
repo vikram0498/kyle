@@ -1370,7 +1370,7 @@ class SearchBuyerController extends Controller
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
             'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
             'buyer_feedback'    => ['required_if:status,not_interested', 'string'],
-            'pdf_file'          => ['required_if:status,interested','mimes:pdf','max:'.config('constants.interested_pdf_size')]
+            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')]
         ],[
             'pdf_file.mimes'    => 'The file must be a PDF document',
         ],[
@@ -1410,15 +1410,15 @@ class SearchBuyerController extends Controller
             $isUpdated = $buyerDeal->update($buyerDealUpdateData);
 
             $uploadedPdfFile = $request->file('pdf_file');
-            if($request->status == 'interested' && $uploadedPdfFile){
+            if($request->status == 'want_to_buy' && $uploadedPdfFile){
                 $uploadId = null;
                 $actionType = 'save';
-                if($uploadedDealPdf = $buyerDeal->interestedDealPdf){
+                if($uploadedDealPdf = $buyerDeal->wantToBuyDealPdf){
                     $uploadId = $uploadedDealPdf->id;
                     $actionType = 'update';
                 }
 
-                uploadImage($buyerDeal, $uploadedPdfFile, 'buyer-deals/interested', "interested-deal-pdf", 'original', $actionType, $uploadId);
+                uploadImage($buyerDeal, $uploadedPdfFile, 'buyer-deals/want_to_buy', "want-to-buy-deal-pdf", 'original', $actionType, $uploadId);
             }
 
             // Send Notification to seller after deal status update
