@@ -20,16 +20,18 @@ class NotificationController extends Controller
         try{
             $records = NotificationModel::orderBy('created_at','desc')->limit(5)->get();   
 
-            $records->transform(function ($notificationData) {
-                if(isset($notificationData->data['notification_type'])){
-                    return $notificationData[$notificationData->data['notification_type']] = $notificationData->data;
+            $notificationRecords = [];
+
+            if($records->count() > 0){
+                foreach($records as $record){
+                    $notificationRecords[$record->data['notification_type']][] = $record->data;
                 }
-            });
+            }
 
             //Return Success Response
             $responseData = [
                 'status' => true,
-                'notifications'   => $records
+                'notifications'   => $notificationRecords
             ];
             return response()->json($responseData, 200);
         } catch (\Throwable $th) {
