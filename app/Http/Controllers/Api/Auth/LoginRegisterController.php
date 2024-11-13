@@ -6,36 +6,51 @@ use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Mail\ResetPasswordMail;
+use App\Services\TwilioService;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+
 
 class LoginRegisterController extends Controller
 {
     public function register(Request $request){
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'first_name'                => 'required',
             'last_name'                 => 'required',
             // 'email'                     => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id,deleted_at,NULL',
             'email'                     => 'required|email|regex:/^(?!.*[\/]).+@(?!.*[\/]).+\.(?!.*[\/]).+$/i|unique:users,email,NULL,id',
-            'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
+            // 'phone'                     => 'required|numeric|not_in:-|unique:users,phone,NULL,id',
             // 'address'                   => 'required',
             'company_name'              => 'required',
             'password'                  => 'required|min:8',
             'password_confirmation'     => 'required|same:password',
 	        'terms_accepted'  		    => 'required', 
-        ],[
-            'phone.required'=>'The mobile number field is required',
-            'phone.digits' =>'The mobile number must be 10 digits',
-            'phone.unique' =>'The mobile number already exists.',
+        ];
+
+        $rules['country_code'] = ['required', 'numeric'];
+        $rules['phone'] = [
+            'required', 'numeric','digits:10','not_in:-',
+            Rule::unique('users')->where(function ($query) use ($request) {
+                return $query->where('country_code', $request->country_code);
+            })
+        ];
+
+        $validator = Validator::make($request->all(), $rules, [
+            'phone.required' => 'The mobile number field is required',
+            'phone.digits'   => 'The mobile number must be 10 digits',
+            'phone.unique'   => 'The mobile number already exists.',
         ]);
+        
         if($validator->fails()){
-             //Error Response Send
-             $responseData = [
+            //Error Response Send
+            $responseData = [
                 'status'        => false,
                 'validation_errors' => $validator->errors(),
             ];
@@ -44,9 +59,21 @@ class LoginRegisterController extends Controller
 
         try {
             DB::beginTransaction();
+
+            //Start to check phone number verified
+            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+                $responseData = [
+                    'status'        => false,
+                    'message'       => 'OTP not verified.',
+                ]; 
+                return response()->json($responseData, 403);
+            }
+            //End to check phone number verified
+
             $input = $request->except(['terms_accepted','password_confirmation']);  
             $input['name'] = $input['first_name'].' '.$input['last_name'];
             $input['password'] = bcrypt($input['password']);
+            $input['phone_verified_at'] = now();
 
             $user = User::create($input);
 
@@ -64,6 +91,9 @@ class LoginRegisterController extends Controller
 
                 $user->roles()->sync(2);
                 
+                //Clear OTP Cache
+                forgetOtpCache($request->country_code,$request->phone);
+
                 DB::commit();
 
                 //Success Response Send
@@ -500,50 +530,82 @@ class LoginRegisterController extends Controller
         return response()->json($response, 200);
     }
 
-   /* public function sendOTP(Request $request){
+    public function sendOTPOnPhone(Request $request){
+        $rules['country_code'] = ['required', 'numeric'];
+        $rules['phone'] = [
+            'required', 'numeric','digits:10','not_in:-',
+            Rule::unique('users')->where(function ($query) use ($request) {
+                return $query->where('country_code', $request->country_code);
+            })
+        ];
 
+        $request->validate($rules);
+
+        try {
+            $otp = generateOTP();
+            $fullPhoneNumber = $request->country_code.$request->phone;
+            Cache::put('otp_' .$fullPhoneNumber, $otp, now()->addMinutes(config('constants.otp_time')));
+
+            $twilio = new TwilioService;
+
+            $toPhoneNumber = '+'.$fullPhoneNumber;
+            $message = trans('messages.otp_sms_content',['otpNumber'=>$otp,'otpTime'=>config('constants.otp_time')]);
+            $twilio->send_SMS($toPhoneNumber, $message);
+
+            //Return Success Response
+            $responseData = [
+                'status'        => true,
+                'message'       => trans('messages.auth.verification.otp_send_success'),
+            ];
+            return response()->json($responseData, 200);
+
+        }catch (\Exception $e) {
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
     }
 
-    public function verifyOTP(){
-       
-        $rules['phone'] = ['required', 'numeric','not_in:-','unique:users,phone,'.$userId.',id,deleted_at,NULL'];
+    public function verifyOTP(Request $request){
+        $rules['country_code'] = ['required', 'numeric'];
+        $rules['phone'] = [
+            'required', 'numeric','digits:10','not_in:-',
+            Rule::unique('users')->where(function ($query) use ($request) {
+                return $query->where('country_code', $request->country_code);
+            })
+        ];
         $rules['otp'] = ['required','numeric','digits:4','not_in:-'];
-
         $request->validate($rules,[
             'otp.required' => 'Please enter the OTP.',
             'otp.digits' => 'The OTP must be exactly 4 digits.',
         ],[]);
 
-        DB::beginTransaction();
         try {
-            $otpNumber = (int)$request->otp1.$request->otp2.$request->otp3.$request->otp4;
-            
-            $otpVerify = User::where('id',$userId)->where('otp',$otpNumber)->first();
-            if($otpVerify){
-                $otpVerify->otp = null;
-                $otpVerify->phone = $request->phone;
-                $otpVerify->phone_verified_at = date('Y-m-d H:i:s');
-                $otpVerify->save();
-                $otpVerify->buyerVerification()->update(['is_phone_verification'=>1]);
+            $fullPhoneNumber = $request->country_code.$request->phone;
+            $cachedOtp = Cache::get('otp_' . $fullPhoneNumber);
 
-                DB::commit();
+            if ($cachedOtp && $cachedOtp == $request->otp) {
+                Cache::put('otp_verified_' . $fullPhoneNumber, true, now()->addMinutes(10));
+
                 //Return Success Response
                 $responseData = [
                     'status'        => true,
-                    'current_step'  => $request->step,
                     'message'       => trans('messages.auth.verification.phone_verify_success'),
                 ];
                 return response()->json($responseData, 200);
             }else{
-                //Return Error Response
-                $responseData = [
-                    'status'        => false,
-                    'error'         => trans('messages.auth.verification.invalid_otp'),
+                 //Return Success Response
+                 $responseData = [ 
+                    'status'        => true,
+                    'message'       => trans('messages.auth.verification.invalid_otp'),
                 ];
-                return response()->json($responseData, 400);
+                return response()->json($responseData, 200);
             }
         }catch (\Exception $e) {
-            DB::rollBack();
             //  dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
@@ -554,7 +616,7 @@ class LoginRegisterController extends Controller
             return response()->json($responseData, 400);
         }
     }
-  */
+  
 
 
 }

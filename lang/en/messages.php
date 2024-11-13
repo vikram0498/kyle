@@ -59,8 +59,9 @@ return [
         'not_found' => "Deal not found"
     ],
 
-    'update_status' => ":module_name status updated successfully"
+    'update_status' => ":module_name status updated successfully",
 
+    'otp_sms_content' => "Your verification code is :otpNumber. Please enter this code to complete your verification. Do not share this code with anyone. The code will expire in :otpTime minutes.",
     
     
 ];

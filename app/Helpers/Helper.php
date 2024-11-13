@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
+use Illuminate\Support\Facades\Cache;
+
 
 if (!function_exists('convertToFloat')) {
 	function convertToFloat($value)
@@ -342,5 +344,28 @@ if (!function_exists('SendPushNotification')) {
 		
 			//\Log::info('Firebase error:', ['FirebaseException' => $e->getMessage()]);
 		}
+	}
+}
+
+
+if (!function_exists('isPhoneNumberVerified')) {
+	function isPhoneNumberVerified($countryCode, $phoneNumber)
+	{
+		$fullPhoneNumber = $countryCode.$phoneNumber;
+		if (!Cache::get('otp_verified_' . $fullPhoneNumber)) {
+			return false;
+		}
+		return true;
+	}
+}
+
+if (!function_exists('forgetOtpCache')) {
+	function forgetOtpCache($countryCode, $phoneNumber)
+	{
+		$fullPhoneNumber = $countryCode.$phoneNumber;
+		Cache::forget('otp_' . $fullPhoneNumber);
+		Cache::forget('otp_verified_' . $fullPhoneNumber);
+
+		return true;
 	}
 }

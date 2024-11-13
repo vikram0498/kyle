@@ -50,6 +50,10 @@ Route::controller(LoginRegisterController::class)->group(function(){
     Route::get('get-email/{id}', 'getEmail');
 
     Route::get('get-links','getLinks');
+
+    Route::post('send-otp','sendOTPOnPhone');
+
+    Route::post('verify-otp','verifyOTP');
     
 });
 
@@ -108,7 +112,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('buyer-profile-verification', [BuyerVerificationController::class, 'index']);
    
-    Route::post('send-sms', [TwilioController::class, 'sendSms']);
+    Route::post('send-sms', [TwilioController::class, 'sendOTP']);
 
     Route::post('buy-box-search/{page?}', [SearchBuyerController::class, 'buyBoxSearch']);
     Route::get('get-last-search', [SearchBuyerController::class, 'lastSearchByUser']);

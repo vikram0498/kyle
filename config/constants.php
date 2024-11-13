@@ -352,5 +352,7 @@ return [
         ],
     ],
 
-    'interested_pdf_size' => '102400' // 102400 KB => 100MB
+    'interested_pdf_size' => '102400', // 102400 KB => 100MB
+
+    'otp_time' => env('OTP_TIME',5), // In Minutes
 ];

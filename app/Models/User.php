@@ -279,8 +279,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFullPhoneNumberAttribute()
     {
-        if($this->country_code && $this->phone_number){
-            return $this->country_code+'-'+$this->phone_number;
+        if($this->country_code && $this->phone){
+            return $this->country_code.'-'.$this->phone;
         }
         return "";
     }

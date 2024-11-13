@@ -214,9 +214,18 @@ class CopyBuyerController extends Controller
     }
 
     public function uploadCopyBuyerDetails(StoreCopyBuyerRequest $request,$token){
-        DB::beginTransaction();
         try {
-            
+            DB::beginTransaction();
+            //Start to check phone number verified
+            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+                $responseData = [
+                    'status'        => false,
+                    'message'       => 'OTP not verified.',
+                ]; 
+                return response()->json($responseData, 403);
+            }
+            //End to check phone number verified
+
             $isMailSend = false;
             $validatedData = $request->all();
 
@@ -254,6 +263,7 @@ class CopyBuyerController extends Controller
                 'last_name'      => $validatedData['last_name'],
                 'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
                 'email'          => $validatedData['email'], 
+                'country_code'   => $validatedData['country_code'],
                 'phone'          => $validatedData['phone'], 
             ];
             $createUser = User::create($userDetails);
@@ -337,6 +347,9 @@ class CopyBuyerController extends Controller
                 }
             }
 
+            //Clear OTP Cache
+            forgetOtpCache($request->country_code,$request->phone);
+
             DB::commit();
                 
             //Success Response Send
@@ -417,9 +430,19 @@ class CopyBuyerController extends Controller
 
 
     public function addBuyer(StoreAddBuyerRequest $request){
-        DB::beginTransaction();
         try {
-            
+            DB::beginTransaction();
+
+            //Start to check phone number verified
+            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+                $responseData = [
+                    'status'        => false,
+                    'message'       => 'OTP not verified.',
+                ]; 
+                return response()->json($responseData, 403);
+            }
+            //End to check phone number verified
+
             $validatedData = $request->all();
 
             $superAdminUser = User::whereHas('roles',function($query){
@@ -446,7 +469,8 @@ class CopyBuyerController extends Controller
                 'first_name'     => $validatedData['first_name'],
                 'last_name'      => $validatedData['last_name'],
                 'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
-                'email'          => $validatedData['email'], 
+                'email'          => $validatedData['email'],
+                'country_code'   => $validatedData['country_code'], 
                 'phone'          => $validatedData['phone'], 
             ];
             $createUser = User::create($userDetails);
@@ -476,7 +500,6 @@ class CopyBuyerController extends Controller
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
                 }
 
-            
                 if($request->zoning){
                     $validatedData['zoning'] = json_encode($request->zoning);
                 }           
@@ -485,29 +508,24 @@ class CopyBuyerController extends Controller
                     $validatedData['permanent_affix'] = (int)$request->permanent_affix;
                 } 
                 if($request->park){
-                    $validatedData['park'] = (int)$request->park;
+                    $validatedData['park'] = (int)$request->park; 
                 }  
                 if($request->rooms){
                     $validatedData['rooms'] = (int)$request->rooms;
                 }
                 
-                
-                $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
-
-                $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
-                
+                $createUser->buyerVerification()->create(['user_id' => $validatedData['user_id']]);
+                $validatedData = collect($validatedData)->except(['uuid','first_name', 'last_name','email','country_code','phone','g-recaptcha-response'])->all();
                 $createUser->buyerDetail()->create($validatedData);
-                
-              
+
                 //Purchased buyer
-                $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                $syncData['buyer_id']   = $createUser->buyerDetail->id;
                 $syncData['created_at'] = Carbon::now();
         
                 User::where('id',$validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
 
                 //Verification mail sent
                 $createUser->NotificationSendToBuyerVerifyEmail();
-                
             }
 
             //Start Register by invitation link
@@ -515,6 +533,9 @@ class CopyBuyerController extends Controller
                 BuyerInvitation::where('uuid',$request->uuid)->update(['status'=>1]);
             }
             //End Register by invitation link
+
+            //Clear OTP Cache
+            forgetOtpCache($request->country_code,$request->phone);
 
             DB::commit();
                 

@@ -21,16 +21,18 @@ class ProfileController extends Controller
         $user = Auth::user();
        
         $user_details = [
-            'first_name' => $user->first_name ?? null,
-            'last_name'  => $user->last_name ?? null,
-            'name'       => $user->name ?? null,
-            'email'      => $user->email ?? null,
-            'phone'      => $user->phone ?? null,
-            'profile_image' => $user->profile_image_url ?? null,
-            'level_type' => $user->level_type ?? null,
-            'is_active'  => $user->is_active ?? 0,
-            'is_block'   => $user->is_block ?? 0,
-            'credit_limit'   => $user->credit_limit ?? 0,
+            'first_name'          => $user->first_name ?? null,
+            'last_name'           => $user->last_name ?? null,
+            'name'                => $user->name ?? null,
+            'email'               => $user->email ?? null,
+            'country_code'        => $user->country_code ?? null,
+            'phone'               => $user->phone ?? null,
+            'full_phone_number'   => $user->full_phone_number ?? null,
+            'profile_image'       => $user->profile_image_url ?? null,
+            'level_type'          => $user->level_type ?? null,
+            'is_active'           => $user->is_active ?? 0,
+            'is_block'            => $user->is_block ?? 0,
+            'credit_limit'        => $user->credit_limit ?? 0,
         ];
         // Return response
         $responseData = [
@@ -42,12 +44,18 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request){
 
-        $userId = auth()->user()->id;
+        $authUser = auth()->user();
 
         $validatedData = [
             'first_name'  => 'required',
             'last_name'   => 'required',
-            'phone'       => 'required',
+        ];
+        $validatedData['country_code'] = ['required', 'numeric'];
+        $validatedData['phone'] = [
+            'required', 'numeric','digits:10','not_in:-',
+            Rule::unique('users')->where(function ($query) use ($request) {
+                return $query->where('country_code', $request->country_code);
+            })->ignore($authUser->id, 'id')
         ];
 
         if($request->old_password || $request->new_password || $request->confirm_password){
@@ -57,7 +65,7 @@ class ProfileController extends Controller
         }
        
         if(!auth()->user()->email){
-            $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($userId)->whereNull('deleted_at')];
+            $validatedData['email']  = ['required', 'string', 'email', 'max:255', Rule::unique((new User)->getTable(), 'email')->ignore($authUser->id)];
         }
 
         if($request->hasFile('profile_image')){
@@ -65,16 +73,33 @@ class ProfileController extends Controller
         }
 
         $request->validate($validatedData,[
-            'confirm_password.same' => 'The confirm password and new password must match.'
+            'phone.required' => 'The phone number field is required',
+            'phone.digits'   => 'The mobile number must be 10 digits',
+            'phone.unique'   => 'The mobile number already exists.',
+            'confirm_password.same' => 'The confirm password and new password must match.',
         ]);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
+
+            if(($request->country_code != $request->country_code) || ($authUser->phone != $request->phone)){
+                //Start to check phone number verified
+                if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+                    $responseData = [
+                        'status'        => false,
+                        'message'       => 'OTP not verified.',
+                    ]; 
+                    return response()->json($responseData, 403);
+                }
+                //End to check phone number verified
+            }
+
             $updateRecords = [
-                'first_name'  => $request->first_name,
-                'last_name'  => $request->last_name,
-                'name'  => $request->first_name.' '.$request->last_name ,
-                'phone' => $request->phone,
+                'first_name'    => $request->first_name,
+                'last_name'     => $request->last_name,
+                'name'          => $request->first_name.' '.$request->last_name ,
+                'country_code'  => $request->country_code,
+                'phone'         => $request->phone,
             ];
 
             if($request->email){
@@ -85,7 +110,10 @@ class ProfileController extends Controller
                 $updateRecords['password'] = Hash::make($request->new_password);
             }
 
-            $updatedUserRecord = User::find($userId)->update($updateRecords);
+            $updatedUserRecord = User::find($authUser->id)->update($updateRecords);
+
+            //Clear OTP Cache
+            forgetOtpCache($request->country_code,$request->phone);
 
             DB::commit();
 
@@ -95,7 +123,7 @@ class ProfileController extends Controller
                    
                     $actionType = 'save';
                     $uploadId = null;
-                    $updatedUser= User::find($userId);
+                    $updatedUser= User::find($authUser->id);
                     if($updatedUser->profileImage){
                         $uploadId = $updatedUser->profileImage->id;
                         $actionType = 'update';

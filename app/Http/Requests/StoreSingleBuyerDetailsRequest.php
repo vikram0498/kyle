@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -50,13 +51,19 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
      */
     public function rules()
     {
+        $countryCode = $this->country_code;
         $rules = [
             'first_name'  => ['required'], 
             'last_name'   => ['required'], 
             // 'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
             // 'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
-            'email'       => ['required', 'email', 'unique:users,email,NULL,id'],
-            'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id'],
+            'email'        => ['required', 'email', 'unique:users,email,NULL,id'],
+            'country_code' => ['required', 'numeric'],
+            'phone'        => ['required', 'numeric','not_in:-', 
+                Rule::unique('users')->where(function ($query) use ($countryCode) {
+                    return $query->where('country_code', $countryCode);
+                })
+            ],
             // 'description' => [],
              
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],

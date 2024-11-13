@@ -10,7 +10,13 @@ class Buyer extends Model
 {
     use SoftDeletes;
 
-    protected $casts = ['parking' => 'array', 'property_type' => 'array', 'property_flaw' => 'array', 'buyer_type' => 'array', 'building_class' => 'array', 'purchase_method' => 'array'];
+    protected $casts = [
+        'parking' => 'array', 
+        'property_type' => 'array', 
+        'property_flaw' => 'array', 
+        'building_class' => 'array', 
+        'purchase_method' => 'array'
+    ];
 
     public $table = 'buyers';
 

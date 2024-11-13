@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -50,6 +51,7 @@ class StoreAddBuyerRequest extends FormRequest
      */
     public function rules()
     {
+        $countryCode = $this->country_code;
         $rules = [
             'uuid'        => ['nullable','exists:buyer_invitations,uuid,deleted_at,NULL'],
             'first_name'  => ['required'], 
@@ -57,7 +59,12 @@ class StoreAddBuyerRequest extends FormRequest
             // 'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
             // 'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
         
-            'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id'],
+            'country_code' => ['required', 'numeric'],
+            'phone'        => ['required', 'numeric','not_in:-', 
+                Rule::unique('users')->where(function ($query) use ($countryCode) {
+                    return $query->where('country_code', $countryCode);
+                })
+            ],
             // 'description' => [], 
 
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
@@ -65,7 +72,7 @@ class StoreAddBuyerRequest extends FormRequest
             'city'        => ['required',/*'exists:states,id'*/], 
             'state'       => ['required',/*'exists:cities,id'*/], 
             //'company_name'   => ['required'], 
-	    'company_name'   => [],
+	        'company_name'   => [],
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->price_min) ? new CheckMaxValue($this->price_min, 'price_min') : ''], 
@@ -86,7 +93,7 @@ class StoreAddBuyerRequest extends FormRequest
             'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
 
-	    'terms_accepted'  => ['required'], 
+	        'terms_accepted'  => ['required'], 
 
         ];
 

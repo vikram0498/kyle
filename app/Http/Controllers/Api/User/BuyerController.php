@@ -159,9 +159,8 @@ class BuyerController extends Controller
 
     public function uploadSingleBuyerDetails(StoreSingleBuyerDetailsRequest $request)
     {
-        DB::beginTransaction();
         try {
-
+            DB::beginTransaction();
             $isMailSend = false;
             $validatedData = $request->all();
 
@@ -171,6 +170,7 @@ class BuyerController extends Controller
                 'last_name'      => $validatedData['last_name'],
                 'name'           => ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
                 'email'          => $validatedData['email'],
+                'country_code'   => $validatedData['country_code'],
                 'phone'          => $validatedData['phone'],
             ];
             $createUser = User::create($userDetails);
@@ -240,7 +240,6 @@ class BuyerController extends Controller
                     $createUser->NotificationSendToBuyerVerifyEmail();
                 }
             }
-
 
             DB::commit();
 
