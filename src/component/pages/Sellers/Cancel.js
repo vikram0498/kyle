@@ -16,7 +16,7 @@ const Cancel = () => {
           <h2 className="payment-card__submsg">Please try again</h2>
           <div className="payment-card__tags">
               <Link to="/">
-                <div className="payment-card__tag submit-btn"> <button type="submit" class="btn btn-fill px-4 py-1 w-auto">Back to home</button></div>
+                <div className="payment-card__tag submit-btn"> <button type="submit" className="btn btn-fill px-4 py-1 w-auto">Back to home</button></div>
               </Link>
           </div>
         </div>

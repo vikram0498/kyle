@@ -166,12 +166,12 @@ export default function BuyerCard({
         <div className="cornor-block">
           {data.phone_verified && 
           <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
-              <img src="/assets/images/ver-phone-number.svg" class="img-fluid" alt=""/>
+              <img src="/assets/images/ver-phone-number.svg" className="img-fluid" alt=""/>
           </OverlayTrigger>
           }
           {data.email_verified && 
             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
-                <img src="/assets/images/ver-email.svg" class="img-fluid" alt=""/>
+                <img src="/assets/images/ver-email.svg" className="img-fluid" alt=""/>
             </OverlayTrigger>
           }
           {(data.driver_license_verified) && 

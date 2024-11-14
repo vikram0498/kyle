@@ -38,7 +38,7 @@ const BuyerCardResult = (props) => {
                             <path d="M6.64304 10.8034C6.39778 11.5011 5.7496 12.0004 4.99047 12.0004C4.52916 12.0004 4.07368 11.8079 3.75251 11.465C3.56565 11.2846 3.4255 11.044 3.34375 10.7974C3.41966 10.8094 3.49558 10.8154 3.57733 10.8274C3.71163 10.8455 3.85178 10.8635 3.99193 10.8756C4.32478 10.9056 4.66346 10.9237 5.00215 10.9237C5.335 10.9237 5.66785 10.9056 5.99486 10.8756C6.11749 10.8635 6.24011 10.8575 6.3569 10.8395C6.45033 10.8274 6.54376 10.8154 6.64304 10.8034Z" fill="#3F53FE"/>
                         </svg>
                     </span>
-                    <div class="arrow">
+                    <div className="arrow">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -188,12 +188,12 @@ const BuyerCardResult = (props) => {
                     <div className="cornor-block">
                         {data.phone_verified && 
                             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
-                                    <img src="/assets/images/ver-phone-number.svg" class="img-fluid" alt=""/>
+                                    <img src="/assets/images/ver-phone-number.svg" className="img-fluid" alt=""/>
                             </OverlayTrigger>
                         }
                         {data.email_verified && 
                             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Email Verified</Tooltip>} >
-                                <img src="/assets/images/ver-email.svg" class="img-fluid" alt=""/>
+                                <img src="/assets/images/ver-email.svg" className="img-fluid" alt=""/>
                             </OverlayTrigger>
                         }
                         {(data.driver_license_verified) && 

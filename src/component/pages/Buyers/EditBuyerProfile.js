@@ -172,7 +172,6 @@ function EditBuyerProfile() {
         setZoning(responseData.zoning);
         setSewer(responseData.sewer);
         setUtilities(responseData.utilities);
-        console.log("seconf 11")
 
         // Set form values for multi-select fields
 
@@ -198,7 +197,6 @@ function EditBuyerProfile() {
         if (selectedProperty.includes(14)) {
           setMobileHomeParkSelected(true);
         }
-        console.log("seconf 13")
 
         const selectedPurchaseMethods = responseData.purchase_method.map((item) => item.value);
         setPurchaseMethodsValue(selectedPurchaseMethods);
@@ -638,6 +636,17 @@ function EditBuyerProfile() {
     return true;
   };
 
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-7890 (up to 10 digits)
+    return cleaned
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
+  };
   let dataObj = {
     setState,
     setCity,
@@ -648,7 +657,6 @@ function EditBuyerProfile() {
     city,
     state
   }
-  console.log('bedRoomMax :>> ', bedRoomMax);
   return (
     <>
       <BuyerHeader />
@@ -846,7 +854,7 @@ function EditBuyerProfile() {
                                 type="text"
                                 className="form-control"
                                 placeholder="Phone Number"
-                                defaultValue={currentBuyerData.phone}
+                                defaultValue={currentBuyerData.phone && formatInput(currentBuyerData.phone)}
                                 disabled
                               />
                               {errors.phone && (

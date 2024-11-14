@@ -277,14 +277,6 @@ function CopyAddBuyer({urlType}) {
     if (formObject.hasOwnProperty("zoning")) {
       formObject.zoning = zoningValue.length > 0 ? zoningValue : "";
     }
-    if (formObject.hasOwnProperty("state")) {
-      //formObject.states =  stateValue;
-      formObject.state = stateValue.length > 0 ? stateValue : "";
-    }
-    if (formObject.hasOwnProperty("city")) {
-      //formObject.city =  cityValue;
-      formObject.city = cityValue.length > 0 ? cityValue : "";
-    }
     if (formObject.hasOwnProperty("phone")) {
       let phoneNumber = formObject.phone.replace(/-/g, "");
       formObject.phone = phoneNumber;
@@ -434,12 +426,12 @@ function CopyAddBuyer({urlType}) {
     // Remove all non-digit characters
     let cleaned = input.replace(/\D/g, "");
 
-    // Format the input as 123-456-789 (up to 9 digits)
+    // Format the input as 123-456-7890 (up to 10 digits)
     return cleaned
-      .substring(0, 9) // Limit the length to 9 digits
-      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
-        [g1, g2, g3].filter(Boolean).join("-")
-      );
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
   };
 
   // Update the form value whenever the phoneValue changes
@@ -1235,14 +1227,6 @@ function CopyAddBuyer({urlType}) {
                               Purchase Method (Multi-Select)<span>*</span>
                             </label>
                             <div className="form-group">
-                              {/* <MultiSelect
-                                                                        name="purchase_method"
-                                                                        options={purchaseMethodsOption}
-                                                                        placeholder='Select Purchase Method'
-                                                                        setMultiselectOption = {setPurchaseMethodsValue}
-                                                                        showCreative = {setShowCreativeFinancing}
-                                                                    /> */}
-
                               <Controller
                                 control={control}
                                 name="purchase_method"
@@ -2653,11 +2637,11 @@ function CopyAddBuyer({urlType}) {
 
                           <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
                           <div className="col-12 col-lg-12">
-                            <div class="form-check">
-                              <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+                            <div className="form-check">
+                              <input className="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
                                 required: "This field is required",
                               })}/>
-                              <label class="form-check-label text-transform-none" for="privacy-policy">
+                              <label className="form-check-label text-transform-none" for="privacy-policy">
                                 <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}>Privacy Policy </Link> 
                                  and 
                                  <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>

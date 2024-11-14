@@ -277,13 +277,6 @@ function AddBuyerDetails() {
       formObject.zoning = zoningValue.length > 0 ? zoningValue : "";
     }
 
-    // change city state value string to array
-    if (formObject.hasOwnProperty("state")) {
-      formObject.state = state;
-    }
-    if (formObject.hasOwnProperty("city")) {
-      formObject.city = city;
-    }
     if (formObject.hasOwnProperty("phone")) {
       let phoneNumber = formObject.phone.replace(/-/g, "");
       formObject.phone = phoneNumber;
@@ -509,12 +502,12 @@ function AddBuyerDetails() {
     // Remove all non-digit characters
     let cleaned = input.replace(/\D/g, "");
 
-    // Format the input as 123-456-789 (up to 9 digits)
+    // Format the input as 123-456-7890 (up to 10 digits)
     return cleaned
-      .substring(0, 9) // Limit the length to 9 digits
-      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
-        [g1, g2, g3].filter(Boolean).join("-")
-      );
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
   };
 
   // Update the form value whenever the phoneValue changes
@@ -745,6 +738,7 @@ function AddBuyerDetails() {
                               </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <input type="hidden" name="country_code" value={1}/>
                               <label>
                                 Phone Number<span>*</span>
                               </label>
@@ -753,15 +747,15 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="phone"
                                   className="form-control"
-                                  placeholder="Eg. 123-456-789"
+                                  placeholder="Eg. 123-456-7890"
                                   {...register("phone", {
                                     required: "Phone Number is required",
                                     validate: {
                                       matchPattern: (v) =>
                                         /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                       maxLength: (v) =>
-                                        (v.length <= 12 && v.length >= 9) || // Adjusted for the formatted length (9 digits + 2 hyphens)
-                                        "The phone number should be between 9 to 12 characters",
+                                        (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                        "The phone number should be between 1 to 10 characters",
                                     },
                                   })}
                                 />

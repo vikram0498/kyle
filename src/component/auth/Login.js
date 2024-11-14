@@ -55,7 +55,6 @@ function Login(props) {
     let headers = {
       Accept: "application/json",
     };
-    console.log("apiUrl", apiUrl);
 
     axios
       .post(apiUrl + "login", payload, { headers: headers })

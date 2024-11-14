@@ -54,7 +54,7 @@ const MyBuyersResult = ({
     Swal.fire({
       icon: "warning",
       title: "Do you want to view this record?",
-      html: '<p class="popup-text-color">It will redeem one point from your account</p>',
+      html: '<p className="popup-text-color">It will redeem one point from your account</p>',
       showCancelButton: true,
       confirmButtonText: "Yes",
     }).then((result) => {
@@ -107,7 +107,7 @@ const MyBuyersResult = ({
         Swal.fire({
           icon: "error",
           title: "Sorry!",
-          html: '<p class="popup-text-color">You Don`t have enough point to view this record</p><p class="popup-text-color">Please add more points</p>',
+          html: '<p className="popup-text-color">You Don`t have enough point to view this record</p><p className="popup-text-color">Please add more points</p>',
         });
         const totalCredit = response.data.credit_limit;
         creditLimit.innerHTML = totalCredit;

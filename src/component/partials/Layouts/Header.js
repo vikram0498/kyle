@@ -105,7 +105,7 @@ function Header() {
                 <Link to="/">
                   <img
                     alt="logo"
-                    src="./assets/images/logo.svg"
+                    src="/assets/images/logo.svg"
                     className="img-fluid"
                   />
                 </Link>
@@ -114,7 +114,7 @@ function Header() {
                 <Link to="/">
                   <img
                     alt="logo"
-                    src="./assets/images/mobile-logo.svg"
+                    src="/assets/images/mobile-logo.svg"
                     className="img-fluid"
                   />
                 </Link>
@@ -551,7 +551,7 @@ function Header() {
                     <span className="upload-buyer-icon d-flex">
                       <img
                         alt="coin"
-                        src="./assets/images/coin.svg"
+                        src="/assets/images/coin.svg"
                         className="img-fluid"
                       />
                     </span>
@@ -562,7 +562,7 @@ function Header() {
                   <span className="upload-buyer-icon d-flex">
                     <img
                       alt="folder"
-                      src="./assets/images/folder.svg"
+                      src="/assets/images/folder.svg"
                       className="img-fluid"
                     />
                   </span>
@@ -585,7 +585,7 @@ function Header() {
                     <span className="upload-buyer-icon d-flex">
                       <img
                         alt="wallet"
-                        src="./assets/images/wallet.svg"
+                        src="/assets/images/wallet.svg"
                         className="img-fluid"
                       />
                     </span>
@@ -619,7 +619,7 @@ function Header() {
                             userDetails !== null &&
                             userDetails.profile_image !== ""
                               ? userDetails.profile_image
-                              : "./assets/images/avtar.png"
+                              : "/assets/images/avtar.png"
                           }
                           className="img-fluid user-profile"
                           alt=""
@@ -666,7 +666,7 @@ function Header() {
                         <span className="upload-buyer-icon d-flex">
                           <img
                             alt="folder"
-                            src="./assets/images/folder.svg"
+                            src="/assets/images/folder.svg"
                             className="img-fluid"
                           />
                         </span>
@@ -689,7 +689,7 @@ function Header() {
                           <span className="upload-buyer-icon d-flex">
                             <img
                               alt="wallet"
-                              src="./assets/images/wallet.svg"
+                              src="/assets/images/wallet.svg"
                               className="img-fluid"
                             />
                           </span>
@@ -714,7 +714,7 @@ function Header() {
                         <Link className="dropdown-item" to="/my-profile">
                           <img
                             alt=""
-                            src="./assets/images/user-login.svg"
+                            src="/assets/images/user-login.svg"
                             className="img-fluid"
                           />
                           My Profile
@@ -724,7 +724,7 @@ function Header() {
                         <Link className="dropdown-item" to="/my-buyers">
                           <img
                             alt=""
-                            src="./assets/images/booksaved.svg"
+                            src="/assets/images/booksaved.svg"
                             className="img-fluid"
                           />
                           My Buyers Data
@@ -734,7 +734,7 @@ function Header() {
                         <Link className="dropdown-item" to="/last-search-data">
                           <img
                             alt=""
-                            src="./assets/images/search-log.svg"
+                            src="/assets/images/search-log.svg"
                             className="img-fluid"
                           />
                           Last Searched Data
@@ -744,7 +744,7 @@ function Header() {
                         <Link className="dropdown-item" to="/support">
                           <img
                             alt=""
-                            src="./assets/images/messages.svg"
+                            src="/assets/images/messages.svg"
                             className="img-fluid"
                           />
                           My Support
@@ -754,7 +754,7 @@ function Header() {
                         <Link className="dropdown-item" to="/settings">
                           <img
                             alt=""
-                            src="./assets/images/setting-1.svg"
+                            src="/assets/images/setting-1.svg"
                             className="img-fluid"
                           />
                           Settings
@@ -769,7 +769,7 @@ function Header() {
                         >
                           <img
                             alt=""
-                            src="./assets/images/logoutcurve.svg"
+                            src="/assets/images/logoutcurve.svg"
                             className="img-fluid"
                           />
                           Logout

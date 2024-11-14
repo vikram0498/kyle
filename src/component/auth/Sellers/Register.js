@@ -455,11 +455,11 @@ const Register = () => {
               </div>
             </div>
             <div className="col-12 col-lg-12">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+              <div className="form-check">
+                <input className="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
                   required: "This field is required",
                 })}/>
-                <label class="form-check-label text-transform-none" for="privacy-policy">
+                <label className="form-check-label text-transform-none" for="privacy-policy">
                   <p>I have read and agree to the <Link target="_blank"  to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}>Privacy Policy </Link> 
                    and <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
                 </label>

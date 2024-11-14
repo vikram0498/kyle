@@ -24,10 +24,9 @@ function MultiSelect({options,placeholder,name, setMultiselectOption, showCreati
     const style = {margin:'auto'};
   return (
     <>
-    <Select
+      <Select
         name={name}
         defaultValue={selectValue}
-        value={selectValue}
         isMulti
         options={options}
         onChange={handleSelect}

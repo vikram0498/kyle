@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/useAuth";
 import InvalidPage from "../../pages/Sellers/InvalidPage";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
+import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
+import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
 
 
 function RegisterBuyer() {
@@ -46,8 +48,10 @@ function RegisterBuyer() {
   const phoneValue = watch("phone", ""); // Watch the phone input value
 
   const [country, setCountry] = useState([]);
-  const [state, setState] = useState([]);
-  const [city, setCity] = useState([]);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [address, setAddress] = useState("");
 
   const [purchaseMethodsOption, setPurchaseMethodsOption] = useState([]);
   const [buildingClassNamesOption, setBuildingClassNamesOption] = useState([]);
@@ -248,15 +252,6 @@ function RegisterBuyer() {
       formObject.zoning = zoningValue.length > 0 ? zoningValue : "";
     }
 
-    // change city state value string to array
-    if (formObject.hasOwnProperty("state")) {
-      //formObject.states =  stateValue;
-      formObject.state = stateValue.length > 0 ? stateValue : "";
-    }
-    if (formObject.hasOwnProperty("city")) {
-      //formObject.city =  cityValue;
-      formObject.city = cityValue.length > 0 ? cityValue : "";
-    }
     if (formObject.hasOwnProperty("phone")) {
       let phoneNumber = formObject.phone.replace(/-/g, "");
       formObject.phone = phoneNumber;
@@ -404,12 +399,12 @@ function RegisterBuyer() {
     // Remove all non-digit characters
     let cleaned = input.replace(/\D/g, "");
 
-    // Format the input as 123-456-789 (up to 9 digits)
+    // Format the input as 123-456-7890 (up to 10 digits)
     return cleaned
-      .substring(0, 9) // Limit the length to 9 digits
-      .replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, g1, g2, g3) =>
-        [g1, g2, g3].filter(Boolean).join("-")
-      );
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
   };
 
   // Update the form value whenever the phoneValue changes
@@ -417,6 +412,18 @@ function RegisterBuyer() {
     const formattedValue = formatInput(phoneValue);
     setValue("phone", formattedValue); // Update the field with the formatted phone number
   }, [phoneValue, setValue]);
+
+  let dataObj = {
+    setState,
+    setCity,
+    setAddress,
+    setZipCode,
+    address,
+    zipCode,
+    city,
+    state
+  }
+
   return (
     <>
         <section className="main-section position-relative pt-4 pb-120">
@@ -551,7 +558,9 @@ function RegisterBuyer() {
                                   {renderFieldError("email")}
                                 </div>
                               </div>
-                              <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
+                              <PhoneNumberWithOTPVerify register={register} errors={errors.phone} renderFieldError={renderFieldError}/>
+
+                              {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>
                                   Phone Number<span>*</span>
                                 </label>
@@ -577,25 +586,7 @@ function RegisterBuyer() {
                                   )}
                                   {renderFieldError("phone")}
                                 </div>
-                              </div>
-                              {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                    <label>Address<span>*</span></label>
-                                                                    <div className="form-group">
-                                                                        <input type="text" name="address" className="form-control" placeholder="Enter Address" {
-                                                                        ...register("address", {
-                                                                            required: "Address is required",
-                                                                        })
-                                                                        } />
-                                                                        {errors.address && <p className="error">{errors.address?.message}</p>}
-                                                                        {renderFieldError('address') }
-                                                                    </div>
-                                                                </div> */}
-                              {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                                                                    <label>Country</label>
-                                                                    <div className="form-group">
-                                                                    <input type="text" className="form-control country-field" value="United States" readOnly/>
-                                                                    </div>
-                                                                </div> */}
+                              </div> */}
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                                 <label>
                                   Company/LLC
@@ -679,39 +670,11 @@ function RegisterBuyer() {
                                   {renderFieldError("buyer_type")}
                                 </div>
                               </div>
-                              <div className="col-12 col-lg-12">
+                              {/* <div className="col-12 col-lg-12">
                                 <label>
                                 Buy Box Criteria State (Multi-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
-                                  {/* <Select
-                                                                        name="state"
-                                                                        defaultValue=''
-                                                                        options={stateOptions}
-                                                                        onChange={(item) => getCities(item)}
-                                                                        className="select"
-                                                                        isClearable={true}
-                                                                        isSearchable={true}
-                                                                        placeholder="Select State"
-                                                                        closeMenuOnSelect={false}
-                                                                        isMulti
-                                                                    />
-                                                                        {renderFieldError('state') } */}
-                                  {/* <Select
-                                                                            name="state"
-                                                                            defaultValue=''
-                                                                            options={stateOptions}
-                                                                            onChange={(item) => getCities(item)}
-                                                                            className="select"
-                                                                            isClearable={true}
-                                                                            isSearchable={true}
-                                                                            isDisabled={false}
-                                                                            isLoading={false}
-                                                                            value={state}
-                                                                            isRtl={false}
-                                                                            placeholder="Select State"
-                                                                            closeMenuOnSelect={true}
-                                                                        /> */}
                                   <Controller
                                     control={control}
                                     name="state"
@@ -744,38 +707,6 @@ function RegisterBuyer() {
                               <div className="col-12 col-lg-12">
                                 <label> Buy Box Criteria City (Multi-Select)<span>*</span> </label>
                                 <div className="form-group">
-                                  {/* <Select
-                                                                            name="city"
-                                                                            defaultValue=''
-                                                                            options={cityOptions}
-                                                                            className="select"
-                                                                            isClearable={true}
-                                                                            isSearchable={true}
-                                                                            isDisabled={false}
-                                                                            isLoading={false}
-                                                                            onChange={handleCityChange}
-                                                                            isRtl={false}
-                                                                            value={city}
-                                                                            placeholder="Select City"
-                                                                            closeMenuOnSelect={false}
-                                                                            isMulti
-                                                                        />
-                                                                        {renderFieldError('city') } */}
-                                  {/* <Select
-                                                                            name="city"
-                                                                            defaultValue=''
-                                                                            options={cityOptions}
-                                                                            onChange={(item) => setCity(item)}
-                                                                            className="select"
-                                                                            isClearable={true}
-                                                                            isSearchable={true}
-                                                                            isDisabled={false}
-                                                                            isLoading={false}
-                                                                            value={city}
-                                                                            isRtl={false}
-                                                                            placeholder="Select City"
-                                                                            closeMenuOnSelect={true}
-                                                                        /> */}
                                   <Controller
                                     control={control}
                                     name="city"
@@ -805,8 +736,8 @@ function RegisterBuyer() {
       
                                   {renderFieldError("city")}
                                 </div>
-                              </div>
-                              
+                              </div> */}
+                              <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label>
                                   MLS Status<span>*</span>
@@ -2644,11 +2575,11 @@ function RegisterBuyer() {
                               </div>
                               <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
                               <div className="col-12 col-lg-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
                                       required: "This field is required",
                                     })}/>
-                                    <label class="form-check-label text-transform-none" for="privacy-policy">
+                                    <label className="form-check-label text-transform-none" htmlFor="privacy-policy">
                                       <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy</Link> 
                                        and 
                                        <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>

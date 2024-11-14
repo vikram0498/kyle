@@ -11,19 +11,20 @@ const PhoneNumberWithOTPVerify = ({register, errors ='' ,renderFieldError=''}) =
                     <span onClick={()=>setShowModal(true)} className='send_otp_right'>Send OTP</span>
                 </label>
                 <div className="form-group position-relative">
+                    <input type="hidden" name="country_code" value={1}/>
                     <input
                         type="text"
                         name="phone"
                         className="form-control"
-                        placeholder="Eg. 123-456-789"
+                        placeholder="Eg. 123-456-7890"
                         {...register("phone", {
                         required: "Phone Number is required",
                             validate: {
                                 matchPattern: (v) =>
                                 /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                 maxLength: (v) =>
-                                (v.length <= 12 && v.length >= 9) || // Adjusted for the formatted length (9 digits + 2 hyphens)
-                                "The phone number should be between 9 to 12 characters",
+                                (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                "The phone number should be between 1 to 10 characters",
                             },
                         })}
                     />
