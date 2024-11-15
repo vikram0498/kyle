@@ -37,6 +37,10 @@
             <td> Level {{  $seller->level_type }}</td>
         </tr>
         <tr>
+            <th width="25%">{{ __('cruds.user.fields.level_3')}}</th>
+            <td> {{ ($seller->level_3 ? 'Active' : 'Deactive') }}</td>
+        </tr>
+        <tr>
             <th width="25%">{{ __('cruds.user.fields.status')}}</th>
             <td> {{ ($seller->is_active ? 'Active' : 'Block') }}</td>
         </tr>

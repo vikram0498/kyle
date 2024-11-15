@@ -7,6 +7,12 @@
             // Update Deal Status
             'update_deal_status_title'   => "Deal Status updated!",
             'update_deal_status_message' => "The buyer has updated the status of the deal to: :status",
+        ],
+
+        'new_user_register' => [
+            'title'   => 'New User Registration Notification',
+            'message' => 'New User Registered' 
+
         ]
     ];
 

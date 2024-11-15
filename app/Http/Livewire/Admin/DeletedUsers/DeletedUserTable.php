@@ -41,7 +41,9 @@ class DeletedUserTable extends Component
             $levelTypeSearch = 3;
         }
 
-        $users = User::query()->withCount(['purchasedBuyers','buyers'])->where(function ($query) use($searchValue,$statusSearch,$levelTypeSearch) {
+        $users = User::query()->withCount(['purchasedBuyers','buyers as buyers_count' => function($q) {
+            $q->whereColumn('user_id', '!=', 'users.id');
+        }])->where(function ($query) use($searchValue,$statusSearch,$levelTypeSearch) {
             $query->where('name', 'like', '%'.$searchValue.'%')
             ->orWhere('email', 'like', '%'.$searchValue.'%')
             ->orWhere('level_type', $levelTypeSearch)

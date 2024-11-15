@@ -51,6 +51,7 @@ class StoreCopyBuyerRequest extends FormRequest
      */
     public function rules()
     {
+        $countryCode = $this->country_code;
         $rules = [
             'first_name'  => ['required'], 
             'last_name'   => ['required'], 

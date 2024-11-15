@@ -67,6 +67,13 @@
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'level_type' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.user.fields.level_3')}}
+                        <span wire:click="sortBy('level_3')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'level_3' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'level_3' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.user.fields.purchased_buyer') }}</th>
                     <th class="text-gray-500 text-xs">{{ __('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
@@ -98,6 +105,13 @@
 
                         <td>Level {{ $user->level_type }}</td>
 
+                        <td>
+                            <label class="toggle-switch">
+                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="level_3"  data-id="{{$user->id}}"  {{ $user->level_3 == 1 ? 'checked' : '' }}>
+                                 <span class="switch-slider" data-on="Active" data-off="Deactive"></span>
+                             </label>
+                        </td>
+
                         <td>{{ $user->purchased_buyers_count ?? 0 }}</td>
 
                         <td>{{ convertDateTimeFormat($user->created_at,'date') }}</td>
@@ -115,7 +129,7 @@
                     @endforeach
                 @else
                 <tr>
-                    <td class="text-center" colspan="8">{{ __('messages.no_record_found')}}</td>
+                    <td class="text-center" colspan="9">{{ __('messages.no_record_found')}}</td>
                 </tr>
                 @endif
             

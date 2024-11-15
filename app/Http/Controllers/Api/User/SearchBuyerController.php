@@ -151,11 +151,11 @@ class SearchBuyerController extends Controller
     public function buyBoxSearch(SearchBuyersRequest $request){
 
         $radioValues = [1];
-        DB::beginTransaction();
         try {
-           
+            DB::beginTransaction();
             $userId = auth()->user()->id;
-            
+            $authUserLevelType = auth()->user()->level_type;
+
             /*
             $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
             */
@@ -184,7 +184,8 @@ class SearchBuyerController extends Controller
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
                     $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
-                }elseif($request->activeTab == 'more_buyers'){
+                }elseif($request->activeTab == 'more_buyers' && $authUserLevelType != 3){
+                    
                     $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                         $query->where('user_id', '=',$userId);
                     })->where('user_id', '=', 1);
@@ -192,6 +193,7 @@ class SearchBuyerController extends Controller
                     $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                         $query->where('user_id', '=',$userId);
                     })->where('user_id', '=', 1);
+                    
                 }
             }
 
@@ -613,7 +615,7 @@ class SearchBuyerController extends Controller
            
             $totalRecord = $buyers->count();
             
-            $authUserLevelType = auth()->user()->level_type;
+          
 
             $pagination = 20;
             if($authUserLevelType == 2 && $request->activeTab == 'more_buyers'){

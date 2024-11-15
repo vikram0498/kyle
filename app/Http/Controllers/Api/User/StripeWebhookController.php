@@ -232,6 +232,7 @@ class StripeWebhookController extends Controller
                         ]);
 
                         $customer->level_type = 1;
+                        $customer->prev_level_type = 1;
                         $customer->save();
                     }
                 }

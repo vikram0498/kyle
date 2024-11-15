@@ -123,14 +123,26 @@ class Index extends Component
         $this->resetValidation();
         $this->resetPage();
     }
+
     public function confirmedToggleAction($data)
     {
         $id = $data['id'];
         $type = $data['type'];
-        
-        $model = User::find($id );
-        $model->update([$type => !$model->$type]);
-        $this->alert('success', trans('messages.change_status_success_message'));
+    
+        if($type == 'level_3'){
+
+            $model = User::find($id);
+            $levelType = !$model->$type ? 3 : $model->prev_level_type;
+
+            $model->update(['level_type' => $levelType, $type => !$model->$type]);
+
+            $this->alert('success', trans('messages.level_3_status_success_message'));
+            $this->emit('refreshTable');
+        }else{
+            $model = User::find($id);
+            $model->update([$type => !$model->$type]);
+            $this->alert('success', trans('messages.change_status_success_message'));
+        }
     }
 
     /* public function changeStatus($statusVal){

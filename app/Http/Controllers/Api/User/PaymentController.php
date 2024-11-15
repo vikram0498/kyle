@@ -203,6 +203,7 @@ class PaymentController extends Controller
                     $authUser->credit_limit = (int)$authUser->credit_limit + (int)$addonPlan->credit;
                 }
                 $authUser->level_type = 2;
+                $authUser->prev_level_type = 2;
                 $authUser->save();
 
                 $response = ['status' => true, 'credit_limit' => $authUser->credit_limit];

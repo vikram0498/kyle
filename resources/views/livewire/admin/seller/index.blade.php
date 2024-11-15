@@ -22,7 +22,6 @@
                         </button></div> --}}
                     </div>
                     <div class="table-responsive search-table-data">
-                        {{-- @livewire('admin.seller.seller-datatable')  --}}
 
                         @livewire('admin.seller.user-table') 
 
@@ -54,7 +53,7 @@
             flag = false;
         }
         Swal.fire({
-            title: 'Are you sure you want to change the status?',
+            title: (type == 'level_3') ? 'Are you sure you want to change the status of level 3?' : 'Are you sure you want to change the status?',
             showDenyButton: true,
             icon: 'warning',
             confirmButtonText: 'Yes, change it',

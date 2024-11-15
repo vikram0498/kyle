@@ -33,6 +33,7 @@ class UserTable extends Component
 
         //Search status
         $levelTypeSearch = null;
+        $level_3_status = null;
         if(Str::contains('level 1', strtolower($searchValue))){
             $levelTypeSearch = 1;
         }else if(Str::contains('level 2', strtolower($searchValue))){
@@ -41,18 +42,21 @@ class UserTable extends Component
             $levelTypeSearch = 3;
         }
 
-        $users = User::query()->withCount(['purchasedBuyers','buyers'])->where(function ($query) use($searchValue,$statusSearch,$levelTypeSearch) {
+        $users = User::query()->withCount(['purchasedBuyers','buyers as buyers_count' => function($q) {
+            $q->whereColumn('user_id', '!=', 'users.id');
+        }])->where(function ($query) use($searchValue,$statusSearch,$levelTypeSearch) {
             $query->where('name', 'like', '%'.$searchValue.'%')
             ->orWhere('email', 'like', '%'.$searchValue.'%')
-            ->orWhere('level_type', $levelTypeSearch)
             ->orWhere('is_active', $statusSearch)
+            ->orWhere('level_type', $levelTypeSearch)
             ->orWhereRaw("date_format(created_at, '".config('constants.search_date_format')."') like ?", ['%'.$searchValue.'%']);
         })
         ->whereHas('roles',function($query){
-            $query->whereIn('id',[2]);
+            $query->whereIn('id',[config('constants.roles.seller')]);
         })
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->perPage);
+
 
         return view('livewire.admin.seller.user-table',compact('users'));
     }

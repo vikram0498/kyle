@@ -4,6 +4,7 @@ return [
     'edit_success_message'   => 'Updated successfully',
     'delete_success_message' => 'Deleted successfully',
     'change_status_success_message' => 'Status successfully changed',
+    'level_3_status_success_message' => 'Level 3 Status successfully changed',
     'seller_block_mesage' => 'Seller blocked successfully',
     'seller_unblock_mesage' => 'Seller unblocked successfully',
     'error_message'   => 'Something went wrong....please try again later!',

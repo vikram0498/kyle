@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SendNotification;
 
 
 class LoginRegisterController extends Controller
@@ -61,7 +62,7 @@ class LoginRegisterController extends Controller
             DB::beginTransaction();
 
             //Start to check phone number verified
-            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+           if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
@@ -93,6 +94,21 @@ class LoginRegisterController extends Controller
                 
                 //Clear OTP Cache
                 forgetOtpCache($request->country_code,$request->phone);
+
+                //Start Send Notification to admin
+                $adminUser = User::whereHas('roles', function($query){
+                    $query->where('id',config('constants.roles.super_admin'));
+                })->first();
+
+                $notificationData = [
+                    'title'     => trans('notification_messages.new_user_register.title'),
+                    'message'   => trans('notification_messages.new_user_register.message'),
+                    'user_id'   => $user->id,
+                    'type'      => 'new_user_register',
+                    'notification_type' => 'new_user_register'
+                ];
+                $adminUser->notify(new SendNotification($notificationData));
+                //Start Send Notification to admin
 
                 DB::commit();
 

@@ -14,7 +14,6 @@
                         <h4 class="card-title-heading">{{__('global.deleted')}} {{__('cruds.user.title')}} {{ __('global.list') }}</h4>
                     </div>
                     <div class="table-responsive search-table-data">
-                        {{-- @livewire('admin.deleted-users.deleted-users-datatable') --}}
 
                         @livewire('admin.deleted-users.deleted-user-table') 
 

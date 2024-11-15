@@ -46,6 +46,8 @@ class User extends Authenticatable implements MustVerifyEmail
 	    'terms_accepted',
         'remember_token',
         'level_type',
+        'prev_level_type',
+        'level_3',
         'is_switch_role',
         'is_active',
         'is_block',
@@ -276,7 +278,6 @@ class User extends Authenticatable implements MustVerifyEmail
     
     }
     
-
     public function getFullPhoneNumberAttribute()
     {
         if($this->country_code && $this->phone){

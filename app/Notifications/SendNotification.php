@@ -7,6 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Mail\DealMail;
+use App\Mail\NewUserRegisterMail;
+use App\Models\User;
+
 
 class SendNotification extends Notification
 {
@@ -38,6 +41,11 @@ class SendNotification extends Notification
                 return ['database', 'mail'];
             }
         }
+
+        if($notifiable->is_admin){
+            return ['database','mail'];
+        }
+
         return ['database'];
     }
 
@@ -54,9 +62,17 @@ class SendNotification extends Notification
         $message  = $this->data['message'];
 
         if( isset($this->data['notification_type']) && in_array($this->data['notification_type'], array('deal_notification')) ){
-
             return (new DealMail($subject, $userName, $message))->to($notifiable->email);
+        }
 
+      
+        if( isset($this->data['notification_type']) && in_array($this->data['notification_type'], array('new_user_register')) ){
+
+            if(isset($this->data['user_id'])){
+                $user = User::where('id',$this->data['user_id'])->first();
+                return (new NewUserRegisterMail($subject, $userName, $user))->to($notifiable->email);
+            }
+            
         }
     }
 
