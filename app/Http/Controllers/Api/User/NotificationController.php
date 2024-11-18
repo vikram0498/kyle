@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Notification as NotificationModel;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -20,7 +19,9 @@ class NotificationController extends Controller
         try{
             $notificationsTypes = ['deal_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
 
-            $records = NotificationModel::whereIn('notification_type',$notificationsTypes)->whereNull('read_at')->orderBy('created_at','desc')->limit(5)->get();   
+            $authUser = auth()->user();
+
+            $records = $authUser->notification()->whereIn('notification_type',$notificationsTypes)->whereNull('read_at')->orderBy('created_at','desc')->limit(5)->get();   
 
          
             $notificationRecords['deal_notification'] = [];
