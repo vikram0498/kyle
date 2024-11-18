@@ -21,18 +21,36 @@ class NotificationController extends Controller
 
             $authUser = auth()->user();
 
-            $records = $authUser->notification()->whereIn('notification_type',$notificationsTypes)->whereNull('read_at')->orderBy('created_at','desc')->limit(5)->get();   
+            $latestNotifications = $authUser->notification()
+            ->whereIn('notification_type', $notificationsTypes)
+            ->whereNull('read_at')
+            ->orderBy('notification_type')
+            ->orderBy('created_at', 'desc') 
+            ->get()
+            ->groupBy('notification_type') 
+            ->map(function ($group) {
+                return $group->take(5);
+            });
 
-         
             $notificationRecords['deal_notification'] = [];
             $notificationRecords['new_buyer_notification'] = [];
             $notificationRecords['new_message_notification'] = [];
             $notificationRecords['interested_buyer_notification'] = [];
 
-            
-            if($records->count() > 0){
-                foreach($records as $record){                    
-                    $notificationRecords[$record->data['notification_type']][] = $record->data;
+            if($latestNotifications->count() > 0){
+                foreach($latestNotifications as $notificationType=>$records){
+                    $notificationRecords[$notificationType] = [
+                        'total' => $records->count(), 
+                        'records' => []
+                    ];
+
+                    foreach($records as $indexKey=>$record){
+                        $notificationRecords[$notificationType]['records'][$indexKey] = [
+                            'data' => $record->data,
+                            'read_at' => $record->read_at ? convertDateTimeFormat($record->read_at, 'datetime') : null,
+                            'created_at' => $record->created_at ? convertDateTimeFormat($record->created_at, 'datetime') : null,
+                        ];
+                    }  
                 }
             }
 
