@@ -43,6 +43,7 @@ class DatabaseChannel
             'id'                => $notification->id,
             'type'              => get_class($notification),
             'data'              => $data,
+            'notification_type' => $data['notification_type'],
             'read_at'           => null,
         ]);
     }

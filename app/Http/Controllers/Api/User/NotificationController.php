@@ -18,12 +18,19 @@ class NotificationController extends Controller
     public function index(Request $request){
 
         try{
-            $records = NotificationModel::orderBy('created_at','desc')->limit(5)->get();   
+            $notificationsTypes = ['deal_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
 
-            $notificationRecords = [];
+            $records = NotificationModel::whereIn('notification_type',$notificationsTypes)->whereNull('read_at')->orderBy('created_at','desc')->limit(5)->get();   
 
+         
+            $notificationRecords['deal_notification'] = [];
+            $notificationRecords['new_buyer_notification'] = [];
+            $notificationRecords['new_message_notification'] = [];
+            $notificationRecords['interested_buyer_notification'] = [];
+
+            
             if($records->count() > 0){
-                foreach($records as $record){
+                foreach($records as $record){                    
                     $notificationRecords[$record->data['notification_type']][] = $record->data;
                 }
             }
