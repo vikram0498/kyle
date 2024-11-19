@@ -5,12 +5,17 @@ import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
 import axios from 'axios';
 import { useAuth } from "../../../hooks/useAuth";
+import Pagination from '../../partials/Pagination';
 
 
 const PropertyDealResult = () => {
     const { getTokenData, setLogout } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL;
     const [dealData,setDealData] = useState([]);
+    const [page, setPage]= useState(1);
+    const [total, setTotal] = useState(0);
+    const [limit, setLimit] = useState(0);
+
     useEffect(()=>{
         let headers = {
             Accept: "application/json",
@@ -19,12 +24,13 @@ const PropertyDealResult = () => {
         };
         const fetchData = async () => {
             let response = await axios.get(`${apiUrl}deals/result-list`,{headers:headers});
+            setLimit(response.data.deals.per_page);
+            setPage(response.data.deals.current_page);
+            setTotal(response.data.deals.total);
             setDealData(response.data.deals.data)
         }
         fetchData();
-    },[]);
-
-    console.log(dealData,"dealData")
+    },[page]);
   return (
     <>
         <Header />
@@ -84,7 +90,7 @@ const PropertyDealResult = () => {
                                                                 <Image src='/assets/images/total-buyer.svg' alt='' />
                                                             </div>
                                                             <div className='list_content'>
-                                                                <span>69</span>
+                                                                <span>{data.total_buyer}</span>
                                                                 <p>Total Buyer</p>
                                                             </div>
                                                         </li>
@@ -130,6 +136,7 @@ const PropertyDealResult = () => {
                                 </div>
                             )
                         })}
+                        <Pagination page={page} setPage={setPage} limit={limit} total={total}/>
                     </div>
                 </Container>
             </section>

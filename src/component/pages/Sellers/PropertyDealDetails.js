@@ -6,12 +6,18 @@ import Footer from '../../partials/Layouts/Footer';
 import { useAuth } from "../../../hooks/useAuth";
 import axios from 'axios';
 import { useParams } from "react-router-dom";
+import Pagination from '../../partials/Pagination';
 
 const PropertyDealDetails = () => {
     const { getTokenData, setLogout } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL;
     const [dealDetailsData,setDealDetailsData] = useState('');
     const [currentTab, setCurrentTab] = useState('total_buyer');
+    const [dealData,setDealData] = useState([]);
+    const [page, setPage]= useState(1);
+    const [total, setTotal] = useState(0);
+    const [limit, setLimit] = useState(0);
+
     const {id} = useParams();
 
     useEffect(()=>{
@@ -27,9 +33,13 @@ const PropertyDealDetails = () => {
             }
             let response = await axios.get(`${apiUrl}deals/show/${id}${status}`,{headers:headers});
             setDealDetailsData(response.data.data);
+            setLimit(response.data.data.buyers.per_page);
+            setPage(response.data.data.buyers.current_page);
+            setTotal(response.data.data.buyers.total);
+            setDealData(response.data.data.buyers.data)
         }
         fetchData();
-    },[currentTab]);
+    },[currentTab,page]);
   return (
     <>
         <Header />
@@ -77,7 +87,7 @@ const PropertyDealDetails = () => {
                                 <div className='deal_left_column border-end-0 detail_deal_column position-relative'>
                                     <div className='detail_deal_left flex_1column'>
                                         <div className='pro_img'>
-                                            <Image src='/assets/images/property-img.png' alt='' />
+                                            <Image src={dealDetailsData != '' ? dealDetailsData.property_images[0] : '/assets/images/property-img.png'} alt='' />
                                         </div>
                                         <div className='pro_details'>
                                             <h3>real easte company that prioritizes Property</h3>
@@ -151,49 +161,49 @@ const PropertyDealDetails = () => {
                                             <tbody>
                                                 {dealDetailsData && dealDetailsData.buyers.data.length > 0 ? (
                                                     dealDetailsData.buyers.data.map((data, index) => {
-                                                    return (
-                                                        <React.Fragment key={index}>
-                                                            <tr><td colSpan="6"></td></tr>
-                                                            <tr>
-                                                                <td>
-                                                                <span>
-                                                                    <span className='deal_user_img_block'>
-                                                                    <Image src={data.profile_image || '/assets/images/user-img1.png'} className='deal_user_img' alt='' />
-                                                                    <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' />
-                                                                    </span>
-                                                                    {data.buyer_name}
-                                                                </span>
-                                                                </td>
-                                                                <td>{data.buyer_phone}</td>
-                                                                <td>{data.buyer_email}</td>
-                                                                <td>
-                                                                <span>
-                                                                    <Image src='/assets/images/folder-zip.svg' alt='' /> Documents.zip
-                                                                </span>
-                                                                </td>
-                                                                <td>
-                                                                    {data.status == 'Interested' && <span className='status interested'>Interested</span>}
-                                                                    {data.status == 'want_to_buy' && <span className='status want-by'>Want To Buy</span>}
-                                                                    {data.status == 'not_interested' && <span className='status not-interested'>Not Interested</span>}
-                                                                    
-                                                                </td>
-                                                                <td>
-                                                                    <Link to='/message'>
-                                                                        <span>
-                                                                        <Image src='/assets/images/chat-icon.svg' alt='' /> Chat With Buyer
+                                                        return (
+                                                            <React.Fragment key={index}>
+                                                                <tr><td colSpan="6"></td></tr>
+                                                                <tr>
+                                                                    <td>
+                                                                    <span>
+                                                                        <span className='deal_user_img_block'>
+                                                                        <Image src={data.profile_image || '/assets/images/user-img1.png'} className='deal_user_img' alt='' />
+                                                                        <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' />
                                                                         </span>
-                                                                    </Link>
-                                                                </td>
-                                                            </tr>
-                                                        </React.Fragment>
-                                                    );
+                                                                        {data.buyer_name}
+                                                                    </span>
+                                                                    </td>
+                                                                    <td>{data.buyer_phone}</td>
+                                                                    <td>{data.buyer_email}</td>
+                                                                    <td>
+                                                                    <span>
+                                                                        <Image src='/assets/images/folder-zip.svg' alt='' /> Documents.zip
+                                                                    </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        {data.status == 'Interested' && <span className='status interested'>Interested</span>}
+                                                                        {data.status == 'Want to Buy' && <span className='status want-by'>Want To Buy</span>}
+                                                                        {data.status == 'Not Interested' && <span className='status not-interested'>Not Interested</span>}
+                                                                        
+                                                                    </td>
+                                                                    <td>
+                                                                        <Link to='/message'>
+                                                                            <span>
+                                                                            <Image src='/assets/images/chat-icon.svg' alt='' /> Chat With Buyer
+                                                                            </span>
+                                                                        </Link>
+                                                                    </td>
+                                                                </tr>
+                                                            </React.Fragment>
+                                                        );
                                                     })
                                                 ) : (
                                                     <tr>
                                                     <td colSpan="6" style={{ textAlign: 'center' }}>No data found</td>
                                                     </tr>
                                                 )}
-                                                </tbody>
+                                            </tbody>
                                         </Table>
                                     </Tab.Pane>
                                     {/* <Tab.Pane eventKey="want_to_buy">
@@ -320,6 +330,7 @@ const PropertyDealDetails = () => {
                                         </Table>
                                     </Tab.Pane> */}
                                 </Tab.Content>
+                                <Pagination page={page} setPage={setPage} limit={limit} total={total}/>
                             </div>
                         </Tab.Container>
                     </div>

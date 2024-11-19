@@ -4380,6 +4380,10 @@ body.nonscroll {
 
   gap: 14px;
 }
+.pagination-section.text-end .pagination {
+  text-align: right !important;
+  margin-top: 20px;
+}
 
 .profile-varification .tab-content .action-button,
 .profile-varification .tab-content .action-button-previous {

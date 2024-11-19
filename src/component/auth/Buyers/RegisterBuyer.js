@@ -27,7 +27,7 @@ function RegisterBuyer() {
   const { getTokenData, setLogout } = useAuth();
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [recaptchaError, setRecaptchaError] = useState("");
-
+  const [isVerifiedOTP, setIsVerifiedOTP] = useState(false);
   const { token } = useParams();
 
   const { setErrors, renderFieldError } = useFormError();
@@ -36,6 +36,7 @@ function RegisterBuyer() {
     handleSubmit,
     setValue,
     control,
+    getValues,
     formState: { errors },
     clearErrors,
     watch,
@@ -558,7 +559,7 @@ function RegisterBuyer() {
                                   {renderFieldError("email")}
                                 </div>
                               </div>
-                              <PhoneNumberWithOTPVerify register={register} errors={errors.phone} renderFieldError={renderFieldError}/>
+                              <PhoneNumberWithOTPVerify register={register} getValues= {getValues} errors={errors.phone} setIsVerifiedOTP={setIsVerifiedOTP} isVerifiedOTP={isVerifiedOTP} renderFieldError={renderFieldError}/>
 
                               {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>
@@ -2590,16 +2591,16 @@ function RegisterBuyer() {
                                   </div>
                             </div>
                             </div>
-      
-                            <div className="submit-btn">
-                              <button
-                                type="submit"
-                                className="btn btn-fill"
-                                disabled={loading ? "disabled" : ""}
-                              >
-                                Submit Now! {loading ? <MiniLoader /> : ""}{" "}
-                              </button>
-                            </div>
+                            {isVerifiedOTP ?         
+                              <div className="submit-btn">
+                                <button
+                                  type="submit"
+                                  className="btn btn-fill"
+                                  disabled={loading ? "disabled" : ""}
+                                >
+                                  Submit Now! {loading ? <MiniLoader /> : ""}{" "}
+                                </button>
+                              </div>:''}
                           </div>
                         </form>
                       </div>

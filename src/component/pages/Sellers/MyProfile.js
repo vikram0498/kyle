@@ -11,6 +11,8 @@ import axios from "axios";
 
 const MyProfile = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const countryCode = process.env.REACT_APP_COUNTRY_CODE;
+
   const { getTokenData, setLogout, getLocalStorageUserdata, setLocalStorageUserdata } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState("");
@@ -28,12 +30,16 @@ const MyProfile = () => {
   const [showNewPassoword, setShowNewPassoword] = useState(false);
   const [showConfirmPassoword, setShowConfirmPassoword] = useState(false);
   const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState('');
   const {
     register,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors },
   } = useForm();
+
+  let phoneValue = watch("phone", '');
 
   // toast.success("sssssssss",{ autoClose: 1500000000 }, {position: toast.POSITION.TOP_RIGHT});
   let headers = {
@@ -51,7 +57,6 @@ const MyProfile = () => {
         headers: headers,
       });
       if (response) {
-        console.log(response, "response");
         let { data } = response.data.data;
         setUserData(response.data.data);
         setFirstName(response.data.data.first_name);
@@ -64,8 +69,8 @@ const MyProfile = () => {
         userData.level_type = response.data.data.level_type;
         userData.role = response.data.data.role;
         userData.total_buyer_uploaded = response.data.data.total_buyer_uploaded;
-        setLocalStorageUserdata(userData);
-        
+        setPhoneNumber(response.data.data.phone);
+        setLocalStorageUserdata(userData);        
         const profileName = document.querySelector(".user-name-title");
         const profilePic = document.querySelector(".user-profile");
 
@@ -86,6 +91,14 @@ const MyProfile = () => {
     setErrors("");
     var data = new FormData(e.target);
     let formData = Object.fromEntries(data.entries());
+
+    if (formData.hasOwnProperty("phone")) {
+      if(formData.phone != ''){
+        let convertedNumber = formData.phone.replace(/\D/g, "")
+        formData.phone = convertedNumber;
+      }
+    }
+
     let headers = {
       Accept: "application/json",
       Authorization: "Bearer " + getTokenData().access_token,
@@ -118,11 +131,13 @@ const MyProfile = () => {
       setLoader(true);
       setPreviewImageUrl("");
     }
+
     async function fetchData() {
       try {
         const response = await axios.post(apiUrl + "update-profile", formData, {
           headers: headers,
         });
+
         if (response.data.status) {
           toast.success(response.data.message, {
             position: toast.POSITION.TOP_RIGHT,
@@ -189,6 +204,24 @@ const MyProfile = () => {
   //         setLastName('');
   //     }
   // }
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-7890 (up to 10 digits)
+    return cleaned
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
+  };
+
+  // Update the form value whenever the phoneValue changes
+  useEffect(() => {
+    const formattedValue = formatInput(phoneNumber);
+    setValue("phone", formattedValue); // Update the field with the formatted phone number
+  }, [phoneNumber, setValue]);
+
   return (
     <>
       <Header />
@@ -354,28 +387,28 @@ const MyProfile = () => {
                           </div>
                         </div>
                         <div className="col-12 col-md-6 col-lg-6">
+                          <input type="hidden" name="country_code" value={countryCode}/>
                           <div className="form-group">
-                            <label>
-                              Phone Number <span className="error">*</span>
-                            </label>
+                            <label> Phone Number <span className="error">*</span></label>
                             <input
                               type="text"
                               name="phone"
                               className="form-control-form"
                               placeholder="Phone Number"
-                              defaultValue={userData.phone}
+                              defaultValue={formatInput(userData.phone)}
                               autoComplete="no-phone"
+                              onKeyUp={(e)=>{setPhoneNumber(e.target.value)}}
                               {...register("phone", {
                                 required: "Phone is required",
                                 validate: {
                                   matchPattern: (v) =>
-                                    /^[0-9]\d*$/.test(v) ||
-                                    "Please enter valid phone number",
+                                    /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                                   maxLength: (v) =>
-                                    (v.length <= 15 && v.length >= 5) ||
-                                    "The phone number should be more than 4 digit and less than equal 15",
+                                    (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                    "The phone number should be between 1 to 10 characters",
                                 },
                               })}
+                              disabled={true}
                             />
                             {errors.phone && (
                               <p className="error">{errors.phone?.message}</p>

@@ -21,13 +21,14 @@ function Home({ userDetails }) {
   const [isActiveVideo, setIsActiveVideo] = useState("");
   const [isLoader, setIsloader] = useState(true);
   const [openVideoModal, SetOpenVideoModal] = useState(false);
+  const [dealData,setDealData] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     getVideoUrl();
   }, []);
   const getVideoUrl = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
       let headers = {
         Accept: "application/json",
         Authorization: "Bearer " + getTokenData().access_token,
@@ -69,6 +70,20 @@ function Home({ userDetails }) {
   const handleOpenModal = () => {
     SetOpenVideoModal(true);
   };
+
+  useEffect(()=>{
+      let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+          "auth-token": getTokenData().access_token,
+      };
+      const fetchData = async () => {
+          let response = await axios.get(`${apiUrl}deals/result-list`,{headers:headers});
+          setDealData(response.data.deals.data)
+      }
+      fetchData();
+  },[]);
+
   // video.currentTime = 0;
   // video.play();
   //video.pause();
@@ -173,7 +188,7 @@ function Home({ userDetails }) {
               <UploadMultipleBuyersOnChange />
             </div>
           </div>
-          <Notification />
+          <Notification dealData={dealData} />
           
         </div>
       </section>

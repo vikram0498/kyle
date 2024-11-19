@@ -114,6 +114,8 @@ function AddBuyerDetails() {
 
   const [copySocialLoading, setCopySocialLoading] = useState(false);
 
+  const countryCode = process.env.REACT_APP_COUNTRY_CODE;
+
   const baseURL = window.location.origin;
 
   useEffect(() => {
@@ -738,11 +740,27 @@ function AddBuyerDetails() {
                               </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
-                              <input type="hidden" name="country_code" value={1}/>
+                              <input type="hidden" name="country_code" value={countryCode}/>
                               <label>
                                 Phone Number<span>*</span>
                               </label>
                               <div className="form-group">
+                              <input
+                                      type="text"
+                                      name="phone"
+                                      className="form-control"
+                                      placeholder="Eg. 123-456-7890"
+                                      {...register("phone", {
+                                      required: "Phone Number is required",
+                                          validate: {
+                                              matchPattern: (v) =>
+                                              /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
+                                              maxLength: (v) =>
+                                              (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                              "The phone number should be between 1 to 10 characters",
+                                          },
+                                      })}
+                                  />
                                 <input
                                   type="text"
                                   name="phone"
