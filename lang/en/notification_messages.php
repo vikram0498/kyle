@@ -12,7 +12,11 @@
         'new_user_register' => [
             'title'   => 'New User Registration Notification',
             'message' => 'New User Registered' 
+        ],
 
+        'user_email_verified' => [
+            'title'   => ':role Email Verified: :userName',
+            'message' => 'User Email Verified' 
         ]
     ];
 

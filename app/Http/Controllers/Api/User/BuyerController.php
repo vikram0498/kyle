@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreSingleBuyerDetailsRequest;
 use App\Http\Requests\UpdateSingleBuyerDetailsRequest;
 use App\Rules\CsvFileValidationRule;
+use App\Notifications\SendNotification;
 
 class BuyerController extends Controller
 {
@@ -238,6 +239,8 @@ class BuyerController extends Controller
                 if ($isMailSend) {
                     //Verification mail sent
                     $createUser->NotificationSendToBuyerVerifyEmail();
+
+                    sendNotificationToAdmin($createUser, 'new_user_register');
                 }
             }
 

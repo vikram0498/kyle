@@ -217,13 +217,13 @@ class CopyBuyerController extends Controller
         try {
             DB::beginTransaction();
             //Start to check phone number verified
-            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+          /*  if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
                 ]; 
                 return response()->json($responseData, 403);
-            }
+            }*/
             //End to check phone number verified
 
             $isMailSend = false;
@@ -340,6 +340,14 @@ class CopyBuyerController extends Controller
                 if($isMailSend){
                     //Verification mail sent
                     $createUser->NotificationSendToBuyerVerifyEmail();
+
+                    sendNotificationToAdmin($createUser, 'new_user_register');
+
+                    $checkToken = Token::where('token_value',$token)->first();
+                    if($checkToken){
+                        sendNotificationToUser($checkToken->user, $createUser, 'new_user_register','new_buyer_notification');
+                    }
+
                 }
 
                 if($token && ($request->type == 'private-buyer')){
@@ -361,7 +369,7 @@ class CopyBuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
+             dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
@@ -526,6 +534,8 @@ class CopyBuyerController extends Controller
 
                 //Verification mail sent
                 $createUser->NotificationSendToBuyerVerifyEmail();
+
+                sendNotificationToAdmin($createUser, 'new_user_register');
             }
 
             //Start Register by invitation link

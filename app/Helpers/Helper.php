@@ -16,6 +16,7 @@ use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\SendNotification;
 
 
 if (!function_exists('convertToFloat')) {
@@ -368,4 +369,80 @@ if (!function_exists('forgetOtpCache')) {
 
 		return true;
 	}
+}
+
+if (!function_exists('sendNotificationToAdmin')) {
+
+	function sendNotificationToAdmin($user, $type){
+
+		//Start Send Notification to admin
+		$adminUser = User::whereHas('roles', function($query){
+			$query->where('id',config('constants.roles.super_admin'));
+		})->first();
+
+		$notificationData = [];
+		if($type == 'new_user_register'){
+			$notificationData = [
+				'title'     => trans('notification_messages.new_user_register.title'),
+				'message'   => trans('notification_messages.new_user_register.message'),
+				'user_id'   => $user->id,
+				'type'      => 'new_user_register',
+				'notification_type' => 'new_user_register'
+			];
+		}else if($type == 'email_verified'){
+			$roleName = $user->roles()->first()->title;
+			$notificationData = [
+                'title'     => trans('notification_messages.user_email_verified.title',['role'=>$roleName,'userName'=>$user->name]),
+                'message'   => trans('notification_messages.user_email_verified.message'),
+                'user_id'   => $user->id,
+                'type'      => 'email_verified',
+                'notification_type' => 'email_verified'
+            ];
+		}
+		
+		if(count($notificationData) > 0 ){
+			$adminUser->notify(new SendNotification($notificationData));
+		}
+		
+		//End Send Notification to admin
+
+		return true;
+	}
+
+}
+
+if (!function_exists('sendNotificationToUser')) {
+
+	function sendNotificationToUser($toUser, $user, $type,$notificationType){
+
+		//Start Send Notification to admin
+		$notificationData = [];
+		if($type == 'email_verified'){
+			$roleName = $user->roles()->first()->title;
+			$notificationData = [
+                'title'     => trans('notification_messages.user_email_verified.title',['role'=>$roleName,'userName'=>$user->name]),
+                'message'   => trans('notification_messages.user_email_verified.message'),
+                'user_id'   => $user->id,
+                'type'      => $type,
+                'notification_type' => $notificationType
+            ];
+		}else if($type == 'new_user_register'){
+			$notificationData = [
+				'title'     => trans('notification_messages.new_user_register.title'),
+				'message'   => trans('notification_messages.new_user_register.message'),
+				'user_id'   => $user->id,
+				'type'      => $type,
+				'notification_type' => $notificationType
+			];
+		}
+		
+		if(count($notificationData) > 0 ){
+			$toUser->notify(new SendNotification($notificationData));
+		}
+		
+		//End Send Notification to admin
+
+		return true;
+	}
+
 }

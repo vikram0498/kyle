@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\SendNotification;
+use App\Models\BuyerInvitation;
 
 
 class LoginRegisterController extends Controller
@@ -95,20 +96,7 @@ class LoginRegisterController extends Controller
                 //Clear OTP Cache
                 forgetOtpCache($request->country_code,$request->phone);
 
-                //Start Send Notification to admin
-                $adminUser = User::whereHas('roles', function($query){
-                    $query->where('id',config('constants.roles.super_admin'));
-                })->first();
-
-                $notificationData = [
-                    'title'     => trans('notification_messages.new_user_register.title'),
-                    'message'   => trans('notification_messages.new_user_register.message'),
-                    'user_id'   => $user->id,
-                    'type'      => 'new_user_register',
-                    'notification_type' => 'new_user_register'
-                ];
-                $adminUser->notify(new SendNotification($notificationData));
-                //Start Send Notification to admin
+                sendNotificationToAdmin($user, 'new_user_register');
 
                 DB::commit();
 
@@ -439,6 +427,8 @@ class LoginRegisterController extends Controller
         if ($user && $hash === sha1($user->email)) {
             $user->update(['email_verified_at' => date('Y-m-d H:i:s')]);
 
+            sendNotificationToAdmin($user, 'email_verified');
+
             //Success Response Send
             $responseData = [
                 'status'  => true,
@@ -486,6 +476,16 @@ class LoginRegisterController extends Controller
 
         if ($user && $request->hash === sha1($user->email)) {
             $user->update(['password' => bcrypt($request->password),'email_verified_at' => date('Y-m-d H:i:s')]);
+
+            sendNotificationToAdmin($user, 'email_verified');
+
+            //Start Register by invitation link buyer verified email
+            $buyerInvitation = BuyerInvitation::where('email',$user->email)->where('status',1)->first();
+            if($buyerInvitation){
+                sendNotificationToUser($buyerInvitation->createdBy, $user, 'email_verified','new_buyer_notification');
+            }
+            //End Register by invitation link buyer verified email
+
 
             //Success Response Send
             $responseData = [

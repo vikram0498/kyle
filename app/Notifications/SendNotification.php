@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Mail\DealMail;
+use App\Mail\VerifiedMail;
 use App\Mail\NewUserRegisterMail;
 use App\Models\User;
 
@@ -43,7 +44,7 @@ class SendNotification extends Notification
         }
 
         if($notifiable->is_admin){
-            return ['database','mail'];
+            return ['mail'];
         }
 
         return ['database'];
@@ -66,7 +67,7 @@ class SendNotification extends Notification
         }
 
       
-        if( isset($this->data['notification_type']) && in_array($this->data['notification_type'], array('new_user_register')) ){
+        if( isset($this->data['type']) && in_array($this->data['type'], array('new_user_register')) ){
 
             if(isset($this->data['user_id'])){
                 $user = User::where('id',$this->data['user_id'])->first();
@@ -74,6 +75,17 @@ class SendNotification extends Notification
             }
             
         }
+
+        if( isset($this->data['type']) && in_array($this->data['type'], array('email_verified')) ){
+
+            if(isset($this->data['user_id'])){
+                $user = User::where('id',$this->data['user_id'])->first();
+                return (new VerifiedMail($subject, $userName, $user))->to($notifiable->email);
+            }
+            
+        }
+
+        
     }
 
     /**
