@@ -43,7 +43,6 @@ class ShowAdPerformaceLogs extends Component
         return view('livewire.admin.advertise-banner.show-ad-performace-logs',compact('adPerformaceLogs','adBanner'));
     }  
 
-
     public function updatedPerPage(){
         $this->resetPage();
     }
