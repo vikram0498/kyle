@@ -22,7 +22,7 @@ class DatabaseChannel
                 if (auth()->check()) {
                     // \Log::info('Start To Send Push Notification-'.$user_id);
         
-                    // SendPushNotification($user_id, $data['title'], $data['message']);
+                    SendPushNotification($user_id, $data['title'], $data['message']);
         
                     // \Log::info('End To Send Push Notification');
                     
@@ -30,7 +30,7 @@ class DatabaseChannel
             
                     // \Log::info('Start To Send Push Notification-'.$user_id);
         
-                    // SendPushNotification($user_id, $data['title'], $data['message']);
+                    SendPushNotification($user_id, $data['title'], $data['message']);
                     
                     // \Log::info('End To Send Push Notification');
                 }

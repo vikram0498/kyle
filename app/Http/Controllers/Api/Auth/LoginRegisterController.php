@@ -243,6 +243,9 @@ class LoginRegisterController extends Controller
                     ];
 
 
+                    if(isset($request->device_token)){
+                        $user->device_token =  $request->device_token ? $request->device_token : null;
+                    }
                     $user->login_at = now();
                     $user->save();
                     
