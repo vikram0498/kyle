@@ -329,5 +329,31 @@ return [
             'status'             => 'Status',
         ]
 
-    ]
+    ],
+
+    'adBanner' => [
+        'title' => 'Ad Banners',
+        'title_singular' => 'Ad Banner',
+        'fields' => [
+            'advertiser_name'       => 'Advertiser Name',
+            'ad_name'               => 'Ad Name',
+            'target_url'            => 'Target Url',
+            'impressions_purchased' => 'Impressions Purchased',
+            'impressions_served'    => 'Impressions Served',
+            'impressions_count'     => 'Impressions Count',
+            'click_count'           => 'Click Count',
+            'start_date'            => 'Start Date',
+            'end_date'              => 'End Date',
+            'image'                 => 'Image',          
+            'status'                => 'Status', 
+            'created_at'            => 'Created At',
+            'event_type'            => 'Event Type',
+            'user_ip'               => 'User IP',
+            'date'                  => 'Date',
+        ],
+        'view_ad_performace_log' => 'View Ad Performance Log',
+
+
+        
+    ],
 ];

@@ -172,7 +172,7 @@ class Index extends Component
         $this->confirm('Are you sure you want to delete it?', [
             'toast' => false,
             'position' => 'center',
-            'confirmButtonText' => 'Yes, change it!',
+            'confirmButtonText' => 'Yes, Delete!',
             'cancelButtonText' => 'No, cancel!',
             'onConfirmed' => 'deleteConfirm',
             'onCancelled' => function () {

@@ -355,4 +355,13 @@ return [
     'interested_pdf_size' => '102400', // 102400 KB => 100MB
 
     'otp_time' => env('OTP_TIME',5), // In Minutes
+
+    'ad_banner_status' => [
+        0 => 'inactive',
+        1 => 'active',
+        2 => 'paused',
+        3 => 'completed',
+        4 => 'archived',
+    ],
+
 ];

@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
 
         Route::view('campaigns', 'admin.campaigns.index')->name('campaigns');
         
+        Route::view('ad-banner', 'admin.advertise-banner.index')->name('ad-banner');
 
     });
 });

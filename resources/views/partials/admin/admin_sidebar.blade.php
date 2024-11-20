@@ -150,6 +150,15 @@
                 </div>
             </li> 
 
+            @can('ad_banner_access')
+            <li class="nav-item {{ request()->is('admin/ad-banner') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.ad-banner') }}">
+                    <i class="icon-grid menu-icon fas fa-wallet"></i>
+                    <span class="menu-title"> {{ __('cruds.adBanner.title') }} </span>
+                </a>
+            </li>
+            @endcan
+
             {{-- Settings --}}
             @can('setting_access')
             <li class="nav-item {{ request()->is('admin/settings') ? 'active' : '' }}">

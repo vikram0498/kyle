@@ -131,7 +131,7 @@
             title: 'Are you sure you want to delete it?',
             showDenyButton: true,
             icon: 'warning',
-            confirmButtonText: 'Yes, change it',
+            confirmButtonText: 'Yes, Delete',
             denyButtonText: `No, cancel!`,
         }).then((result) => {
             if (result.isConfirmed) {

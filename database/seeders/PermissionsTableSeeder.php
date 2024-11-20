@@ -266,6 +266,32 @@ class PermissionsTableSeeder extends Seeder
                 'created_at' => $createDate,
                 'updated_at' => $updateDate,
             ],
+
+            [
+                'title'      => 'ad_banner_access',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'ad_banner_create',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [   
+                'title'      => 'ad_banner_edit',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'ad_banner_show',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
+            [
+                'title'      => 'ad_banner_delete',
+                'created_at' => $createDate,
+                'updated_at' => $updateDate,
+            ],
         ];
 
         Permission::insert($permissions);
