@@ -17,6 +17,8 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Illuminate\Support\Facades\Cache;
 use App\Notifications\SendNotification;
+use App\Mail\VerifiedMail;
+use App\Mail\NewUserRegisterMail;
 
 
 if (!function_exists('convertToFloat')) {
@@ -382,6 +384,7 @@ if (!function_exists('sendNotificationToAdmin')) {
 
 		$notificationData = [];
 		if($type == 'new_user_register'){
+
 			$notificationData = [
 				'title'     => trans('notification_messages.new_user_register.title'),
 				'message'   => trans('notification_messages.new_user_register.message'),
@@ -389,7 +392,12 @@ if (!function_exists('sendNotificationToAdmin')) {
 				'type'      => 'new_user_register',
 				'notification_type' => 'new_user_register'
 			];
+
+			$subject = $notificationData['title'];
+			Mail::to($adminUser->email)->queue(new NewUserRegisterMail($subject, $adminUser->name, $user));
+
 		}else if($type == 'email_verified'){
+
 			$roleName = $user->roles()->first()->title;
 			$notificationData = [
                 'title'     => trans('notification_messages.user_email_verified.title',['role'=>$roleName,'userName'=>$user->name]),
@@ -398,6 +406,10 @@ if (!function_exists('sendNotificationToAdmin')) {
                 'type'      => 'email_verified',
                 'notification_type' => 'email_verified'
             ];
+
+			$subject = $notificationData['title'];
+			Mail::to($adminUser->email)->queue(new VerifiedMail($subject, $adminUser->name, $user));
+
 		}
 		
 		if(count($notificationData) > 0 ){
@@ -426,6 +438,10 @@ if (!function_exists('sendNotificationToUser')) {
                 'type'      => $type,
                 'notification_type' => $notificationType
             ];
+
+			$subject = $notificationData['title'];
+			Mail::to($toUser->email)->queue(new VerifiedMail($subject, $toUser->name, $user));
+			
 		}else if($type == 'new_user_register'){
 			$notificationData = [
 				'title'     => trans('notification_messages.new_user_register.title'),
@@ -434,6 +450,9 @@ if (!function_exists('sendNotificationToUser')) {
 				'type'      => $type,
 				'notification_type' => $notificationType
 			];
+
+			$subject = $notificationData['title'];
+			Mail::to($toUser->email)->queue(new NewUserRegisterMail($subject, $toUser->name, $user));
 		}
 		
 		if(count($notificationData) > 0 ){
