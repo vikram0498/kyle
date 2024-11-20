@@ -463,9 +463,8 @@ class BuyerController extends Controller
     public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request)
     {
 
-    	  DB::beginTransaction();
     	  try {
-
+            DB::beginTransaction();
         	$authUserId = auth()->user()->id;
 
         	$validatedData = $request->all();
@@ -527,7 +526,7 @@ class BuyerController extends Controller
 
         	$validatedData['unit_min']    = $request->unit_min ? $request->unit_min : null;
         	$validatedData['unit_max']    = $request->unit_max ? $request->unit_max : null;
-		$validatedData['building_class']    = $request->building_class ? array_map('intval', $request->building_class) : null;
+		    $validatedData['building_class']    = $request->building_class ? array_map('intval', $request->building_class) : null;
         	$validatedData['value_add']    = isset($request->value_add) ? $request->value_add : null;
 
 

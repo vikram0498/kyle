@@ -217,13 +217,13 @@ class CopyBuyerController extends Controller
         try {
             DB::beginTransaction();
             //Start to check phone number verified
-          /*  if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
                 ]; 
                 return response()->json($responseData, 403);
-            }*/
+            }
             //End to check phone number verified
 
             $isMailSend = false;
