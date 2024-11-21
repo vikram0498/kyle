@@ -148,10 +148,9 @@ function BuyerHeader() {
             </div>
             <div className="col-6 col-sm-6 col-md-8 col-lg-9">
               <div className="block-session">
-              <div className="top_icons_list d-none d-xxl-block">
+                <div className="top_icons_list d-none d-xxl-block">
                   <ul>
                     <li>
-
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                           <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">{notificationData.deal_notification.total || 0}</span>
@@ -334,6 +333,16 @@ function BuyerHeader() {
                             className="img-fluid"
                           />
                           Support
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/deal-notifications">
+                          <img
+                            alt=""
+                            src="./assets/images/setting-1.svg"
+                            className="img-fluid"
+                          />
+                          Deal Notification
                         </Link>
                       </li>
                       <li>

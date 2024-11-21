@@ -31,6 +31,7 @@ function EditBuyerProfile() {
     clearErrors,
     setValue,
   } = useForm();
+
   /* previous form data start*/
   const [loader, setLoader] = useState(false);
   const [miniLoader, setMiniLoader] = useState(false);
@@ -127,7 +128,6 @@ function EditBuyerProfile() {
   /* min max value states end */
   
   useEffect(() => {
-    console.log("first")
     getOptionsValues();
     fetchBuyerData();
   }, [navigate]);
@@ -403,7 +403,6 @@ function EditBuyerProfile() {
       .then((response) => {
         setMiniLoader(false);
         if (response.data.status) {
-          console.log(response.data.userData, "rohittt");
           let userData = getLocalStorageUserdata();
           
           userData.first_name = response.data.userData.first_name;

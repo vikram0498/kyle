@@ -8,6 +8,7 @@ const PhoneVerification = ({
   handleSubmit,
   sendOtp,
   isOtpVerify,
+  countryCode,
   setphoneNumber,
   phoneNumber,
   miniLoader,
@@ -39,6 +40,19 @@ const PhoneVerification = ({
       }
     }
   };
+
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-7890 (up to 10 digits)
+    return cleaned
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
+  };
+
   return (
     <>
       <div className="card-box-blocks">
@@ -47,11 +61,12 @@ const PhoneVerification = ({
             <div className="col-12 col-md-8">
               <label>Phone Number</label>
               <div className="form-group mb-0">
+                <input type="hidden" value={countryCode} name="country_code"/>
                 <input
                   autoComplete="off"
                   type="text"
                   name="phone"
-                  value={phoneNumber}
+                  value={formatInput(phoneNumber)}
                   className="form-control"
                   placeholder="Enter Phone Number"
                   {...register("phone", {
@@ -60,12 +75,9 @@ const PhoneVerification = ({
                     },
                     required: "Phone Number is required",
                     validate: {
-                      matchPattern: (v) =>
-                        /^[0-9]\d*$/.test(v) ||
-                        "Please enter valid phone number",
                       maxLength: (v) =>
-                        (v.length <= 15 && v.length >= 5) ||
-                        "The phone number should be more than 4 digit and less than equal 15",
+                        (v.length <= 13) ||
+                        "The phone number should be less than equal 10",
                     },
                   })}
                 />

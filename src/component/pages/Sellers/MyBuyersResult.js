@@ -19,7 +19,8 @@ const MyBuyersResult = ({
   selectedDeals,
   handleCheckboxChange,
   setCurrentBuyerId,
-  setSendDealShow
+  setSendDealShow,
+  user_data
 }) => {
   const { setErrors, renderFieldError } = useFormError();
 
@@ -313,6 +314,7 @@ const MyBuyersResult = ({
                       selectedDeals={selectedDeals}
                       handleCheckboxChange={handleCheckboxChange}
                       setSendDealShow={setSendDealShow}
+                      user_data={user_data}
                     />
                   );
                 })}

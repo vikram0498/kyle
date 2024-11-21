@@ -2,7 +2,6 @@ import React from "react";
 import ButtonLoader from "../../../partials/MiniLoader";
 
 const ApplicationProcess = ({ miniLoader }) => {
-  console.log(miniLoader, "miniLoader");
   return (
     <>
       <fieldset>

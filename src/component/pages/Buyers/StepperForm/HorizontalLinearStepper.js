@@ -18,12 +18,14 @@ import SuccessPage from "./ApplicationStatusPage/SuccessPage";
 import ApprorvedPage from "./ApplicationStatusPage/ApprovedPage";
 import PendingPage from "./ApplicationStatusPage/PendingPage";
 import RejectedPage from "./ApplicationStatusPage/RejectedPage";
+import CertifiedCloser from "./CertifiedCloser";
 
 const steps = [
   "Phone Verification",
   "Proof of Funds",
   "ID/Driver’s License",
   "Business Verification",
+  "Certified Closer",
   "Application Process",
 ];
 
@@ -42,6 +44,7 @@ const HorizontalLinearStepper = () => {
   const [isOtpSent, setIsOtpSent] =useState(false);
   const [isOtpVerify, setIsOtpVerify] = useState(false);
   const [phoneNumber, setphoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState(process.env.REACT_APP_COUNTRY_CODE);
   const [rejectMessage, setRejectMessage] = useState("");
   const { getTokenData, setLogout } = useAuth();
   const { setErrors, renderFieldError } = useFormError();
@@ -112,9 +115,10 @@ const HorizontalLinearStepper = () => {
         Authorization: "Bearer " + getTokenData().access_token,
         "auth-token": getTokenData().access_token,
       };
+      const extractNumber = phoneNumber.replace(/\D/g, "");
       let response = await axios.post(
         apiUrl + "send-sms",
-        { phone: phoneNumber },
+        { phone: extractNumber,country_code:countryCode },
         {
           headers: headers,
         }
@@ -146,7 +150,12 @@ const HorizontalLinearStepper = () => {
       }
     }
   };
+
   const stepperForm = async (formObject) => {
+    if(formObject.phone !== undefined){
+      const formattedPhoneNumber = formObject.phone.replace(/-/g, '');
+      formObject.phone = formattedPhoneNumber;
+    }
     const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",
@@ -162,7 +171,7 @@ const HorizontalLinearStepper = () => {
       }
     );
     if (response.data.status) {
-      if (parseInt(response.data.current_step) === 5) {
+      if (parseInt(response.data.current_step) === 6) {
         let url = response.data.session.url;
         window.location.href = url;
         return false;
@@ -294,6 +303,7 @@ const HorizontalLinearStepper = () => {
                             isOtpSent={isOtpSent}
                             sendOtp={sendOtp}
                             setphoneNumber={setphoneNumber}
+                            countryCode={countryCode}
                             phoneNumber={phoneNumber}
                             handleSubmit={handleSubmit}
                             isOtpVerify={isOtpVerify}
@@ -324,8 +334,10 @@ const HorizontalLinearStepper = () => {
                             renderFieldError={renderFieldError}
                           />
                         )}
-
                         {activeStep === 4 && (
+                          <CertifiedCloser register={register} errors={errors} renderFieldError={renderFieldError} />
+                        )}
+                        {activeStep === 5 && (
                           <ApplicationProcess miniLoader={miniLoader} />
                         )}
                       </>

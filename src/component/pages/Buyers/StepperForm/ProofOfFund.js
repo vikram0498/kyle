@@ -8,6 +8,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
       setDocumentName(e.target.files[0].name);
     }
   };
+
   const validateFileSize = (file) => {
     let extension = ["application/pdf"];
     if (!extension.includes(file[0].type)) {
@@ -17,6 +18,7 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
     }
     return true;
   };
+
   return (
     <>
       <fieldset>
@@ -39,12 +41,14 @@ const ProofOfFund = ({ register, errors, renderFieldError }) => {
                         accept="application/pdf"
                         className="file-input"
                         name="bank_statement_pdf"
+
                         {...register("bank_statement_pdf", {
                           required: "This field is required",
                           validate: {
                             fileSize: validateFileSize,
                           },
                         })}
+                        
                         onChange={(e) => {
                           previewImage(e, "bank_statement_pdf");
                         }}
