@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Notifications\SendNotification;
 use App\Mail\VerifiedMail;
 use App\Mail\NewUserRegisterMail;
+use App\Models\Token;
 
 
 if (!function_exists('convertToFloat')) {

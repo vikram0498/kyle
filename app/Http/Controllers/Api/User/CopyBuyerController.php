@@ -216,6 +216,7 @@ class CopyBuyerController extends Controller
     public function uploadCopyBuyerDetails(StoreCopyBuyerRequest $request,$token){
         try {
             DB::beginTransaction();
+            
             //Start to check phone number verified
             if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
@@ -266,12 +267,18 @@ class CopyBuyerController extends Controller
                 'country_code'   => $validatedData['country_code'],
                 'phone'          => $validatedData['phone'], 
             ];
-            $createUser = User::create($userDetails);
+
+            $findUser = User::where('email',$userDetails['email'])->first();
+            if($findUser){
+                $createUser = $findUser;
+                User::where('id',$findUser->id)->update($userDetails);
+            }else{
+                $createUser = User::create($userDetails);
+                $createUser->roles()->sync(3);
+            }
             // End create users table
 
             if($createUser){
-
-                $createUser->roles()->sync(3);
 
                 $validatedData['buyer_user_id'] = $createUser->id;
 
@@ -311,43 +318,47 @@ class CopyBuyerController extends Controller
                 
                 // $createdBuyer = Buyer::create($validatedData);
 
-                $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+                if(!$findUser){
+                    $createUser->buyerVerification()->create(['user_id'=>$validatedData['user_id']]);
+                }
 
                 $validatedData = collect($validatedData)->except(['first_name', 'last_name','email','phone'])->all();
                 
                 $createUser->buyerDetail()->create($validatedData);
                 
-                if($token){
-                    //Purchased buyer
-                    $syncData['buyer_id'] = $createUser->buyerDetail->id;
-                    $syncData['created_at'] = Carbon::now();
-            
-                    User::where('id',$validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
-
-                    $isMailSend = true;
-                }else{
-                    if(auth()->user()->is_seller){
+                if(!$findUser){
+                    if($token){
                         //Purchased buyer
                         $syncData['buyer_id'] = $createUser->buyerDetail->id;
                         $syncData['created_at'] = Carbon::now();
                 
-                        auth()->user()->purchasedBuyers()->create($syncData);
+                        User::where('id', $validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
+
+                        $isMailSend = true;
+                    }else{
+                        if(auth()->user()->is_seller){
+                            //Purchased buyer
+                            $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                            $syncData['created_at'] = Carbon::now();
+                    
+                            auth()->user()->purchasedBuyers()->create($syncData);
+                        }
+
+                        $isMailSend = true;
                     }
+                    
+                    if($isMailSend){
+                        //Verification mail sent
+                        $createUser->NotificationSendToBuyerVerifyEmail();
 
-                    $isMailSend = true;
-                }
-                
-                if($isMailSend){
-                    //Verification mail sent
-                    $createUser->NotificationSendToBuyerVerifyEmail();
+                        sendNotificationToAdmin($createUser, 'new_user_register');
 
-                    sendNotificationToAdmin($createUser, 'new_user_register');
+                        $checkToken = Token::where('token_value',$token)->first();
+                        if($checkToken){
+                            sendNotificationToUser($checkToken->user, $createUser, 'new_user_register','new_buyer_notification');
+                        }
 
-                    $checkToken = Token::where('token_value',$token)->first();
-                    if($checkToken){
-                        sendNotificationToUser($checkToken->user, $createUser, 'new_user_register','new_buyer_notification');
                     }
-
                 }
 
                 if($token && ($request->type == 'private-buyer')){

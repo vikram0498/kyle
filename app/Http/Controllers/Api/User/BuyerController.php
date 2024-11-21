@@ -269,7 +269,9 @@ class BuyerController extends Controller
     {
         try {
             $userId = auth()->user()->id;
-            $buyer = User::with('buyerDetail')->where('id', $userId)->first();
+            $buyer = User::with(['buyerDetail'=>function($query){
+                $query->orderBy('id','desc');
+            }])->where('id', $userId)->first();
 
             $buyer->profile_image_url = $buyer->profile_image_url;
 
@@ -449,7 +451,7 @@ class BuyerController extends Controller
             return response()->json($responseData, 200);
             
         } catch (\Exception $e) {
-            // dd($e->getMessage().'->'.$e->getLine());
+            dd($e->getMessage().'->'.$e->getLine());
 
             //Return Error Response
             $responseData = [

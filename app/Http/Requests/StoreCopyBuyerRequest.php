@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use App\Rules\CheckMaxValue;
 use App\Rules\CheckMinValue;
 use Illuminate\Validation\Rule;
@@ -53,25 +54,22 @@ class StoreCopyBuyerRequest extends FormRequest
     {
         $countryCode = $this->country_code;
         $rules = [
-            'first_name'  => ['required'], 
-            'last_name'   => ['required'], 
-            // 'email'       => ['required', 'email', 'unique:users,email,NULL,id,deleted_at,NULL'],
-            // 'phone'       => ['required', 'numeric','not_in:-','unique:users,phone,NULL,id,deleted_at,NULL'],
-            'email'       => ['required', 'email', 'unique:users,email,NULL,id'],
+            'first_name'   => ['required'], 
+            'last_name'    => ['required'], 
+            'email'        => ['required', 'email', 'regex:/^(?!.*\s)(?!.*[\/]).+@.+\..+$/i','unique:users,email,NULL,id'],
             'country_code' => ['required', 'numeric'],
             'phone'        => ['required', 'numeric','not_in:-', 
                 Rule::unique('users')->where(function ($query) use ($countryCode) {
                     return $query->where('country_code', $countryCode);
-                })
+                })->ignore($this->email,'email'),
             ],
-            // 'description' => [], 
 
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
             'city'        => ['required',/*'exists:states,id'*/], 
             'state'       => ['required',/*'exists:cities,id'*/], 
             //'company_name'   => ['required'],
-	    'company_name'   => [], 
+	        'company_name'   => [], 
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 
             'price_max' => ['required', 'numeric', !empty($this->price_min) ? new CheckMaxValue($this->price_min, 'price_min') : ''], 
@@ -91,7 +89,7 @@ class StoreCopyBuyerRequest extends FormRequest
             'sewer' => ['nullable','numeric','in:'.implode(',', array_keys(config('constants.sewers')))],
             'market_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.market_preferances')))],
             'contact_preferance' => ['required','numeric','in:'.implode(',', array_keys(config('constants.contact_preferances')))],
-	    'terms_accepted'  => ['required'], 
+	        'terms_accepted'  => ['required'], 
 
         ];
 
@@ -127,6 +125,11 @@ class StoreCopyBuyerRequest extends FormRequest
         if(!empty($this->property_type) && !array_intersect([7,14], $this->property_type)){
             $rules['stories_min'] = ['required', 'numeric',!empty($this->stories_min) ? new CheckMinValue($this->stories_min, 'stories_min') : ''];
             $rules['stories_max'] = ['required', 'numeric',!empty($this->stories_max) ? new CheckMaxValue($this->stories_max, 'stories_max') : ''];
+        }
+
+        $findUser = User::withTrashed()->where('email',$this->email)->first();
+        if($findUser){
+            $rules['email'] = ['required', 'email','regex:/^(?!.*\s)(?!.*[\/]).+@.+\..+$/i'];
         }
 
 
