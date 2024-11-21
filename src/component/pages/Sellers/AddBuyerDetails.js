@@ -745,7 +745,7 @@ function AddBuyerDetails() {
                                 Phone Number<span>*</span>
                               </label>
                               <div className="form-group">
-                              <input
+                              {/* <input
                                       type="text"
                                       name="phone"
                                       className="form-control"
@@ -760,7 +760,7 @@ function AddBuyerDetails() {
                                               "The phone number should be between 1 to 10 characters",
                                           },
                                       })}
-                                  />
+                                  /> */}
                                 <input
                                   type="text"
                                   name="phone"

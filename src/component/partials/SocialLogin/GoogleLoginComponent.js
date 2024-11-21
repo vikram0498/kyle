@@ -11,7 +11,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { toHaveAttribute } from '@testing-library/jest-dom/matchers';
 
-const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => { 
+const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors, firebaseDeviceToken}) => { 
 
     const auto_select = false;
     // const login = useGoogleLogin({
@@ -21,6 +21,7 @@ const GoogleLoginComponent = ({apiUrl , setLoading, navigate, setErrors}) => {
     const {setAsLogged} = useAuth();
 
     const googleLogin = (data) =>{
+        data.device_token = firebaseDeviceToken;
         let headers = {
             "Accept": "application/json", 
         }

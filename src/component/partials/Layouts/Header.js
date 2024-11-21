@@ -6,12 +6,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import DarkMode from "./DarkMode";
 import { Dropdown, Image } from "react-bootstrap";
+import { generatedToken,messaging } from "../../../notifications/firebase";
+import { onMessage } from "firebase/messaging";
 
 function Header() {
   const navigate = useNavigate();
 
   const [userDetails, setUserDetails] = useState(null);
   const [creditLimit, setCreditLimit] = useState(null);
+  const [isNewNotification, setIsNewNotification] = useState('');
   const [notificationData, setNotificationData] = useState({
     deal_notification:[{
       total: 0,
@@ -30,6 +33,7 @@ function Header() {
       records: []
     }]
   });
+  
   const { setLogout, getTokenData, getLocalStorageUserdata, setLocalStorageUserdata } = useAuth();
 
   const location = useLocation();
@@ -120,7 +124,6 @@ function Header() {
           Authorization: "Bearer " + getTokenData().access_token,
         };
         let response = await axios.get(`${apiUrl}get-notifications`,{headers});
-        console.log(response.data.notifications,"sdsds")
         setNotificationData(response.data.notifications);
       } catch (error) {
         if (error.response.status === 401) {
@@ -129,7 +132,16 @@ function Header() {
       }
     }
     fetchNotificationData()
+  },[isNewNotification]);
+
+  useEffect(()=>{
+    generatedToken()
+    onMessage(messaging,(payload)=>{
+      console.log(payload,"payload seller data")
+      setIsNewNotification(payload.notification.body)
+    })
   },[]);
+
   return (
     <>
       <header className="dashboard-header">
@@ -172,7 +184,7 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">{notificationData.deal_notification.total}</span>
+                          <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">{notificationData.deal_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Deals</h5>
@@ -209,7 +221,7 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/user-top.svg' alt='' /><span className="list_numbers">{notificationData.new_buyer_notification.total}</span>
+                          <Image src='/assets/images/user-top.svg' alt='' /><span className="list_numbers">{notificationData.new_buyer_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Buyers</h5>
@@ -253,7 +265,7 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">{notificationData.new_message_notification.total}</span>
+                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">{notificationData.new_message_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Messages</h5>

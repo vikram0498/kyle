@@ -68,6 +68,7 @@ const DealNotifications = () => {
     const handleStatusType = async (propertyStatus, buyerId) => {
         try {
             setDealConfirmation(true);
+            setIsDealDocumentVerified(false);
             handleOpenModal(propertyStatus);
             if(propertyStatus =='interested'){
                 let payload = {

@@ -6,10 +6,11 @@ import {useAuth} from "../../../hooks/useAuth";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const FacebookLoginButton = ({apiUrl , setLoading, navigate, setErrors}) => { 
+const FacebookLoginButton = ({apiUrl , setLoading, navigate, setErrors, firebaseDeviceToken}) => { 
     const {setAsLogged} = useAuth();
     const [fbAutoLoad, setFbAutoLoad] = useState(false);
     const responseFacebook = (response) => {
+        response.device_token = firebaseDeviceToken;
         if(response.accessToken !='' && response.accessToken != undefined){
             const handleFacebookLogin = () =>{
                 let headers = {

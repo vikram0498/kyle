@@ -11,6 +11,7 @@ import GoogleLoginComponent from "../partials/SocialLogin/GoogleLoginComponent";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import FacebookLoginButton from "../partials/SocialLogin/FacebookLoginButton";
 import Layout from "./Layout";
+import { generatedToken,messaging } from "../../notifications/firebase";
 
 function Login(props) {
   const { setAsLogged, getRememberMeData, getTokenData } = useAuth();
@@ -21,6 +22,7 @@ function Login(props) {
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [firebaseDeviceToken, setFirebaseDeviceToken] = useState("");
 
   useEffect(() => {
     let login = getTokenData();
@@ -49,13 +51,16 @@ function Login(props) {
     setErrors(null);
     setMessage("");
     let payload = { email, password };
+    payload.device_token = firebaseDeviceToken;
+    console.log(payload,"payload22223223232")
+
     if (remember) {
       payload.remember = true;
     }
     let headers = {
       Accept: "application/json",
     };
-
+    console.log(payload,"payload222")
     axios
       .post(apiUrl + "login", payload, { headers: headers })
       .then((response) => {
@@ -101,6 +106,13 @@ function Login(props) {
         }
       });
   };
+  useState(()=>{
+    const getToken = async () => {
+      let deviceToken = await generatedToken();
+      setFirebaseDeviceToken(deviceToken);
+    }
+    getToken();
+  },[])
 
   return (
     <Layout>
@@ -236,6 +248,7 @@ function Login(props) {
                  <li>
                 <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
                     <FacebookLoginButton
+                      firebaseDeviceToken={firebaseDeviceToken}
                       apiUrl={apiUrl}
                       setLoading={setLoading}
                       navigate={navigate}
@@ -254,6 +267,7 @@ function Login(props) {
                   {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
                   <GoogleOAuthProvider clientId={googleClientId}>
                     <GoogleLoginComponent
+                      firebaseDeviceToken={firebaseDeviceToken}
                       apiUrl={apiUrl}
                       setLoading={setLoading}
                       navigate={navigate}

@@ -5,12 +5,33 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import DarkMode from "./DarkMode";
 import { Dropdown, Image } from "react-bootstrap";
+import { generatedToken,messaging } from "../../../notifications/firebase";
+import { onMessage } from "firebase/messaging";
 
 function BuyerHeader() {
   const navigate = useNavigate();
   const { setLogout, getTokenData, getLocalStorageUserdata,setLocalStorageUserdata } = useAuth();
   const [userDetails, setUserDetails] = useState(null);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const [isNewNotification, setIsNewNotification] = useState('');
+  const [notificationData, setNotificationData] = useState({
+    deal_notification:[{
+      total: 0,
+      records: []
+    }],
+    new_buyer_notification:[{
+      total: 0,
+      records: []
+    }],
+    new_message_notification:[{
+      total: 0,
+      records: []
+    }],
+    interested_buyer_notification:[{
+      total: 0,
+      records: []
+    }]
+  });
 
   useEffect(() => {
     if (getTokenData().access_token !== null) {
@@ -77,6 +98,32 @@ function BuyerHeader() {
       } 
     }
   }
+  useEffect(()=>{
+    const fetchNotificationData = async () => {
+      try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+        };
+        let response = await axios.get(`${apiUrl}get-notifications`,{headers});
+        setNotificationData(response.data.notifications);
+      } catch (error) {
+        if (error.response.status === 401) {
+          setLogout();
+        } 
+      }
+    }
+    fetchNotificationData()
+  },[isNewNotification]);
+  
+  useEffect(()=>{
+    generatedToken()
+    onMessage(messaging,(payload)=>{
+      console.log(payload,"payload data")
+      setIsNewNotification(payload.notification.body)
+    })
+  },[]);
+
   return (
     <>
       <header className="dashboard-header">
@@ -104,81 +151,37 @@ function BuyerHeader() {
               <div className="top_icons_list d-none d-xxl-block">
                   <ul>
                     <li>
+
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">5</span>
+                          <Image src='/assets/images/home-dollar.svg' alt='' /><span className="list_numbers">{notificationData.deal_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Deals</h5>
                           <ul>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Property Name</h6>
-                                <p>Buyer want to buy you property...</p>
-                              </div>
-                              <div className="dropdown_end align-self-center">
-                                <Link to="#">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                  </svg>
-                                </Link>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Property Name</h6>
-                                <p>Buyer want to buy you property...</p>
-                              </div>
-                              <div className="dropdown_end align-self-center">
-                                <Link to="#">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                  </svg>
-                                </Link>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Property Name</h6>
-                                <p>Buyer want to buy you property...</p>
-                              </div>
-                              <div className="dropdown_end align-self-center">
-                                <Link to="#">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                  </svg>
-                                </Link>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Property Name</h6>
-                                <p>Buyer want to buy you property...</p>
-                              </div>
-                              <div className="dropdown_end align-self-center">
-                                <Link to="#">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
-                                  </svg>
-                                </Link>
-                              </div>
-                            </li>
+                            {notificationData.deal_notification.total > 0 && 
+                              notificationData.deal_notification.records.map((data,index)=>{
+                                return (
+                                  <li>
+                                    <div className="dropdown_start">
+                                      <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
+                                    </div>
+                                    <div className="dropdown_middle">
+                                      <h6>{data.data.title}</h6>
+                                      <p>{data.data.message}</p>
+                                    </div>
+                                    <div className="dropdown_end align-self-center">
+                                      <Link to="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
+                                          <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                          <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                      </Link>
+                                    </div>
+                                  </li>
+                                )
+                              })
+                            }
                           </ul>
                           <Link to="/deal-notifications">View All</Link>
                         </Dropdown.Menu>
@@ -187,59 +190,37 @@ function BuyerHeader() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">6</span>
+                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">{notificationData.new_message_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Messages</h5>
                           <ul>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Brooklyn Simmons</h6>
-                                <p>New buy added in your buyer list....</p>
-                              </div>
-                              <div className="dropdown_end">
-                                2m ago
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Brooklyn Simmons</h6>
-                                <p>New buy added in your buyer list....</p>
-                              </div>
-                              <div className="dropdown_end">
-                                2m ago
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Brooklyn Simmons</h6>
-                                <p>New buy added in your buyer list....</p>
-                              </div>
-                              <div className="dropdown_end">
-                                2m ago
-                              </div>
-                            </li>
-                            <li>
-                              <div className="dropdown_start">
-                                <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
-                              </div>
-                              <div className="dropdown_middle">
-                                <h6>Brooklyn Simmons</h6>
-                                <p>New buy added in your buyer list....</p>
-                              </div>
-                              <div className="dropdown_end">
-                                2m ago
-                              </div>
-                            </li>
+                            {notificationData.new_message_notification.total > 0 ? 
+                              notificationData.new_message_notification.records.map((data,index)=>{
+                                return(
+                                  <li>
+                                    <div className="dropdown_start">
+                                      <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                                    </div>
+                                    <div className="dropdown_middle">
+                                      <h6>Brooklyn Simmons</h6>
+                                      <p>New buy added in your buyer list....</p>
+                                    </div>
+                                    <div className="dropdown_end">
+                                      2m ago
+                                    </div>
+                                  </li>
+                                )
+                                }):
+                                <li>
+                                  <div className="dropdown_start">
+                                    <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
+                                  </div>
+                                  <div className="dropdown_middle">
+                                    <h6>No Data Found</h6>
+                                  </div>
+                                </li>
+                            }
                           </ul>
                           <Link to="/message">View All</Link>
                         </Dropdown.Menu>
