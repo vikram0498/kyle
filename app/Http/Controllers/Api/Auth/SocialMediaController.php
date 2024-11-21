@@ -40,6 +40,12 @@ class SocialMediaController extends Controller
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                    if(isset($request->device_token)){
+                        $userAuthenticated->device_token =  $request->device_token ? $request->device_token : null;
+                    }
+
+                    $userAuthenticated->save();
+
                     DB::commit();
                     //Success Response Send
                     $responseData = [
@@ -79,6 +85,7 @@ class SocialMediaController extends Controller
                     'register_type' => 2,
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
+                    'device_token'  => isset($request->device_token) ? $request->device_token : null,
                 ]);
 
                 // Assign Reviewer Role
@@ -159,6 +166,12 @@ class SocialMediaController extends Controller
                 if($userAuthenticated){
                     $accessToken = $isUser->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
+                    if(isset($request->device_token)){
+                        $userAuthenticated->device_token =  $request->device_token ? $request->device_token : null;
+                    }
+
+                    $userAuthenticated->save();
+
                     DB::commit();
                     $responseData = [
                         'status'        => true,
@@ -195,6 +208,7 @@ class SocialMediaController extends Controller
                     'register_type' => 3,
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
+                    'device_token'  => isset($request->device_token) ? $request->device_token : null,
                 ]);
                 
                 // Assign Reviewer Role

@@ -1270,7 +1270,7 @@ class SearchBuyerController extends Controller
                 ];
                 $buyerUser->notify(new SendNotification($notificationData));
 
-                if($buyerUser->notificationSetting->email_notification){
+                if(isset($buyerUser->notificationSetting) && $buyerUser->notificationSetting->email_notification){
                     //Send Mail
                     $subject  = $notificationData['title'];
                     $message  = $notificationData['message'];
@@ -1444,7 +1444,7 @@ class SearchBuyerController extends Controller
                 ];
                 Notification::send($createdByUser, new SendNotification($notificationData));
 
-                if($createdByUser->notificationSetting->email_notification){
+                if(isset($createdByUser->notificationSetting) && $createdByUser->notificationSetting->email_notification){
                     //Send Mail
                     $subject  = $notificationData['title'];
                     $message  = $notificationData['message'];

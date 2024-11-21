@@ -40,7 +40,7 @@ class NotificationController extends Controller
             if($latestNotifications->count() > 0){
                 foreach($latestNotifications as $notificationType=>$records){
                     $notificationRecords[$notificationType] = [
-                        'total' => $records->count(), 
+                        'total' => $authUser->notification()->where('notification_type', $notificationType)->whereNull('read_at')->count(), 
                         'records' => []
                     ];
 
