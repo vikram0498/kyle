@@ -309,7 +309,7 @@ return [
         "deal_notification" => [
             'value' => "enable",
             'display_name' => "Deal Notifications",
-            'setting_for'  => ['buyer'],
+            'setting_for'  => ['seller','buyer'],
             'push' => [
                 'enabled' => false,
             ],
