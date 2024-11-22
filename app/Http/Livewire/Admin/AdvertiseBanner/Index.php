@@ -119,8 +119,8 @@ class Index extends Component
         // Check if the photo has been changed
         $uploadId = null;
         if ($this->image) {
-            $uploadId = $adBanner->adBannerImage->id;
-            uploadImage($adBanner, $this->image, 'adBanner/image/',"adBanner", 'original', 'update', $uploadId);
+            $uploadId = $adBanner->adBannerImage?->id;
+            $uploadId ? uploadImage($adBanner, $this->image, 'adBanner/image/', "adBanner", 'original', 'update', $uploadId) : uploadImage($adBanner, $this->image, 'adBanner/image/', "adBanner", 'original', 'save');
         }
         
         $updateRecord = $this->except(['search','formMode','updateMode','adBanner_id','impressions_served','impressions_count','click_count','image','originalImage','page','paginators']);

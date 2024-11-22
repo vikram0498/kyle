@@ -22,6 +22,11 @@ class AdvertiseBanner extends Model
         'end_date',
     ];
 
+    protected $casts = [        
+        'start_time' => 'datetime:H:i:s',
+        'end_time' => 'datetime:H:i:s',        
+    ];
+
     protected $fillable = [
         'advertiser_name',
         'ad_name',
@@ -32,6 +37,9 @@ class AdvertiseBanner extends Model
         'click_count',
         'start_date',
         'end_date',
+        'page_type',
+        'start_time',
+        'end_time',
         'status',
         'created_by',
         'updated_by',
