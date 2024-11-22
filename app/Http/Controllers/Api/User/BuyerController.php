@@ -966,17 +966,20 @@ class BuyerController extends Controller
                     CASE WHEN is_driver_license = 1 AND driver_license_status = 'verified' THEN 1 ELSE 0 END +
                     CASE WHEN is_proof_of_funds = 1 AND proof_of_funds_status = 'verified' THEN 1 ELSE 0 END +
                     CASE WHEN is_llc_verification = 1 AND llc_verification_status = 'verified' THEN 1 ELSE 0 END +
+                    CASE WHEN is_certified_closer = 1 AND certified_closer_status = 'verified' THEN 1 ELSE 0 END +
                     CASE WHEN is_application_process = 1 THEN 1 ELSE 0 END
                 ) AS verification_count
             "))
             ->whereColumn('user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status', DB::raw("($verificationSubquery) as verification_count"),])
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status','users.level_type', DB::raw("($verificationSubquery) as verification_count"),])
+                ->leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
                 ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
                 ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
                 ->withCount(['likes as likes_count'])
                 ->orderByRaw('ISNULL(plan_position), plan_position ASC')
+                ->orderBy('users.level_type', 'desc')
                 ->orderBy('verification_count', 'desc') 
                 ->orderBy('likes_count', 'desc')
                 ->paginate(20);
@@ -1025,6 +1028,7 @@ class BuyerController extends Controller
 
                 $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
 
+                $buyer->certified_closer_verified = $buyer->userDetail->buyerVerification->certified_closer_status == 'verified' ? true : false;
                 $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
                 //End Verification status
             }

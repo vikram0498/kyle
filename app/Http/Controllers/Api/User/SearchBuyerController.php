@@ -179,23 +179,29 @@ class SearchBuyerController extends Controller
             ->whereColumn('user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id',DB::raw("($verificationSubquery) as verification_count")])
-            ->leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
+            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
+            ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
 
             $additionalBuyers = Buyer::query();
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
                     $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
-                }elseif($request->activeTab == 'more_buyers' && $authUserLevelType != 3){
+                }elseif($request->activeTab == 'more_buyers'){
                     
-                    $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                        $query->where('user_id', '=',$userId);
-                    })->where('user_id', '=', 1);
-
-                    $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                        $query->where('user_id', '=',$userId);
-                    })->where('user_id', '=', 1);
+                     if(in_array($authUserLevelType, [1,2])){
+                         $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                            $query->where('user_id', '=',$userId);
+                        })->where('user_id', '=', 1);
+    
+                        $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                            $query->where('user_id', '=',$userId);
+                        })->where('user_id', '=', 1);
+                     }else if($authUserLevelType == 3){
+                         $buyers = $buyers->where('user_id', '!=', $userId);
+                         $additionalBuyers->where('user_id', '!=', $userId);
+                     }
+                    
                     
                 }
             }
@@ -225,7 +231,7 @@ class SearchBuyerController extends Controller
             }
 
             if($request->address){
-                $buyers = $buyers->where('address', 'like', '%'.$request->address.'%');
+                $buyers = $buyers->where('buyers.address', 'like', '%'.$request->address.'%');
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
             }
 
@@ -636,9 +642,14 @@ class SearchBuyerController extends Controller
             $buyers = $buyers->paginate($pagination);
 
             // Get additional buyer
-            $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                $query->where('user_id', '=',$userId);
-            })->where('user_id', '=', 1);
+            if($authUserLevelType == 3){
+                 $additionalBuyers = $additionalBuyers->where('user_id', '!=', $userId);
+            }else{
+                 $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                    $query->where('user_id', '=',$userId);
+                })->where('user_id', '=', 1);
+            }
+           
 
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;

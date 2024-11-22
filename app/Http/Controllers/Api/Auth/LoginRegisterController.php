@@ -63,19 +63,19 @@ class LoginRegisterController extends Controller
             DB::beginTransaction();
 
             //Start to check phone number verified
-           if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+           /*if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
                 ]; 
                 return response()->json($responseData, 403);
-            }
+            }*/
             //End to check phone number verified
 
             $input = $request->except(['terms_accepted','password_confirmation']);  
             $input['name'] = $input['first_name'].' '.$input['last_name'];
             $input['password'] = bcrypt($input['password']);
-            $input['phone_verified_at'] = now();
+            // $input['phone_verified_at'] = now();
 
             $user = User::create($input);
 
@@ -94,7 +94,7 @@ class LoginRegisterController extends Controller
                 $user->roles()->sync(2);
                 
                 //Clear OTP Cache
-                forgetOtpCache($request->country_code,$request->phone);
+                // forgetOtpCache($request->country_code,$request->phone);
 
                 sendNotificationToAdmin($user, 'new_user_register');
 

@@ -134,7 +134,11 @@ class Index extends Component
             $model = User::find($id);
             $levelType = !$model->$type ? 3 : $model->prev_level_type;
 
-            $model->update(['level_type' => $levelType, $type => !$model->$type]);
+            $prevLevelType = $levelType==3 ? $model->level_type : $model->prev_level_type;
+            if($levelType == 2){
+                $prevLevelType = 1;
+            }
+            $model->update(['prev_level_type'=>$prevLevelType,'level_type' => $levelType, $type => !$model->$type]);
 
             $this->alert('success', trans('messages.level_3_status_success_message'));
             $this->emit('refreshTable');
