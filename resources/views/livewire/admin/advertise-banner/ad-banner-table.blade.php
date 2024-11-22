@@ -58,12 +58,19 @@
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
+                        {{ __('cruds.adBanner.fields.page_type')}}
+                        <span wire:click="sortBy('page_type')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'page_type' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'page_type' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    {{-- <th class="text-gray-500 text-xs">
                         {{ __('cruds.adBanner.fields.impressions_purchased')}}
                         <span wire:click="sortBy('impressions_purchased')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'impressions_purchased' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'impressions_purchased' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
-                    </th>
+                    </th> --}}
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.adBanner.fields.start_date')}}
                         <span wire:click="sortBy('start_date')" class="float-right text-sm" style="cursor: pointer;">
@@ -109,7 +116,8 @@
                         <td>{{ $serialNo+1 }}</td>
                         <td>{{ ucwords($adBanner->advertiser_name) }}</td>
                         <td>{{ ucwords($adBanner->ad_name) }}</td>
-                        <td>{{ $adBanner->impressions_purchased ?? 0 }}</td>
+                        <td>{{ config('constants.banner_page_type.' . $adBanner->page_type, 'N/A') }}</td>
+                        {{-- <td>{{ $adBanner->impressions_purchased ?? 0 }}</td> --}}
                         <td>{{ $adBanner->start_date ? $adBanner->start_date->format(config('constants.date_format')) : '' }}</td>
                         <td>{{ $adBanner->end_date ? $adBanner->end_date->format(config('constants.date_format')) : '' }}</td>                        
                         <td>{{ $adBanner->start_time ? $adBanner->start_time->format(config('constants.time_format')) : '' }}</td>
