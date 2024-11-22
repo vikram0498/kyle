@@ -20,12 +20,12 @@
                         <div wire:loading wire:target="create" class="loader"></div>
                         <div class="card-title top-box-set">
                             <h4 class="card-title-heading">{{__('cruds.adBanner.title')}} {{ __('global.list') }}</h4>
-                            <div class="card-top-box-item">
+                            {{-- <div class="card-top-box-item">
                                 <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
                                     <i class="ti-plus btn-icon-prepend"></i>                                                    
                                         {{__('global.add')}}
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="table-responsive search-table-data">    
                                 @livewire('admin.advertise-banner.ad-banner-table')                          
@@ -68,6 +68,9 @@
                 let startDate = start.format('YYYY-MM-DD');
                 @this.set('start_date', startDate);
 
+                @this.set('start_time', null);
+                @this.set('end_time', null);               
+
                 $('input[id="end_date"]').daterangepicker({
                     autoApply: true,
                     singleDatePicker: true,
@@ -81,7 +84,48 @@
                     @this.set('end_date', start.format('YYYY-MM-DD'));
                 });
             });
+            
+            // Initialize start_time picker
+            let startTime = @this.start_time; // Get start_time value from Livewire
+            let timeNow = moment().startOf('hour').minute(moment().minute()); // Default to current time
+            
+            $('#start_time').daterangepicker({
+                autoApply: true,
+                timePicker: true,
+                timePicker24Hour: false,
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                startDate: startTime ? moment(startTime, 'HH:mm') : timeNow, // Use start_time from Livewire or default
+                locale: {
+                    format: 'hh:mm A'
+                }
+            }).on('apply.daterangepicker', function(ev, picker) {
+                @this.set('start_time', picker.startDate.format('HH:mm'));
+                @this.set('end_time', null); // Clear end_time when start_time is updated
+            }).on('show.daterangepicker', function(ev, picker) {
+                picker.container.find(".calendar-table").hide(); // Hide calendar (date picker)
+            });
 
+            // Initialize end_time picker
+            let endTime = @this.end_time; // Get end_time value from Livewire
+
+            $('#end_time').daterangepicker({
+                autoApply: true,
+                timePicker: true,
+                timePicker24Hour: false,
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                startDate: endTime ? moment(endTime, 'HH:mm') : timeNow.add(1, 'hour'), // Use end_time from Livewire or default
+                locale: {
+                    format: 'hh:mm A'
+                }
+            }).on('apply.daterangepicker', function(ev, picker) {
+                @this.set('end_time', picker.startDate.format('HH:mm'));
+            }).on('show.daterangepicker', function(ev, picker) {
+                picker.container.find(".calendar-table").hide(); // Hide calendar (date picker)
+            });
+
+    
             $('input[id="end_date"]').daterangepicker({
                 autoApply: true,
                 singleDatePicker: true,
@@ -95,6 +139,9 @@
             function(start, end, label) {
                 @this.set('end_date', start.format('YYYY-MM-DD'));
             });
+
+
+
         });
     
         $(document).on('click', '.dropify-clear', function(e) {
@@ -106,35 +153,7 @@
                 @this.set('originalImage',null);
                 @this.set('removeImage',true);
             }
-        });
-    
-        /*
-        $(document).on('click', '.toggleSwitchMain', function(e){
-            var _this = $(this);
-            var id = _this.data('id');
-            var type = _this.data('type');
-    
-            var data = { id: id, type: type }
-            
-            var flag = true;
-            if(_this.prop("checked")){
-                flag = false;
-            }
-            Swal.fire({
-                title: 'Are you sure you want to change the status?',
-                showDenyButton: true,
-                icon: 'warning',
-                confirmButtonText: 'Yes, change it',
-                denyButtonText: `No, cancel!`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    @this.emit('confirmedToggleAction', data);
-                } else if (result.isDenied) {
-                    _this.prop("checked", flag);
-                }
-            })
-        })
-        */
+        });        
     
         $(document).on('click', '.deleteBtn', function(e){
             var _this = $(this);
@@ -151,9 +170,12 @@
                     @this.emit('deleteConfirm', id);
                 }
             })
-        })
-    
-       
+        });
+
+ 
+
+
+      
     
     </script>
 @endpush

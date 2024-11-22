@@ -32,6 +32,8 @@ class AdBannerTable extends Component
             ->orWhere('impressions_purchased','like',$searchValue.'%')
             ->orWhereRaw("date_format(start_date, '".config('constants.search_date_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(end_date, '".config('constants.search_date_format')."') like ?", ['%'.$searchValue.'%'])
+            ->orWhereRaw("date_format(start_time, '".config('constants.search_time_format')."') like ?", ['%'.$searchValue.'%'])
+            ->orWhereRaw("date_format(end_time, '".config('constants.search_time_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         })->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->perPage);

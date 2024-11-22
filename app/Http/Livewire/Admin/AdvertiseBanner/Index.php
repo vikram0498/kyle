@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\AdvertiseBanner;
 
 use App\Models\AdvertiseBanner;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,7 @@ class Index extends Component
 
     protected $adBanners = null;
 
-    public  $advertiser_name, $ad_name, $target_url, $impressions_purchased,$impressions_served, $impressions_count,$click_count,$start_date,$end_date, $status = 0, $image=null, $viewMode = false,$adPerformanceLogsViewMode = false,$originalImage;
+    public  $advertiser_name, $ad_name, $target_url, $impressions_purchased,$impressions_served, $impressions_count,$click_count,$start_date,$end_date,$page_type,$start_time,$end_time, $status = 0, $image=null, $viewMode = false,$adPerformanceLogsViewMode = false,$originalImage;
 
     public $adBanner_id =null;
 
@@ -89,6 +90,9 @@ class Index extends Component
         $this->impressions_purchased = $adBanner->impressions_purchased;
         $this->start_date = $adBanner->start_date->format(config('constants.date_format'));
         $this->end_date = $adBanner->end_date->format(config('constants.date_format'));
+        $this->start_time = $adBanner->start_time->format('H:i');
+        $this->end_time = $adBanner->end_time->format('H:i');
+        $this->page_type   = $adBanner->page_type;
         $this->status = $adBanner->status;
         $this->originalImage = $adBanner->image_url;
 
@@ -101,17 +105,33 @@ class Index extends Component
 
     public function update(){
        
+        $rules =  [
+            'advertiser_name'       => ['required'],
+            'ad_name'               => ['required'],
+            'target_url'            => ['required','url'],
+            'impressions_purchased'     => ['required', 'numeric', 'min:0', 'max:999999'],
+            'start_date'                => ['required', 'date','after_or_equal:today','before_or_equal:end_date'],
+            'end_date'                  => ['required', 'date','after_or_equal:start_date'],               
+            'image'                     => ['nullable', 'image', 'max:'.config('constants.img_max_size')],
+            'status'                    => ['required', 'numeric', 'in:' . implode(',', array_keys(config('constants.ad_banner_status')))],
+        ];
+
+        $starDateTime = Carbon::parse($this->start_date.' '.$this->start_time);
+        $endDateTime = Carbon::parse($this->start_date.' '.$this->end_time);
+        $currentDateTime = Carbon::now();
+
+        // Check if start time is greater than current time
+        if ($starDateTime->lt($currentDateTime)) {
+            $rules['start_time'] = '|after:now';
+        }
+
+        // Check if end time is greater than start time
+        if ($endDateTime->lt($starDateTime)) {
+            $rules['end_time'] = '|after:start_time';
+        }
+
         $validatedData = $this->validate(
-            [
-                'advertiser_name'       => ['required'],
-                'ad_name'               => ['required'],
-                'target_url'            => ['required','url'],
-                'impressions_purchased'     => ['required', 'numeric', 'min:0', 'max:999999'],
-                'start_date'                => ['required', 'date','after_or_equal:today','before_or_equal:end_date'],
-                'end_date'                  => ['required', 'date','after_or_equal:start_date'],               
-                'image'                     => ['nullable', 'image', 'max:'.config('constants.img_max_size')],
-                'status'                    => ['required', 'numeric', 'in:' . implode(',', array_keys(config('constants.ad_banner_status')))],
-            ],['without_spaces' => 'The :attribute field is required'],['advertiser_name'  => 'advertiser name', 'ad_name' => 'ad name','target_url'  => 'target url']
+            $rules,['without_spaces' => 'The :attribute field is required'],['advertiser_name'  => 'advertiser name', 'ad_name' => 'ad name','target_url'  => 'target url']
         );
 
         $adBanner = AdvertiseBanner::find($this->adBanner_id);
@@ -183,6 +203,9 @@ class Index extends Component
         $this->impressions_purchased = '';
         $this->start_date = '';
         $this->end_date = '';
+        $this->start_time = '';
+        $this->end_time = '';
+        $this->page_type = '';
         $this->status = 0;
         $this->image =null;
         $this->originalImage = '';

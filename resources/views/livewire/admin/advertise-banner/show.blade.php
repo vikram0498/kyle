@@ -6,11 +6,15 @@
     <table class="table table-design mb-4">
         <tr>
             <th width="25%">{{ __('cruds.adBanner.fields.image')}}</th>
-            <td><img class="rounded img-thumbnail" src="{{ $details->image_url }}" style="width:100px; height: auto;"/></td>
+            <td><img class="rounded img-thumbnail" src="{{ $details->adBannerImage ? $details->image_url : asset('images/default-img.jpg') }}" style="width:100px; height: auto;"/></td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.adBanner.fields.advertiser_name')}}</th>
             <td>{{ $details->advertiser_name ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.adBanner.fields.page_type')}}</th>
+            <td>{{ config('constants.banner_page_type.' . $details->page_type, 'N/A') }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.adBanner.fields.ad_name')}}</th>
@@ -43,6 +47,14 @@
         <tr>
             <th width="25%">{{ __('cruds.adBanner.fields.end_date')}}</th>
             <td> {{ $details->end_date->format(config('constants.date_format')) }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.adBanner.fields.start_time')}}</th>
+            <td> {{ $details->start_time->format(config('constants.time_format')) }}</td>
+        </tr>
+        <tr>
+            <th width="25%">{{ __('cruds.adBanner.fields.end_time')}}</th>
+            <td> {{ $details->end_time->format(config('constants.time_format')) }}</td>
         </tr>
         <tr>
             <th width="25%">{{ __('cruds.adBanner.fields.status')}}</th>

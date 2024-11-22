@@ -46,7 +46,8 @@ return [
     'search_datetime_format' => '%d-%m-%Y %H:%i',
     'search_date_format' => '%d-%m-%Y',
     'set_timezone' => 'Asia/kolkata', // set timezone
-    
+    'time_format' => 'h:i A',
+
     'logo_min_width' => '250', // logo min width
     'logo_min_height' => '150', // logo min height
    
@@ -362,6 +363,11 @@ return [
         2 => 'paused',
         3 => 'completed',
         4 => 'archived',
+    ],
+
+    'banner_page_type' =>[
+        'home' => 'Home',
+        'add-buyer-details' => 'Add Buyer Details',
     ],
 
 ];

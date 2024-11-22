@@ -78,13 +78,27 @@
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'end_date' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.adBanner.fields.start_time')}}
+                        <span wire:click="sortBy('start_time')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'start_time' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'start_time' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.adBanner.fields.end_time')}}
+                        <span wire:click="sortBy('end_time')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'end_time' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'end_time' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     
-                    <th class="text-gray-500 text-xs">{{ trans('global.created') }}
+                    {{-- <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
-                    </th>
+                    </th> --}}
                     <th class="text-gray-500 text-xs">{{ trans('global.action') }}</th>
                 </tr>
             </thead>
@@ -98,8 +112,10 @@
                         <td>{{ $adBanner->impressions_purchased ?? 0 }}</td>
                         <td>{{ $adBanner->start_date ? $adBanner->start_date->format(config('constants.date_format')) : '' }}</td>
                         <td>{{ $adBanner->end_date ? $adBanner->end_date->format(config('constants.date_format')) : '' }}</td>                        
+                        <td>{{ $adBanner->start_time ? $adBanner->start_time->format(config('constants.time_format')) : '' }}</td>
+                        <td>{{ $adBanner->end_time ? $adBanner->end_time->format(config('constants.time_format')) : '' }}</td>                        
                                              
-                        <td>{{ convertDateTimeFormat($adBanner->created_at,'date') }}</td>
+                        {{-- <td>{{ convertDateTimeFormat($adBanner->created_at,'date') }}</td> --}}
                         <td>
                             @can('ad_banner_show')
                                                            

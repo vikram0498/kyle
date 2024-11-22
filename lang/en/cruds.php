@@ -351,10 +351,10 @@ return [
             'event_type'            => 'Event Type',
             'user_ip'               => 'User IP',
             'date'                  => 'Date',
+            'page_type'             => 'Page Type',
+            'start_time'            => 'Start Time',
+            'end_time'              => 'End Time',
         ],
-        'view_ad_performace_log' => 'View Ad Performance Log',
-
-
-        
+        'view_ad_performace_log' => 'View Ad Performance Log',        
     ],
 ];
