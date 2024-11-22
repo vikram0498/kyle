@@ -38,6 +38,7 @@ return [
             'driver_license_success'=> 'ID Submitted Successfully!',
             'proof_of_funds_success'=> 'Proof Of Funds Submitted Successfully!',
             'llc_verification_success'=> 'LLC Submitted Successfully!',
+            'certified_closure_success'=> 'Certified Closure Submitted Successfully!',
             'application_process_success'=> 'Application Payment Successfully!',
             'profile_upload_success' => 'Your profile image has been successfully uploaded!',
 

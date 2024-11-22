@@ -34,6 +34,9 @@ class BuyerVerificationController extends Controller
                 return $this->LLCVerification($request);
             break;
             case 5:
+                return $this->certifiedCloser($request);
+            break;
+            case 6:
                 return $this->applicationProcess($request);
             break;
             default:
@@ -68,7 +71,6 @@ class BuyerVerificationController extends Controller
         DB::beginTransaction();
         try {
             $otpNumber = (int)$request->otp1.$request->otp2.$request->otp3.$request->otp4;
-            
             $otpVerify = User::where('id',$userId)->where('otp',$otpNumber)->first();
             if($otpVerify){
                 $otpVerify->otp = null;
@@ -311,6 +313,66 @@ class BuyerVerificationController extends Controller
         }
     }
 
+    // New Step Certified Closer
+    private function certifiedCloser($request){
+        /**
+         * Rules
+         * file|mimes:pdf|max:5120|
+        */
+        $rules['certified_closer_statement_pdf']   = ['required','file','mimes:pdf'];
+
+        $customMessage = [];
+
+        $attributNames = [
+            'certified_closer_statement_pdf' => 'Certified Closer',
+        ];
+
+        $request->validate($rules,$customMessage,$attributNames); 
+
+        DB::beginTransaction();
+        try {
+            $userId = auth()->user()->id;
+            $user = User::where('id',$userId)->first();
+            if($user){
+
+                // Start bank statement pdf upload
+                $uploadId = null;
+                if($request->certified_closer_statement_pdf) {
+                    if($user->certifiedCloserPdf){
+                        $uploadId = $user->certifiedCloserPdf->id;
+                        uploadImage($user, $request->certified_closer_statement_pdf, 'buyer/verification/',"certified-closer-pdf", 'original', 'update', $uploadId);
+                    }else{
+                        uploadImage($user, $request->certified_closer_statement_pdf, 'buyer/verification/',"certified-closer-pdf", 'original', 'save', $uploadId);
+                    }
+                }
+
+                $user->buyerVerification()->update(['is_certified_closer'=>1, 'certified_closer_status' => 'pending']);
+
+                DB::commit();
+
+                $this->sendVerificationMailToAdmin($user);
+
+                //Return Success Response
+                $responseData = [
+                    'status'        => true,
+                    'current_step'  => $request->step,
+                    'message'       => trans('messages.auth.verification.certified_closure_success'),
+                ];
+                return response()->json($responseData, 200);
+            }
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
     private function applicationProcess($request){
         DB::beginTransaction();
         try {
@@ -404,8 +466,12 @@ class BuyerVerificationController extends Controller
             $statusOfLastStep = $user->buyerVerification->llc_verification_status;
         }
 
-        if($user->buyerVerification->is_application_process){
+        if($user->buyerVerification->is_certified_closer){
             $lastStepForm = 5;
+        }
+
+        if($user->buyerVerification->is_application_process){
+            $lastStepForm = 6;
         }
 
         if($lastStepForm == 2){

@@ -21,270 +21,328 @@
 
                     @if($viewMode)
 
-                    @php 
-                        $phone_verify_uploaded = $details->buyerVerification->is_phone_verification;
-                        $dl_uploaded = $details->buyerVerification->is_driver_license;
-                        $pof_uploaded = $details->buyerVerification->is_proof_of_funds;
-                        $llc_uploaded = $details->buyerVerification->is_llc_verification;
-                        $payment_uploaded = $details->buyerVerification->is_application_process;
+                        @php 
+                            $phone_verify_uploaded = $details->buyerVerification->is_phone_verification;
+                            $dl_uploaded = $details->buyerVerification->is_driver_license;
+                            $pof_uploaded = $details->buyerVerification->is_proof_of_funds;
+                            $llc_uploaded = $details->buyerVerification->is_llc_verification;
+                            $certify_closer_pdf_uploaded = $details->buyerVerification->is_certified_closer;
+                            $payment_uploaded = $details->buyerVerification->is_application_process;
 
-                        $activeTab = 'phone_verification';
+                            $activeTab = 'phone_verification';
 
-                        if($dl_uploaded == 1 && $details->buyerVerification->driver_license_status == 'pending'){
-                            $activeTab = 'driver_license';
-                        }elseif($pof_uploaded == 1 && $details->buyerVerification->proof_of_funds_status == 'pending'){
-                            $activeTab = 'proof_of_funds';
-                        }elseif($llc_uploaded == 1 && $details->buyerVerification->llc_verification_status == 'pending'){
-                            $activeTab = 'llc_verification';
-                        }elseif($payment_uploaded == 1){
-                            $activeTab = 'application_process';
-                        }
+                            if($dl_uploaded == 1 && $details->buyerVerification->driver_license_status == 'pending'){
+                                $activeTab = 'driver_license';
+                            }elseif($pof_uploaded == 1 && $details->buyerVerification->proof_of_funds_status == 'pending'){
+                                $activeTab = 'proof_of_funds';
+                            }elseif($llc_uploaded == 1 && $details->buyerVerification->llc_verification_status == 'pending'){
+                                $activeTab = 'llc_verification';
+                            }elseif($certify_closer_pdf_uploaded == 1 && $details->buyerVerification->certified_closer_status == 'pending'){
+                                $activeTab = 'certified_closer';
+                            }elseif($payment_uploaded == 1){
+                                $activeTab = 'application_process';
+                            }
 
-                    @endphp
+                        @endphp
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="nav nav-pills kyclisting_tab" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link {{ ($activeTab == 'phone_verification') ? 'active' : ''}}" id="v-pills-phone-verification-tab" data-toggle="pill" href="#v-pills-phone-verification" role="tab" aria-controls="v-pills-phone-verification" aria-selected="true">
-                                    {{ __('cruds.buyer.profile_verification.phone_verification') }}
-                                </a>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="nav nav-pills kyclisting_tab" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link {{ ($activeTab == 'phone_verification') ? 'active' : ''}}" id="v-pills-phone-verification-tab" data-toggle="pill" href="#v-pills-phone-verification" role="tab" aria-controls="v-pills-phone-verification" aria-selected="true">
+                                        {{ __('cruds.buyer.profile_verification.phone_verification') }}
+                                    </a>
 
-                                <a class="nav-link {{ ($activeTab == 'proof_of_funds') ? 'active' : ''}}" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                                    {{ __('cruds.buyer.profile_verification.proof_of_funds') }}
-                                </a>
+                                    <a class="nav-link {{ ($activeTab == 'proof_of_funds') ? 'active' : ''}}" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                                        {{ __('cruds.buyer.profile_verification.proof_of_funds') }}
+                                    </a>                                   
 
-                                <a class="nav-link {{ ($activeTab == 'driver_license') ? 'active' : ''}}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-                                    {{ __('cruds.buyer.profile_verification.driver_license') }}
-                                </a>
+                                    <a class="nav-link {{ ($activeTab == 'driver_license') ? 'active' : ''}}" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                                        {{ __('cruds.buyer.profile_verification.driver_license') }}
+                                    </a>
 
-                                <a class="nav-link {{ ($activeTab == 'llc_verification') ? 'active' : ''}}" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                                    {{ __('cruds.buyer.profile_verification.llc_verification') }}
-                                </a>
+                                    <a class="nav-link {{ ($activeTab == 'llc_verification') ? 'active' : ''}}" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                                        {{ __('cruds.buyer.profile_verification.llc_verification') }}
+                                    </a>
 
-                                <a class="nav-link {{ ($activeTab == 'application_process') ? 'active' : ''}}" id="v-pills-application-process-tab" data-toggle="pill" href="#v-pills-application-process" role="tab" aria-controls="v-pills-application-process" aria-selected="true">
-                                    {{ __('cruds.buyer.profile_verification.application_process') }}
-                                </a>
-                               
+                                    <a class="nav-link {{ ($activeTab == 'certified_closer') ? 'active' : ''}}" id="v-pills-certified-tab" data-toggle="pill" href="#v-pills-certified" role="tab" aria-controls="v-pills-certified" aria-selected="false">
+                                        {{ __('cruds.buyer.profile_verification.certified_closer') }}
+                                    </a>
+
+                                    <a class="nav-link {{ ($activeTab == 'application_process') ? 'active' : ''}}" id="v-pills-application-process-tab" data-toggle="pill" href="#v-pills-application-process" role="tab" aria-controls="v-pills-application-process" aria-selected="true">
+                                        {{ __('cruds.buyer.profile_verification.application_process') }}
+                                    </a>
+                                
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="tab-content kyclisting_tab" id="v-pills-tabContent">
-                                <div class="tab-pane fade {{ $activeTab == 'phone_verification' ? 'show active' : ''}}" id="v-pills-phone-verification" role="tabpanel" aria-labelledby="v-pills-phone-verification-tab">
-                                    <table class="table table-design mb-4 buyer_profile_verification">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="4"> 
-                                                    {{ $phone_verify_uploaded == 1 ? 'Yes' : 'No'  }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <div class="tab-pane fade {{ $activeTab == 'driver_license' ? 'show active' : ''}}" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                                    <table class="table table-design mb-4 buyer_profile_verification">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="4"> 
-                                                    @if($dl_uploaded == 1)
-                                                        @if($details->buyerVerification->driver_license_status == 'pending')
-                                                            <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->driver_license_status }}" data-type="driver_license_status">
-                                                                @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                                                    <option value="{{ $key }}" {{ ($details->buyerVerification->driver_license_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        @else
-                                                            {{ ucwords($details->buyerVerification->driver_license_status) }}
+                            <div class="col-md-9">
+                                <div class="tab-content kyclisting_tab" id="v-pills-tabContent">
+                                    <div class="tab-pane fade {{ $activeTab == 'phone_verification' ? 'show active' : ''}}" id="v-pills-phone-verification" role="tabpanel" aria-labelledby="v-pills-phone-verification-tab">
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        {{ $phone_verify_uploaded == 1 ? 'Yes' : 'No'  }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="tab-pane fade {{ $activeTab == 'driver_license' ? 'show active' : ''}}" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        @if($dl_uploaded == 1)
+                                                            @if($details->buyerVerification->driver_license_status == 'pending')
+                                                                <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->driver_license_status }}" data-type="driver_license_status">
+                                                                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
+                                                                        <option value="{{ $key }}" {{ ($details->buyerVerification->driver_license_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ ucwords($details->buyerVerification->driver_license_status) }}
+                                                            @endif
+                                                        @else 
+                                                            No
                                                         @endif
-                                                    @else 
-                                                        No
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @if($dl_uploaded == 1)
-                                            <tr>
-                                                @php 
-                                                    $frontImageExist = $details->uploads()->where('type', 'driver-license-front')->first();
-                                                    $frontImage = '';
-                                                    if(!is_null($frontImageExist) && !empty($frontImageExist) && $frontImageExist){
-                                                        $frontImage = $frontImageExist->file_path;
-                                                    }
-                                                    $backImageExist = $details->uploads()->where('type', 'driver-license-back')->first();
-                                                    $backImage = '';
-                                                    if(!is_null($backImageExist) && !empty($backImageExist) && $backImageExist){
-                                                        $backImage = $backImageExist->file_path;
-                                                    }
-                                                @endphp
-                                                <td class="remove-white-space">
-                                                    <h5>{{ __('cruds.buyer.profile_verification.front_id_photo') }}</h5>
-                                                    <div class="text-center">
-                                                        
-                                                        <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$frontImage) }}">
-                                                            <img src="{{ asset('storage/'.$frontImage) }}"  alt="" width="150px" height="100px">
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td class="remove-white-space">
-                                                    <h5>{{ __('cruds.buyer.profile_verification.back_id_photo') }}</h5>
-                                                    <div class="text-center">
-                                                        <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$backImage) }}">
-                                                            <img src="{{ asset('storage/'.$backImage) }}" alt="" width="150px" height="100px">
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <div class="tab-pane fade {{ $activeTab == 'proof_of_funds' ? 'show active' : ''}}" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                                    <table class="table table-design mb-4 buyer_profile_verification">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="4"> 
-                                                    @if($pof_uploaded == 1)
-                                                        @if($details->buyerVerification->proof_of_funds_status == 'pending')
-                                                            <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->proof_of_funds_status }}" data-type="proof_of_funds_status">
-                                                                @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                                                    <option value="{{ $key }}" {{ ($details->buyerVerification->proof_of_funds_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        @else
-                                                            {{ ucwords($details->buyerVerification->proof_of_funds_status) }}
-                                                        @endif
-                                                    @else 
-                                                        No
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @if($pof_uploaded == 1)
-                                            <tr>
-                                                @php 
-                                                    $bankStatementExist = $details->uploads()->where('type', 'bank-statement-pdf')->first();
-                                                    $bankStatementPdf = '';
-                                                    if(!is_null($bankStatementExist) && !empty($bankStatementExist) && $bankStatementExist){
-                                                        $bankStatementPdf = $bankStatementExist->file_path;
-                                                    }
-                                                @endphp
-                                                <td class="remove-white-space">
-                                                    <h5>{{ __('cruds.buyer.profile_verification.bank_statement') }}</h5>
-                                                    <div class="text-center">
-                                                        
-                                                        <a href="{{ asset('storage/'.$bankStatementPdf) }}" target="_blank" class="btn btn-primary btn-rounded btn-icon viewpdf-btn" data-src="">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                                                <path d="M9 9l1 0" />
-                                                                <path d="M9 13l6 0" />
-                                                                <path d="M9 17l6 0" />
-                                                            </svg>
-                                                            View Pdf 
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td class="remove-white-space">
-                                                    <h5>{{ __('cruds.buyer.profile_verification.other_proof_fund') }}</h5>
-                                                    <div >
-                                                        {{$details->buyerVerification->other_proof_of_fund ?? 'N/A'}}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="tab-pane fade {{ $activeTab == 'llc_verification' ? 'show active' : ''}}" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <table class="table table-design mb-4 buyer_profile_verification">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="4"> 
-                                                    @if($llc_uploaded == 1)
-                                                        @if($details->buyerVerification->llc_verification_status == 'pending')
-                                                            <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->llc_verification_status }}" data-type="llc_verification_status">
-                                                                @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
-                                                                    <option value="{{ $key }}" {{ ($details->buyerVerification->llc_verification_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        @else
-                                                            {{ ucwords($details->buyerVerification->llc_verification_status) }}
-                                                        @endif
-                                                    @else 
-                                                        No
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @if($llc_uploaded == 1)
+                                                    </td>
+                                                </tr>
+                                                @if($dl_uploaded == 1)
                                                 <tr>
                                                     @php 
-                                                        $llcFrontImageExist = $details->uploads()->where('type', 'llc-front-image')->first();
-                                                        $llcFrontImage = '';
-                                                        if(!is_null($llcFrontImageExist) && !empty($llcFrontImageExist) && $llcFrontImageExist){
-                                                            $llcFrontImage = $llcFrontImageExist->file_path;
+                                                        $frontImageExist = $details->uploads()->where('type', 'driver-license-front')->first();
+                                                        $frontImage = '';
+                                                        if(!is_null($frontImageExist) && !empty($frontImageExist) && $frontImageExist){
+                                                            $frontImage = $frontImageExist->file_path;
                                                         }
-                                                        $llcBackImageExist = $details->uploads()->where('type', 'llc-back-image')->first();
-                                                        $llcBackImage = '';
-                                                        if(!is_null($llcBackImageExist) && !empty($llcBackImageExist) && $llcBackImageExist){
-                                                            $llcBackImage = $llcBackImageExist->file_path;
+                                                        $backImageExist = $details->uploads()->where('type', 'driver-license-back')->first();
+                                                        $backImage = '';
+                                                        if(!is_null($backImageExist) && !empty($backImageExist) && $backImageExist){
+                                                            $backImage = $backImageExist->file_path;
                                                         }
                                                     @endphp
                                                     <td class="remove-white-space">
                                                         <h5>{{ __('cruds.buyer.profile_verification.front_id_photo') }}</h5>
                                                         <div class="text-center">
-                                                            <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$llcFrontImage) }}">
-                                                                <img src="{{ asset('storage/'.$llcFrontImage) }}"  alt="" width="150px" height="100px">
+                                                            
+                                                            <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$frontImage) }}">
+                                                                <img src="{{ asset('storage/'.$frontImage) }}"  alt="" width="150px" height="100px">
                                                             </a>
                                                         </div>
                                                     </td>
                                                     <td class="remove-white-space">
                                                         <h5>{{ __('cruds.buyer.profile_verification.back_id_photo') }}</h5>
                                                         <div class="text-center">
-                                                            <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$llcBackImage) }}">
-                                                                <img src="{{ asset('storage/'.$llcBackImage) }}" alt="" width="150px" height="100px">
+                                                            <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$backImage) }}">
+                                                                <img src="{{ asset('storage/'.$backImage) }}" alt="" width="150px" height="100px">
                                                             </a>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="tab-pane fade {{ $activeTab == 'application_process' ? 'show active' : ''}}" id="v-pills-application-process" role="tabpanel" aria-labelledby="v-pills-application-process-tab">
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     
-                                    <table class="table table-design mb-4 buyer_profile_verification">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="4"> 
-                                                    {{ $payment_uploaded == 1 ? 'Yes' : 'No'  }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="tab-pane fade {{ $activeTab == 'proof_of_funds' ? 'show active' : ''}}" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        @if($pof_uploaded == 1)
+                                                            @if($details->buyerVerification->proof_of_funds_status == 'pending')
+                                                                <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->proof_of_funds_status }}" data-type="proof_of_funds_status">
+                                                                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
+                                                                        <option value="{{ $key }}" {{ ($details->buyerVerification->proof_of_funds_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ ucwords($details->buyerVerification->proof_of_funds_status) }}
+                                                            @endif
+                                                        @else 
+                                                            No
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @if($pof_uploaded == 1)
+                                                <tr>
+                                                    @php 
+                                                        $bankStatementExist = $details->uploads()->where('type', 'bank-statement-pdf')->first();
+                                                        $bankStatementPdf = '';
+                                                        if(!is_null($bankStatementExist) && !empty($bankStatementExist) && $bankStatementExist){
+                                                            $bankStatementPdf = $bankStatementExist->file_path;
+                                                        }
+                                                    @endphp
+                                                    <td class="remove-white-space">
+                                                        <h5>{{ __('cruds.buyer.profile_verification.bank_statement') }}</h5>
+                                                        <div class="text-center">
+                                                            
+                                                            <a href="{{ asset('storage/'.$bankStatementPdf) }}" target="_blank" class="btn btn-primary btn-rounded btn-icon viewpdf-btn" data-src="">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                                                    <path d="M9 9l1 0" />
+                                                                    <path d="M9 13l6 0" />
+                                                                    <path d="M9 17l6 0" />
+                                                                </svg>
+                                                                View Pdf 
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                    <td class="remove-white-space">
+                                                        <h5>{{ __('cruds.buyer.profile_verification.other_proof_fund') }}</h5>
+                                                        <div >
+                                                            {{$details->buyerVerification->other_proof_of_fund ?? 'N/A'}}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
+
+                                    <div class="tab-pane fade {{ $activeTab == 'llc_verification' ? 'show active' : ''}}" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        @if($llc_uploaded == 1)
+                                                            @if($details->buyerVerification->llc_verification_status == 'pending')
+                                                                <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->llc_verification_status }}" data-type="llc_verification_status">
+                                                                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
+                                                                        <option value="{{ $key }}" {{ ($details->buyerVerification->llc_verification_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ ucwords($details->buyerVerification->llc_verification_status) }}
+                                                            @endif
+                                                        @else 
+                                                            No
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @if($llc_uploaded == 1)
+                                                    <tr>
+                                                        @php 
+                                                            $llcFrontImageExist = $details->uploads()->where('type', 'llc-front-image')->first();
+                                                            $llcFrontImage = '';
+                                                            if(!is_null($llcFrontImageExist) && !empty($llcFrontImageExist) && $llcFrontImageExist){
+                                                                $llcFrontImage = $llcFrontImageExist->file_path;
+                                                            }
+                                                            $llcBackImageExist = $details->uploads()->where('type', 'llc-back-image')->first();
+                                                            $llcBackImage = '';
+                                                            if(!is_null($llcBackImageExist) && !empty($llcBackImageExist) && $llcBackImageExist){
+                                                                $llcBackImage = $llcBackImageExist->file_path;
+                                                            }
+                                                        @endphp
+                                                        <td class="remove-white-space">
+                                                            <h5>{{ __('cruds.buyer.profile_verification.front_id_photo') }}</h5>
+                                                            <div class="text-center">
+                                                                <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$llcFrontImage) }}">
+                                                                    <img src="{{ asset('storage/'.$llcFrontImage) }}"  alt="" width="150px" height="100px">
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                        <td class="remove-white-space">
+                                                            <h5>{{ __('cruds.buyer.profile_verification.back_id_photo') }}</h5>
+                                                            <div class="text-center">
+                                                                <a href="javascript:void(0)" class="modal_image_btn" data-src="{{ asset('storage/'.$llcBackImage) }}">
+                                                                    <img src="{{ asset('storage/'.$llcBackImage) }}" alt="" width="150px" height="100px">
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="tab-pane fade {{ $activeTab == 'certified_closer' ? 'show active' : ''}}" id="v-pills-certified" role="tabpanel" aria-labelledby="v-pills-certified-tab">
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        @if($certify_closer_pdf_uploaded == 1)
+                                                            @if($details->buyerVerification->certified_closer_status == 'pending')
+                                                                <select class="select_profile_verify_status" data-id="{{ $details->buyerVerification->id }}" data-old_value="{{ $details->buyerVerification->certified_closer_status }}" data-type="certified_closer_status">
+                                                                    @foreach(config('constants.buyer_profile_verification_status') as $key => $value)
+                                                                        <option value="{{ $key }}" {{ ($details->buyerVerification->certified_closer_status == $key) ? 'selected' : '' }} >{{ $value }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ ucwords($details->buyerVerification->certified_closer_status) }}
+                                                            @endif
+                                                        @else 
+                                                            No
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @if($certify_closer_pdf_uploaded == 1)
+                                                <tr>
+                                                    @php 
+                                                        $certifiedClosureExist = $details->uploads()->where('type', 'certified-closer-pdf')->first();
+                                                        $certifiedClosurePdf = '';
+                                                        if(!is_null($certifiedClosureExist) && !empty($certifiedClosureExist) && $certifiedClosureExist){
+                                                            $certifiedClosurePdf = $certifiedClosureExist->file_path;
+                                                        }
+                                                    @endphp
+                                                    <td class="remove-white-space">
+                                                        <h5>{{ __('cruds.buyer.profile_verification.bank_statement') }}</h5>
+                                                        <div class="text-center">
+                                                            
+                                                            <a href="{{ asset('storage/'.$certifiedClosurePdf) }}" target="_blank" class="btn btn-primary btn-rounded btn-icon viewpdf-btn" data-src="">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                                                    <path d="M9 9l1 0" />
+                                                                    <path d="M9 13l6 0" />
+                                                                    <path d="M9 17l6 0" />
+                                                                </svg>
+                                                                View Pdf 
+                                                            </a>
+                                                        </div>
+                                                    </td>                                                   
+                                                </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="tab-pane fade {{ $activeTab == 'application_process' ? 'show active' : ''}}" id="v-pills-application-process" role="tabpanel" aria-labelledby="v-pills-application-process-tab">
+                                        
+                                        <table class="table table-design mb-4 buyer_profile_verification">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4"> 
+                                                        {{ $payment_uploaded == 1 ? 'Yes' : 'No'  }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="row profileCard-box">
+                            <div class="col-12 d-flex headBox-card">
+                                @php 
+                                    $phone_verify_uploaded = $details->buyerVerification->is_phone_verification;
+                                    $dl_uploaded = $details->buyerVerification->is_driver_license;
+                                    $pof_uploaded = $details->buyerVerification->is_proof_of_funds;
+                                    $llc_uploaded = $details->buyerVerification->is_llc_verification;
+                                    $certify_closer_pdf_uploaded = $details->buyerVerification->is_certified_closer;
+                                    $payment_uploaded = $details->buyerVerification->is_application_process;
+                                @endphp
 
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row profileCard-box">
-                        <div class="col-12 d-flex headBox-card">
-                            @php 
-                                $phone_verify_uploaded = $details->buyerVerification->is_phone_verification;
-                                $dl_uploaded = $details->buyerVerification->is_driver_license;
-                                $pof_uploaded = $details->buyerVerification->is_proof_of_funds;
-                                $llc_uploaded = $details->buyerVerification->is_llc_verification;
-                                $payment_uploaded = $details->buyerVerification->is_application_process;
-                            @endphp
-
-                        </div>
-                    </div>
-
-
                     @else
-                                      
+     
                         <div class="table-responsive search-table-data">
                             <div>
                             <div class="relative">

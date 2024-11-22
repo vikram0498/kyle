@@ -146,6 +146,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ->where('is_driver_license',1)->where('driver_license_status','verified')
         ->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')
         ->where('is_llc_verification',1)->where('llc_verification_status','verified')
+        ->where('is_certified_closer',1)->where('certified_closer_status','verified')
         ->where('is_application_process',1)->exists();
     }
 
@@ -191,6 +192,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return "";
     }
     //End Bank Statement Pdf
+
+    //Start Certified Closer Statement Pdf
+    public function certifiedCloserPdf()
+    {
+        return $this->morphOne(Uploads::class, 'uploadsable')->where('type','certified-closer-pdf');
+    }
+
+    public function getCertifiedCloserPdfUrlAttribute()
+    {
+        if($this->certifiedCloserPdf){
+            return $this->certifiedCloserPdf->file_url;
+        }
+        return "";
+    }
+    //End Certified Closer Statement Pdf
 
     // Start LLC Front Images
     public function llcFrontImage()

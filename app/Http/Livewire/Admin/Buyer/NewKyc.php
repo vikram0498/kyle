@@ -72,6 +72,10 @@ class NewKyc extends Component
                     ['proof_of_funds_status', 'pending']
                 ])
                 ->orWhere([
+                    ['is_certified_closer', 1],
+                    ['certified_closer_status', 'pending']
+                ])
+                ->orWhere([
                     ['is_llc_verification', 1],
                     ['llc_verification_status', 'pending']
                 ]);
@@ -83,7 +87,6 @@ class NewKyc extends Component
         })
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->perPage);
-
         return view('livewire.admin.buyer.new-kyc',compact('kycBuyers'));
     }
 

@@ -198,6 +198,7 @@ return [
             'phone_verification'    => 'Phone Verification',
             'driver_license'        => 'Driver’s License',
             'proof_of_funds'        => 'Proof of Funds',
+            'certified_closer'      => 'Certified Closer',
             'llc_verification'      => 'LLC Verification',
             'application_process'   => 'Application Process',
             'phone_verification'    => 'Phone Verification',

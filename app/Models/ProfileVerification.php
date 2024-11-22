@@ -30,7 +30,9 @@ class ProfileVerification extends Model
         'is_application_process',
         'reason_type',
         'reason_content',
-        'is_profile_verify'
+        'is_profile_verify',
+        'is_certified_closer',
+        'certified_closer_status',
     ];
 
     public function uploads()
