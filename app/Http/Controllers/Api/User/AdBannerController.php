@@ -39,6 +39,7 @@ class AdBannerController extends Controller
                 'end_time' => $banner->end_time ? $banner->end_time->format('H:i:s') : null,
                 'created_at' => $banner->created_at ? $banner->created_at->format('d-m-Y') : null,
                 'image' => $banner->adBannerImage ? $banner->image_url : asset('images/default-img.jpg'),
+                'is_expired' => false
             ];
 
             return response()->json([
@@ -49,7 +50,7 @@ class AdBannerController extends Controller
 
         return response()->json([
             'success' => true,
-            'is_expired' => true
+            'data' => ['is_expired' => true]
         ],200);
     }
 }
