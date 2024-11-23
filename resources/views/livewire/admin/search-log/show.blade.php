@@ -8,17 +8,22 @@
             <th width="25%">{{ __('cruds.search_log.fields.user_id')}}</th>
             <td> {{ $details->seller->name ?? 'N/A' }}</td>
         </tr>        
+        
+        {{--
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.address')}}</th>
             <td> {{ $details->address ?? 'N/A' }}</td>
         </tr>
+        --}}
+        
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.city')}}</th>
             <td> 
                 @php
                    $AllCities = [];
-                   if($details->city){
-                        $AllCities = \DB::table('cities')->whereIn('id', $details->city)->pluck('name')->toArray();
+                    $cities_array = json_decode($details->city, true);
+                    if($cities_array && count($cities_array) > 0){
+                        $AllCities = \DB::table('cities')->whereIn('id', $cities_array)->pluck('name')->toArray();
                    }
                     
                 @endphp
@@ -30,17 +35,22 @@
             <td> 
                 @php
                   $AllStates = [];
-                  if($details->state){
-                    $AllStates = \DB::table('states')->whereIn('id', $details->state)->pluck('name')->toArray();
+                  $states_array = json_decode($details->state, true);
+                  if($states_array && count($states_array) > 0){
+                    $AllStates = \DB::table('states')->whereIn('id', $states_array)->pluck('name')->toArray();
                   }
                 @endphp
                  {{  count($AllStates) > 0 ? implode(',',$AllStates) : 'N/A'   }}
             </td>
         </tr>
+        
+        {{--
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.zip_code')}}</th>
             <td> {{ $details->zip_code ?? 'N/A' }}</td>
         </tr>
+        --}}
+        
         <tr>
             <th width="25%">{{ __('cruds.search_log.fields.bedroom')}}</th>
             <td> {{ $details->bedroom ?? 'N/A' }}</td>

@@ -187,17 +187,17 @@ class BuyerController extends Controller
 
                 $validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-                // if($request->state){
-                //      $validatedData['state'] = json_encode($request->state);
-                // }
+                if($request->state){
+                     $validatedData['state'] = json_encode($request->state);
+                }
 
-                //  if($request->city){
-                //      $validatedData['city'] = json_encode($request->city);
-                // }
+                 if($request->city){
+                     $validatedData['city'] = json_encode($request->city);
+                }
 
-                // if ($request->parking) {
-                //     $validatedData['parking'] = (int)$request->parking;
-                // }
+                if ($request->parking) {
+                    $validatedData['parking'] = (int)$request->parking;
+                }
 
                 if ($request->buyer_type) {
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
@@ -297,25 +297,32 @@ class BuyerController extends Controller
             $other_details = $buyer->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
 
             //Start State Column
-            /* $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $other_details->state)->orderBy('name', 'ASC')->pluck('name', 'id');
+            $state_array = json_decode($other_details->state,true);
+            if( $state_array ){
+                 $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $state_array)->orderBy('name', 'ASC')->pluck('name', 'id');
 
-            $other_details->state = $states->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => ucwords(strtolower($label)),
-                ];
-            })->values()->all();
+                $other_details->state = $states->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => ucwords(strtolower($label)),
+                    ];
+                })->values()->all();
+            }
+           
             //End State Column
 
             //Start City Column
-            $cities = DB::table('cities')->whereIn('id', $other_details->city)->orderBy('name', 'ASC')->pluck('name', 'id');
-
-            $other_details->city = $cities->map(function ($label, $value) {
-                return [
-                    'value' => $value,
-                    'label' => ucwords(strtolower($label)),
-                ];
-            })->values()->all(); */
+            $city_array = json_decode($other_details->city,true);
+            if( $city_array ){
+                $cities = DB::table('cities')->whereIn('id', $city_array)->orderBy('name', 'ASC')->pluck('name', 'id');
+    
+                $other_details->city = $cities->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => ucwords(strtolower($label)),
+                    ];
+                })->values()->all(); 
+            }
             //End City Column
 
             //Start Market Preference (MLS Status) Column
@@ -451,12 +458,13 @@ class BuyerController extends Controller
             return response()->json($responseData, 200);
             
         } catch (\Exception $e) {
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
 
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 400);
         }
@@ -485,13 +493,13 @@ class BuyerController extends Controller
 
         	$validatedData['country'] =  DB::table('countries')->where('id', 233)->value('name');
 
-        	/* if($request->state){
+        	if($request->state){
                   	$validatedData['state'] = array_map('intval',$request->state);
         	}
 
        		if($request->city){
                 	$validatedData['city'] = array_map('intval',$request->city);
-        	} */
+        	} 
         
         	if($request->property_type){
            		 $validatedData['property_type'] = array_map('intval',$request->property_type);
@@ -573,7 +581,7 @@ class BuyerController extends Controller
         	$responseData = [
             		'status'        => false,
             		'error'         => trans('messages.error_message'),
-            		'error_details' => $e->getMessage()
+            		'error_details' => $e->getMessage().'->'.$e->getLine()
         	];
         	return response()->json($responseData, 400);
     	}
@@ -1068,24 +1076,24 @@ class BuyerController extends Controller
             $allBuyers = [];
             foreach ($buyers as $key => $buyer) {
                 $labels = '';
-                $labels = $buyer->address;
+                // $labels = $buyer->address;
 
                 if ($buyer->city) {
-                    // $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
-                    // $labels .= count($cityArray) > 0 ?  ', '.implode(',',$cityArray) : '';
+                    $cityArray = DB::table('cities')->whereIn('id',$buyer->city)->pluck('name')->toArray();
+                    $labels .= count($cityArray) > 0 ?  ', '.implode(',',$cityArray) : '';
                 }
 
                 if ($buyer->state) {
-                    // $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
-                    // $labels .= count($stateArray) > 0 ? ', '.implode(', ',$stateArray):'';
+                    $stateArray = DB::table('states')->whereIn('id',$buyer->state)->pluck('name')->toArray();
+                    $labels .= count($stateArray) > 0 ? ', '.implode(', ',$stateArray):'';
                 }
 
                 $labels .= $buyer->zip_code ? ', ' . $buyer->zip_code : '';
 
-                $allBuyers[0][$labels]['address'] = '';
+                // $allBuyers[0][$labels]['address'] = '';
                 $allBuyers[0][$labels]['city'] = '';
                 $allBuyers[0][$labels]['state'] = '';
-                $allBuyers[0][$labels]['zip_code'] = '';
+                // $allBuyers[0][$labels]['zip_code'] = '';
 
                 $allBuyers[0][$labels]['address'] = $buyer->address;
 
@@ -1109,7 +1117,7 @@ class BuyerController extends Controller
                     })->values()->all();
                 }
 
-                $allBuyers[0][$labels]['zip_code'] = $buyer->zip_code;
+                // $allBuyers[0][$labels]['zip_code'] = $buyer->zip_code;
             }
 
             //Return Error Response
@@ -1126,6 +1134,7 @@ class BuyerController extends Controller
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 400);
         }

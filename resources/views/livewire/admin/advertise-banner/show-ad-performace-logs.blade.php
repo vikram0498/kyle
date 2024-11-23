@@ -88,9 +88,9 @@
         </div>
     </div>
 
+ <div class="relative"> 
     <div class="table-responsive search-table-data">
-        <div class="relative">   
-                
+         
             <!-- Show entries & Search box -->
             <div class="flex items-center justify-between mb-1">
                 <div class="flex items-center">                

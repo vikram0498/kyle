@@ -116,7 +116,7 @@ return [
             'city'                          => 'Buy Box Criteria City',
             'country'                       => 'Country',
             'state'                         => 'Buy Box Criteria State',
-            'zip_code'                      => 'Zip',
+            'zip_code'                      => 'Buy Box Criteria Pin Code',
             'bedroom_min'                   => 'Bedroom (min)',
             'bedroom_max'                   => 'Bedroom (max)',
             'bath_min'                      => 'Bath (min)',
@@ -205,6 +205,7 @@ return [
             'front_id_photo'        => 'Front ID Photo',
             'back_id_photo'         => 'Back ID Photo',
             'bank_statement'        => 'Bank Statement',
+            'settlement_statement'  => 'Settlement Statement',
             'other_proof_fund'      => 'Other Proof Of Fund'
         ]
     ],

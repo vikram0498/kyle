@@ -229,23 +229,29 @@ class SearchBuyerController extends Controller
                 $buyers = $buyers->where('park', $parkType);
                 $additionalBuyers = $additionalBuyers->where('park', $parkType);
             }
+            
+            
 
-            if($request->address){
+           /* if($request->address){
                 $buyers = $buyers->where('buyers.address', 'like', '%'.$request->address.'%');
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
-            }
+            }*/
 
-            /* if($request->state){
+            if($request->state){
                 $selectedValues = $request->state;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("state", $value);
+                    if($selectedValues){
+                        foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("state", $value);
+                        }
                     }
                 });
 
                 $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("state", $value);
+                    if($selectedValues){
+                        foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("state", $value);
+                        }
                     }
                 });
             }
@@ -253,18 +259,24 @@ class SearchBuyerController extends Controller
             if($request->city){
                 $selectedValues = $request->city;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("city", $value);
+                    if($selectedValues){
+                        foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("city", $value);
+                        }
                     }
                 });
 
                 $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("city", $value);
+                    if($selectedValues){
+                        foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("city", $value);
+                        }
                     }
                 });
-            } */
+            }
+            
 
+            /*
             if($request->state){
                 $buyers = $buyers->where('state', $request->state);
                 $additionalBuyers = $additionalBuyers->where('state', $request->state);
@@ -273,6 +285,7 @@ class SearchBuyerController extends Controller
                 $buyers = $buyers->where('city', $request->city);
                 $additionalBuyers = $additionalBuyers->where('city', $request->city);
             }
+            */
 
             // if($request->zip_code){
             //     $buyers = $buyers->where('zip_code', $request->zip_code);
@@ -314,6 +327,7 @@ class SearchBuyerController extends Controller
                           ->where('bath_max', '>=', $bathValue);
                 });
             }
+            
 
             // if($request->rooms && is_numeric($request->rooms)){
             //     $roomsValue = $request->rooms;
@@ -400,6 +414,8 @@ class SearchBuyerController extends Controller
                 });
             }
 
+            
+            
             if($request->property_flaw){
                 // $selectedValues = $request->property_flaw;
                 $propertyFlows = array_map('intval', $request->property_flaw);
@@ -451,6 +467,7 @@ class SearchBuyerController extends Controller
                     }
                 });
             }
+            
 
             if($request->utilities){
                 $buyers = $buyers->where('utilities', $request->utilities);
@@ -611,6 +628,7 @@ class SearchBuyerController extends Controller
                     }
                 });
             }
+            
 
             if(!is_null($request->value_add) && in_array($request->value_add, $radioValues)){
                 $buyers = $buyers->where('value_add', $request->value_add);
@@ -653,12 +671,13 @@ class SearchBuyerController extends Controller
 
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
-
+            
             $searchLogId = 0;
             if(isset($request->filterType) && $request->filterType == 'search_page'){
+               
                 $insertLogRecords['country'] =  233;
-                $insertLogRecords['state']   =  $request->state ?? null;
-                $insertLogRecords['city']    =  $request->city ?? null;
+                $insertLogRecords['state']   =  $request->state ? json_encode($request->state,JSON_NUMERIC_CHECK) : null;
+                $insertLogRecords['city']    =  $request->city ? json_encode($request->city,JSON_NUMERIC_CHECK) : null;
                 $insertLogRecords['permanent_affix'] =  (!is_null($request->permanent_affix))?$request->permanent_affix : 0;
                 $insertLogRecords['park']    =  $request->park;
                 $insertLogRecords['rooms']    =  $request->rooms;
@@ -667,6 +686,7 @@ class SearchBuyerController extends Controller
                 $insertLogRecords['purchase_method']  =  (isset($purchaseMethods) && $purchaseMethods && count($purchaseMethods) > 0) ? $purchaseMethods : null;
                 $insertLogRecords['picture_link'] =  $request->picture_link;
                 $searchLog = SearchLog::create($insertLogRecords);
+                
                 $searchLogId = $searchLog->id;
                     if ($request->hasFile('attachments')) {                   
                         foreach ($request->file('attachments') as $file) {
@@ -674,6 +694,8 @@ class SearchBuyerController extends Controller
                         }
                     }
             }
+            
+            
             
             foreach ($buyers as $key=>$buyer){
                 $liked = false;
@@ -698,7 +720,7 @@ class SearchBuyerController extends Controller
                 }
                 
                 if($request->activeTab){
-                    if($request->activeTab == 'my_buyers'){
+                    if( ($request->activeTab == 'my_buyers') || ($authUserLevelType == 3) ){
 
                         if($buyerDetails){
                             $buyer->name =  ucwords($name);
@@ -714,7 +736,7 @@ class SearchBuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                         $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
-                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+                        $buyer->createdByAdmin = (($buyer->created_by == 1) || ($authUserLevelType == 3)) ? true : false;
                         $buyer->liked = $liked;
                         $buyer->disliked = $disliked;
 
@@ -882,24 +904,29 @@ class SearchBuyerController extends Controller
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
             // }
 
-            /* if($lastSearchLog->state){
+            if($lastSearchLog->state){
                 $selectedValues = $lastSearchLog->state;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("state", $value);
+                    if($selectedValues){
+                         foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("state", $value);
+                        }
                     }
+                   
                 });
             }
 
             if($lastSearchLog->city){
                 $selectedValues = $lastSearchLog->city;
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    foreach ($selectedValues as $value) {
-                        $query->orWhereJsonContains("city", $value);
+                    if($selectedValues){
+                        foreach ($selectedValues as $value) {
+                            $query->orWhereJsonContains("city", $value);
+                        }
                     }
                 });
-            } */
-            if($lastSearchLog->state){
+            } 
+            /*if($lastSearchLog->state){
                 $buyers = $buyers->where('state', $lastSearchLog->state);
             }
             if($lastSearchLog->city){
@@ -908,7 +935,7 @@ class SearchBuyerController extends Controller
 
             if($lastSearchLog->zip_code){
                 $buyers = $buyers->where('zip_code', $lastSearchLog->zip_code);
-            }
+            }*/
 
             if($lastSearchLog->price){
                 $priceValue = $lastSearchLog->price;

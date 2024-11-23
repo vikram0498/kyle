@@ -68,8 +68,8 @@ class StoreSingleBuyerDetailsRequest extends FormRequest
              
             // 'zip_code' => ['nullable', 'max:9', 'regex:/^[0-9]*$/'],
             // 'country'     => ['required'],
-            'city'        => ['required',/*'exists:states,id'*/], 
-            'state'       => ['required',/*'exists:cities,id'*/], 
+            'city'        => [/*'required','exists:cities,id'*/], 
+            'state'       => ['required',/*'exists:states,id'*/], 
             'company_name'   => [], 
 
             'price_min' => ['required','numeric', !empty($this->price_max) ? new CheckMinValue($this->price_max, 'price_max') : ''], 

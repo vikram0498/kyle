@@ -37,44 +37,64 @@
             <th width="25%">{{ __('cruds.buyer.fields.phone')}}</th>
             <td class="remove-white-space"> {{ $details->userDetail->phone ?? 'N/A' }}</td>
         </tr>
+       
         <tr>
             <th width="25%">Description</th>
             <td class="remove-white-space"> {{ $details->userDetail->description ?? 'N/A' }}</td>
         </tr>
+      
+       
+        {{--
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.country')}}</th>
-            <td class="remove-white-space"> {{ $details->country ?? 'N/A' }}</td>
+            <th width="25%">{{ __('cruds.buyer.fields.address')}}</th>
+            <td class="remove-white-space"> {{ $details->address ?? 'N/A' }}</td>
         </tr>
+        --}}
+        
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.city')}}</th>
+            <td class="remove-white-space">
+                 @php
+                  $AllCities = [];
+                 
+                  $cities_array = json_decode($details->city, true);
+                  if($cities_array && count($cities_array) > 0){
+                    $AllCities = \DB::table('cities')->whereIn('id', $cities_array)->pluck('name')->toArray();
+                  }
+                @endphp
+                {{  count($AllCities) > 0 ? implode(', ',$AllCities) : 'N/A'   }}
+            </td>
+        </tr>   
+        {{--
+        <tr>
+            <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
+            <td class="remove-white-space"> {{ $details->zip_code ?? 'N/A' }}</td>
+        </tr>
+        --}}
+        
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.state')}}</th>
             <td class="remove-white-space">
-                @php
+                  @php
                 
                   $AllStates = [];
-                  if($details->state){
-                    $AllStates = \DB::table('states')->whereIn('id', $details->state)->pluck('name')->toArray();
+                  
+                  $states_array = json_decode($details->state, true);
+                  if($states_array && count($states_array) > 0){
+                    $AllStates = \DB::table('states')->whereIn('id', $states_array)->pluck('name')->toArray();
                   }
                 @endphp
                  {{  count($AllStates) > 0 ? implode(', ',$AllStates) : 'N/A'   }}
             </td>
         </tr>
+        
+        {{--
         <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.city')}}</th>
-            <td class="remove-white-space">
-                @php
-                  $AllCities = [];
-                  if($details->city){
-                    $AllCities = \DB::table('cities')->whereIn('id', $details->city)->pluck('name')->toArray();
-                  }
-                @endphp
-                {{  count($AllCities) > 0 ? implode(', ',$AllCities) : 'N/A'   }}
-            </td>
-        </tr>        
-        {{-- <tr>
-            <th width="25%">{{ __('cruds.buyer.fields.zip_code')}}</th>
-            <td class="remove-white-space"> {{ $details->zip_code ?? 'N/A' }}</td>
-        </tr> --}}
-
+            <th width="25%">{{ __('cruds.buyer.fields.country')}}</th>
+            <td class="remove-white-space"> {{ $details->country ?? 'N/A' }}</td>
+        </tr>
+        --}}
+        
         
         <tr>
             <th width="25%">{{ __('cruds.buyer.fields.market_preferance')}}</th>
@@ -410,6 +430,7 @@
                 $dl_uploaded = $details->userDetail->buyerVerification->is_driver_license;
                 $pof_uploaded = $details->userDetail->buyerVerification->is_proof_of_funds;
                 $llc_uploaded = $details->userDetail->buyerVerification->is_llc_verification;
+                $certified_closer_uploaded = $details->userDetail->buyerVerification->is_certified_closer;
                 $payment_uploaded = $details->userDetail->buyerVerification->is_application_process;
             @endphp
         </div>
@@ -507,6 +528,7 @@
                 </td>
             </tr>
         @endif
+        
         <tr>
             <th rowspan="{{ $llc_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.llc_verification') }}</th>
             <td colspan="2"> 
@@ -551,6 +573,47 @@
                 </td>
             </tr>
         @endif
+        
+        <tr>
+            <th rowspan="{{ $certified_closer_uploaded == 1 ?2 : 1 }}" width="25%">{{ __('cruds.buyer.profile_verification.certified_closer') }}</th>
+            <td colspan="2">
+                @if($certified_closer_uploaded == 1)
+                    {{ ucwords($details->userDetail->buyerVerification->certified_closer_status) }}
+                @else 
+                    No
+                @endif
+            </td>
+        </tr>
+        @if($certified_closer_uploaded == 1)
+            <tr>
+                @php 
+                    $certifiedCloserExist = $details->userDetail->uploads()->where('type', 'certified-closer-pdf')->first();
+                    $certifiedCloserPdf = '';
+                    if(!is_null($certifiedCloserExist) && !empty($certifiedCloserExist) && $certifiedCloserExist){
+                        $certifiedCloserPdf = $certifiedCloserExist->file_path;
+                    }
+                @endphp
+                <td class="remove-white-space" colspan="2">
+                    <h5>{{ __('cruds.buyer.profile_verification.settlement_statement') }} </h5>
+                    <div class="text-center">
+                        
+                        <a href="{{ asset('storage/'.$certifiedCloserPdf) }}" target="_blank" class="btn btn-primary btn-rounded btn-icon viewpdf-btn" data-src="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-text" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                <path d="M9 9l1 0" />
+                                <path d="M9 13l6 0" />
+                                <path d="M9 17l6 0" />
+                            </svg>
+                            View Pdf 
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        @endif
+        
+        
         <tr>
             <th rowspan="2" width="25%">{{ __('cruds.buyer.profile_verification.application_process') }}</th>
             <td colspan="2">{{ $payment_uploaded == 1 ? 'Yes' : 'No'  }}</td>

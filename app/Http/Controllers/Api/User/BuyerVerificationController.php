@@ -468,6 +468,7 @@ class BuyerVerificationController extends Controller
 
         if($user->buyerVerification->is_certified_closer){
             $lastStepForm = 5;
+            $statusOfLastStep = $user->buyerVerification->certified_closer_status;
         }
 
         if($user->buyerVerification->is_application_process){

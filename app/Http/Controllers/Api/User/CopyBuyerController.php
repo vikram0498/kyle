@@ -218,7 +218,7 @@ class CopyBuyerController extends Controller
             DB::beginTransaction();
             
             //Start to check phone number verified
-            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+           if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
@@ -284,17 +284,17 @@ class CopyBuyerController extends Controller
 
                 $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
 
-                // if($request->state){
-                //      $validatedData['state'] = json_encode($request->state);
-                // }
+                if($request->state){
+                     $validatedData['state'] = json_encode($request->state);
+                }
                 
-                //  if($request->city){
-                //      $validatedData['city'] = json_encode($request->city);
-                // }
+                 if($request->city){
+                     $validatedData['city'] = json_encode($request->city);
+                }
                 
-                // if($request->parking){
-                //     $validatedData['parking'] = (int)$request->parking;
-                // }
+                if($request->parking){
+                    $validatedData['parking'] = (int)$request->parking;
+                }
             
                 if($request->buyer_type){
                     $validatedData['buyer_type'] = (int)$request->buyer_type;
@@ -380,12 +380,13 @@ class CopyBuyerController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-             dd($e->getMessage().'->'.$e->getLine());
+            //  dd($e->getMessage().'->'.$e->getLine());
             
             //Return Error Response
             $responseData = [
                 'status'        => false,
                 'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
             ];
             return response()->json($responseData, 400);
         }
@@ -453,13 +454,13 @@ class CopyBuyerController extends Controller
             DB::beginTransaction();
 
             //Start to check phone number verified
-            if(!isPhoneNumberVerified($request->country_code,$request->phone)){
+            /*if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                 $responseData = [
                     'status'        => false,
                     'message'       => 'OTP not verified.',
                 ]; 
                 return response()->json($responseData, 403);
-            }
+            }*/
             //End to check phone number verified
 
             $validatedData = $request->all();
@@ -503,17 +504,17 @@ class CopyBuyerController extends Controller
 
                 $validatedData['country'] =  DB::table('countries')->where('id',233)->value('name');
 
-                // if($request->state){
-                //      $validatedData['state'] = json_encode($request->state);
-                // }
+                if($request->state){
+                     $validatedData['state'] = json_encode($request->state);
+                }
                 
-                //  if($request->city){
-                //      $validatedData['city'] = json_encode($request->city);
-                // }
+                 if($request->city){
+                     $validatedData['city'] = json_encode($request->city);
+                }
                 
-                // if($request->parking){
-                //     $validatedData['parking'] = (int)$request->parking;
-                // }
+                if($request->parking){
+                    $validatedData['parking'] = (int)$request->parking;
+                }
             
                 if($request->buyer_type){
                     $validatedData['buyer_type'] = (int)$request->buyer_type;

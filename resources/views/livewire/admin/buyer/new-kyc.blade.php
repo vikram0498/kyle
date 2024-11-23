@@ -289,7 +289,7 @@
                                                         }
                                                     @endphp
                                                     <td class="remove-white-space">
-                                                        <h5>{{ __('cruds.buyer.profile_verification.bank_statement') }}</h5>
+                                                        <h5>{{ __('cruds.buyer.profile_verification.settlement_statement') }}</h5>
                                                         <div class="text-center">
                                                             
                                                             <a href="{{ asset('storage/'.$certifiedClosurePdf) }}" target="_blank" class="btn btn-primary btn-rounded btn-icon viewpdf-btn" data-src="">

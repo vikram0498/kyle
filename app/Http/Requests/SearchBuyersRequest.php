@@ -53,7 +53,7 @@ class SearchBuyersRequest extends FormRequest
     {
         $rules = [
             'property_type'  => ['required','numeric'],
-            'address'     => ['required', 'string'], 
+            'address'     => [/*'required', 'string'*/], 
             'country'     => [],
             'city'        => ['required'], 
             'state'       => ['required'], 

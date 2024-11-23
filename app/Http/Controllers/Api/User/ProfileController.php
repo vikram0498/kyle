@@ -266,7 +266,7 @@ class ProfileController extends Controller
 
             $authUser = auth()->user();
 
-            if(!($authUser->level_type == 2)){
+            if(!($authUser->level_type == 2 || $authUser->level_type == 3)){
                 $responseData = [
                     'status'    => false,
                     'message'   => "Your account should level 2 type user!",
