@@ -141,7 +141,6 @@ function Header() {
       setIsNewNotification(payload.notification.body)
     })
   },[]);
-
   return (
     <>
       <header className="dashboard-header">
@@ -172,13 +171,16 @@ function Header() {
                 <div className="modetype">
                   <DarkMode />
                 </div>
-                <div className="buyer_seller_toggle">
-                  <input type="checkbox" onChange={handleToggleSeller}/>
-                  <label>
-                    <span>Seller</span>
-                    <span>Buyer</span>
-                  </label>
-                </div>
+                {userDetails?.level_type > 1 && 
+                  <div className="buyer_seller_toggle">
+                    <input type="checkbox" onChange={handleToggleSeller}/>
+                    <label>
+                      <span>Seller</span>
+                      <span>Buyer</span>
+                    </label>
+                  </div>
+                }
+                
                 <div className="top_icons_list d-none d-xxl-block">
                   <ul>
                     <li>
@@ -234,8 +236,8 @@ function Header() {
                                       <Image src='/assets/images/user-dropdown-icon.svg' alt='' />
                                     </div>
                                     <div className="dropdown_middle">
-                                      <h6>Brooklyn Simmons</h6>
-                                      <p>New buy added in your buyer list....</p>
+                                      <h6>{data.data.title}</h6>
+                                      <p>{data.data.message}</p>
                                     </div>
                                     <div className="dropdown_end align-self-center">
                                       <Link to="/deal-notifications">

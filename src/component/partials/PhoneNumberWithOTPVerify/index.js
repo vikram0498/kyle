@@ -88,11 +88,14 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
                     }
                 </label>
                 <div className="form-group position-relative">
-                    <input type="hidden" name="country_code" value={countryCode}/>
-                    <input
+                    <div className="form-group-inner">
+                        <span className="form-icon verification_count">(+{countryCode})</span>
+                    
+                        {/* <input type="hidden" value={countryCode} name="country_code"/> */}
+                        <input
                         type="text"
                         name="phone"
-                        className="form-control"
+                        className="form-control verification_input"
                         placeholder="Eg. 123-456-7890"
                         {...register("phone", {
                         required: "Phone Number is required",
@@ -105,6 +108,8 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
                             },
                         })}
                     />
+                    </div>
+                    <input type="hidden" name="country_code" value={countryCode}/>
                     {errors && (
                         <p className="error">
                         {errors?.message}

@@ -14,12 +14,12 @@ const MobileHomePark = ({ data }) => {
         <GoogleMapAutoAddress dataObj={data} />
         {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
-        </div>
+        </div>*/}
         <div className="col-12 col-lg-12">
           <label>State</label>
           <div className="form-group">
             <Select
-              name="state"
+              name="state[]"
               defaultValue=""
               options={data.stateOptions}
               onChange={(item) => data.getCities(item)}
@@ -40,7 +40,7 @@ const MobileHomePark = ({ data }) => {
           <label>City</label>
           <div className="form-group">
             <Select
-              name="city"
+              name="city[]"
               defaultValue=""
               options={data.cityOptions}
               onChange={(item) => data.setCity(item)}
@@ -57,7 +57,7 @@ const MobileHomePark = ({ data }) => {
             {data.renderFieldError("city")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Zip Code</label>
           <div className="form-group">
             <input
@@ -70,7 +70,7 @@ const MobileHomePark = ({ data }) => {
             />
             {data.renderFieldError("zip_code")}
           </div>
-        </div> */}
+        </div>  */}
 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
           <label>Lot Size Sq Ft</label>

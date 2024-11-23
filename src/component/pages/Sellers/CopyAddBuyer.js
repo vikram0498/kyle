@@ -18,6 +18,7 @@ import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
 import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
 import GoogleFacebookLogin from "../../partials/GoogleFacebookLogin";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 function CopyAddBuyer({urlType}) {
   const { token } = useParams();
@@ -267,8 +268,9 @@ function CopyAddBuyer({urlType}) {
     }
     var data = new FormData(e.target);
     let formObject = Object.fromEntries(data.entries());
-
     formObject.parking =  parkingValue;
+    formObject.city = cityValue;
+    formObject.state = stateValue;
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     // formObject.buyer_type       =  buyerTypeValue;
@@ -368,7 +370,7 @@ function CopyAddBuyer({urlType}) {
       getStates(e);
     } else if (name == "state") {
       setState(e);
-      getCities(e);
+      getCities([e]);
     } else if (name == "city") {
       //setCity(e);
     } else if (name == "building_class") {
@@ -494,12 +496,12 @@ function CopyAddBuyer({urlType}) {
                 <div className="col-12 col-lg-12">
                   <div className="card-box-inner">
                     <div className="row">
-                      <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                        <h3>Buy Box Criteria Form</h3>
-                        <p>Real estate deals that match your exact buying criteria</p>
-                      </div>
-                      <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                         <GoogleFacebookLogin/>
+                      <div className="col-12 col-sm-7 col-md-12 col-lg-12">
+                        <div className="center-content mb-3 md:mb-5">
+                          <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
+                          {/* <h2>Welcome to Inucation!</h2> */}
+                          <h2>Buy Box Criteria</h2>
+                        </div>
                       </div>
                     </div>
 
@@ -735,9 +737,9 @@ function CopyAddBuyer({urlType}) {
                               {renderFieldError("buyer_type")}
                             </div>
                           </div>
-                          {/* <div className="col-12 col-lg-12">
+                          <div className="col-12 col-lg-12">
                             <label>
-                            Buy Box Criteria State (Multi-Select)<span>*</span>
+                            Buy Box Criteria State (Single-Select)<span>*</span>
                             </label>
                             <div className="form-group">
                               <Controller
@@ -754,12 +756,11 @@ function CopyAddBuyer({urlType}) {
                                     isClearable={true}
                                     className="select"
                                     placeholder="Select Buy Box Criteria State (Multi-Select)"
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     onChange={(e) => {
                                       onChange(e);
                                       handleCustum(e, "state");
                                     }}
-                                    isMulti
                                   />
                                 )}
                               />
@@ -803,8 +804,8 @@ function CopyAddBuyer({urlType}) {
 
                               {renderFieldError("city")}
                             </div>
-                          </div> */}
-                          <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
+                          </div>
+                          {/* <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/> */}
                           <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                             <label>
                               MLS Status<span>*</span>
@@ -2140,6 +2141,7 @@ function CopyAddBuyer({urlType}) {
                                     name="solar"
                                     value="1"
                                     id="solar_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="solar_yes">
                                     Yes
@@ -2168,6 +2170,7 @@ function CopyAddBuyer({urlType}) {
                                     name="pool"
                                     value="1"
                                     id="pool_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="pool_yes">
                                     Yes
@@ -2196,6 +2199,7 @@ function CopyAddBuyer({urlType}) {
                                     name="septic"
                                     value="1"
                                     id="septic_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="septic_yes">
                                     Yes
@@ -2224,6 +2228,7 @@ function CopyAddBuyer({urlType}) {
                                     name="well"
                                     value="1"
                                     id="well_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="well_yes">
                                     Yes
@@ -2252,6 +2257,7 @@ function CopyAddBuyer({urlType}) {
                                     name="hoa"
                                     value="1"
                                     id="hoa_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="hoa_yes">
                                     Yes
@@ -2280,6 +2286,7 @@ function CopyAddBuyer({urlType}) {
                                     name="age_restriction"
                                     value="1"
                                     id="age_restriction_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2314,6 +2321,7 @@ function CopyAddBuyer({urlType}) {
                                     name="rental_restriction"
                                     value="1"
                                     id="rental_restriction_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2349,6 +2357,7 @@ function CopyAddBuyer({urlType}) {
                                     name="post_possession"
                                     value="1"
                                     id="post_possession_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2384,6 +2393,7 @@ function CopyAddBuyer({urlType}) {
                                     name="tenant"
                                     value="1"
                                     id="tenant_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="tenant_yes">
                                     Yes
@@ -2413,6 +2423,7 @@ function CopyAddBuyer({urlType}) {
                                     name="squatters"
                                     value="1"
                                     id="squatters_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2448,6 +2459,7 @@ function CopyAddBuyer({urlType}) {
                                     name="building_required"
                                     value="1"
                                     id="building_required_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2483,6 +2495,7 @@ function CopyAddBuyer({urlType}) {
                                     name="rebuild"
                                     value="1"
                                     id="rebuild_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="rebuild_yes">
                                     Yes
@@ -2512,6 +2525,7 @@ function CopyAddBuyer({urlType}) {
                                     name="foundation_issues"
                                     value="1"
                                     id="foundation_issues_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2546,6 +2560,7 @@ function CopyAddBuyer({urlType}) {
                                     name="mold"
                                     value="1"
                                     id="mold_yes"
+                                    defaultChecked
                                   />
                                   <label className="mb-0" htmlFor="mold_yes">
                                     Yes
@@ -2574,6 +2589,7 @@ function CopyAddBuyer({urlType}) {
                                     name="fire_damaged"
                                     value="1"
                                     id="fire_damaged_yes"
+                                    defaultChecked
                                   />
                                   <label
                                     className="mb-0"
@@ -2613,6 +2629,7 @@ function CopyAddBuyer({urlType}) {
                                     <label
                                       className="mb-0"
                                       htmlFor="permanent_affix_yes"
+                                      defaultChecked
                                     >
                                       Yes
                                     </label>
@@ -2655,7 +2672,7 @@ function CopyAddBuyer({urlType}) {
                           </div>
                         </div>
 
-                        {isVerifiedOTP && 
+                        {isVerifiedOTP ? 
                           <div className="submit-btn">
                             <button
                               type="submit"
@@ -2665,7 +2682,23 @@ function CopyAddBuyer({urlType}) {
                               Submit Now! {loading ? <MiniLoader /> : ""}{" "}
                             </button>
                           
+                          </div>:
+                          <div className="submit-btn" style={{ position: 'relative' }}>
+                          <div
+                            data-tooltip-id="my-tooltip-1"
+                            className="col-md-12 tooltip-wrapper"
+                            style={{ display: 'inline-block', cursor: 'not-allowed' }}
+                          >
+                            <button
+                              type="submit"
+                              className="btn btn-fill"
+                              disabled={true}
+                              style={{ pointerEvents: 'none' }}
+                            >
+                              Submit Now!
+                            </button>
                           </div>
+                        </div>
                         }
                       </div>
                     </form>
@@ -2676,6 +2709,10 @@ function CopyAddBuyer({urlType}) {
           </div>
           )}
         </section>
+        <ReactTooltip
+          id="my-tooltip-1"
+          place="top"
+          content="Please verify Phone Number to submit this form"/>
     </>
   );
 }

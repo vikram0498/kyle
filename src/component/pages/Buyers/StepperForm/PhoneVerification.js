@@ -58,29 +58,36 @@ const PhoneVerification = ({
       <div className="card-box-blocks">
         <div className="lic-detail-area">
           <div className="row align-items-end">
+              <div className="col-12">
+                <label>Phone Number</label>
+              </div>
             <div className="col-12 col-md-8">
-              <label>Phone Number</label>
               <div className="form-group mb-0">
-                <input type="hidden" value={countryCode} name="country_code"/>
-                <input
-                  autoComplete="off"
-                  type="text"
-                  name="phone"
-                  value={formatInput(phoneNumber)}
-                  className="form-control"
-                  placeholder="Enter Phone Number"
-                  {...register("phone", {
-                    onChange: (e) => {
-                      setphoneNumber(e.target.value);
-                    },
-                    required: "Phone Number is required",
-                    validate: {
-                      maxLength: (v) =>
-                        (v.length <= 13) ||
-                        "The phone number should be less than equal 10",
-                    },
-                  })}
-                />
+                <div className="form-group-inner">
+                  <span className="form-icon verification_count">(+{countryCode})</span>
+                
+                  {/* <input type="hidden" value={countryCode} name="country_code"/> */}
+
+                  <input
+                    autoComplete="off"
+                    type="text"
+                    name="phone"
+                    value={formatInput(phoneNumber)}
+                    className="form-control verification_input"
+                    placeholder="Enter Phone Number"
+                    {...register("phone", {
+                      onChange: (e) => {
+                        setphoneNumber(e.target.value);
+                      },
+                      required: "Phone Number is required",
+                      validate: {
+                        maxLength: (v) =>
+                          (v.length <= 13) ||
+                          "The phone number should be less than equal 10",
+                      },
+                    })}
+                  />
+                  </div>
               </div>
             </div>
             <div className="col-12 col-sm-4 mt-2 mt-md-0 col-md-4">

@@ -27,11 +27,11 @@ const BuyerCardResult = (props) => {
   return (
     <div className="col-12 col-lg-6" >
         <div className={`position-relative property-critera-outer ${data.user_detail.level_type ==2 ? 'change-badge-color' : ''}` }>
-            {(activeTab ==='my_buyers' && user_data.level_type == 2 )&&<input type="checkbox" id={data.buyer_user_id} value={data.buyer_user_id} className='deal-check-box' checked={selectedDeals.includes(data.buyer_user_id)} onChange={() => handleCheckboxChange(data.buyer_user_id)}/>}
+            {(activeTab ==='my_buyers' && user_data.level_type > 1 )&&<input type="checkbox" id={data.buyer_user_id} value={data.buyer_user_id} className='deal-check-box' checked={selectedDeals.includes(data.buyer_user_id)} onChange={() => handleCheckboxChange(data.buyer_user_id)}/>}
             <label className={`property-critera-block buyer-blog-area property-section-${data.id} ${data.user_detail.level_type ==2 ? 'change-badge-color' : ''}`} for={data.buyer_user_id}>
                 <div className='buyer-notifaction'>
 
-                    {(activeTab ==='my_buyers' && user_data.level_type == 2 ) && 
+                    {(activeTab ==='my_buyers' && user_data.level_type > 1 ) && 
                         <Button className="top_buyer_btn" onClick={()=>handleClickCurrentDeal(data.buyer_user_id)}>
                             <span>
                                 <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,7 +185,7 @@ const BuyerCardResult = (props) => {
                         </OverlayTrigger>
                     </div>:''
                 }
-                {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
+                {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.certified_closer_verified|| data.createdByAdmin ) ? 
                     <div className="cornor-block">
                         {data.phone_verified && 
                             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
@@ -222,6 +222,15 @@ const BuyerCardResult = (props) => {
                                 className="img-fluid"
                                 alt=""
                                 />
+                            </OverlayTrigger>
+                        }
+                        {(data.certified_closer_verified) && 
+                            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Certified Closer Verification</Tooltip>} >
+                            <img
+                            src="/assets/images/certified-closer.svg"
+                            className="img-fluid"
+                            alt=""
+                            />
                             </OverlayTrigger>
                         }
                         {

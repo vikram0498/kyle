@@ -22,11 +22,13 @@ function Home({ userDetails }) {
   const [isLoader, setIsloader] = useState(true);
   const [openVideoModal, SetOpenVideoModal] = useState(false);
   const [dealData,setDealData] = useState([]);
+  const [advertisementData, setAdvertisementData] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     getVideoUrl();
   }, []);
+
   const getVideoUrl = async () => {
     try {
       let headers = {
@@ -48,6 +50,7 @@ function Home({ userDetails }) {
         //setIsPlaying(true)
       }
       setIsloader(false);
+
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
@@ -67,6 +70,7 @@ function Home({ userDetails }) {
       }
     }
   };
+
   const handleOpenModal = () => {
     SetOpenVideoModal(true);
   };
@@ -84,6 +88,26 @@ function Home({ userDetails }) {
       fetchData();
   },[]);
 
+  useEffect(()=>{
+    const fetchAdvertisementBannerData = async () => {
+      try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+          "auth-token": getTokenData().access_token,
+        };
+  
+        let response = await axios.post(apiUrl + `banner/home`, {}, {
+          headers: headers,
+        });
+        setAdvertisementData(response.data.data);
+      } catch (error) {
+          console.log(error)
+      }
+    } 
+    fetchAdvertisementBannerData();
+  },[])
+  
   // video.currentTime = 0;
   // video.play();
   //video.pause();
@@ -96,7 +120,7 @@ function Home({ userDetails }) {
             <div className="col-12 col-lg-9">
               <div className="ad">
                 <Link>
-                  <Image src="./assets/images/add.svg" />
+                  <Image src={advertisementData.is_expired ? './assets/images/add.svg' :  advertisementData.image}  />
                 </Link>
               </div>
             </div>

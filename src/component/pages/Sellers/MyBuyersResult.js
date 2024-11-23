@@ -197,7 +197,7 @@ const MyBuyersResult = ({
       CurrentBuyer[0].liked = true;
       if (CurrentBuyer[0].disliked) {
         CurrentBuyer[0].totalBuyerUnlikes =
-          CurrentBuyer[0].totalBuyerUnlikes - 1;
+        CurrentBuyer[0].totalBuyerUnlikes - 1;
         CurrentBuyer[0].disliked = false;
       }
       likeUnlikeBuyer(id, 1, 0, index);
@@ -273,7 +273,6 @@ const MyBuyersResult = ({
       }
     }
   };
-
   return (
     <>
       <div

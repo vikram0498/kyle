@@ -302,24 +302,24 @@ const SellerForm = () => {
     setAttachments([]);
     setUrl("");
 
-    setSolar('0');
-    setPool('0');
-    setSeptic('0');
-    setWell('0');
-    setHoa('0');
-    setAgeRestriction('0');
-    setRentalRestriction('0');
-    setPostPossession('0');
-    setTenant('0');
-    setSquatters('0');
-    setBuildingRequired('0');
-    setRebuild('0');
-    setFoundationIssues('0');
-    setMold('0');
-    setFireDamaged('0');
-    setPermanentlyAffixed('0');
+    setSolar('1');
+    setPool('1');
+    setSeptic('1');
+    setWell('1');
+    setHoa('1');
+    setAgeRestriction('1');
+    setRentalRestriction('1');
+    setPostPossession('1');
+    setTenant('1');
+    setSquatters('1');
+    setBuildingRequired('1');
+    setRebuild('1');
+    setFoundationIssues('1');
+    setMold('1');
+    setFireDamaged('1');
+    setPermanentlyAffixed('1');
 
-    setBalloonPayment('0');
+    setBalloonPayment('1');
     setShowCreativeFinancing(false);
     setLocationFlawsValue([]);
 
@@ -343,10 +343,10 @@ const SellerForm = () => {
   const submitSearchBuyerForm = (e) => {
     e.preventDefault();
 
-    if(!captchaVerified){
-      setLoading(false);
-      setRecaptchaError("Please complete reCAPTCHA verification.");
-      return false;
+    if (!captchaVerified) {
+        setLoading(false);
+        setRecaptchaError("Please complete reCAPTCHA verification.");
+        return false;
     }
 
     setErrors(null);
@@ -354,35 +354,26 @@ const SellerForm = () => {
 
     const data = new FormData(e.target);
 
-    // Manually add `property_flaw` as an array to FormData
-    locationFlaw.forEach((item) => {
-        data.append("property_flaw[]", item);  // Using "[]" to denote array
-    });
-
-    // Manually add `purchase_method` as an array to FormData
-    purchaseMethod.forEach((item) => {
-        data.append("purchase_method[]", item);
-    });
-
-    // Manually add `zoning` as an array to FormData (if it's an array)
-    if (Array.isArray(zoning)) {
-        zoning.forEach((item) => {
-            data.append("zoning[]", item);
-        });
-    }
-    // Append any other fields that aren't arrays or files
+    // Add arrays to FormData
+    locationFlaw.forEach((item) => data.append("property_flaw[]", item));
+    purchaseMethod.forEach((item) => data.append("purchase_method[]", item));
+    if (Array.isArray(zoning)) zoning.forEach((item) => data.append("zoning[]", item));
+    
+    // Append other fields
     data.append("filterType", "search_page");
     data.append("activeTab", "my_buyers");
+    // data.append("state[]", state.value);
 
-    // Add attachments if you have a file array, such as selectedImages
-    attachments.forEach((file, index) => {
-        data.append("attachments[]", file);
-    });
-    setFilterFormData(data);
-    // Submit FormData directly to the endpoint
-    buyBoxSearch(data);  // Ensure `buyBoxSearch` can handle FormData
+    // // Append `city` values correctly
+    // city.forEach((item) => {
+    //     data.append("city[]", item.value); // Using "[]" to denote array
+    // });
+
+    // Add attachments
+    attachments.forEach((file) => data.append("attachments[]", file));
+    // Submit FormData
+    buyBoxSearch(data);
 };
-
 
 
   const dataObj = {

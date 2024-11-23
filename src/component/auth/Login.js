@@ -52,7 +52,6 @@ function Login(props) {
     setMessage("");
     let payload = { email, password };
     payload.device_token = firebaseDeviceToken;
-    console.log(payload,"payload22223223232")
 
     if (remember) {
       payload.remember = true;
@@ -60,7 +59,6 @@ function Login(props) {
     let headers = {
       Accept: "application/json",
     };
-    console.log(payload,"payload222")
     axios
       .post(apiUrl + "login", payload, { headers: headers })
       .then((response) => {
@@ -232,28 +230,45 @@ function Login(props) {
               </div>
             </div>
             <div className="col-12 col-lg-12">
-              <p className="account-now">
+              {/* <p className="account-now"> Or Register as:</p> */}
+                <div class="line-with-text">Or Register As</div>
+                  <br></br>
+                    <div className="row">
+                       <div className="col-md-6 mt-2"> 
+                          <Link to="/register-buyer">
+                            <button className="btn btn-fill btn-white">Buyer</button>
+                          </Link>
+                        </div>
+                       <div className="col-md-6 mt-2">
+                        <Link to={"/register"}>
+                          <button className="btn btn-fill">Wholesaler</button>
+                        </Link>
+                       </div>
+                    </div>
+              {/* <p className="account-now">
                 Register as <Link to="/register">Wholesaler</Link>/<Link to="/register-buyer">Buyer</Link>
-              </p>
+              </p> */}
+
               {/* <p className="account-now">
                 <span style={{ marginRight: "2px" }}>
                   Don’t Have an account?{" "}
                 </span>
                 <Link to="/register"> Sign up now!</Link>
               </p> */}
+
               <div className="or">
                 <span>OR</span>
               </div>
               <ul className="account-with-social social-login-link list-unstyled mb-0">
                  <li>
-                <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
-                    <FacebookLoginButton
-                      firebaseDeviceToken={firebaseDeviceToken}
-                      apiUrl={apiUrl}
-                      setLoading={setLoading}
-                      navigate={navigate}
-                      setErrors={setErrors}
-                    />
+                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/>Login With Facebook</Link>
+                      <FacebookLoginButton
+                        firebaseDeviceToken={firebaseDeviceToken}
+                        apiUrl={apiUrl}
+                        setLoading={setLoading}
+                        navigate={navigate}
+                        setErrors={setErrors}
+                      />
                 </li> 
                 <li>
                   <Link to="https://google.com">
@@ -262,7 +277,7 @@ function Login(props) {
                       className="img-fluid"
                       alt="google-icon"
                     />{" "}
-                    With Google
+                    Login With Google
                   </Link>
                   {/* <Link to="https://google.com"><img src="./assets/images/google.svg" className="img-fluid" alt='google-icon'/> With Google</Link> */}
                   <GoogleOAuthProvider clientId={googleClientId}>

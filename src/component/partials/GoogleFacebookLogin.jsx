@@ -14,7 +14,7 @@ const GoogleFacebookLogin = () => {
   return (
     <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-end">
         <li>
-            <Link to="https://facebook.com"><img src="/assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> With Facebook</Link>
+            <Link to="https://facebook.com"><img src="/assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> Register With Facebook</Link>
             <FacebookLoginButton
                 apiUrl={apiUrl}
                 setLoading={setLoading}
@@ -29,7 +29,7 @@ const GoogleFacebookLogin = () => {
                 className="img-fluid"
                 alt="google-icon"
             />{" "}
-            With Google
+            Register With Google
             </Link>
             <GoogleOAuthProvider clientId={googleClientId}>
             <GoogleLoginComponent

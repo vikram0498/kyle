@@ -87,9 +87,9 @@ const AutocompleteInput = ({
         component.types.includes("postal_code")
       );
 
-      setCity(cityComponent?.long_name || "");
-      setState(stateComponent?.long_name || "");
-      setZipCode(pinComponent?.long_name || "");
+      // setCity(cityComponent?.long_name || "");
+      // setState(stateComponent?.long_name || "");
+      // setZipCode(pinComponent?.long_name || "");
     } catch (error) {
       console.error("Error getting geocode data:", error);
     }
@@ -161,7 +161,7 @@ const AutocompleteInput = ({
           
         </div>
       </div>
-      <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+      {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
         <label>State</label>
         <div className="form-group">
           <input type="text" value={state} name="state" readOnly className="form-control" />
@@ -178,7 +178,7 @@ const AutocompleteInput = ({
         <div className="form-group">
           <input type="text" value={zipCode} name="zip_code" readOnly className="form-control" />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

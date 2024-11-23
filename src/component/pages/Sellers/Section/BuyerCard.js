@@ -61,7 +61,7 @@ export default function BuyerCard({
               Buyer
             </p>
 
-            <span class={data.status? 'ac-de-feeture active-feat':'ac-de-feeture deactive-feat'}>{data.status? 'Active':'Inactive'}</span>
+            {/* <span class={data.status? 'ac-de-feeture active-feat':'ac-de-feeture deactive-feat'}>{data.status? 'Active':'Inactive'}</span> */}
             {data.createdByAdmin ? (
               <ul className="like-unlike mb-0 list-unstyled 888">
                 <li>
@@ -162,7 +162,7 @@ export default function BuyerCard({
             </li> */}
           </ul>
         </div>
-        {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.createdByAdmin ) ? 
+        {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.certified_closer_verified || data.createdByAdmin ) ? 
         <div className="cornor-block">
           {data.phone_verified && 
           <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
@@ -201,6 +201,16 @@ export default function BuyerCard({
                 />
             </OverlayTrigger>
           }
+          {(data.certified_closer_verified) && 
+            <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Certified Closer Verification</Tooltip>} >
+                <img
+                src="/assets/images/certified-closer.svg"
+                className="img-fluid"
+                alt=""
+                />
+            </OverlayTrigger>
+          }
+          
           {data.createdByAdmin ? (
             data.redFlagShow ? (
               <>

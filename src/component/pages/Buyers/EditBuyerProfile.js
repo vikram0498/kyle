@@ -133,6 +133,7 @@ function EditBuyerProfile() {
   }, [navigate]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
+  const countryCode = process.env.REACT_APP_COUNTRY_CODE;
 
   let headers = {
     Accept: "application/json",
@@ -490,14 +491,13 @@ function EditBuyerProfile() {
       }
       setPurchaseMethodsValue(selectedValues);
     } else if (name == "parking") {
-      console.log(selectedValues,'selectedValues');
       setParking(selectedValues);
       setParkingValue(e);
     } else if (name == "country") {
       getStates(e);
     } else if (name == "state") {
       setState(e);
-      getCities(e);
+      getCities([e]);
     } else if (name == "city") {
       //setCity(e);
     } else if (name == "building_class") {
@@ -849,13 +849,19 @@ function EditBuyerProfile() {
                               Phone Number<span>*</span>
                             </label>
                             <div className="form-group">
+                            <div className="form-group-inner">
+                              <span className="form-icon verification_count">(+{countryCode})</span>
+                            
+                              {/* <input type="hidden" value={countryCode} name="country_code"/> */}
                               <input
                                 type="text"
-                                className="form-control"
+                                className="form-control verification_input"
                                 placeholder="Phone Number"
                                 defaultValue={currentBuyerData.phone && formatInput(currentBuyerData.phone)}
                                 disabled
                               />
+                              </div>
+                              
                               {errors.phone && (
                                 <p className="error">{errors.phone?.message}</p>
                               )}
@@ -870,8 +876,8 @@ function EditBuyerProfile() {
                               <textarea className="form-control" name="description" style={{height:'90px'}} defaultValue={currentBuyerData.description}></textarea>
                             </div>
                           </div>
-                          <GoogleMapAutoAddress dataObj={dataObj} />
-                          {/* <div className="col-12 col-lg-12">
+                          {/* <GoogleMapAutoAddress dataObj={dataObj} /> */}
+                          <div className="col-12 col-lg-12">
                             <label>
                               State<span>*</span>
                             </label>
@@ -890,12 +896,11 @@ function EditBuyerProfile() {
                                     isClearable={true}
                                     className="select"
                                     placeholder="Select State"
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     onChange={(e) => {
                                       onChange(e);
                                       handleCustum(e, "state");
                                     }}
-                                    isMulti
                                   />
                                 )}
                               />
@@ -939,7 +944,7 @@ function EditBuyerProfile() {
 
                               {renderFieldError("city")}
                             </div>
-                          </div> */}
+                          </div>
                           <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
                             <label>
                               Company/LLC<span>*</span>

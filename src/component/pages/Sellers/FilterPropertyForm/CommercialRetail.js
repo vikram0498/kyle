@@ -21,11 +21,11 @@ const CommercialRetail = ({
         {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div> */}
-        {/* <div className="col-12 col-lg-12">
+        <div className="col-12 col-lg-12">
           <label>State<span>*</span></label>
           <div className="form-group">
             <Select
-              name="state"
+              name="state[]"
               defaultValue=""
               options={data.stateOptions}
               onChange={(item) => data.getCities(item)}
@@ -46,7 +46,7 @@ const CommercialRetail = ({
           <label>City<span>*</span></label>
           <div className="form-group">
             <Select
-              name="city"
+              name="city[]"
               defaultValue=""
               options={data.cityOptions}
               onChange={(item) => data.setCity(item)}
@@ -59,11 +59,12 @@ const CommercialRetail = ({
               isRtl={false}
               placeholder="Select City"
               closeMenuOnSelect={true}
+              isMulti
             />
             {data.renderFieldError("city")}
           </div>
         </div>
-        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Zip Code</label>
           <div className="form-group">
             <input

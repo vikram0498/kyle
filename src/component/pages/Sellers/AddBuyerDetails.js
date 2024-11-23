@@ -81,6 +81,7 @@ function AddBuyerDetails() {
   const [hotelMotelSelected, setHotelMotelSelected] = useState(false);
 
   const [parkingValue, setParkingValue] = useState([]);
+  const [parkingDefaultValue, setParkingDefaultValue] = useState([]);
   const [propertyTypeValue, setPropertyTypeValue] = useState([]);
   const [locationFlawsValue, setLocationFlawsValue] = useState([]);
   const [buyerTypeValue, setBuyerTypeValue] = useState([]);
@@ -107,15 +108,11 @@ function AddBuyerDetails() {
   /* min max value states end */
 
   const [copySuccess, setCopySuccess] = useState(false);
-
   const [loading, setLoading] = useState(false);
-
   const [copyLoading, setCopyLoading] = useState(false);
-
   const [copySocialLoading, setCopySocialLoading] = useState(false);
-
+  const [advertisementData, setAdvertisementData] = useState([]);
   const countryCode = process.env.REACT_APP_COUNTRY_CODE;
-
   const baseURL = window.location.origin;
 
   useEffect(() => {
@@ -144,8 +141,13 @@ function AddBuyerDetails() {
             setPropertyTypeOption(result.property_types);
             setLocationFlawsOption(result.location_flaws);
             setParkingOption(result.parking_values);
+            setParkingDefaultValue(result.parking_values);
             setParkOption(result.park);
             setStateOptions(result.states);
+            const selectedParkingValue = result.parking_values.map((item) => item.value);
+            console.log(selectedParkingValue,"selectedParkingValue")
+            setValue('parking',selectedParkingValue)
+            setParkingValue(selectedParkingValue);
             setbuyerTypeOption(result.buyer_types);
             setMarketPreferanceOption(result.market_preferances);
             setContactPreferanceOption(result.contact_preferances);
@@ -271,6 +273,8 @@ function AddBuyerDetails() {
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     //formObject.buyer_type       =  buyerTypeValue;
+    formObject.city = cityValue;
+    formObject.state = stateValue;
     formObject.purchase_method = purchaseMethodsValue;
     if (formObject.hasOwnProperty("building_class")) {
       formObject.building_class = buildingClassNamesValue;
@@ -283,6 +287,7 @@ function AddBuyerDetails() {
       let phoneNumber = formObject.phone.replace(/-/g, "");
       formObject.phone = phoneNumber;
     }
+    console.log(formObject,"formObject")
     try {
       let response = await axios.post(
         apiUrl + "upload-single-buyer-details",
@@ -438,13 +443,14 @@ function AddBuyerDetails() {
       getStates(e);
     } else if (name == "state") {
       setState(e);
-      getCities(e);
+      getCities([e]);
     } else if (name == "city") {
       setCity(e);
     } else if (name == "building_class") {
       setBuildingClassNamesValue(selectedValues);
     } else if (name == "parking") {
       setParkingValue(selectedValues);
+      setParkingDefaultValue(e);
     } else if (name == "buyer_type") {
       let value = "";
       if (e) {
@@ -499,6 +505,26 @@ function AddBuyerDetails() {
       }
     }
   };
+
+  useEffect(()=>{
+    const fetchAdvertisementBannerData = async () => {
+      try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+          "auth-token": getTokenData().access_token,
+        };
+  
+        let response = await axios.post(apiUrl + `banner/add-buyer-details`, {}, {
+          headers: headers,
+        });
+        setAdvertisementData(response.data.data);
+      } catch (error) {
+          console.log(error)
+      }
+    } 
+    fetchAdvertisementBannerData();
+  },[])
 
   const formatInput = (input) => {
     // Remove all non-digit characters
@@ -579,7 +605,7 @@ function AddBuyerDetails() {
                         </div>
                         <div className="col-12 col-md-6 col-lg-6">
                           <div className="add_buyer-right">
-                            <button
+                            {/* <button
                               type="button"
                               className="copy-link"
                               onClick={copyAddBuyerLink}
@@ -617,7 +643,7 @@ function AddBuyerDetails() {
                                 </svg>
                               </span>
                               Copy Form Link {copyLoading ? <MiniLoader /> : ""}
-                            </button>
+                            </button> */}
                             <button className="share_btn" onClick={copySocialShareLink}>
                               <span className="link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -656,7 +682,7 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="first_name"
                                   className="form-control"
-                                  placeholder="First Name"
+                                  placeholder="Enter First Name"
                                   {...register("first_name", {
                                     required: "First Name is required",
                                     validate: {
@@ -685,7 +711,7 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="last_name"
                                   className="form-control"
-                                  placeholder="Last Name"
+                                  placeholder="Enter Last Name"
                                   {...register("last_name", {
                                     required: "Last Name is required",
                                     validate: {
@@ -716,7 +742,7 @@ function AddBuyerDetails() {
                                   type="text"
                                   name="email"
                                   className="form-control"
-                                  placeholder="Email Address"
+                                  placeholder="Enter Email Address"
                                   {...register("email", {
                                     required: "Email address is required",
                                     validate: {
@@ -745,38 +771,26 @@ function AddBuyerDetails() {
                                 Phone Number<span>*</span>
                               </label>
                               <div className="form-group">
-                              {/* <input
+                                <div className="form-group-inner">
+                                    <span className="form-icon verification_count">(+{countryCode})</span>
+                                    {/* <input type="hidden" value={countryCode} name="country_code"/> */}
+                                    <input
                                       type="text"
                                       name="phone"
-                                      className="form-control"
+                                      className="form-control verification_input"
                                       placeholder="Eg. 123-456-7890"
                                       {...register("phone", {
-                                      required: "Phone Number is required",
-                                          validate: {
-                                              matchPattern: (v) =>
-                                              /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
-                                              maxLength: (v) =>
-                                              (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
-                                              "The phone number should be between 1 to 10 characters",
-                                          },
+                                        required: "Phone Number is required",
+                                        validate: {
+                                          matchPattern: (v) =>
+                                            /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
+                                          maxLength: (v) =>
+                                            (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                            "The phone number should be between 1 to 10 characters",
+                                        },
                                       })}
-                                  /> */}
-                                <input
-                                  type="text"
-                                  name="phone"
-                                  className="form-control"
-                                  placeholder="Eg. 123-456-7890"
-                                  {...register("phone", {
-                                    required: "Phone Number is required",
-                                    validate: {
-                                      matchPattern: (v) =>
-                                        /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
-                                      maxLength: (v) =>
-                                        (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
-                                        "The phone number should be between 1 to 10 characters",
-                                    },
-                                  })}
-                                />
+                                    />
+                                </div>
                                 {errors.phone && (
                                   <p className="error">
                                     {errors.phone?.message}
@@ -868,10 +882,10 @@ function AddBuyerDetails() {
                                 {renderFieldError("buyer_type")}
                               </div>
                             </div>
-                            <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
-                            {/* <div className="col-12 col-lg-12">
+                            {/* <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/> */}
+                            <div className="col-12 col-lg-12">
                               <label>
-                              Buy Box Criteria State (Multi-Select)<span>*</span>
+                              Buy Box Criteria State (Single-Select)<span>*</span>
                               </label>
                               <div className="form-group">
                                 <Controller
@@ -885,15 +899,14 @@ function AddBuyerDetails() {
                                       options={stateOptions}
                                       name={name}
                                       //value={state}
-                                      closeMenuOnSelect={false}
+                                      closeMenuOnSelect={true}
                                       isClearable={true}
                                       className="select"
-                                      placeholder="Select Buy Box Criteria State (Multi-Select)"
+                                      placeholder="Select Buy Box Criteria State (Single-Select)"
                                       onChange={(e) => {
                                         onChange(e);
                                         handleCustum(e, "state");
                                       }}
-                                      isMulti
                                     />
                                   )}
                                 />
@@ -907,13 +920,13 @@ function AddBuyerDetails() {
                             </div>
                             <div className="col-12 col-lg-12">
                               <label>
-                                Buy Box Criteria City (Multi-Select)<span>*</span>
+                                Buy Box Criteria City (Multi-Select)
                               </label>
                               <div className="form-group">
                                 <Controller
                                   control={control}
                                   name="city"
-                                  rules={{ required: "Buy Box Criteria City(s) Required" }}
+                                  // rules={{ required: "Buy Box Criteria City(s) Required" }}
                                   render={({
                                     field: { value, onChange, name },
                                   }) => (
@@ -941,7 +954,7 @@ function AddBuyerDetails() {
 
                                 {renderFieldError("city")}
                               </div>
-                            </div> */}
+                            </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 MLS Status<span>*</span>
@@ -990,6 +1003,7 @@ function AddBuyerDetails() {
                                     field: { value, onChange, name },
                                   }) => (
                                     <Select
+                                      value={parkingDefaultValue}
                                       options={parkingOption}
                                       name={name}
                                       className="select"
@@ -2280,6 +2294,7 @@ function AddBuyerDetails() {
                                       name="solar"
                                       value="1"
                                       id="solar_yes"
+                                      defaultChecked
                                     />
                                     <label className="mb-0" htmlFor="solar_yes">
                                       Yes
@@ -2308,6 +2323,7 @@ function AddBuyerDetails() {
                                       name="pool"
                                       value="1"
                                       id="pool_yes"
+                                      defaultChecked
                                     />
                                     <label className="mb-0" htmlFor="pool_yes">
                                       Yes
@@ -2336,6 +2352,7 @@ function AddBuyerDetails() {
                                       name="septic"
                                       value="1"
                                       id="septic_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2367,6 +2384,7 @@ function AddBuyerDetails() {
                                       name="well"
                                       value="1"
                                       id="well_yes"
+                                      defaultChecked
                                     />
                                     <label className="mb-0" htmlFor="well_yes">
                                       Yes
@@ -2395,6 +2413,7 @@ function AddBuyerDetails() {
                                       name="hoa"
                                       value="1"
                                       id="hoa_yes"
+                                      defaultChecked
                                     />
                                     <label className="mb-0" htmlFor="hoa_yes">
                                       Yes
@@ -2423,6 +2442,7 @@ function AddBuyerDetails() {
                                       name="age_restriction"
                                       value="1"
                                       id="age_restriction_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2457,6 +2477,7 @@ function AddBuyerDetails() {
                                       name="rental_restriction"
                                       value="1"
                                       id="rental_restriction_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2491,6 +2512,7 @@ function AddBuyerDetails() {
                                       name="post_possession"
                                       value="1"
                                       id="post_possession_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2525,6 +2547,7 @@ function AddBuyerDetails() {
                                       name="tenant"
                                       value="1"
                                       id="tenant_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2556,6 +2579,7 @@ function AddBuyerDetails() {
                                       name="squatters"
                                       value="1"
                                       id="squatters_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2590,6 +2614,7 @@ function AddBuyerDetails() {
                                       name="building_required"
                                       value="1"
                                       id="building_required_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2624,6 +2649,7 @@ function AddBuyerDetails() {
                                       name="rebuild"
                                       value="1"
                                       id="rebuild_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2658,6 +2684,7 @@ function AddBuyerDetails() {
                                       name="foundation_issues"
                                       value="1"
                                       id="foundation_issues_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2692,6 +2719,7 @@ function AddBuyerDetails() {
                                       name="mold"
                                       value="1"
                                       id="mold_yes"
+                                      defaultChecked
                                     />
                                     <label className="mb-0" htmlFor="mold_yes">
                                       Yes
@@ -2720,6 +2748,7 @@ function AddBuyerDetails() {
                                       name="fire_damaged"
                                       value="1"
                                       id="fire_damaged_yes"
+                                      defaultChecked
                                     />
                                     <label
                                       className="mb-0"
@@ -2755,6 +2784,7 @@ function AddBuyerDetails() {
                                         name="permanent_affix"
                                         value="1"
                                         id="permanent_affix_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2831,11 +2861,13 @@ function AddBuyerDetails() {
                     ) : (
                       ""
                     )}
+                    {!advertisementData.is_expired &&  
                     <div className="advertisement">
                       <Link>
-                        <Image src="./assets/images/add-1.svg" />
+                        <Image src={advertisementData.is_expired ? './assets/images/add-1.svg' :  advertisementData.image}/>
                       </Link>
                     </div>
+                    }
                   </div>
                 </div>
               </div>

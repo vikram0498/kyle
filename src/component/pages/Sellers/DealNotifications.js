@@ -25,6 +25,7 @@ const DealNotifications = () => {
     const [dealId, setDealId] = useState(0);
     const [isDealDocumentVerified, setIsDealDocumentVerified] = useState(false);
     const [dealFeedback, setDealFeedback] = useState("");
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const [attachmentsError,setAttachmentsError] = useState("");
     const fileInputRef = useRef(null);
     const [page, setPage]= useState(1);
@@ -67,6 +68,7 @@ const DealNotifications = () => {
 
     const handleStatusType = async (propertyStatus, buyerId) => {
         try {
+            setIsSubmitted(true);
             setDealConfirmation(true);
             setIsDealDocumentVerified(false);
             handleOpenModal(propertyStatus);
@@ -129,7 +131,6 @@ const DealNotifications = () => {
                 Authorization: "Bearer " + getTokenData().access_token,
                 "auth-token": getTokenData().access_token,
             };
-            console.log(dealFeedback,"dealFeedback",currentStatus )
             if(dealFeedback == '' && currentStatus == 'not_interested'){
                 setModalContent('not-interested');
                 return false;
@@ -398,7 +399,7 @@ const DealNotifications = () => {
                                 <div className="col-12 col-md-12 col-lg-12">
                                     <div className="form-group">
                                         <textarea className="form-control-form h-50" rows="3" onChange={(e)=>{setDealFeedback(e.target.value)}}>{dealFeedback}</textarea>
-                                        {dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
+                                        {isSubmitted && dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
                                         {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
                                     </div>
                                     <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>handleStatusType('not-interested-feedback-submitted')}>Submit</button>

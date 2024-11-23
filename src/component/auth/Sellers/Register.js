@@ -17,9 +17,12 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     formState: { errors },
+    watch,
   } = useForm();
+
+  const phoneValue = watch("phone", ""); // Watch the phone input value
 
   useEffect(() => {
     let login = getTokenData();
@@ -33,7 +36,7 @@ const Register = () => {
   const capchaSecretKey = process.env.REACT_APP_RECAPTCHA_SECRET_KEY;
   const [showPassoword, setshowPassoword] = useState(false);
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
+  const countryCode = process.env.REACT_APP_COUNTRY_CODE;
   
   const togglePasswordVisibility = () => {
     setshowPassoword(!showPassoword);
@@ -140,17 +143,72 @@ const Register = () => {
     }
   }
 
+
   useEffect(()=>{
     getPrivacyLink();
   },[])
+
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-7890 (up to 10 digits)
+    return cleaned
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
+  };
+
+  // Update the form value whenever the phoneValue changes
+  useEffect(() => {
+    const formattedValue = formatInput(phoneValue);
+    setValue("phone", formattedValue); // Update the field with the formatted phone number
+  }, [phoneValue, setValue]);
+  
+
   return (
     <Layout>
       <div className="account-in">
-        <div className="center-content">
-          <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
-          {/* <h2>Welcome to Inucation!</h2> */}
-          <h2>Register for BuyBoxBot!</h2>
-        </div>
+          <div className="center-content">
+            <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
+            {/* <h2>Welcome to Inucation!</h2> */}
+            <h3>Register as a Wholesaler for BuyBoxBot</h3>
+          </div>
+          <ul className="account-with-social list-unstyled mb-0 social-login-link spacing-above">
+              <li>
+                  <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" />Register With Facebook</Link>
+                  <FacebookLoginButton
+                  apiUrl={apiUrl}
+                  setLoading={setLoading}
+                  navigate={navigate}
+                  setErrors={setErrors}
+                  />
+              </li>
+
+              <li>
+                <Link to="https://google.com">
+                  <img
+                    src="./assets/images/google.svg"
+                    className="img-fluid"
+                    alt="google-icon"
+                  />{" "}
+                  Register With Google
+                </Link>
+                <GoogleOAuthProvider clientId={googleClientId}>
+                  <GoogleLoginComponent
+                    apiUrl={apiUrl}
+                    setLoading={setLoading}
+                    navigate={navigate}
+                    setErrors={setErrors}
+                  />
+                </GoogleOAuthProvider>
+              </li>
+            </ul>
+            <div className="or">
+              <span>OR</span>
+            </div>
+
         <form
           method="POST"
           action="#"
@@ -297,25 +355,26 @@ const Register = () => {
                       alt=""
                     />
                   </span>
+                  <span className="form-icon  counts_icon">(+{countryCode})</span>
+                  <input type="hidden" name="country_code" value={countryCode}/>
                   <input
-                    type="number"
+                    type="text"
                     name="phone"
                     id="phone"
-                    className="form-control"
+                    className="form-control phone_input"
                     //value={phone}
                     //onChange={e => setPhone(e.target.value)}
-                    placeholder="1234567890"
                     autoComplete="off"
                     disabled={loading ? "disabled" : ""}
+                    placeholder="123-456-7890"
                     {...register("phone", {
-                      required: "Phone is required",
+                      required: "Phone Number is required",
                       validate: {
                         matchPattern: (v) =>
-                          /^[0-9]\d*$/.test(v) ||
-                          "Please enter valid phone number",
+                          /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
                         maxLength: (v) =>
-                          (v.length <= 15 && v.length >= 5) ||
-                          "The phone number should be more than 4 digit and less than equal 15",
+                          (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                          "The phone number should be between 1 to 10 characters",
                       },
                     })}
                   />
@@ -497,35 +556,6 @@ const Register = () => {
               <div className="or">
                 <span>OR</span>
               </div>
-              <ul className="account-with-social list-unstyled mb-0 social-login-link">
-                {/* <li>
-                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" /> With Facebook</Link>
-                    <FacebookLoginButton
-                    apiUrl={apiUrl}
-                    setLoading={setLoading}
-                    navigate={navigate}
-                    setErrors={setErrors}
-                    />
-                </li> */}
-                <li>
-                  <Link to="https://google.com">
-                    <img
-                      src="./assets/images/google.svg"
-                      className="img-fluid"
-                      alt="google-icon"
-                    />{" "}
-                    With Google
-                  </Link>
-                  <GoogleOAuthProvider clientId={googleClientId}>
-                    <GoogleLoginComponent
-                      apiUrl={apiUrl}
-                      setLoading={setLoading}
-                      navigate={navigate}
-                      setErrors={setErrors}
-                    />
-                  </GoogleOAuthProvider>
-                </li>
-              </ul>
             </div>
           </div>
         </form>

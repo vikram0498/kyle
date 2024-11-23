@@ -251,11 +251,11 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                   <h6 className="center-head text-center mb-0">Result Page</h6>
                 </div>
                 <div className="col-12 col-sm-3 col-md-3 col-lg-3">
-                  {(activeTab ==='my_buyers' && user_data.level_type == 2 ) && 
+                  {(activeTab ==='my_buyers' && user_data.level_type > 1 ) && 
                     <div className="buyer_top_bar d-flex align-items-center justify-content-end">
                       <div className="buyer_top_select">
                         <span>Select : </span>
-                        <label><input type="checkbox" className="all-deal-checkbox" checked={selectedDeals.length === buyerData.length} onChange={handleSelectAllChange}/> <span>All</span></label>
+                        <label><input type="checkbox" className="all-deal-checkbox" checked={buyerData.length > 0 && selectedDeals.length === buyerData.length} onChange={handleSelectAllChange}/> <span>All</span></label>
                       </div>
                       
                       <Button className="top_buyer_btn" onClick={checkSelectedDeals}>
@@ -269,7 +269,6 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                           </svg>
                         </span> SEND DEAL
                       </Button>
-                      
                     </div>
                   }
                   {/* <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">
@@ -310,7 +309,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                                 My Buyers
                               </button>
                             </li>
-                            {user_data.level_type === 2 ? (
+                            {user_data.level_type > 1 ? (
                               <li className="nav-item" role="presentation">
                                 <button
                                   className="nav-link"

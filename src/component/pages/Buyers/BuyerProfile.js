@@ -119,7 +119,6 @@ const BuyerProfile = () => {
     }
   };
   const getLabelValue = (data) => {
-    console.log('data', data)
     if (data !== undefined) {
       const selectedBuildingClass = data.map((item) => item.label);
       return selectedBuildingClass.join(", ");
@@ -765,22 +764,24 @@ const BuyerProfile = () => {
                   </div>
                   <div className="contact-desc-box">
                     <div className="row">
-                      <div className="col-12 col-lg-4"><label>Address</label></div>
-                      <div className="col-12 col-lg-8">
+                      {/* <div className="col-12 col-lg-4"><label>Address</label></div> */}
+                      {/* <div className="col-12 col-lg-8">
                         {currentBuyerData.address}
-                      </div>
+                      </div> */}
                       <div className="col-12 col-lg-4"><label>States</label></div>
                       <div className="col-12 col-lg-8">
-                        {currentBuyerData.state}
+                      {currentBuyerData.state.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}
                       </div>
                       <div className="col-12 col-lg-4"><label>Cities</label></div>
                       <div className="col-12 col-lg-8">
-                        {currentBuyerData.city}
+                        {currentBuyerData.city.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}
+
+                        {/* {currentBuyerData.city} */}
                       </div>
-                      <div className="col-12 col-lg-4"><label>Zip Code</label></div>
+                      {/* <div className="col-12 col-lg-4"><label>Zip Code</label></div>
                       <div className="col-12 col-lg-8">
                         {currentBuyerData.zip_code}
-                      </div>
+                      </div> */}
                       <div className="col-12 col-lg-4"><label>Company/LLC</label></div>
                       <div className="col-12 col-lg-8">
                         {currentBuyerData.company_name}

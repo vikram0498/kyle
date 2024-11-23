@@ -210,7 +210,7 @@ const HorizontalLinearStepper = () => {
       setLoader(false);
       setStepNameData(stepMessages[response.data.lastStepForm-1]);
 
-      if(response.data.lastStepForm > 1 & response.data.lastStepForm < 5){
+      if(response.data.lastStepForm > 1 & response.data.lastStepForm < 6){
         setActiveStep(response.data.lastStepForm-1);
         setProfileVerificationStatus(response.data.lastStepStatus);
         setRejectMessage(response.data.reason_content);

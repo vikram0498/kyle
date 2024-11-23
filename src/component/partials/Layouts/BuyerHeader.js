@@ -161,7 +161,7 @@ function BuyerHeader() {
                             {notificationData.deal_notification.total > 0 && 
                               notificationData.deal_notification.records.map((data,index)=>{
                                 return (
-                                  <li>
+                                  <li key={index}>
                                     <div className="dropdown_start">
                                       <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
                                     </div>
@@ -197,7 +197,7 @@ function BuyerHeader() {
                             {notificationData.new_message_notification.total > 0 ? 
                               notificationData.new_message_notification.records.map((data,index)=>{
                                 return(
-                                  <li>
+                                  <li key={index}>
                                     <div className="dropdown_start">
                                       <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
                                     </div>
@@ -227,7 +227,8 @@ function BuyerHeader() {
                     </li>
                   </ul>
                 </div>
-                {userDetails?.is_switch_role == 1 && 
+                
+                {(userDetails?.is_switch_role == 1  && userDetails?.level_type > 1 )&& 
                 <div className="buyer_seller_toggle">
                   <input type="checkbox" onChange={handleToggleSeller} defaultChecked={true}/>
                   <label>

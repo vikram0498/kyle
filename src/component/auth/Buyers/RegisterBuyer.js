@@ -14,6 +14,8 @@ import InvalidPage from "../../pages/Sellers/InvalidPage";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
 import PhoneNumberWithOTPVerify from "../../partials/PhoneNumberWithOTPVerify";
+import GoogleFacebookLogin from "../../partials/GoogleFacebookLogin";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 
 function RegisterBuyer() {
@@ -246,6 +248,8 @@ function RegisterBuyer() {
     formObject.property_type = propertyTypeValue;
     formObject.property_flaw = locationFlawsValue;
     formObject.purchase_method = purchaseMethodsValue;
+    formObject.city = cityValue;
+    formObject.state = stateValue;
     if (formObject.hasOwnProperty("building_class")) {
       formObject.building_class = buildingClassNamesValue;
     }
@@ -342,7 +346,7 @@ function RegisterBuyer() {
       getStates(e);
     } else if (name == "state") {
       setState(e);
-      getCities(e);
+      getCities([e]);
     } else if (name == "city") {
       //setCity(e);
     } else if (name == "building_class") {
@@ -438,15 +442,37 @@ function RegisterBuyer() {
               <div className="container position-relative">
                 <div className="card-box">
                   <div className="row">
+                    <div className="col-2 col-md-4 col-lg-3 col-xxl-2">
+                      <div className="header-logo d-none d-md-block">
+                        <Link to="/">
+                          <img
+                            alt="logo"
+                            src="/assets/images/logo.svg"
+                            className="img-fluid"
+                          />
+                        </Link>
+                      </div>
+                      <div className="header-logo d-md-none">
+                        <Link to="/">
+                          <img
+                            alt="logo"
+                            src="/assets/images/mobile-logo.svg"
+                            className="img-fluid"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
                     <div className="col-12 col-lg-12">
                       <div className="card-box-inner">
                         <div className="row">
-                          <div className="col-12 col-sm-7 col-md-12 col-lg-12">
-                            <div className="center-content mb-3 md:mb-5">
-                              <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
-                              {/* <h2>Welcome to Inucation!</h2> */}
-                              <h2>Buy Box Criteria</h2>
-                            </div>
+                          <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                            <h3>Buy Box Criteria Form </h3>
+                            {/* <p>Real estate deals that match your exact buying criteria</p> */}
+                          </div>
+                          <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                            <GoogleFacebookLogin/>
                           </div>
                         </div>
       
@@ -671,9 +697,9 @@ function RegisterBuyer() {
                                   {renderFieldError("buyer_type")}
                                 </div>
                               </div>
-                              {/* <div className="col-12 col-lg-12">
+                              <div className="col-12 col-lg-12">
                                 <label>
-                                Buy Box Criteria State (Multi-Select)<span>*</span>
+                                Buy Box Criteria State (Single-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
                                   <Controller
@@ -690,12 +716,11 @@ function RegisterBuyer() {
                                         isClearable={true}
                                         className="select"
                                         placeholder="Select Buy Box Criteria State (Multi-Select)"
-                                        closeMenuOnSelect={false}
+                                        closeMenuOnSelect={true}
                                         onChange={(e) => {
                                           onChange(e);
                                           handleCustum(e, "state");
                                         }}
-                                        isMulti
                                       />
                                     )}
                                   />
@@ -737,8 +762,9 @@ function RegisterBuyer() {
       
                                   {renderFieldError("city")}
                                 </div>
-                              </div> */}
-                              <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/>
+                              </div>
+
+                              {/* <GoogleMapAutoAddress dataObj={dataObj} register={register} errors={errors}/> */}
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label>
                                   MLS Status<span>*</span>
@@ -1154,19 +1180,53 @@ function RegisterBuyer() {
                                   </div>
                                 </div>
                               )}
-                              <div className="col-12 col-lg-12">
+                              <div className="col-12 col-lg-6">
                                 <label>
                                   Purchase Method (Multi-Select)<span>*</span>
                                 </label>
                                 <div className="form-group">
-                                  {/* <MultiSelect
-                                                                            name="purchase_method"
-                                                                            options={purchaseMethodsOption}
-                                                                            placeholder='Select Purchase Method'
-                                                                            setMultiselectOption = {setPurchaseMethodsValue}
-                                                                            showCreative = {setShowCreativeFinancing}
-                                                                        /> */}
+                                  <Controller
+                                    control={control}
+                                    name="purchase_method"
+                                    rules={{
+                                      required: "Purchase Method is required",
+                                    }}
+                                    render={({
+                                      field: { value, onChange, name },
+                                    }) => (
+                                      <Select
+                                        options={purchaseMethodsOption}
+                                        name={name}
+                                        className="select"
+                                        placeholder="Select Purchase Method"
+                                        setMultiselectOption={
+                                          setPurchaseMethodsValue
+                                        }
+                                        showCreative={setShowCreativeFinancing}
+                                        onChange={(e) => {
+                                          onChange(e);
+                                          handleCustum(e, "purchase_method");
+                                        }}
+                                        closeMenuOnSelect={false}
+                                        isMulti
+                                      />
+                                    )}
+                                  />
+                                  {errors.purchase_method && (
+                                    <p className="error">
+                                      {errors.purchase_method?.message}
+                                    </p>
+                                  )}
       
+                                  {renderFieldError("purchase_method")}
+                                </div>
+                              </div>
+
+                              <div className="col-12 col-lg-6">
+                                <label>
+                                  Purchase Method (Multi-Select)<span>*</span>
+                                </label>
+                                <div className="form-group">
                                   <Controller
                                     control={control}
                                     name="purchase_method"
@@ -2078,6 +2138,7 @@ function RegisterBuyer() {
                                         name="solar"
                                         value="1"
                                         id="solar_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="solar_yes">
                                         Yes
@@ -2106,6 +2167,7 @@ function RegisterBuyer() {
                                         name="pool"
                                         value="1"
                                         id="pool_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="pool_yes">
                                         Yes
@@ -2134,6 +2196,7 @@ function RegisterBuyer() {
                                         name="septic"
                                         value="1"
                                         id="septic_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="septic_yes">
                                         Yes
@@ -2162,6 +2225,7 @@ function RegisterBuyer() {
                                         name="well"
                                         value="1"
                                         id="well_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="well_yes">
                                         Yes
@@ -2190,6 +2254,7 @@ function RegisterBuyer() {
                                         name="hoa"
                                         value="1"
                                         id="hoa_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="hoa_yes">
                                         Yes
@@ -2218,6 +2283,7 @@ function RegisterBuyer() {
                                         name="age_restriction"
                                         value="1"
                                         id="age_restriction_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2252,6 +2318,7 @@ function RegisterBuyer() {
                                         name="rental_restriction"
                                         value="1"
                                         id="rental_restriction_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2287,6 +2354,7 @@ function RegisterBuyer() {
                                         name="post_possession"
                                         value="1"
                                         id="post_possession_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2322,6 +2390,7 @@ function RegisterBuyer() {
                                         name="tenant"
                                         value="1"
                                         id="tenant_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="tenant_yes">
                                         Yes
@@ -2351,6 +2420,7 @@ function RegisterBuyer() {
                                         name="squatters"
                                         value="1"
                                         id="squatters_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2386,6 +2456,7 @@ function RegisterBuyer() {
                                         name="building_required"
                                         value="1"
                                         id="building_required_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2421,6 +2492,7 @@ function RegisterBuyer() {
                                         name="rebuild"
                                         value="1"
                                         id="rebuild_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="rebuild_yes">
                                         Yes
@@ -2450,6 +2522,7 @@ function RegisterBuyer() {
                                         name="foundation_issues"
                                         value="1"
                                         id="foundation_issues_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2484,6 +2557,7 @@ function RegisterBuyer() {
                                         name="mold"
                                         value="1"
                                         id="mold_yes"
+                                        defaultChecked
                                       />
                                       <label className="mb-0" htmlFor="mold_yes">
                                         Yes
@@ -2512,6 +2586,7 @@ function RegisterBuyer() {
                                         name="fire_damaged"
                                         value="1"
                                         id="fire_damaged_yes"
+                                        defaultChecked
                                       />
                                       <label
                                         className="mb-0"
@@ -2547,6 +2622,7 @@ function RegisterBuyer() {
                                           name="permanent_affix"
                                           value="1"
                                           id="permanent_affix_yes"
+                                          defaultChecked
                                         />
                                         <label
                                           className="mb-0"
@@ -2591,7 +2667,7 @@ function RegisterBuyer() {
                                   </div>
                             </div>
                             </div>
-                            {isVerifiedOTP ?         
+                            {!isVerifiedOTP ?         
                               <div className="submit-btn">
                                 <button
                                   type="submit"
@@ -2600,7 +2676,24 @@ function RegisterBuyer() {
                                 >
                                   Submit Now! {loading ? <MiniLoader /> : ""}{" "}
                                 </button>
-                              </div>:''}
+                              </div>:
+                              <div className="submit-btn" style={{ position: 'relative' }}>
+                                <div
+                                  data-tooltip-id="my-tooltip-1"
+                                  className="col-md-12 tooltip-wrapper"
+                                  style={{ display: 'inline-block', cursor: 'not-allowed' }}
+                                >
+                                  <button
+                                    type="submit"
+                                    className="btn btn-fill"
+                                    disabled={true}
+                                    style={{ pointerEvents: 'none' }}
+                                  >
+                                    Submit Now!
+                                  </button>
+                                </div>
+                              </div>
+                              }
                           </div>
                         </form>
                       </div>
@@ -2612,7 +2705,10 @@ function RegisterBuyer() {
           : ''
       )}
         </section>
-      
+        <ReactTooltip
+          id="my-tooltip-1"
+          place="top"
+          content="Please verify Phone Number to submit this form"/>
     </>
   );
 }
