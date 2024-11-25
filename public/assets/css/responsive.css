@@ -1,6 +1,5 @@
 @media screen and (min-width: 1400px)  and (max-width: 1599px){
   .modetype,
-  .buyer_seller_toggle,
   .top_icons_list,
   .upload-buyer{
     margin-right: 15px;
@@ -10,6 +9,12 @@
   }
   .block-session>.upload-buyer{
     padding: 7px;
+  }
+  .header-left{
+    gap: 20px;
+  }
+  .user-dropdown .dropdown-menu{
+    right: 0 !important;
   }
 }
 @media (max-width: 1399px) {
@@ -23,12 +28,22 @@
     max-width: 93%;
   }
   .modetype,
-  .buyer_seller_toggle,
   .top_icons_list{
     margin-right: 10px;
   }
   .block-session>.upload-buyer{
     padding: 7px;
+  }
+  .top_icons_list .mobile-header-list{
+    gap: 10px;
+    align-items: center;
+    -webkit-align-items: center;
+  }
+  .header-left{
+    gap: 20px;
+  }
+  .user-dropdown .dropdown-menu{
+    right: 0 !important;
   }
 }
 
@@ -155,6 +170,13 @@
   }
   .seller-notification-box .seller-notification-view {
     width: 100px;
+  }
+  .header-left{
+    gap: 20px;
+  }
+  .block-session>.boost_btn{
+    padding: 0;
+    background-color: transparent;
   }
 }
 
@@ -328,6 +350,7 @@
   }
   .seller-notification-box .seller-notification-view {
       width: 140px;
+      margin: 20px 0 0;
   }
   .seller-notification-box .seller-notification-title::before {
     content: '';
@@ -571,7 +594,7 @@
     align-items: center;
     width: 100%;
   }
-.settings .deal_left_column {
+  .settings .deal_left_column {
     border-right: none;
     width: 100%;
   }
@@ -583,97 +606,106 @@
     border-radius: 10px;
     margin: 15px 0 0;
     gap: 10px;
-}
-.setting-card-body {
-  padding: 20px;
-}
-.setting-card-body .setting-card-head-right:before{display: none;}
-.deal_notifications_left>.pro_details {
-  flex: 0 0 100%;
-  max-width: 100%;
-  padding-right: 0;
-  padding-left: 0;
-  padding-top: 15px;
-}
-.pro_img {
-  flex: 0 0 100%;
-  max-width: 100%;
-}
-.deal_notifications_left .pro_img>img {
-  height: 160px;
-}
-.deal_notifications_right {
-  padding: 10px;
-}
-.space_modal {
-  padding: 30px 20px;
-}
-.modal_inner_content h3 {
-  font-size: 25px;
-  line-height: 34px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-.buy_modal_icon {
-  width: 70px;
-  height: 70px;
-  line-height: 65px;
-}
-.buy_modal_icon img {
-  max-width: 35px;
-}
-.seller-notification-box .seller-notification-list .seller-notification-col {
-  width: auto;
-  border-left: none;
-  justify-content: center;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
-  -webkit-box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
-  padding: 5px 10px;
-  display: flex;
-  display: -webkit-flex;
-  flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  align-items: center;
-  -webkit-align-items: center;
-  gap: 5px;
-  min-width: auto;
-}
-.seller-notification-box{padding: 10px;}
-.seller-notification-box .seller-notification-list {
-  width: 100%;
-  margin: 15px 0;
-  gap: 10px;
-  padding: 0;
-  flex-wrap: wrap;
-}
-.seller-notification-box .seller-notification-view .btn-fill {
-  margin-right: auto;
-  margin-left: 0;
-}
-.seller-notification-box .seller-notification-list .seller-notification-col:last-child{border-right: none;}
-.seller-notification-box .seller-notification-title::before{display: none;}
-.seller-notification-card {
-  padding: 15px;
-  margin: 50px 0 0;
-}
-.seller-notification-list {
-  width: calc(100% + 10px);
-  padding-right: 5px;
-}
-.column_bg_space.setting-card>.deal_column.setting-card-head .setting-card-head-right {
-  display: none;
-}
-.setting-card-body .deal_column.settings {
-  flex-wrap: wrap;
-}
-.column_bg_space.setting-card>.deal_column.setting-card-head {
-  padding: 20px;
-}
-.container>.card-box.setting-card {
-  padding: 0;
-}
+  }
+  .setting-card-body {
+    padding: 20px;
+  }
+  .setting-card-body .setting-card-head-right:before{display: none;}
+  .deal_notifications_left>.pro_details {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    padding-top: 15px;
+  }
+  .pro_img {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .deal_notifications_left .pro_img>img {
+    height: 160px;
+  }
+  .deal_notifications_right {
+    padding: 10px;
+  }
+  .space_modal {
+    padding: 30px 20px;
+  }
+  .modal_inner_content h3 {
+    font-size: 25px;
+    line-height: 34px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .buy_modal_icon {
+    width: 70px;
+    height: 70px;
+    line-height: 65px;
+  }
+  .buy_modal_icon img {
+    max-width: 35px;
+  }
+  .seller-notification-box .seller-notification-list .seller-notification-col {
+    width: auto;
+    border-left: none;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
+    -webkit-box-shadow: 6px 6px 20px rgba(191, 204, 218, 0.19);
+    padding: 5px 10px;
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    align-items: center;
+    -webkit-align-items: center;
+    gap: 5px;
+    min-width: auto;
+  }
+  .seller-notification-box{padding: 10px;}
+  .seller-notification-box .seller-notification-list {
+    width: 100%;
+    margin: 15px 0;
+    gap: 10px;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .seller-notification-box .seller-notification-view .btn-fill {
+    margin-right: auto;
+    margin-left: 0;
+  }
+  .seller-notification-box .seller-notification-list .seller-notification-col:last-child{border-right: none;}
+  .seller-notification-box .seller-notification-title::before{display: none;}
+  .seller-notification-card {
+    padding: 15px;
+    margin: 50px 0 0;
+  }
+  .seller-notification-list {
+    width: calc(100% + 10px);
+    padding-right: 5px;
+  }
+  .column_bg_space.setting-card>.deal_column.setting-card-head .setting-card-head-right {
+    display: none;
+  }
+  .setting-card-body .deal_column.settings {
+    flex-wrap: wrap;
+  }
+  .column_bg_space.setting-card>.deal_column.setting-card-head {
+    padding: 20px;
+  }
+  .container>.card-box.setting-card {
+    padding: 0;
+  }
+  .top_icons_list .mobile-header-list{
+    gap: 7px;
+  }
+  .seller-notification-box .seller-notification-view{
+    margin-top: 0;
+  }
+  .pro_deal_table table thead th{
+    min-width: 170px;
+  }
 }
 
 @media (max-width: 575px) {

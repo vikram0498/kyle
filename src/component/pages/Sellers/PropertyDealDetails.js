@@ -147,6 +147,7 @@ const PropertyDealDetails = () => {
                             <div className='pro_deal_table'>
                                 <Tab.Content>
                                     <Tab.Pane eventKey={currentTab}>
+                                    <div className='table-responsive' style={{ overflowY: "hidden" }}>
                                         <Table>
                                             <thead>
                                                 <tr>
@@ -213,7 +214,8 @@ const PropertyDealDetails = () => {
                                                     </tr>
                                                 )}
                                             </tbody>
-                                        </Table>
+                                            </Table>
+                                        </div>
                                     </Tab.Pane>
                                     {/* <Tab.Pane eventKey="want_to_buy">
                                         <Table>

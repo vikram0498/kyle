@@ -129,7 +129,7 @@ function BuyerHeader() {
       <header className="dashboard-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-6 col-sm-6 col-md-4 col-lg-3">
+            <div className="col-4 col-sm-4 col-md-4 col-lg-3">
               <div className="header-logo">
                 <Link to="/buyer-profile">
                   <img
@@ -146,10 +146,10 @@ function BuyerHeader() {
                 </a> */}
               </div>
             </div>
-            <div className="col-6 col-sm-6 col-md-8 col-lg-9">
+            <div className="col-8 col-sm-8 col-md-8 col-lg-9">
               <div className="block-session">
-                <div className="top_icons_list d-none d-xxl-block">
-                  <ul>
+                <div className="top_icons_list">
+                  <ul className="mobile-header-list align-items-center">
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -227,21 +227,7 @@ function BuyerHeader() {
                     </li>
                   </ul>
                 </div>
-                
-                {(userDetails?.is_switch_role == 1  && userDetails?.level_type > 1 )&& 
-                <div className="buyer_seller_toggle">
-                  <input type="checkbox" onChange={handleToggleSeller} defaultChecked={true}/>
-                  <label>
-                    <span>Seller</span>
-                    <span>Buyer</span>
-                  </label>
-                </div>
-                }
-                
-                <div className="modetype">
-                  <DarkMode />
-                </div>
-                <Link to="/boost-your-profile" className="upload-buyer">
+                <Link to="/boost-your-profile" className="upload-buyer boost_btn">
                   <span className="upload-buyer-icon">
                     <img
                       src="/assets/images/rocket.svg"
@@ -354,6 +340,21 @@ function BuyerHeader() {
                             className="img-fluid"
                           />
                           Settings
+                        </Link>
+                      </li>
+                      <li>
+                          <DarkMode />
+                      </li>
+                      <li>
+                        <Link className="dropdown-item position-relative">
+                          {(userDetails?.is_switch_role == 1  && userDetails?.level_type > 1 )&& 
+                            <div className="buyer_seller_toggle2">
+                              <input type="checkbox" onChange={handleToggleSeller} defaultChecked={true}/>
+                              <label>
+                                <span>Seller</span>
+                              </label>
+                            </div>
+                          }
                         </Link>
                       </li>
                       <li>

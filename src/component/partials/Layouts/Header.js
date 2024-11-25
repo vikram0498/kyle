@@ -146,41 +146,86 @@ function Header() {
       <header className="dashboard-header">
         <div className="container-fluid">
           <div className="row align-items-center">
-            <div className="col-2 col-md-4 col-lg-3 col-xxl-2">
-              <div className="header-logo d-none d-md-block">
-                <Link to="/">
-                  <img
-                    alt="logo"
-                    src="/assets/images/logo.svg"
-                    className="img-fluid"
-                  />
-                </Link>
-              </div>
-              <div className="header-logo d-md-none">
-                <Link to="/">
-                  <img
-                    alt="logo"
-                    src="/assets/images/mobile-logo.svg"
-                    className="img-fluid"
-                  />
-                </Link>
+            <div className="col-2 col-md-4 col-lg-8 col-xxl-8">
+              <div className="d-flex align-items-center header-left">
+                <div className="header-logo d-none d-md-block">
+                  <Link to="/">
+                    <img
+                      alt="logo"
+                      src="/assets/images/logo.svg"
+                      className="img-fluid"
+                    />
+                  </Link>
+                </div>
+                <div className="header-logo d-md-none">
+                  <Link to="/">
+                    <img
+                      alt="logo"
+                      src="/assets/images/mobile-logo.svg"
+                      className="img-fluid"
+                    />
+                  </Link>
+                </div>
+                <div className="d-flex">
+                  <Link to="/additional-credits" className="upload-buyer bg-green d-none d-lg-flex">
+                    <span className="upload-buyer-icon d-flex">
+                      <img
+                        alt="coin"
+                        src="/assets/images/coin.svg"
+                        className="img-fluid"
+                      />
+                    </span>
+                    <p>Buy Credits</p>
+                  </Link>
+                  <Link to="/my-buyers" className="upload-buyer d-none d-lg-flex">
+                    <span className="upload-buyer-icon d-flex">
+                      <img
+                        alt="folder"
+                        src="/assets/images/folder.svg"
+                        className="img-fluid"
+                      />
+                    </span>
+                    <p>
+                      uploaded Buyer Data :{" "}
+                      <b>
+                        {creditLimit !== null ? (
+                          creditLimit.total_buyer_uploaded
+                        ) : (
+                          <MiniLoader />
+                        )}
+                      </b>
+                    </p>
+                  </Link>
+                  {userDetails !== null && userDetails.level_type !== 1 ? (
+                  <>
+                    <div className="upload-buyer d-none d-lg-flex me-0">
+                      <span className="upload-buyer-icon d-flex">
+                        <img
+                          alt="wallet"
+                          src="/assets/images/wallet.svg"
+                          className="img-fluid"
+                        />
+                      </span>
+                      <p>
+                        Credits Points :{" "}
+                        <b className="credit_limit">
+                          {creditLimit !== null ? (
+                            creditLimit.credit_limit
+                          ) : (
+                            <MiniLoader />
+                          )}
+                        </b>
+                      </p>
+                    </div>
+                  </>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-10 col-md-8 col-lg-9 col-xxl-10">
+            <div className="col-10 col-md-8 col-lg-4 col-xxl-4">
               <div className="block-session">
-                <div className="modetype">
-                  <DarkMode />
-                </div>
-                {userDetails?.level_type > 1 && 
-                  <div className="buyer_seller_toggle">
-                    <input type="checkbox" onChange={handleToggleSeller}/>
-                    <label>
-                      <span>Seller</span>
-                      <span>Buyer</span>
-                    </label>
-                  </div>
-                }
-                
                 <div className="top_icons_list d-none d-xxl-block">
                   <ul>
                     <li>
@@ -351,7 +396,18 @@ function Header() {
                 </div>
                 {/* Mobile Notifications */}
                 <div className="top_icons_list d-xxl-none">
-                  <ul>
+                  <ul className="mobile-header-list">
+                    <li className="d-lg-none">
+                      <Link to="/additional-credits" className="upload-buyer bg-green m-0">
+                        <span className="upload-buyer-icon d-flex m-0">
+                          <img
+                            alt="coin"
+                            src="/assets/images/coin.svg"
+                            className="img-fluid"
+                          />
+                        </span>
+                      </Link>
+                    </li>
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -434,82 +490,6 @@ function Header() {
                     </li>
                   </ul>
                 </div>
-                  {/* {userDetails !== null &&
-                  userDetails.level_type !== 1 &&
-                  userDetails.credit_limit < 5 ? (
-                    <Link to="/additional-credits">
-                      <div className="upload-buyer bg-green">
-                        <span className="upload-buyer-icon d-flex">
-                          <img
-                            alt="coin"
-                            src="./assets/images/coin.svg"
-                            className="img-fluid"
-                          />
-                        </span>
-                        <p>More Credits</p>
-                      </div>
-                    </Link>
-                  ) : (
-                    ""
-                  )} */}
-                <Link to="/additional-credits">
-                  <div className="upload-buyer bg-green">
-                    <span className="upload-buyer-icon d-flex">
-                      <img
-                        alt="coin"
-                        src="/assets/images/coin.svg"
-                        className="img-fluid"
-                      />
-                    </span>
-                    <p>Buy Credits</p>
-                  </div>
-                </Link>
-                <div className="upload-buyer d-none d-lg-flex">
-                  <span className="upload-buyer-icon d-flex">
-                    <img
-                      alt="folder"
-                      src="/assets/images/folder.svg"
-                      className="img-fluid"
-                    />
-                  </span>
-                  <Link to="/my-buyers">
-                    <p>
-                      uploaded Buyer Data :{" "}
-                      <b>
-                        {creditLimit !== null ? (
-                          creditLimit.total_buyer_uploaded
-                        ) : (
-                          <MiniLoader />
-                        )}
-                      </b>
-                    </p>
-                  </Link>
-                </div>
-                {userDetails !== null && userDetails.level_type !== 1 ? (
-                  <>
-                  <div className="upload-buyer d-none d-lg-flex">
-                    <span className="upload-buyer-icon d-flex">
-                      <img
-                        alt="wallet"
-                        src="/assets/images/wallet.svg"
-                        className="img-fluid"
-                      />
-                    </span>
-                    <p>
-                      Credits Points :{" "}
-                      <b className="credit_limit">
-                        {creditLimit !== null ? (
-                          creditLimit.credit_limit
-                        ) : (
-                          <MiniLoader />
-                        )}
-                      </b>
-                    </p>
-                  </div>
-                  </>
-                ) : (
-                  ""
-                )}
                 <div className="dropdown user-dropdown">
                   <button
                     className="btn dropdown-toggle ms-auto"
@@ -665,6 +645,21 @@ function Header() {
                             className="img-fluid"
                           />
                           Settings
+                        </Link>
+                      </li>
+                      <li>
+                          <DarkMode />
+                      </li>
+                      <li>
+                        <Link className="dropdown-item position-relative">
+                          {userDetails?.level_type > 1 && 
+                            <div className="buyer_seller_toggle2">
+                              <input type="checkbox" onChange={handleToggleSeller}/>
+                              <label>
+                                <span>Buyer</span>
+                              </label>
+                            </div>
+                          }
                         </Link>
                       </li>
                       <li>
