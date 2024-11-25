@@ -72,7 +72,7 @@ const PropertyDealResult = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='card-box column_bg_space'>
+                    <div className='card-box column_bg_space wrap-column'>
                         {dealData.map((data,index)=>{
                             return (
                                 <div className='deal_column' key={index}>

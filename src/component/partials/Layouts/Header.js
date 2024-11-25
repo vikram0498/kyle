@@ -637,7 +637,8 @@ function Header() {
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/last-search-data">
+                        {/* <Link className="dropdown-item" to="/last-search-data"> */}
+                        <Link className="dropdown-item" to="/property-deal-result">
                           <img
                             alt=""
                             src="/assets/images/search-log.svg"
