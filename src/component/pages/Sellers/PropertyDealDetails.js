@@ -150,12 +150,14 @@ const PropertyDealDetails = () => {
                                         <Table>
                                             <thead>
                                                 <tr>
-                                                    <th>Buyer Name</th>
-                                                    <th>Phone Number</th>
-                                                    <th>Email Address</th>
-                                                    <th>documents</th>
-                                                    <th>Status</th>
-                                                    <th>Chat</th>
+                                                    <th>BUYER NAME</th>
+                                                    <th>PHONE NUMBER</th>
+                                                    <th>EMAIL ADDRESS</th>
+                                                    {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
+                                                    <th>PROOF OF FUND</th>
+                                                    }
+                                                    <th>STATUS</th>
+                                                    <th>CHAT</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -176,15 +178,22 @@ const PropertyDealDetails = () => {
                                                                     </td>
                                                                     <td>{data.buyer_phone}</td>
                                                                     <td>{data.buyer_email}</td>
+                                                                    {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
                                                                     <td>
-                                                                    <span>
-                                                                        <Image src='/assets/images/folder-zip.svg' alt='' /> Documents.zip
-                                                                    </span>
+                                                                        {data.want_to_buy_deal_pdf_url !='' &&
+                                                                        <a href={data.want_to_buy_deal_pdf_url} download="Documents.zip">
+                                                                            <span>
+                                                                            <Image src="/assets/images/folder-zip.svg" alt="" /> Documents
+                                                                            </span>
+                                                                        </a>
+                                                                        }
                                                                     </td>
+                                                                    }
                                                                     <td>
                                                                         {data.status == 'Interested' && <span className='status interested'>Interested</span>}
                                                                         {data.status == 'Want to Buy' && <span className='status want-by'>Want To Buy</span>}
                                                                         {data.status == 'Not Interested' && <span className='status not-interested'>Not Interested</span>}
+                                                                        {data.status == '' && <span >N/A</span>}
                                                                         
                                                                     </td>
                                                                     <td>

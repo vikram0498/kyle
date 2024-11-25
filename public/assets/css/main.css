@@ -6295,7 +6295,7 @@ body.dark .pro_deal_table table thead th{
 .pro_deal_table td:not(:last-child)::after{
   content: '';
   position: absolute;
-  right: 0;
+  right: 1px;
   top: 50%;
   transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
