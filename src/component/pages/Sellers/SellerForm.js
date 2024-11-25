@@ -373,6 +373,8 @@ const SellerForm = () => {
     attachments.forEach((file) => data.append("attachments[]", file));
     // Submit FormData
     buyBoxSearch(data);
+    setFilterFormData(data);
+
 };
 
 
@@ -534,6 +536,7 @@ const SellerForm = () => {
           setIsFiltered(true);
         }
       }
+      
     } catch (error) {
       setLoading(false);
       if (error.response) {

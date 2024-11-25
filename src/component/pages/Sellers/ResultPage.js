@@ -51,9 +51,17 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
     try {
       setShowLoader(true);
       let searchFields = filterFormData
-      searchFields.delete("active_tab");
-      searchFields.delete("buyer_type");
-      searchFields.delete("filterType");
+      // Remove unnecessary fields
+      if (searchFields.has("active_tab")) {
+        searchFields.delete("active_tab");
+      }
+      if (searchFields.has("buyer_type")) {
+        searchFields.delete("buyer_type");
+      }
+      if (searchFields.has("filterType")) {
+        searchFields.delete("filterType");
+      }
+
       let newTab = active_tab == null ? "my_buyers" : activeTab;
       searchFields.append("activeTab", newTab);
       searchFields.append("buyer_type",buyer_type);
