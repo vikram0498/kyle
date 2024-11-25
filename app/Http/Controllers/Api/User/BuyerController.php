@@ -562,6 +562,7 @@ class BuyerController extends Controller
             		'role' => $authUser->roles()->first()->id ?? '',
             		'is_verified'  => $authUser->is_buyer_verified ?? false,
             		'total_buyer_uploaded' => $authUser->buyers()->count(),
+            		'level_type'           => $authUser->level_type,
         	];
 
         	DB::commit();

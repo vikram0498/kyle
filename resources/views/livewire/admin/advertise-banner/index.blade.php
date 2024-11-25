@@ -13,9 +13,9 @@
                         @livewire('admin.advertise-banner.show', ['adBanner_id' => $adBanner_id])
     
                     @elseif($adPerformanceLogsViewMode)
-
+                       
                         @livewire('admin.advertise-banner.show-ad-performace-logs', ['adBanner_id' => $adBanner_id])
-                    
+                       
                     @else
                         <div wire:loading wire:target="create" class="loader"></div>
                         <div class="card-title top-box-set">

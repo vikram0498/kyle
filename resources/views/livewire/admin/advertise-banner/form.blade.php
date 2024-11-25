@@ -12,7 +12,7 @@
             </div>
         </div>       
 
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.adBanner.fields.ad_name')}} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" wire:model.defer="ad_name" placeholder="{{ __('cruds.adBanner.fields.ad_name')}}">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.adBanner.fields.page_type')}} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" wire:model.defer="page_type" placeholder="{{ __('cruds.adBanner.fields.page_type')}}" readonly>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold">{{ __('cruds.adBanner.fields.target_url')}} <span class="text-danger">*</span></label>
                 <input type="url" class="form-control" wire:model.defer="target_url" placeholder="{{ __('cruds.adBanner.fields.target_url')}}">
@@ -54,19 +54,20 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <label class="font-weight-bold">{{ __('cruds.adBanner.fields.end_date')}}<span class="text-danger">*</span></label>
-                <input type="text" id="end_date" class="form-control" wire:model.defer="end_date" placeholder="{{ __('cruds.adBanner.fields.end_date')}}" autocomplete="off">
-                @error('end_date') <span class="error text-danger">{{ $message }}</span>@enderror
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.adBanner.fields.start_time')}}<span class="text-danger">*</span></label>
                 <input type="text" id="start_time" class="form-control" wire:model.defer="start_time" placeholder="{{ __('cruds.adBanner.fields.start_time')}}" autocomplete="off" readonly="true">
                 @error('start_time') <span class="error text-danger">{{ $message }}</span>@enderror
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="font-weight-bold">{{ __('cruds.adBanner.fields.end_date')}}<span class="text-danger">*</span></label>
+                <input type="text" id="end_date" class="form-control" wire:model.defer="end_date" placeholder="{{ __('cruds.adBanner.fields.end_date')}}" autocomplete="off">
+                @error('end_date') <span class="error text-danger">{{ $message }}</span>@enderror
+            </div>
+        </div>
+        
         <div class="col-md-6">
             <div class="form-group">
                 <label class="font-weight-bold justify-content-start">{{ __('cruds.adBanner.fields.end_time')}}<span class="text-danger">*</span></label>

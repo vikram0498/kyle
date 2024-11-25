@@ -565,16 +565,19 @@ class LoginRegisterController extends Controller
             $fullPhoneNumber = $request->country_code.$request->phone;
             Cache::put('otp_' .$fullPhoneNumber, $otp, now()->addMinutes(config('constants.otp_time')));
 
+            /*
             $twilio = new TwilioService;
 
             $toPhoneNumber = '+'.$fullPhoneNumber;
             $message = trans('messages.otp_sms_content',['otpNumber'=>$otp,'otpTime'=>config('constants.otp_time')]);
             $twilio->send_SMS($toPhoneNumber, $message);
+            */
 
             //Return Success Response
             $responseData = [
                 'status'        => true,
                 'message'       => trans('messages.auth.verification.otp_send_success'),
+                'otp'           => $otp
             ];
             return response()->json($responseData, 200);
 

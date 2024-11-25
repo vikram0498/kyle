@@ -237,44 +237,37 @@ class SearchBuyerController extends Controller
                 $additionalBuyers = $additionalBuyers->where('address', 'like', '%'.$request->address.'%');
             }*/
 
-            if($request->state){
-                $selectedValues = $request->state;
+           if($request->state){
+                $selectedValues = array_map('intval', $request->state);
+            
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    if($selectedValues){
-                        foreach ($selectedValues as $value) {
-                            $query->orWhereJsonContains("state", $value);
-                        }
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("state", $value);
                     }
                 });
 
                 $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    if($selectedValues){
-                        foreach ($selectedValues as $value) {
-                            $query->orWhereJsonContains("state", $value);
-                        }
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("state", $value);
                     }
+                    
                 });
             }
 
             if($request->city){
-                $selectedValues = $request->city;
+                $selectedValues = array_map('intval', $request->city);
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
-                    if($selectedValues){
-                        foreach ($selectedValues as $value) {
-                            $query->orWhereJsonContains("city", $value);
-                        }
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("city", $value);
                     }
                 });
 
                 $additionalBuyers = $additionalBuyers->where(function ($query) use ($selectedValues) {
-                    if($selectedValues){
-                        foreach ($selectedValues as $value) {
-                            $query->orWhereJsonContains("city", $value);
-                        }
+                    foreach ($selectedValues as $value) {
+                        $query->orWhereJsonContains("city", $value);
                     }
                 });
             }
-            
 
             /*
             if($request->state){
@@ -720,7 +713,7 @@ class SearchBuyerController extends Controller
                 }
                 
                 if($request->activeTab){
-                    if( ($request->activeTab == 'my_buyers') || ($authUserLevelType == 3) ){
+                    if($request->activeTab == 'my_buyers'){
 
                         if($buyerDetails){
                             $buyer->name =  ucwords($name);
@@ -736,7 +729,7 @@ class SearchBuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                         $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
-                        $buyer->createdByAdmin = (($buyer->created_by == 1) || ($authUserLevelType == 3)) ? true : false;
+                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
                         $buyer->liked = $liked;
                         $buyer->disliked = $disliked;
 
@@ -765,48 +758,61 @@ class SearchBuyerController extends Controller
 
                     }else if($request->activeTab == 'more_buyers'){
                         // $buyer->user = $buyer->user_id;
-                        if($buyerDetails){
-                            $buyer->first_name  =  substr($buyerDetails->first_name, 0, 1).str_repeat("X", strlen($buyerDetails->first_name)-1);
-                            $buyer->last_name  =  substr($buyerDetails->last_name, 0, 1).str_repeat("X", strlen($buyerDetails->last_name)-1);
-                            $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
-                            $buyer->email =  substr($buyerDetails->email, 0, 3).str_repeat("X", strlen($buyerDetails->email)-3);
-                            $buyer->phone =  substr($buyerDetails->phone, 0, 3).str_repeat("X", strlen($buyerDetails->phone)-3);
-                        }
-
-                        $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
                         
-                        $buyer->contact_preferance_id = $buyer->contact_preferance;
-
-                        $buyer->contact_preferance = substr($contactPreference, 0, 1).str_repeat("X", strlen($contactPreference)-1);
-
-                        $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
-                        $buyer->totalBuyerLikes = totalLikes($buyer->id);
-                        $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
-                        $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
-                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
-                        $buyer->liked = $liked;
-                        $buyer->disliked = $disliked;
-
-                        // $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
-
-                        $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
-                        $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
-                        $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
-                        $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
-                        $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
-
-
-                        //Start Verification status
-                        $buyer->driver_license_verified = $buyer->userDetail->buyerVerification->driver_license_status == 'verified' ? true : false;
- 
-                        $buyer->proof_of_funds_verified = $buyer->userDetail->buyerVerification->proof_of_funds_status == 'verified' ? true : false;
- 
-                        $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
- 
-                        $buyer->certified_closer_verified = $buyer->userDetail->buyerVerification->certified_closer_status == 'verified' ? true : false;
-
-                        $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
-                        //End Verification status
+                        if($authUserLevelType == 3){
+                            if($buyerDetails){
+                                $buyer->name =  ucwords($name);
+                                $buyer->first_name = ucwords($buyerDetails->first_name);
+                                $buyer->last_name = ucwords($buyerDetails->last_name);
+                                $buyer->email = $buyerDetails->email;
+                                $buyer->phone = $buyerDetails->phone;
+                            }
+    
+                            $buyer->contact_preferance_id = $buyer->contact_preferance;
+                            $buyer->contact_preferance = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
+                        }else{
+                            if($buyerDetails){
+                                $buyer->first_name  =  substr($buyerDetails->first_name, 0, 1).str_repeat("X", strlen($buyerDetails->first_name)-1);
+                                $buyer->last_name  =  substr($buyerDetails->last_name, 0, 1).str_repeat("X", strlen($buyerDetails->last_name)-1);
+                                $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                                $buyer->email =  substr($buyerDetails->email, 0, 3).str_repeat("X", strlen($buyerDetails->email)-3);
+                                $buyer->phone =  substr($buyerDetails->phone, 0, 3).str_repeat("X", strlen($buyerDetails->phone)-3);
+                            }
+    
+                            $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
+                            
+                            $buyer->contact_preferance_id = $buyer->contact_preferance;
+    
+                            $buyer->contact_preferance = substr($contactPreference, 0, 1).str_repeat("X", strlen($contactPreference)-1);
+                        }
+                            $buyer->redFlag = $buyer->redFlagedData()->where('user_id',$userId)->exists();
+                            $buyer->totalBuyerLikes = totalLikes($buyer->id);
+                            $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
+                            $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
+                            $buyer->createdByAdmin = (($buyer->created_by == 1) || ($authUserLevelType == 3)) ? true : false;
+                            $buyer->liked = $liked;
+                            $buyer->disliked = $disliked;
+    
+                            // $buyer->buyer_profile_image = $buyer->userDetail->profile_image_url ?? '';
+    
+                            $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
+                            $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
+                            $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
+                            $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                            $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
+    
+    
+                            //Start Verification status
+                            $buyer->driver_license_verified = $buyer->userDetail->buyerVerification->driver_license_status == 'verified' ? true : false;
+     
+                            $buyer->proof_of_funds_verified = $buyer->userDetail->buyerVerification->proof_of_funds_status == 'verified' ? true : false;
+     
+                            $buyer->llc_verified = $buyer->userDetail->buyerVerification->llc_verification_status == 'verified' ? true : false;
+     
+                            $buyer->certified_closer_verified = $buyer->userDetail->buyerVerification->certified_closer_status == 'verified' ? true : false;
+    
+                            $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
+                            //End Verification status
                     }
                 }
             }
@@ -896,16 +902,17 @@ class SearchBuyerController extends Controller
 
             }
 
-            if($lastSearchLog->address){
+            /*if($lastSearchLog->address){
                 $buyers = $buyers->where('address', 'like', '%'.$lastSearchLog->address.'%');
-            }
+            }*/
 
             // if($lastSearchLog->country){
             //     $buyers = $buyers->where('country', $lastSearchLog->country);
             // }
 
             if($lastSearchLog->state){
-                $selectedValues = $lastSearchLog->state;
+                $selectedValues = json_decode($lastSearchLog->state,true);
+                
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     if($selectedValues){
                          foreach ($selectedValues as $value) {
@@ -917,7 +924,7 @@ class SearchBuyerController extends Controller
             }
 
             if($lastSearchLog->city){
-                $selectedValues = $lastSearchLog->city;
+                $selectedValues = json_decode($lastSearchLog->city,true);
                 $buyers = $buyers->where(function ($query) use ($selectedValues) {
                     if($selectedValues){
                         foreach ($selectedValues as $value) {
@@ -1540,16 +1547,22 @@ class SearchBuyerController extends Controller
 
             $seachLogDeals->getCollection()->transform(function ($seachLogDeal) {            
                 $address = $seachLogDeal && $seachLogDeal->address ? $seachLogDeal->address : '';
-                return [
+                
+                $record = [
                     'id'                => $seachLogDeal->id,
                     'title'             => $address,
                     'address'           => $address,
                     'property_images'   => $seachLogDeal->uploads ? $seachLogDeal->search_log_image_urls : '',
+                    
                     "total_buyer"       => $seachLogDeal->buyerDeals()->count(),
                     'want_to_buy_count' => $seachLogDeal->want_to_buy_count,
                     'interested_count'  => $seachLogDeal->interested_count,
                     'not_interested_count' => $seachLogDeal->not_interested_count,
                 ];
+                
+                return $record;
+                
+                
             });
 
             //Return Success Response
@@ -1599,7 +1612,7 @@ class SearchBuyerController extends Controller
 
             $searchlogBuyerDeals->getCollection()->transform(function ($searchlogBuyerDeal) {
                 $buyerUser = $searchlogBuyerDeal->buyerUser;
-                return [
+                $record = [
                     'deal_id'           => $searchlogBuyerDeal->id,
                     'buyer_user_id'     => $searchlogBuyerDeal->buyer_user_id,                    
 
@@ -1608,7 +1621,14 @@ class SearchBuyerController extends Controller
                     'buyer_phone'       => $buyerUser->phone,
                     'profile_image'     => $buyerUser->profile_image_url,
                     'status'            => $searchlogBuyerDeal->status ? config('constants.buyer_deal_status')[$searchlogBuyerDeal->status] : '',
+                    
                 ];
+                
+                if($searchlogBuyerDeal->status == 'want_to_buy'){
+                    $record['want_to_buy_deal_pdf_url'] =  $searchlogBuyerDeal->want_to_buy_deal_pdf_url;
+                }
+                
+                return $record;
             });
             
             $address = $searchLog && $searchLog->address ? $searchLog->address : '';

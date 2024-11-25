@@ -125,11 +125,6 @@ class Index extends Component
             $rules['start_time'] = '|after:now';
         }
 
-        // Check if end time is greater than start time
-        if ($endDateTime->lt($starDateTime)) {
-            $rules['end_time'] = '|after:start_time';
-        }
-
         $validatedData = $this->validate(
             $rules,['without_spaces' => 'The :attribute field is required'],['advertiser_name'  => 'advertiser name', 'ad_name' => 'ad name','target_url'  => 'target url']
         );

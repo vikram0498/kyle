@@ -172,24 +172,24 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
 
     // For Seller
-    Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {
+    // Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {
 
         // Property Deals
         Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
         Route::get('deals/result-list', [SearchBuyerController::class, 'sellerDealResultList']);
         Route::get('deals/show/{id}/{status?}', [SearchBuyerController::class, 'sellerDealDetail']);
 
-    });
+    // });
     
     // For Buyer
-    Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.buyer')])]], function () {
+    // Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.buyer')])]], function () {
  
         // Property Deals
         Route::get('buyer-deals/list', [SearchBuyerController::class, 'buyerDealsList']);
         Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
         Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
         
-    });
+    // });
    
 
     // Settings
