@@ -389,32 +389,35 @@ const MyProfile = () => {
                         <div className="col-12 col-md-6 col-lg-6">
                           <input type="hidden" name="country_code" value={countryCode}/>
                           <div className="form-group">
-                            <label> Phone Number <span className="error">*</span></label>
-                            <input
-                              type="text"
-                              name="phone"
-                              className="form-control-form"
-                              placeholder="Phone Number"
-                              defaultValue={formatInput(userData.phone)}
-                              autoComplete="no-phone"
-                              onKeyUp={(e)=>{setPhoneNumber(e.target.value)}}
-                              {...register("phone", {
-                                required: "Phone is required",
-                                validate: {
-                                  matchPattern: (v) =>
-                                    /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
-                                  maxLength: (v) =>
-                                    (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
-                                    "The phone number should be between 1 to 10 characters",
-                                },
-                              })}
-                              disabled={true}
-                            />
-                            {errors.phone && (
-                              <p className="error">{errors.phone?.message}</p>
-                            )}
+                            <label>Phone Number <span className="error">*</span></label>
+                            <div className="form-group-inner">
+                              <span className="form-icon pro_counts_icon">(+{countryCode})</span>
+                              <input
+                                type="text"
+                                name="phone"
+                                className="form-control-form prefix_space"
+                                placeholder="Phone Number"
+                                defaultValue={formatInput(userData.phone)}
+                                autoComplete="no-phone"
+                                onKeyUp={(e)=>{setPhoneNumber(e.target.value)}}
+                                {...register("phone", {
+                                  required: "Phone is required",
+                                  validate: {
+                                    matchPattern: (v) =>
+                                      /^[0-9-]*$/.test(v) || "Please enter a valid phone number",
+                                    maxLength: (v) =>
+                                      (v.length <= 13 && v.length >= 1) || // Adjusted for the formatted length (9 digits + 2 hyphens)
+                                      "The phone number should be between 1 to 10 characters",
+                                  },
+                                })}
+                                disabled={true}
+                              />
+                              {errors.phone && (
+                                <p className="error">{errors.phone?.message}</p>
+                              )}
 
-                            {renderFieldError("phone")}
+                              {renderFieldError("phone")}
+                            </div>
                           </div>
                         </div>
                       </div>

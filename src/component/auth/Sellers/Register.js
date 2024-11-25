@@ -173,19 +173,9 @@ const Register = () => {
           <div className="center-content">
             <img src="./assets/images/logo.svg" className="img-fluid" alt="" />
             {/* <h2>Welcome to Inucation!</h2> */}
-            <h3>Register as a Wholesaler for BuyBoxBot</h3>
+            <h3 className="fw-700 color2 mb-4">Register as a Wholesaler for BuyBoxBot</h3>
           </div>
           <ul className="account-with-social list-unstyled mb-0 social-login-link spacing-above">
-              <li>
-                  <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" />Register With Facebook</Link>
-                  <FacebookLoginButton
-                  apiUrl={apiUrl}
-                  setLoading={setLoading}
-                  navigate={navigate}
-                  setErrors={setErrors}
-                  />
-              </li>
-
               <li>
                 <Link to="https://google.com">
                   <img
@@ -203,6 +193,15 @@ const Register = () => {
                     setErrors={setErrors}
                   />
                 </GoogleOAuthProvider>
+              </li>
+              <li>
+                  <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" />Register With Facebook</Link>
+                  <FacebookLoginButton
+                  apiUrl={apiUrl}
+                  setLoading={setLoading}
+                  navigate={navigate}
+                  setErrors={setErrors}
+                  />
               </li>
             </ul>
             <div className="or">
@@ -553,9 +552,9 @@ const Register = () => {
               <p className="account-now">
                 Already Have an account? <Link to="/login">Login Now!</Link>
               </p>
-              <div className="or">
+              {/* <div className="or">
                 <span>OR</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </form>

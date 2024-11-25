@@ -219,7 +219,7 @@ function Login(props) {
               </Link>
             </div>
             <div className="col-12 col-lg-12">
-              <div className="form-group-btn">
+              <div className="form-group-btn mt-30">
                 <button
                   type="submit"
                   className="btn btn-fill"
@@ -234,12 +234,12 @@ function Login(props) {
                 <div class="line-with-text">Or Register As</div>
                   <br></br>
                     <div className="row">
-                       <div className="col-md-6 mt-2"> 
+                       <div className="col-md-6"> 
                           <Link to="/register-buyer">
                             <button className="btn btn-fill btn-white">Buyer</button>
                           </Link>
                         </div>
-                       <div className="col-md-6 mt-2">
+                       <div className="col-md-6 mt-2 mt-md-0">
                         <Link to={"/register"}>
                           <button className="btn btn-fill">Wholesaler</button>
                         </Link>
@@ -260,16 +260,6 @@ function Login(props) {
                 <span>OR</span>
               </div>
               <ul className="account-with-social social-login-link list-unstyled mb-0">
-                 <li>
-                    <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/>Login With Facebook</Link>
-                      <FacebookLoginButton
-                        firebaseDeviceToken={firebaseDeviceToken}
-                        apiUrl={apiUrl}
-                        setLoading={setLoading}
-                        navigate={navigate}
-                        setErrors={setErrors}
-                      />
-                </li> 
                 <li>
                   <Link to="https://google.com">
                     <img
@@ -290,13 +280,23 @@ function Login(props) {
                     />
                   </GoogleOAuthProvider>
                 </li>
+                <li>
+                  <Link to="https://facebook.com"><img src="./assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/>Login With Facebook</Link>
+                    <FacebookLoginButton
+                      firebaseDeviceToken={firebaseDeviceToken}
+                      apiUrl={apiUrl}
+                      setLoading={setLoading}
+                      navigate={navigate}
+                      setErrors={setErrors}
+                    />
+                </li>
               </ul>
             </div>
           </div>
         </form>
-        <p className="support-text mt-4 pt-2">
+        <p className="support-text mt-4">
           Want to get in touch? We'd love to hear from you.{" "}
-          <Link to="/support" style={{ color: "#0d6efd" }}>
+          <Link to="/support" style={{ color: "#3F53FE" }}>
             click here
           </Link>
         </p>

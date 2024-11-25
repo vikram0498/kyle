@@ -467,11 +467,11 @@ function RegisterBuyer() {
                     <div className="col-12 col-lg-12">
                       <div className="card-box-inner">
                         <div className="row">
-                          <div className="col-12 col-sm-7 col-md-6 col-lg-6">
-                            <h3>Buy Box Criteria Form </h3>
+                          <div className="col-12 col-md-12 col-lg-4">
+                            <h2 className="fw-700 color2 mb-0">Buy Box Criteria</h2>
                             {/* <p>Real estate deals that match your exact buying criteria</p> */}
                           </div>
-                          <div className="col-12 col-sm-7 col-md-6 col-lg-6">
+                          <div className="col-12 col-md-12 col-lg-8">
                             <GoogleFacebookLogin/>
                           </div>
                         </div>
@@ -479,8 +479,9 @@ function RegisterBuyer() {
                         <form
                           method="post"
                           onSubmit={handleSubmit(submitSingleBuyerForm)}
+                          className="pt-2"
                         >
-                          <div className="card-box-blocks">
+                          <div className="card-box-blocks mt-4">
                             <div className="row">
                               <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                                 <label>
@@ -2128,7 +2129,7 @@ function RegisterBuyer() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="column--grid">
+                              <div className="column--grid buyer_register_form">
                                 <div className="grid-template-col">
                                   <div className="radio-block-group">
                                     <label>Solar</label>
@@ -2657,7 +2658,7 @@ function RegisterBuyer() {
                                       required: "This field is required",
                                     })}/>
                                     <label className="form-check-label text-transform-none" htmlFor="privacy-policy">
-                                      <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy</Link> 
+                                      <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy </Link> 
                                        and 
                                        <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
                                     </label>

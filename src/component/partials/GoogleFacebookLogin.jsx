@@ -12,7 +12,7 @@ const GoogleFacebookLogin = () => {
     const [loading, setLoading] = useState(false);
 
   return (
-    <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-end">
+    <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-start justify-content-lg-end mt-2 mt-lg-0">
         <li>
             <Link to="https://facebook.com"><img src="/assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> Register With Facebook</Link>
             <FacebookLoginButton

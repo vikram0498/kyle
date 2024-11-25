@@ -611,17 +611,22 @@ input[type="radio"]:checked:before {
   color: #464b70;
   letter-spacing: -1px;
   line-height: 0.91;
+  font-size: 14px;
+  height: 14px;
 }
 .form-control.phone_input{
-  padding-left: 90px !important;
+  padding-left: 84px !important;
 }
 .form-icon.verification_count{
   color: #464b70;
   letter-spacing: -1px;
   line-height: 0.91;
+  font-size: 14px;
+  height: 14px;
+  top: 2px;
 }
 .card-box-blocks .form-control.verification_input{
-  padding-left: 70px !important;
+  padding-left: 65px !important;
   height: 56px;
 }
 
@@ -825,21 +830,17 @@ input[type="radio"]:checked:before {
 }
 
 .account-in {
-  border: 1px solid #eaeceb;
-
+  /* border: 1px solid #eaeceb; */
   max-width: 620px;
-
   padding: 40px;
-
   border-radius: 10px;
-
   margin: 30px auto;
-
   width: 100%;
-
   background: #fff;
-
   position: relative;
+}
+.mt-30{
+  margin-top: 30px;
 }
 
 .session-img img {
@@ -1863,8 +1864,9 @@ section.main-section {
   display: flex;
   align-items: center;
   text-align: center;
-  color: #333;
+  color: #464B70;
   font-size: 18px;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .line-with-text::before,
@@ -7463,11 +7465,30 @@ span.status.interested {
 .setting-card-head-right .buyer_seller_toggle>input:checked + label::before {
   left: calc(100% - 17px);
 }
+.fw-700{
+  font-weight: 700;
+}
+.color2{
+  color: #0A2540;
+}
+.pro_counts_icon{
+  left: 10px;
+  color: #464b70;
+  letter-spacing: -1px;
+  line-height: 0.91;
+  font-size: 14px;
+  height: 14px;
+  top: 2px;
+}
+.prefix_space{
+  padding-left: 52px;
+}
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{
     overflow: hidden;
   }
-  .main-login-form .register-recaptcha iframe{
+  .main-login-form .register-recaptcha iframe,
+  .buyer_register_form + div>.register-recaptcha iframe{
     transform: scale(0.75);
     -webkit-transform: scale(0.75);
     transform-origin: left;
@@ -7477,8 +7498,20 @@ span.status.interested {
     width: auto !important;
     height: auto !important;
   }
+  .buyer_register_form{
+    margin-bottom: 20px;
+  }
+  .buyer_register_form + div>.register-recaptcha{
+    margin-bottom: 10px !important;
+  }
   .main-login-form .form-icon{
     left: 10px;
+  }
+  .form-icon.counts_icon{
+    left: 43px;
+  }
+  .form-icon.counts_icon ~ .phone_input{
+    padding-left: 78px !important;
   }
   .main-login-form .form-control{
     padding: 17px 0 17px 44px !important;

@@ -551,7 +551,9 @@ body.dark .cornor-block {
   background-color: #1f1f1f;
   border: 1px solid #5b5b5b;
 }
-body.dark{
+body.dark,
+body.dark .form-icon.counts_icon,
+body.dark .pro_counts_icon{
   color: #fff;
 }
 body.dark .account-with-social a {
