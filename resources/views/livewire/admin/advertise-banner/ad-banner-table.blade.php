@@ -142,11 +142,13 @@
                             </button>
                             @endcan
 
-                            @can('ad_banner_delete')
+                           {{--
+                           @can('ad_banner_delete')
                             <button type="button" data-id="{{$adBanner->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
                                 <i class="ti-trash"></i>
                             </button>
-                            @endcan                            
+                            @endcan 
+                            --}}
                         </td>
                     </tr>
                     @endforeach
