@@ -307,7 +307,7 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/home-top-check.svg' alt='' /><span className="list_numbers">{notificationData.new_buyer_notification.length }</span>
+                          <Image src='/assets/images/home-top-check.svg' alt='' /><span className="list_numbers">{notificationData.new_buyer_notification.length || 0 }</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>Interested Buyers</h5>

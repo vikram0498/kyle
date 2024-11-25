@@ -153,6 +153,7 @@ const BuyerProfile = () => {
   useState(() => {
     fetchBuyerData();
   }, []);
+
   return (
     <>
       <BuyerHeader />
@@ -770,11 +771,11 @@ const BuyerProfile = () => {
                       </div> */}
                       <div className="col-12 col-lg-4"><label>States</label></div>
                       <div className="col-12 col-lg-8">
-                      {currentBuyerData.state.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}
+                      {currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}
                       </div>
                       <div className="col-12 col-lg-4"><label>Cities</label></div>
                       <div className="col-12 col-lg-8">
-                        {currentBuyerData.city.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}
+                        {currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}
 
                         {/* {currentBuyerData.city} */}
                       </div>
