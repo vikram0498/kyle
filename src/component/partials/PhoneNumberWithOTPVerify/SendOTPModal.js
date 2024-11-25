@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SendOTPModal = ({ handleSendOtp, handleSubmitOtp, setOtpValue }) => {
+const SendOTPModal = ({ handleSendOtp, handleSubmitOtp, setOtpValue,validOTP }) => {
     const inputFocus = (event) => {
         const elements = document.getElementsByClassName("otpnumb");
         const inputField = document.getElementById("otp_value");
@@ -58,6 +58,8 @@ const SendOTPModal = ({ handleSendOtp, handleSubmitOtp, setOtpValue }) => {
                 </span>
                 <h3>Otp is sent on this</h3>
                 <p>Please verify the phone number</p>
+                <p><strong>Your valid OTP is {validOTP}</strong></p>
+                
             </div>
             <form className="modal-form">
                 <div className="otp_block">

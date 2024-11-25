@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldError='', setIsVerifiedOTP='', isVerifiedOTP}) => {
     const [showModal, setShowModal] = useState(false);
     const [otpValue, setOtpValue] = useState(0);
+    const [validOTP, setValidOTP] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL;
     const countryCode = process.env.REACT_APP_COUNTRY_CODE;
     const handleSendOtp = async () => {
@@ -22,6 +23,7 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
               };
             let response = await axios.post(`${apiUrl}send-otp` , payload,{ headers: headers });
             if(response.data.status){
+                setValidOTP(response.data.otp);
                 toast.success(response.data.message, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -78,6 +80,7 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
         }
         inputField.value = ""; // Clear hidden input
         setOtpValue(""); // Clear OTP value in state
+        setValidOTP("");
     };
     return(
         <>
@@ -119,7 +122,7 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
                     {isVerifiedOTP  && 
                         <span className='otp_success_check'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"/>
+                                <path fillRule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"/>
                             </svg>
                         </span>
                     }
@@ -130,7 +133,7 @@ const PhoneNumberWithOTPVerify = ({register, errors ='', getValues ,renderFieldE
             <Modal show={showModal} onHide={setShowModal} centered className='radius_30 max-648'>
                 <Modal.Header closeButton className='new_modal_close'></Modal.Header>
                 <Modal.Body className='space_modal'>
-                    <SendOTPModal handleSendOtp={handleSendOtp} handleSubmitOtp={handleSubmitOtp} setOtpValue={setOtpValue}/>
+                    <SendOTPModal handleSendOtp={handleSendOtp} handleSubmitOtp={handleSubmitOtp} setOtpValue={setOtpValue} validOTP={validOTP}/>
                 </Modal.Body>
             </Modal>
 
