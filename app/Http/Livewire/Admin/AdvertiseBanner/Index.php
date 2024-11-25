@@ -29,7 +29,7 @@ class Index extends Component
     public $removeImage=false;
 
     protected $listeners = [
-        'show','showAdPerformanceLog', 'edit', 'confirmedToggleAction','deleteConfirm'
+        'show','showAdPerformanceLog', 'edit', 'confirmedToggleAction','deleteConfirm','cancel'
     ];
 
     public function mount(){

@@ -70,4 +70,9 @@ class ShowAdPerformaceLogs extends Component
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     } 
 
+    public function cancel(){
+      $this->emitUp('cancel');
+    }
+
+
 }

@@ -65,10 +65,38 @@
                     format: 'DD-MM-YYYY'
                 },
             }, function(start, end, label) {
-                let startDate = start.format('YYYY-MM-DD');
+                let startDate = start.format('DD-MM-YYYY');
                 @this.set('start_date', startDate);
 
-                @this.set('start_time', null);
+                const isToday = start.isSame(new Date(), 'day');
+    
+                var now = moment();
+                if (start.isSame(now, 'day')) {
+                   var time = moment().startOf('hour').minute(moment().minute());
+                }else{
+                    var time = moment().startOf('day');
+                }
+                // Initialize the start time picker
+                $('#start_time').daterangepicker({
+                    autoApply: true,
+                    timePicker: true,
+                    timePicker24Hour: true,
+                    singleDatePicker: true,
+                    autoUpdateInput: false,
+                    minDate: time,
+                    startDate: time,
+                    locale: {
+                        format: 'HH:mm'
+                    },
+
+                }).on('apply.daterangepicker', function(ev, picker) {
+                    @this.set('start_time', picker.startDate.format('HH:mm'));
+                    @this.set('end_time', null); // Clear end_time when start_time is updated
+                }).on('show.daterangepicker', function(ev, picker) {
+                    picker.container.find(".calendar-table").hide(); // Hide calendar (date picker)
+                });
+
+                // @this.set('start_time', null);
                 @this.set('end_time', null);               
 
                 $('input[id="end_date"]').daterangepicker({
@@ -81,23 +109,23 @@
                         format: 'DD-MM-YYYY'
                     },
                 }, function(start, end, label) {
-                    @this.set('end_date', start.format('YYYY-MM-DD'));
+                    @this.set('end_date', start.format('DD-MM-YYYY'));
                 });
             });
             
             // Initialize start_time picker
             let startTime = @this.start_time; // Get start_time value from Livewire
-            let timeNow = moment().startOf('hour').minute(moment().minute()); // Default to current time
+            let timeNow = moment().startOf('hour').minute(moment().minute()); // Default to current tim
             
             $('#start_time').daterangepicker({
                 autoApply: true,
                 timePicker: true,
-                timePicker24Hour: false,
+                timePicker24Hour: true,
                 singleDatePicker: true,
                 autoUpdateInput: false,
                 startDate: startTime ? moment(startTime, 'HH:mm') : timeNow, // Use start_time from Livewire or default
                 locale: {
-                    format: 'hh:mm A'
+                    format: 'HH:mm'
                 }
             }).on('apply.daterangepicker', function(ev, picker) {
                 @this.set('start_time', picker.startDate.format('HH:mm'));
@@ -112,12 +140,12 @@
             $('#end_time').daterangepicker({
                 autoApply: true,
                 timePicker: true,
-                timePicker24Hour: false,
+                timePicker24Hour: true,
                 singleDatePicker: true,
                 autoUpdateInput: false,
                 startDate: endTime ? moment(endTime, 'HH:mm') : timeNow.add(1, 'hour'), // Use end_time from Livewire or default
                 locale: {
-                    format: 'hh:mm A'
+                    format: 'HH:mm'
                 }
             }).on('apply.daterangepicker', function(ev, picker) {
                 @this.set('end_time', picker.startDate.format('HH:mm'));
@@ -137,7 +165,7 @@
                 },
             },
             function(start, end, label) {
-                @this.set('end_date', start.format('YYYY-MM-DD'));
+                @this.set('end_date', start.format('DD-MM-YYYY'));
             });
 
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\User\SearchBuyerController;
 use App\Http\Controllers\Api\User\CopyBuyerController;
 use App\Http\Controllers\Api\User\TwilioController;
 use App\Http\Controllers\Api\User\BuyerVerificationController;
+use App\Http\Controllers\Api\User\ChatMessageController;
 use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\SettingController;
 use App\Http\Controllers\Api\User\StripeWebhookController;
@@ -169,6 +170,9 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('/get-current-limit', [ProfileController::class, 'getCurrentLimit']);
 
     Route::post('banner/{page}', [AdBannerController::class, 'getBanner']);
+
+    Route::post('/send-message', [ChatMessageController::class, 'sendMessage']);
+    Route::post('/chat-messages', [ChatMessageController::class, 'getMessages']);
 
 
     // For Seller

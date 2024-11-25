@@ -466,3 +466,26 @@ if (!function_exists('sendNotificationToUser')) {
 	}
 
 }
+
+if (!function_exists('formatDateLabel')) {
+    function formatDateLabel($createdAt)
+    {
+        $date = Carbon::parse($createdAt);
+        $now = Carbon::now();        
+        
+        if ($date->isToday()) {
+            return $date->format('h:i A');
+        }
+
+        if ($date->isYesterday()) {
+            return 'Yesterday'; 
+        }
+        
+        if ($date->greaterThanOrEqualTo($now->subDays(7))) {
+            return $date->format('l'); 
+        }
+
+        // If the date is older than a week, return the date in 'd-m-Y' format
+        return $date->format('d-m-Y');
+    }
+}
