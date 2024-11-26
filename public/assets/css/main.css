@@ -7604,10 +7604,13 @@ span.status.interested {
   transition: all 0.4s ease-in-out;
 }
 .mode_type label .lightmode,
-.mode_type input:checked + label .darkmode{
+.mode_type input:checked + label .darkmode,
+.auth_mode,
+.dark-container .mode_type{
   display: none;
 }
-.mode_type input:checked + label .lightmode{
+.mode_type input:checked + label .lightmode,
+.dark-container .auth_mode{
   display: block;
 }
 .mode_type input:checked + label::after{
@@ -7615,7 +7618,7 @@ span.status.interested {
   border-color: #3f53fe;
 }
 .mode_type:hover label span,
-.user-dropdown .dropdown-menu li .dropdown-item:hover .buyer_seller_toggle label span{
+.user-dropdown .dropdown-menu li .dropdown-item:hover .buyer_seller_toggle2 label span{
   background: transparent;
   color: #0a2540;
   font-weight: 600;
