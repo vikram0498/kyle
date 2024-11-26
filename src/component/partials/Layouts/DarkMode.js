@@ -13,15 +13,10 @@ const DarkMode = () => {
     setIsDarkMode(myValue == 'true');
 
   };
-  console.log(myValue,"myValue");
-
   useEffect(()=>{
     let darkClass = localStorage.getItem("darkMode");
-    console.log(darkClass,"darkClass")
     setIsDarkMode(darkClass == 'true');
   },[isDarkMode]);
-
-  console.log(isDarkMode,"isDarkMode")
 
   return (
     <>

@@ -38,6 +38,7 @@ import PropertyDealDetails from "../component/pages/Sellers/PropertyDealDetails"
 import DealNotifications from "../component/pages/Sellers/DealNotifications";
 import Message from "../component/pages/Sellers/Message";
 import Settings from "../component/pages/Sellers/Settings";
+import LastSearchResult from "../component/pages/Sellers/LastSearchResult";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -85,9 +86,13 @@ const Seller = () => {
             path="/my-buyers"
             element={<Protected Component={MyBuyer} />}
           />
-          <Route
+          {/* <Route
             path="/last-search-data"
             element={<Protected Component={LastSearchData} />}
+          /> */}
+          <Route
+            path="/last-search-data"
+            element={<Protected Component={LastSearchResult} />}
           />
           <Route
             path="/sellers-form"
