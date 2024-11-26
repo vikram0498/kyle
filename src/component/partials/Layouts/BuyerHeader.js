@@ -345,18 +345,19 @@ function BuyerHeader() {
                       <li>
                           <DarkMode />
                       </li>
+
+                      {(userDetails?.is_switch_role == 1  && userDetails?.level_type > 1 )&& 
                       <li>
                         <Link className="dropdown-item position-relative">
-                          {(userDetails?.is_switch_role == 1  && userDetails?.level_type > 1 )&& 
                             <div className="buyer_seller_toggle2">
                               <input type="checkbox" onChange={handleToggleSeller} defaultChecked={true}/>
                               <label>
                                 <span>Seller</span>
                               </label>
                             </div>
-                          }
                         </Link>
                       </li>
+                      }
                       <li>
                         <a
                           href={void 0}
