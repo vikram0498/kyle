@@ -250,8 +250,8 @@ function Header() {
                                     <div className="dropdown_end align-self-center">
                                       <Link to="#">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                          <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                          <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                          <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                          <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                         </svg>
                                       </Link>
                                     </div>
@@ -287,8 +287,8 @@ function Header() {
                                     <div className="dropdown_end align-self-center">
                                       <Link to="/deal-notifications">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                          <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                          <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                          <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                          <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                         </svg>
                                       </Link>
                                     </div>
@@ -371,8 +371,8 @@ function Header() {
                                       <div className="dropdown_end align-self-center">
                                         <Link to="#">
                                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                            <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                            <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                           </svg>
                                         </Link>
                                       </div>
@@ -428,8 +428,8 @@ function Header() {
                               <div className="dropdown_end align-self-center">
                                 <Link to="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                   </svg>
                                 </Link>
                               </div>
@@ -446,8 +446,8 @@ function Header() {
                               <div className="dropdown_end align-self-center">
                                 <Link to="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                   </svg>
                                 </Link>
                               </div>
@@ -463,8 +463,8 @@ function Header() {
                               <div className="dropdown_end align-self-center">
                                 <Link to="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                   </svg>
                                 </Link>
                               </div>
@@ -480,8 +480,8 @@ function Header() {
                               <div className="dropdown_end align-self-center">
                                 <Link to="#">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="9" viewBox="0 0 14 9" fill="none">
-                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M1 4.5L12.9972 4.5" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
+                                    <path d="M9.80078 1L13.0003 4.5L9.80078 8" stroke="#121639" strokeLinecap="round" stroke-linejoin="round"/>
                                   </svg>
                                 </Link>
                               </div>

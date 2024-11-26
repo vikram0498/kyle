@@ -28,7 +28,7 @@ const BuyerCardResult = (props) => {
     <div className="col-12 col-lg-6" >
         <div className={`position-relative property-critera-outer ${data.user_detail.level_type ==2 ? 'change-badge-color' : ''}` }>
             {(activeTab ==='my_buyers' && user_data.level_type > 1 )&&<input type="checkbox" id={data.buyer_user_id} value={data.buyer_user_id} className='deal-check-box' checked={selectedDeals.includes(data.buyer_user_id)} onChange={() => handleCheckboxChange(data.buyer_user_id)}/>}
-            <label className={`property-critera-block buyer-blog-area property-section-${data.id} ${data.user_detail.level_type ==2 ? 'change-badge-color' : ''}`} for={data.buyer_user_id}>
+            <label className={`property-critera-block buyer-blog-area property-section-${data.id} ${data.user_detail.level_type ==2 ? 'change-badge-color' : ''}`} htmlFor={data.buyer_user_id}>
                 <div className='buyer-notifaction'>
 
                     {(activeTab ==='my_buyers' && user_data.level_type > 1 ) && 

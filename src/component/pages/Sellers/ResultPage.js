@@ -36,7 +36,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
   const [currentBuyerId, setCurrentBuyerId] = useState('');
   const [showLoader, setShowLoader] = useState(true);
   const { setErrors, renderFieldError } = useFormError();
-
+  const [sendDealMessage, setSendDealMessage] = useState('');
   const [selectedDeals, setSelectedDeals] = useState([]); // Array to store selected deal IDs
 
   const [sendDealShow, setSendDealShow] = useState(false);
@@ -44,7 +44,6 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
   const sendDealClose = () => setSendDealShow(false);
   const apiUrl = process.env.REACT_APP_API_URL;
 
-  const handleDealShow = () => setSendDealBox(true);
 
   useEffect(() => {
     getFilterResult();
@@ -134,7 +133,6 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
     //console.log(activeTab,'activeTab1',pageNumber);
   };
   const handleClickMoreBuyers = () => {
-    console.log('first')
     setActiveTab("more_buyers");
     setPageNumber(1);
     setBuyerType("");
@@ -197,9 +195,11 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
             message : message
         }
         let response = await axios.post(`${apiUrl}search-buyers/send-deal`,payload, {headers:headers});
-        toast.success(response.data.message, { position: toast.POSITION.TOP_RIGHT,});
+        // toast.success(response.data.message, { position: toast.POSITION.TOP_RIGHT,});
+        setSendDealMessage(response.data.message);
         setSelectedDeals([]);
         setSendDealShow(false);
+        setSendDealBox(true)
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
@@ -275,7 +275,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                             <path d="M12.6404 10.5404C12.4409 11.064 12.0207 11.4619 11.4722 11.6435C10.703 11.8948 9.91239 12.0833 9.11466 12.2159C9.03631 12.2299 8.95796 12.2439 8.87961 12.2509C8.7514 12.2718 8.6232 12.2858 8.49499 12.2997C8.33829 12.3207 8.17447 12.3346 8.01065 12.3486C7.56193 12.3835 7.12032 12.4044 6.6716 12.4044C6.21575 12.4044 5.7599 12.3835 5.31118 12.3416C5.11887 12.3276 4.93368 12.3067 4.74849 12.2788C4.64165 12.2648 4.53481 12.2509 4.43509 12.2369C4.35674 12.2229 4.2784 12.2159 4.20005 12.202C3.40944 12.0763 2.62595 11.8878 1.86383 11.6365C1.29402 11.448 0.859536 11.05 0.667225 10.5404C0.474914 10.0377 0.54614 9.45127 0.852413 8.9486L1.65727 7.63608C1.82821 7.34984 1.98491 6.7983 1.98491 6.46319V5.16463C1.98491 2.63034 4.08609 0.570801 6.6716 0.570801C9.24999 0.570801 11.3512 2.63034 11.3512 5.16463V6.46319C11.3512 6.7983 11.5079 7.34984 11.6859 7.63608L12.4908 8.9486C12.7828 9.43731 12.8398 10.0098 12.6404 10.5404Z" fill="#3F53FE"/>
                             <path d="M6.65265 6.65221C6.3535 6.65221 6.11133 6.41484 6.11133 6.12162V3.95735C6.11133 3.66413 6.3535 3.42676 6.65265 3.42676C6.9518 3.42676 7.19397 3.66413 7.19397 3.95735V6.12162C7.18684 6.41484 6.94468 6.65221 6.65265 6.65221Z" fill="white"/>
                             <path d="M8.32176 13.1519C8.48163 13.1323 8.6021 13.2884 8.52168 13.4279C8.15323 14.0673 7.4546 14.4993 6.65506 14.4993C6.09238 14.4993 5.53681 14.2759 5.14507 13.878C4.98811 13.7337 4.85817 13.5564 4.75991 13.3665C4.7 13.2507 4.80227 13.1199 4.93139 13.1379C5.09521 13.1589 5.26615 13.1798 5.4371 13.1938C5.84308 13.2287 6.2562 13.2496 6.66931 13.2496C7.0753 13.2496 7.48129 13.2287 7.88016 13.1938C8.02973 13.1798 8.17931 13.1728 8.32176 13.1519Z" fill="#3F53FE"/>
-                            <circle cx="11.2748" cy="10.2138" r="3.46429" fill="#ECECFF" stroke="white" stroke-width="0.5"/>
+                            <circle cx="11.2748" cy="10.2138" r="3.46429" fill="#ECECFF" stroke="white" strokeWidth="0.5"/>
                             <path d="M12.2062 11.2005C12.0984 11.088 12.0984 10.9018 12.2062 10.7893C12.3075 10.6835 12.2326 10.5079 12.0861 10.5079L9.426 10.5079C9.27254 10.5079 9.14397 10.378 9.14397 10.2135C9.14397 10.049 9.2684 9.91915 9.426 9.91915L12.0861 9.91915C12.2326 9.91915 12.3075 9.74352 12.2062 9.63776C12.0984 9.52521 12.0984 9.33906 12.2062 9.22651C12.314 9.11395 12.4924 9.11395 12.6002 9.22651L13.3467 10.0057C13.3512 10.0104 13.3531 10.0172 13.3572 10.0223C13.3757 10.0457 13.3936 10.0698 13.4048 10.101C13.4214 10.1399 13.4297 10.1746 13.4297 10.2135C13.4297 10.2525 13.4214 10.2871 13.409 10.3261C13.3965 10.3607 13.3758 10.3953 13.3467 10.4213L12.6002 11.2005C12.4924 11.3131 12.314 11.3131 12.2062 11.2005Z" fill="#3F53FE"/>
                           </svg>
                         </span> SEND DEAL
@@ -485,7 +485,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                         <Button className="light_bg_btn" onClick={sendDealClose}>
                           Cancel
                         </Button>
-                        <Button className="btn btn-fill" type="submit" onClick={handleDealShow}>
+                        <Button className="btn btn-fill" type="submit">
                           Submit
                         </Button>
                       </Form.Group>
@@ -502,7 +502,7 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                 <Row>
                   <Col lg={12} className="text-center">
                     <Image src='/assets/images/green-check.svg' alt='' />
-                    <h2>Successfully sent deal notifications to 3 buyers</h2>
+                    <h2>{sendDealMessage}</h2>
                     <p>Deal notifications have been successfully sent to all the selected buyers.</p>
                   </Col>
                 </Row>

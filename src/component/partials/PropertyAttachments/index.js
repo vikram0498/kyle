@@ -4,33 +4,39 @@ import { useDropzone } from "react-dropzone";
 const PropertyAttachments = ({ data }) => {
     const [maxImagesWarning, setMaxImagesWarning] = useState("");
 
-    const onDrop = useCallback((acceptedFiles) => {
-        if (data.attachments.length >= 3) {
-            setMaxImagesWarning("You can only upload a maximum of 3 images.");
-            return;
-        }
+    const onDrop = useCallback(
+        (acceptedFiles) => {
+            const currentAttachmentsCount = data.attachments.length;
 
-        const remainingSlots = 3 - data.attachments.length;
-        const imagePreviews = acceptedFiles.slice(0, remainingSlots).map(file => 
-            Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })
-        );
+            if (currentAttachmentsCount >= 3) {
+                setMaxImagesWarning("You can only upload a maximum of 3 images.");
+                return;
+            }
 
-        data.setAttachments(prev => [...prev, ...imagePreviews]);
-        setMaxImagesWarning(""); // Clear warning if upload is successful
-    }, [data.attachments, data.setAttachments]);
+            const remainingSlots = 3 - currentAttachmentsCount;
+
+            // Filter and limit files to the remaining slots
+            const imagePreviews = acceptedFiles.slice(0, remainingSlots).map((file) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                })
+            );
+
+            data.setAttachments((prev) => [...prev, ...imagePreviews]);
+            setMaxImagesWarning(""); // Clear warning if upload is successful
+        },
+        [data.attachments, data.setAttachments]
+    );
 
     const removeImage = (indexToRemove) => {
-        data.setAttachments(prev => prev.filter((_, index) => index !== indexToRemove));
+        data.setAttachments((prev) => prev.filter((_, index) => index !== indexToRemove));
         setMaxImagesWarning(""); // Clear warning when an image is removed
     };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: 'image/jpeg, image/png, image/jpg, image/svg+xml',
-        multiple: true,
-        name: "attachments"
+        accept: "jpeg", // Allowed file types
+        multiple: true, // Allow multiple files
     });
 
     return (
@@ -39,40 +45,44 @@ const PropertyAttachments = ({ data }) => {
                 <div className="col-12 col-lg-12">
                     <div className="form-group">
                         <label>
-                            Url<span>*</span>
+                            URL<span>*</span>
                         </label>
-                        <input 
-                            type="url" 
-                            placeholder="Url" 
-                            className="form-control" 
-                            value={data.url} 
-                            name="picture_link" 
+                        <input
+                            type="url"
+                            placeholder="Enter URL"
+                            className="form-control"
+                            value={data.url}
+                            name="picture_link"
                             onChange={(e) => data.setUrl(e.target.value)}
                         />
                         {data.renderFieldError("picture_link")}
                     </div>
                 </div>
+
                 <div className="col-12 col-lg-12">
                     <div className="form-group">
-                        <label>Select Images<span>*</span> <span className="max-image">Max 3 images can uploads </span></label>
+                        <label>
+                            Select Images<span>*</span> <span className="max-image">(Max 3 images allowed)</span>
+                        </label>
                         <div className="multiple_files">
                             <div {...getRootProps()} className="dropzone">
                                 <input {...getInputProps()} />
-                                {isDragActive ? (
-                                    <p>Drop files here or click to upload.</p>
-                                ) : (
-                                    <p>Drop files here or click to upload.</p>
-                                )}
+                                <p>{isDragActive ? "Drop files here..." : "Drag and drop or click to upload images"}</p>
                             </div>
-                            {/* Warning message for max image limit */}
+
+                            {/* Warning for max image limit */}
                             {maxImagesWarning && (
-                                <p className="warning-text" style={{ color: 'red' }}>{maxImagesWarning}</p>
+                                <p className="warning-text" style={{ color: "red" }}>
+                                    {maxImagesWarning}
+                                </p>
                             )}
+
+                            {/* Image previews */}
                             <div className="image-preview">
                                 {data.attachments.map((file, index) => (
                                     <div key={index} className="image-container">
-                                        <img src={file.preview} alt={`Preview ${index}`} className="preview-image"/>
-                                        <button type="button" className="remove-button" onClick={() => removeImage(index)}> ✕</button>
+                                        <img src={file.preview} alt={`Preview ${index + 1}`} className="preview-image"/>
+                                        <button type="button" className="remove-button" onClick={() => removeImage(index)}>✕</button>
                                     </div>
                                 ))}
                             </div>
