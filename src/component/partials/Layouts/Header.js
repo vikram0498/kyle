@@ -416,13 +416,14 @@ function Header() {
                         <Dropdown.Menu>
                           <h5>Notifications</h5>
                           <ul>
+                            {notificationData.deal_notification.total > 0 && 
                             <li>
                               <div className="dropdown_start">
                                 <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
                               </div>
                               <div className="dropdown_middle">
-                                <h6>Property Name</h6>
-                                <p>Buyer want to buy you property...</p>
+                                <h6>{notificationData.deal_notification.records[0].data.title} Property Name</h6>
+                                <p>{notificationData.deal_notification.records[0].data.message}</p>
                               </div>
                               <div className="dropdown_end align-self-center">
                                 <Link to="#">
@@ -433,6 +434,7 @@ function Header() {
                                 </Link>
                               </div>
                             </li>
+                            }
                             <li>
                               <div className="dropdown_start">
                                 <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />

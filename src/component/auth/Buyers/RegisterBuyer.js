@@ -2668,7 +2668,7 @@ function RegisterBuyer() {
                                   </div>
                             </div>
                             </div>
-                            {!isVerifiedOTP ?         
+                            {isVerifiedOTP ?         
                               <div className="submit-btn">
                                 <button
                                   type="submit"

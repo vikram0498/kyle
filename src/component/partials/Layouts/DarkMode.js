@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 const DarkMode = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  let  myValue = localStorage.getItem("darkMode");
   const handleChange = (e) => {
     if (e.target.checked) {
       localStorage.setItem("darkMode", true);
@@ -7,8 +9,19 @@ const DarkMode = () => {
       localStorage.removeItem("darkMode");
     }
     document.body.classList.toggle("dark");
+    myValue = localStorage.getItem("darkMode");
+    setIsDarkMode(myValue == 'true');
+
   };
-  const myValue = localStorage.getItem("darkMode");
+  console.log(myValue,"myValue");
+
+  useEffect(()=>{
+    let darkClass = localStorage.getItem("darkMode");
+    console.log(darkClass,"darkClass")
+    setIsDarkMode(darkClass == 'true');
+  },[isDarkMode]);
+
+  console.log(isDarkMode,"isDarkMode")
 
   return (
     <>
@@ -18,7 +31,7 @@ const DarkMode = () => {
           className="checkbox"
           id="checkbox"
           onChange={handleChange}
-          defaultChecked={myValue === "true" ? "checked" : ""}
+          checked={isDarkMode}
         />
         <label htmlFor="checkbox" className="">
             <span className="lightmode txtmode">Light Mode</span>
@@ -32,7 +45,7 @@ const DarkMode = () => {
           className="checkbox"
           id="checkbox"
           onChange={handleChange}
-          defaultChecked={myValue === "true" ? "checked" : ""}
+          checked={isDarkMode}
         />
         <label htmlFor="checkbox" className="checkbox-label">
           <span className="moon togglecontent">
