@@ -56,7 +56,7 @@ return [
     'reminder_sent_success' => 'Reminder Mail Sent Successfully!',
 
     'buyer_deal' => [
-        'success_send_deal' => "Deal sent successfully to all selected buyers.",
+        'success_send_deal' => "Successfully sent deal notifications to :total_buyer buyers",
         'already_updated' => "Deal status is already updated to :status",
         'not_found' => "Deal not found"
     ],

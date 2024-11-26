@@ -1334,7 +1334,7 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status'    => true,
-                'message'   => trans('messages.buyer_deal.success_send_deal'),
+                'message'   => trans('messages.buyer_deal.success_send_deal',['total_buyer'=>count($request->buyer_user_ids)]),
             ];
             return response()->json($responseData, 200);
         } catch (\Exception $e) {
