@@ -40,8 +40,11 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
   const [selectedDeals, setSelectedDeals] = useState([]); // Array to store selected deal IDs
 
   const [sendDealShow, setSendDealShow] = useState(false);
+  const [sendDealBox, setSendDealBox] = useState(false);
   const sendDealClose = () => setSendDealShow(false);
   const apiUrl = process.env.REACT_APP_API_URL;
+
+  const handleDealShow = () => setSendDealBox(true);
 
   useEffect(() => {
     getFilterResult();
@@ -482,11 +485,25 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                         <Button className="light_bg_btn" onClick={sendDealClose}>
                           Cancel
                         </Button>
-                        <Button className="btn btn-fill" type="submit">
+                        <Button className="btn btn-fill" type="submit" onClick={handleDealShow}>
                           Submit
                         </Button>
                       </Form.Group>
                     </Form>
+                  </Col>
+                </Row>
+              </div>
+          </Modal.Body>
+        </Modal>
+
+        <Modal show={sendDealBox} onHide={() => setSendDealBox(false)} centered className='radius_30 max-648'>
+          <Modal.Body className=''>
+              <div className="send_deal_box">
+                <Row>
+                  <Col lg={12} className="text-center">
+                    <Image src='/assets/images/green-check.svg' alt='' />
+                    <h2>Successfully sent deal notifications to 3 buyers</h2>
+                    <p>Deal notifications have been successfully sent to all the selected buyers.</p>
                   </Col>
                 </Row>
               </div>

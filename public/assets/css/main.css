@@ -7079,6 +7079,9 @@ body.dark .notification_pro_deal>li:last-child{
 .send_deal_modal{
   padding: 34px;
 }
+.max-648 .modal-dialog{
+  max-width: 648px;
+}
 
 .deal_property_img img{
   width: 100%;
@@ -7622,6 +7625,18 @@ span.status.interested {
   background: transparent;
   color: #0a2540;
   font-weight: 600;
+}
+.send_deal_box{
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.send_deal_box h2{
+  margin-top: -20px;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+}
+.send_deal_box p{
+  margin-bottom: 30px;
 }
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{
