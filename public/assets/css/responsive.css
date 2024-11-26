@@ -196,6 +196,11 @@
   .detail_deal_left .pro_details .nav{
     margin-bottom: -10px;
   }
+  .wrap-column .deal_left_column{
+    padding-right: 0;
+    border-right: 0;
+    padding-bottom: 20px;
+  }
 }
 
 @media (max-width: 991px) {
@@ -730,7 +735,8 @@
   .seller-notification-box .seller-notification-view{
     margin-top: 0;
   }
-  .send_deal_box{
+  .send_deal_box,
+  .pro_details{
     padding-left: 0;
     padding-right: 0;
   }
@@ -743,6 +749,12 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     width: calc(100vw - 64px);
+  }
+  .wrap-column .deal_left_column .pro_details{
+    padding-top: 20px;
+  }
+  .wrap-column .btn-w-icon{
+    margin-left: 0;
   }
 }
 

@@ -6100,6 +6100,7 @@ body.dark .column_bg_space>.deal_column{
   -webkit-align-items: center;
   width: max-content;
   margin: 0 auto;
+  padding: 10px 20px;
 }
 .btn-w-icon svg{
   margin-left: 10px;
@@ -6150,7 +6151,7 @@ body.dark .pro_img{
 .pro_details{
   padding-left: 20px;
 }
-.pro_details h3,
+
 .setting-card-head-title{
   font-size: 18px;
   line-height: 24px;
@@ -6161,6 +6162,14 @@ body.dark .pro_img{
 }
 .setting-card-head-title {
   text-align: center;
+}
+.pro_details h3{
+  font-size: 20px;
+  line-height: 26px;
+  color: #1D2246;
+  font-weight: 700;
+  font-family: "Nunito Sans", sans-serif;
+  text-transform: capitalize;
 }
 
 .pro_details .deal_info_list{
@@ -7638,6 +7647,14 @@ span.status.interested {
 .send_deal_box p{
   margin-bottom: 30px;
 }
+.wrap-column .pro_details h3{
+  margin-bottom: 20px;
+}
+.wrap-column .deal_left_column{
+  border-right: 1px solid #D0DEE7;
+  padding-right: 20px;
+}
+
 @media screen and (max-width: 575px){
   .main-login-form .register-recaptcha{
     overflow: hidden;
