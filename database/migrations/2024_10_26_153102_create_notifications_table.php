@@ -19,6 +19,8 @@ return new class extends Migration
             $table->morphs('notifiable');
             $table->text('data');
             $table->string('notification_type')->nullable();
+            $table->unsignedInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });

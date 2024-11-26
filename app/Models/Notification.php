@@ -18,6 +18,7 @@ class Notification extends Model
         'notifiable',
         'data',
         'notification_type',
+        'role_id',
         'read_at',        
     ];
 
@@ -36,6 +37,11 @@ class Notification extends Model
     public function notifyUser()
     {
         return $this->belongsTo(User::class,'notifiable_id','id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class,'role_id','id');
     }
 
 

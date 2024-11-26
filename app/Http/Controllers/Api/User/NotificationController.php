@@ -21,8 +21,11 @@ class NotificationController extends Controller
 
             $authUser = auth()->user();
 
+            $authUserRoleId = $authUser->roles()->first()->id;
+
             $latestNotifications = $authUser->notification()
             ->whereIn('notification_type', $notificationsTypes)
+            ->where('role_id',$authUserRoleId)
             ->whereNull('read_at')
             ->orderBy('notification_type')
             ->orderBy('created_at', 'desc') 
