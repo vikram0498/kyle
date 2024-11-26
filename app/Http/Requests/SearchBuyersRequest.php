@@ -31,12 +31,48 @@ class SearchBuyersRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         if ($this->expectsJson()) {
-            throw new HttpResponseException(
+            /*throw new HttpResponseException(
                 response()->json([
                     'status' => false,
                     // 'message' => 'Validation error',
                     'errors' => $validator->errors(),
                 ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
+            );*/
+            
+            $errors = $validator->errors();
+
+            // Prepare a custom error message for attachments
+            $customErrors = [];
+    
+           // Collect all errors related to attachments.*
+            $attachmentErrors = [];
+            $otherErrors = [];
+    
+            // Iterate through the keys and check for attachment-related errors
+            foreach ($errors->messages() as $key => $messages) {
+                if (str_contains($key, 'attachments.') && !isset($attachmentErrors['attachments'])) {
+                    // Take only the first error for each attachment
+                    $attachmentErrors[] = $messages[0];
+                }else {
+                    // Collect errors for other fields
+                    $otherErrors[$key] = $messages;
+                }
+            }
+    
+            // If there are any attachment errors, assign them to the 'attachments' key
+            if (!empty($attachmentErrors)) {
+                $customErrors['attachments'] = $attachmentErrors;
+            }
+            
+            if (!empty($otherErrors)) {
+                $customErrors = array_merge($customErrors, $otherErrors);
+            }
+    
+            // Throw the HttpResponseException with the custom response
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => $customErrors,
+                ], 422)
             );
         }
 
@@ -180,7 +216,10 @@ class SearchBuyersRequest extends FormRequest
     {
         return [
             'market_preferance.required' => 'The mls status field is required',
-            'zip_code.max' => 'The digit should be less than 10.',
+            'zip_code.max'               => 'The digit should be less than 10.',
+            'attachments.*.image'        => 'Each attachment must be an image.',
+            'attachments.*.mimes'        => 'Each attachment must be a jpeg, png, jpg, or svg file.',
+            'attachments.*.max'          => 'Each attachment must not exceed the maximum file size.',
         ];
     }
 
