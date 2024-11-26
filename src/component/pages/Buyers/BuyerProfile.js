@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useFormError } from "../../../hooks/useFormError";
 import { toast } from "react-toastify";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Nav, OverlayTrigger, Tab, Tooltip } from "react-bootstrap";
 import Swal from "sweetalert2";
 import MiniLoader from "../../partials/MiniLoader";
 const BuyerProfile = () => {
@@ -764,46 +764,205 @@ const BuyerProfile = () => {
                     </div>
                   </div>
                   <div className="contact-desc-box">
-                    <div className="row">
-                      {/* <div className="col-12 col-lg-4"><label>Address</label></div> */}
-                      {/* <div className="col-12 col-lg-8">
-                        {currentBuyerData.address}
-                      </div> */}
-                      <div className="col-12 col-lg-4"><label>States</label></div>
-                      <div className="col-12 col-lg-8">
-                      {currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}
-                      </div>
-                      <div className="col-12 col-lg-4"><label>Cities</label></div>
-                      <div className="col-12 col-lg-8">
-                        {currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}
-
-                        {/* {currentBuyerData.city} */}
-                      </div>
-                      {/* <div className="col-12 col-lg-4"><label>Zip Code</label></div>
-                      <div className="col-12 col-lg-8">
-                        {currentBuyerData.zip_code}
-                      </div> */}
-                      <div className="col-12 col-lg-4"><label>Company/LLC</label></div>
-                      <div className="col-12 col-lg-8">
-                        {currentBuyerData.company_name}
-                      </div>
-                      <div className="col-12 col-lg-4"><label>MLS Status</label></div>
-                      <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.market_preferance)}
-                      </div>
-                      <div className="col-12 col-lg-4"><label>Contact Preference</label></div>
-                      <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.contact_preferance)}
-                      </div>
-                      <div className="col-12 col-lg-4"><label>Property Type</label></div>
-                      <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.property_type)}
-                      </div>
-                      <div className="col-12 col-lg-4"><label>Purchase Method</label></div>
-                      <div className="col-12 col-lg-8">
-                        {getLabelValue(currentBuyerData.purchase_method)}
-                      </div>
-                    </div>
+                    <Tab.Container defaultActiveKey="buyer_profile1">
+                      <Nav variant="pills">
+                        <Nav.Item>
+                            <Nav.Link eventKey="buyer_profile1">
+                              <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+                                  <path d="M10 0L0 10.7253H3.16419V19H7.93336V13.9079H12.0666V19H16.8358V10.7253H20L10 0Z" fill="url(#paint0_linear_546_7436)"/>
+                                  <defs>
+                                  <linearGradient id="paint0_linear_546_7436" x1="10" y1="0" x2="10" y2="19.3889" gradientUnits="userSpaceOnUse">
+                                  <stop stop-color="#466AFF"/>
+                                  <stop offset="1" stop-color="#06ACFF"/>
+                                  </linearGradient>
+                                  </defs>
+                                </svg>
+                              </span>
+                              BuyBox 01
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="buyer_profile2">
+                              <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+                                  <path d="M10 0L0 10.7253H3.16419V19H7.93336V13.9079H12.0666V19H16.8358V10.7253H20L10 0Z" fill="url(#paint0_linear_546_7436)"/>
+                                  <defs>
+                                  <linearGradient id="paint0_linear_546_7436" x1="10" y1="0" x2="10" y2="19.3889" gradientUnits="userSpaceOnUse">
+                                  <stop stop-color="#466AFF"/>
+                                  <stop offset="1" stop-color="#06ACFF"/>
+                                  </linearGradient>
+                                  </defs>
+                                </svg>
+                              </span>
+                              BuyBox 02
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="buyer_profile3">
+                              <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+                                  <path d="M10 0L0 10.7253H3.16419V19H7.93336V13.9079H12.0666V19H16.8358V10.7253H20L10 0Z" fill="url(#paint0_linear_546_7436)"/>
+                                  <defs>
+                                  <linearGradient id="paint0_linear_546_7436" x1="10" y1="0" x2="10" y2="19.3889" gradientUnits="userSpaceOnUse">
+                                  <stop stop-color="#466AFF"/>
+                                  <stop offset="1" stop-color="#06ACFF"/>
+                                  </linearGradient>
+                                  </defs>
+                                </svg>
+                              </span>
+                              BuyBox 03
+                            </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="buyer_profile4">
+                              <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19" fill="none">
+                                  <path d="M10 0L0 10.7253H3.16419V19H7.93336V13.9079H12.0666V19H16.8358V10.7253H20L10 0Z" fill="url(#paint0_linear_546_7436)"/>
+                                  <defs>
+                                  <linearGradient id="paint0_linear_546_7436" x1="10" y1="0" x2="10" y2="19.3889" gradientUnits="userSpaceOnUse">
+                                  <stop stop-color="#466AFF"/>
+                                  <stop offset="1" stop-color="#06ACFF"/>
+                                  </linearGradient>
+                                  </defs>
+                                </svg>
+                              </span>
+                              BuyBox 04
+                            </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                      <Tab.Content>
+                        <Tab.Pane eventKey="buyer_profile1">
+                          <ul className="buyer_profile_details">
+                            <li>
+                              <label>States</label>
+                              <p>{currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Cities</label>
+                              <p>{currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Company/LLC</label>
+                              <p>{currentBuyerData.company_name}</p>
+                            </li>
+                            <li>
+                              <label>MLS Status</label>
+                              <p>{getLabelValue(currentBuyerData.market_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Contact Preference</label>
+                              <p>{getLabelValue(currentBuyerData.contact_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Property Type</label>
+                              <p>{getLabelValue(currentBuyerData.property_type)}</p>
+                            </li>
+                            <li>
+                              <label>Purchase Method</label>
+                              <p>{getLabelValue(currentBuyerData.purchase_method)}</p>
+                            </li>
+                          </ul>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="buyer_profile2">
+                          <ul className="buyer_profile_details">
+                            <li>
+                              <label>States</label>
+                              <p>{currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Cities</label>
+                              <p>{currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Company/LLC</label>
+                              <p>{currentBuyerData.company_name}</p>
+                            </li>
+                            <li>
+                              <label>MLS Status</label>
+                              <p>{getLabelValue(currentBuyerData.market_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Contact Preference</label>
+                              <p>{getLabelValue(currentBuyerData.contact_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Property Type</label>
+                              <p>{getLabelValue(currentBuyerData.property_type)}</p>
+                            </li>
+                            <li>
+                              <label>Purchase Method</label>
+                              <p>{getLabelValue(currentBuyerData.purchase_method)}</p>
+                            </li>
+                          </ul>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="buyer_profile3">
+                          <ul className="buyer_profile_details">
+                            <li>
+                              <label>States</label>
+                              <p>{currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Cities</label>
+                              <p>{currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Company/LLC</label>
+                              <p>{currentBuyerData.company_name}</p>
+                            </li>
+                            <li>
+                              <label>MLS Status</label>
+                              <p>{getLabelValue(currentBuyerData.market_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Contact Preference</label>
+                              <p>{getLabelValue(currentBuyerData.contact_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Property Type</label>
+                              <p>{getLabelValue(currentBuyerData.property_type)}</p>
+                            </li>
+                            <li>
+                              <label>Purchase Method</label>
+                              <p>{getLabelValue(currentBuyerData.purchase_method)}</p>
+                            </li>
+                          </ul>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="buyer_profile4">
+                          <ul className="buyer_profile_details">
+                            <li>
+                              <label>States</label>
+                              <p>{currentBuyerData?.state?.length >0 ? currentBuyerData.state.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Cities</label>
+                              <p>{currentBuyerData?.city?.length >0 ? currentBuyerData.city.map(item => item.label).join(", ") : ''}</p>
+                            </li>
+                            <li>
+                              <label>Company/LLC</label>
+                              <p>{currentBuyerData.company_name}</p>
+                            </li>
+                            <li>
+                              <label>MLS Status</label>
+                              <p>{getLabelValue(currentBuyerData.market_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Contact Preference</label>
+                              <p>{getLabelValue(currentBuyerData.contact_preferance)}</p>
+                            </li>
+                            <li>
+                              <label>Property Type</label>
+                              <p>{getLabelValue(currentBuyerData.property_type)}</p>
+                            </li>
+                            <li>
+                              <label>Purchase Method</label>
+                              <p>{getLabelValue(currentBuyerData.purchase_method)}</p>
+                            </li>
+                          </ul>
+                        </Tab.Pane>
+                      </Tab.Content>
+                    </Tab.Container>
+                    
                   </div>
                   {/* <div className="update-profile">
                   <a href="" className="btn btn-fill">

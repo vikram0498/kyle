@@ -529,9 +529,6 @@
   .lic-detail-area .upload-img {
     height: auto !important;
   }
-  .buyer-proinner .card-box {
-    padding: 0;
-  }
   .buyer-proinner .component-group {
     gap: 5px;
   }
@@ -756,6 +753,27 @@
   .wrap-column .btn-w-icon{
     margin-left: 0;
   }
+  .contact-desc-box{
+    padding: 15px;
+  }
+  .contact-desc-box>.nav{
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    padding: 0;
+    overflow-y: inherit;
+    overflow-x: auto;
+  }
+  .contact-desc-box>.nav,
+  .contact-desc-box>.tab-content{
+    flex: 0 0 100%;
+    -webkit-flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .buyer_profile_details{
+    padding-left: 0;
+    padding-top: 20px;
+  }
+
 }
 
 @media (max-width: 575px) {

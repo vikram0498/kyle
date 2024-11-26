@@ -147,73 +147,73 @@ const PropertyDealDetails = () => {
                             <div className='pro_deal_table'>
                                 <Tab.Content>
                                     <Tab.Pane eventKey={currentTab}>
-                                    <div className='table-responsive' style={{ overflowY: "hidden" }}>
-                                        <Table>
-                                            <thead>
-                                                <tr>
-                                                    <th>BUYER NAME</th>
-                                                    <th>PHONE NUMBER</th>
-                                                    <th>EMAIL ADDRESS</th>
-                                                    {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
-                                                    <th>PROOF OF FUND</th>
-                                                    }
-                                                    <th>STATUS</th>
-                                                    <th>CHAT</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {dealDetailsData && dealDetailsData.buyers.data.length > 0 ? (
-                                                    dealDetailsData.buyers.data.map((data, index) => {
-                                                        return (
-                                                            <React.Fragment key={index}>
-                                                                <tr><td colSpan="6"></td></tr>
-                                                                <tr>
-                                                                    <td>
-                                                                    <span>
-                                                                        <span className='deal_user_img_block'>
-                                                                        <Image src={data.profile_image || '/assets/images/user-img1.png'} className='deal_user_img' alt='' />
-                                                                        <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' />
-                                                                        </span>
-                                                                        {data.buyer_name}
-                                                                    </span>
-                                                                    </td>
-                                                                    <td>{data.buyer_phone}</td>
-                                                                    <td>{data.buyer_email}</td>
-                                                                    {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
-                                                                    <td>
-                                                                        {data.want_to_buy_deal_pdf_url !='' &&
-                                                                        <a href={data.want_to_buy_deal_pdf_url} download="proof-of-fund">
-                                                                            <span>
-                                                                            <Image src="/assets/images/folder-zip.svg" alt="" /> Documents
-                                                                            </span>
-                                                                        </a>
-                                                                        }
-                                                                    </td>
-                                                                    }
-                                                                    <td>
-                                                                        {data.status == 'Interested' && <span className='status interested'>Interested</span>}
-                                                                        {data.status == 'Want to Buy' && <span className='status want-by'>Want To Buy</span>}
-                                                                        {data.status == 'Not Interested' && <span className='status not-interested'>Not Interested</span>}
-                                                                        {data.status == '' && <span >N/A</span>}
-                                                                        
-                                                                    </td>
-                                                                    <td>
-                                                                        <Link to='/message'>
-                                                                            <span>
-                                                                            <Image src='/assets/images/chat-icon.svg' alt='' /> Chat With Buyer
-                                                                            </span>
-                                                                        </Link>
-                                                                    </td>
-                                                                </tr>
-                                                            </React.Fragment>
-                                                        );
-                                                    })
-                                                ) : (
+                                        <div className='table-responsive' style={{ overflowY: "hidden" }}>
+                                            <Table>
+                                                <thead>
                                                     <tr>
-                                                    <td colSpan="6" style={{ textAlign: 'center' }}>No data found</td>
+                                                        <th>BUYER NAME</th>
+                                                        <th>PHONE NUMBER</th>
+                                                        <th>EMAIL ADDRESS</th>
+                                                        {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
+                                                        <th>PROOF OF FUND</th>
+                                                        }
+                                                        <th>STATUS</th>
+                                                        <th>CHAT</th>
                                                     </tr>
-                                                )}
-                                            </tbody>
+                                                </thead>
+                                                <tbody>
+                                                    {dealDetailsData && dealDetailsData.buyers.data.length > 0 ? (
+                                                        dealDetailsData.buyers.data.map((data, index) => {
+                                                            return (
+                                                                <React.Fragment key={index}>
+                                                                    <tr><td colSpan="6"></td></tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                        <span>
+                                                                            <span className='deal_user_img_block'>
+                                                                            <Image src={data.profile_image || '/assets/images/user-img1.png'} className='deal_user_img' alt='' />
+                                                                            <Image src='/assets/images/pcheck.svg' className='user_verified_check' alt='' />
+                                                                            </span>
+                                                                            {data.buyer_name}
+                                                                        </span>
+                                                                        </td>
+                                                                        <td>{data.buyer_phone}</td>
+                                                                        <td>{data.buyer_email}</td>
+                                                                        {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
+                                                                        <td>
+                                                                            {data.want_to_buy_deal_pdf_url !='' &&
+                                                                            <a href={data.want_to_buy_deal_pdf_url} download="proof-of-fund">
+                                                                                <span>
+                                                                                <Image src="/assets/images/folder-zip.svg" alt="" /> Documents
+                                                                                </span>
+                                                                            </a>
+                                                                            }
+                                                                        </td>
+                                                                        }
+                                                                        <td>
+                                                                            {data.status == 'Interested' && <span className='status interested'>Interested</span>}
+                                                                            {data.status == 'Want to Buy' && <span className='status want-by'>Want To Buy</span>}
+                                                                            {data.status == 'Not Interested' && <span className='status not-interested'>Not Interested</span>}
+                                                                            {data.status == '' && <span >N/A</span>}
+                                                                            
+                                                                        </td>
+                                                                        <td>
+                                                                            <Link to='/message'>
+                                                                                <span>
+                                                                                <Image src='/assets/images/chat-icon.svg' alt='' /> Chat With Buyer
+                                                                                </span>
+                                                                            </Link>
+                                                                        </td>
+                                                                    </tr>
+                                                                </React.Fragment>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <tr>
+                                                        <td colSpan="6" style={{ textAlign: 'center' }}>No data found</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
                                             </Table>
                                         </div>
                                     </Tab.Pane>
