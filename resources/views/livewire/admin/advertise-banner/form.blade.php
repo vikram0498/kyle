@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="col-md-12 mb-4">
+        <div class="col-md-6 mb-4">
             <div class="form-group mb-0" wire:ignore>
                 <label class="font-weight-bold">{{ __('cruds.adBanner.fields.image')}} <span class="text-danger">*</span></label>
                 <input type="file"  wire:model.defer="image" class="dropify" data-default-file="{{ $originalImage }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="jpeg png jpg svg" data-min-file-size-preview="1M" data-max-file-size-preview="3M" accept="image/jpeg, image/png, image/jpg,image/svg" id="dropify-image" />
