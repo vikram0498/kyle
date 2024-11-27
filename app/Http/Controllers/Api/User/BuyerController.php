@@ -293,9 +293,7 @@ class BuyerController extends Controller
             ];
 
             $buyer_details = collect($buyer_details);
-
-           /*
-            $other_details = $buyer->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
+            $other_details = $authUser->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
 
             //Start State Column
             $state_array = json_decode($other_details->state,true);
@@ -445,13 +443,13 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
             //End Location Flaw Column
-        */
-            // $mergedBuyerDetails = $buyer_details->merge($other_details);
+        
+            $mergedBuyerDetails = $buyer_details->merge($other_details);
 
             //Return Success Response
             $responseData = [
                 'status'       => true,
-                'buyer'        => $buyer_details,
+                'buyer'        => $mergedBuyerDetails,
             ];
             return response()->json($responseData, 200);
             
