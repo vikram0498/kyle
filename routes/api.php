@@ -126,8 +126,11 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     //Start edit buyer
     Route::get('edit-buyer', [BuyerController::class, 'edit']);
+    Route::get('get-buyer-properites', [BuyerController::class, 'getBuyerProperties']);
+    Route::get('get-buyer-property-detail/{id}', [BuyerController::class, 'getBuyerPropertiesDetails']);
+
     Route::get('edit-buyer-form-element-values', [CommanController::class, 'editBuyerFormElementValues']);
-    Route::post('update-single-buyer-details', [BuyerController::class, 'updateSingleBuyerDetails']);
+    Route::post('update-single-buyer-details/{buyer_property_id}', [BuyerController::class, 'updateSingleBuyerDetails']);
     //End edit buyer
 
     Route::post('upload-multiple-buyers-csv', [BuyerController::class, 'import']);

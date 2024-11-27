@@ -105,6 +105,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Buyer::class, 'buyer_user_id', 'id');
     }
 
+    public function buyerProperties()
+    {
+        return $this->hasMany(Buyer::class, 'buyer_user_id', 'id');
+    }
+
     public function buyerVerification()
     {
         return $this->hasOne(ProfileVerification::class, 'user_id', 'id');

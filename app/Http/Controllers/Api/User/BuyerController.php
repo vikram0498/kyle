@@ -269,31 +269,32 @@ class BuyerController extends Controller
     {
         try {
             $userId = auth()->user()->id;
-            $buyer = User::with(['buyerDetail'=>function($query){
+            $authUser = User::with(['buyerDetail'=>function($query){
                 $query->orderBy('id','desc');
-            }])->where('id', $userId)->first();
+            }])->where('id',$userId)->first();
 
-            $buyer->profile_image_url = $buyer->profile_image_url;
-
+            $authUser->profile_image_url = $authUser->profile_image_url;
             $buyer_details = [
-                'first_name' => $buyer->first_name ?? null,
-                'last_name'  => $buyer->last_name ?? null,
-                'name'       => $buyer->name ?? null,
-                'email'      => $buyer->email ?? null,
-                'phone'      => $buyer->phone ?? null,
-                'description'=> $buyer->description ?? null,
-                'profile_image' => $buyer->profile_image_url ?? null,
-                'is_active'  => $buyer->is_active ?? 0,
-                'buyer_search_status' =>  $buyer->buyerDetail->status ?? 0,
-                'contact_value' =>  $buyer->buyerDetail ? $buyer->buyerDetail->contact_preferance : null,
-                'email_verified' => $buyer->email_verified_at != null ? true : false,
-                'phone_verified' => $buyer->phone_verified_at != null ? true : false,
-                'profile_tag_name'  => $buyer->buyerDetail->buyerPlan ? $buyer->buyerDetail->buyerPlan->title : null,
-                'profile_tag_image' => $buyer->buyerDetail->buyerPlan ? $buyer->buyerDetail->buyerPlan->image_url : null,
+                'first_name'            => $authUser->first_name ?? null,
+                'last_name'             => $authUser->last_name ?? null,
+                'name'                  => $authUser->name ?? null,
+                'email'                 => $authUser->email ?? null,
+                'phone'                 => $authUser->phone ?? null,
+                'description'           => $authUser->description ?? null,
+                'profile_image'         => $authUser->profile_image_url ?? null,
+                'is_active'             => $authUser->is_active ?? 0,
+                'buyer_search_status'   => $authUser->buyerDetail->status ?? 0,
+                'contact_value'         => $authUser->buyerDetail ? $authUser->buyerDetail->contact_preferance : null,
+                'email_verified'        => $authUser->email_verified_at != null ? true : false,
+                'phone_verified'        => $authUser->phone_verified_at != null ? true : false,
+                'profile_tag_name'      => $authUser->buyerDetail->buyerPlan ? $authUser->buyerDetail->buyerPlan->title : null,
+                'profile_tag_image'     => $authUser->buyerDetail->buyerPlan ? $authUser->buyerDetail->buyerPlan->image_url : null,
+                'is_buyer_verified'     => $authUser->is_buyer_verified,
             ];
 
-          
             $buyer_details = collect($buyer_details);
+
+           /*
             $other_details = $buyer->buyerDetail()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->first();
 
             //Start State Column
@@ -444,16 +445,13 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
             //End Location Flaw Column
+        */
+            // $mergedBuyerDetails = $buyer_details->merge($other_details);
 
-            //Start Buyer Verification Details
-            $other_details->is_buyer_verified = $buyer->is_buyer_verified;
-            //End Buyer Verification Details
-
-            $mergedBuyerDetails = $buyer_details->merge($other_details);
             //Return Success Response
             $responseData = [
                 'status'       => true,
-                'buyer'        => $mergedBuyerDetails,
+                'buyer'        => $buyer_details,
             ];
             return response()->json($responseData, 200);
             
@@ -470,7 +468,218 @@ class BuyerController extends Controller
         }
     }
 
-    public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request)
+    public function getBuyerProperties(){
+       
+        try{
+            $authUser = auth()->user();
+            $allBuyerProperties = $authUser->buyerProperties()->select('buyers.id')->get()->map(function ($item,$key) {
+                return [
+                    'key' => $item->id,
+                    'value' => 'BuyBox ' .$key+1,
+                ];
+            });
+
+            //Return Success Response
+            $responseData = [
+                'status'      => true,
+                'data'        => $allBuyerProperties,
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }   
+    }
+
+    public function getBuyerPropertiesDetails($buyerPropertyId){
+        try{
+            $authUser = auth()->user();
+            $buyerPropertyDetail = $authUser->buyerProperties()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->where('id',$buyerPropertyId)->first();
+
+            if(!$buyerPropertyDetail){
+                $responseData = [
+                    'status'        => false,
+                    'error'         => trans('messages.no_record_found'),
+                ];
+                return response()->json($responseData, 404);
+            }
+           
+            //Start State Column
+            $state_array = json_decode($buyerPropertyDetail->state,true);
+            if( $state_array ){
+                $states = DB::table('states')->where('flag', '=', 1)->whereIn('id', $state_array)->orderBy('name', 'ASC')->pluck('name', 'id');
+
+                $buyerPropertyDetail->state = $states->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => ucwords(strtolower($label)),
+                    ];
+                })->values()->all();
+            }
+            
+            //End State Column
+
+            //Start City Column
+            $city_array = json_decode($buyerPropertyDetail->city,true);
+            if( $city_array ){
+                $cities = DB::table('cities')->whereIn('id', $city_array)->orderBy('name', 'ASC')->pluck('name', 'id');
+    
+                $buyerPropertyDetail->city = $cities->map(function ($label, $value) {
+                    return [
+                        'value' => $value,
+                        'label' => ucwords(strtolower($label)),
+                    ];
+                })->values()->all(); 
+            }
+            //End City Column
+
+            //Start Market Preference (MLS Status) Column
+            $mls_status_arr = \Arr::only(config('constants.market_preferances'), $buyerPropertyDetail->market_preferance);
+            $buyerPropertyDetail->market_preferance = collect($mls_status_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Market Preference (MLS Status) Column
+
+            //Start Contact Preference Column
+            $contact_pref_arr = \Arr::only(config('constants.contact_preferances'), $buyerPropertyDetail->contact_preferance);
+            $buyerPropertyDetail->contact_preferance = collect($contact_pref_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Contact Preference Column
+
+            //Start Property Type Column
+            $property_type_arr = \Arr::only(config('constants.property_types'), $buyerPropertyDetail->property_type);
+            $buyerPropertyDetail->property_type = collect($property_type_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Property Type Column
+
+            //Start Purchase Method Column
+            $purchase_method_arr = \Arr::only(config('constants.purchase_methods'), $buyerPropertyDetail->purchase_method);
+            $buyerPropertyDetail->purchase_method = collect($purchase_method_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Purchase Method Column
+
+            //Start Zoning Column
+            $zoning_arr = \Arr::only(config('constants.zonings'), json_decode($buyerPropertyDetail->zoning));
+            $buyerPropertyDetail->zoning = collect($zoning_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Zoing Column
+
+            //Start Utilities Column
+            $utilities_arr = \Arr::only(config('constants.utilities'), $buyerPropertyDetail->utilities);
+            $buyerPropertyDetail->utilities = collect($utilities_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Utilities Column
+
+            //Start Sewage Column
+            $sewer_arr = \Arr::only(config('constants.sewers'), $buyerPropertyDetail->sewer);
+            $buyerPropertyDetail->sewer = collect($sewer_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Sewage Column
+
+            //Start Building Class Column
+            $building_class_arr = \Arr::only(config('constants.building_class_values'), $buyerPropertyDetail->building_class);
+            $buyerPropertyDetail->building_class = collect($building_class_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Building Class Column
+
+            //Start Parking Column
+            $parking_arr = \Arr::only(config('constants.parking_values'), $buyerPropertyDetail->parking);
+            $buyerPropertyDetail->parking = collect($parking_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Parking Column
+
+            //Start Buyer Type Column
+            $buyer_type_arr = \Arr::only(config('constants.buyer_types'), $buyerPropertyDetail->buyer_type);
+            $buyerPropertyDetail->buyer_type = collect($buyer_type_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Buyer Type Column
+
+            //Start Park Column
+            $park_arr = \Arr::only(config('constants.park'), $buyerPropertyDetail->park);
+            $buyerPropertyDetail->park = collect($park_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Park Column
+
+            //Start Location Flaw Column
+            $property_flaw_arr = \Arr::only(config('constants.property_flaws'), $buyerPropertyDetail->property_flaw);
+            $buyerPropertyDetail->property_flaw = collect($property_flaw_arr)->map(function ($label, $value) {
+                return [
+                    'value' => $value,
+                    'label' => $label,
+                ];
+            })->values()->all();
+            //End Location Flaw Column
+  
+            //Return Success Response
+            $responseData = [
+                'status'      => true,
+                'data'        => $buyerPropertyDetail,
+            ];
+            return response()->json($responseData, 200);
+        }catch (\Exception $e) {
+            // dd($e->getMessage().'->'.$e->getLine());
+
+            //Return Error Response
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }   
+    }
+
+    public function updateSingleBuyerDetails(UpdateSingleBuyerDetailsRequest $request, $buyerPropertyId)
     {
 
     	  try {
@@ -551,7 +760,7 @@ class BuyerController extends Controller
 
         	$validatedData = collect($validatedData)->except(['first_name', 'last_name', 'email', 'phone','description'])->all();
 
-        	auth()->user()->buyerDetail()->update($validatedData);
+        	auth()->user()->buyerProperties()->where('id',$buyerPropertyId)->update($validatedData);
     
         	$authUser = User::where('id', $authUserId)->first();
         	$userData          = [
