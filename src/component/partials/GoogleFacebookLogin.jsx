@@ -12,7 +12,7 @@ const GoogleFacebookLogin = () => {
     const [loading, setLoading] = useState(false);
 
   return (
-    <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-start justify-content-lg-end mt-2 mt-lg-0">
+    <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-start justify-content-lg-end">
         <li>
             <Link to="https://google.com">
             <img

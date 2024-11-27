@@ -6407,10 +6407,15 @@ body.dark .outline_btn{
   background-color: #3F53FE;
   box-shadow: none;
 }
-.disabled-btn button {
+.disabled-btn button:not(.deal_notifications_btn>li .outline_btn) {
   cursor: not-allowed !important;
   background: transparent;
   border: none;
+  pointer-events: none;
+}
+.deal_notifications_btn.disabled-btn>li .outline_btn{
+  cursor: not-allowed !important;
+  background: transparent;
   pointer-events: none;
 }
 .disabled-btn button span svg {
@@ -7661,6 +7666,8 @@ span.status.interested {
   display: -webkit-flex;
   justify-content: space-between;
   -webkit-justify-content: space-between;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
 }
 .criteria_row_right,
 .already_login{
@@ -7671,18 +7678,21 @@ span.status.interested {
 }
 .criteria_row_right{
   gap: 20px;
+  margin-top: -15px;
 }
 .already_login{
   gap: 15px;
 }
 .already_login p{
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
   flex: 0 0 auto;
   -webkit-flex: 0 0 auto;
 }
 .already_login .btn-fill{
   min-width: 173px;
   text-align: center;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 /*---------new section css --------*/
@@ -7693,13 +7703,13 @@ span.status.interested {
   font-family: 'Barlow';
   font-size: 14px;
 }
-.detail img {
+.property-details-Browse-Deal-icons .detail img {
   background: #ffff;
   border-radius: 50%;
   padding: 10px;
   margin-right: 10px;
 }
-.detail span {
+.property-details-Browse-Deal-icons .detail span {
   font-weight: 500;
 }
 .dollar-text {
@@ -7707,6 +7717,14 @@ span.status.interested {
   font-size: 18px;
 }
 /*---------new section css --------*/
+.add_buyer-right{
+  padding-top: 15px;
+}
+.add_buyer-right .share_btn{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{
@@ -7729,14 +7747,14 @@ span.status.interested {
   .main-login-form .register-recaptcha{
     overflow: hidden;
   }
-  .main-login-form .register-recaptcha iframe,
+  .register-recaptcha iframe,
   .buyer_register_form + div>.register-recaptcha iframe{
     transform: scale(0.75);
     -webkit-transform: scale(0.75);
     transform-origin: left;
     -webkit-transform-origin: left;
   }
-  .main-login-form .register-recaptcha>div>div>*{
+  .register-recaptcha>div>div>*{
     width: auto !important;
     height: auto !important;
   }

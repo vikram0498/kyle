@@ -271,7 +271,6 @@ const DealNotifications = () => {
                                             <div className="property-details-Browse-Deal-icons">
                                                 <div className="detail">
                                                     <img src='/assets/images/double-bed.svg'/>
-                                                    <i className="icon-bed"></i>
                                                     <span>02 Beds</span>
                                                 </div>
                                                 <div className="detail">
@@ -287,7 +286,7 @@ const DealNotifications = () => {
                                                     <span>800 ft</span>
                                                 </div>
                                             </div>
-                                            <p className='dollar-text mt-2'><strong>$200.00</strong></p>
+                                            <p className='dollar-text mt-3'><strong>$200.00</strong></p>
                                             {/* <ul className='notification_pro_deal'>
                                                 <li>2</li>
                                                 <li>3</li>

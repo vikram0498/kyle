@@ -201,6 +201,12 @@
     border-right: 0;
     padding-bottom: 20px;
   }
+  .criteria_row_right{
+    margin-top: 20px;
+  }
+  .property-details-Browse-Deal-icons{
+    gap: 15px;
+  }
 }
 
 @media (max-width: 991px) {
@@ -395,6 +401,13 @@
   }
   .detail_deal_left .pro_details .nav{
     gap: 5px;
+  }
+  .criteria_row_right{
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+  }
+  .criteria_row_right .account-with-social{
+    margin-left: 0;
   }
 }
 @media (max-width: 767px) {
@@ -773,6 +786,28 @@
     padding-left: 0;
     padding-top: 20px;
   }
+  .property-details-Browse-Deal-icons{
+    gap: 18px;
+  }
+  .property-details-Browse-Deal-icons .detail{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    justify-content: center;
+    -webkit-justify-content: center;
+    align-items: center;
+    -webkit-align-items: center;
+    text-align: center;
+  }
+  .property-details-Browse-Deal-icons .detail img{
+    margin-right: 0;
+    margin-bottom: 5px;
+    width: 40px;
+  }
+  .deal_notifications_left .pro_details .dollar-text{
+    margin-bottom: 0;
+  }
 
 }
 
@@ -899,6 +934,12 @@
   } */
   .pat-40{
     padding-top: 40px;
+  }
+  .already_login{
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    gap: 2px;
+    width: 100%;
   }
 }
 
