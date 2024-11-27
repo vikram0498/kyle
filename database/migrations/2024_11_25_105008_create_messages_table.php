@@ -17,22 +17,22 @@ return new class extends Migration
             $table->id();
 
             $table->uuid('uuid')->unique();
-
-            $table->string('conversation_id');
         
+            $table->unsignedBigInteger('conversation_id');
+            $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+        
             $table->longtext('content')->nullable();
-            $table->enum('type',['text','image','video','file'])->default('text');
-
-            $table->enum('chat_type',['direct','group'])->default('direct');
-            //$table->unsignedBigInteger('group_id')->nullable(); // For future perspective if chat type is group
-            // $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->enum('type', ['text', 'image', 'video', 'file'])->default('text');
+        
+            $table->enum('chat_type', ['direct', 'group'])->default('direct'); 
+            //$table->unsignedBigInteger('group_id')->nullable(); // You could add this in the future if you want a direct reference to groups
+        
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes(); // Good for message deletion management
 
-            $table->index(['conversation_id']);
         });
     }
 

@@ -171,9 +171,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('banner/{page}', [AdBannerController::class, 'getBanner']);
 
-    Route::post('/send-message', [ChatMessageController::class, 'sendMessage']);
+    Route::post('/send-message', [ChatMessageController::class, 'sendDirectMessage']);
     Route::post('/chat-messages', [ChatMessageController::class, 'getMessages']);
-
 
     // For Seller
     // Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {

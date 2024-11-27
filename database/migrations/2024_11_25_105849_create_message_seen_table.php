@@ -17,14 +17,15 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            $table->unsignedBigInteger('conversation_id')->nullable();
+            $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
+
             $table->unsignedBigInteger('message_id')->nullable();
             $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
 
-            $table->string('conversation_id');
-
             $table->timestamp('read_at')->nullable();
 
-            $table->index(['user_id', 'message_id','conversation_id']);
+            $table->index(['user_id', 'message_id']);
         });
     }
 
