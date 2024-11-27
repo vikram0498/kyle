@@ -51,12 +51,13 @@ class ProfileController extends Controller
             'last_name'   => 'required',
         ];
         $validatedData['country_code'] = ['required', 'numeric'];
-        $validatedData['phone'] = [
+        
+        /*/$validatedData['phone'] = [
             'required', 'numeric','digits:10','not_in:-',
             Rule::unique('users')->where(function ($query) use ($request) {
                 return $query->where('country_code', $request->country_code);
             })->ignore($authUser->id, 'id')
-        ];
+        ];*/
 
         if($request->old_password || $request->new_password || $request->confirm_password){
             $validatedData['old_password'] = ['required', 'string','min:8',new MatchOldPassword];
@@ -82,7 +83,7 @@ class ProfileController extends Controller
         try {
             DB::beginTransaction();
 
-            if(($request->country_code != $request->country_code) || ($authUser->phone != $request->phone)){
+            /*if(($request->country_code != $request->country_code) || ($authUser->phone != $request->phone)){
                 //Start to check phone number verified
                 if(!isPhoneNumberVerified($request->country_code,$request->phone)){
                     $responseData = [
@@ -92,14 +93,14 @@ class ProfileController extends Controller
                     return response()->json($responseData, 403);
                 }
                 //End to check phone number verified
-            }
+            }*/
 
             $updateRecords = [
                 'first_name'    => $request->first_name,
                 'last_name'     => $request->last_name,
                 'name'          => $request->first_name.' '.$request->last_name ,
-                'country_code'  => $request->country_code,
-                'phone'         => $request->phone,
+               /* 'country_code'  => $request->country_code,
+                'phone'         => $request->phone,*/
             ];
 
             if($request->email){
