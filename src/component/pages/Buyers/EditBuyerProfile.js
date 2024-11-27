@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link,useParams  } from "react-router-dom";
 import MultiSelect from "../../partials/Select2/MultiSelect";
 import Select from "react-select";
 import { useFormError } from "../../../hooks/useFormError";
@@ -21,6 +21,7 @@ function EditBuyerProfile() {
   const [endDate, setEndDate] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const { getTokenData, setLogout, getLocalStorageUserdata, setLocalStorageUserdata} = useAuth();
+  const { id } = useParams(); // Get 'id' from the URL
 
   const { setErrors, renderFieldError } = useFormError();
   const {
@@ -128,6 +129,7 @@ function EditBuyerProfile() {
   /* min max value states end */
   
   useEffect(() => {
+
     getOptionsValues();
     fetchBuyerData();
   }, [navigate]);
@@ -143,7 +145,7 @@ function EditBuyerProfile() {
 
   const fetchBuyerData = async () => {
     try {
-      let response = await axios.get(apiUrl + "edit-buyer", {
+      let response = await axios.get(`${apiUrl}edit-buyer/${id}`, {
         headers: headers,
       });
       if (response.data.status) {
@@ -398,7 +400,7 @@ function EditBuyerProfile() {
     }
     
     axios
-      .post(`${apiUrl}update-single-buyer-details`, formObject, {
+      .post(`${apiUrl}update-single-buyer-details/${id}`, formObject, {
         headers: headers,
       })
       .then((response) => {
@@ -712,7 +714,7 @@ function EditBuyerProfile() {
                         {previewImageUrl == "" ? (
                           <img
                             className="image img-fluid"
-                            src="assets/images/avtar-big.png"
+                            src="/assets/images/avtar-big.png"
                           />
                         ) : (
                           <img className="image" src={previewImageUrl} />

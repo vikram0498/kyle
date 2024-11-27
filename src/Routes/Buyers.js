@@ -27,7 +27,7 @@ const Buyers = () => {
       />
 
       <Route
-        path="/edit-profile"
+        path="/edit-profile/:id"
         element={<Protected Component={EditBuyerProfile} />}
       />
       <Route
