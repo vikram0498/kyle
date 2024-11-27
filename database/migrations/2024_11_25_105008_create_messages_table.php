@@ -21,8 +21,11 @@ return new class extends Migration
             $table->unsignedBigInteger('conversation_id');
             $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('sender_id');
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->unsignedBigInteger('receiver_id');
+            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
         
             $table->longtext('content')->nullable();
             $table->enum('type', ['text', 'image', 'video', 'file'])->default('text');

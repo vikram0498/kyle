@@ -8,9 +8,69 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class ChatMessageController extends Controller
 {
+
+    public function getChatList()
+    {
+        $userId = auth()->user()->id;  // Get authenticated user's ID
+
+        $conversations = Conversation::where(function($query) use ($userId) {
+            $query->where('participant_1', $userId)
+                  ->orWhere('participant_2', $userId);
+        })
+        ->get();
+    
+        $chatList = $conversations->map(function ($conversation) use ($userId) {
+            // Determine the other participant in the conversation
+            $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;    
+            // Fetch user details for the other participant
+            $user = User::find($otherParticipantId);
+    
+            if (!$user) {
+                return null;  // If no user found, return null to exclude it from the list
+            }
+    
+            // Get the last message in the conversation
+            $lastMessage = Message::where('conversation_id', $conversation->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+    
+            // Calculate unread message count for the authenticated user
+            $unreadMessageCount = Message::where('conversation_id', $conversation->id)
+                ->where('sender_id', '!=', $userId)
+                ->whereDoesntHave('seenBy', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                })
+                ->count();
+    
+            // Format the last message details
+            $lastMessageDetails = $lastMessage ? [
+                'content' => $lastMessage->content,
+                'is_read' => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
+                'created_date' => $lastMessage->created_at->format('d-M-Y'),
+                'created_time' => $lastMessage->created_at->format('g:i A'),
+                'date_time_label' => formatDateLabel($lastMessage->created_at),
+            ] : null;
+    
+            return [
+                'id' => $user->id,
+                'name' => $user->name ?? '',
+                'is_online' => $user->is_online ?? '',
+                'profile_image' => $recipient->profile_image_url ?? null,
+                'unread_message_count' => $unreadMessageCount ?? "",
+                'last_message' => $lastMessageDetails ? $lastMessageDetails : null,
+            ];
+        })->filter();
+        $responseData = [
+            'status'    => true,
+            'data'      => $chatList,     
+        ];
+
+        return response()->json($responseData, 200);
+    }
 
     public function sendDirectMessage(Request $request)
     {
@@ -30,31 +90,27 @@ class ChatMessageController extends Controller
                 return response()->json(['error' => 'You cannot send a message to yourself.'], 400);
             }
 
-            $conversation = Conversation::where(function ($query) use ($sender, $recipient_id) {
-                $query->where('is_group', false)
-                      ->where(function ($query) use ($sender, $recipient_id) {
-                          $query->where('sender_id', $sender->id)
-                                ->where('receiver_id', $recipient_id);
-                      })
-                      ->orWhere(function ($query) use ($sender, $recipient_id) {
-                          $query->where('receiver_id', $recipient_id)
-                                ->where('sender_id', $sender->id);
-                      });
+            $conversation = Conversation::where('is_group', false)
+            ->where(function ($query) use ($sender, $recipient_id) {
+                $query->whereIn('participant_1', [$sender->id, $recipient_id])
+                      ->whereIn('participant_2', [$sender->id, $recipient_id]);
             })->first();
 
             if (!$conversation) {
                 $conversation = Conversation::create([
                     'is_group'      => false,
-                    'sender_id'     => $sender->id,
-                    'receiver_id'   => $recipient_id,
+                    'participant_1' => $sender->id,
+                    'participant_2' => $recipient_id,
                     'title'         => null,
-                    'created_by'    => $sender->id 
+                    'created_by'    => $sender->id ,
+                    'participants_count'    => 2 ,   // For Direct Messages it is 2 other than group messages
                 ]);
             }
 
             $message = Message::create([
                 'conversation_id'   => $conversation->id,
-                'user_id'           => $sender->id,
+                'sender_id'         => $sender->id,
+                'receiver_id'       => $recipient_id,
                 'content'           => $request->content,
                 'type'              => $request->type, // text, image, video, file
                 'chat_type'         => 'direct', 
@@ -95,20 +151,29 @@ class ChatMessageController extends Controller
             DB::beginTransaction();
             $message = Message::find($request->message_id);
 
-            if ($message->conversation->user_id_1 !== auth()->user()->id && $message->conversation->user_id_2 !== auth()->user()->id) {
+            $userId = auth()->user()->id;
+
+            if ($message->conversation->participant_1 !== $userId  && $message->conversation->participant_2 !== $userId) {
                 return response()->json(['error' => 'You do not have access to this message.'], 403);
             }
 
-            $messageSeen = MessageSeen::updateOrCreate(
-                ['user_id' => auth()->user()->id, 'message_id' => $message->id],
-                ['read_at' => now()]
-            );
+            $alreadyRead = DB::table('message_seen')
+            ->where('message_id', $message->id)
+            ->where('user_id', $userId)
+            ->exists();
+
+            if (!$alreadyRead) {
+                $message->seenBy()->attach($userId, [
+                    'conversation_id' => $message->conversation->id,
+                    'read_at' => now(),
+                ]);  
+            }           
 
             DB::commit();
 
             $responseData = [
                 'status'            => true,
-                'message'           => 'Message marked as read.',
+                'message'           => trans('messages.chat_message.marked_as_read_successfully'),
             ];
             return response()->json($responseData, 200);
 
@@ -124,55 +189,81 @@ class ChatMessageController extends Controller
         }
     }
 
+
     public function getMessages(Request $request)
     {
-        $conversationId = md5($request->buyer_id . '-' . $request->seller_id);
-        $messages = Message::where('conversation_id', $conversationId)->orderBy('created_at', 'asc')->select('id','user_id','content','type','created_at')->with('usersSeen')->get();
+        $request->validate([
+            'recipient_id' => 'required|exists:users,id', // recipient must exist
+        ]);
+        
+        $sender = auth()->user();
+        $recipient_id = $request->recipient_id;
+
+        $recipient = User::find($recipient_id);
+        // Find the conversation between the sender and recipient
+        $conversation = Conversation::where('is_group', false)
+        ->where(function ($query) use ($sender, $recipient_id) {
+            $query->whereIn('participant_1', [$sender->id, $recipient_id])
+                  ->whereIn('participant_2', [$sender->id, $recipient_id]);
+        })->first();
+
+        if (!$conversation) {
+            return response()->json(['error' => trans('messages.chat_message.no_conversation_found')], 404);        
+        }
+
+        // Fetch all messages in this conversation
+        $messages = Message::where('conversation_id', $conversation->id)
+            ->orderBy('created_at', 'asc')
+            ->get();        
 
         if($messages->count() > 0){
-            $messages->transform(function ($message) {
-                $message->date_time_lable = formatDateLabel($message->created_at);
-                $message->created_date = Carbon::parse($message->created_at)->format('d-M-Y');
-                $message->created_time = Carbon::parse($message->created_at)->format('g:i A');
-                // $message->is_read = !is_null($message->read_at) ? true : false;
-                return $message;
-            });
 
+            $groupedMessages = $messages->transform(function ($message) {
+                $message->date_time_label = formatDateLabel($message->created_at);
+                $message->created_date = $message->created_at->format('d-m-Y');
+                $message->created_time = $message->created_at->format('g:i A');
+                $message->is_read = $message->seenBy()->exists() ? true : false;
+        
+                return [
+                    'id'               => $message->id,
+                    'sender_id'        => $message->sender_id,
+                    'content'          => $message->content,
+                    'created_date'     => $message->created_date,
+                    'created_time'     => $message->created_time,
+                    'is_read'          => $message->is_read,
+                    'date_time_label'  => $message->date_time_label,
+                ];
+            })->groupBy(function ($message) {
+                $createdDate = $message['created_date'];
+                $now = Carbon::now();
+        
+                // Group by Today, Yesterday, Day names (for the last 7 days), or specific date
+                if (Carbon::parse($createdDate)->isToday()) {
+                    return 'Today';
+                } elseif (Carbon::parse($createdDate)->isYesterday()) {
+                    return 'Yesterday';
+                } elseif (Carbon::parse($createdDate)->greaterThanOrEqualTo($now->copy()->subDays(6))) {
+                    return Carbon::parse($createdDate)->format('l'); // Day name (e.g., Monday, Tuesday)
+                } else {
+                    return $createdDate; // Fallback to the formatted date
+                }
+            });
+        
             $responseData = [
-                'status'            => true,
-                'data'              => $messages,
+                'status'    => true,
+                'message'   => $groupedMessages,
+                'user-data' => [
+                    'id'    => $recipient->id,
+                    'name'  => $recipient->name,
+                    'is_online'  => $recipient->is_online,
+                    'profile_image' => $recipient->profile_image_url ?? null,
+                ],
             ];
     
             return response()->json($responseData, 200);
         }
 
-        return response()->json(['message' => trans('messages.chat_message.no_message_found')], 404);        
-    }
-
-    public function markMessageAsSeen(Request $request)
-    {
-        $request->validate([
-            'message_id' => 'required|exists:messages,id',
-            'conversation_id' => 'required',
-        ]);
-
-        $userId = auth()->user()->id; // Get the currently authenticated user's ID
-        $message = Message::where('message_id', $request->message_id)->where('conversation_id', $$request->conversation_id)->first($request->message_id);
-
-        $alreadySeen =  $message->usersSeen()->exists();
-
-        if (!$alreadySeen) {
-            // Insert a new record into the message_seen table
-            $message->usersSeen()->create([
-                'user_id'           => $userId,
-                'message_id'        => $request->message_id,
-                'conversation_id'   => $request->conversation_id,
-                'read_at'           => now(),
-            ]);
-
-            return response()->json(['message' => 'Message marked as seen.'], 200);
-        }
-
-        return response()->json(['message' => 'Message already seen.'], 200);
+        return response()->json(['error' => trans('messages.chat_message.no_message_found')], 404);        
+        
     }
 }

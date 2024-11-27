@@ -14,8 +14,8 @@ class Conversation extends Model
 
     protected $fillable = [
         'uuid',
-        'sender_id',
-        'receiver_id',
+        'participant_1',
+        'participant_2',
         'title',
         'is_group',
         'created_by',
@@ -44,6 +44,11 @@ class Conversation extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class,'created_by','id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'conversation_id');
     }
 
 }

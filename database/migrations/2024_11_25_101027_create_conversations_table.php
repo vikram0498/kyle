@@ -18,11 +18,11 @@ return new class extends Migration
 
             $table->uuid('uuid')->unique();
 
-            $table->unsignedBigInteger('sender_id');
-            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('participant_1');
+            $table->foreign('participant_1')->references('id')->on('users')->onDelete('cascade');
 
-            $table->unsignedBigInteger('receiver_id');
-            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('participant_2');
+            $table->foreign('participant_2')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('title')->nullable(); // Title of the conversation (useful for group chats, can be null for 1:1 chats)
 

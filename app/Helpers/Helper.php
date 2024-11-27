@@ -474,14 +474,14 @@ if (!function_exists('formatDateLabel')) {
         $now = Carbon::now();        
         
         if ($date->isToday()) {
-            return $date->format('h:i A');
+            return 'Today'; 
         }
 
         if ($date->isYesterday()) {
-            return 'Yesterday'; 
+            return 'Yesterday';
         }
         
-        if ($date->greaterThanOrEqualTo($now->subDays(7))) {
+        if ($date->greaterThanOrEqualTo($now->subDays(6))) {
             return $date->format('l'); 
         }
 

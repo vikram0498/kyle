@@ -68,6 +68,8 @@ return [
     'chat_message' => [
         'success_send_message' => "Message sent successfully.",
         'no_message_found' => "No messages found for this conversation.",
+        'no_conversation_found' => "No Conversation found.",
+        'marked_as_read_successfully' => "Message successfully marked as read.",
     ]
     
 ];
