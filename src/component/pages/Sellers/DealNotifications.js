@@ -224,7 +224,8 @@ const DealNotifications = () => {
                         </div>
                         <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
                             <h6 className="center-head text-center mb-0">
-                                Deal Notifications
+                                {/* Deal Notifications */}
+                                Browse Deal
                             </h6>
                         </div>
                     </div>
@@ -266,14 +267,33 @@ const DealNotifications = () => {
                                         {/* Property Details Section */}
                                         <div className='pro_details'>
                                             <h3>{data.title}</h3>
-                                            <ul className='notification_pro_deal'>
-                                                <li>
-                                                <Image src='/assets/images/home_retail.svg' alt='Property Type Icon' /> {data.property_type}
-                                                </li>
-                                                <li>
-                                                <Image src='/assets/images/map_pin.svg' alt='Location Icon' /> {data.address}
-                                                </li>
-                                            </ul>
+                                            <p>Real Easte Company That Prioritizes Property</p>
+                                            <div className="property-details-Browse-Deal-icons">
+                                                <div className="detail">
+                                                    <img src='/assets/images/double-bed.svg'/>
+                                                    <i className="icon-bed"></i>
+                                                    <span>02 Beds</span>
+                                                </div>
+                                                <div className="detail">
+                                                    <img src='/assets/images/bath-1.svg'/>
+                                                    <span>02 Baths</span>
+                                                </div>
+                                                <div className="detail">
+                                                    <img src='/assets/images/network-1.svg'/>
+                                                    <span>800 Square Foot</span>
+                                                </div>
+                                                <div className="detail">
+                                                    <img src='/assets/images/full-screen-2.svg'/>
+                                                    <span>800 ft</span>
+                                                </div>
+                                            </div>
+                                            <p className='dollar-text mt-2'><strong>$200.00</strong></p>
+                                            {/* <ul className='notification_pro_deal'>
+                                                <li>2</li>
+                                                <li>3</li>
+                                                <li>4</li>
+                                                <li>5</li>
+                                            </ul> */}
                                         </div>
                                     </div>
                                     {/* Buttons Section */}

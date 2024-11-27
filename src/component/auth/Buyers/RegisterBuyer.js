@@ -466,12 +466,21 @@ function RegisterBuyer() {
                   <div className="row">
                     <div className="col-12 col-lg-12">
                       <div className="card-box-inner">
-                        <div className="row">
-                          <div className="col-12 col-md-12 col-lg-4">
+                        <div className="criteria_row">
+                          <div className="">
                             <h2 className="fw-700 color2 mb-0">Buy Box Criteria</h2>
-                            {/* <p>Real estate deals that match your exact buying criteria</p> */}
                           </div>
-                          <div className="col-12 col-md-12 col-lg-8">
+                          <div className="criteria_row_right">
+                            <div className="already_login">
+                              <p>Already a member</p>
+                              <button
+                                type="button"
+                                className="btn btn-fill"
+                                style={{ pointerEvents: 'none' }}
+                              >
+                                Login
+                              </button>
+                            </div>
                             <GoogleFacebookLogin/>
                           </div>
                         </div>
@@ -2651,22 +2660,22 @@ function RegisterBuyer() {
                                   </div>
                                 )}
                               </div>
+                                <div className="col-12 col-lg-12">
+                                    <div className="form-check">
+                                      <input className="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
+                                        required: "This field is required",
+                                      })}/>
+                                      <label className="form-check-label text-transform-none" htmlFor="privacy-policy">
+                                        <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy </Link> 
+                                        and 
+                                        <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
+                                      </label>
+                                      {errors.terms_accepted && (
+                                        <p className="error error_space">{errors.terms_accepted?.message}</p>
+                                      )}
+                                    </div>
+                              </div>
                               <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
-                              <div className="col-12 col-lg-12">
-                                <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" name="terms_accepted" value="1" id="privacy-policy" {...register("terms_accepted", {
-                                      required: "This field is required",
-                                    })}/>
-                                    <label className="form-check-label text-transform-none" htmlFor="privacy-policy">
-                                      <p>I have read and agree to the <Link target="_blank" to={privacyLink.privacy_policy_link !== undefined ? privacyLink.privacy_policy_link :''}> Privacy Policy </Link> 
-                                       and 
-                                       <Link target="_blank" to={privacyLink.terms_services_link !== undefined ? privacyLink.terms_services_link :''}> Terms or Service </Link></p>
-                                    </label>
-                                    {errors.terms_accepted && (
-                                      <p className="error error_space">{errors.terms_accepted?.message}</p>
-                                    )}
-                                  </div>
-                            </div>
                             </div>
                             {isVerifiedOTP ?         
                               <div className="submit-btn">

@@ -7656,6 +7656,57 @@ span.status.interested {
   font-family: "Nunito Sans", sans-serif;
   font-weight: 500;
 }
+.criteria_row{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}
+.criteria_row_right,
+.already_login{
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+}
+.criteria_row_right{
+  gap: 20px;
+}
+.already_login{
+  gap: 15px;
+}
+.already_login p{
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  -webkit-flex: 0 0 auto;
+}
+.already_login .btn-fill{
+  min-width: 173px;
+  text-align: center;
+}
+
+/*---------new section css --------*/
+.property-details-Browse-Deal-icons {
+  display: flex;
+  gap: 10%; /* Space between items */
+  align-items: center;
+  font-family: 'Barlow';
+  font-size: 14px;
+}
+.detail img {
+  background: #ffff;
+  border-radius: 50%;
+  padding: 10px;
+  margin-right: 10px;
+}
+.detail span {
+  font-weight: 500;
+}
+.dollar-text {
+  color: #07B89C !important;
+  font-size: 18px;
+}
+/*---------new section css --------*/
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{

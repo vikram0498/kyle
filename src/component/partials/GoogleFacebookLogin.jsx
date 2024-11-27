@@ -14,15 +14,6 @@ const GoogleFacebookLogin = () => {
   return (
     <ul className="account-with-social social-login-link list-unstyled mb-0 justify-content-start justify-content-lg-end mt-2 mt-lg-0">
         <li>
-            <Link to="https://facebook.com"><img src="/assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> Register With Facebook</Link>
-            <FacebookLoginButton
-                apiUrl={apiUrl}
-                setLoading={setLoading}
-                navigate={navigate}
-                setErrors={setErrors}
-            />
-        </li> 
-        <li>
             <Link to="https://google.com">
             <img
                 src="/assets/images/google.svg"
@@ -40,6 +31,15 @@ const GoogleFacebookLogin = () => {
             />
             </GoogleOAuthProvider>
         </li>
+        <li>
+            <Link to="https://facebook.com"><img src="/assets/images/facebook.svg" className="img-fluid" alt='fb-icon'/> Register With Facebook</Link>
+            <FacebookLoginButton
+                apiUrl={apiUrl}
+                setLoading={setLoading}
+                navigate={navigate}
+                setErrors={setErrors}
+            />
+        </li> 
     </ul>
   )
 }
