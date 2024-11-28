@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Events\ChatMessage;
+use App\Events\MessageSent;
 use Carbon\Carbon;
 use App\Models\Message;
 use App\Models\Conversation;
@@ -9,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class ChatMessageController extends Controller
 {
@@ -120,6 +123,18 @@ class ChatMessageController extends Controller
             $conversation->last_message_at = now();
             $conversation->save();
     
+
+            event(new MessageSent($request->content, 'user-' . $recipient_id));
+
+            $response = Http::get('http://192.168.1.24:3000/broadcast', [
+                'channel' => 'user-' . $recipient_id,
+                'message' => $request->content,
+            ]);
+    
+            if (!$response->successful()) {
+                throw new \Exception("Node.js broadcast failed.");
+            }
+
             DB::commit();
 
             $responseData = [

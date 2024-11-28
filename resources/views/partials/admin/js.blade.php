@@ -14,6 +14,7 @@
 
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script> -->
 
+
   <!-- inject:js -->
   <script src="{{ asset('admin/js/off-canvas.js') }}"></script>
   <!-- <script src="{{ asset('admin/js/hoverable-collapse.js') }}"></script> -->
@@ -25,3 +26,5 @@
 <script src="{{ asset('admin/js/admin-custom.js') }}"></script>
 <script src="{{ asset('admin/js/popper.min.js') }}"></script>
 <!-- End custom js for this page-->
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
