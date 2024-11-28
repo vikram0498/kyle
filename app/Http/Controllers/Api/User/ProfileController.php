@@ -177,7 +177,7 @@ class ProfileController extends Controller
 
         DB::beginTransaction();
         try {
-            if($user->buyerDetail->is_profile_verified){
+            if($user->is_profile_verified){
               
                 // Start to Update Profile Image
                 if($request->hasFile('profile_image')){

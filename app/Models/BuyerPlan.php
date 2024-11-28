@@ -70,7 +70,7 @@ class BuyerPlan extends Model
 
     public function buyers()
     {
-        return $this->hasMany(Buyer::class, 'plan_id', 'id');
+        return $this->hasMany(User::class, 'plan_id', 'id');
     }
 
 }

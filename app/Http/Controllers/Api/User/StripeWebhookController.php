@@ -320,7 +320,8 @@ class StripeWebhookController extends Controller
                 $user = User::where('stripe_customer_id', $customer_stripe_id)->first();
                 $user->buyerVerification()->update(['is_application_process' => 1]);
 
-                $user->buyerDetail()->update(['is_profile_verified' => 1]);
+                $user->is_profile_verified = 1;
+                $user->save();
 
                 $authUser = User::where('stripe_customer_id', $customer_stripe_id)->first();
                 $userJson = [

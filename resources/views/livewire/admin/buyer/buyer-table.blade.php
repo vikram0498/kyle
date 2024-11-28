@@ -54,9 +54,9 @@
                     </th>
                     <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.status')}}
-                        <span wire:click="sortBy('status')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        <span wire:click="sortBy('users.status')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'users.status' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'users.status' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">
@@ -72,14 +72,14 @@
                    
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'buyers.created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'buyers.created_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.updated') }}
                         <span wire:click="sortBy('updated_at')" class="float-right text-sm" style="cursor: pointer;">
-                            <i class="fa fa-arrow-up {{ $sortColumnName === 'updated_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
-                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'updated_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'buyers.updated_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'buyers.updated_at' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
                     <th class="text-gray-500 text-xs">{{ trans('global.action') }}</th>
@@ -89,7 +89,7 @@
                 @if($buyers->count() > 0)
                     @foreach($buyers as $serialNo => $buyer)
                      @php
-                        $buyerFlagCount = $buyer->redFlagedData()->where('status', 0)->count();
+                        $buyerFlagCount = $buyer->redFlagedData()->where('buyer_user.status', 0)->count();
                      @endphp
                     <tr>
                         <td>{{ $serialNo+1 }}</td>
@@ -100,7 +100,7 @@
                         </td>
                         <td>
                             <label class="toggle-switch">
-                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->id}}"  {{ $buyer->status == 1 ? 'checked' : '' }}>
+                                <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="status"  data-id="{{$buyer->userDetail->id}}"  {{ $buyer->userDetail->status == 1 ? 'checked' : '' }}>
                                 <span class="switch-slider" data-on="Active" data-off="Inactive"></span>
                             </label>
                         </td>

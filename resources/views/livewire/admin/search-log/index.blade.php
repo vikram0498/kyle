@@ -14,11 +14,7 @@
                             <h4 class="card-title-heading">{{__('cruds.search_log.title')}} {{ __('global.list') }}</h4>                            
                         </div>                
                         <div class="table-responsive search-table-data">
-                        {{-- @livewire('admin.search-log.search-log-datatable') --}}
-
                             @livewire('admin.search-log.search-log-table') 
-
-                        
                         </div>
 
                     @endif

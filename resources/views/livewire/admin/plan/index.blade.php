@@ -24,10 +24,7 @@
                         </div>
                     </div>
                     <div class="table-responsive search-table-data">
-                           {{-- @livewire('admin.plan.plan-datatable')  --}}
-
-                            @livewire('admin.plan.plan-table') 
-                       
+                        @livewire('admin.plan.plan-table') 
                     </div>
 
                 @endif

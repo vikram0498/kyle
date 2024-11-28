@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Buyer;
 
 use App\Models\Buyer;
+use App\Models\User;
 use App\Models\ProfileVerification;
 use Illuminate\Auth\Events\Verified;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -42,7 +43,7 @@ class Show extends Component
     public function render()
     {
         $details = Buyer::find($this->buyerId);
-        // dd($details);
+        // dd($details,$this->buyerId);
         return view('livewire.admin.buyer.show', compact('details'));
     }
 

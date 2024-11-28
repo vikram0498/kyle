@@ -72,8 +72,6 @@ return new class extends Migration
 
             $table->json('purchase_method');    
 
-
-
             $table->boolean('is_ban')->default(0)->comment('0=> Not ban, 1=> ban');
             $table->tinyInteger('permanent_affix')->default(0)->comment('1=>Yes, 0=>No');
             $table->integer('park')->nullable();

@@ -1,7 +1,7 @@
 <div>
 
     @php 
-        $buyerFlagCount = $details->redFlagedData()->where('status', 0)->count();
+        $buyerFlagCount = $details->redFlagedData()->where('buyer_user.status', 0)->count();
     @endphp
 
     @if($buyerFlagCount)
@@ -397,7 +397,7 @@
 
         {{-- <tr>
             <th width="25%">{{ __('cruds.buyer.fields.status')}}</th>
-            <td class="remove-white-space"> {{ ($details->status ? 'Active' : 'Inactive') }}</td>
+            <td class="remove-white-space"> {{ ($details->userDetail->status ? 'Active' : 'Inactive') }}</td>
         </tr> --}}
         <tr>
             <th width="25%">{{ __('global.created_at')}}</th>

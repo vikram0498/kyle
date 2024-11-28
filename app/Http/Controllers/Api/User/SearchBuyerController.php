@@ -158,10 +158,6 @@ class SearchBuyerController extends Controller
             $userId = auth()->user()->id;
             $authUserLevelType = auth()->user()->level_type;
 
-            /*
-            $buyers = Buyer::select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
-            */
-
             /** Update query 26-07-2024 */
 
             // Subquery to calculate verification count
@@ -179,8 +175,8 @@ class SearchBuyerController extends Controller
             ->whereColumn('user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
-            ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id');
+            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
+            ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id');
 
             $additionalBuyers = Buyer::query();
 
@@ -206,7 +202,7 @@ class SearchBuyerController extends Controller
                 }
             }
 
-            $buyers = $buyers->where('buyers.status', 1);
+            $buyers = $buyers->where('users.status', 1);
         
             if($request->property_type){
                 $selectedValues = [$request->property_type];
@@ -737,8 +733,8 @@ class SearchBuyerController extends Controller
 
                         $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
                         $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
-                        $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
-                        $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                        $buyer->profile_tag_name = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->title : null;
+                        $buyer->profile_tag_image = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->image_url : null;
                         $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
                         //Start Verification status
@@ -797,8 +793,8 @@ class SearchBuyerController extends Controller
     
                             $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
                             $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
-                            $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
-                            $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                            $buyer->profile_tag_name = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->title : null;
+                            $buyer->profile_tag_image = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->image_url : null;
                             $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
     
     
@@ -884,7 +880,10 @@ class SearchBuyerController extends Controller
 
             // $buyers = Buyer::query()->with(['userDetail'])->select('id','user_id','created_by','contact_preferance')->where('status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
-            $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'])->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')->where('buyers.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+            $buyers = Buyer::select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.status'])
+            ->leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+            ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id')
+            ->where('users.status', 1)->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
 
             if(isset($dealReactedBuyerIds) && !empty($dealReactedBuyerIds)){
                 $buyers = $buyers->whereIn('buyer_user_id', $dealReactedBuyerIds);
@@ -1226,8 +1225,8 @@ class SearchBuyerController extends Controller
 
                 $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
                 $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
-                $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
-                $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                $buyer->profile_tag_name = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->title : null;
+                $buyer->profile_tag_image = $buyerDetails->buyerPlan ? $buyerDetails->buyerPlan->image_url : null;
                 $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
                 //Start Verification status

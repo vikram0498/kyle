@@ -287,8 +287,8 @@ class BuyerController extends Controller
                 'contact_value'         => $authUser->buyerDetail ? $authUser->buyerDetail->contact_preferance : null,
                 'email_verified'        => $authUser->email_verified_at != null ? true : false,
                 'phone_verified'        => $authUser->phone_verified_at != null ? true : false,
-                'profile_tag_name'      => $authUser->buyerDetail->buyerPlan ? $authUser->buyerDetail->buyerPlan->title : null,
-                'profile_tag_image'     => $authUser->buyerDetail->buyerPlan ? $authUser->buyerDetail->buyerPlan->image_url : null,
+                'profile_tag_name'      => $authUser->buyerPlan ? $authUser->buyerPlan->title : null,
+                'profile_tag_image'     => $authUser->buyerPlan ? $authUser->buyerPlan->image_url : null,
                 'is_buyer_verified'     => $authUser->is_buyer_verified,
             ];
 
@@ -505,7 +505,9 @@ class BuyerController extends Controller
     public function getBuyerPropertiesDetails($buyerPropertyId){
         try{
             $authUser = auth()->user();
-            $buyerPropertyDetail = $authUser->buyerProperties()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->where('id',$buyerPropertyId)->first();
+            /*$buyerPropertyDetail = $authUser->buyerProperties()->select('occupation', 'replacing_occupation', 'company_name', 'address', 'country', 'state', 'city', 'zip_code', 'price_min', 'price_max', 'bedroom_min', 'bedroom_max', 'bath_min', 'bath_max', 'size_min', 'size_max', 'lot_size_min', 'lot_size_max', 'build_year_min', 'build_year_max', 'arv_min', 'arv_max', 'parking', 'property_type', 'property_flaw', 'solar', 'pool', 'septic', 'well', 'age_restriction', 'rental_restriction', 'hoa', 'tenant', 'post_possession', 'building_required', 'foundation_issues', 'mold', 'fire_damaged', 'rebuild', 'squatters', 'buyer_type', 'max_down_payment_percentage', 'max_down_payment_money', 'max_interest_rate', 'balloon_payment', 'unit_min', 'unit_max', 'building_class', 'value_add', 'purchase_method', 'stories_min', 'stories_max', 'zoning', 'utilities', 'sewer', 'market_preferance', 'contact_preferance', 'is_ban', 'permanent_affix', 'park', 'rooms')->where('id',$buyerPropertyId)->first();*/
+
+            $buyerPropertyDetail = $authUser->buyerProperties()->select('state', 'city','company_name','market_preferance','contact_preferance','property_type','purchase_method')->where('id',$buyerPropertyId)->first();
 
             if(!$buyerPropertyDetail){
                 $responseData = [
@@ -584,6 +586,7 @@ class BuyerController extends Controller
             })->values()->all();
             //End Purchase Method Column
 
+            /*
             //Start Zoning Column
             $zoning_arr = \Arr::only(config('constants.zonings'), json_decode($buyerPropertyDetail->zoning));
             $buyerPropertyDetail->zoning = collect($zoning_arr)->map(function ($label, $value) {
@@ -663,7 +666,7 @@ class BuyerController extends Controller
                 ];
             })->values()->all();
             //End Location Flaw Column
-  
+        */
             //Return Success Response
             $responseData = [
                 'status'      => true,
@@ -823,14 +826,9 @@ class BuyerController extends Controller
 
             $totalBuyers = Buyer::whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->count();
 
-            /* $buyers = Buyer::select('id')->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
-            // ->orderBy('created_by', 'desc')
-            ->orderBy(BuyerPlan::select('position')->whereColumn('buyer_plans.id', 'buyers.plan_id'), 'asc')
-            ->paginate($perPage); */
-
-
             $buyers = Buyer::select(['buyers.id', 'buyer_plans.position as plan_position'])
-                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+                ->leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id')
                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
                 // ->orderByRaw('plan_position ASC, plan_position IS NULL')
                 ->orderByRaw('ISNULL(plan_position), plan_position ASC')
@@ -1170,16 +1168,6 @@ class BuyerController extends Controller
             $radioValues = [0, 1];
             $userId = auth()->user()->id;
 
-            /*$buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status'
-            ])
-                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
-                ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)->where('buyers.user_id',$userId)
-                ->orderByRaw('ISNULL(plan_position), plan_position ASC')
-                ->paginate(20);*/
-
-
-            /** Update query 26-07-2024 */
-
             // Subquery to calculate verification count
             $verificationSubquery = DB::table('profile_verifications')
             ->select(DB::raw("
@@ -1195,9 +1183,9 @@ class BuyerController extends Controller
             ->whereColumn('user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'buyers.is_profile_verified', 'buyers.plan_id','buyers.status','users.level_type', DB::raw("($verificationSubquery) as verification_count"),])
+            $buyers = Buyer::query()->select(['buyers.id', 'buyers.user_id','buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.status','users.level_type', DB::raw("($verificationSubquery) as verification_count"),])
                 ->leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
-                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'buyers.plan_id')
+                ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id')
                 ->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId)
                 ->withCount(['likes as likes_count'])
                 ->orderByRaw('ISNULL(plan_position), plan_position ASC')
@@ -1239,8 +1227,8 @@ class BuyerController extends Controller
 
                 $buyer->email_verified = $buyer->userDetail->email_verified_at != null ? true : false;
                 $buyer->phone_verified = $buyer->userDetail->phone_verified_at != null ? true : false;
-                $buyer->profile_tag_name = $buyer->buyerPlan ? $buyer->buyerPlan->title : null;
-                $buyer->profile_tag_image = $buyer->buyerPlan ? $buyer->buyerPlan->image_url : null;
+                $buyer->profile_tag_name = $buyer->userDetail->buyerPlan ? $buyer->userDetail->buyerPlan->title : null;
+                $buyer->profile_tag_image = $buyer->userDetail->buyerPlan ? $buyer->userDetail->buyerPlan->image_url : null;
                 $buyer->is_buyer_verified = $buyer->userDetail->is_buyer_verified;
 
                 //Start Verification status
@@ -1253,6 +1241,8 @@ class BuyerController extends Controller
                 $buyer->certified_closer_verified = $buyer->userDetail->buyerVerification->certified_closer_status == 'verified' ? true : false;
                 $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
                 //End Verification status
+
+                $buyer->makeHidden(['userDetail','buyerPlan']);
             }
 
             //Return Success Response
@@ -1359,7 +1349,7 @@ class BuyerController extends Controller
         try {
 
             $buyerPlans = BuyerPlan::with('buyers')->where('status', 1)->orderBy('position', 'asc')->get();
-            $loggedBuyerPlan = Buyer::select('plan_id', 'is_plan_auto_renew')->where('buyer_user_id', auth()->user()->id)->first();
+            $loggedBuyerPlan = auth()->user();
             $buyerPlansList = [];
             foreach ($buyerPlans as $key => $plan) {
                 $buyerIds = $plan->buyers->pluck('id');

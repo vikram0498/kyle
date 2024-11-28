@@ -182,7 +182,7 @@ class PaymentController extends Controller
                 $buyerPlan = BuyerPlan::where('plan_stripe_id', $userToken->plan_stripe_id)->first();
 
                 if($buyerPlan){
-                $updateBuyerPlan = Buyer::where('buyer_user_id', $authUser->id)->update(['plan_id' => $buyerPlan->id, 'is_plan_auto_renew' =>1]);
+                    $updateBuyerPlan = User::where('id', $authUser->id)->update(['plan_id' => $buyerPlan->id, 'is_plan_auto_renew' =>1]);
                     $response = [
                         'status' => true,
                         'message' => 'Your payment is successfully completed.'
@@ -265,7 +265,7 @@ class PaymentController extends Controller
            
                 //End to acncel subscription on stripe
                 if($isCancelSubscription){
-                    $updateBuyerPlan = Buyer::where('buyer_user_id',$authUser->id)->update(['is_plan_auto_renew' => $request->is_plan_auto_renew]);
+                    $updateBuyerPlan = User::where('id',$authUser->id)->update(['is_plan_auto_renew' => $request->is_plan_auto_renew]);
     
                     DB::commit();
                     $responseData = [
@@ -335,15 +335,15 @@ class PaymentController extends Controller
                     $stripe_subscription = StripeSubscription::retrieve($paymentIntent->subscription); 
                     
                     $record = [
-                        'user_id' => $user->id,
-                        'stripe_customer_id' => $paymentIntent->customer,
-                        'plan_id'=>$plan ? $plan->id : null,
-                        'stripe_plan_id'=>$plan ? $plan->plan_stripe_id : null,
-                        'stripe_subscription_id'=>$paymentIntent->subscription,
-                        'start_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_start)->format('Y-m-d'),
-                        'end_date' => Carbon::createFromTimestamp($stripe_subscription->current_period_end)->format('Y-m-d'),
-                        'subscription_json'=>json_encode($stripe_subscription),
-                        'status'=> $stripe_subscription->status,
+                        'user_id'                   => $user->id,
+                        'stripe_customer_id'        => $paymentIntent->customer,
+                        'plan_id'                   => $plan ? $plan->id : null,
+                        'stripe_plan_id'            => $plan ? $plan->plan_stripe_id : null,
+                        'stripe_subscription_id'    => $paymentIntent->subscription,
+                        'start_date'                => Carbon::createFromTimestamp($stripe_subscription->current_period_start)->format('Y-m-d'),
+                        'end_date'                  => Carbon::createFromTimestamp($stripe_subscription->current_period_end)->format('Y-m-d'),
+                        'subscription_json'         => json_encode($stripe_subscription),
+                        'status'                    => $stripe_subscription->status,
                     ];
 
                     // return response()->json(['success' => true,'record'=>$stripe_subscription]);

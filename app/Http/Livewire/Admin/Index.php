@@ -939,8 +939,9 @@ class Index extends Component
                       ->where('updated_at', '<=', DB::raw('NOW()'))
                       ->groupBy(DB::raw('TIMESTAMPDIFF(HOUR, updated_at, NOW())'));
             })
-            ->where('plan_id', $value)
-            ->whereNotNull('plan_id')
+            ->whereHas('userDetail', function ($query) use ($value) {
+                $query->where('plan_id', $value)->whereNotNull('plan_id');
+            })
             ->whereNotNull('updated_at')
             ->orderByRaw('HOUR(updated_at) DESC')
             ->groupBy(DB::raw('hour(updated_at)'))
@@ -960,8 +961,9 @@ class Index extends Component
 
             $reqQuery = Buyer::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
             ->whereDate('updated_at', '>=', $sevenDaysAgo)
-            ->where('plan_id', $value)
-            ->whereNotNull('plan_id')
+            ->whereHas('userDetail', function ($query) use ($value) {
+                $query->where('plan_id', $value)->whereNotNull('plan_id');
+            })
             ->groupBy('date')
             ->orderBy('date')->get();
 
@@ -979,8 +981,9 @@ class Index extends Component
             $thirtyDaysAgo = $current->copy()->subDays(30);
 
             $reqQuery = Buyer::query()->selectRaw('DATE(updated_at) as date, COUNT(*) as count')
-            ->where('plan_id', $value)
-            ->whereNotNull('plan_id')
+            ->whereHas('userDetail', function ($query) use ($value) {
+                $query->where('plan_id', $value)->whereNotNull('plan_id');
+            })
             ->whereDate('updated_at', '>=', $thirtyDaysAgo)
             ->groupBy('date')
             ->orderBy('date','desc')->get();

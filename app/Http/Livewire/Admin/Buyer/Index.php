@@ -420,8 +420,8 @@ class Index extends Component
         }
 
         $countryName = $buyer->country;
-        $stateId = $buyer->state;
-        $cityId = $buyer->city;
+        $stateId = json_decode($buyer->state,true);
+        $cityId = json_decode($buyer->city,true);
 
         // $countryId = DB::table('countries')->where('name', $countryName)->first()->id;
 
@@ -432,7 +432,7 @@ class Index extends Component
         $this->state['city'] = $cityId;
 
         $this->states = DB::table('states')->where('country_id', $countryId)->pluck('name', 'id');
-        $this->cities = DB::table('cities')->where('state_id', $stateId)->pluck('name', 'id');
+        $this->cities = DB::table('cities')->whereIn('state_id', $stateId)->pluck('name', 'id');
 
         $this->buyer_id = $id;
         $this->buyer_user_id = $buyer->buyer_user_id;
@@ -470,7 +470,8 @@ class Index extends Component
                 'last_name'      => $this->state['last_name'],
                 'name'           => ucwords($this->state['first_name'].' '.$this->state['last_name']),
                 'email'          => $this->state['email'], 
-                'phone'          => $this->state['phone'], 
+                'phone'          => $this->state['phone'],
+                'status'         => $this->state['status'] 
             ];
             $updateUser =  $user->update($userDetails);
             // End create users table
@@ -556,9 +557,10 @@ class Index extends Component
                 }
             }
 
-            
+            $buyerPropertyRecord = Arr::except($this->state,['status']);
+
             $buyer = Buyer::find($this->buyer_id);
-            $buyer->update($this->state);
+            $buyer->update($buyerPropertyRecord);
     
             $this->formMode = false;
             $this->updateMode = false;
@@ -623,9 +625,12 @@ class Index extends Component
         $id = $data['id'];
         $type = $data['type'];
 
-        $model = Buyer::find($id);
-        // $model->userDetail()->update(['is_active'=>!$model->$type]);
-        $model->update(['status' => !$model->$type]);
+        $model = User::where('id',$id)->first();
+        $model->status = !$model->$type;
+        $model->save();
+
+        $this->emit('refreshTable');
+
         $this->alert('success', trans('messages.change_status_success_message'));
     }
 

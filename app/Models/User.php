@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'country_code',
         'phone',
         'description',
+        'is_online',
         'company_name',
         'otp',
         'register_type',
@@ -45,6 +46,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'deleted_at',
 	    'terms_accepted',
         'remember_token',
+        'plan_id',
+        'is_plan_auto_renew',
+        'is_profile_verified',
         'level_type',
         'prev_level_type',
         'level_3',
@@ -56,6 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'phone_verified_at',
         'is_online',
+        'status', // this status for buyer will search or not
     ];
 
     /**
@@ -94,6 +99,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function redFlagedBuyer(){
         return $this->belongsToMany(Buyer::class)->withPivot(['reason', 'status']);
+    }
+
+    public function buyerPlan()
+    {
+        return $this->belongsTo(BuyerPlan::class, 'plan_id', 'id');
     }
 
     public function buyers()

@@ -14,7 +14,7 @@ class BuyerTable extends Component
 
     public $search = null;
     
-    public $sortColumnName = 'updated_at', $sortDirection = 'desc', $perPage = 10;
+    public $sortColumnName = 'buyers.updated_at', $sortDirection = 'desc', $perPage = 10;
     
     protected $listeners = [
         'refreshTable' =>'render'
@@ -38,8 +38,14 @@ class BuyerTable extends Component
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         });
+        
+        /*->whereHas('userDetail', function ($query) {
+            $query->whereHas('roles', function ($roleQuery) {
+                $roleQuery->where('id', config('constants.roles.buyer'));
+            });
+        });*/
 
-        if($this->sortColumnName == 'name' || $this->sortColumnName == 'status'){
+        if($this->sortColumnName == 'name' || $this->sortColumnName == 'users.status'){
             $buyers = $buyers->orderBy(User::select($this->sortColumnName)->whereColumn('users.id', 'buyers.buyer_user_id'), $this->sortDirection);
         } else {
             $buyers = $buyers->orderBy($this->sortColumnName, $this->sortDirection);
