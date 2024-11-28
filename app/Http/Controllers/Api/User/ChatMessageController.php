@@ -126,7 +126,7 @@ class ChatMessageController extends Controller
 
             event(new MessageSent($request->content, 'user-' . $recipient_id));
 
-            $response = Http::get('http://192.168.1.24:3000/broadcast', [
+            $response = Http::get('https://kyle-dev-react.hipl-staging3.com:3000/broadcast', [
                 'channel' => 'user-' . $recipient_id,
                 'message' => $request->content,
             ]);

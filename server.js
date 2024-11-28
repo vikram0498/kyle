@@ -9,7 +9,7 @@ const io = socketIo(server, {
     // cors: { origin: "http://localhost:8000" } // Ensure this matches your frontend URL
     // cors: { origin: "http://192.168.1.24:8000" } // Ensure this matches your frontend URL
     cors: {
-        origin: ["http://localhost:3002", "http://localhost:8000","http://192.168.1.3:3002", "http://192.168.1.24:8000"], // Add all allowed origins
+        origin: "*", // Add all allowed origins
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"],
         credentials: true, // If credentials (cookies, headers) are needed
