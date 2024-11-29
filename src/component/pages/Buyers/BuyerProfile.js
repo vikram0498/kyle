@@ -558,15 +558,15 @@ const BuyerProfile = () => {
                       </div>
                       <div className="col-12 col-lg-6">
                         <div className="swittcher-area">
-                            <div className="inswittcher">
-                              <label>
-                                active
-                                <input type="checkbox" id="buyer-status" onChange={handleClickConfirmation} defaultChecked={(currentBuyerData.buyer_search_status ==0) ? 'checked': ''}/>
-                                <span></span>
-                                Inactive
-                              </label>
-                            </div>
+                          <div className="inswittcher">
+                            <label>
+                              active
+                              <input type="checkbox" id="buyer-status" onChange={handleClickConfirmation} defaultChecked={(currentBuyerData.buyer_search_status ==0) ? 'checked': ''}/>
+                              <span></span>
+                              Inactive
+                            </label>
                           </div>
+                        </div>
                         <div className="component-group">
                           {/* <div
                             className={
@@ -671,113 +671,113 @@ const BuyerProfile = () => {
                             </OverlayTrigger>
                             }
                           </div>
-                            <div className="field-box call-darea">
-                              <OverlayTrigger
-                                  placement="top"
-                                  style={{ backgroundColor: "green" }}
-                                  overlay={ <Tooltip> Contact Preference </Tooltip>}>
-                                  <div className="inner-call-box">
-                                    <span>preference</span>
-                                    <div className="dropdown">
-                                      <button
-                                        className="btn dropdown-toggle"
-                                        type="button"
-                                        id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
+                          <div className="field-box call-darea">
+                            <OverlayTrigger
+                                placement="top"
+                                style={{ backgroundColor: "green" }}
+                                overlay={ <Tooltip> Contact Preference </Tooltip>}>
+                                <div className="inner-call-box">
+                                  <span>preference</span>
+                                  <div className="dropdown">
+                                    <button
+                                      className="btn dropdown-toggle"
+                                      type="button"
+                                      id="dropdownMenuButton1"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      <span className="commentic">
+                                        {(buttonLoader)? 
+                                          <MiniLoader/>
+                                          :
+                                          <img
+                                          src={
+                                              profileIcons[
+                                                currentBuyerData.contact_value
+                                              ]
+                                            }
+                                          />
+                                        }
+                                        
+                                      </span>
+                                      <span className="dropdown-arr">
+                                        <svg
+                                          width="10"
+                                          height="6"
+                                          viewBox="0 0 10 6"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M1 1L5 5L9 1"
+                                            stroke="#464B70"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      </span>
+                                    </button>
+                                    <ul
+                                      className="dropdown-menu"
+                                      aria-labelledby="dropdownMenuButton1"
+                                    >
+                                      <li
+                                        className="profile-status"
+                                        onClick={() => contactPreferanceUpdate(1)}
                                       >
-                                        <span className="commentic">
-                                          {(buttonLoader)? 
-                                            <MiniLoader/>
-                                            :
-                                            <img
-                                            src={
-                                                profileIcons[
-                                                  currentBuyerData.contact_value
-                                                ]
-                                              }
-                                            />
-                                          }
-                                          
-                                        </span>
-                                        <span className="dropdown-arr">
-                                          <svg
-                                            width="10"
-                                            height="6"
-                                            viewBox="0 0 10 6"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M1 1L5 5L9 1"
-                                              stroke="#464B70"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                            />
-                                          </svg>
-                                        </span>
-                                      </button>
-                                      <ul
-                                        className="dropdown-menu"
-                                        aria-labelledby="dropdownMenuButton1"
+                                        <a className="dropdown-item" href={void 0}>
+                                          Email
+                                          {currentBuyerData.contact_value === 1 ? (
+                                            <span className="markedChecked">✓</span>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </a>
+                                      </li>
+                                      <li
+                                        className="profile-status"
+                                        onClick={() => contactPreferanceUpdate(2)}
                                       >
-                                        <li
-                                          className="profile-status"
-                                          onClick={() => contactPreferanceUpdate(1)}
-                                        >
-                                          <a className="dropdown-item" href={void 0}>
-                                            Email
-                                            {currentBuyerData.contact_value === 1 ? (
-                                              <span className="markedChecked">✓</span>
-                                            ) : (
-                                              ""
-                                            )}
-                                          </a>
-                                        </li>
-                                        <li
-                                          className="profile-status"
-                                          onClick={() => contactPreferanceUpdate(2)}
-                                        >
-                                          <a className="dropdown-item" href={void 0}>
-                                            Text
-                                            {currentBuyerData.contact_value === 2 ? (
-                                              <span className="markedChecked">✓</span>
-                                            ) : (
-                                              ""
-                                            )}
-                                          </a>
-                                        </li>
-                                        <li
-                                          className="profile-status"
-                                          onClick={() => contactPreferanceUpdate(3)}
-                                        >
-                                          <a className="dropdown-item" href={void 0}>
-                                            Call
-                                            {currentBuyerData.contact_value === 3 ? (
-                                              <span className="markedChecked">✓</span>
-                                            ) : (
-                                              ""
-                                            )}
-                                          </a>
-                                        </li>
-                                        <li
-                                          className="profile-status"
-                                          onClick={() => contactPreferanceUpdate(4)}
-                                        >
-                                          <a className="dropdown-item" href={void 0}>
-                                            No Preference
-                                            {currentBuyerData.contact_value === 4 ? (
-                                              <span className="markedChecked">✓</span>
-                                            ) : (
-                                              ""
-                                            )}
-                                          </a>
-                                        </li>
-                                      </ul>
-                                    </div>
+                                        <a className="dropdown-item" href={void 0}>
+                                          Text
+                                          {currentBuyerData.contact_value === 2 ? (
+                                            <span className="markedChecked">✓</span>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </a>
+                                      </li>
+                                      <li
+                                        className="profile-status"
+                                        onClick={() => contactPreferanceUpdate(3)}
+                                      >
+                                        <a className="dropdown-item" href={void 0}>
+                                          Call
+                                          {currentBuyerData.contact_value === 3 ? (
+                                            <span className="markedChecked">✓</span>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </a>
+                                      </li>
+                                      <li
+                                        className="profile-status"
+                                        onClick={() => contactPreferanceUpdate(4)}
+                                      >
+                                        <a className="dropdown-item" href={void 0}>
+                                          No Preference
+                                          {currentBuyerData.contact_value === 4 ? (
+                                            <span className="markedChecked">✓</span>
+                                          ) : (
+                                            ""
+                                          )}
+                                        </a>
+                                      </li>
+                                    </ul>
                                   </div>
-                              </OverlayTrigger>
-                            </div>
+                                </div>
+                            </OverlayTrigger>
+                          </div>
                           {/* <Link to="/edit-profile">
                             <div className="account-check">
                               <button className="btn">
@@ -826,12 +826,14 @@ const BuyerProfile = () => {
                       </Nav>
                       <Tab.Content>
                         <div className="text-end">
-                          <span className="buyer_multi_profile_edit">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                              <path d="M8.67949 2.08847L1.93867 8.8281C1.67891 9.08782 1.43215 9.59427 1.3802 9.95787L1.01653 12.5291C0.886652 13.464 1.53605 14.1133 2.47119 13.9835L5.0428 13.6199C5.40647 13.5679 5.91304 13.3212 6.1728 13.0615L12.9136 6.32184C14.0695 5.1661 14.628 3.81558 12.9136 2.10145C11.1992 0.37434 9.84841 0.919747 8.67949 2.08847Z" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M7.7207 3.04956C8.29218 5.08833 9.88971 6.69857 11.9418 7.26995" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                          </span>
+                          <Link to={`/edit-profile/${profileId}`}>
+                            <span className="buyer_multi_profile_edit">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                                <path d="M8.67949 2.08847L1.93867 8.8281C1.67891 9.08782 1.43215 9.59427 1.3802 9.95787L1.01653 12.5291C0.886652 13.464 1.53605 14.1133 2.47119 13.9835L5.0428 13.6199C5.40647 13.5679 5.91304 13.3212 6.1728 13.0615L12.9136 6.32184C14.0695 5.1661 14.628 3.81558 12.9136 2.10145C11.1992 0.37434 9.84841 0.919747 8.67949 2.08847Z" stroke="#292D32" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M7.7207 3.04956C8.29218 5.08833 9.88971 6.69857 11.9418 7.26995" stroke="#292D32" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </span>
+                          </Link>
                         </div>
                         <Tab.Pane eventKey={`buyer_profile_${profileId}`}>
                           <ul className="buyer_profile_details">

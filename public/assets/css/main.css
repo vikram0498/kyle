@@ -7733,7 +7733,11 @@ span.status.interested {
   height: 30px;
   text-align: center;
 }
-
+li.active-user {
+  background: #caffc4;
+  padding: 8px;
+  border-radius: 13px;
+}
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{

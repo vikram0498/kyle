@@ -1,19 +1,20 @@
 import React from 'react'
 import { Dropdown, Figure, Image } from 'react-bootstrap';
 
-const ChatMessagePanel = () => {
+const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserData}) => {
+  console.log(messages,"messages")
   return (
     <>
         <div className='chat_box'>
           <div className='chat_header d-flex flex-wrap align-items-center'>
             <div className='chat_header_user d-flex flex-wrap align-items-center'>
               <Figure>
-                  <Image src='/assets/images/property-img.png' alt='' />
+                  <Image src={activeUserData.profile_image || '/assets/images/property-img.png'} alt='' />
                   <span className='active_status'></span>
               </Figure>
               <div>
-                <span>Swathi</span>
-                <p>Online</p>
+                <span>{activeUserData.name}</span>
+                <p>{activeUserData.is_online && "Online" }</p>
               </div>
             </div>
             <div className='chat_header_action'>
@@ -34,11 +35,19 @@ const ChatMessagePanel = () => {
           </div>
           <div className='chat_body'>
             <div className='whole_messages scrollbar_design'>
+              {messages.map((data,index) => {
+                return (
+                  <div className='msg_item'>
+                      <div className='msg_content'>{data.content}</div>
+                      <p className='msg_time'>Today, 2:01pm</p>
+                  </div>
+                )
+              })}
               <div className='msg_item'>
                 <div className='msg_content'>Hey There !</div>
                 <p className='msg_time'>Today, 2:01pm</p>
               </div>
-              <div className='msg_item'>
+              {/* <div className='msg_item'>
                 <div className='msg_content'>How are you doing?</div>
                 <p className='msg_time'>Today, 2:02pm</p>
               </div>
@@ -57,16 +66,16 @@ const ChatMessagePanel = () => {
               <div className='msg_item outgoing_msg'>
                 <div className='msg_content'>Sure!</div>
                 <p className='msg_time'>Today, 2:14pm</p>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className='chat_footer'>
             <form className='msg_send_footer'>
-              <input type='text' placeholder='Message Here...' />
-              <button type='submit' className='msg_send_btn'>
+              <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}/>
+              <button type='button' className='msg_send_btn' onClick={sendMessage}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             </form>

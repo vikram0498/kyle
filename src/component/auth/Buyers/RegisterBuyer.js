@@ -473,13 +473,15 @@ function RegisterBuyer() {
                           <div className="criteria_row_right">
                             <div className="already_login">
                               <p>Already a member</p>
-                              <button
-                                type="button"
-                                className="btn btn-fill"
-                                style={{ pointerEvents: 'none' }}
-                              >
-                                Login
-                              </button>
+                              <Link to='/login'>
+                                <button
+                                  type="button"
+                                  className="btn btn-fill"
+                                  style={{ pointerEvents: 'none' }}
+                                >
+                                  Login
+                                </button>
+                              </Link>
                             </div>
                             <GoogleFacebookLogin/>
                           </div>
@@ -1190,7 +1192,7 @@ function RegisterBuyer() {
                                   </div>
                                 </div>
                               )}
-                              <div className="col-12 col-lg-6">
+                              <div className="col-12 col-lg-12">
                                 <label>
                                   Purchase Method (Multi-Select)<span>*</span>
                                 </label>
@@ -1232,7 +1234,7 @@ function RegisterBuyer() {
                                 </div>
                               </div>
 
-                              <div className="col-12 col-lg-6">
+                              {/* <div className="col-12 col-lg-6">
                                 <label>
                                   Purchase Method (Multi-Select)<span>*</span>
                                 </label>
@@ -1272,7 +1274,7 @@ function RegisterBuyer() {
       
                                   {renderFieldError("purchase_method")}
                                 </div>
-                              </div>
+                              </div> */}
       
                               {showCreativeFinancing && (
                                 <div className="block-divide">

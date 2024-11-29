@@ -137,7 +137,7 @@ const Seller = () => {
           <Route path="/property-deal-result" element={<PropertyDealResult />} />
           <Route path="/property-deal-details/:id" element={<PropertyDealDetails />} />
           {/* <Route path="/deal-notifications" element={<DealNotifications />} /> */}
-          <Route path="/message" element={<Protected Component={Message} />} />
+          <Route path="/message/:id?" element={<Protected Component={Message} />} />
 
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>

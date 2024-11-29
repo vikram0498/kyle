@@ -198,7 +198,7 @@ const PropertyDealDetails = () => {
                                                                             
                                                                         </td>
                                                                         <td>
-                                                                            <Link to='/message'>
+                                                                            <Link to={`/message/${data.buyer_user_id}`}>
                                                                                 <span>
                                                                                 <Image src='/assets/images/chat-icon.svg' alt='' /> Chat With Buyer
                                                                                 </span>
