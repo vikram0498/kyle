@@ -612,6 +612,9 @@ body.dark .offer_price_input input::-webkit-input-placeholder{
 body.dark .offer_price_input input::-moz-placeholder{
   color: #fff;
 }
+body.dark label.property-critera-block.buyer-blog-area.change-badge-color{
+  background-color: #364434;
+}
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{
     background-color: #fff !important;

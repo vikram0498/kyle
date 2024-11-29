@@ -371,7 +371,8 @@
   .top_icons_list .dropdown .dropdown-menu::before{
     left: calc(100% - 30px);
   }
-  .ad {
+  .ad,
+  .top_advertisment{
     margin: 0 0 10px;
   }
   .seller-notification-box {
@@ -417,6 +418,10 @@
   }
   .criteria_row_right .account-with-social{
     margin-left: 0;
+  }
+  .inner_red_flag{
+    right: 86px;
+    top: 14px;
   }
 }
 @media (max-width: 767px) {

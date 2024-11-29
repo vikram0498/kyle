@@ -1993,7 +1993,7 @@ section.main-section {
 }
 
 label.property-critera-block.buyer-blog-area.change-badge-color {
-  background-color: #d9fde2;
+  background-color: #dbffe4;
 }
 
 .property-critera-details {
@@ -2068,12 +2068,12 @@ label.property-critera-block.buyer-blog-area.change-badge-color {
 .cornor-block {
   position: absolute;
   left: 246px; 
-  bottom: -20px;
+  bottom: -27px;
   display: flex;
   align-items: center;
   column-gap: 9px;
   background-color: #ffffff;
-  padding: 9px 15px;
+  padding: 7px 15px;
   border-radius: 10px;
   border: 1px solid #D2E1F0;
   box-shadow: 8px 10px 23px 0px rgba(199, 212, 220, 0.32);
@@ -7861,6 +7861,12 @@ li.active-user {
   gap: 20px;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
+}
+.inner_red_flag{
+  position: absolute;
+  right: 20px;
+  bottom: 26px;
+  background: transparent;
 }
 
 @media screen and (min-width: 768px){
