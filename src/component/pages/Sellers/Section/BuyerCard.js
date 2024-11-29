@@ -10,7 +10,7 @@ export default function BuyerCard({
 }) {
   let PreferenceIcons = "./assets/images/contact-preferance.svg";
   if (data.contact_preferance_id === 1) {
-    PreferenceIcons = "./assets/images/Email-Preference-bg.svg";
+    PreferenceIcons = "./assets/images/result-user-icon.svg";
   } else if (data.contact_preferance_id === 2) {
     PreferenceIcons = "./assets/images/Text-Preference-bg.svg";
   } else if (data.contact_preferance_id === 3) {
@@ -166,7 +166,7 @@ export default function BuyerCard({
             data.redFlagShow ? (
               <>
                 <div
-                  className="red-flag"
+                  className="red-flag inner_red_flag"
                   onClick={() => {
                     handleClickEditFlag(data.redFlag, data.id);
                   }}
@@ -187,7 +187,7 @@ export default function BuyerCard({
             ""
           )}
         {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.certified_closer_verified || data.createdByAdmin ) ? 
-        <div className="cornor-block">
+        <div className="cornor-block cornor-block2">
           {data.phone_verified && 
           <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Phone Verified</Tooltip>} >
               <img src="/assets/images/ver-phone-number.svg" className="img-fluid" alt=""/>

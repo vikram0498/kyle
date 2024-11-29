@@ -6,7 +6,7 @@ const BuyerCardResult = (props) => {
     const {data,index,activeTab,checkSelectedDeals,setSendDealShow,setCurrentBuyerId, handleLikeClick,handleDisikeClick,handleClickConfirmation,handleClickEditFlag,selectedDeals,handleCheckboxChange,user_data} = props;
     let PreferenceIcons = './assets/images/contact-preferance.svg';
     if(data.contact_preferance_id === 1){
-        PreferenceIcons = './assets/images/Email-Preference-bg.svg';
+        PreferenceIcons = './assets/images/result-user-icon.svg';
     }else if(data.contact_preferance_id === 2){
         PreferenceIcons = './assets/images/Text-Preference-bg.svg';
     }else if(data.contact_preferance_id === 3){

@@ -5433,6 +5433,7 @@ span.badge.bg-success.purchased-profile {
   position: absolute;
   right: 0;
   top: 10px;
+  z-index: 1;
 }
 .buyer-active-verfiy::after{
   content: "";

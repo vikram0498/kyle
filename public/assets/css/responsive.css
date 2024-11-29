@@ -210,7 +210,8 @@
 }
 
 @media screen and (min-width: 992px) and (max-width: 1199px){
-  .property-critera-outer .property-critera-block .cornor-block{
+  .property-critera-outer .property-critera-block .cornor-block,
+  .cornor-block2{
     left: 50%;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
@@ -833,7 +834,8 @@
     margin-left: auto;
     align-items: center;
   }
-  .property-critera-outer .property-critera-block .cornor-block{
+  .property-critera-outer .property-critera-block .cornor-block,
+  .cornor-block2{
     width: max-content;
     left: 50%;
     transform: translateX(-50%);

@@ -114,7 +114,7 @@ const EditRequest = ({
         </button>
         <Modal.Body>
           <div className="want-to-edit">
-            <div className="popup-heading-block text-center inner_red_flag">
+            <div className="popup-heading-block text-center">
               <img src="/assets/images/red-flag-bg.svg" className="img-fluid w-25" alt=""/>
               <h3>Flag Data</h3>
               <p>Please report the incorrect information</p>
