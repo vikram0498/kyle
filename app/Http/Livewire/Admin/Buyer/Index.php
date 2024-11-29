@@ -355,16 +355,14 @@ class Index extends Component
                 if(isset($this->state['property_flaw']) && !empty($this->state['property_flaw'])){
                     $this->state['property_flaw'] = array_map('intval', $this->state['property_flaw']);
                 }
-            
-                // dd($this->state);
-                // $createdBuyer = Buyer::create($this->state);
 
-                $this->state = collect($this->state)->except(['first_name', 'last_name','email','phone'])->all();
-                
+                $this->state = collect($this->state)->except(['first_name', 'last_name','email','phone'])->all();              
+              
+                $this->state['buyer_user_id'] = $createUser->id;
+                $this->state['state'] = json_encode($this->state['state']);
+                $this->state['city'] = json_encode($this->state['city']);
 
-                // dd($this->state);
-                
-                $createUser->buyerDetail()->create($this->state);
+                $createdBuyer = Buyer::create($this->state);
 
                 if($createUser->buyerDetail){
                     //Purchased buyer
@@ -374,7 +372,6 @@ class Index extends Component
                     auth()->user()->purchasedBuyers()->create($syncData);
                 }
 
-               
                 //Verification mail sent
                 $createUser->NotificationSendToBuyerVerifyEmail();
 
@@ -390,7 +387,7 @@ class Index extends Component
             }
         }catch (\Exception $e) {
             DB::rollBack();
-            //  dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
 
             Log::error('Livewire -> Buyer-> Index -> Store()'.$e->getMessage().'->'.$e->getLine());
             

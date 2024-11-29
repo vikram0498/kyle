@@ -54,10 +54,10 @@ class ChatMessageController extends Controller
     
             // Format the last message details
             $lastMessageDetails = $lastMessage ? [
-                'content' => $lastMessage->content,
-                'is_read' => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
-                'created_date' => $lastMessage->created_at->format('d-M-Y'),
-                'created_time' => $lastMessage->created_at->format('g:i A'),
+                'content'       => $lastMessage->content,
+                'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
+                'created_date'  => $lastMessage->created_at->format('d-M-Y'),
+                'created_time'  => $lastMessage->created_at->format('g:i A'),
                 'date_time_label' => formatDateLabel($lastMessage->created_at),
             ] : null;
     
@@ -65,7 +65,10 @@ class ChatMessageController extends Controller
                 'id'                    => $user->id,
                 'name'                  => $user->name ?? '',
                 'is_online'             => $user->is_online ?? '',
-                'profile_image'         => $recipient->profile_image_url ?? null,
+                'profile_image'         => $user->profile_image_url ?? null,
+                'level_type'            => $user->level_type ?? '',
+                'profile_tag_name'      => $user->buyerPlan ? $user->buyerPlan->title : null,
+                'profile_tag_image'     => $user->buyerPlan ? $user->buyerPlan->image_url : null,
                 'unread_message_count'  => $unreadMessageCount ?? "",
                 'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
             ];
@@ -129,7 +132,7 @@ class ChatMessageController extends Controller
             $recipient = User::find($recipient_id);
             $notificationData = [
                 'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
-                'message'   => trans('notification_messages.chat_message.received_new_message') .'<br/>'. $request->content .'<br/>',
+                'message'   => trans('notification_messages.chat_message.received_new_message') .'<br/> '. $request->content .'<br/>',
                 'module'    => "dm_notification",
                 'type'      => "dm_notification",
                 'user_id'   => $recipient->id,
@@ -140,24 +143,10 @@ class ChatMessageController extends Controller
             
             if(isset($recipient->notificationSetting) && $recipient->notificationSetting->email_notification){
                 //Send Mail               
-
                 $subject  = $notificationData['title'];
                 $message  = $notificationData['message'];
                 Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $message));
             }
-
-            /*
-            event(new MessageSent($request->content, 'user-' . $recipient_id));
-
-            $response = Http::get('http://127.0.0.1:3000/broadcast', [
-                'channel' => 'user-' . $recipient_id,
-                'message' => $request->content,
-            ]);
-    
-            if (!$response->successful()) {
-                throw new \Exception("Node.js broadcast failed.");
-            }
-            */
 
             DB::commit();
 
@@ -293,10 +282,13 @@ class ChatMessageController extends Controller
                 'status'    => true,
                 'message'   => $groupedMessages,
                 'data' => [
-                    'id'    => $recipient->id,
-                    'name'  => $recipient->name,
-                    'is_online'  => (bool)$recipient->is_online,
-                    'profile_image' => $recipient->profile_image_url ?? null,
+                    'id'                => $recipient->id,
+                    'name'              => $recipient->name,
+                    'is_online'         => (bool)$recipient->is_online,
+                    'profile_image'     => $recipient->profile_image_url ?? null,
+                    'level_type'            => $recipient->level_type ?? '',
+                    'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
+                    'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
                 ],
             ];
     
