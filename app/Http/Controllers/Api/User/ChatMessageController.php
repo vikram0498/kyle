@@ -10,8 +10,11 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
+use App\Mail\ChatMessageMail;
 use App\Models\User;
+use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class ChatMessageController extends Controller
 {
@@ -78,7 +81,7 @@ class ChatMessageController extends Controller
     public function sendDirectMessage(Request $request)
     {
         $request->validate([
-            'recipient_id'  => 'required|exists:users,id',
+            'recipient_id'  => 'required|exists:users,id,deleted_at,NULL',
             'content'       => 'required|string|max:5000',
             'type'          => 'nullable|in:text,image,video,file',
         ]);
@@ -122,11 +125,30 @@ class ChatMessageController extends Controller
 
             $conversation->last_message_at = now();
             $conversation->save();
-    
 
+            $recipient = User::find($recipient_id);
+            $notificationData = [
+                'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
+                'message'   => trans('notification_messages.chat_message.received_new_message'),
+                'module'    => "chat_message",
+                'type'      => "send_chat_message",
+                'user_id'   => $recipient->id,
+                'notification_type' => 'chat_message_notification'
+            ];
+
+            $recipient->notify(new SendNotification($notificationData));
+            
+            if(isset($recipient->notificationSetting) && $recipient->notificationSetting->email_notification){
+                //Send Mail
+                $subject  = $notificationData['title'];
+                $message  = $notificationData['message'];
+                Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $message));
+            }
+
+            /*
             event(new MessageSent($request->content, 'user-' . $recipient_id));
 
-            $response = Http::get('https://kyle-dev-react.hipl-staging3.com:3000/broadcast', [
+            $response = Http::get('http://127.0.0.1:3000/broadcast', [
                 'channel' => 'user-' . $recipient_id,
                 'message' => $request->content,
             ]);
@@ -134,6 +156,7 @@ class ChatMessageController extends Controller
             if (!$response->successful()) {
                 throw new \Exception("Node.js broadcast failed.");
             }
+            */
 
             DB::commit();
 
@@ -208,13 +231,14 @@ class ChatMessageController extends Controller
     public function getMessages(Request $request)
     {
         $request->validate([
-            'recipient_id' => 'required|exists:users,id', // recipient must exist
+            'recipient_id' => 'required|exists:users,id,deleted_at,NULL', // recipient must exist
         ]);
         
         $sender = auth()->user();
         $recipient_id = $request->recipient_id;
 
-        $recipient = User::find($recipient_id);
+        $recipient = User::where('id',$recipient_id)->first();
+
         // Find the conversation between the sender and recipient
         $conversation = Conversation::where('is_group', false)
         ->where(function ($query) use ($sender, $recipient_id) {

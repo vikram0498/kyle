@@ -55,6 +55,25 @@ class AdvertiseBannerSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'advertiser_name' => 'Advertiser Three',
+                'ad_name' => 'Demo Product',
+                'target_url' => 'https://example.com/demo-product',
+                'impressions_purchased' => 5000,
+                'impressions_served' => 0,
+                'impressions_count' => 0,
+                'click_count' => 0,
+                'start_date' => now()->toDateString(),
+                'end_date' => now()->addDays(3)->toDateString(),
+                'page_type' => 'search-buybox',
+                'start_time' => '10:00:00',
+                'end_time' => '20:00:00',
+                'status' => 1,
+                'created_by' => 1,
+                'updated_by' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ];
 
         AdvertiseBanner::insert($data);

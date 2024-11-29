@@ -351,6 +351,17 @@ return [
                 'enabled' => false,
             ],
         ],
+        "chat_message_notification" => [
+            'value' => "enable",
+            'display_name' => "Chat Message Notification",
+            'setting_for'  => ['seller','buyer'],
+            'push' => [
+                'enabled' => false,
+            ],
+            'email' => [
+                'enabled' => false,
+            ],
+        ],
     ],
 
     'interested_pdf_size' => '102400', // 102400 KB => 100MB
@@ -368,6 +379,7 @@ return [
     'banner_page_type' =>[
         'home' => 'Home',
         'add-buyer-details' => 'Add Buyer Details',
+        'search-buybox' => 'Search BuyBox',
     ],
 
 ];

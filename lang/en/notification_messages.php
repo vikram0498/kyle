@@ -17,7 +17,12 @@
         'user_email_verified' => [
             'title'   => ':role Email Verified: :userName',
             'message' => 'User Email Verified' 
-        ]
+        ],
+
+        'chat_message' => [
+            'new_chat_message_from_user' => 'New message from :user',
+            'received_new_message' => 'You have received new chat message!',
+        ],
     ];
 
 ?>

@@ -122,8 +122,10 @@ class Index extends Component
 
         // Check if start time is greater than current time
         if ($starDateTime->lt($currentDateTime)) {
-            $rules['start_time'] = '|after:now';
+            $rules['start_time'] = 'required|after:now';
         }
+
+        $rules['end_time'] = 'required';
 
         $validatedData = $this->validate(
             $rules,['without_spaces' => 'The :attribute field is required'],['advertiser_name'  => 'advertiser name', 'ad_name' => 'ad name','target_url'  => 'target url']
