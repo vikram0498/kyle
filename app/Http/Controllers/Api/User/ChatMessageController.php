@@ -292,7 +292,7 @@ class ChatMessageController extends Controller
             $responseData = [
                 'status'    => true,
                 'message'   => $groupedMessages,
-                'user-data' => [
+                'data' => [
                     'id'    => $recipient->id,
                     'name'  => $recipient->name,
                     'is_online'  => $recipient->is_online,
