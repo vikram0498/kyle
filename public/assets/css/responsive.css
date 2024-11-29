@@ -808,6 +808,17 @@
   .deal_notifications_left .pro_details .dollar-text{
     margin-bottom: 0;
   }
+  .buyer_multi_profile_edit{
+    position: inherit;
+    top: inherit;
+    right: inherit;
+    display: flex;
+    margin-bottom: -20px;
+    margin-top: 10px;
+    justify-content: center;
+    margin-left: auto;
+    align-items: center;
+  }
 
 }
 

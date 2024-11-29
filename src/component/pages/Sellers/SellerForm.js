@@ -21,12 +21,13 @@ import TownHouse from "./FilterPropertyForm/TownHouse";
 import MobileHomePark from "./FilterPropertyForm/MobileHomePark";
 import HotelMotel from "./FilterPropertyForm/HotelMotel";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
+import { Image } from "react-bootstrap";
 
 
 const SellerForm = () => {
   const { getTokenData, setLogout } = useAuth();
   const [isLoader, setIsLoader] = useState(true);
-
+  const [advertisementData, setAdvertisementData] = useState([]);
   const [videoUrl, setVideoUrl] = useState("");
 
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -582,6 +583,26 @@ const SellerForm = () => {
       }
     }
   };
+
+  useEffect(()=>{
+    const fetchAdvertisementBannerData = async () => {
+      try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+          "auth-token": getTokenData().access_token,
+        };
+  
+        let response = await axios.post(apiUrl + `banner/add-buyer-details`, {}, {
+          headers: headers,
+        });
+        setAdvertisementData(response.data.data);
+      } catch (error) {
+          console.log(error)
+      }
+    } 
+    fetchAdvertisementBannerData();
+  },[])
   
   return (
     <>
@@ -631,69 +652,81 @@ const SellerForm = () => {
                       <form method="post" onSubmit={submitSearchBuyerForm} >
                         <div className="card-box-blocks">
                           <div className="row">
-                            <div className="col-12 col-lg-12">
-                              <div className="form-group">
-                                <label>
-                                  Property Type<span>*</span>
-                                </label>
-                                <Select
-                                  name="property_type"
-                                  defaultValue=""
-                                  options={propertyTypeOption}
-                                  onChange={(item) =>
-                                    handlePropertyTypeChange(item)
-                                  }
-                                  className="select"
-                                  isClearable={true}
-                                  isSearchable={true}
-                                  isDisabled={false}
-                                  isLoading={false}
-                                  value={propertyTypeValue}
-                                  isRtl={false}
-                                  placeholder="Select Property Type"
-                                  closeMenuOnSelect={true}
-                                />
-                                {renderFieldError("property_type")}
+                            <div className="col-12 col-lg-8 w-70">
+                              <div className="row">
+                                <div className="col-12 col-lg-12">
+                                  <div className="form-group">
+                                    <label>
+                                      Property Type<span>*</span>
+                                    </label>
+                                    <Select
+                                      name="property_type"
+                                      defaultValue=""
+                                      options={propertyTypeOption}
+                                      onChange={(item) =>
+                                        handlePropertyTypeChange(item)
+                                      }
+                                      className="select"
+                                      isClearable={true}
+                                      isSearchable={true}
+                                      isDisabled={false}
+                                      isLoading={false}
+                                      value={propertyTypeValue}
+                                      isRtl={false}
+                                      placeholder="Select Property Type"
+                                      closeMenuOnSelect={true}
+                                    />
+                                    {renderFieldError("property_type")}
+                                  </div>
+                                </div>
+                              </div>
+                              {isSearchForm === 3 && (
+                                <CommercialRetail data={dataObj} />
+                              )}
+                              {isSearchForm === 4 && <Condo data={dataObj} />}
+                              {isSearchForm === 7 && <Land data={dataObj} />}
+                              {isSearchForm === 8 && (
+                                <Manufactured data={dataObj} />
+                              )}
+                              {isSearchForm === 10 && (
+                                <MultiFamilyCommercial data={dataObj} />
+                              )}
+                              {isSearchForm === 11 && (
+                                <MultiFamilyResidential data={dataObj} />
+                              )}
+                              {isSearchForm === 12 && (
+                                <SingleFamily data={dataObj} />
+                              )}
+                              
+                              {isSearchForm === 13 && <TownHouse data={dataObj} />}
+                              {isSearchForm === 14 && (
+                                <MobileHomePark data={dataObj} />
+                              )}
+                              {isSearchForm === 15 && <HotelMotel data={dataObj} />}
+
+                              <div className="row mb-2">
+                                <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
+                              </div>
+
+                              <div className="submit-btn">
+                                <button
+                                  type="submit"
+                                  className="btn btn-fill"
+                                  disabled={loading ? "disabled" : ""}
+                                >
+                                  Submit Now! {loading ? <MiniLoader /> : ""}{" "}
+                                </button>
                               </div>
                             </div>
-                          </div>
-                          
-                          {isSearchForm === 3 && (
-                            <CommercialRetail data={dataObj} />
-                          )}
-                          {isSearchForm === 4 && <Condo data={dataObj} />}
-                          {isSearchForm === 7 && <Land data={dataObj} />}
-                          {isSearchForm === 8 && (
-                            <Manufactured data={dataObj} />
-                          )}
-                          {isSearchForm === 10 && (
-                            <MultiFamilyCommercial data={dataObj} />
-                          )}
-                          {isSearchForm === 11 && (
-                            <MultiFamilyResidential data={dataObj} />
-                          )}
-                          {isSearchForm === 12 && (
-                            <SingleFamily data={dataObj} />
-                          )}
-                          
-                          {isSearchForm === 13 && <TownHouse data={dataObj} />}
-                          {isSearchForm === 14 && (
-                            <MobileHomePark data={dataObj} />
-                          )}
-                          {isSearchForm === 15 && <HotelMotel data={dataObj} />}
-
-                          <div className="row mb-2">
-                            <GoogleReCaptcha setCaptchaVerified={setCaptchaVerified} recaptchaError={recaptchaError}/>
-                          </div>
-
-                          <div className="submit-btn">
-                            <button
-                              type="submit"
-                              className="btn btn-fill"
-                              disabled={loading ? "disabled" : ""}
-                            >
-                              Submit Now! {loading ? <MiniLoader /> : ""}{" "}
-                            </button>
+                            <div className="col-12 col-lg-4 w-30">
+                              {!advertisementData.is_expired &&  
+                              <div className="advertisement">
+                                <Link>
+                                  <Image src={advertisementData.is_expired ? './assets/images/add-1.svg' :  advertisementData.image}/>
+                                </Link>
+                              </div>
+                              }
+                            </div>
                           </div>
                         </div>
                       </form>

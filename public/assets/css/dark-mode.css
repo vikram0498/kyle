@@ -43,7 +43,9 @@ body.dark p {
   color: #cacaca;
 }
 body.dark .contact-update .contact-update-item a,
-body.dark .user-name-title {
+body.dark .user-name-title,
+body.dark .buyer_profile_details > li > label,
+body.dark .buyer_profile_details > li > label::after{
   color: #fff;
 }
 body.dark .contact-update {

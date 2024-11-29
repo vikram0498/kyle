@@ -7617,6 +7617,7 @@ span.status.interested {
   flex: 0 0 calc(100% - 230px);
   -webkit-flex: 0 0 calc(100% - 230px);
   max-width: calc(100% - 230px);
+  position: relative;
 }
 .buyer_profile_details{
   padding: 0 0 0 20px;
@@ -7723,6 +7724,14 @@ span.status.interested {
 .add_buyer-right .share_btn{
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.buyer_multi_profile_edit{
+  position: absolute;
+  right: -10px;
+  top: -12px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
 }
 
 

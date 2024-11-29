@@ -825,6 +825,14 @@ const BuyerProfile = () => {
                         })}
                       </Nav>
                       <Tab.Content>
+                        <div className="text-end">
+                          <span className="buyer_multi_profile_edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                              <path d="M8.67949 2.08847L1.93867 8.8281C1.67891 9.08782 1.43215 9.59427 1.3802 9.95787L1.01653 12.5291C0.886652 13.464 1.53605 14.1133 2.47119 13.9835L5.0428 13.6199C5.40647 13.5679 5.91304 13.3212 6.1728 13.0615L12.9136 6.32184C14.0695 5.1661 14.628 3.81558 12.9136 2.10145C11.1992 0.37434 9.84841 0.919747 8.67949 2.08847Z" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M7.7207 3.04956C8.29218 5.08833 9.88971 6.69857 11.9418 7.26995" stroke="#292D32" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </div>
                         <Tab.Pane eventKey={`buyer_profile_${profileId}`}>
                           <ul className="buyer_profile_details">
                             <li>
