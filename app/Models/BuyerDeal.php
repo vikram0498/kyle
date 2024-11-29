@@ -22,6 +22,8 @@ class BuyerDeal extends Model
         'uuid',
         'buyer_user_id',
         'search_log_id',
+        'is_proof_of_funds',
+        'offer_price',
         'message',
         'buyer_feedback',
         'status',

@@ -1437,7 +1437,9 @@ class SearchBuyerController extends Controller
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
             'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
             'buyer_feedback'    => ['required_if:status,not_interested', 'string'],
-            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')]
+            'is_proof_of_funds' => ['required','in:true,false'],
+            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')],
+            'offer_price'       => ['required','numeric','min:0'],
         ],[
             'pdf_file.mimes'    => 'The file must be a PDF document',
         ],[
@@ -1467,7 +1469,9 @@ class SearchBuyerController extends Controller
             $createdByUser = $buyerDeal->createdBy;
 
             $buyerDealUpdateData = [
-                "status" => $request->status
+                "status"            => $request->status,
+                "is_proof_of_funds" => $request->is_proof_of_funds ? 1 : 0,
+                "offer_price"       => $request->offer_price,
             ];
 
             if($request->status == 'not_interested' && $request->has('buyer_feedback') && !empty($request->buyer_feedback)){
