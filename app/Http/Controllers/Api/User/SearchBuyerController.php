@@ -1375,6 +1375,11 @@ class SearchBuyerController extends Controller
                         'picture_link'      => $searchLog && $searchLog->picture_link ? $searchLog->picture_link : '',
                         'status'            => $buyerDeal->status,
                         'is_proof_of_fund_verified'  => $is_proof_of_fund_verified,
+                        'bedroom_min'       => $searchLog->bedroom,
+                        'bath'              => $searchLog->bath,
+                        'size'              => $searchLog->size,
+                        'lot_size'          => $searchLog->lot_size,
+                        'price'             => $searchLog->price,
                     ];
                 });
 
