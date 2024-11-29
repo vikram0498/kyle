@@ -295,7 +295,7 @@ class ChatMessageController extends Controller
                 'data' => [
                     'id'    => $recipient->id,
                     'name'  => $recipient->name,
-                    'is_online'  => $recipient->is_online,
+                    'is_online'  => (bool)$recipient->is_online,
                     'profile_image' => $recipient->profile_image_url ?? null,
                 ],
             ];
