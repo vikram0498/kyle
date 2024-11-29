@@ -172,30 +172,42 @@ class SearchBuyerController extends Controller
                     CASE WHEN is_application_process = 1 THEN 1 ELSE 0 END
                 ) AS verification_count
             "))
-            ->whereColumn('user_id', 'buyers.buyer_user_id')
+            ->whereColumn('profile_verifications.user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
+            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id')
+            ->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
             ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id');
 
-            $additionalBuyers = Buyer::query();
+            $additionalBuyers = Buyer::leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id');
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
-                    $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+                    // $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
+                   $buyers = $buyers->where('purchased_buyers.user_id', '=', $userId);
                 }elseif($request->activeTab == 'more_buyers'){
                     
                      if(in_array($authUserLevelType, [1,2])){
-                         $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                        /*
+                        $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                             $query->where('user_id', '=',$userId);
-                        })->where('user_id', '=', 1);
+                        })->where('buyers.user_id', '=', 1);
     
                         $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
                             $query->where('user_id', '=',$userId);
-                        })->where('user_id', '=', 1);
+                        })->where('buyers.user_id', '=', 1);
+                        */
+                        
+                        $buyers = $buyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId) 
+                        ->where('buyers.user_id', '=', 1);
+        
+                        $additionalBuyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId)
+                        ->where('buyers.user_id', '=', 1);
+                
                      }else if($authUserLevelType == 3){
-                         $buyers = $buyers->where('user_id', '!=', $userId);
-                         $additionalBuyers->where('user_id', '!=', $userId);
+                         $buyers = $buyers->where('buyers.user_id', '!=', $userId);
+                         $additionalBuyers->where('buyers.user_id', '!=', $userId);
                      }
                     
                     
@@ -650,11 +662,15 @@ class SearchBuyerController extends Controller
 
             // Get additional buyer
             if($authUserLevelType == 3){
-                 $additionalBuyers = $additionalBuyers->where('user_id', '!=', $userId);
+                 $additionalBuyers = $additionalBuyers->where('buyers.user_id', '!=', $userId);
             }else{
-                 $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                    $query->where('user_id', '=',$userId);
-                })->where('user_id', '=', 1);
+                //  $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
+                //     $query->where('user_id', '=',$userId);
+                // })->where('user_id', '=', 1);
+                
+                $additionalBuyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId)
+                        ->where('buyers.user_id', '=', 1);
+                
             }
            
 
@@ -725,7 +741,7 @@ class SearchBuyerController extends Controller
                         $buyer->totalBuyerLikes = totalLikes($buyer->id);
                         $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                         $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
-                        $buyer->createdByAdmin = ($buyer->created_by == 1) ? true : false;
+                        $buyer->createdByAdmin = ($buyer->user_id == 1) ? true : false;
                         $buyer->liked = $liked;
                         $buyer->disliked = $disliked;
 
@@ -785,7 +801,7 @@ class SearchBuyerController extends Controller
                             $buyer->totalBuyerLikes = totalLikes($buyer->id);
                             $buyer->totalBuyerUnlikes = totalUnlikes($buyer->id);
                             $buyer->redFlagShow = $buyer->buyersPurchasedByUser()->where('user_id',auth()->user()->id)->exists();
-                            $buyer->createdByAdmin = (($buyer->created_by == 1) || ($authUserLevelType == 3)) ? true : false;
+                            $buyer->createdByAdmin = (($buyer->user_id == 1) || ($authUserLevelType == 3)) ? true : false;
                             $buyer->liked = $liked;
                             $buyer->disliked = $disliked;
     
@@ -1437,9 +1453,7 @@ class SearchBuyerController extends Controller
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
             'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
             'buyer_feedback'    => ['required_if:status,not_interested', 'string'],
-            'is_proof_of_funds' => ['required','in:true,false'],
-            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')],
-            'offer_price'       => ['required','numeric','min:0'],
+            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')]
         ],[
             'pdf_file.mimes'    => 'The file must be a PDF document',
         ],[
@@ -1469,9 +1483,7 @@ class SearchBuyerController extends Controller
             $createdByUser = $buyerDeal->createdBy;
 
             $buyerDealUpdateData = [
-                "status"            => $request->status,
-                "is_proof_of_funds" => $request->is_proof_of_funds ? 1 : 0,
-                "offer_price"       => $request->offer_price,
+                "status" => $request->status
             ];
 
             if($request->status == 'not_interested' && $request->has('buyer_feedback') && !empty($request->buyer_feedback)){
