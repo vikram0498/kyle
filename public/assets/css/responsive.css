@@ -922,6 +922,18 @@
   .ac-de-feeture:before{
     top: calc(50% - 1px);
   }
+  .upload-document-section .browse-files{
+    display: block;
+    padding: 12px 5px 5px 5px;
+  }
+  .upload-document-section .d-block.upload-file{
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+  .modal_inner_content .deal_notifications_btn{
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 @media (max-width: 480px) {
   .account-with-social > li {

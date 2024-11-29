@@ -584,7 +584,9 @@ body.dark .setting-card-head-title,
 body.dark .list_content>span,
 body.dark .buyer_seller_toggle2 label span,
 body.dark .mode_type label span,
-body.dark .user-dropdown .dropdown-menu li .dropdown-item:hover .buyer_seller_toggle2 label span{
+body.dark .user-dropdown .dropdown-menu li .dropdown-item:hover .buyer_seller_toggle2 label span,
+body.dark .offer_label,
+body.dark .proof_checkbox label{
   color: #fff;
 }
 body.dark .buyer_seller_toggle2 label::before{
@@ -599,6 +601,16 @@ body.dark .mode_type{
 }
 body.dark .mode_type label::before{
   right: 22px;
+}
+body.dark .offer_price_input input{
+  background-color: transparent;
+  color: #fff;
+}
+body.dark .offer_price_input input::-webkit-input-placeholder{
+  color: #fff;
+}
+body.dark .offer_price_input input::-moz-placeholder{
+  color: #fff;
 }
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{

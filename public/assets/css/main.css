@@ -4776,7 +4776,7 @@ span.moon.togglecontent {
 
   flex: 240px;
 
-  margin-left: auto;
+  margin-left: 0;
 
   padding-right: 7px;
 }
@@ -6522,6 +6522,7 @@ body.dark .notification_pro_deal>li:last-child{
   font-weight: 700;
   margin-top: 20px;
   margin-bottom: 16px;
+  text-transform: capitalize;
 }
 .modal_inner_content .deal_notifications_btn{
   display: flex;
@@ -7337,7 +7338,7 @@ span.status.interested {
 .upload-document-section .browse-files {
   border-radius: 5px;
   border: solid 1px #E1E3E7;
-  padding: 5px 5px 5px 18px;
+  padding: 4px 4px 4px 15px;
   display: flex;
   justify-content: space-between;
   margin: 0 0 30px;
@@ -7347,16 +7348,17 @@ span.status.interested {
   line-height: normal;
   display: block;
   border-radius: 5px;
-  padding: 14px 35px;
+  padding: 11px 15px;
   text-transform: capitalize;
   color: #fff;
   font-weight: 600;
   font-family: "Nunito Sans", sans-serif;
+  font-size: 14px;
 }
 .upload-document-section  .d-block.upload-file {
   margin-left: 0;
   font-family: "Nunito Sans", sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   line-height: normal;
   color: #464b70;
@@ -7737,6 +7739,100 @@ li.active-user {
   background: #caffc4;
   padding: 8px;
   border-radius: 13px;
+}
+.offer_price_input{
+  margin-top: 0;
+  text-align: left;
+  margin-bottom: 25px;
+}
+.offer_label{
+  color: #121639;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Nunito Sans", sans-serif;
+  margin-bottom: 6px;
+}
+.offer_price_input input{
+  border-radius: 5px;
+  border: solid 1px #E1E3E7;
+  padding: 12px 15px;
+  color: #464B70;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  width: 100%;
+}
+.offer_price_input input::-webkit-input-placeholder{
+  opacity: 1;
+  color: #464B70;
+}
+.offer_price_input input::-moz-placeholder{
+  opacity: 1;
+  color: #464B70;
+}
+.btn-fill-green,
+.btn-fill-green:focus{
+  background-color: #49D8A3;
+  border-color: #49D8A3;
+  color: #fff;
+}
+.btn-fill-green:hover:not(:focus){
+  border-color: #49D8A3;
+  color: #49D8A3;
+}
+.offer_price_area{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.offer_price_area .offer_label{
+  margin-bottom: 0;
+}
+.proof_checkbox input{
+  display: none;
+}
+.proof_checkbox span::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #E1E3E7;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.proof_checkbox span::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="white"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
+  opacity: 0;
+}
+.proof_checkbox input:checked + span::before{
+  background-color: #3f53fe;
+  border-color: #3f53fe;
+}
+.proof_checkbox input:checked + span::after{
+  opacity: 1;
+}
+.proof_checkbox label{
+  padding-left: 26px;
+  text-transform: capitalize;
+  color: #464B70;
+  font-size: 12px;
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 400;
 }
 
 @media screen and (min-width: 768px){
