@@ -7157,6 +7157,7 @@ span.status.interested {
   right: 0;
   top: 10px;
   display: flex;
+  z-index: 1;
 }
 .buyer-notifaction .top_buyer_btn {
   background: #F5F7F9;
@@ -7833,6 +7834,33 @@ li.active-user {
   font-size: 12px;
   font-family: "Nunito Sans", sans-serif;
   font-weight: 400;
+}
+.top_advertisment img{
+  height: 100px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 5px;
+}
+.phone_verifications .form-control.verification_input{
+  height: 50px;
+}
+.result_topbar{
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}
+.result_topbar_right{
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
 }
 
 @media screen and (min-width: 768px){

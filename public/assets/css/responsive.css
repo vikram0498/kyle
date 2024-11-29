@@ -209,6 +209,15 @@
   }
 }
 
+@media screen and (min-width: 992px) and (max-width: 1199px){
+  .property-critera-outer .property-critera-block .cornor-block{
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    width: max-content;
+  }
+}
+
 @media (max-width: 991px) {
   .account-in {
     padding: 15px;
@@ -818,6 +827,26 @@
     justify-content: center;
     margin-left: auto;
     align-items: center;
+  }
+  .property-critera-outer .property-critera-block .cornor-block{
+    width: max-content;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    column-gap: 0;
+  }
+  .buyer-notifaction .top_buyer_btn{
+    border-color: #DFDFDF;
+  }
+  .result_topbar{
+    display: block;
+  }
+  .result_topbar .center-head{
+    text-align: left !important;
+    margin: 10px 0 !important;
+  }
+  .result_topbar_right{
+    gap: 10px;
   }
 
 }

@@ -118,7 +118,7 @@ function Home({ userDetails }) {
         <div className="container position-relative">
           <div className="row mb-60">
             <div className="col-12 col-lg-9">
-              <div className="ad">
+              <div className="top_advertisment">
                 <Link>
                   <Image src={advertisementData.is_expired ? './assets/images/add.svg' :  advertisementData.image}  />
                 </Link>

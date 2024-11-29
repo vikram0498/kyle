@@ -55,7 +55,7 @@ const PhoneVerification = ({
 
   return (
     <>
-      <div className="card-box-blocks">
+      <div className="card-box-blocks phone_verifications">
         <div className="lic-detail-area">
           <div className="row align-items-end">
               <div className="col-12">

@@ -226,8 +226,8 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
         <section className="main-section position-relative pt-4 pb-120">
           <div className="container position-relative">
             <div className="back-block">
-              <div className="row">
-                <div className="col-12 col-sm-3 col-md-3 col-lg-3">
+              <div className="result_topbar">
+                <div className="result_topbar_left">
                   <a
                     onClick={handleBackClick}
                     style={{ cursor: "pointer" }}
@@ -258,10 +258,8 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                     Back
                   </a>
                 </div>
-                <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                  <h6 className="center-head text-center mb-0">Result Page</h6>
-                </div>
-                <div className="col-12 col-sm-3 col-md-3 col-lg-3">
+                <h6 className="center-head text-center mb-0">Result Page</h6>
+                <div className="result_topbar_right">
                   {(activeTab ==='my_buyers' && user_data.level_type > 1 ) && 
                     <div className="buyer_top_bar d-flex align-items-center justify-content-end">
                       <div className="buyer_top_select">
@@ -282,11 +280,6 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                       </Button>
                     </div>
                   }
-                  {/* <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">
-                    {currentPageNo} out of {totalPage}
-                  </p> */}
-                </div>
-                <div className="col-12 col-sm-2 col-md-2 col-lg-2">
                   <p className="page-out mb-0 text-center text-sm-end text-md-end text-lg-end">
                     {currentPageNo} out of {totalPage}
                   </p>
