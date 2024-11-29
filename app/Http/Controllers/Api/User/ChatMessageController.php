@@ -62,12 +62,12 @@ class ChatMessageController extends Controller
             ] : null;
     
             return [
-                'id' => $user->id,
-                'name' => $user->name ?? '',
-                'is_online' => $user->is_online ?? '',
-                'profile_image' => $recipient->profile_image_url ?? null,
-                'unread_message_count' => $unreadMessageCount ?? "",
-                'last_message' => $lastMessageDetails ? $lastMessageDetails : null,
+                'id'                    => $user->id,
+                'name'                  => $user->name ?? '',
+                'is_online'             => $user->is_online ?? '',
+                'profile_image'         => $recipient->profile_image_url ?? null,
+                'unread_message_count'  => $unreadMessageCount ?? "",
+                'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
             ];
         })->filter();
         $responseData = [
