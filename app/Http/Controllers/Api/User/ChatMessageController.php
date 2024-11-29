@@ -130,16 +130,17 @@ class ChatMessageController extends Controller
             $notificationData = [
                 'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
                 'message'   => trans('notification_messages.chat_message.received_new_message'),
-                'module'    => "chat_message",
-                'type'      => "send_chat_message",
+                'module'    => "dm_notification",
+                'type'      => "dm_notification",
                 'user_id'   => $recipient->id,
-                'notification_type' => 'chat_message_notification'
+                'notification_type' => 'dm_notification'
             ];
 
             $recipient->notify(new SendNotification($notificationData));
             
             if(isset($recipient->notificationSetting) && $recipient->notificationSetting->email_notification){
-                //Send Mail
+                //Send Mail               
+
                 $subject  = $notificationData['title'];
                 $message  = $notificationData['message'];
                 Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $message));
