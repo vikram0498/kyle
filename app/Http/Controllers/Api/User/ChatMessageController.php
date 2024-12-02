@@ -71,8 +71,12 @@ class ChatMessageController extends Controller
                 'profile_tag_image'     => $user->buyerPlan ? $user->buyerPlan->image_url : null,
                 'unread_message_count'  => $unreadMessageCount ?? "",
                 'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
+                'last_message_at'       => $lastMessage ? $lastMessage->created_at : null,
             ];
         })->filter();
+
+        $chatList = $chatList->sortByDesc('last_message_at')->values();
+
         $responseData = [
             'status'    => true,
             'data'      => $chatList,     
