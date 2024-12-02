@@ -6416,7 +6416,7 @@ body.dark .outline_btn{
 }
 .deal_notifications_btn.disabled-btn>li .outline_btn{
   cursor: not-allowed !important;
-  background: transparent;
+  /* background: transparent; */
   pointer-events: none;
 }
 .disabled-btn button span svg {

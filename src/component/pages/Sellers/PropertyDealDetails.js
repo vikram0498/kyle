@@ -181,10 +181,10 @@ const PropertyDealDetails = () => {
                                                                         <td>{data.buyer_email}</td>
                                                                         {(currentTab =='total_buyer' || currentTab =='want_to_buy') && 
                                                                         <td>
-                                                                            {data.want_to_buy_deal_pdf_url !='' &&
+                                                                            {(data.want_to_buy_deal_pdf_url !='' && data.want_to_buy_deal_pdf_url !=undefined) &&
                                                                             <a href={data.want_to_buy_deal_pdf_url} download="proof-of-fund">
                                                                                 <span>
-                                                                                <Image src="/assets/images/folder-zip.svg" alt="" /> Documents
+                                                                                <Image src="/assets/images/folder-zip.svg" alt="" /> {} Documents
                                                                                 </span>
                                                                             </a>
                                                                             }

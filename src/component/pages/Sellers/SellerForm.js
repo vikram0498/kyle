@@ -593,7 +593,7 @@ const SellerForm = () => {
           "auth-token": getTokenData().access_token,
         };
   
-        let response = await axios.post(apiUrl + `banner/add-buyer-details`, {}, {
+        let response = await axios.post(apiUrl + `banner/search-buybox`, {}, {
           headers: headers,
         });
         setAdvertisementData(response.data.data);

@@ -31,6 +31,8 @@ const DealNotifications = () => {
     const [page, setPage]= useState(1);
     const [total, setTotal] = useState(0);
     const [limit, setLimit] = useState(0);
+    const [offerPrice, setOfferPrice] = useState(0);
+    const [isProofOfFund, setIsProofOfFund] = useState(false);
     const [isUpdatedStatus,setIsUpdatedStatus] = useState(false);
 
     const handleOpenModal = (content,id=0) => {
@@ -96,7 +98,16 @@ const DealNotifications = () => {
             if(propertyStatus == "submit-want-to-buy-doc"){
                 setModalContent('want-to-buy');
                 setAttachmentsError("Attachment is required");
-                if (fileInputRef.current && fileInputRef.current.files.length > 0) {
+                if(isProofOfFund){
+                    setAttachmentsError(""); // Clear error if file is valid
+                    const formData = new FormData();
+                    formData.append("status", "want_to_buy");
+                    formData.append("buyer_deal_id", dealId); // Ensure dealId is available in scope
+                    formData.append("is_proof_of_fund", isProofOfFund); // The file itself
+                    formData.append("offer_price", offerPrice); // The file itself
+                    await updateDealStatus(formData);
+                    setIsDealDocumentVerified(true)
+                }else if (fileInputRef.current && fileInputRef.current.files.length > 0) {
                     const file = fileInputRef.current.files[0];
                     if (file.type !== "application/pdf") {
                         setAttachmentsError("Only PDF files are allowed");
@@ -107,9 +118,8 @@ const DealNotifications = () => {
                     formData.append("status", "want_to_buy");
                     formData.append("buyer_deal_id", dealId); // Ensure dealId is available in scope
                     formData.append("pdf_file", file); // The file itself
-
+                    formData.append("offer_price", offerPrice); // The file itself
                     await updateDealStatus(formData);
-                    setIsDealDocumentVerified(true)
                 }
             }
 
@@ -271,22 +281,22 @@ const DealNotifications = () => {
                                             <div className="property-details-Browse-Deal-icons">
                                                 <div className="detail">
                                                     <img src='/assets/images/double-bed.svg'/>
-                                                    <span>02 Beds</span>
+                                                    <span>{data.bedroom_min || 0} Beds</span>
                                                 </div>
                                                 <div className="detail">
                                                     <img src='/assets/images/bath-1.svg'/>
-                                                    <span>02 Baths</span>
+                                                    <span>{data.bath || 0} Baths</span>
                                                 </div>
                                                 <div className="detail">
                                                     <img src='/assets/images/network-1.svg'/>
-                                                    <span>800 Square Foot</span>
+                                                    <span>{data.size || 0} Square Foot</span>
                                                 </div>
                                                 <div className="detail">
                                                     <img src='/assets/images/full-screen-2.svg'/>
-                                                    <span>800 ft</span>
+                                                    <span>{data.lot_size || 0} ft</span>
                                                 </div>
                                             </div>
-                                            <p className='dollar-text mt-3'><strong>$200.00</strong></p>
+                                            <p className='dollar-text mt-3'><strong>${data.price || 0}</strong></p>
                                             {/* <ul className='notification_pro_deal'>
                                                 <li>2</li>
                                                 <li>3</li>
@@ -382,7 +392,7 @@ const DealNotifications = () => {
                                     <div className='offer_price_input'>
                                         <label className='offer_label'>Offer Your Price</label>
                                         <div className=''>
-                                            <input type='text' placeholder='Enter Offer Price' />
+                                            <input type='text' placeholder='Enter Offer Price' value={offerPrice} onChange={(e)=> setOfferPrice(e.target.value)}/>
                                         </div>
                                     </div>
                                     <div className='upload-document-section'>
@@ -390,7 +400,7 @@ const DealNotifications = () => {
                                             <label className='offer_label'>Offer Your Price</label>
                                             <div className='proof_checkbox position-relative'>
                                                 <label>
-                                                    <input type='checkbox' name='current_poof' />
+                                                    <input type='checkbox' name='current_poof' checked={isProofOfFund} onChange={(e)=>{setIsProofOfFund(e.target.checked)}}/>
                                                     <span>use current proof of funds</span>
                                                 </label>
                                             </div>

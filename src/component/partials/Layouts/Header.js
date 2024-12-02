@@ -186,7 +186,7 @@ function Header() {
                       />
                     </span>
                     <p>
-                      uploaded Buyer Data :{" "}
+                      Buyer Database :{" "}
                       <b>
                         {creditLimit !== null ? (
                           creditLimit.total_buyer_uploaded
@@ -207,7 +207,7 @@ function Header() {
                         />
                       </span>
                       <p>
-                        Credits Points :{" "}
+                        Credits :{" "}
                         <b className="credit_limit">
                           {creditLimit !== null ? (
                             creditLimit.credit_limit
@@ -582,7 +582,7 @@ function Header() {
                             />
                           </span>
                           <p>
-                            Credits Points{" "}
+                            Credits{" "}
                             <b className="credit_limit">
                               {creditLimit !== null ? (
                                 creditLimit.credit_limit

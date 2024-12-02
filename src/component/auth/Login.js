@@ -231,7 +231,7 @@ function Login(props) {
             </div>
             <div className="col-12 col-lg-12">
               {/* <p className="account-now"> Or Register as:</p> */}
-                <div class="line-with-text">Or Register As</div>
+                <div className="line-with-text">Or Register As</div>
                   <br></br>
                     <div className="row">
                        <div className="col-md-6"> 
