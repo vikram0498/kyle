@@ -54,6 +54,8 @@ class ChatMessageController extends Controller
     
             // Format the last message details
             $lastMessageDetails = $lastMessage ? [
+                'id'            => $lastMessage->id,
+                'sender_id'     => $lastMessage->sender_id,
                 'content'       => $lastMessage->content,
                 'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
                 'created_date'  => $lastMessage->created_at->format('d-M-Y'),
@@ -148,8 +150,7 @@ class ChatMessageController extends Controller
             if(isset($recipient->notificationSetting) && $recipient->notificationSetting->email_notification){
                 //Send Mail               
                 $subject  = $notificationData['title'];
-                $message  = $notificationData['message'];
-                Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $message));
+                Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $notificationData['message']));
             }
 
             DB::commit();

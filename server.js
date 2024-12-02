@@ -41,7 +41,7 @@ const setupSocket = (io) => {
                 };
 
                 const response = await axios.post(
-                    `${apiUrl}/send-message`,
+                    `${apiUrl}/api/send-message`,
                     payload,
                     { headers }
                 );
@@ -52,10 +52,12 @@ const setupSocket = (io) => {
                 if (receiverSocketId) {
                     console.log("Receiver Socket ID:", receiverSocketId);
 
-                    io.to(receiverSocketId).emit("receiveMessage", {
-                        channel: payloadData.recipient_id,
-                        message: response.data.data.content,
-                    });
+                    io.to(receiverSocketId).emit("receiveMessage",response.data.data
+                        /*{
+                            channel: payloadData.recipient_id,
+                            message: response.data.data.content,
+                        }*/
+                    );
                 }
             } catch (error) {
                 console.error("Error saving message:", error.message);

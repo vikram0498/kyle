@@ -160,7 +160,7 @@ class SearchBuyerController extends Controller
 
             /** Update query 26-07-2024 */
 
-            // Subquery to calculate verification count
+            // Subquery to calculate verification count 
             $verificationSubquery = DB::table('profile_verifications')
             ->select(DB::raw("   
                 SUM(
@@ -176,11 +176,11 @@ class SearchBuyerController extends Controller
             ->toSql();
 
             $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
-            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id')
+            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.buyer_user_id')
             ->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
             ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id');
 
-            $additionalBuyers = Buyer::leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id');
+            $additionalBuyers = Buyer::leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.buyer_user_id');
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
@@ -199,11 +199,16 @@ class SearchBuyerController extends Controller
                         })->where('buyers.user_id', '=', 1);
                         */
                         
-                        $buyers = $buyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId) 
-                        ->where('buyers.user_id', '=', 1);
+                        $buyers = $buyers->whereRaw("
+                            NOT EXISTS (
+                                SELECT 1 
+                                FROM purchased_buyers 
+                                WHERE purchased_buyers.user_id = $userId
+                                AND purchased_buyers.buyer_id = buyers.id
+                            )
+                            AND buyers.user_id = 1
+                        ");
         
-                        $additionalBuyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId)
-                        ->where('buyers.user_id', '=', 1);
                 
                      }else if($authUserLevelType == 3){
                          $buyers = $buyers->where('buyers.user_id', '!=', $userId);
@@ -668,9 +673,17 @@ class SearchBuyerController extends Controller
                 //     $query->where('user_id', '=',$userId);
                 // })->where('user_id', '=', 1);
                 
-                $additionalBuyers->whereNull('purchased_buyers.user_id')->where('purchased_buyers.user_id','!=',$userId)
-                        ->where('buyers.user_id', '=', 1);
-                
+              
+                $additionalBuyers = $additionalBuyers->whereRaw("
+                    NOT EXISTS (
+                        SELECT 1 
+                        FROM purchased_buyers 
+                        WHERE purchased_buyers.user_id = $userId
+                        AND purchased_buyers.buyer_id = buyers.id
+                    )
+                    AND buyers.user_id = 1
+                ");
+               
             }
            
 
@@ -1383,6 +1396,7 @@ class SearchBuyerController extends Controller
                     $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
                     return [
                         'id'                => $buyerDeal->id,
+                        'sender_by'         => $searchLog->user_id,
                         'search_log_id'     => $searchLog->id ?? '',
                         'title'             => $address,
                         'address'           => $address,
