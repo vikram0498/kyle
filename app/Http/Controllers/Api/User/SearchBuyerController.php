@@ -802,6 +802,12 @@ class SearchBuyerController extends Controller
                                 $buyer->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
                                 $buyer->email =  substr($buyerDetails->email, 0, 3).str_repeat("X", strlen($buyerDetails->email)-3);
                                 $buyer->phone =  substr($buyerDetails->phone, 0, 3).str_repeat("X", strlen($buyerDetails->phone)-3);
+
+                                $buyer->userDetail->first_name  =  substr($buyerDetails->first_name, 0, 1).str_repeat("X", strlen($buyerDetails->first_name)-1);
+                                $buyer->userDetail->last_name  =  substr($buyerDetails->last_name, 0, 1).str_repeat("X", strlen($buyerDetails->last_name)-1);
+                                $buyer->userDetail->name  =  substr($name, 0, 3).str_repeat("X", strlen($name)-3);
+                                $buyer->userDetail->email =  substr($buyerDetails->email, 0, 3).str_repeat("X", strlen($buyerDetails->email)-3);
+                                $buyer->userDetail->phone =  substr($buyerDetails->phone, 0, 3).str_repeat("X", strlen($buyerDetails->phone)-3);
                             }
     
                             $contactPreference = $buyer->contact_preferance ? config('constants.contact_preferances')[$buyer->contact_preferance]: '';
@@ -839,6 +845,7 @@ class SearchBuyerController extends Controller
                             $buyer->is_application_verified = $buyer->userDetail->buyerVerification->is_application_process ? true : false;
                             //End Verification status
                     }
+                    // $buyer->makeHidden(['userDetail']);
                 }
             }
             
