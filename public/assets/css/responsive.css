@@ -424,6 +424,9 @@
     right: 86px;
     top: 14px;
   }
+  .buyer_dash_deals{
+    margin-top: 30px !important;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -855,6 +858,12 @@
   .result_topbar_right{
     gap: 10px;
   }
+  .buyer_dash_linkTop{
+    gap: 16px;
+  }
+  .buyer_dash_linkTop li{
+    flex: 0 0 calc(50% - 8px);
+  }
 
 }
 
@@ -968,6 +977,38 @@
   }
   .modal_inner_content .deal_notifications_btn{
     flex-direction: column;
+    gap: 10px;
+  }
+  .buyer_dash_linkTop li,
+  .buyer_dash_bothBtn>a{
+    flex: 0 0 100%;
+  }
+  .buyer_dash_bothBtn{
+    gap: 16px;
+  }
+  .dash_deals_left,
+  .dash_deals_center,
+  .dash_deals_right{
+    flex: 0 0 100%;
+    -webkit-flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .dash_deals_center{
+    padding-left: 0;
+    padding-top: 16px;
+  }
+  .dash_deals_right{
+    text-align: left;
+    margin-top: 10px;
+  }
+  .dash_deals_left{
+    height: 140px;
+  }
+  .dash_deals_left img{
+    width: 100%;
+  }
+  .buyer_dash_bothBtn>a{
+    padding: 20px;
     gap: 10px;
   }
 }

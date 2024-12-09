@@ -12,6 +12,7 @@ import PaymentConfirm from "../component/pages/Buyers/PaymentConfirm";
 import RegisterBuyer from "../component/auth/Buyers/RegisterBuyer";
 import DealNotifications from "../component/pages/Sellers/DealNotifications";
 import Message from "../component/pages/Sellers/Message";
+import Dashboard from "../component/pages/Buyers/Dashboard";
 const Buyers = () => {
   return (
     <Routes>
@@ -43,10 +44,10 @@ const Buyers = () => {
         path="/deal-notifications"
         element={<Protected Component={DealNotifications} />}
       />
-      {/* <Route
-        path="/stepper-form"
-        element={<Protected Component={MultiStepForm} />}
-      /> */}
+      <Route
+        path="/dashboard"
+        element={<Protected Component={Dashboard} />}
+      />
     </Routes>
   );
 };

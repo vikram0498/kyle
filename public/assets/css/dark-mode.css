@@ -609,11 +609,23 @@ body.dark .offer_price_input input{
 body.dark .offer_price_input input::-webkit-input-placeholder{
   color: #fff;
 }
-body.dark .offer_price_input input::-moz-placeholder{
+body.dark .offer_price_input input::-moz-placeholder,
+body.dark .dash_boost_profile p{
   color: #fff;
 }
 body.dark label.property-critera-block.buyer-blog-area.change-badge-color{
   background-color: #364434;
+}
+body.dark .buyer_dash_linkTop li>a,
+body.dark .buyer_dash_bothBtn>a{
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+}
+body.dark .buyer_dash_deals ul>li{
+  background: #1f1f1f;
+}
+body.dark .buyer_dash_linkTop li>a:hover{
+  background-color: rgba(63, 83, 254, 1);
 }
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{

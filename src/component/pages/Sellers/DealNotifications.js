@@ -35,6 +35,10 @@ const DealNotifications = () => {
     const [isLoader, setIsLoader] = useState(false);
     const [isProofOfFund, setIsProofOfFund] = useState(false);
     const [isUpdatedStatus,setIsUpdatedStatus] = useState(false);
+    const [proofSave, setProofSave] = useState(false);
+
+    const handleProofShow = () => setProofSave(true);
+    const handleProofHide = () => setProofSave(false);
 
     const handleOpenModal = (content,id=0) => {
         setAttachmentsError('');
@@ -281,7 +285,7 @@ const DealNotifications = () => {
                                             
                                             {/* Property Details Section */}
                                             <div className='pro_details'>
-                                                <h3>{data.title}</h3>
+                                                <h3 onClick={handleProofShow}>{data.title}</h3>
                                                 <p>Real Easte Company That Prioritizes Property</p>
                                                 <div className="property-details-Browse-Deal-icons">
                                                     <div className="detail">
@@ -464,6 +468,20 @@ const DealNotifications = () => {
                 </div>
             </Modal.Body>
         </Modal>
+
+        {/* Save Proof of fund */}
+        <Modal show={proofSave} onHide={handleProofHide} centered className='radius_30 max-340'>
+            <Modal.Body className='some_space'>
+                <div className='modal_inner_content proofSave'>
+                    <h3>Do you want to save this proof of fund</h3>
+                    <div class="both_btn_group m-0">
+                        <button type="button" class="light_bg_btn btn btn-primary" onClick={handleProofHide}>No</button>
+                        <button type="submit" class="btn btn-fill btn-primary" onClick={handleProofHide}>Yes</button>
+                    </div>
+                </div>
+            </Modal.Body>
+        </Modal>
+
         <ReactTooltip
         id="my-tooltip-1"
         place="top"
