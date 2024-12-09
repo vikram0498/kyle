@@ -200,7 +200,7 @@ const BoostYourProfile = () => {
                             </div>
                           </div>
                           <div className="postion">
-                            position : {data.position}
+                            position : {data.position < 10 ? '0':''}{data.position}
                           </div>
                           <div className="priceby">
                             $ {data.amount} <span>/{data.type}</span>

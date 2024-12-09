@@ -17,7 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Col, Image, Modal, Row, Form } from "react-bootstrap";
 import Swal from "sweetalert2";
 
-const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments,address }) => {
+const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments,address,size, lotSize , bath, bedroom}) => {
   const [buyerId, setBuyerId] = useState(0);
   const [buyerStatus, setBuyerStatus] = useState(true);
   const [filterType, setFilterType] = useState("search_page");
@@ -463,8 +463,10 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                       <h2>real estate company that prioritizes Property</h2>
                       <p><Image src="/assets/images/map_pin.svg" alt="" />{address}</p>
                       <ul>
-                        <li><span><Image src="/assets/images/bed.svg" alt="" /></span> 02 Bed</li>
-                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> 02 Baths</li>
+                        <li><span><Image src="/assets/images/bed.svg" alt="" /></span> {bedroom} Bed</li>
+                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {bath} Baths</li>
+                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {size } Square Foot</li>
+                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {lotSize} ft</li>
                       </ul>
                     </div>
                   </Col>

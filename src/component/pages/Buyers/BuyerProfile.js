@@ -191,6 +191,18 @@ const BuyerProfile = () => {
     }
   }, [profileId]);
 
+  const formatInput = (input) => {
+    // Remove all non-digit characters
+    let cleaned = input.replace(/\D/g, "");
+
+    // Format the input as 123-456-7890 (up to 10 digits)
+    return cleaned
+        .substring(0, 10) // Limit the length to 10 digits
+        .replace(/(\d{3})(\d{0,3})(\d{0,4})/, (_, g1, g2, g3) =>
+            [g1, g2, g3].filter(Boolean).join("-")
+        );
+  };
+
   return (
     <>
       <BuyerHeader />
@@ -317,7 +329,7 @@ const BuyerProfile = () => {
                             </svg>
                           </span>
                           <span className="contact-title align-self-center">
-                            {currentBuyerData.phone}
+                            {formatInput(currentBuyerData.phone)}
                           </span>
                            {(currentBuyerData.phone_verified) && 
                             <OverlayTrigger
@@ -382,6 +394,16 @@ const BuyerProfile = () => {
                               <img src='/assets/images/ver-check-blue.svg' className="img-fluid" />
                             </OverlayTrigger>
                           }
+                        </a>
+                      </div>
+                      <div className="contact-update-item">
+                        <a href={void(0)}>
+                          <span className="icon">
+                            <img src="/assets/images/building-1.svg"/>
+                          </span>
+                          <span className="contact-title align-self-center">
+                            {currentBuyerData.company_name}
+                          </span>
                         </a>
                       </div>
                       <div className="update-profile">

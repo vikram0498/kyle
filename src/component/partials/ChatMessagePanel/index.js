@@ -2,7 +2,14 @@ import React from 'react'
 import { Dropdown, Figure, Image } from 'react-bootstrap';
 
 const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserData}) => {
-  console.log(messages,"messages")
+   // Handle the Enter key press event to send the message
+   const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && message.trim()) {
+      sendMessage(); // Call sendMessage when Enter is pressed
+      e.preventDefault(); // Prevent the default action of the Enter key (new line)
+    }
+  };
+
   return (
     <>
         <div className='chat_box'>
@@ -37,41 +44,18 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
             <div className='whole_messages scrollbar_design'>
               {messages.map((data,index) => {
                 return (
-                  <div className='msg_item'>
-                      <div className='msg_content'>{data.content}</div>
-                      <p className='msg_time'>Today, 2:01pm</p>
+                  <div className={`msg_item ${data.sender_id !== activeUserData.id && 'outgoing_msg'}`}>
+                    <div className='msg_content'>{data.content}</div>
+                    <p className='msg_time'>{data.date_time_label == 'Today' ? data.created_time : data.created_date}</p>
                   </div>
                 )
               })}
-              <div className='msg_item'>
-                <div className='msg_content'>Hey There !</div>
-                <p className='msg_time'>Today, 2:01pm</p>
-              </div>
-              {/* <div className='msg_item'>
-                <div className='msg_content'>How are you doing?</div>
-                <p className='msg_time'>Today, 2:02pm</p>
-              </div>
-              <div className='msg_item outgoing_msg'>
-                <div className='msg_content'>Hello...</div>
-                <p className='msg_time'>Today, 2:12pm</p>
-              </div>
-              <div className='msg_item outgoing_msg'>
-                <div className='msg_content'>I am good  and how about you?</div>
-                <p className='msg_time'>Today, 2:12pm</p>
-              </div>
-              <div className='msg_item'>
-                <div className='msg_content'>I am doing well. Can we meet up tomorrow?</div>
-                <p className='msg_time'>Today, 2:13pm</p>
-              </div>
-              <div className='msg_item outgoing_msg'>
-                <div className='msg_content'>Sure!</div>
-                <p className='msg_time'>Today, 2:14pm</p>
-              </div> */}
+              
             </div>
           </div>
           <div className='chat_footer'>
             <form className='msg_send_footer'>
-              <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}/>
+              <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}  onKeyDown={handleKeyDown}/>
               <button type='button' className='msg_send_btn' onClick={sendMessage}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

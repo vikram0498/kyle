@@ -21,11 +21,10 @@ const Message = () => {
     const [socket, setSocket] = useState(null);
     const [receiverId, setReceiverId] = useState(''); 
 
-    const apiUrl = process.env.REACT_APP_API_URL || "http://192.168.1.14:8000/api/";
-
+    const apiUrl = process.env.REACT_APP_API_URL
     useEffect(() => {
         const userData = getLocalStorageUserdata();
-        const socketInstance = io(process.env.REACT_APP_BACKEND_URL || "http://192.168.1.14:3000", {
+        const socketInstance = io(process.env.REACT_APP_SOCKET_URL, {
             transports: ["websocket", "polling"],
             query: { userId: userData.id }, // Ensure valid user ID is passed
         });
@@ -59,7 +58,7 @@ const Message = () => {
                 { headers }
             );
             setActiveUserData(response.data.data || [])
-            setMessages(response.data.messages || []);
+            setMessages(response.data.message.Today || []);
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
@@ -74,11 +73,11 @@ const Message = () => {
         try {
             const response = await axios.get(`${apiUrl}get-chat-list`, { headers });
             setChatList(response.data.data || []);
-            if(chatPartnerId !== undefined){
-                setReceiverId(chatPartnerId)
-            }else{
-                setReceiverId(response.data.data[0].id)
-            }
+            // if(chatPartnerId !== undefined){
+            //     setReceiverId(chatPartnerId)
+            // }else{
+            //     setReceiverId(response.data.data[0].id)
+            // }
         } catch (error) {
             console.error("Error fetching chat list:", error);
         }
@@ -90,21 +89,40 @@ const Message = () => {
             return; 
         }
         console.log("Sending message:", message);
+        const now = new Date();
+        const created_time = now.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit', hour12: true  }); // Format as "HH:MM AM/PM"
+
+        // Create a message object for the sender's message
+        const senderMessage = {
+            content: message.trim(),
+            sender_id: getLocalStorageUserdata().id, // Assuming the user ID is stored in local storage
+            recipient_id: receiverId,
+            type: "text",
+            chat_type: "direct",
+            date_time_label:"Today",
+            created_time:created_time,
+            timestamp: new Date().toISOString(), // Add timestamp if needed
+        };
+
+        // Update the local state with the new sender's message
+        setMessages((prevMessages) => [...prevMessages, senderMessage]);
+        
         const payload = {
             access_token: `Bearer ${getTokenData().access_token}`,
             recipient_id: receiverId,
             content: message.trim(),
             type: "text",
         };
-        console.log("Payload:", payload); 
-
         socket.emit("sendMessage", payload);
         setMessage(""); 
     };
 
     useEffect(() => {
+        console.log(receiverId,"receiverId");
         fetchChatList();
-        fetchMessages();
+        if(receiverId !== ''){
+            fetchMessages();
+        }
     }, [receiverId]);
 
     useEffect(() => {
@@ -112,6 +130,7 @@ const Message = () => {
         if (getTokenData().access_token && userRole === 0) {
             setUserRole(userData.role);
         }
+        setReceiverId(chatPartnerId)
     }, []);
 
     return (

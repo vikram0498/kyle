@@ -613,7 +613,7 @@ const SellerForm = () => {
             <img alt="" src="assets/images/loader.svg" />
           </div>
         ) : isFiltered ? (
-          <ResultPage setIsFiltered={setIsFiltered} filterFormData={filterFormData} lastSearchedLogId={lastSearchedLogId} address={address} attachments={attachments}/>
+          <ResultPage setIsFiltered={setIsFiltered} filterFormData={filterFormData} lastSearchedLogId={lastSearchedLogId} address={address} attachments={attachments} size={size} lotSize={lotSize} bath={bath} bedroom={bedroom}/>
         ) : (
           <>
             <div className="container position-relative pat-40">

@@ -32,6 +32,7 @@ const DealNotifications = () => {
     const [total, setTotal] = useState(0);
     const [limit, setLimit] = useState(0);
     const [offerPrice, setOfferPrice] = useState(0);
+    const [isLoader, setIsLoader] = useState(false);
     const [isProofOfFund, setIsProofOfFund] = useState(false);
     const [isUpdatedStatus,setIsUpdatedStatus] = useState(false);
 
@@ -47,6 +48,7 @@ const DealNotifications = () => {
 
     useEffect(()=>{
         const fetchDeal = async ()=>{
+            setIsLoader(true);
             try {
                 let headers = {
                     Accept: "application/json",
@@ -58,11 +60,13 @@ const DealNotifications = () => {
                 setLimit(response.data.deals.per_page);
                 setPage(response.data.deals.current_page);
                 setTotal(response.data.deals.total);
+                setIsLoader(false);
             } catch (error) {
                 if (error.response.status === 401) {
                     setLogout();
                 }
                 console.log('error', error)
+                setIsLoader(false);
             }
         }
         fetchDeal();
@@ -202,127 +206,116 @@ const DealNotifications = () => {
         {/* <Header /> */}
         <BuyerHeader />
         <section className='main-section position-relative pt-4 pb-120'>
-            <Container className='position-relative'>
-                <div className="back-block">
-                    <div className="row">
-                        <div className="col-4 col-sm-4 col-md-4 col-lg-4">
-                            <Link to="/" className="back">
-                                <svg
-                                    width="16"
-                                    height="12"
-                                    viewBox="0 0 16 12"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                <path
-                                    d="M15 6H1"
-                                    stroke="#0A2540"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                                <path
-                                    d="M5.9 11L1 6L5.9 1"
-                                    stroke="#0A2540"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                                </svg>
-                                Back
-                            </Link>
-                        </div>
-                        <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
-                            <h6 className="center-head text-center mb-0">
-                                {/* Deal Notifications */}
-                                Browse Deal
-                            </h6>
+            { isLoader ? <div className="loader" style={{ textAlign: "center" }}><img src="assets/images/loader.svg" /></div> : 
+                <Container className='position-relative'>
+                    <div className="back-block">
+                        <div className="row">
+                            <div className="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <Link to="/" className="back">
+                                    <svg
+                                        width="16"
+                                        height="12"
+                                        viewBox="0 0 16 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                    <path
+                                        d="M15 6H1"
+                                        stroke="#0A2540"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                    <path
+                                        d="M5.9 11L1 6L5.9 1"
+                                        stroke="#0A2540"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                    </svg>
+                                    Back
+                                </Link>
+                            </div>
+                            <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <h6 className="center-head text-center mb-0">
+                                    {/* Deal Notifications */}
+                                    Browse Deal
+                                </h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='card-box column_bg_space'>
-                    {dealData.map((data, index) => {
-                        // Destructure first image and remaining images from data.property_images
-                        const [firstImage, ...remainingImages] = data.property_images || []; 
-                        return (
-                            <div className='deal_column' key={index}>
-                                <div className='deal_left_column notifications_deal_column border-end-0'>
-                                    <div className='deal_notifications_left flex_1column align-items-center'>
-                                        {/* Profile Image Section */}
-                                        <div className='pro_img'>
-                                            {/* Display first image or fallback if no images available */}
-                                            <div className='pro_img-main'>
-                                            {firstImage ? (
-                                                <Image src={firstImage} alt='Property Image' width={200} height={200} />
-                                            ) : (
-                                                <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
-                                            )}
+                    <div className='card-box column_bg_space'>
+                        {dealData.length > 0 ? dealData.map((data, index) => {
+                            // Destructure first image and remaining images from data.property_images
+                            const [firstImage, ...remainingImages] = data.property_images || []; 
+                            return (
+                                <div className='deal_column' key={index}>
+                                    <div className='deal_left_column notifications_deal_column border-end-0'>
+                                        <div className='deal_notifications_left flex_1column align-items-center'>
+                                            {/* Profile Image Section */}
+                                            <div className='pro_img'>
+                                                {/* Display first image or fallback if no images available */}
+                                                <div className='pro_img-main'>
+                                                {firstImage ? (
+                                                    <Image src={firstImage} alt='Property Image' width={200} height={200} />
+                                                ) : (
+                                                    <Image src='/assets/images/property-img.png' alt='Default Image' width={200} height={200} />
+                                                )}
+                                                </div>
+                                                
+                                                {/* Remaining Images Section */}
+                                                <div className='deal_img_group'>
+                                                    {remainingImages.map((imgUrl, i) => (
+                                                    <div key={i}>
+                                                        <Image src={imgUrl} alt={`Deal Image ${i + 1}`} width={100} height={100} />
+                                                    </div>
+                                                    ))}
+                                                    <Link to={data.picture_link}>
+                                                        <div className='align-items-center cursor-pointer'>
+                                                            More..
+                                                        </div>
+                                                    </Link>
+                                                </div>
                                             </div>
                                             
-                                            {/* Remaining Images Section */}
-                                            <div className='deal_img_group'>
-                                                {remainingImages.map((imgUrl, i) => (
-                                                <div key={i}>
-                                                    <Image src={imgUrl} alt={`Deal Image ${i + 1}`} width={100} height={100} />
-                                                </div>
-                                                ))}
-                                                <Link to={data.picture_link}>
-                                                    <div className='align-items-center cursor-pointer'>
-                                                        More..
+                                            {/* Property Details Section */}
+                                            <div className='pro_details'>
+                                                <h3>{data.title}</h3>
+                                                <p>Real Easte Company That Prioritizes Property</p>
+                                                <div className="property-details-Browse-Deal-icons">
+                                                    <div className="detail">
+                                                        <img src='/assets/images/double-bed.svg'/>
+                                                        <span>{data.bedroom_min || 0} Beds</span>
                                                     </div>
-                                                </Link>
+                                                    <div className="detail">
+                                                        <img src='/assets/images/bath-1.svg'/>
+                                                        <span>{data.bath || 0} Baths</span>
+                                                    </div>
+                                                    <div className="detail">
+                                                        <img src='/assets/images/network-1.svg'/>
+                                                        <span>{data.size || 0} Square Foot</span>
+                                                    </div>
+                                                    <div className="detail">
+                                                        <img src='/assets/images/full-screen-2.svg'/>
+                                                        <span>{data.lot_size || 0} ft</span>
+                                                    </div>
+                                                </div>
+                                                <p className='dollar-text mt-3'><strong>${data.price || 0}</strong></p>
+                                                {/* <ul className='notification_pro_deal'>
+                                                    <li>2</li>
+                                                    <li>3</li>
+                                                    <li>4</li>
+                                                    <li>5</li>
+                                                </ul> */}
                                             </div>
                                         </div>
-                                        
-                                        {/* Property Details Section */}
-                                        <div className='pro_details'>
-                                            <h3>{data.title}</h3>
-                                            <p>Real Easte Company That Prioritizes Property</p>
-                                            <div className="property-details-Browse-Deal-icons">
-                                                <div className="detail">
-                                                    <img src='/assets/images/double-bed.svg'/>
-                                                    <span>{data.bedroom_min || 0} Beds</span>
-                                                </div>
-                                                <div className="detail">
-                                                    <img src='/assets/images/bath-1.svg'/>
-                                                    <span>{data.bath || 0} Baths</span>
-                                                </div>
-                                                <div className="detail">
-                                                    <img src='/assets/images/network-1.svg'/>
-                                                    <span>{data.size || 0} Square Foot</span>
-                                                </div>
-                                                <div className="detail">
-                                                    <img src='/assets/images/full-screen-2.svg'/>
-                                                    <span>{data.lot_size || 0} ft</span>
-                                                </div>
-                                            </div>
-                                            <p className='dollar-text mt-3'><strong>${data.price || 0}</strong></p>
-                                            {/* <ul className='notification_pro_deal'>
-                                                <li>2</li>
-                                                <li>3</li>
-                                                <li>4</li>
-                                                <li>5</li>
-                                            </ul> */}
-                                        </div>
-                                    </div>
-                                    {/* Buttons Section */}
-                                    <div className='deal_notifications_right flex_auto_column'>
-                                        <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
-                                            <li>
-                                                {data.is_proof_of_fund_verified ? 
-                                                    <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('want-to-buy', data.id) : null}>
-                                                        <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
-                                                        {data.status === 'want_to_buy' &&
-                                                            <span>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path>
-                                                                </svg>
-                                                            </span>
-                                                        }
-                                                    </Button>
-                                                :
-                                                    <div data-tooltip-id="my-tooltip-1">
-                                                        <Button className='outline_btn' disabled>
+                                        {/* Buttons Section */}
+                                        <div className='deal_notifications_right flex_auto_column'>
+                                            <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
+                                                <li>
+                                                    {data.is_proof_of_fund_verified ? 
+                                                        <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('want-to-buy', data.id) : null}>
                                                             <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
                                                             {data.status === 'want_to_buy' &&
                                                                 <span>
@@ -332,41 +325,54 @@ const DealNotifications = () => {
                                                                 </span>
                                                             }
                                                         </Button>
-                                                    </div>
-                                                }
-                                            </li>
-                                            <li>
-                                                <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('interested',data.id) : null}>
-                                                <Image src='/assets/images/chat-seller.svg' alt='' /> chat with seller
-                                                {data.status == 'interested' &&
-                                                    <span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
-                                                    </span>
+                                                    :
+                                                        <div data-tooltip-id="my-tooltip-1">
+                                                            <Button className='outline_btn' disabled>
+                                                                <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
+                                                                {data.status === 'want_to_buy' &&
+                                                                    <span>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                                                            <path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path>
+                                                                        </svg>
+                                                                    </span>
+                                                                }
+                                                            </Button>
+                                                        </div>
                                                     }
-                                                </Button>
-                                            </li>
-                                            <li>
-                                                <Button className='text_btn' onClick={data.status === null ? () => handleOpenModal('not-interested',data.id) : null}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                                    <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                </svg> Not Interested
-                                                {data.status == 'not_interested' &&
-                                                    <span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
-                                                    </span>
-                                                }
-                                                </Button>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                                <li>
+                                                    <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('interested',data.id) : null}>
+                                                    <Image src='/assets/images/chat-seller.svg' alt='' /> chat with seller
+                                                    {data.status == 'interested' &&
+                                                        <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
+                                                        </span>
+                                                        }
+                                                    </Button>
+                                                </li>
+                                                <li>
+                                                    <Button className='text_btn' onClick={data.status === null ? () => handleOpenModal('not-interested',data.id) : null}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                        <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                        <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </svg> Not Interested
+                                                    {data.status == 'not_interested' &&
+                                                        <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M9.81632 0.133089C10.0421 0.33068 10.0626 0.674907 9.86176 0.897832L4.20761 7.1736C4.00571 7.39769 3.65904 7.41194 3.43943 7.20522L0.167566 4.12504C-0.0364783 3.93294 -0.0560104 3.61286 0.119053 3.39404C0.312223 3.15257 0.671949 3.11934 0.901844 3.32611L3.44037 5.60947C3.66098 5.80791 4.00062 5.79016 4.19938 5.56984L9.06279 0.177574C9.25956 -0.0406347 9.59519 -0.0604144 9.81632 0.133089Z" fill="#19955A"></path></svg>
+                                                        </span>
+                                                    }
+                                                    </Button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <Pagination page={page} setPage={setPage} limit={limit} total={total}/>
-            </Container>
+                            );
+                        }) :<div className='deal_column text-center'><p>No Data found</p></div>}
+                    </div>
+                    <Pagination page={page} setPage={setPage} limit={limit} total={total}/>
+                </Container>
+            }
         </section>
         <Footer />
         <Modal show={dealConfirmation} onHide={() =>{ setDealConfirmation(false); setDealFeedback(""); setIsSubmitted(false);}} centered className='radius_30 max-648'>
