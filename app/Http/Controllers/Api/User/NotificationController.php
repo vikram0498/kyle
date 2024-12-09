@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Notification;
 class NotificationController extends Controller
 {
 
-    public function index(Request $request, $type=null){
+    public function index(Request $request){
 
         try{
             $notificationsTypes = ['deal_notification','dm_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
@@ -22,10 +22,6 @@ class NotificationController extends Controller
             $authUser = auth()->user();
 
             $authUserRoleId = $authUser->roles()->first()->id;
-
-            if( in_array($type,$notificationsTypes) ){
-                $authUser->notification()->where('notification_type',$type)->update(['read_at' => now()]);
-            }
 
             $latestNotifications = $authUser->notification()
             ->whereIn('notification_type', $notificationsTypes)
@@ -80,6 +76,37 @@ class NotificationController extends Controller
             return response()->json($responseData, 400);
         }
 
+    }
+
+    public function markAsRead($type){
+        try{
+            $notificationsTypes = ['deal_notification','dm_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
+
+            if( !in_array($type,$notificationsTypes) ){
+                $responseData = [
+                    'status'        => false,
+                    'error'         => 'Invalid Notification Type',
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            $authUser = auth()->user();
+            $authUser->notification()->where('notification_type',$type)->update(['read_at' => now()]);
+
+            //Return Success Response
+            $responseData = [
+                'status'  => true,
+                'message' => 'Mark as read successfully!'
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Throwable $th) {
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $th->getMessage().'->'.$th->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
     }
 
 }

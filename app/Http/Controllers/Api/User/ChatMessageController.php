@@ -73,6 +73,7 @@ class ChatMessageController extends Controller
                     'unread_message_count'  => $unreadMessageCount ?? "",
                     'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
                     'last_message_at'       => $lastMessage ? $lastMessage->created_at : null,
+                    'isChatInitialized'     => true,
                 ];
             })->filter();
     
@@ -99,6 +100,7 @@ class ChatMessageController extends Controller
                 'unread_message_count'  => 0,
                 'last_message'          => null,
                 'last_message_at'       => null,
+                'isChatInitialized'     => false,
             ];
         
             $responseData = [
