@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\User;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Notification;
-use App\Mail\DealMail;
-use Illuminate\Support\Facades\Mail;
+use App\Events\NotificationSent;
 
 class SearchBuyerController extends Controller
 {
@@ -1357,12 +1356,9 @@ class SearchBuyerController extends Controller
                 ];
                 $buyerUser->notify(new SendNotification($notificationData));
 
-                if(isset($buyerUser->notificationSetting) && $buyerUser->notificationSetting->email_notification){
-                    //Send Mail
-                    $subject  = $notificationData['title'];
-                    $message  = $notificationData['message'];
-                    Mail::to($buyerUser->email)->queue(new DealMail($subject, $buyerUser->name, $message));
-                }
+                // Fire the event form mail
+                event(new NotificationSent($buyerUser, $notificationData));
+
             }
 
             DB::commit();
@@ -1537,12 +1533,8 @@ class SearchBuyerController extends Controller
                 ];
                 Notification::send($createdByUser, new SendNotification($notificationData));
 
-                if(isset($createdByUser->notificationSetting) && $createdByUser->notificationSetting->email_notification){
-                    //Send Mail
-                    $subject  = $notificationData['title'];
-                    $message  = $notificationData['message'];
-                    Mail::to($createdByUser->email)->queue(new DealMail($subject, $createdByUser->name, $message));
-                }
+                // Fire the event form mail
+                event(new NotificationSent($createdByUser, $notificationData));
                 
             }
             

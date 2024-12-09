@@ -3,18 +3,16 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Events\ChatMessage;
-use App\Events\MessageSent;
 use Carbon\Carbon;
 use App\Models\Message;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
-use App\Mail\ChatMessageMail;
 use App\Models\User;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
+use App\Events\NotificationSent;
 
 class ChatMessageController extends Controller
 {
@@ -122,7 +120,7 @@ class ChatMessageController extends Controller
                 ]);
             }
 
-            $message = Message::create([
+            $message = Message::create([  
                 'conversation_id'   => $conversation->id,
                 'sender_id'         => $sender->id,
                 'receiver_id'       => $recipient_id,
@@ -147,11 +145,8 @@ class ChatMessageController extends Controller
 
             $recipient->notify(new SendNotification($notificationData));
             
-            if(isset($recipient->notificationSetting) && $recipient->notificationSetting->email_notification){
-                //Send Mail               
-                $subject  = $notificationData['title'];
-                Mail::to($recipient->email)->queue(new ChatMessageMail($subject, $recipient->name, $notificationData['message']));
-            }
+            // Fire the event form mail
+            event(new NotificationSent($recipient, $notificationData));
 
             DB::commit();
 
