@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Notification;
 class NotificationController extends Controller
 {
 
-    public function index(Request $request){
+    public function index(Request $request, $type=null){
 
         try{
             $notificationsTypes = ['deal_notification','dm_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
@@ -23,10 +23,14 @@ class NotificationController extends Controller
 
             $authUserRoleId = $authUser->roles()->first()->id;
 
+            if( in_array($type,$notificationsTypes) ){
+                $authUser->notification()->where('notification_type',$type)->update(['read_at' => now()]);
+            }
+
             $latestNotifications = $authUser->notification()
             ->whereIn('notification_type', $notificationsTypes)
             ->where('role_id',$authUserRoleId)
-            ->whereNull('read_at')
+            // ->whereNull('read_at')
             ->orderBy('notification_type')
             ->orderBy('created_at', 'desc') 
             ->get()
@@ -56,6 +60,9 @@ class NotificationController extends Controller
                         ];
                     }  
                 }
+
+               
+               
             }
 
             //Return Success Response

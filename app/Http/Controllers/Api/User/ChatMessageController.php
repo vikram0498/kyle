@@ -17,7 +17,7 @@ use App\Events\NotificationSent;
 class ChatMessageController extends Controller
 {
 
-    public function getChatList()
+    public function getChatList($recipient=null)
     {
         $userId = auth()->user()->id;  // Get authenticated user's ID
 
@@ -27,62 +27,95 @@ class ChatMessageController extends Controller
         })
         ->get();
     
-        $chatList = $conversations->map(function ($conversation) use ($userId) {
-            // Determine the other participant in the conversation
-            $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;    
-            // Fetch user details for the other participant
-            $user = User::find($otherParticipantId);
+        if($conversations->count() > 0){ 
+            $chatList = $conversations->map(function ($conversation) use ($userId) {
+                // Determine the other participant in the conversation
+                $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;    
+                // Fetch user details for the other participant
+                $user = User::find($otherParticipantId);
+        
+                if (!$user) {
+                    return null;  // If no user found, return null to exclude it from the list
+                }
+        
+                // Get the last message in the conversation
+                $lastMessage = Message::where('conversation_id', $conversation->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+        
+                // Calculate unread message count for the authenticated user
+                $unreadMessageCount = Message::where('conversation_id', $conversation->id)
+                    ->where('sender_id', '!=', $userId)
+                    ->whereDoesntHave('seenBy', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    })
+                    ->count();
+        
+                // Format the last message details
+                $lastMessageDetails = $lastMessage ? [
+                    'id'            => $lastMessage->id,
+                    'sender_id'     => $lastMessage->sender_id,
+                    'content'       => $lastMessage->content,
+                    'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
+                    'created_date'  => $lastMessage->created_at->format('d-M-Y'),
+                    'created_time'  => $lastMessage->created_at->format('g:i A'),
+                    'date_time_label' => formatDateLabel($lastMessage->created_at),
+                ] : null;
+        
+                return [
+                    'id'                    => $user->id,
+                    'name'                  => $user->name ?? '',
+                    'is_online'             => $user->is_online ?? '',
+                    'profile_image'         => $user->profile_image_url ?? null,
+                    'level_type'            => $user->level_type ?? '',
+                    'profile_tag_name'      => $user->buyerPlan ? $user->buyerPlan->title : null,
+                    'profile_tag_image'     => $user->buyerPlan ? $user->buyerPlan->image_url : null,
+                    'unread_message_count'  => $unreadMessageCount ?? "",
+                    'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
+                    'last_message_at'       => $lastMessage ? $lastMessage->created_at : null,
+                ];
+            })->filter();
     
-            if (!$user) {
-                return null;  // If no user found, return null to exclude it from the list
-            }
+            $chatList = $chatList->sortByDesc('last_message_at')->values();
     
-            // Get the last message in the conversation
-            $lastMessage = Message::where('conversation_id', $conversation->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-    
-            // Calculate unread message count for the authenticated user
-            $unreadMessageCount = Message::where('conversation_id', $conversation->id)
-                ->where('sender_id', '!=', $userId)
-                ->whereDoesntHave('seenBy', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                })
-                ->count();
-    
-            // Format the last message details
-            $lastMessageDetails = $lastMessage ? [
-                'id'            => $lastMessage->id,
-                'sender_id'     => $lastMessage->sender_id,
-                'content'       => $lastMessage->content,
-                'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
-                'created_date'  => $lastMessage->created_at->format('d-M-Y'),
-                'created_time'  => $lastMessage->created_at->format('g:i A'),
-                'date_time_label' => formatDateLabel($lastMessage->created_at),
-            ] : null;
-    
-            return [
-                'id'                    => $user->id,
-                'name'                  => $user->name ?? '',
-                'is_online'             => $user->is_online ?? '',
-                'profile_image'         => $user->profile_image_url ?? null,
-                'level_type'            => $user->level_type ?? '',
-                'profile_tag_name'      => $user->buyerPlan ? $user->buyerPlan->title : null,
-                'profile_tag_image'     => $user->buyerPlan ? $user->buyerPlan->image_url : null,
-                'unread_message_count'  => $unreadMessageCount ?? "",
-                'last_message'          => $lastMessageDetails ? $lastMessageDetails : null,
-                'last_message_at'       => $lastMessage ? $lastMessage->created_at : null,
+            $responseData = [
+                'status'    => true,
+                'data'      => $chatList,     
             ];
-        })->filter();
+    
+            return response()->json($responseData, 200);
+        }
 
-        $chatList = $chatList->sortByDesc('last_message_at')->values();
+        if($recipient){
+            $recipentUser = User::where('id',$recipient)->first();
+            $chatList = [
+                'id'                    => $recipentUser->id,
+                'name'                  => $recipentUser->name ?? '',
+                'is_online'             => $recipentUser->is_online ?? '',
+                'profile_image'         => $recipentUser->profile_image_url ?? null,
+                'level_type'            => $recipentUser->level_type ?? '',
+                'profile_tag_name'      => $recipentUser->buyerPlan ? $recipentUser->buyerPlan->title : null,
+                'profile_tag_image'     => $recipentUser->buyerPlan ? $recipentUser->buyerPlan->image_url : null,
+                'unread_message_count'  => 0,
+                'last_message'          => null,
+                'last_message_at'       => null,
+            ];
+        
+            $responseData = [
+                'status'    => true,
+                'data'      => $chatList,     
+            ];
+    
+            return response()->json($responseData, 200);
+        }
 
         $responseData = [
             'status'    => true,
-            'data'      => $chatList,     
+            'message'   => trans('messages.no_record_found'),
+            'data'      => [],     
         ];
 
-        return response()->json($responseData, 200);
+        return response()->json($responseData, 200);   
     }
 
     public function sendDirectMessage(Request $request)

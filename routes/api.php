@@ -177,7 +177,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('/send-message', [ChatMessageController::class, 'sendDirectMessage']);
     Route::post('/chat-messages', [ChatMessageController::class, 'getMessages']);
     Route::post('/mark-read-message', [ChatMessageController::class, 'markAsRead']);
-    Route::get('/get-chat-list', [ChatMessageController::class, 'getChatList']);
+    Route::get('/get-chat-list/{recipient?}', [ChatMessageController::class, 'getChatList']);
 
 
     // For Seller
@@ -208,7 +208,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('notification-settings/update', [SettingController::class, 'updateUserNotificationSettings']);
 
     //Notifictions 
-    Route::get('get-notifications', [NotificationController::class, 'index']);
+    Route::get('get-notifications/{type?}', [NotificationController::class, 'index']);
 
 });
 
