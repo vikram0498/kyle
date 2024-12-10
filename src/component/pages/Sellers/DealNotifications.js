@@ -57,14 +57,16 @@ const DealNotifications = () => {
         setInterestedProperty(true)
     };
     const handleThankyouFeedback = () => {
-        setThankyouFeedback(true)
+        setThankyouFeedback(true);
+        setInterestedProperty(false)
     };
 
     const handleProofHide = () => {
         setProofSave(false);
         setDealConfirmation(true);
         setIsConfirmProofOfFund(false);
-        setIsDealDocumentVerified(false)
+        setIsDealDocumentVerified(false);
+        setSubmitOffer(false);
     }
 
     const handleOpenModal = (content,id=0) => {
@@ -106,6 +108,7 @@ const DealNotifications = () => {
     const handleStatusType = async (propertyStatus, buyerId) => {
         try {
             setIsSubmitted(true);
+            setSubmitOffer(false);
             setDealConfirmation(true);
             setIsDealDocumentVerified(false);
             handleOpenModal(propertyStatus);
