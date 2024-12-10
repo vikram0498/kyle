@@ -70,7 +70,7 @@ class ChatMessageController extends Controller
                 'profile_tag_image'     => $user->buyerPlan ? $user->buyerPlan->image_url : null,
                 'unread_message_count'  => $unreadMessageCount ?? 0,
                 'last_message'          => $lastMessageDetails,
-                'last_message_at'       => $lastMessage ? $lastMessage->created_at : null,
+                'last_message_at'       => $lastMessage ? $lastMessage->created_at->format('d-M-Y g:i A') : null,
             ];
         })->filter();
     
@@ -263,7 +263,21 @@ class ChatMessageController extends Controller
         })->first();
 
         if (!$conversation) {
-            return response()->json(['error' => trans('messages.chat_message.no_conversation_found')], 404);        
+            $responseData = [
+                'status'    => true,
+                'message'   => [],
+                'data' => [
+                    'id'                => $recipient->id,
+                    'name'              => $recipient->name,
+                    'is_online'         => (bool)$recipient->is_online,
+                    'profile_image'     => $recipient->profile_image_url ?? null,
+                    'level_type'            => $recipient->level_type ?? '',
+                    'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
+                    'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
+                ],
+            ];
+    
+            return response()->json($responseData, 200); 
         }
 
         // Fetch all messages in this conversation

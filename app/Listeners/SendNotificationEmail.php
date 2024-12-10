@@ -22,7 +22,7 @@ class SendNotificationEmail
                 Mail::to($user->email)->queue(new ChatMessageMail($subject, $user->name, $message));
             }
 
-            if(isset($notificationData['notification_type']) && $notificationData['notification_type'] == 'deal_notification'){
+            if(isset($notificationData['notification_type']) && ($notificationData['notification_type'] == 'deal_notification' || $notificationData['notification_type'] == 'interested_buyer_notification') ){
                 Mail::to($user->email)->queue(new DealMail($subject, $user->name, $message));
             }
 

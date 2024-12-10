@@ -17,7 +17,7 @@ class NotificationController extends Controller
     public function index(Request $request){
 
         try{
-            $notificationsTypes = ['deal_notification','dm_notification','new_buyer_notification','new_message_notification','interested_buyer_notification'];
+            $notificationsTypes = ['deal_notification','dm_notification','new_buyer_notification','interested_buyer_notification'];
 
             $authUser = auth()->user();
 
@@ -35,10 +35,9 @@ class NotificationController extends Controller
                 return $group->take(5);
             });
 
-            $notificationRecords['dm_notification'] = [];
             $notificationRecords['deal_notification'] = [];
+            $notificationRecords['dm_notification'] = [];
             $notificationRecords['new_buyer_notification'] = [];
-            $notificationRecords['new_message_notification'] = [];
             $notificationRecords['interested_buyer_notification'] = [];
 
             if($latestNotifications->count() > 0){
@@ -56,9 +55,6 @@ class NotificationController extends Controller
                         ];
                     }  
                 }
-
-               
-               
             }
 
             //Return Success Response

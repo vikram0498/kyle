@@ -1479,6 +1479,7 @@ class SearchBuyerController extends Controller
 
         DB::beginTransaction();
         try {
+            $notificationType = null;
             $dealStatus = config('constants.buyer_deal_status');
             $buyerDeal = BuyerDeal::where('buyer_user_id', auth()->id())->whereId($request->buyer_deal_id)->first();
             if(!$buyerDeal){
@@ -1511,6 +1512,9 @@ class SearchBuyerController extends Controller
 
             $uploadedPdfFile = $request->file('pdf_file');
             if($request->status == 'want_to_buy' && $uploadedPdfFile){
+
+                $notificationType = 'deal_notification';
+
                 $uploadId = null;
                 $actionType = 'save';
                 if($uploadedDealPdf = $buyerDeal->wantToBuyDealPdf){
@@ -1521,15 +1525,19 @@ class SearchBuyerController extends Controller
                 uploadImage($buyerDeal, $uploadedPdfFile, 'buyer-deals/want_to_buy', "want-to-buy-deal-pdf", 'original', $actionType, $uploadId);
             }
 
+            if($request->status == 'interested' || $request->status == 'not_interested'){
+                $notificationType = 'interested_buyer_notification';
+            }
+
             // Send Notification to seller after deal status update
-            if($isUpdated && $createdByUser){
+            if($isUpdated && $createdByUser && $notificationType){
                 $notificationData = [
                     'title'     => trans('notification_messages.buyer_deal.update_deal_status_title'),
                     'message'   => trans('notification_messages.buyer_deal.update_deal_status_message', ['status' => $dealStatus[$request->status]]),
                     'module'    => "buyer_deal",
                     'type'      => "update_status",
                     'module_id' => $buyerDealId,
-                    'notification_type' => 'deal_notification'
+                    'notification_type' => $notificationType
                 ];
                 Notification::send($createdByUser, new SendNotification($notificationData));
 
