@@ -7357,7 +7357,8 @@ span.status.interested {
   justify-content: space-between;
   margin: 0 0 12px;
 }
-.upload-document-section .browse-files + .error{
+.upload-document-section .browse-files + .error,
+.modal_inner_content .form-group .form-control-form + .error{
   display: block;
   text-align: left;
   padding-bottom: 5px;

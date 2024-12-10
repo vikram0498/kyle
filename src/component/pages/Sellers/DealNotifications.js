@@ -38,9 +38,28 @@ const DealNotifications = () => {
     const [proofSave, setProofSave] = useState(false);
     const [isConfirmProofOfFund, setIsConfirmProofOfFund] = useState(false);
     const [proofOfFundFormData, setProofOfFundFormData]= useState({});
+
+    const [submitOffer, setSubmitOffer] = useState(false);
+    const [letsConnect, setLetsConnect] = useState(false);
+    const [interestedProperty, setInterestedProperty] = useState(false);
+    const [thankyouFeedback, setThankyouFeedback] = useState(false);
+
     const handleProofShow = () => {
         setProofSave(true)
     };
+    const handleSubmitOffer = () => {
+        setSubmitOffer(true)
+    };
+    const handleLetsConnect = () => {
+        setLetsConnect(true)
+    };
+    const handleInterestedProperty = () => {
+        setInterestedProperty(true)
+    };
+    const handleThankyouFeedback = () => {
+        setThankyouFeedback(true)
+    };
+
     const handleProofHide = () => {
         setProofSave(false);
         setDealConfirmation(true);
@@ -331,7 +350,7 @@ const DealNotifications = () => {
                                             <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
                                                 <li>
                                                     {data.is_proof_of_fund_verified ? 
-                                                        <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('want-to-buy', data.id) : null}>
+                                                        <Button className='outline_btn' onClick={handleSubmitOffer}>
                                                             <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
                                                             {data.status === 'want_to_buy' &&
                                                                 <span>
@@ -357,7 +376,7 @@ const DealNotifications = () => {
                                                     }
                                                 </li>
                                                 <li>
-                                                    <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('interested',data.id) : null}>
+                                                    <Button className='outline_btn' onClick={handleLetsConnect}>
                                                     <Image src='/assets/images/chat-seller.svg' alt='' /> chat with seller
                                                     {data.status == 'interested' &&
                                                         <span>
@@ -367,7 +386,7 @@ const DealNotifications = () => {
                                                     </Button>
                                                 </li>
                                                 <li>
-                                                    <Button className='text_btn' onClick={data.status === null ? () => handleOpenModal('not-interested',data.id) : null}>
+                                                    <Button className='text_btn' onClick={handleInterestedProperty}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                         <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                         <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -391,99 +410,115 @@ const DealNotifications = () => {
             }
         </section>
         <Footer />
-        <Modal show={dealConfirmation} onHide={() =>{ setDealConfirmation(false); setDealFeedback(""); setIsSubmitted(false);}} centered className='radius_30 max-648'>
+        <Modal show={submitOffer} onHide={() => setSubmitOffer(false)} centered className='radius_30 max-648'>
             <Modal.Header closeButton className='new_modal_close'></Modal.Header>
             <Modal.Body className='space_modal'>
                 <div className='modal_inner_content'>
-                    {modalContent === 'want-to-buy' && (
-                        <>
-                            <div className='buy_modal_icon light_green_bg ps-2'><Image src='/assets/images/home-dollar2.svg' alt='' /></div>
-                            <h3>submit your offer</h3>
-                            <p className='mb-4 px-md-5'>Please upload your proof of funds to submit your offer. Or select a proof of fund</p>
-                            {isDealDocumentVerified ?  
-                                <ul className='deal_notifications_btn'>
-                                    <li>
-                                        <Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button>
-                                    </li>
-                                    <li>
-                                        <Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link>
-                                    </li>
-                                </ul>
-                                :
-                                <form>
-                                    <div className='offer_price_input'>
-                                        <label className='offer_label'>Offer Your Price</label>
-                                        <div className=''>
-                                            <input type='text' placeholder='Enter Offer Price' value={offerPrice} onChange={(e)=> setOfferPrice(e.target.value)}/>
-                                        </div>
-                                    </div>
-                                    <div className='upload-document-section'>
-                                        <div className='offer_price_area'>
-                                            <label className='offer_label'>Upload Your Proof Of Funds</label>
-                                            <div className='offer_price_select'>
-                                                <select>
-                                                    <option>verified proof of funds</option>
-                                                    <option>verified proof of funds</option>
-                                                    <option>verified proof of funds</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className=''>
-                                            <span className="browse-files position-relative">
-                                                <input type='hidden' name="buyer_deal_id" value={dealId}/>
-                                                <input id='formFile' type="file" className="default-file-input" ref={fileInputRef}/>
-                                                <span className="d-block upload-file">PDF-Name.pdf</span>
-                                                <span className="browse-files-text">submit proof of funds</span>
-                                            </span>
-                                            {attachmentsError !='' && <span className='error'>{attachmentsError}</span>}
-                                        </div>
-                                        <div className='proof_checkbox position-relative text-start'>
-                                            <label>
-                                                <input type='checkbox' name='current_poof' checked={isProofOfFund} onChange={(e)=>{setIsProofOfFund(e.target.checked)}}/>
-                                                <span>Save as default proof of funds</span>
-                                            </label>
-                                        </div>
-                                        <button type="button" className="btn btn-fill btn-fill-green btn btn-primary w-100" onClick={()=>handleStatusType('submit-want-to-buy-doc')}>Submit your offer</button>
-                                    </div>
-                                </form>
-                            }
-                        </>
-                    )}
-                    {modalContent === 'interested' && (
-                        <>
-                            <div className='buy_modal_icon light_blue_bg'><Image src='/assets/images/home-interested.svg' alt='' /></div>
-                            <h3>Let’s Connect With Us</h3>
-                            <p className='mb-4 px-md-5'>Please keep an eye on next available options which can match your criteria.</p>
-                            <ul className='deal_notifications_btn'>
-                                {/* <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li> */}
-                                <li><Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
-                            </ul>
-                        </>
-                    )}
-                    {modalContent === 'not-interested' && (
-                        <>
-                            <div className='buy_modal_icon light_gray_bg'><Image src='/assets/images/like-vector.svg' alt='' /></div>
-                            <h3>not interested in this property?</h3>
-                            <p className='mb-4'>Would you like to share some feedbacks (optional)</p>
-                            <div className='row'>
-                                <div className="col-12 col-md-12 col-lg-12">
-                                    <div className="form-group">
-                                        <textarea className="form-control-form h-50" rows="3" onChange={(e)=>{setDealFeedback(e.target.value)}} placeholder='Enter Your Feedback'>{dealFeedback}</textarea>
-                                        {isSubmitted && dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
-                                        {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
-                                    </div>
-                                    <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>handleStatusType('not-interested-feedback-submitted')}>Share Feedback</button>
+                    <div className='buy_modal_icon light_green_bg ps-2'>
+                        <Image src='/assets/images/home-dollar2.svg' alt='' />
+                    </div>
+                    <h3>submit your offer</h3>
+                    <p className='mb-4 px-md-5'>Please upload your proof of funds to submit your offer. Or select a proof of fund</p>
+                    {isDealDocumentVerified ?  
+                        <ul className='deal_notifications_btn'>
+                            <li>
+                                <Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button>
+                            </li>
+                            <li>
+                                <Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link>
+                            </li>
+                        </ul>
+                        :
+                        <form>
+                            <div className='offer_price_input'>
+                                <label className='offer_label'>Offer Your Price</label>
+                                <div className=''>
+                                    <input type='text' placeholder='Enter Offer Price' value={offerPrice} onChange={(e)=> setOfferPrice(e.target.value)}/>
                                 </div>
                             </div>
-                        </>
-                    )}
-                    {modalContent === 'not-interested-submitted' && (
-                        <>
-                            <div className='buy_modal_icon light_gray_bg'><Image src='/assets/images/like-vector.svg' alt='' /></div>
-                            <h3>Thank you for your feedback</h3>
-                            <p className='mb-0'>Please keep an eye out for your next BuyBox match</p>
-                        </>
-                    )}
+                            <div className='upload-document-section'>
+                                <div className='offer_price_area'>
+                                    <label className='offer_label'>Upload Your Proof Of Funds</label>
+                                    <div className='offer_price_select'>
+                                        <select>
+                                            <option>verified proof of funds</option>
+                                            <option>verified proof of funds</option>
+                                            <option>verified proof of funds</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className=''>
+                                    <span className="browse-files position-relative">
+                                        <input type='hidden' name="buyer_deal_id" value={dealId}/>
+                                        <input id='formFile' type="file" className="default-file-input" ref={fileInputRef}/>
+                                        <span className="d-block upload-file">PDF-Name.pdf</span>
+                                        <span className="browse-files-text">submit proof of funds</span>
+                                    </span>
+                                    {attachmentsError !='' && <span className='error'>{attachmentsError}</span>}
+                                </div>
+                                <div className='proof_checkbox position-relative text-start'>
+                                    <label>
+                                        <input type='checkbox' name='current_poof' checked={isProofOfFund} onChange={(e)=>{setIsProofOfFund(e.target.checked)}}/>
+                                        <span>Save as default proof of funds</span>
+                                    </label>
+                                </div>
+                                <button type="button" className="btn btn-fill btn-fill-green btn btn-primary w-100" onClick={()=>handleStatusType('submit-want-to-buy-doc')}>Submit your offer</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </Modal.Body>
+        </Modal>
+
+        <Modal show={letsConnect} onHide={() => setLetsConnect(false)} centered className='radius_30 max-648'>
+            <Modal.Header closeButton className='new_modal_close'></Modal.Header>
+            <Modal.Body className='space_modal'>
+                <div className='modal_inner_content'>
+                    <div className='buy_modal_icon light_blue_bg'>
+                        <Image src='/assets/images/home-interested.svg' alt='' />
+                    </div>
+                    <h3>Let’s Connect With Us</h3>
+                    <p className='mb-4 px-md-5'>Please keep an eye on next available options which can match your criteria.</p>
+                    <ul className='deal_notifications_btn'>
+                        {/* <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li> */}
+                        <li><Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
+                    </ul>
+                </div>
+            </Modal.Body>
+        </Modal>
+
+        <Modal show={interestedProperty} onHide={() => setInterestedProperty(false)} centered className='radius_30 max-648'>
+            <Modal.Header closeButton className='new_modal_close'></Modal.Header>
+            <Modal.Body className='space_modal'>
+                <div className='modal_inner_content'>
+                    <div className='buy_modal_icon light_gray_bg'>
+                        <Image src='/assets/images/like-vector.svg' alt='' />
+                    </div>
+                    <h3>not interested in this property?</h3>
+                    <p className='mb-4'>Would you like to share some feedbacks (optional)</p>
+                    <div className='row'>
+                        <div className="col-12 col-md-12 col-lg-12">
+                            <div className="form-group">
+                                <textarea className="form-control-form h-50" rows="3" onChange={(e)=>{setDealFeedback(e.target.value)}} placeholder='Enter Your Feedback'>{dealFeedback}</textarea>
+                                {isSubmitted && dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
+                                {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
+                            </div>
+                            <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={handleThankyouFeedback}>Share Feedback</button>
+                        </div>
+                    </div>
+                </div>
+            </Modal.Body>
+        </Modal>
+
+        <Modal show={thankyouFeedback} onHide={() => setThankyouFeedback(false)} centered className='radius_30 max-648'>
+            <Modal.Header closeButton className='new_modal_close'></Modal.Header>
+            <Modal.Body className='space_modal'>
+                <div className='modal_inner_content'>
+                    <div className='buy_modal_icon light_gray_bg'>
+                        <Image src='/assets/images/like-vector.svg' alt='' />
+                    </div>
+                    <h3>Thank you for your feedback</h3>
+                    <p className='mb-0'>Please keep an eye out for your next BuyBox match</p>
                 </div>
             </Modal.Body>
         </Modal>
