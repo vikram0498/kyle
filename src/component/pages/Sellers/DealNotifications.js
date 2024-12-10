@@ -293,20 +293,28 @@ const DealNotifications = () => {
                                                 <p>Real Easte Company That Prioritizes Property</p>
                                                 <div className="property-details-Browse-Deal-icons">
                                                     <div className="detail">
-                                                        <img src='/assets/images/double-bed.svg'/>
-                                                        <span>{data.bedroom_min || 0} Beds</span>
+                                                        <div>
+                                                            <img src='/assets/images/double-bed.svg'/>
+                                                        </div>
+                                                        <span>Beds: {data.bedroom_min || 0}</span>
                                                     </div>
                                                     <div className="detail">
-                                                        <img src='/assets/images/bath-1.svg'/>
-                                                        <span>{data.bath || 0} Baths</span>
+                                                        <div>
+                                                            <img src='/assets/images/bath-1.svg'/>
+                                                        </div>
+                                                        <span>Baths: {data.bath || 0}</span>
                                                     </div>
                                                     <div className="detail">
-                                                        <img src='/assets/images/network-1.svg'/>
-                                                        <span>{data.size || 0} Square Foot</span>
+                                                        <div>
+                                                            <img src='/assets/images/network-1.svg'/>
+                                                        </div>
+                                                        <span>Liveable sq. ft. : {data.size || 0}</span>
                                                     </div>
                                                     <div className="detail">
-                                                        <img src='/assets/images/full-screen-2.svg'/>
-                                                        <span>{data.lot_size || 0} ft</span>
+                                                        <div>
+                                                            <img src='/assets/images/full-screen-2.svg'/>
+                                                        </div>
+                                                        <span>Lot sq. ft. : {data.lot_size || 0}</span>
                                                     </div>
                                                 </div>
                                                 <p className='dollar-text mt-3'><strong>${data.price || 0}</strong></p>
@@ -322,7 +330,7 @@ const DealNotifications = () => {
                                         <div className='deal_notifications_right flex_auto_column'>
                                             <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
                                                 <li>
-                                                    {!data.is_proof_of_fund_verified ? 
+                                                    {data.is_proof_of_fund_verified ? 
                                                         <Button className='outline_btn' onClick={data.status === null ? () => handleStatusType('want-to-buy', data.id) : null}>
                                                             <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
                                                             {data.status === 'want_to_buy' &&
@@ -411,12 +419,13 @@ const DealNotifications = () => {
                                     </div>
                                     <div className='upload-document-section'>
                                         <div className='offer_price_area'>
-                                            <label className='offer_label'>Offer Your Price</label>
-                                            <div className='proof_checkbox position-relative'>
-                                                <label>
-                                                    <input type='checkbox' name='current_poof' checked={isProofOfFund} onChange={(e)=>{setIsProofOfFund(e.target.checked)}}/>
-                                                    <span>use current proof of funds</span>
-                                                </label>
+                                            <label className='offer_label'>Upload Your Proof Of Funds</label>
+                                            <div className='offer_price_select'>
+                                                <select>
+                                                    <option>verified proof of funds</option>
+                                                    <option>verified proof of funds</option>
+                                                    <option>verified proof of funds</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div className=''>
@@ -424,9 +433,15 @@ const DealNotifications = () => {
                                                 <input type='hidden' name="buyer_deal_id" value={dealId}/>
                                                 <input id='formFile' type="file" className="default-file-input" ref={fileInputRef}/>
                                                 <span className="d-block upload-file">PDF-Name.pdf</span>
-                                                <span className="browse-files-text">Upload proof of funds</span>
+                                                <span className="browse-files-text">submit proof of funds</span>
                                             </span>
                                             {attachmentsError !='' && <span className='error'>{attachmentsError}</span>}
+                                        </div>
+                                        <div className='proof_checkbox position-relative text-start'>
+                                            <label>
+                                                <input type='checkbox' name='current_poof' checked={isProofOfFund} onChange={(e)=>{setIsProofOfFund(e.target.checked)}}/>
+                                                <span>Save as default proof of funds</span>
+                                            </label>
                                         </div>
                                         <button type="button" className="btn btn-fill btn-fill-green btn btn-primary w-100" onClick={()=>handleStatusType('submit-want-to-buy-doc')}>Submit your offer</button>
                                     </div>
@@ -457,7 +472,7 @@ const DealNotifications = () => {
                                         {isSubmitted && dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
                                         {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
                                     </div>
-                                    <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>handleStatusType('not-interested-feedback-submitted')}>Share your valuable feedback</button>
+                                    <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={()=>handleStatusType('not-interested-feedback-submitted')}>Share Feedback</button>
                                 </div>
                             </div>
                         </>

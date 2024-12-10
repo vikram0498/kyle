@@ -818,11 +818,11 @@
     -webkit-align-items: center;
     text-align: center;
   }
-  .property-details-Browse-Deal-icons .detail img{
+  /* .property-details-Browse-Deal-icons .detail img{
     margin-right: 0;
     margin-bottom: 5px;
     width: 40px;
-  }
+  } */
   .deal_notifications_left .pro_details .dollar-text{
     margin-bottom: 0;
   }

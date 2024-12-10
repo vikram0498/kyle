@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import 'react-circular-progressbar/dist/styles.css';
 const Dashboard = () => {
+    const percentage = 75;
   return (
     <>
       <BuyerHeader />
@@ -28,15 +31,16 @@ const Dashboard = () => {
                     <ul className="buyer_dash_linkTop">
                         <li>
                             <Link href="#">
-                                <span className="buyer-icon">
+                                <span className="buyer-dash-icon">
                                     <img src="/assets/images/deal-icon.svg" className="img-fluid" alt="" />
                                 </span>
                                 Deals
+                                <span className="buyer_list_number">5</span>
                             </Link>
                         </li>
                         <li>
                             <Link href="#">
-                                <span className="buyer-icon">
+                                <span className="buyer-dash-icon">
                                     <img src="/assets/images/buybox-criteria-icon.svg" className="img-fluid" alt="" />
                                 </span>
                                 buybox criteria
@@ -44,18 +48,36 @@ const Dashboard = () => {
                         </li>
                         <li>
                             <Link href="#">
-                                <span className="buyer-icon">
+                                {/* <span className="buyer-dash-icon">
                                     <img src="/assets/images/complete-verification-icon.svg" className="img-fluid" alt="" />
-                                </span>
-                                complete verification
+                                </span> */}
+                                <div style={{ width: 42, height: 42 }} className="verification_graph">
+                                    <CircularProgressbar 
+                                        value={percentage}
+                                        text={`${percentage}%`}
+                                        strokeWidth={6}
+                                        styles={buildStyles({
+                                            rotation: 0,
+                                            strokeLinecap: 'butt',
+                                            textSize: '30px',
+                                            pathTransitionDuration: 0.5,
+                                            pathColor: `rgba(63, 83, 254, 1)`,
+                                            textColor: '#1d2246',
+                                            trailColor: '#f5f7f9',
+                                            backgroundColor: '#f5f7f9',
+                                        })}
+                                    />
+                                </div>
+                                3/5 completed verification
                             </Link>
                         </li>
                         <li>
                             <Link href="#">
-                                <span className="buyer-icon">
+                                <span className="buyer-dash-icon">
                                     <img src="/assets/images/chats-icon.svg" className="img-fluid" alt="" />
                                 </span>
                                 Chats
+                                <span className="buyer_list_number">5</span>
                             </Link>
                         </li>
                     </ul>
@@ -103,9 +125,15 @@ const Dashboard = () => {
                                     <div className="dash_deals_center">
                                         <h4>4517 Washington Ave. Manch...</h4>
                                         <p>real easte company that...</p>
+                                        <ul className="inner_room_details">
+                                            <li>Beds : <span>2</span></li>
+                                            <li>Baths : <span>2</span></li>
+                                            <li>Liveable sq. ft. : <span>500</span></li>
+                                            <li>Lot sq. ft. : <span>300</span></li>
+                                        </ul>
                                     </div>
                                     <div className="dash_deals_right">
-                                        <Link href="#">View Now</Link>
+                                        <span>$200.00</span>
                                     </div>
                                 </li>
                                 <li>
@@ -115,9 +143,15 @@ const Dashboard = () => {
                                     <div className="dash_deals_center">
                                         <h4>4517 Washington Ave. Manch...</h4>
                                         <p>real easte company that...</p>
+                                        <ul className="inner_room_details">
+                                            <li>Beds : <span>2</span></li>
+                                            <li>Baths : <span>2</span></li>
+                                            <li>Liveable sq. ft. : <span>500</span></li>
+                                            <li>Lot sq. ft. : <span>300</span></li>
+                                        </ul>
                                     </div>
                                     <div className="dash_deals_right">
-                                        <Link href="#">View Now</Link>
+                                        <span>$200.00</span>
                                     </div>
                                 </li>
                                 <li>
@@ -127,9 +161,15 @@ const Dashboard = () => {
                                     <div className="dash_deals_center">
                                         <h4>4517 Washington Ave. Manch...</h4>
                                         <p>real easte company that...</p>
+                                        <ul className="inner_room_details">
+                                            <li>Beds : <span>2</span></li>
+                                            <li>Baths : <span>2</span></li>
+                                            <li>Liveable sq. ft. : <span>500</span></li>
+                                            <li>Lot sq. ft. : <span>300</span></li>
+                                        </ul>
                                     </div>
                                     <div className="dash_deals_right">
-                                        <Link href="#">View Now</Link>
+                                        <span>$200.00</span>
                                     </div>
                                 </li>
                             </ul>

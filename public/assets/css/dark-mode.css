@@ -621,7 +621,7 @@ body.dark .buyer_dash_bothBtn>a{
   background: rgb(255 255 255 / 10%);
   color: #fff;
 }
-body.dark .buyer_dash_deals ul>li{
+body.dark .buyer_dash_deals>ul>li{
   background: #1f1f1f;
 }
 body.dark .buyer_dash_linkTop li>a:hover{

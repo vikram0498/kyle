@@ -143,12 +143,15 @@ const Message = () => {
                 <Container className="position-relative">
                     <div className="back-block">
                         <div className="row">
-                            <div className="col-4">
+                            <div className="col-4 col-sm-4 col-md-4 col-lg-4">
                                 <Link to="/" className="back">
-                                    {/* Back SVG */}
+                                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15 6H1" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>Back
                                 </Link>
                             </div>
-                            <div className="col-7 align-self-center">
+                            <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
                                 <h6 className="center-head text-center mb-0">Message</h6>
                             </div>
                         </div>

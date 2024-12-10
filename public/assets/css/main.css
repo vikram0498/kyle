@@ -6419,6 +6419,15 @@ body.dark .outline_btn{
   /* background: transparent; */
   pointer-events: none;
 }
+.deal_notifications_btn>li .outline_btn:disabled{
+  background-color: #efefef;
+  color: #000;
+  border-color: #efefef;
+  cursor: not-allowed;
+}
+.deal_notifications_btn>li .outline_btn img{
+  height: 36px;
+}
 .disabled-btn button span svg {
   width: 15px;
   margin-left: 5px;
@@ -7346,7 +7355,12 @@ span.status.interested {
   padding: 4px 4px 4px 15px;
   display: flex;
   justify-content: space-between;
-  margin: 0 0 30px;
+  margin: 0 0 12px;
+}
+.upload-document-section .browse-files + .error{
+  display: block;
+  text-align: left;
+  padding-bottom: 5px;
 }
 .upload-document-section .browse-files .browse-files-text {
   background: #3F53FE;
@@ -7360,7 +7374,7 @@ span.status.interested {
   font-family: "Nunito Sans", sans-serif;
   font-size: 14px;
 }
-.upload-document-section  .d-block.upload-file {
+.upload-document-section .d-block.upload-file {
   margin-left: 0;
   font-family: "Nunito Sans", sans-serif;
   font-size: 14px;
@@ -7706,19 +7720,27 @@ span.status.interested {
 /*---------new section css --------*/
 .property-details-Browse-Deal-icons {
   display: flex;
-  gap: 10%; /* Space between items */
+  gap: 20px;
   align-items: center;
-  font-family: 'Barlow';
+  font-family: "Barlow", sans-serif;
   font-size: 14px;
 }
-.property-details-Browse-Deal-icons .detail img {
+.property-details-Browse-Deal-icons .detail{
+  display: flex;
+  align-items: center;
+}
+.property-details-Browse-Deal-icons .detail>div{
   background: #ffff;
   border-radius: 50%;
-  padding: 10px;
   margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  line-height: 28px;
+  text-align: center;
 }
 .property-details-Browse-Deal-icons .detail span {
   font-weight: 500;
+  text-transform: capitalize;
 }
 .dollar-text {
   color: #07B89C !important;
@@ -7792,10 +7814,15 @@ li.active-user {
   -webkit-justify-content: space-between;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
+  align-items: center;
+  -webkit-align-items: center;
   margin-bottom: 6px;
 }
 .offer_price_area .offer_label{
   margin-bottom: 0;
+}
+.proof_checkbox{
+  margin-bottom: 25px;
 }
 .proof_checkbox input{
   display: none;
@@ -7952,10 +7979,16 @@ li.active-user {
   font-weight: 700;
   transition: all 350ms ease-in-out;
   min-height: 100%;
+  position: relative;
 }
 .buyer_dash_linkTop li>a:hover{
   background-color: rgba(63, 83, 254, 1);
   color: #fff;
+}
+.buyer_dash_linkTop li>a .buyer-dash-icon{
+  flex: 0 0 42px;
+  -webkit-flex: 0 0 42px;
+  max-width: 42px;
 }
 .buyer_dash_bothBtn{
   display: flex;
@@ -8001,7 +8034,7 @@ li.active-user {
   text-transform: capitalize;
   margin-bottom: 18px;
 }
-.buyer_dash_deals ul{
+.buyer_dash_deals>ul{
   padding: 0;
   margin: 0;
   display: flex;
@@ -8010,7 +8043,7 @@ li.active-user {
   -webkit-flex-direction: column;
   gap: 15px;
 }
-.buyer_dash_deals ul>li{
+.buyer_dash_deals>ul>li{
   display: flex;
   display: -webkit-flex;
   flex-wrap: wrap;
@@ -8059,10 +8092,95 @@ li.active-user {
   white-space: nowrap;
   overflow: hidden;
 }
-.dash_deals_right>a{
-  color: rgba(63, 83, 254, 1);
-  font-weight: 700;
+.dash_deals_right>span{
+  color: #fff;
+  font-weight: 800;
+  background-color: rgba(7, 184, 156, 1);
+  padding: 7px 13px 6px;
+  display: inline-block;
+  font-family: "Nunito Sans", sans-serif;
+  border-radius: 22px;
+  font-size: 16px;
+  line-height: 18px;
 }
+.buyer_list_number{
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  background-color: rgba(255, 0, 0, 1);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+}
+.inner_room_details{
+  padding: 5px 0 0;
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+}
+.inner_room_details>li{
+  display: block;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: capitalize;
+  color: rgba(18, 22, 57, 1);
+  font-weight: 500;
+  position: relative;
+  margin-right: 6px;
+  padding-right: 6px;
+}
+.inner_room_details>li:last-child{
+  margin-right: 0;
+  padding-right: 0;
+}
+.inner_room_details>li:not(:last-child)::after{
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 2px;
+  width: 1px;
+  height: 12px;
+  background-color: rgba(18, 22, 57, 1);
+}
+.offer_price_select select{
+  border: 1px solid rgba(225, 227, 231, 1);
+  border-radius: 5px;
+  color: rgba(70, 75, 112, 1);
+  font-size: 12px;
+  font-weight: 400;
+  padding: 4px 10px;
+  text-transform: capitalize;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="%23464B70" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: calc(100% - 8px) center;
+  padding-right: 24px;
+  min-width: 180px;
+  background-size: 13px;
+}
+.offer_price_select select:focus{
+  outline: none;
+}
+.verification_graph{
+  width: 42px;
+  height: 42px;
+  background-color: #f5f7f9;
+  border-radius: 50%;
+}
+.buyer_dash_linkTop li>a:hover .verification_graph .CircularProgressbar-path{
+  stroke: #7d8bff !important;
+}
+
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{
