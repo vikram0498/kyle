@@ -1567,11 +1567,17 @@ class SearchBuyerController extends Controller
     /**
      * Get List of Deals for Seller with Selected status count
      */
-    public function sellerDealResultList(){
+    public function sellerDealResultList($type=null){
         try {
             $authUser = auth()->user();
 
-            $seachLogDeals = SearchLog::with(['buyerDeals'])->whereHas('buyerDeals')
+            $seachLogDeals = SearchLog::with(['buyerDeals'])->whereHas('buyerDeals',function($query) use($type){
+                if($type == 'want-to-buy'){
+                    $query->where('status','want_to_buy');
+                }elseif($type == 'interested'){
+                    $query->whereIn('status',['interested','not_interested']);
+                }
+            })
             ->where('user_id', $authUser->id)
             ->withCount([
                 'buyerDeals as want_to_buy_count' => function ($query) {

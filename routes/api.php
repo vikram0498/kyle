@@ -185,7 +185,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
         // Property Deals
         Route::post('search-buyers/send-deal', [SearchBuyerController::class, 'sendDealToBuyers']);
-        Route::get('deals/result-list', [SearchBuyerController::class, 'sellerDealResultList']);
+        Route::get('deals/result-list/{type?}', [SearchBuyerController::class, 'sellerDealResultList']);
         Route::get('deals/show/{id}/{status?}', [SearchBuyerController::class, 'sellerDealDetail']);
 
     // });
