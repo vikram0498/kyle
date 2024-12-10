@@ -69,10 +69,12 @@ const Message = () => {
             Accept: "application/json",
             Authorization: `Bearer ${getTokenData().access_token}`,
         };
-
         try {
-            const response = await axios.get(`${apiUrl}get-chat-list`, { headers });
+            const response = await axios.get(`${apiUrl}get-chat-list/${receiverId}`, { headers });
             setChatList(response.data.data || []);
+            if(receiverId == ''){
+                setReceiverId(response.data.data[0].id)
+            }
             // if(chatPartnerId !== undefined){
             //     setReceiverId(chatPartnerId)
             // }else{

@@ -18,7 +18,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                             <div className='chat_pro_area'>
                                 <div className='chat_user_info'>
                                     <span>{data.name}</span>
-                                    <p>{data?.last_message?.content}</p>
+                                    {/* <p>{data?.last_message?.content}</p> */}
                                 </div>
                                 <div className='chat_status_area'>
                                     <p className='mb-0'>Today, 8:56pm</p>
