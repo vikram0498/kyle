@@ -24,7 +24,7 @@ function Header() {
       total: 0,
       records: []
     }],
-    new_message_notification:[{
+    dm_notification:[{
       total: 0,
       records: []
     }],
@@ -312,13 +312,13 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">{notificationData.new_message_notification.total || 0}</span>
+                          <Image src='/assets/images/msg-top.svg' alt='' /><span className="list_numbers">{notificationData.dm_notification.total || 0}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>New Messages</h5>
                           <ul>
-                          {notificationData.new_message_notification.total > 0 ? 
-                              notificationData.new_message_notification.records.map((data,index)=>{
+                          {notificationData.dm_notification.total > 0 ? 
+                              notificationData.dm_notification.records.map((data,index)=>{
                                 return(
                                   <li>
                                     <div className="dropdown_start">
