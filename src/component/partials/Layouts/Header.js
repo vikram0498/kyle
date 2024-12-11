@@ -304,7 +304,7 @@ function Header() {
                                   </li>
                                   }
                           </ul>
-                          <Link to="/deal-notifications">View All</Link>
+                          <Link to="/my-buyers">View All</Link>
                         </Dropdown.Menu>
                       </Dropdown>
                     </li>
@@ -352,21 +352,21 @@ function Header() {
                     <li>
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <Image src='/assets/images/home-top-check.svg' alt='' /><span className="list_numbers">{notificationData.new_buyer_notification.length || 0 }</span>
+                          <Image src='/assets/images/home-top-check.svg' alt='' /><span className="list_numbers">{notificationData.interested_buyer_notification.total || 0 }</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <h5>Interested Buyers</h5>
                           <ul>
-                          {notificationData.new_buyer_notification.total > 0 ? 
-                              notificationData.new_buyer_notification.records.map((data,index)=>{
+                          {notificationData.interested_buyer_notification.total > 0 ? 
+                              notificationData.interested_buyer_notification.records.map((data,index)=>{
                                 return(
-                                    <li>
+                                    <li key={index}>
                                       <div className="dropdown_start">
                                         <Image src='/assets/images/interested-buyer-drop.svg' alt='' />
                                       </div>
                                       <div className="dropdown_middle">
-                                        <h6>Brooklyn Simmons</h6>
-                                        <p>New buy added in your buyer list....</p>
+                                        <h6>{data.data.title}</h6>
+                                        <p>{data.data.message}</p>
                                       </div>
                                       <div className="dropdown_end align-self-center">
                                         <Link to="#">

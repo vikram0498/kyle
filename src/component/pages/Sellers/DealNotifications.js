@@ -19,7 +19,6 @@ const DealNotifications = () => {
 
     const { getTokenData, setLogout } = useAuth();
     const [dealConfirmation, setDealConfirmation] = useState(false);
-    const [modalContent, setModalContent] = useState('');
     const [errors, setErrors] = useState([]);
     const [dealData, setDealData] = useState([]);
     const [dealId, setDealId] = useState(0);
@@ -37,7 +36,7 @@ const DealNotifications = () => {
     const [isUpdatedStatus,setIsUpdatedStatus] = useState(false);
     const [proofSave, setProofSave] = useState(false);
     const [isConfirmProofOfFund, setIsConfirmProofOfFund] = useState(false);
-    const [proofOfFundFormData, setProofOfFundFormData]= useState({});
+    const [wantToBuyFormData, setWantToBuyFormData]= useState({});
 
     const [submitOffer, setSubmitOffer] = useState(false);
     const [letsConnect, setLetsConnect] = useState(false);
@@ -47,13 +46,16 @@ const DealNotifications = () => {
     const handleProofShow = () => {
         setProofSave(true)
     };
-    const handleSubmitOffer = () => {
+    const handleSubmitOffer = (id) => {
         setSubmitOffer(true)
+        setDealId(id);
     };
-    const handleLetsConnect = () => {
-        setLetsConnect(true)
-    };
-    const handleInterestedProperty = () => {
+    // const handleLetsConnect = (id) => {
+    //     setDealId(id);
+    //     setLetsConnect(true)
+    // };
+    const handleInterestedProperty = (id) => {
+        setDealId(id);
         setInterestedProperty(true)
     };
     const handleThankyouFeedback = () => {
@@ -68,15 +70,6 @@ const DealNotifications = () => {
         setIsDealDocumentVerified(false);
         setSubmitOffer(false);
     }
-
-    const handleOpenModal = (content,id=0) => {
-        setAttachmentsError('');
-        setDealConfirmation(true);
-        setModalContent(content);
-        if (id) {
-            setDealId(id);
-        }
-    };
     const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(()=>{
@@ -105,132 +98,93 @@ const DealNotifications = () => {
         fetchDeal();
     },[isUpdatedStatus, page]);
 
-    const handleStatusType = async (propertyStatus, buyerId) => {
-        try {
-            setIsSubmitted(true);
-            setSubmitOffer(false);
-            setDealConfirmation(true);
-            setIsDealDocumentVerified(false);
-            handleOpenModal(propertyStatus);
-            if(propertyStatus =='interested'){
-                let payload = {
-                    status:"interested",
-                    buyer_deal_id:buyerId,
-                }
-                await updateDealStatus(payload);
-            }
-            if(propertyStatus =='not-interested'){
-                setDealId(buyerId);
-            }
-            if(propertyStatus =='not-interested-feedback-submitted'){
-                let payload = {
-                    status:"not_interested",
-                    buyer_deal_id:dealId,
-                    buyer_feedback:dealFeedback,
-                }
-                await updateDealStatus(payload);
-            }
-            if(propertyStatus =='want-to-buy'){
-                setDealId(buyerId);
-            }
-            if(propertyStatus == "submit-want-to-buy-doc"){
-                setModalContent('want-to-buy');
-                setAttachmentsError("Attachment is required");
-                setProofSave(true);
-                setDealConfirmation(false);
 
-                if(isProofOfFund){
-                    setAttachmentsError(""); // Clear error if file is valid
-                    const formData = new FormData();
-                    formData.append("status", "want_to_buy");
-                    formData.append("buyer_deal_id", dealId); // Ensure dealId is available in scope
-                    formData.append("is_proof_of_fund", isProofOfFund); // The file itself
-                    formData.append("offer_price", offerPrice); // The file itself
-                    setProofOfFundFormData(formData)
-                    setIsDealDocumentVerified(true)
-                }else if (fileInputRef.current && fileInputRef.current.files.length > 0) {
-                    const file = fileInputRef.current.files[0];
-                    if (file.type !== "application/pdf") {
-                        setAttachmentsError("Only PDF files are allowed");
-                        return;
-                    }
-                    setAttachmentsError(""); // Clear error if file is valid
-                    const formData = new FormData();
-                    formData.append("status", "want_to_buy");
-                    formData.append("buyer_deal_id", dealId); // Ensure dealId is available in scope
-                    formData.append("pdf_file", file); // The file itself
-                    formData.append("offer_price", offerPrice); // The file itself
-                    setProofOfFundFormData(formData)
-                    // await updateDealStatus(formData);
-                }
-                
-            }
-        } catch (error) {
-            console.log(error,"error");
-        }
-    }
+    const handleSubmitWantToBuy = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        formData.append("buyer_deal_id", dealId); 
+        formData.append("status","want_to_buy");
+        const formObject = Object.fromEntries(formData.entries());
+        setWantToBuyFormData(formData);
+        setProofSave(true);
+        setSubmitOffer(false);
+    };
 
-    const updateDealStatus = async (payload) => {
-        let currentStatus = '';
-        if (payload instanceof FormData) {
-            currentStatus =  payload.get("status");
-        } else if (typeof payload === "object" && payload !== null) {
-            currentStatus =  payload.status;
-        }
-        try {
+    const handleSubmitInterested = async (id)=>{
+        try{
             let headers = {
                 Accept: "application/json",
                 Authorization: "Bearer " + getTokenData().access_token,
                 "auth-token": getTokenData().access_token,
             };
-            if(dealFeedback == '' && currentStatus == 'not_interested'){
-                setModalContent('not-interested');
-                return false;
-            }else {
+            let payload = {
+                status:"interested",
+                buyer_deal_id:id,
+            }
+            let response = await axios.post(`${apiUrl}buyer-deals/status`,payload,{headers:headers});
+            if(response.data.status){
+                setLetsConnect(true);
+                toast.success(response.data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        }catch(error){
+            console.log(error,"new error")
+        }
+    }
+    const handleSubmitNotInterested = async () => {
+        setIsSubmitted(true);
+        if(dealFeedback != ''){
+            try{
+                let headers = {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + getTokenData().access_token,
+                    "auth-token": getTokenData().access_token,
+                };
+                let payload = {
+                    status:"not_interested",
+                    buyer_deal_id:dealId,
+                    buyer_feedback:dealFeedback,
+                }
                 let response = await axios.post(`${apiUrl}buyer-deals/status`,payload,{headers:headers});
                 if(response.data.status){
                     toast.success(response.data.message, {
                         position: toast.POSITION.TOP_RIGHT,
                     });
-                    setIsUpdatedStatus(!isUpdatedStatus);
-                    // setTimeout(() => {
-                    //     navigate(0);
-                    // }, 1000);
+                    setDealFeedback("");
+                    handleThankyouFeedback()
+                    setIsSubmitted(false);
                 }
-                // handleOpenModal(currentStatus)
-    
-                if(currentStatus == 'want_to_buy'){
-                    setIsDealDocumentVerified(true);
-                    setProofSave(false);
-                }else if(currentStatus == 'not_interested'){
-                    handleOpenModal('not-interested-submitted');
-                }
+            }catch(error){
+                console.log(error,"new error")
             }
-        } catch (error) {
-          console.log(error);
-          console.log(currentStatus,"currentStatus")
-            setProofSave(false);
-            setDealConfirmation(true);
-            setIsConfirmProofOfFund(false);
-            if(error.response?.data?.errors){
-                setErrors(error.response.data.errors);
-            }
-        }
-    }
+        }    
+    };
     useEffect(() => {
         const handleDealUpdate = async () => {
             try {
-                if (isConfirmProofOfFund && proofOfFundFormData) {
-                    await updateDealStatus(proofOfFundFormData);
+                if(isConfirmProofOfFund){
+                    let headers = {
+                        Accept: "application/json",
+                        Authorization: "Bearer " + getTokenData().access_token,
+                        "auth-token": getTokenData().access_token,
+                    };
+                    let response = await axios.post(`${apiUrl}buyer-deals/status`,wantToBuyFormData,{headers:headers});
+                    if(response.data.status){
+                        toast.success(response.data.message, {
+                            position: toast.POSITION.TOP_RIGHT,
+                        });
+                    }
                 }
             } catch (error) {
-                console.error("Error in deal update:", error);
+                setSubmitOffer(true);
+                setErrors(error.response.data.errors);
             }
         };
-    
         handleDealUpdate(); // Call the async function inside useEffect
-    }, [isConfirmProofOfFund, proofOfFundFormData]);
+    }, [isConfirmProofOfFund, wantToBuyFormData]);
 
+    console.log(errors,"errors")
   return (
     <>
         {/* <Header /> */}
@@ -355,8 +309,8 @@ const DealNotifications = () => {
                                         <div className='deal_notifications_right flex_auto_column'>
                                             <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
                                                 <li>
-                                                    {data.is_proof_of_fund_verified ? 
-                                                        <Button className='outline_btn' onClick={handleSubmitOffer}>
+                                                    {!data.is_proof_of_fund_verified ? 
+                                                        <Button className='outline_btn' onClick={()=>handleSubmitOffer(data.id)}>
                                                             <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
                                                             {data.status === 'want_to_buy' &&
                                                                 <span>
@@ -382,7 +336,7 @@ const DealNotifications = () => {
                                                     }
                                                 </li>
                                                 <li>
-                                                    <Button className='outline_btn' onClick={handleLetsConnect}>
+                                                    <Button className='outline_btn' onClick={()=>{handleSubmitInterested(data.id)}}>
                                                     <Image src='/assets/images/chat-seller.svg' alt='' /> chat with seller
                                                     {data.status == 'interested' &&
                                                         <span>
@@ -392,7 +346,7 @@ const DealNotifications = () => {
                                                     </Button>
                                                 </li>
                                                 <li>
-                                                    <Button className='text_btn' onClick={handleInterestedProperty}>
+                                                    <Button className='text_btn' onClick={()=>{handleInterestedProperty(data.id)}}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                                                         <path d="M11 1L1 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                                         <path d="M1 1L11 11" stroke="#E21B1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -435,7 +389,7 @@ const DealNotifications = () => {
                             </li>
                         </ul>
                         :
-                        <form>
+                        <form method='post' onSubmit={handleSubmitWantToBuy} encType="multipart/form-data">
                             <div className='offer_price_input'>
                                 <label className='offer_label'>Offer Your Price</label>
                                 <div className=''>
@@ -446,21 +400,21 @@ const DealNotifications = () => {
                                 <div className='offer_price_area'>
                                     <label className='offer_label'>Upload Your Proof Of Funds</label>
                                     <div className='offer_price_select'>
-                                        <select>
-                                            <option>verified proof of funds</option>
-                                            <option>verified proof of funds</option>
-                                            <option>verified proof of funds</option>
+                                        <select name='proof_of_fund_option'>
+                                            <option value={1}>verified proof of funds</option>
+                                            <option value={2}>verified proof of funds</option>
+                                            <option value={3}>verified proof of funds</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className=''>
                                     <span className="browse-files position-relative">
                                         <input type='hidden' name="buyer_deal_id" value={dealId}/>
-                                        <input id='formFile' type="file" className="default-file-input" ref={fileInputRef}/>
+                                        <input id='formFile' type="file" name="pdf_file" className="default-file-input" ref={fileInputRef}/>
                                         <span className="d-block upload-file">PDF-Name.pdf</span>
                                         <span className="browse-files-text">submit proof of funds</span>
                                     </span>
-                                    {attachmentsError !='' && <span className='error'>{attachmentsError}</span>}
+                                    {errors.pdf_file !='' && <span className='error'>{errors.pdf_file}</span>}
                                 </div>
                                 <div className='proof_checkbox position-relative text-start'>
                                     <label>
@@ -468,7 +422,7 @@ const DealNotifications = () => {
                                         <span>Save as default proof of funds</span>
                                     </label>
                                 </div>
-                                <button type="button" className="btn btn-fill btn-fill-green btn btn-primary w-100" onClick={()=>handleStatusType('submit-want-to-buy-doc')}>Submit your offer</button>
+                                <button type="submit" className="btn btn-fill btn-fill-green btn btn-primary w-100">Submit your offer</button>
                             </div>
                         </form>
                     }
@@ -509,7 +463,7 @@ const DealNotifications = () => {
                                 {isSubmitted && dealFeedback.trim() == '' && <span className='error'>This field is required</span>}
                                 {errors.buyer_feedback && <span className='error'>{errors.buyer_feedback[0]}</span>}
                             </div>
-                            <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={handleThankyouFeedback}>Share Feedback</button>
+                            <button type="button" className="btn btn-fill  btn btn-primary w-100" onClick={handleSubmitNotInterested}>Share Feedback</button>
                         </div>
                     </div>
                 </div>
@@ -534,9 +488,9 @@ const DealNotifications = () => {
             <Modal.Body className='some_space'>
                 <div className='modal_inner_content proofSave'>
                     <h3>Do you want to save this proof of fund</h3>
-                    <div class="both_btn_group m-0">
-                        <button type="button" class="light_bg_btn btn btn-primary" onClick={handleProofHide}>No</button>
-                        <button type="submit" class="btn btn-fill btn-primary" onClick={()=>setIsConfirmProofOfFund(true)}>Yes</button>
+                    <div className="both_btn_group m-0">
+                        <button type="button" className="light_bg_btn btn btn-primary" onClick={handleProofHide}>No</button>
+                        <button type="submit" className="btn btn-fill btn-primary" onClick={()=>setIsConfirmProofOfFund(true)}>Yes</button>
                     </div>
                 </div>
             </Modal.Body>

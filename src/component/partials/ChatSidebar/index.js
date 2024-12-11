@@ -33,7 +33,11 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                     {/* <p>{data?.last_message?.content}</p> */}
                                 </div>
                                 <div className='chat_status_area'>
-                                    <p className='mb-0'>Today, 8:56pm</p>
+                                    <p className='mb-0'>{data.last_message_at}</p>
+                                    {data.unread_message_count > 0 ? 
+                                    <div className='seen_status text-end'>
+                                        <span className='msg_left_number'>{data.unread_message_count}</span>
+                                    </div>:
                                     <div className='seen_status text-end'>
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="27" height="15" viewBox="0 0 27 15" fill="none">
@@ -41,6 +45,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                             </svg>
                                         </span>
                                     </div>
+                                    }
                                 </div>
                             </div>
                         </li>

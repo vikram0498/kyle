@@ -70,7 +70,7 @@ const Message = () => {
             Authorization: `Bearer ${getTokenData().access_token}`,
         };
         try {
-            const response = await axios.get(`${apiUrl}get-chat-list/${receiverId}`, { headers });
+            const response = await axios.get(`${apiUrl}get-chat-list/${chatPartnerId}`, { headers });
             setChatList(response.data.data || []);
             if(receiverId == ''){
                 setReceiverId(response.data.data[0].id)
@@ -135,6 +135,7 @@ const Message = () => {
         setReceiverId(chatPartnerId)
     }, []);
 
+    console.log(receiverId,"receiverId")
     return (
         <>
             {userRole === 3 && <BuyerHeader />}
