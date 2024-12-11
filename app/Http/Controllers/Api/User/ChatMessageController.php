@@ -51,7 +51,8 @@ class ChatMessageController extends Controller
     
             // Format last message details
             $lastMessageDetails = $lastMessage ? [
-                'id'            => $lastMessage->id,
+                'id'             => $lastMessage->id,
+                'conversation_id'=> $conversation->id,
                 'sender_id'     => $lastMessage->sender_id,
                 'content'       => $lastMessage->content,
                 'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
@@ -195,55 +196,6 @@ class ChatMessageController extends Controller
         }
     }
 
-    public function markAsRead(Request $request)
-    {
-        $request->validate([
-            'message_id' => 'required|exists:messages,id',
-        ]);
-
-        try{
-            DB::beginTransaction();
-            $message = Message::find($request->message_id);
-
-            $userId = auth()->user()->id;
-
-            if ($message->conversation->participant_1 !== $userId  && $message->conversation->participant_2 !== $userId) {
-                return response()->json(['error' => 'You do not have access to this message.'], 403);
-            }
-
-            $alreadyRead = DB::table('message_seen')
-            ->where('message_id', $message->id)
-            ->where('user_id', $userId)
-            ->exists();
-
-            if (!$alreadyRead) {
-                $message->seenBy()->attach($userId, [
-                    'conversation_id' => $message->conversation->id,
-                    'read_at' => now(),
-                ]);  
-            }           
-
-            DB::commit();
-
-            $responseData = [
-                'status'            => true,
-                'message'           => trans('messages.chat_message.marked_as_read_successfully'),
-            ];
-            return response()->json($responseData, 200);
-
-        }catch(\Exception $e){
-            DB::rollBack();
-            // dd($e->getMessage());
-            $responseData = [
-                'status'        => false,
-                'error'         => trans('messages.error_message'),
-                'error_details' => $e->getMessage().'->'.$e->getLine()
-            ];
-            return response()->json($responseData, 400);
-        }
-    }
-
-
     public function getMessages(Request $request)
     {
         $request->validate([
@@ -317,7 +269,7 @@ class ChatMessageController extends Controller
                     return $createdDate; // Fallback to the formatted date
                 }
             });
-        
+              
             $responseData = [
                 'status'    => true,
                 'message'   => $groupedMessages,
@@ -338,4 +290,58 @@ class ChatMessageController extends Controller
         return response()->json(['error' => trans('messages.chat_message.no_message_found')], 404);        
         
     }
+
+    public function markAsRead(Request $request)
+    {
+        $request->validate([
+            'conversation_id' => 'required|exists:conversations,id',
+        ]);
+
+        try{
+            DB::beginTransaction();
+            
+            $userId = auth()->user()->id;
+
+            $messages = Message::where('conversation_id',$request->conversation_id)->whereNotExists(function ($query) use ($userId) {
+                $query->select(DB::raw(1))
+                    ->from('message_seen')
+                    ->whereRaw('message_seen.message_id = messages.id')
+                    ->where('message_seen.user_id', $userId);
+            })->get();
+
+            if($messages->count() > 0){
+
+                foreach($messages as $message){
+                    if ($message->conversation->participant_1 !== $userId  && $message->conversation->participant_2 !== $userId) {
+                        return response()->json(['error' => 'You do not have access to this message.'], 403);
+                    }
+    
+                    $message->seenBy()->attach($userId, [
+                        'conversation_id' => $message->conversation->id,
+                        'read_at' => now(),
+                    ]);  
+                    
+                }
+            }
+                       
+            DB::commit();
+
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.chat_message.marked_as_read_successfully'),
+            ];
+            return response()->json($responseData, 200);
+
+        }catch(\Exception $e){
+            DB::rollBack();
+            // dd($e->getMessage());
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
 }

@@ -1470,7 +1470,8 @@ class SearchBuyerController extends Controller
             'buyer_deal_id'     => ['required', 'exists:buyer_deals,id'],
             'status'            => ['required', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
             'buyer_feedback'    => ['required_if:status,not_interested', 'string'],
-            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')]
+            'pdf_file'          => ['required_if:status,want_to_buy','mimes:pdf','max:'.config('constants.interested_pdf_size')],
+            // 'proof_of_fund_option' => ['nullable']
         ],[
             'pdf_file.mimes'    => 'The file must be a PDF document',
         ],[
