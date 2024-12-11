@@ -6592,7 +6592,7 @@ body.dark .notification_pro_deal>li:last-child{
   color: #102846;
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 .chat_side_list{
   padding: 0;
@@ -6743,6 +6743,10 @@ body.dark .notification_pro_deal>li:last-child{
   padding: 10px 20px;
   background-color: #FFFFFF;
   border-radius: 10px;
+}
+.chat_header_user .mobile_hamburger{
+  padding-left: 0;
+  margin-right: 14px;
 }
 .chat_header_user>.figure{
   width: 55px;
@@ -8180,6 +8184,13 @@ li.active-user {
 }
 .buyer_dash_linkTop li>a:hover .verification_graph .CircularProgressbar-path{
   stroke: #7d8bff !important;
+}
+.deal_bottom_price{
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "Nunito Sans", sans-serif;
+  color: rgba(29, 34, 70, 1);
 }
 
 

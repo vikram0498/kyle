@@ -2,14 +2,26 @@ import React from 'react'
 import { Figure, Image } from 'react-bootstrap';
 
 const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
+    const closeSidebar = () => {
+        document.body.classList.remove("msg-sidebar-open");
+      };
   return (
     <>
         <div className='chat_sidebar'>
-            <h6>Messages</h6>
+            <h6>Messages 
+                <span className='sidebar_mob_close d-lg-none' onClick={closeSidebar}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                        <path d="M9.28265 7.5L14.6306 2.15205C15.7766 1.00606 13.9939 -0.776597 12.848 0.369393L7.5 5.71735L2.15205 0.369393C1.00606 -0.776597 -0.776597 1.00606 0.369393 2.15205L5.71735 7.5L0.369393 12.848C-0.776597 13.9939 1.00606 15.7766 2.15205 14.6306L7.5 9.28265L12.848 14.6306C13.9939 15.7766 15.7766 13.9939 14.6306 12.848L9.28265 7.5Z" fill="#5c5c5c"/>
+                    </svg>
+                </span>
+            </h6>
             <ul className='chat_side_list scrollbar_design'>
                 {chatList.map((data,index)=>{
                     return(
-                        <li onClick={()=>setReceiverId(data.id)} key={index} className={data.id == receiverId && 'active-user'}>
+                        <li onClick={() => {
+                            setReceiverId(data.id);
+                            closeSidebar();
+                          }} key={index} className={data.id == receiverId && 'active-user'}>
                             <div className='chat_user_img'>
                                 <Figure>
                                     <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
@@ -148,6 +160,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                 </li> */}
             </ul>
         </div>
+        <div className='mobile_overlay d-lg-none' onClick={closeSidebar}></div>
     </>
   );
 };

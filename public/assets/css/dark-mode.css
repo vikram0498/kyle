@@ -387,8 +387,12 @@ body.dark .modal-video-main .modal-content .modal-header .btn-close{
   filter: invert(1);
   opacity: 1;
 }
-body.dark .your-buyer{
+body.dark .your-buyer,
+body.dark .chat_status_area>p{
   color: #1f1f1f;
+}
+body.dark .mobile_hamburger svg path{
+  fill: #fff;
 }
 
 body.dark .select div[id*="-placeholder"],
@@ -472,7 +476,6 @@ body.dark .chat_box,
 body.dark .scrollbar_design::-webkit-scrollbar-thumb{
   background-color: #1f1f1f;
 }
-body.dark .chat_user_info>span,
 body.dark .chat_header_user>div span,
 body.dark .msg_send_footer>input:not(input[type="submit"]),
 body.dark .msg_content,

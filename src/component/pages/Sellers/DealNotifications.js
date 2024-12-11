@@ -339,7 +339,10 @@ const DealNotifications = () => {
                                                         <span>Lot sq. ft. : {data.lot_size || 0}</span>
                                                     </div>
                                                 </div>
-                                                <p className='dollar-text mt-3'><strong>${data.price || 0}</strong></p>
+                                                <div className='d-flex align-items-center deal_bottom_price mt-3'>
+                                                    Asking Price :
+                                                    <p className='dollar-text mb-0'><strong>${data.price || 0}</strong></p>
+                                                </div>
                                                 {/* <ul className='notification_pro_deal'>
                                                     <li>2</li>
                                                     <li>3</li>
