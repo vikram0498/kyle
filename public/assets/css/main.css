@@ -7025,6 +7025,9 @@ body.dark .notification_pro_deal>li:last-child{
   font-family: "Nunito Sans", sans-serif;
   margin-bottom: 20px;
 }
+.day-header.line-with-text {
+  font-size: 12px;
+}
 .deal_property_content>p{
   display: flex;
   flex-wrap: wrap;

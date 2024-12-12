@@ -6,6 +6,7 @@ import Footer from '../../partials/Layouts/Footer';
 import axios from 'axios';
 import { useAuth } from "../../../hooks/useAuth";
 import Pagination from '../../partials/Pagination';
+import { toast } from "react-toastify";
 
 
 const PropertyDealResult = () => {
@@ -23,14 +24,47 @@ const PropertyDealResult = () => {
             "auth-token": getTokenData().access_token,
         };
         const fetchData = async () => {
-            let response = await axios.get(`${apiUrl}deals/result-list`,{headers:headers});
-            setLimit(response.data.deals.per_page);
-            setPage(response.data.deals.current_page);
-            setTotal(response.data.deals.total);
-            setDealData(response.data.deals.data)
+            try {
+                let response = await axios.get(`${apiUrl}deals/result-list`,{headers:headers});
+                setLimit(response.data.deals.per_page);
+                setPage(response.data.deals.current_page);
+                setTotal(response.data.deals.total);
+                setDealData(response.data.deals.data)
+            } catch (error) {
+                if (error.response.status === 401) {
+                    setLogout();
+                }
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                  }
+            }
         }
         fetchData();
     },[page]);
+
+    useEffect(()=>{
+        const markReadNotification = async () => {
+            let headers = {
+                Accept: "application/json",
+                Authorization: "Bearer " + getTokenData().access_token,
+                "auth-token": getTokenData().access_token,
+            };
+
+            try {
+                let response = await axios.get(`${apiUrl}mark-as-read-notification/deal_notification`,{headers:headers});
+            } catch (error) {
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error, {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                  }
+            }
+        }
+        markReadNotification();
+    },[]);
+
   return (
     <>
         <Header />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -11,104 +11,145 @@ import Header from "../../partials/Layouts/Header";
 import Footer from "../../partials/Layouts/Footer";
 
 const Message = () => {
-    const { id: chatPartnerId } = useParams(); 
+    const { id: chatPartnerId } = useParams();
     const { getTokenData, getLocalStorageUserdata } = useAuth();
+
     const [userRole, setUserRole] = useState(0);
     const [messages, setMessages] = useState([]);
     const [activeUserData, setActiveUserData] = useState([]);
     const [chatList, setChatList] = useState([]);
     const [message, setMessage] = useState("");
     const [socket, setSocket] = useState(null);
-    const [receiverId, setReceiverId] = useState(''); 
+    const [receiverId, setReceiverId] = useState("");
 
-    const apiUrl = process.env.REACT_APP_API_URL
+    const apiUrl = process.env.REACT_APP_API_URL;
+
+    // Ref for the messages container
+    const messagesEndRef = useRef("chat_box");
+
+    // Utility to get authorization headers
+    const getAuthHeaders = () => ({
+        Accept: "application/json",
+        Authorization: `Bearer ${getTokenData().access_token}`,
+    });
+
+    // Scroll to the bottom of the message list
+    const scrollToBottom = () => {
+        const chatBody = document.querySelector('.whole_messages');
+        if (chatBody) {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    };
+
+    // Initialize socket.io and setup listeners
     useEffect(() => {
         const userData = getLocalStorageUserdata();
         const socketInstance = io(process.env.REACT_APP_SOCKET_URL, {
             transports: ["websocket", "polling"],
-            query: { userId: userData.id }, // Ensure valid user ID is passed
+            query: { userId: userData.id },
         });
 
         setSocket(socketInstance);
 
-        socketInstance.on("connect", () => {
-            console.log("Connected to Socket.IO server");
-        });
+        const handleMessage = (newMessage) => {
+            console.log(newMessage,"newMessage",messages)
+            setMessages((prevMessages) => {
+                // Clone the current messages object to avoid direct mutation
+                const updatedMessages = { ...prevMessages };
+            
+                // Ensure 'Today' exists in the structure
+                if (!updatedMessages.Today) {
+                    updatedMessages.Today = [];
+                }
+            
+                // Add the new senderMessage to the 'Today' array
+                updatedMessages.Today.push(newMessage);
+            
+                // Return the updated messages object
+                return updatedMessages;
+            });
+            // setMessages((prevMessages) => [...prevMessages, newMessage]);
+        };
 
-        socketInstance.on("receiveMessage", (newMessage) => {
-            console.log("New message received:", newMessage);
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-        });
+        socketInstance.on("connect", () => console.log("Connected to Socket.IO server"));
+        socketInstance.on("receiveMessage", handleMessage);
 
         return () => {
-            if (socketInstance) socketInstance.disconnect();
+            socketInstance.off("receiveMessage", handleMessage);
+            socketInstance.disconnect();
         };
     }, []);
 
+    // Fetch chat messages for the selected receiver
     const fetchMessages = async () => {
-        const headers = {
-            Accept: "application/json",
-            Authorization: `Bearer ${getTokenData().access_token}`,
-        };
+        if (!receiverId) return;
 
         try {
             const response = await axios.post(
                 `${apiUrl}chat-messages`,
                 { recipient_id: receiverId },
-                { headers }
+                { headers: getAuthHeaders() }
             );
-            setActiveUserData(response.data.data || [])
-            setMessages(response.data.message.Today || []);
+            setActiveUserData(response.data.data || []);
+            setMessages(response.data.message || []);
         } catch (error) {
-            console.error("Error fetching messages:", error);
+            console.error("Error fetching messages:", error.response?.data?.message || error.message);
         }
     };
 
+    // Fetch the list of chats for the user
     const fetchChatList = async () => {
-        const headers = {
-            Accept: "application/json",
-            Authorization: `Bearer ${getTokenData().access_token}`,
-        };
         try {
-            const response = await axios.get(`${apiUrl}get-chat-list/${chatPartnerId}`, { headers });
+            const response = await axios.get(`${apiUrl}get-chat-list/${chatPartnerId || ''}`, {
+                headers: getAuthHeaders(),
+            });
             setChatList(response.data.data || []);
-            if(receiverId == ''){
-                setReceiverId(response.data.data[0].id)
+            if (!receiverId && response.data.data.length) {
+                setReceiverId(response.data.data[0].id);
             }
-            // if(chatPartnerId !== undefined){
-            //     setReceiverId(chatPartnerId)
-            // }else{
-            //     setReceiverId(response.data.data[0].id)
-            // }
         } catch (error) {
-            console.error("Error fetching chat list:", error);
+            console.error("Error fetching chat list:", error.response?.data?.message || error.message);
         }
     };
 
+    // Send a message to the selected receiver
     const sendMessage = () => {
-        if (!socket || !message.trim()) {
-            console.log("Message is empty or socket is not connected");
-            return; 
+        if (!socket?.connected || !message.trim()) {
+            console.error("Socket is not connected or message is empty");
+            return;
         }
-        console.log("Sending message:", message);
-        const now = new Date();
-        const created_time = now.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit', hour12: true  }); // Format as "HH:MM AM/PM"
 
-        // Create a message object for the sender's message
+        const now = new Date();
+        const created_time = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: true });
+
         const senderMessage = {
             content: message.trim(),
-            sender_id: getLocalStorageUserdata().id, // Assuming the user ID is stored in local storage
+            sender_id: getLocalStorageUserdata().id,
             recipient_id: receiverId,
             type: "text",
             chat_type: "direct",
-            date_time_label:"Today",
-            created_time:created_time,
-            timestamp: new Date().toISOString(), // Add timestamp if needed
+            date_time_label: "Today",
+            created_time,
+            timestamp: now.toISOString(),
         };
 
-        // Update the local state with the new sender's message
-        setMessages((prevMessages) => [...prevMessages, senderMessage]);
+        setMessages((prevMessages) => {
+            // Clone the current messages object to avoid direct mutation
+            const updatedMessages = { ...prevMessages };
         
+            // Ensure 'Today' exists in the structure
+            if (!updatedMessages.Today) {
+                updatedMessages.Today = [];
+            }
+        
+            // Add the new senderMessage to the 'Today' array
+            updatedMessages.Today.push(senderMessage);
+        
+            // Return the updated messages object
+            return updatedMessages;
+        });
+        // setMessages((prevMessages) => [...prevMessages, senderMessage]);
+
         const payload = {
             access_token: `Bearer ${getTokenData().access_token}`,
             recipient_id: receiverId,
@@ -116,26 +157,32 @@ const Message = () => {
             type: "text",
         };
         socket.emit("sendMessage", payload);
-        setMessage(""); 
+        setMessage("");
     };
 
+    // Scroll to bottom whenever messages change
     useEffect(() => {
-        console.log(receiverId,"receiverId");
+        scrollToBottom();
+    }, [messages]);
+
+    // Fetch chat list and messages whenever `receiverId` changes
+    useEffect(() => {
         fetchChatList();
-        if(receiverId !== ''){
-            fetchMessages();
-        }
+    }, []);
+
+    useEffect(() => {
+        fetchMessages();
     }, [receiverId]);
 
+    // Set user role and initial receiver ID
     useEffect(() => {
         const userData = getLocalStorageUserdata();
         if (getTokenData().access_token && userRole === 0) {
             setUserRole(userData.role);
         }
-        setReceiverId(chatPartnerId)
+        setReceiverId(chatPartnerId);
     }, []);
-
-    console.log(receiverId,"receiverId")
+    console.log(messagesEndRef,"messagesEndRef")
     return (
         <>
             {userRole === 3 && <BuyerHeader />}
@@ -144,16 +191,17 @@ const Message = () => {
                 <Container className="position-relative">
                     <div className="back-block">
                         <div className="row">
-                            <div className="col-4 col-sm-4 col-md-4 col-lg-4">
+                            <div className="col-4">
                                 <Link to="/" className="back">
                                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M15 6H1" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>Back
+                                        <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    Back
                                 </Link>
                             </div>
-                            <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
-                                <h6 className="center-head text-center mb-0">Message</h6>
+                            <div className="col-7 text-center">
+                                <h6 className="center-head mb-0">Message</h6>
                             </div>
                         </div>
                     </div>
@@ -163,13 +211,16 @@ const Message = () => {
                                 <ChatSidebar chatList={chatList} setReceiverId={setReceiverId} receiverId={receiverId} />
                             </Col>
                             <Col lg="8">
-                                <ChatMessagePanel
-                                    messages={messages}
-                                    message={message}
-                                    setMessage={setMessage}
-                                    sendMessage={sendMessage}
-                                    activeUserData={activeUserData}
-                                />
+                                <div className="message-panel">
+                                    <ChatMessagePanel
+                                        messages={messages}
+                                        message={message}
+                                        setMessage={setMessage}
+                                        sendMessage={sendMessage}
+                                        activeUserData={activeUserData}
+                                    />
+                                    <div ref={messagesEndRef} />
+                                </div>
                             </Col>
                         </Row>
                     </div>

@@ -213,6 +213,29 @@ const MyBuyer = () => {
       }
     }
   };
+
+  useEffect(()=>{
+      const markReadNotification = async () => {
+          const apiUrl = process.env.REACT_APP_API_URL;
+          let headers = {
+              Accept: "application/json",
+              Authorization: "Bearer " + getTokenData().access_token,
+              "auth-token": getTokenData().access_token,
+          };
+
+          try {
+              let response = await axios.get(`${apiUrl}mark-as-read-notification/deal_notification`,{headers:headers});
+          } catch (error) {
+              if (error.response.data.error) {
+                  toast.error(error.response.data.error, {
+                    position: toast.POSITION.TOP_RIGHT,
+                  });
+                }
+          }
+      }
+      markReadNotification();
+  },[]);
+
   return (
     <>
       <Header />

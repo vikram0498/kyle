@@ -52,15 +52,18 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
           </div>
           <div className='chat_body'>
             <div className='whole_messages scrollbar_design'>
-              {messages.map((data,index) => {
-                return (
-                  <div className={`msg_item ${data.sender_id !== activeUserData.id && 'outgoing_msg'}`}>
+              { Object.entries(messages).map(([day, dayMessages]) => (
+                  <>
+                  <div className="day-header line-with-text"><span>{day}</span></div>
+                  {dayMessages.map((data,index)=>(
+                    <div className={`msg_item ${data.sender_id !== activeUserData.id && 'outgoing_msg'}`}>
                     <div className='msg_content'>{data.content}</div>
-                    <p className='msg_time'>{data.date_time_label == 'Today' ? data.created_time : data.created_date}</p>
+                    {/* <p className='msg_time'>{data.date_time_label == 'Today' ? data.created_time : data.created_date}</p> */}
+                    <p className='msg_time'>{data.created_time}</p>
                   </div>
-                )
-              })}
-              
+                  ))}
+                  </>
+                ))}
             </div>
           </div>
           <div className='chat_footer'>
