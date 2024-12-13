@@ -630,6 +630,20 @@ body.dark .buyer_dash_deals>ul>li{
 body.dark .buyer_dash_linkTop li>a:hover{
   background-color: rgba(63, 83, 254, 1);
 }
+body.dark .boost-slot-panel .buyer-active-verfiy,
+body.dark .buyer-blog-new .buyer-active-verfiy{
+  background: #e5f6fe;
+}
+body.dark .boost-slot-panel .buyer-active-verfiy span,
+body.dark .buyer-blog-new .buyer-active-verfiy span{
+  color: #4c4c4c;
+}
+body.dark label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-panel .buyer-active-verfiy::after{
+  border-right-color: #5e695d;
+}
+body.dark .css-1nmdiq5-menu>div>div{
+  color: #000;
+}
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{
     background-color: #fff !important;

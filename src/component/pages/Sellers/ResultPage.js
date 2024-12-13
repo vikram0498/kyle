@@ -465,8 +465,8 @@ const ResultPage = ({ setIsFiltered,filterFormData,lastSearchedLogId,attachments
                       <ul>
                         <li><span><Image src="/assets/images/bed.svg" alt="" /></span> {bedroom} Bed</li>
                         <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {bath} Baths</li>
-                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {size } Square Foot</li>
-                        <li><span><Image src="/assets/images/bathroom.svg" alt="" /></span> {lotSize} ft</li>
+                        <li><span><Image src="/assets/images/network-1.svg" alt="" /></span> {size } Square Foot</li>
+                        <li><span><Image src="/assets/images/full-screen-2.svg" alt="" /></span> {lotSize} ft</li>
                       </ul>
                     </div>
                   </Col>

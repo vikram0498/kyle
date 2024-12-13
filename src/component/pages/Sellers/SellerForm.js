@@ -675,6 +675,7 @@ const SellerForm = () => {
                                       isRtl={false}
                                       placeholder="Select Property Type"
                                       closeMenuOnSelect={true}
+                                      //menuIsOpen={true}
                                     />
                                     {renderFieldError("property_type")}
                                   </div>

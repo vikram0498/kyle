@@ -1931,7 +1931,7 @@ section.main-section {
 .property-critera-block {
   background: #ffffff;
   border-radius: 10px;
-  padding: 13px 20px 20px;
+  padding: 15px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -5419,8 +5419,8 @@ span.badge.bg-success.purchased-profile {
 }
 .buyer-check {
   position: absolute;
-  right: -6px;
-  top: 65px;
+  right: 0;
+  top: 70px;
 }
 .buyer-active-verfiy{
   position: relative;
@@ -5431,7 +5431,7 @@ span.badge.bg-success.purchased-profile {
 }
 .buyer-blog-new .buyer-active-verfiy {
   position: absolute;
-  right: 0;
+  left: 15px;
   top: 10px;
   z-index: 1;
 }
@@ -5458,7 +5458,7 @@ span.badge.bg-success.purchased-profile {
   height: 232px;
 }
 .profile-tag-image{
-  width: 20px;
+  width: 15px;
 }
 .ac-de-feeture {
   display: table;
@@ -6305,7 +6305,7 @@ body.dark .pro_deal_table tbody tr:nth-child(even) td{
 .pro_deal_table td:first-child>span{
   gap: 12px;
 }
-.pro_deal_table td:not(:first-child)>span img{
+.pro_deal_table td:not(:first-child) span img{
   transform: translateY(4px);
 }
 .deal_user_img{
@@ -7062,6 +7062,9 @@ body.dark .notification_pro_deal>li:last-child{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.deal_property_content ul>li>span img{
+  width: 22px;
 }
 
 .send_deal_form{
@@ -8194,6 +8197,31 @@ li.active-user {
   font-weight: 500;
   font-family: "Nunito Sans", sans-serif;
   color: rgba(29, 34, 70, 1);
+}
+.boost-slot-panel{
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  z-index: 1;
+}
+.boost-slot-panel .buyer-active-verfiy,
+.buyer-blog-new .buyer-active-verfiy{
+  padding: 5px 20px 5px 10px;
+}
+.boost-slot-panel .buyer-active-verfiy::after,
+.buyer-blog-new .buyer-active-verfiy::after{
+  left: inherit;
+  right: 0;
+  border-left: none;
+  border-right: 8px solid #F5F7F9;
+}
+label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-panel .buyer-active-verfiy::after{
+  border-right-color: #bfe7ca;
+}
+.boost-slot-panel .buyer-active-verfiy span,
+.buyer-blog-new .buyer-active-verfiy span{
+  font-size: 10px;
+  font-weight: 600;
 }
 
 
