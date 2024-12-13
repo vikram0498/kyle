@@ -51,7 +51,8 @@ class NotificationController extends Controller
                         $notificationRecords[$notificationType]['records'][$indexKey] = [
                             'data' => $record->data,
                             'read_at' => $record->read_at ? convertDateTimeFormat($record->read_at, 'datetime') : null,
-                            'created_at' => $record->created_at ? convertDateTimeFormat($record->created_at, 'datetime') : null,
+                            'created_at' => $record->created_at ? formatDateLabel($record->created_at) : null,
+                            'created_time' => $record->created_at ? convertDateTimeFormat($record->created_at, 'time') : null,
                         ];
                     }  
                 }

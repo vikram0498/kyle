@@ -192,8 +192,10 @@ if (!function_exists('convertDateTimeFormat')) {
 		$changeFormatValue = Carbon::parse($value);
 		if ($type == 'date') {
 			return $changeFormatValue->format(config('constants.date_format'));
-		}else if($type='datetime'){
+		}else if($type == 'datetime'){
 			return $changeFormatValue->format(config('constants.datetime_format'));
+		}else if($type == 'time'){
+			return $changeFormatValue->format(config('constants.time_format'));
 		}
 		return $changeFormatValue;
 	}

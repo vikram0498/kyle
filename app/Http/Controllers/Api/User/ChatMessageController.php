@@ -155,8 +155,15 @@ class ChatMessageController extends Controller
                 'type'              => $request->type, // text, image, video, file
                 'chat_type'         => 'direct', 
             ]);
-           
 
+            // Calculate unread message count for the authenticated user
+            $unreadMessageCount = Message::where('conversation_id', $conversation->id)
+                ->where('sender_id', '!=', $recipient_id)
+                ->whereDoesntHave('seenBy', function ($query) use ($recipient_id) {
+                    $query->where('user_id', $recipient_id);
+                })
+                ->count();
+                
             $conversation->last_message_at = now();
             $conversation->save();
 
@@ -181,6 +188,7 @@ class ChatMessageController extends Controller
                 'status'            => true,
                 'message'           => trans('messages.chat_message.success_send_message'),
                 'data'              =>  $message,
+                'unread_message_count' => $unreadMessageCount
             ];
             
             return response()->json($responseData, 200);
