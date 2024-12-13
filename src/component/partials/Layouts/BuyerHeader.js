@@ -202,12 +202,10 @@ function BuyerHeader() {
                                       <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
                                     </div>
                                     <div className="dropdown_middle">
-                                      <h6>Brooklyn Simmons</h6>
-                                      <p>New buy added in your buyer list....</p>
+                                      <h6>{data.data.title}</h6>
+                                      <p>{data.data.message}</p>
                                     </div>
-                                    <div className="dropdown_end">
-                                      2m ago
-                                    </div>
+                                    <div className="dropdown_end">{data.created_at}</div>
                                   </li>
                                 )
                                 }):

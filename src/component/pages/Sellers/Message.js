@@ -182,7 +182,6 @@ const Message = () => {
         }
         setReceiverId(chatPartnerId);
     }, []);
-    console.log(messagesEndRef,"messagesEndRef")
     return (
         <>
             {userRole === 3 && <BuyerHeader />}

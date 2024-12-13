@@ -239,7 +239,7 @@ function Header() {
                             {notificationData.deal_notification.total > 0 && 
                               notificationData.deal_notification.records.map((data,index)=>{
                                 return (
-                                  <li>
+                                  <li key={index}>
                                     <div className="dropdown_start">
                                       <Image src='/assets/images/home-dollar-drop-icon.svg' alt='' />
                                     </div>
@@ -276,7 +276,7 @@ function Header() {
                             {notificationData.new_buyer_notification.total > 0 ? 
                               notificationData.new_buyer_notification.records.map((data,index)=>{
                                 return (
-                                  <li>
+                                  <li key={index}>
                                     <div className="dropdown_start">
                                       <Image src='/assets/images/user-dropdown-icon.svg' alt='' />
                                     </div>
@@ -320,17 +320,15 @@ function Header() {
                           {notificationData.dm_notification.total > 0 ? 
                               notificationData.dm_notification.records.map((data,index)=>{
                                 return(
-                                  <li>
+                                  <li key={index}>
                                     <div className="dropdown_start">
                                       <Image src='/assets/images/msg-dropdown-icon.svg' alt='' />
                                     </div>
                                     <div className="dropdown_middle">
-                                      <h6>Brooklyn Simmons</h6>
-                                      <p>New buy added in your buyer list....</p>
+                                      <h6>{data.data.title}</h6>
+                                      <p>{data.data.message}</p>
                                     </div>
-                                    <div className="dropdown_end">
-                                      2m ago
-                                    </div>
+                                    <div className="dropdown_end">{data.created_at}</div>
                                   </li>
                                 )
                               }):
