@@ -7064,7 +7064,10 @@ body.dark .notification_pro_deal>li:last-child{
   justify-content: center;
 }
 .deal_property_content ul>li>span img{
-  width: 22px;
+  width: 20px;
+}
+.deal_property_content ul>li:last-child>span img{
+  width: 17px;
 }
 
 .send_deal_form{
