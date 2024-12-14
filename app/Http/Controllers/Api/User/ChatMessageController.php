@@ -170,7 +170,7 @@ class ChatMessageController extends Controller
             $recipient = User::find($recipient_id);
             $notificationData = [
                 'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
-                'message'   => trans('notification_messages.chat_message.received_new_message') .'<br/> '. $request->content .'<br/>',
+                'message'   => trans('notification_messages.chat_message.received_new_message') .' '. $request->content,
                 'module'    => "dm_notification",
                 'type'      => "dm_notification",
                 'user_id'   => $recipient->id,
