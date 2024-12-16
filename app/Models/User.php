@@ -151,7 +151,11 @@ class User extends Authenticatable implements MustVerifyEmail
         if($this->profileImage){
             return $this->profileImage->file_url;
         }
-        return "";
+
+        $path = config('constants.default.profile_image');
+        $defaultProfileImageUrl = asset($path);
+
+        return $defaultProfileImageUrl;
     }
 
     /** Start Buyer Profile Verification files */

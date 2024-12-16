@@ -11,6 +11,10 @@ class LogoutController extends Controller
     {
         $user = $request->user();
        
+        $user->is_online = config('constants.online_status.offline');
+
+        $user->save();
+
         // Revoke all user's tokens to logout
         $user->tokens()->delete();
 

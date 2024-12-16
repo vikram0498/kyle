@@ -44,6 +44,8 @@ class SocialMediaController extends Controller
                         $userAuthenticated->device_token =  $request->device_token ? $request->device_token : null;
                     }
 
+                    $userAuthenticated->is_online = config('constants.online_status.online');
+
                     $userAuthenticated->save();
 
                     DB::commit();
@@ -83,6 +85,7 @@ class SocialMediaController extends Controller
                     'email'      => $request->email ?? null,
                     'email_verified_at'  => Carbon::now(),
                     'register_type' => 2,
+                    'is_online'     => config('constants.online_status.online'),
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
                     'device_token'  => isset($request->device_token) ? $request->device_token : null,
@@ -170,6 +173,8 @@ class SocialMediaController extends Controller
                         $userAuthenticated->device_token =  $request->device_token ? $request->device_token : null;
                     }
 
+                    $userAuthenticated->is_online = config('constants.online_status.online');
+
                     $userAuthenticated->save();
 
                     DB::commit();
@@ -206,6 +211,7 @@ class SocialMediaController extends Controller
                     'email'      => $request->email ?? null,
                     'email_verified_at'  => (isset($request->email) && !is_null($request->email)) ? Carbon::now() : null,
                     'register_type' => 3,
+                    'is_online'     => config('constants.online_status.online'),
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
                     'device_token'  => isset($request->device_token) ? $request->device_token : null,

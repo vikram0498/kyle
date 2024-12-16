@@ -179,6 +179,9 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('/mark-read-message', [ChatMessageController::class, 'markAsRead']);
     Route::get('/get-chat-list/{recipient?}', [ChatMessageController::class, 'getChatList']);
 
+    Route::post('/update-block-status', [ChatMessageController::class, 'updateBlockStatus']);
+    
+
 
     // For Seller
     // Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {

@@ -20,7 +20,7 @@ return [
         'short_logo' => 'images/favicon.png',
         'admin_logo' => 'images/logo.svg',
         'transparent_logo' => 'assets/logo/logo-transparent.png',
-        'profile_image' => 'default/default-user-man.png',
+        'profile_image' => 'default/default-user-man.svg',
         'email_logo' => 'images/email-logo.png',
     ],
 
@@ -371,4 +371,8 @@ return [
         'search-buybox' => 'Search BuyBox',
     ],
 
+    'online_status' => [
+        'offline' => 0,
+        'online'  => 1,
+    ]
 ];

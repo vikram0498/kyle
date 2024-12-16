@@ -352,4 +352,44 @@ class ChatMessageController extends Controller
         }
     }
 
+    public function updateBlockStatus(Request $request){
+        $request->validate([
+            'recipient_id'  => 'required|exists:users,id,deleted_at,NULL',
+            'is_block'      => 'required|in:0,1',
+        ],[],
+        [
+            'is_block' => 'Block status'
+        ]);
+
+        try{
+            DB::beginTransaction();
+            $user = User::find($request->recipient_id);
+            if($user){
+                $user->is_block = $request->is_block;
+                $user->save();
+
+                DB::commit();
+
+                $responseData = [
+                    'status'            => true,
+                    'message'           => trans('messages.chat_message.user_block_success'),
+                ];
+                return response()->json($responseData, 200);
+            }
+
+            return response()->json(['status'=>false, 'error' => trans('messages.chat_message.no_message_found')], 404);  
+
+        }catch(\Exception $e){
+            DB::rollBack();
+            // dd($e->getMessage());
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+
+    }
+
 }

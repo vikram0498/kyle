@@ -66,10 +66,11 @@ return [
     'otp_sms_content' => "Your verification code is :otpNumber. Please enter this code to complete your verification. Do not share this code with anyone. The code will expire in :otpTime minutes.",
     
     'chat_message' => [
-        'success_send_message' => "Message sent successfully.",
-        'no_message_found' => "No messages found for this conversation.",
-        'no_conversation_found' => "No Conversation found.",
+        'success_send_message'      => "Message sent successfully.",
+        'no_message_found'          => "No messages found for this conversation.",
+        'no_conversation_found'     => "No Conversation found.",
         'marked_as_read_successfully' => "Message successfully marked as read.",
+        'user_block_success'          => "Blocked successfully." 
     ]
     
 ];

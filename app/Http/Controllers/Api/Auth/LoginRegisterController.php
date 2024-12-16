@@ -218,6 +218,10 @@ class LoginRegisterController extends Controller
                 if(Auth::attempt($credentialsOnly, $remember_me)){
                     $user = Auth::user();
 
+                    $user->is_online = config('constants.online_status.online');
+
+                    $user->save();
+                   
                     $accessToken = $user->createToken(env('APP_NAME', 'Kyle'))->plainTextToken;
 
                     DB::commit();
