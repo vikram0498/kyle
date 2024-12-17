@@ -180,6 +180,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('/get-chat-list/{recipient?}', [ChatMessageController::class, 'getChatList']);
 
     Route::post('/update-block-status', [ChatMessageController::class, 'updateBlockStatus']);
+    Route::post('/wishlist/add', [ChatMessageController::class, 'addToWishlist']);
     
 
 

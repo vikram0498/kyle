@@ -18,29 +18,36 @@ class ChatMessageController extends Controller
 {
     public function getChatList($recipient = null)
     {
-        $userId = auth()->user()->id; 
-    
-        // Fetch conversations where the authenticated user is a participant
-        $conversations = Conversation::where(function($query) use ($userId) {
-            $query->where('participant_1', $userId)
-                  ->orWhere('participant_2', $userId);
+        $userId = auth()->user()->id;
+
+        // Fetch wishlist users
+        $wishlistUsers = User::whereIn('id', function ($query) use ($userId) {
+            $query->select('wishlist_user_id')
+                ->from('wishlists')
+                ->where('user_id', $userId);
         })->get();
-    
+
+        // Fetch conversations where the authenticated user is a participant
+        $conversations = Conversation::where(function ($query) use ($userId) {
+            $query->where('participant_1', $userId)
+                ->orWhere('participant_2', $userId);
+        })->get();
+
         $chatList = $conversations->map(function ($conversation) use ($userId) {
             $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;
-    
+
             // Fetch user details for the other participant
             $user = User::find($otherParticipantId);
-    
+
             if (!$user) {
                 return null; // Exclude invalid users
             }
-    
+
             // Get the last message in the conversation
             $lastMessage = Message::where('conversation_id', $conversation->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
-    
+
             // Calculate unread message count for the authenticated user
             $unreadMessageCount = Message::where('conversation_id', $conversation->id)
                 ->where('sender_id', '!=', $userId)
@@ -48,19 +55,19 @@ class ChatMessageController extends Controller
                     $query->where('user_id', $userId);
                 })
                 ->count();
-    
+
             // Format last message details
             $lastMessageDetails = $lastMessage ? [
                 'id'             => $lastMessage->id,
                 'conversation_id'=> $conversation->id,
-                'sender_id'     => $lastMessage->sender_id,
-                'content'       => $lastMessage->content,
-                'is_read'       => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
-                'created_date'  => $lastMessage->created_at->format('d-M-Y'),
-                'created_time'  => $lastMessage->created_at->format('g:i A'),
-                'date_time_label' => formatDateLabel($lastMessage->created_at),
+                'sender_id'      => $lastMessage->sender_id,
+                'content'        => $lastMessage->content,
+                'is_read'        => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
+                'created_date'   => $lastMessage->created_at->format('d-M-Y'),
+                'created_time'   => $lastMessage->created_at->format('g:i A'),
+                'date_time_label'=> formatDateLabel($lastMessage->created_at),
             ] : null;
-    
+
             return [
                 'id'                    => $user->id,
                 'name'                  => $user->name ?? '',
@@ -74,11 +81,29 @@ class ChatMessageController extends Controller
                 'last_message_at'       => $lastMessage ? $lastMessage->created_at->format('d-M-Y g:i A') : null,
             ];
         })->filter();
-    
+
+        // Add wishlist users who are not already in the chat list
+        $wishlistUsers->each(function ($wishlistUser) use ($chatList) {
+            if (!$chatList->pluck('id')->contains($wishlistUser->id)) {
+                $chatList->push([
+                    'id'                    => $wishlistUser->id,
+                    'name'                  => $wishlistUser->name ?? '',
+                    'is_online'             => $wishlistUser->is_online ?? '',
+                    'profile_image'         => $wishlistUser->profile_image_url ?? null,
+                    'level_type'            => $wishlistUser->level_type ?? '',
+                    'profile_tag_name'      => $wishlistUser->buyerPlan ? $wishlistUser->buyerPlan->title : null,
+                    'profile_tag_image'     => $wishlistUser->buyerPlan ? $wishlistUser->buyerPlan->image_url : null,
+                    'unread_message_count'  => 0,
+                    'last_message'          => null,
+                    'last_message_at'       => null,
+                ]);
+            }
+        });
+
         // If a recipient is provided, ensure their profile is shown even without a conversation
         if ($recipient) {
             $recipientUser = User::find($recipient);
-    
+
             if ($recipientUser) {
                 $chatList->push([
                     'id'                    => $recipientUser->id,
@@ -94,10 +119,17 @@ class ChatMessageController extends Controller
                 ]);
             }
         }
-    
-        // Remove duplicates and sort the list by last_message_at
-        $chatList = $chatList->unique('id')->sortByDesc('last_message_at')->values();
-    
+
+        // Sort chat list: Wishlist users first, then by last message timestamp
+        $chatList = $chatList
+            ->unique('id')
+            ->sortByDesc(function ($item) use ($wishlistUsers) {
+                return [
+                    $wishlistUsers->pluck('id')->contains($item['id']) ? 1 : 0, // Wishlist priority
+                    $item['last_message_at'], // Sort by last message
+                ];
+            })->values();
+
         if ($chatList->isEmpty()) {
             return response()->json([
                 'status' => true,
@@ -105,12 +137,13 @@ class ChatMessageController extends Controller
                 'data' => [],
             ], 200);
         }
-    
+
         return response()->json([
             'status' => true,
             'data' => $chatList,
         ], 200);
     }
+
     
     public function sendDirectMessage(Request $request)
     {
@@ -392,4 +425,50 @@ class ChatMessageController extends Controller
 
     }
 
+    public function addToWishlist(Request $request){
+        $request->validate([
+            'wishlist_user_id' => 'required|exists:users,id',
+        ]);
+
+        try{
+            DB::beginTransaction();
+            $authUser = auth()->user();
+
+            if ($authUser->id == $request->wishlist_user_id) {
+                $responseData = [
+                    'status'            => false,
+                    'message'           => trans('messages.chat_message.yourself_not_to_add_wishlist'),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            if ($authUser->wishlistedUsers()->where('wishlist_user_id', $request->wishlist_user_id)->exists()) {
+                $responseData = [
+                    'status'            => false,
+                    'message'           => trans('messages.chat_message.already_added_wishlist'),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            $authUser->wishlistedUsers()->attach($request->wishlist_user_id);
+
+            DB::commit();
+
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.chat_message.added_wishlist_success'),
+            ];
+            return response()->json($responseData, 200);
+
+        }catch(\Exception $e){
+            DB::rollBack();
+            // dd($e->getMessage());
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
 }
