@@ -110,7 +110,8 @@ class Index extends Component
             'ad_name'               => ['required'],
             'target_url'            => ['required','url'],
             'impressions_purchased'     => ['required', 'numeric', 'min:0', 'max:999999'],
-            'start_date'                => ['required', 'date','after_or_equal:today','before_or_equal:end_date'],
+            // 'start_date'                => ['required', 'date','after_or_equal:today','before_or_equal:end_date'],
+            'start_date'                => ['required', 'date','before_or_equal:end_date'],
             'end_date'                  => ['required', 'date','after_or_equal:start_date'],               
             'image'                     => ['nullable', 'image', 'max:'.config('constants.img_max_size')],
             'status'                    => ['required', 'numeric', 'in:' . implode(',', array_keys(config('constants.ad_banner_status')))],
@@ -122,7 +123,8 @@ class Index extends Component
 
         // Check if start time is greater than current time
         if ($starDateTime->lt($currentDateTime)) {
-            $rules['start_time'] = 'required|after:now';
+            // $rules['start_time'] = 'required|after:now';
+            $rules['start_time'] = 'required';
         }
 
         $rules['end_time'] = 'required';

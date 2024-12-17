@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Models\AdvertiseBanner;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AdBannerController extends Controller
 {
@@ -13,7 +14,7 @@ class AdBannerController extends Controller
         $currentDate = now()->toDateString();
         $currentTime = now()->toTimeString();
 
-        $banner = AdvertiseBanner::where('page_type', $page)
+        /*$banner = AdvertiseBanner::where('page_type', $page)
             ->where('status', 1) 
             ->whereDate('end_date', '>=', $currentDate)
             ->where(function ($query) use ($currentTime) {
@@ -25,6 +26,20 @@ class AdBannerController extends Controller
                     ->orWhere('end_time', '>=', $currentTime);
             })
             ->first();
+        */
+        
+        $currentDateTime = Carbon::now();
+        $banner = AdvertiseBanner::where('page_type', $page)
+        ->where('status', 1)
+        ->where(function ($query) use ($currentDateTime) {
+            $query->whereNull('end_date')
+                  ->orWhereRaw("CONCAT(end_date, ' ', COALESCE(end_time, '23:59:59')) >= ?", [$currentDateTime]);
+        })
+        ->where(function ($query) use ($currentDateTime) {
+            $query->whereNull('start_date')
+                  ->orWhereRaw("CONCAT(start_date, ' ', COALESCE(start_time, '00:00:00')) <= ?", [$currentDateTime]);
+        })
+        ->first();
 
         if ($banner)
         {        
