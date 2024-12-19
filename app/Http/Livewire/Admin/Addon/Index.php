@@ -184,35 +184,41 @@ class Index extends Component
 
     public function deleteConfirm($id){
         $model = Addon::find($id);
-
-        Stripe::setApiKey(config('app.stripe_secret_key'));
+        try {
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+            /*
+                // Retrieve the product's prices
+                $prices = \Stripe\Price::all(['product' => $model->product_stripe_id]);
         
-        $product = new StripProduct( $model->product_stripe_id);
-        $prices = StripProduct::retrieve($model->product_stripe_id)->prices;
-        // Set the product ID
-  
-        if($prices){
-            // Delete the prices
-            foreach ($prices as $price) {
-                try {
-                    Stripe::setApiKey(config('app.stripe_secret_key'));
-                    $price->delete();
-                } catch (\Exception $e) {
-                    Log::error($e->getMessage());
+                // Delete each price associated with the product
+                if($prices->data){
+                   foreach ($prices->data as $price) {
+                        try {
+                             \Stripe\Price::update($price->id, ['active' => false]);
+                        } catch (\Exception $e) {
+                            \Log::error("Failed to delete price {$price->id}: " . $e->getMessage());
+                        }
+                    } 
                 }
-            }
+                
+                // Retrieve and delete the product
+                $product = \Stripe\Product::retrieve($model->product_stripe_id);
+                $product->delete();
+            */
+            // Delete the local model
+            $model->delete();
+    
+            $this->emit('refreshTable');
+            $this->emit('refreshLivewireDatatable');
+            $this->alert('success', trans('messages.delete_success_message'));
+    
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            \Log::error("Stripe error: " . $e->getMessage());
+            $this->alert('error', $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::error("Error: " . $e->getMessage());
+            $this->alert('error', trans('messages.delete_error_message'));
         }
-        
-        // Delete the product
-        $product->delete();
-
-        $model->delete();
-
-        $this->emit('refreshTable');
-        
-        $this->emit('refreshLivewireDatatable');
-
-        $this->alert('success', trans('messages.delete_success_message'));
     }
 
     public function show($id){
