@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Report;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Http;
 use App\Events\NotificationSent;
@@ -266,11 +267,13 @@ class ChatMessageController extends Controller
                     'id'                => $recipient->id,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => (bool)$recipient->is_block,
+                    'is_block'          => (bool)$recipient->is_block, 
+                    'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
                     'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
+                    'reports'               => null,
                 ],
             ];
     
@@ -323,10 +326,12 @@ class ChatMessageController extends Controller
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
                     'is_block'          => (bool)$recipient->is_block,
+                    'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
                     'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
+                    'reports'               => $conversation->reports->makeHidden(['conversation_id','reported_by','created_at','updated_at']),
                 ],
             ];
     
@@ -465,6 +470,59 @@ class ChatMessageController extends Controller
             ];
             return response()->json($responseData, 200);
 
+        }catch(\Exception $e){
+            DB::rollBack();
+            // dd($e->getMessage());
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    public function addToReport(Request $request,$conversationUuid){
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
+        try{
+            DB::beginTransaction();
+            $authUser = auth()->user();
+
+            $conversation = Conversation::where('uuid',$conversationUuid)->first();
+            if (!$conversation) {
+                return response()->json(['error' => 'Conversation not found'], 404);
+            }
+
+            // Check if the user is part of the conversation
+            if (!in_array($authUser->id, [$conversation->participant_1, $conversation->participant_2])) {
+                return response()->json(['error' => 'Unauthorized action'], 403);
+            }
+            
+            // Check if the conversation is already reported by the user
+            $existingReport = Report::where('conversation_id', $conversation->id)
+                ->where('reported_by', $authUser->id)
+                ->first();
+
+            if ($existingReport) {
+                return response()->json(['message' => trans('messages.chat_message.conversation_already_reported')], 200);
+            }
+
+            // Add the conversation to the report
+            $report = Report::create([
+                'conversation_id' => $conversation->id,
+                'reason' => $request->reason ?? null,
+            ]);
+
+            DB::commit();
+
+            $responseData = [
+                'status'            => true,
+                'message'           => trans('messages.chat_message.conversation_added_to_report'),
+            ];
+            return response()->json($responseData, 200);
         }catch(\Exception $e){
             DB::rollBack();
             // dd($e->getMessage());

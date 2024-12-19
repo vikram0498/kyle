@@ -74,6 +74,8 @@ return [
         'added_wishlist_success'       => "Added to wishlist successfully!",
         'yourself_not_to_add_wishlist' => "You cannot add yourself to the wishlist.",
         'already_added_wishlist'       => "Already in your wishlist.",
+        'conversation_already_reported' => "Conversation already reported",
+        'conversation_added_to_report'  => "Conversation added to report"
 
     ]
     
