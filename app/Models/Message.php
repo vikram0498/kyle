@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
 
 class Message extends Model
@@ -39,6 +39,9 @@ class Message extends Model
         parent::boot();
         static::creating(function(Message $model) {
             $model->uuid = Str::uuid();
+
+            $cacheKey = "conversation_messages_{$model->conversation_id}";
+            Cache::forget($cacheKey);
         });               
     }
 

@@ -14,6 +14,8 @@ use App\Models\Report;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Http;
 use App\Events\NotificationSent;
+use Illuminate\Support\Facades\Cache;
+
 
 class ChatMessageController extends Controller
 {
@@ -280,10 +282,13 @@ class ChatMessageController extends Controller
             return response()->json($responseData, 200); 
         }
 
-        // Fetch all messages in this conversation
-        $messages = Message::where('conversation_id', $conversation->id)
-            ->orderBy('created_at', 'asc')
-            ->get();        
+        // Fetch all messages (no cache expiration time needed)
+        $cacheKey = "conversation_messages_{$conversation->id}";
+        $messages = Cache::rememberForever($cacheKey, function () use ($conversation) {
+            return Message::where('conversation_id', $conversation->id)
+                ->orderBy('created_at', 'asc')
+                ->get();
+        });
 
         if($messages->count() > 0){
 
@@ -323,6 +328,7 @@ class ChatMessageController extends Controller
                 'message'   => $groupedMessages,
                 'data' => [
                     'id'                => $recipient->id,
+                    'conversation_uuid' => $conversation->uuid,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
                     'is_block'          => (bool)$recipient->is_block,
