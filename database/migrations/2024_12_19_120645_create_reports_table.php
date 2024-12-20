@@ -17,7 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('conversation_id');
             $table->unsignedBigInteger('reported_by');
-            $table->string('reason')->nullable();
+            
+            $table->unsignedBigInteger('reason');
+            $table->foreign('reason')->references('id')->on('reasons')->onDelete('cascade');
+            $table->string('comment', 255)->nullable();
+
             $table->timestamps();
 
             $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');

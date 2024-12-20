@@ -184,6 +184,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('/wishlist/remove', [ChatMessageController::class, 'removeFromWishlist']);
     Route::post('/conversations/{conversationUuid}/add-to-report', [ChatMessageController::class, 'addToReport']);
     
+    Route::get('/get-reasons', [HomeController::class, 'getReasons']);
+    
 
     // For Seller
     // Route::group(['middleware' => ['role:' . implode(',', [config('constants.roles.seller')])]], function () {

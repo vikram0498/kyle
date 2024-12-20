@@ -6,6 +6,7 @@ use App\Models\Plan;
 use App\Models\Addon;
 use App\Models\Video;
 use App\Models\User;
+use App\Models\Reason;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupportRequest;
@@ -143,5 +144,16 @@ class HomeController extends Controller
         }
        
     }
+
+
+    public function getReasons(){
+        $reasons = Reason::all();
+        //Success Response Send
+        $responseData = [
+            'status'   => true,
+            'data'     => $reasons->makeHidden(['created_at','updated_at'])
+        ];
+        return response()->json($responseData, 200);
+   }
 
 }

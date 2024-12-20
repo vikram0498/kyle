@@ -8,7 +8,7 @@ class Report extends Model
 {
     public $table = 'reports';
 
-    protected $fillable = ['conversation_id', 'reported_by', 'reason'];
+    protected $fillable = ['conversation_id', 'reported_by', 'reason','comment'];
 
     protected static function boot () 
     {
@@ -18,6 +18,10 @@ class Report extends Model
         });               
     }
     
+    public function reason()
+    {
+        return $this->belongsTo(Reason::class, 'reason', 'id');
+    }   
     
     /**
      * Get the conversation that this report belongs to.

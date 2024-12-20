@@ -275,7 +275,6 @@ class ChatMessageController extends Controller
                     'level_type'            => $recipient->level_type ?? '',
                     'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
-                    'reports'               => null,
                 ],
             ];
     
@@ -337,7 +336,6 @@ class ChatMessageController extends Controller
                     'level_type'            => $recipient->level_type ?? '',
                     'profile_tag_name'      => $recipient->buyerPlan ? $recipient->buyerPlan->title : null,
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
-                    'reports'               => $conversation->reports->makeHidden(['conversation_id','reported_by','created_at','updated_at']),
                 ],
             ];
     
@@ -530,7 +528,8 @@ class ChatMessageController extends Controller
 
     public function addToReport(Request $request,$conversationUuid){
         $request->validate([
-            'reason' => 'required|string|max:255',
+            'reason'  => 'required|exists:reasons,id',
+            'comment' => 'nullable|string|max:255',
         ]);
 
         try{
@@ -548,18 +547,19 @@ class ChatMessageController extends Controller
             }
             
             // Check if the conversation is already reported by the user
-            $existingReport = Report::where('conversation_id', $conversation->id)
+            /*$existingReport = Report::where('conversation_id', $conversation->id)
                 ->where('reported_by', $authUser->id)
                 ->first();
 
             if ($existingReport) {
                 return response()->json(['message' => trans('messages.chat_message.conversation_already_reported')], 200);
-            }
+            }*/
 
             // Add the conversation to the report
             $report = Report::create([
                 'conversation_id' => $conversation->id,
                 'reason' => $request->reason ?? null,
+                'comment' => $request->comment ?? null,
             ]);
 
             DB::commit();
