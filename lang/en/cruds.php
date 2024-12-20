@@ -358,4 +358,11 @@ return [
         ],
         'view_ad_performace_log' => 'View Ad Performance Log',        
     ],
+
+    'chat_report' => [
+        'title' => 'Chat Reports',
+        'title_singular' => 'Chat Report',
+    ]
+
+    
 ];

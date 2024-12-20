@@ -66,15 +66,15 @@ Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])
 
 Route::group(['middleware' => ['web', 'guest'], 'as' => 'auth.','prefix'=>''], function () {    
     // Route::view('signup', 'auth.admin.register')->name('register');
-    Route::view('/admin/login', 'auth.admin.login')->name('login');
+    Route::view('/login', 'auth.admin.login')->name('login');
     Route::view('forget-password', 'auth.admin.forget-password')->name('forget-password');
     Route::view('reset-password/{token}/{email}', 'auth.admin.reset-password')->name('reset-password');
  
 });    
 
 Route::group(['middleware' => ['auth','preventBackHistory']], function () {
-    Route::view('admin/profile', 'auth.profile.index')->name('auth.admin-profile');
-    Route::group(['as' => 'admin.','prefix'=>'admin'], function () {        
+    Route::view('profile', 'auth.profile.index')->name('auth.admin-profile');
+    Route::group(['as' => 'admin.','prefix'=>''], function () {        
         Route::view('dashboard', 'admin.index')->name('dashboard');
         Route::view('plan', 'admin.plan.index')->name('plan');
         Route::view('addon', 'admin.addon.index')->name('addon');
@@ -102,6 +102,9 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('campaigns', 'admin.campaigns.index')->name('campaigns');
         
         Route::view('ad-banner', 'admin.advertise-banner.index')->name('ad-banner');
+
+        Route::view('chat-reports', 'admin.chat-reports.index')->name('chat-reports');
+
 
     });
 });
