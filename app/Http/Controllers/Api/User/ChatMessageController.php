@@ -488,6 +488,46 @@ class ChatMessageController extends Controller
         }
     }
 
+    public function removeFromWishlist(Request $request)
+    {
+        $request->validate([
+            'wishlist_user_id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $authUser = auth()->user();
+
+            if (!$authUser->wishlistedUsers()->where('wishlist_user_id', $request->wishlist_user_id)->exists()) {
+                $responseData = [
+                    'status'  => false,
+                    'message' => trans('messages.chat_message.not_in_wishlist'),
+                ];
+                return response()->json($responseData, 400);
+            }
+
+            $authUser->wishlistedUsers()->detach($request->wishlist_user_id);
+
+            DB::commit();
+
+            $responseData = [
+                'status'  => true,
+                'message' => trans('messages.chat_message.removed_wishlist_success'),
+            ];
+            return response()->json($responseData, 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+                'error_details' => $e->getMessage() . '->' . $e->getLine(),
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
     public function addToReport(Request $request,$conversationUuid){
         $request->validate([
             'reason' => 'required|string|max:255',

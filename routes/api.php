@@ -181,6 +181,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::post('/update-block-status', [ChatMessageController::class, 'updateBlockStatus']);
     Route::post('/wishlist/add', [ChatMessageController::class, 'addToWishlist']);
+    Route::post('/wishlist/remove', [ChatMessageController::class, 'removeFromWishlist']);
     Route::post('/conversations/{conversationUuid}/add-to-report', [ChatMessageController::class, 'addToReport']);
     
 

@@ -37,10 +37,10 @@ class Message extends Model
     protected static function boot () 
     {
         parent::boot();
-        static::creating(function(Message $model) {
+        static::creating(function(Message $model) { 
             $model->uuid = Str::uuid();
 
-            $cacheKey = "conversation_messages_{$model->conversation_id}";
+            $cacheKey = "conversation_messages_{$conversation->id}";
             Cache::forget($cacheKey);
         });               
     }
@@ -51,7 +51,7 @@ class Message extends Model
     }
 
     public function receiver()
-    {
+    { 
         return $this->belongsTo(User::class,'receiver_id','id');
     }
 
