@@ -641,8 +641,20 @@ body.dark .buyer-blog-new .buyer-active-verfiy span{
 body.dark label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-panel .buyer-active-verfiy::after{
   border-right-color: #5e695d;
 }
-body.dark .css-1nmdiq5-menu>div>div{
+body.dark .css-1nmdiq5-menu>div>div,
+body.dark .user_block_content{
   color: #000;
+}
+body.dark li:not(.blocked,.active-user) .chat_user_info>span{
+  color: #fff;
+}
+body.dark li:not(.blocked,.active-user) .chat_status_area>p{
+  color: #fff;
+}
+body.dark .modal_inner_form select{
+  background: rgb(255 255 255 / 10%) !important;
+  border-color: rgb(255 255 255 / 20%) !important;
+  color: #9b9b9b !important;
 }
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{

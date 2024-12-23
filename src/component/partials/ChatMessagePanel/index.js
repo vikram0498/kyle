@@ -134,8 +134,11 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                   <span className={activeUserData.is_online && "active_status" }></span>
               </Figure>
               <div>
-                <span>{activeUserData.name}</span>
-                <p>{activeUserData.is_online && "Online" }</p>
+                <div className='d-flex chat_user_name_area'><span>{activeUserData.name}</span><span>Level 1</span></div>
+                <div className='d-flex align-items-center chat_user_name_below gap-2'>
+                  <p>{activeUserData.is_online && "Online" }</p>
+                  <p className='d-flex'><span><Image src='/assets/images/premium-quality.svg' alt='' /></span>VIP</p>
+                </div>
               </div>
             </div>
 

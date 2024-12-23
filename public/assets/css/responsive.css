@@ -518,6 +518,10 @@
     flex: 0 0 46px;
     -webkit-flex: 0 0 46px;
   }
+  .wishlist_star_icon{
+    left: -10px;
+    top: 24px;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
