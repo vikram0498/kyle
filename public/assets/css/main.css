@@ -1293,6 +1293,19 @@ section.main-section {
   display: none;
 }
 
+li.blocked {
+  background: #c3c3c3;
+  padding: 8px !important;
+  border-radius: 13px;
+  margin-top: 5px;
+}
+
+.fav-icons-start {
+  margin-right: 23px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;

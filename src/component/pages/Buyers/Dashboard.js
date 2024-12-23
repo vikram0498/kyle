@@ -30,7 +30,7 @@ const Dashboard = () => {
                 <div>
                     <ul className="buyer_dash_linkTop">
                         <li>
-                            <Link href="#">
+                            <Link to="/deal-notifications">
                                 <span className="buyer-dash-icon">
                                     <img src="/assets/images/deal-icon.svg" className="img-fluid" alt="" />
                                 </span>
@@ -39,7 +39,7 @@ const Dashboard = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="#">
+                            <Link to="#">
                                 <span className="buyer-dash-icon">
                                     <img src="/assets/images/buybox-criteria-icon.svg" className="img-fluid" alt="" />
                                 </span>
@@ -47,7 +47,7 @@ const Dashboard = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="#">
+                            <Link to="/profile-verification">
                                 {/* <span className="buyer-dash-icon">
                                     <img src="/assets/images/complete-verification-icon.svg" className="img-fluid" alt="" />
                                 </span> */}
@@ -72,7 +72,7 @@ const Dashboard = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="#">
+                            <Link to="/message">
                                 <span className="buyer-dash-icon">
                                     <img src="/assets/images/chats-icon.svg" className="img-fluid" alt="" />
                                 </span>
@@ -93,7 +93,7 @@ const Dashboard = () => {
                                 </span>
                                 Browse all matches
                             </Link>
-                            <Link href="#">
+                            <Link to="/buyer-profile">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
                                         <path d="M30.1383 25.2632C30.1383 29.6179 24.2566 33.15 16.9998 33.15C9.74308 33.15 3.86133 29.6179 3.86133 25.2632C3.86133 20.9055 9.74308 17.3733 16.9998 17.3733C24.2566 17.3733 30.1383 20.9055 30.1383 25.2632Z" fill="url(#paint0_linear_564_7672)"/>

@@ -1,7 +1,18 @@
-import React from 'react'
-import { Dropdown, Figure, Image } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react'
+import { Dropdown, Figure, Image, Modal, Form,FloatingLabel, Button} from 'react-bootstrap';
+import Swal from "sweetalert2";
+import axios from "axios";
+import { useAuth } from "../../../hooks/useAuth";
+import { toast } from 'react-toastify';
 
-const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserData}) => {
+const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserData, handleConfirmBox, conversationUuid, currentUserId, setIsSubmitted, isSubmitted}) => {
+   const { getTokenData } = useAuth();
+   const [isShowReportModal, setIsShowReportModal] = useState(false);
+   const [reason, setReason] = useState("");
+   const [comment, setComment] = useState("");
+   const [error, setError] = useState("");
+   const [reportReasons, setReportReasons] = useState([]);
+   const apiUrl = process.env.REACT_APP_API_URL;
    // Handle the Enter key press event to send the message
    const handleKeyDown = (e) => {
     if (e.key === 'Enter' && message.trim()) {
@@ -12,6 +23,99 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
   const openSidebar = () => {
     document.body.classList.add("msg-sidebar-open");
   };
+
+  const getAuthHeaders = () => ({
+    Accept: "application/json",
+    Authorization: `Bearer ${getTokenData().access_token}`,
+  });
+  const handleAddWishList = (status) => {
+     const addToWishList = async () => {
+          try {
+            const response = await axios.post(`${apiUrl}wishlist/add`,{wishlist_user_id: currentUserId},{ headers: getAuthHeaders() });
+            toast.success(response.data.message, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            setIsSubmitted(!isSubmitted);
+        } catch (error) {
+            console.error("Error fetching messages:", error.response?.data?.message || error.message);
+        }
+     }
+     addToWishList();
+    // Swal.fire({
+    //     icon: "success",
+    //     title: "Success!",
+    //     text: "User Added to favorite list",
+    // });
+  }
+
+  const handleRemoveWishList = (status) => {
+    const addToWishList = async () => {
+         try {
+           const response = await axios.post(`${apiUrl}wishlist/remove`,{wishlist_user_id: currentUserId},{ headers: getAuthHeaders() });
+            toast.success(response.data.message, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+           setIsSubmitted(!isSubmitted);
+       } catch (error) {
+           console.error("Error fetching messages:", error.response?.data?.message || error.message);
+       }
+    }
+    addToWishList();
+  //  Swal.fire({
+  //      icon: "success",
+  //      title: "Success!",
+  //      text: "User Added to favorite list",
+  //  });
+ }
+
+  const handleSubmitReport = (e) => {
+    e.preventDefault();
+
+    if (!reason) {
+      setError("Reason for Report is required.");
+      return;
+    }
+    setError(""); // Clear error if validation passes
+
+    const formData = {
+      reason,
+      comment,
+    };
+
+    const addToWishList = async () => {
+      try {
+        const response = await axios.post(`${apiUrl}conversations/${conversationUuid}/add-to-report`,formData,{ headers: getAuthHeaders() });
+        if(response.data.status){
+          setIsShowReportModal(false);
+        }
+    } catch (error) {
+        console.error("Error fetching messages:", error.response?.data?.message || error.message);
+        setError(error.response?.data?.message)
+    }
+ }
+ addToWishList();
+    console.log("Form Submitted:", formData);
+  };
+
+  const handleChangeReason = (e) => {
+    const reason = reportReasons.find(reason => reason.id == e.target.value);
+    let selectedComment = reason ? reason.description : "";
+    setReason(e.target.value);
+    setComment(selectedComment);
+    setError("");
+  }
+  
+  useEffect(()=>{
+    const fetchReportReason = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}get-reasons`,{ headers: getAuthHeaders() });
+        setReportReasons(response.data.data);
+      } catch (error) {
+        
+      }
+    }
+    fetchReportReason();
+  },[]);
 
   return (
     <>
@@ -27,14 +131,17 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
               </div>
               <Figure>
                   <Image src={activeUserData.profile_image || '/assets/images/property-img.png'} alt='' />
-                  <span className='active_status'></span>
+                  <span className={activeUserData.is_online && "active_status" }></span>
               </Figure>
               <div>
                 <span>{activeUserData.name}</span>
                 <p>{activeUserData.is_online && "Online" }</p>
               </div>
             </div>
-            <div className='chat_header_action'>
+
+            <div className='chat_header_action d-flex'>
+              {activeUserData.wishlisted ? <div className='fav-icons-start' onClick={handleRemoveWishList}><img src='./assets/images/vector-yellow.svg'/></div> : <div className='fav-icons-start' onClick={handleAddWishList}><img src='./assets/images/vector.svg'/></div>}
+              
               <Dropdown>
                 <Dropdown.Toggle>
                   <svg xmlns="http://www.w3.org/2000/svg" width="4" height="20" viewBox="0 0 4 20" fill="none">
@@ -44,8 +151,12 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                   </svg>
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item href="javascript:void(0)">Delete</Dropdown.Item>
-                  <Dropdown.Item href="javascript:void(0)">Block</Dropdown.Item>
+                  {activeUserData.is_block ?
+                  <Dropdown.Item href="javascript:void(0)" onClick={()=>handleConfirmBox(activeUserData.id, 0)}>Unblock</Dropdown.Item>
+                  :
+                  <Dropdown.Item href="javascript:void(0)" onClick={()=>handleConfirmBox(activeUserData.id, 1)}>Block</Dropdown.Item>
+                  }
+                  <Dropdown.Item href="javascript:void(0)" className='text-danger' onClick={() => {setIsShowReportModal(true)}}><strong>Report</strong></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -57,29 +168,84 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                     <div className="day-header line-with-text"><span>{day}</span></div>
                     {dayMessages.map((data,index)=>(
                       <div className={`msg_item ${data.sender_id !== activeUserData.id && 'outgoing_msg'}`} key={index}>
-                      <div className='msg_content'>{data.content}</div>
-                      {/* <p className='msg_time'>{data.date_time_label == 'Today' ? data.created_time : data.created_date}</p> */}
-                      <p className='msg_time'>{data.created_time}</p>
-                    </div>
+                        <div className='msg_content'>{data.content}</div>
+                        {/* <p className='msg_time'>{data.date_time_label == 'Today' ? data.created_time : data.created_date}</p> */}
+                        <p className='msg_time'>{data.created_time}</p>
+                      </div>
                     ))}
                   </div>
                 ))}
             </div>
           </div>
-          <div className='chat_footer'>
-            <form className='msg_send_footer'>
-              <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}  onKeyDown={handleKeyDown}/>
-              <button type='button' className='msg_send_btn' onClick={sendMessage}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </form>
-          </div>
+          {activeUserData.is_block == 1 ? <p>User Blocked </p>:
+            <div className='chat_footer'>
+              <form className='msg_send_footer'>
+                <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}  onKeyDown={handleKeyDown}/>
+                <button type='button' className='msg_send_btn' onClick={sendMessage}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          }
         </div>
+
+        <Modal
+          show={isShowReportModal}
+          onHide={() => setIsShowReportModal(false)}
+          centered
+          className="radius_30 max-648"
+        >
+          <Modal.Header closeButton className="new_modal_close"></Modal.Header>
+          <Modal.Body className="space_modal">
+            <div className="modal_inner_content">
+              <Form onSubmit={handleSubmitReport}>
+                <Form.Group className="mb-3 text-start">
+                  <Form.Label>Reason for Report</Form.Label>
+                  <Form.Select
+                    aria-label="Select a reason"
+                    value={reason}
+                    onChange={handleChangeReason}
+                  >
+                    <option value="">Select a reason</option>
+                    {reportReasons.map((data,index)=>{
+                      return (
+                        <option value={data.id} key={index}>{data.name}</option>
+
+                      )
+                    })}
+                    {/* <option value="">Select a reason</option>
+                    <option value="1">Inappropriate Content</option>
+                    <option value="2">Spam</option>
+                    <option value="3">Harassment</option>
+                    <option value="4">Other</option> */}
+                  </Form.Select>
+                  {error && <div className="text-danger mt-1">{error}</div>}
+                </Form.Group>
+                <Form.Group className="mb-3 text-start">
+                  <Form.Label>Comment</Form.Label>
+                  <FloatingLabel controlId="floatingTextarea2">
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Write your comment here"
+                      style={{ height: "100px" }}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+                <Form.Group className="d-flex justify-content-end">
+                  <Button variant="primary" type="submit" className="w-100">
+                    Submit
+                  </Button>
+                </Form.Group>
+              </Form>
+            </div>
+          </Modal.Body>
+        </Modal>
     </>
   );
 };
-
 export default ChatMessagePanel;

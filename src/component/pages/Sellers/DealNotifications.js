@@ -12,7 +12,6 @@ import Pagination from '../../partials/Pagination';
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
-
 const DealNotifications = () => {
     // Common Modal for want-to-buy, interested and not-interested
     const navigate = useNavigate();
@@ -184,7 +183,6 @@ const DealNotifications = () => {
         handleDealUpdate(); // Call the async function inside useEffect
     }, [isConfirmProofOfFund, wantToBuyFormData]);
 
-    console.log(errors,"errors")
   return (
     <>
         {/* <Header /> */}
@@ -309,7 +307,7 @@ const DealNotifications = () => {
                                         <div className='deal_notifications_right flex_auto_column'>
                                             <ul className={`deal_notifications_btn ${data.status != null ? 'disabled-btn' : ''}`}>
                                                 <li>
-                                                    {!data.is_proof_of_fund_verified ? 
+                                                    {data.is_proof_of_fund_verified ? 
                                                         <Button className='outline_btn' onClick={()=>handleSubmitOffer(data.id)}>
                                                             <Image src='/assets/images/want_buy.svg' alt='' /> Want to Buy 
                                                             {data.status === 'want_to_buy' &&

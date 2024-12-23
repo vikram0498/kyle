@@ -21,7 +21,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                         <li onClick={() => {
                             setReceiverId(data.id);
                             closeSidebar();
-                          }} key={index} className={data.id == receiverId && 'active-user'}>
+                          }} key={index} className={data.is_block == 1 ? 'blocked' : data.id == receiverId && 'active-user'}>
                             <div className='chat_user_img'>
                                 <Figure>
                                     <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
@@ -34,7 +34,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                 </div>
                                 <div className='chat_status_area'>
                                     <p className='mb-0'>{data.last_message_at}</p>
-                                    {data.unread_message_count > 0 ? 
+                                    {data.unread_message_count > 0 && data.id != receiverId? 
                                     <div className='seen_status text-end'>
                                         <span className='msg_left_number'>{data.unread_message_count}</span>
                                     </div>:
