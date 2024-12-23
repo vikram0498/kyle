@@ -222,7 +222,6 @@ const MyBuyer = () => {
               Authorization: "Bearer " + getTokenData().access_token,
               "auth-token": getTokenData().access_token,
           };
-
           try {
               let response = await axios.get(`${apiUrl}mark-as-read-notification/deal_notification`,{headers:headers});
           } catch (error) {

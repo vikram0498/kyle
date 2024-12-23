@@ -177,7 +177,7 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                 ))}
             </div>
           </div>
-          {activeUserData.is_block == 1 ? <p className='user_block_content'>This user is blocked.<button className='unlock_btn'>Tap to unblock</button></p>:
+          {activeUserData.is_block == 1 ? <p className='user_block_content'>This user is blocked.<button className='unlock_btn' onClick={()=>handleConfirmBox(activeUserData.id, 0)}>Tap to unblock</button></p>:
             <div className='chat_footer'>
               <form className='msg_send_footer'>
                 <input type='text' placeholder='Message Here...' value={message}  onChange={(e) => setMessage(e.target.value)}  onKeyDown={handleKeyDown}/>

@@ -187,7 +187,16 @@ const BuyerCardResult = (props) => {
                         </OverlayTrigger>
                     </div>:''
                 }
-                {
+                <div className="red-flag inner_red_flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
+                    <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
+                        <img
+                        src="/assets/images/red-flag-bg.svg"
+                        className="img-fluid"
+                        alt=""
+                        />
+                    </OverlayTrigger>
+                </div>
+                {/* {
                     data.createdByAdmin && data.redFlagShow && 
                         <div className="red-flag inner_red_flag" onClick={()=>{handleClickEditFlag(data.redFlag,data.id)}}>
                             <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
@@ -198,7 +207,7 @@ const BuyerCardResult = (props) => {
                                 />
                             </OverlayTrigger>
                         </div>
-                }
+                } */}
                 {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.certified_closer_verified|| data.createdByAdmin ) ? 
                     <div className="cornor-block">
                         {data.phone_verified && 

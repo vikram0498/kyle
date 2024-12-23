@@ -162,7 +162,23 @@ export default function BuyerCard({
             </li> */}
           </ul>
         </div>
-        {data.createdByAdmin ? (
+          <>
+            <div
+              className="red-flag inner_red_flag"
+              onClick={() => {
+                handleClickEditFlag(data.redFlag, data.id);
+              }}
+            >
+              <OverlayTrigger placement="top" style={{ backgroundColor: 'green' }} overlay={<Tooltip>Flag</Tooltip>} >
+                <img
+                  src="/assets/images/red-flag-bg.svg"
+                  className="img-fluid"
+                  alt=""
+                />
+              </OverlayTrigger>
+            </div>
+          </>
+        {/* {data.createdByAdmin ? (
             data.redFlagShow ? (
               <>
                 <div
@@ -185,7 +201,7 @@ export default function BuyerCard({
             )
           ) : (
             ""
-          )}
+          )} */}
         {(data.phone_verified || data.email_verified || data.driver_license_verified || data.llc_verified || data.proof_of_funds_verified || data.certified_closer_verified || data.createdByAdmin ) ? 
         <div className="cornor-block cornor-block2">
           {data.phone_verified && 
