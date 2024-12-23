@@ -6635,11 +6635,31 @@ body.dark .notification_pro_deal>li:last-child{
   align-items: center;
   -webkit-align-items: center;
   cursor: pointer;
-  padding: 18px 0;
-  border-bottom: 1px solid #CFDEE7;
+  padding: 8px 0;
+  /* border-bottom: 1px solid #CFDEE7; */
+  margin-top: 11px;
+  position: relative;
+}
+.chat_side_list>li::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background-color: #CFDEE7;
+}
+.chat_side_list>li.blocked{
+  background: #e9e9e9;
 }
 .chat_side_list>li:last-child{
   border-bottom: none;
+}
+.chat_side_list>li:first-child{
+  margin-top: 0;
+}
+.chat_side_list>li:last-child::after{
+  display: none;
 }
 .chat_pro_area{
   flex: 1;
@@ -8240,6 +8260,49 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   font-weight: 600;
 }
 
+.user_block_content{
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  background-color: #c3c3c3;
+  margin: 0 auto;
+  padding: 5px 30px;
+  border-radius: 40px;
+  color: #121639;
+  font-weight: 500;
+}
+.unlock_btn{
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+  color: #3f53fe;
+  font-weight: 600;
+}
+.icon_top_circle{
+  width: 100px;
+  height: 100px;
+  background-color: #F5F7F9;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  line-height: 94px;
+}
+.modal_inner_form select{
+  border: 1px solid #E1E3E7;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 11px 18px;
+  color: #464B70;
+}
+.modal_inner_form textarea{
+  font-size: 14px !important;
+  padding: 11px 18px !important;
+  color: #464B70 !important;
+  border: 1px solid #E1E3E7 !important;
+  background-color: transparent !important;
+}
+
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{
@@ -8301,5 +8364,9 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   .multiple_files .image-preview .image-container{
     width: 100px;
     height: 100px;
+  }
+  .user_block_content{
+    font-size: 13px;
+    padding: 3px 8px;
   }
 }
