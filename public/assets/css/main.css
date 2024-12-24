@@ -4127,7 +4127,7 @@ body.nonscroll {
   left: unset !important;
   transform: none !important;
   top: 50px !important;
-  z-index: 0;
+  z-index: 99;
 }
 .component-group .dropdown-menu:before {
   position: absolute;

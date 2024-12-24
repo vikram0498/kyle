@@ -67,7 +67,7 @@ const LastSearchResult = () => {
                             </div>
                             <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
                                 <h6 className="center-head text-center mb-0">
-                                   Last Search Data
+                                   Last Searched Data
                                 </h6>
                             </div>
                         </div>
