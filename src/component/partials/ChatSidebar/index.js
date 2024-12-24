@@ -1,5 +1,5 @@
 import React from 'react'
-import { Figure, Image } from 'react-bootstrap';
+import { Dropdown, Figure, Image } from 'react-bootstrap';
 
 const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
     const closeSidebar = () => {
@@ -9,11 +9,25 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
     <>
         <div className='chat_sidebar'>
             <h6>Messages 
-                <span className='sidebar_mob_close d-lg-none' onClick={closeSidebar}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                        <path d="M9.28265 7.5L14.6306 2.15205C15.7766 1.00606 13.9939 -0.776597 12.848 0.369393L7.5 5.71735L2.15205 0.369393C1.00606 -0.776597 -0.776597 1.00606 0.369393 2.15205L5.71735 7.5L0.369393 12.848C-0.776597 13.9939 1.00606 15.7766 2.15205 14.6306L7.5 9.28265L12.848 14.6306C13.9939 15.7766 15.7766 13.9939 14.6306 12.848L9.28265 7.5Z" fill="#5c5c5c"/>
-                    </svg>
-                </span>
+                <div className='d-flex align-items-center gap-3'>
+                    <Dropdown>
+                        <Dropdown.Toggle>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="20" viewBox="0 0 4 20" fill="none">
+                            <path d="M2 4C3.10457 4 4 3.10457 4 2C4 0.895431 3.10457 0 2 0C0.895431 0 0 0.895431 0 2C0 3.10457 0.895431 4 2 4Z" fill="#464B70"/>
+                            <path d="M2 11.9999C3.10457 11.9999 4 11.1044 4 9.99988C4 8.89531 3.10457 7.99988 2 7.99988C0.895431 7.99988 0 8.89531 0 9.99988C0 11.1044 0.895431 11.9999 2 11.9999Z" fill="#464B70"/>
+                            <path d="M2 19.9998C3.10457 19.9998 4 19.1043 4 17.9998C4 16.8952 3.10457 15.9998 2 15.9998C0.895431 15.9998 0 16.8952 0 17.9998C0 19.1043 0.895431 19.9998 2 19.9998Z" fill="#464B70"/>
+                        </svg>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu align="end">
+                            <Dropdown.Item href="javascript:void(0)">Blocked Users</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <span className='sidebar_mob_close d-lg-none' onClick={closeSidebar}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                            <path d="M9.28265 7.5L14.6306 2.15205C15.7766 1.00606 13.9939 -0.776597 12.848 0.369393L7.5 5.71735L2.15205 0.369393C1.00606 -0.776597 -0.776597 1.00606 0.369393 2.15205L5.71735 7.5L0.369393 12.848C-0.776597 13.9939 1.00606 15.7766 2.15205 14.6306L7.5 9.28265L12.848 14.6306C13.9939 15.7766 15.7766 13.9939 14.6306 12.848L9.28265 7.5Z" fill="#5c5c5c"/>
+                        </svg>
+                    </span>
+                </div>
             </h6>
             <ul className='chat_side_list scrollbar_design'>
                 {chatList.map((data,index)=>{
@@ -27,12 +41,12 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                     <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
                                 </Figure>
                             </div>
+                            <div className='wishlist_star_icon'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                    <path d="M8.50049 13.8076L4.51586 15.8652C3.65728 16.3089 2.65428 15.5927 2.81791 14.6532L3.57874 10.2936L0.354951 7.20564C-0.340093 6.54064 0.0435119 5.38183 1.00299 5.24404L5.45834 4.60827L7.45065 0.64124C7.8799 -0.213747 9.11997 -0.213747 9.54922 0.64124L11.5415 4.60827L15.997 5.24404C16.9564 5.38083 17.34 6.53955 16.6452 7.20564L13.4213 10.2936L14.1821 14.6532C14.3458 15.5928 13.3427 16.3089 12.4842 15.8652L8.50049 13.8076Z" fill="#FFA800"/>
+                                </svg>
+                            </div>
                             <div className='chat_pro_area'>
-                                <div className='wishlist_star_icon'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
-                                        <path d="M8.50049 13.8076L4.51586 15.8652C3.65728 16.3089 2.65428 15.5927 2.81791 14.6532L3.57874 10.2936L0.354951 7.20564C-0.340093 6.54064 0.0435119 5.38183 1.00299 5.24404L5.45834 4.60827L7.45065 0.64124C7.8799 -0.213747 9.11997 -0.213747 9.54922 0.64124L11.5415 4.60827L15.997 5.24404C16.9564 5.38083 17.34 6.53955 16.6452 7.20564L13.4213 10.2936L14.1821 14.6532C14.3458 15.5928 13.3427 16.3089 12.4842 15.8652L8.50049 13.8076Z" fill="#FFA800"/>
-                                    </svg>
-                                </div>
                                 <div className='chat_user_info'>
                                     <span>{data.name}</span>
                                     {/* <p>{data?.last_message?.content}</p> */}
@@ -51,6 +65,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                         </span>
                                     </div>
                                     }
+                                    <button className='unblock_btn'>Unblock</button>
                                 </div>
                             </div>
                         </li>

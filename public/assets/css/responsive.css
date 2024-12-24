@@ -481,14 +481,6 @@
   .chat_user_info{
     padding-left: 10px;
   }
-  .chat_sidebar>h6{
-    display: flex;
-    display: -webkit-flex;
-    flex-wrap: wrap;
-    -webkit-flex-wrap: wrap;
-    justify-content: space-between;
-    -webkit-justify-content: space-between;
-  }
   .chat_header_user>.figure{
     width: 40px;
     height: 40px;
@@ -519,8 +511,12 @@
     -webkit-flex: 0 0 46px;
   }
   .wishlist_star_icon{
-    left: -10px;
-    top: 24px;
+    left: 26px;
+    bottom: 5px;
+  }
+  .chat_side_list>li.blocked .wishlist_star_icon,
+  .chat_side_list>li.active-user .wishlist_star_icon{
+    left: 38px;
   }
 }
 @media (max-width: 767px) {
@@ -1105,6 +1101,21 @@
   .buyer_dash_bothBtn>a{
     padding: 20px;
     gap: 10px;
+  }
+  .chat_header_action{
+    flex: 0 0 100%;
+    -webkit-flex: 0 0 100%;
+    max-width: 100%;
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+  }
+  .chat_box .chat_header{
+    position: relative;
+  }
+  .chat_header_user .mobile_hamburger{
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
   }
 }
 @media (max-width: 480px) {

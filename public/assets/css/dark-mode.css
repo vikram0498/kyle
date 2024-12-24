@@ -483,14 +483,22 @@ body.dark .send_deal_form .form-label,
 body.dark .buyer_top_select label{
   color: #fff;
 }
-body.dark .chat_header_action button svg path{
+body.dark .chat_header_action button svg path,
+body.dark .chat_sidebar h6 .dropdown button.btn svg path{
   fill: #fff;
 }
-body.dark .chat_header_action .dropdown-menu{
-  background: #1f1f1f;
+body.dark .chat_header_action .dropdown-menu,
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu{
+  background: #434343;
   border-color: rgb(255 255 255 / 20%);
 }
-body.dark .chat_header_action .dropdown-menu>a{
+body.dark .chat_header_action .dropdown-menu::before,
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu::before{
+  border-bottom-color: #434343;
+}
+body.dark .chat_header_action .dropdown-menu>a,
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu>a,
+body.dark  .day-header.line-with-text{
   color: #cacaca;
 }
 body.dark .chat_header,
@@ -498,7 +506,11 @@ body.dark .chat_header_action .dropdown-menu>a:hover,
 body.dark .chat_header_action .dropdown-menu>a:focus,
 body.dark .chat_header_action .dropdown-menu>a:active,
 body.dark .scrollbar_design:hover::-webkit-scrollbar-thumb,
-body.dark .msg_send_footer>input:not(input[type="submit"]){
+body.dark .msg_send_footer>input:not(input[type="submit"]),
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu>a:hover,
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu>a:focus,
+body.dark .chat_sidebar h6 .dropdown .dropdown-menu>a:active,
+body.dark .chat_side_list>li::after{
   background-color: rgb(255 255 255 / 10%);
 }
 body.dark .chat_side_list>li{

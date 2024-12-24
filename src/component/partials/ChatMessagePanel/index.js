@@ -137,7 +137,10 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                 <div className='d-flex chat_user_name_area'><span>{activeUserData.name}</span><span>Level {activeUserData.level_type}</span></div>
                 <div className='d-flex align-items-center chat_user_name_below gap-2'>
                   <p>{activeUserData.is_online && "Online" }</p>
-                  <p className='d-flex'><span><Image src={activeUserData.profile_tag_image} alt='' /></span>{activeUserData.profile_tag_name}</p>
+                  <p className='d-flex gap-1'>
+                    <span><Image src={activeUserData.profile_tag_image} alt='' /></span>
+                    {activeUserData.profile_tag_name}
+                  </p>
                 </div>
               </div>
             </div>
@@ -217,7 +220,7 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
               </div>
               <Form onSubmit={handleSubmitReport} className='modal_inner_form'>
                 <Form.Group className="mb-3 text-start">
-                  {/* <Form.Label>Reason for Report</Form.Label> */}
+                  <Form.Label className='offer_label'>Reason For Report</Form.Label>
                   <Form.Select
                     aria-label="Select a reason"
                     value={reason}
@@ -238,11 +241,11 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                   {error && <div className="text-danger mt-1">{error}</div>}
                 </Form.Group>
                 <Form.Group className="mb-3 text-start">
-                  {/* <Form.Label>Comment</Form.Label> */}
+                  <Form.Label className='offer_label'>Comment</Form.Label>
                   <FloatingLabel controlId="floatingTextarea2">
                     <Form.Control
                       as="textarea"
-                      placeholder="Enter Here"
+                      placeholder="Write your comment here"
                       style={{ height: "100px" }}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}

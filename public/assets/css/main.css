@@ -1301,8 +1301,8 @@ li.blocked {
 }
 
 .fav-icons-start {
-  margin-right: 23px;
-  margin-top: 5px;
+  margin-right: 12px;
+  margin-top: 4px;
   cursor: pointer;
 }
 
@@ -5962,6 +5962,8 @@ span.contact-preference.mx-2 img {
   flex: 0 0 calc(100% - 83px);
   max-width: calc(100% - 83px);
   padding-left: 5px;
+  align-self: center;
+  -webkit-align-self: center;
 }
 .dropdown_end{
   flex: 0 0 50px;
@@ -6606,6 +6608,44 @@ body.dark .notification_pro_deal>li:last-child{
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 20px;
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}
+.chat_sidebar h6 .dropdown button.btn{
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.chat_sidebar h6 .dropdown button.btn::after{
+  display: none;
+}
+.chat_sidebar h6 .dropdown .dropdown-menu{
+  padding: 6px 0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 3px 10px 40px #0F21441A;
+  -webkit-box-shadow: 3px 10px 40px #0F21441A;
+  margin-right: -20px;
+  margin-top: 12px;
+}
+.chat_sidebar h6 .dropdown .dropdown-menu::before{
+  content: '';
+  position: absolute;
+  right: 16px;
+  bottom: 100%;
+  border: 10px solid transparent;
+  border-bottom-color: #fff;
+  border-top: none;
+}
+.chat_sidebar h6 .dropdown .dropdown-menu>a{
+  color: #464B70;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 7px 16px;
 }
 .chat_side_list{
   padding: 0;
@@ -6726,7 +6766,7 @@ body.dark .notification_pro_deal>li:last-child{
   font-weight: 600;
   font-family: "Barlow", sans-serif;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   white-space: nowrap;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
@@ -6761,6 +6801,16 @@ body.dark .notification_pro_deal>li:last-child{
   font-size: 14px;
   font-weight: 600;
   margin-left: auto;
+}
+.chat_status_area>.unblock_btn{
+  background-color: #3F53FE;
+  padding: 7px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
 }
 
 /* Chat Right Part */
@@ -6840,7 +6890,20 @@ body.dark .notification_pro_deal>li:last-child{
 .chat_header_action .dropdown-menu{
   padding: 6px 0;
   border-radius: 10px;
-  overflow: hidden;
+  border: none;
+  box-shadow: 3px 10px 40px #0F21441A;
+  -webkit-box-shadow: 3px 10px 40px #0F21441A;
+  margin-right: -20px;
+  margin-top: 12px;
+}
+.chat_header_action .dropdown-menu::before{
+  content: '';
+  position: absolute;
+  right: 16px;
+  bottom: 100%;
+  border: 10px solid transparent;
+  border-bottom-color: #fff;
+  border-top: none;
 }
 .chat_header_action .dropdown-menu>a{
   color: #464B70;
@@ -8266,17 +8329,18 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   align-items: center;
   justify-content: center;
   width: fit-content;
-  background-color: #c3c3c3;
+  background-color: #E4EAF0;
   margin: 0 auto;
   padding: 5px 30px;
   border-radius: 40px;
   color: #121639;
   font-weight: 500;
+  font-size: 14px;
 }
 .unlock_btn{
   background-color: transparent;
   border: none;
-  text-decoration: underline;
+  text-decoration: none;
   color: #3f53fe;
   font-weight: 600;
 }
@@ -8304,8 +8368,12 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
 }
 .wishlist_star_icon{
   position: absolute;
-  left: -20px;
-  top: 35px;
+  left: 50px;
+  bottom: 12px;
+}
+.chat_side_list>li.blocked .wishlist_star_icon,
+.chat_side_list>li.active-user .wishlist_star_icon{
+  left: 58px;
 }
 .chat_user_name_area{
   margin-bottom: 6px;
@@ -8346,6 +8414,7 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 }
 
 
