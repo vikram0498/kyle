@@ -119,7 +119,7 @@ const EditRequest = ({
               <h3>Flag Data</h3>
               <p>Please report the incorrect information</p>
             </div>
-            <form className="modal-form" method="post" onSubmit={handleSubmit}>
+            <form className="modal-form modal_inner_form" method="post" onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-12 col-lg-12 mb-4">
                   <div className="row">
