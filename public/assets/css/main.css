@@ -6289,6 +6289,10 @@ body.dark .pro_deal_table table thead th{
   border: none;
   position: relative;
 }
+.pro_deal_table td:first-child{
+  padding-left: 20px;
+  padding-right: 20px;
+}
 body.dark .pro_deal_table td{
   color: #fff;
 }
@@ -6308,8 +6312,8 @@ body.dark .pro_deal_table tbody tr:nth-child(even) td{
   display: -webkit-flex;
   align-items: center;
   -webkit-align-items: center;
-  justify-content: center;
-  -webkit-justify-content: center;
+  /* justify-content: center;
+  -webkit-justify-content: center; */
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   gap: 6px;

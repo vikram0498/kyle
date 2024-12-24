@@ -518,6 +518,16 @@
   .chat_side_list>li.active-user .wishlist_star_icon{
     left: 38px;
   }
+  .pro_deal_table td:first-child{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .pro_deal_table td:first-child>span{
+    gap: 6px;
+  }
+  .pro_deal_table td{
+    font-size: 14px;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -955,7 +965,6 @@
   .buyer_dash_linkTop li{
     flex: 0 0 calc(50% - 8px);
   }
-
 }
 
 @media (max-width: 575px) {
