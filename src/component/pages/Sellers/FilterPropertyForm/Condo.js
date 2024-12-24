@@ -59,7 +59,7 @@ const Condo = ({ data, manufactureSelected }) => {
             {data.renderFieldError("city")}
           </div>
         </div>
-        {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Zip Code</label>
           <div className="form-group">
             <input
@@ -72,7 +72,7 @@ const Condo = ({ data, manufactureSelected }) => {
             />
             {data.renderFieldError("zip_code")}
           </div>
-        </div>  */}
+        </div> 
         <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-4">
           <label>Bed<span>*</span></label>
           <div className="form-group">

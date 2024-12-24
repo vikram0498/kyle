@@ -134,10 +134,10 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                   <span className={activeUserData.is_online && "active_status" }></span>
               </Figure>
               <div>
-                <div className='d-flex chat_user_name_area'><span>{activeUserData.name}</span><span>Level 1</span></div>
+                <div className='d-flex chat_user_name_area'><span>{activeUserData.name}</span><span>Level {activeUserData.level_type}</span></div>
                 <div className='d-flex align-items-center chat_user_name_below gap-2'>
                   <p>{activeUserData.is_online && "Online" }</p>
-                  <p className='d-flex'><span><Image src='/assets/images/premium-quality.svg' alt='' /></span>VIP</p>
+                  <p className='d-flex'><span><Image src={activeUserData.profile_tag_image} alt='' /></span>{activeUserData.profile_tag_name}</p>
                 </div>
               </div>
             </div>
@@ -227,7 +227,6 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                     {reportReasons.map((data,index)=>{
                       return (
                         <option value={data.id} key={index}>{data.name}</option>
-
                       )
                     })}
                     {/* <option value="">Select a reason</option>
