@@ -10,6 +10,8 @@ use App\Models\Reason;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupportRequest;
+use App\Models\BuyerDeal;
+use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; 
 
@@ -154,6 +156,106 @@ class HomeController extends Controller
             'data'     => $reasons->makeHidden(['created_at','updated_at'])
         ];
         return response()->json($responseData, 200);
-   }
+    }
+
+    public function getBuyerDashBoardDetail()
+    {
+        $totalDealsCount = 0;
+        $unreadMessageCount = 0;
+        $completedVerificationNum = 0;
+        $completedVerificationPercent = 0;
+        try{           
+
+            $user = auth()->user();
+            $propertyTypes = config('constants.property_types');
+
+            // Total number of buyer's deals 
+            $buyerDealQuery = BuyerDeal::where("buyer_user_id", $user->id);
+
+            $totalDealsCount = $buyerDealQuery->count();
+
+            // Latest 3 Buyer Deals
+            $latestDeals  = $buyerDealQuery->with(['searchLog', 'createdBy'])->latest()->take(3)->get();
+
+                $latestDeals->transform(function ($buyerDeal) use ($propertyTypes) {
+                    $searchLog = $buyerDeal->searchLog ?? null;
+                    $propertType = $searchLog && $searchLog->property_type && $propertyTypes[$searchLog->property_type] ? $propertyTypes[$searchLog->property_type] : '';
+                    $address = $searchLog && $searchLog->address ? $searchLog->address : '';
+                    $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
+                    return [
+                        'id'                => $buyerDeal->id,
+                        'sender_by'         => $searchLog->user_id,
+                        'search_log_id'     => $searchLog->id ?? '',
+                        'title'             => $address,
+                        'address'           => $address,
+                        'property_type'     => $propertType,
+                        'property_images'   => $searchLog && $searchLog->uploads ? $searchLog->search_log_image_urls : '',
+                        'picture_link'      => $searchLog && $searchLog->picture_link ? $searchLog->picture_link : '',
+                        'status'            => $buyerDeal->status,
+                        'is_proof_of_fund_verified'  => $is_proof_of_fund_verified,
+                        'bedroom_min'       => $searchLog->bedroom,
+                        'bath'              => $searchLog->bath,
+                        'size'              => $searchLog->size,
+                        'lot_size'          => $searchLog->lot_size,
+                        'price'             => $searchLog->price,
+                    ];
+                });
+    
+
+            // Profile Verification status
+            $verification = $user->buyerVerification;         
+
+            // Define the verification steps
+            $steps = [
+                $verification->is_phone_verification ?? 0,
+                $verification->is_driver_license && $verification->driver_license_status === 'verified',
+                $verification->is_proof_of_funds && $verification->proof_of_funds_status === 'verified',
+                $verification->is_llc_verification && $verification->llc_verification_status === 'verified',
+                $verification->is_certified_closer && $verification->certified_closer_status === 'verified',
+                $verification->is_application_process ?? 0,
+            ];
+
+            // Calculate total and completed steps
+            $totalSteps = count($steps);
+            $completedSteps = collect($steps)->filter()->count();
+            // Calculate the percentage
+            $percentage = $totalSteps > 0 ? round(($completedSteps / $totalSteps) * 100, 2) : 0;
+
+            // Total number of new chat messages
+            $unreadMessageCount = Message::where('receiver_id', $user->id)
+            ->where('sender_id', '!=', $user->id)
+            ->whereDoesntHave('seenBy', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->count();
+
+            $buyer_verification = [
+                'ratio' => $completedSteps ." / " . $totalSteps,
+                'percentage' => $percentage . '%',
+            ];
+
+            // Prepare the response
+
+            $responseData = [
+                'status'    => true,
+                'data'      => [
+                    'total_deals_count'     => $totalDealsCount,
+                    'buyer_verification'     => $buyer_verification,                    
+                    'unreadMessageCount'    => $unreadMessageCount,
+                    'latest_buyer_deals'    => $latestDeals,
+                ],
+            ];
+            return response()->json($responseData, 200);
+    
+        }catch(\Exception $e){
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
 
 }

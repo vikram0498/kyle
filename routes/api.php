@@ -218,6 +218,10 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::get('get-notifications', [NotificationController::class, 'index']);
     Route::get('mark-as-read-notification/{type?}', [NotificationController::class, 'markAsRead']);
 
+    // Buyer Dashboard Detail
+    Route::get('/buyer-dashboard-details', [HomeController::class, 'getBuyerDashBoardDetail']);
+
+
 
 });
 
