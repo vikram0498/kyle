@@ -216,8 +216,10 @@ class HomeController extends Controller
             $percentage = $totalSteps > 0 ? round(($completedSteps / $totalSteps) * 100, 2) : 0;
 
             $buyer_verification = [
-                'ratio' => $completedSteps ." / " . $totalSteps,
-                'percentage' => $percentage . '%',
+                'completed_steps'   => $completedSteps,
+                'total_steps'       => $totalSteps,
+                'ratio'             => $completedSteps ." / " . $totalSteps,
+                'percentage'        => $percentage . '%',
             ];
 
             // Total number of new chat messages
