@@ -40,7 +40,7 @@ class Message extends Model
         static::creating(function(Message $model) { 
             $model->uuid = Str::uuid();
 
-            $cacheKey = "conversation_messages_{$conversation->id}";
+            $cacheKey = "conversation_messages_{$model->id}";
             Cache::forget($cacheKey);
         });               
     }

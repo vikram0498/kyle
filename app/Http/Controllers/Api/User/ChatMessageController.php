@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ChatMessageController extends Controller
 {
-    public function getChatList($recipient = null)
+    public function getChatList(Request $request,$recipient = null)
     {
         $userId = auth()->user()->id;
 
@@ -36,11 +36,18 @@ class ChatMessageController extends Controller
                 ->orWhere('participant_2', $userId);
         })->get();
 
-        $chatList = $conversations->map(function ($conversation) use ($userId) {
+        $chatList = $conversations->map(function ($conversation) use ($userId, $request) {
             $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;
 
             // Fetch user details for the other participant
-            $user = User::find($otherParticipantId);
+            $userQuery = User::where('id', $otherParticipantId);
+
+            // Apply Blocked filter 
+            if ($request->filled('blocked') && $request->blocked == true) {
+                $userQuery->where('is_block', true);
+            }
+
+            $user = $userQuery->first();
 
             if (!$user) {
                 return null; // Exclude invalid users
