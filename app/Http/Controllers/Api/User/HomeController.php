@@ -218,7 +218,6 @@ class HomeController extends Controller
             $buyer_verification = [
                 'completed_steps'   => $completedSteps,
                 'total_steps'       => $totalSteps,
-                'ratio'             => $completedSteps ." / " . $totalSteps,
                 'percentage'        => $percentage . '%',
             ];
 
