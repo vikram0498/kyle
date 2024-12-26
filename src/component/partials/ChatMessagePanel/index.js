@@ -28,24 +28,25 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
     Accept: "application/json",
     Authorization: `Bearer ${getTokenData().access_token}`,
   });
+
   const handleAddWishList = (status) => {
-     const addToWishList = async () => {
-          try {
-            const response = await axios.post(`${apiUrl}wishlist/add`,{wishlist_user_id: currentUserId},{ headers: getAuthHeaders() });
-            toast.success(response.data.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-            setIsSubmitted(!isSubmitted);
-        } catch (error) {
-            console.error("Error fetching messages:", error.response?.data?.message || error.message);
-        }
-     }
-     addToWishList();
-    // Swal.fire({
-    //     icon: "success",
-    //     title: "Success!",
-    //     text: "User Added to favorite list",
-    // });
+    const addToWishList = async () => {
+      try {
+        const response = await axios.post(`${apiUrl}wishlist/add`,{wishlist_user_id: currentUserId},{ headers: getAuthHeaders() });
+        toast.success(response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+        setIsSubmitted(!isSubmitted);
+      } catch (error) {
+          console.error("Error fetching messages:", error.response?.data?.message || error.message);
+      }
+    }
+    addToWishList();
+      // Swal.fire({
+      //     icon: "success",
+      //     title: "Success!",
+      //     text: "User Added to favorite list",
+      // });
   }
 
   const handleRemoveWishList = (status) => {
@@ -137,16 +138,18 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
                 <div className='d-flex chat_user_name_area'><span>{activeUserData.name}</span><span>Level {activeUserData.level_type}</span></div>
                 <div className='d-flex align-items-center chat_user_name_below gap-2'>
                   <p>{activeUserData.is_online && "Online" }</p>
-                  <p className='d-flex gap-1'>
-                    <span><Image src={activeUserData.profile_tag_image} alt='' /></span>
-                    {activeUserData.profile_tag_name}
-                  </p>
+                  {activeUserData.profile_tag_image && 
+                    <p className='d-flex gap-1'>
+                      <span><Image src={activeUserData.profile_tag_image} alt='' /></span>
+                      {activeUserData.profile_tag_name}
+                    </p>
+                  }
                 </div>
               </div>
             </div>
 
             <div className='chat_header_action d-flex'>
-              {activeUserData.wishlisted ? <div className='fav-icons-start' onClick={handleRemoveWishList}><img src='./assets/images/vector-yellow.svg'/></div> : <div className='fav-icons-start' onClick={handleAddWishList}><img src='./assets/images/vector.svg'/></div>}
+              {activeUserData.wishlisted ? <div className='fav-icons-start' onClick={handleRemoveWishList}><img src='./assets/images/vector-yellow.svg'/></div> : <div className='fav-icons-start' onClick={handleAddWishList}><img src='/assets/images/vector.svg'/></div>}
               
               <Dropdown>
                 <Dropdown.Toggle>

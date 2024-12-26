@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useAuth } from "../../../hooks/useAuth";
@@ -19,6 +19,7 @@ const EditRequest = ({
   const [loading, setLoading] = useState(false);
   const [checkboxError, setCheckboxError] = useState(false);
   const [checkMessage, setCheckMessage] = useState("");
+  const [flagReasons, setFlagReasons] = useState([]);
   const [checkMessageError, setCheckMessageError] = useState(false);
 
   const handleClose = () => {
@@ -28,6 +29,7 @@ const EditRequest = ({
     setCheckMessageError(false);
   };
   const { getTokenData, setLogout } = useAuth();
+  const apiUrl = process.env.REACT_APP_API_URL;
   const handleSubmit = (e) => {
     e.preventDefault();
     var formData = new FormData(e.target);
@@ -58,7 +60,6 @@ const EditRequest = ({
     }
     formData.append("incorrect_info", JSON.stringify(Obj));
     let buyerUserId = formData.get("buyer_id");
-    const apiUrl = process.env.REACT_APP_API_URL;
     let headers = {
       Accept: "application/json",
       Authorization: "Bearer " + getTokenData().access_token,
@@ -106,6 +107,28 @@ const EditRequest = ({
   const handleMessage = (e) => {
     setCheckMessage(e.target.value.trim());
   };
+  useEffect(()=>{
+    const fetchFlagReason = async () => {
+      try {
+        let headers = {
+          Accept: "application/json",
+          Authorization: "Bearer " + getTokenData().access_token,
+          "auth-token": getTokenData().access_token,
+        };
+        const response = await axios.get(`${apiUrl}get-reasons`,{ headers: headers });
+        setFlagReasons(response.data.data);
+      } catch (error) {
+          console.log(error, "error");
+      }
+    }
+    fetchFlagReason();
+  },[]);
+  
+  const handleChangeMessage = (e) => {
+    const reason = flagReasons.find(reason => reason.id == e.target.value.trim());
+    let selectedComment = reason ? reason.description : "";
+    setCheckMessage(selectedComment);
+  }
   return (
     <div>
       <Modal show={editOpen} onHide={handleClose} className="modal-form-main">
@@ -123,10 +146,7 @@ const EditRequest = ({
               <div className="row">
                 <div className="col-12 col-lg-12 mb-4">
                   <div className="row">
-                    <label>
-                      What Information is incorrect
-                      <span className="error"> *</span>
-                    </label>
+                    <label>What Information is incorrect<span className="error"> *</span></label>
                     <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3">
                       <div className="form-check">
                         <input
@@ -203,16 +223,16 @@ const EditRequest = ({
                     ""
                   )}
                 </div>
-                <div className="col-12 col-lg-12 mb-4">
+                {/* <div className="col-12 col-lg-12 mb-4">
                   <label>Message</label>
-                  <select class="form-select" aria-label="Default select example">
+                  <select class="form-select" aria-label="Default select example" onChange={handleChangeMessage}>
                     <option selected>Select Message</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    {flagReasons.map((data, index)=>{
+                      return <option value={data.id} key={index}>{data.name}</option>
+                    })}
                   </select>
-                </div>
-                <div className="col-12 col-lg-12">
+                </div> */}
+                <div className="col-12 col-lg-12 mb-2">
                   <input type="hidden" value={buyerId} name="buyer_id" />
                   <div className="form-group">
                     <label>
@@ -222,6 +242,7 @@ const EditRequest = ({
                       placeholder="Enter Your Message"
                       name="reason"
                       onChange={handleMessage}
+                      value={checkMessage}
                     ></textarea>
                   </div>
                   {checkMessageError ? (

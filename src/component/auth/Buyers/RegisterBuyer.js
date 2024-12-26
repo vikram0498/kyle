@@ -213,11 +213,7 @@ function RegisterBuyer() {
         const selectedStates = state_id.map((item) => item.value);
         setStatevalue(selectedStates);
         let country_id = { country };
-        let response = await axios.post(
-          apiUrl + "getCities",
-          { state_id: selectedStates, country_id: 233 },
-          { headers: headers }
-        );
+        let response = await axios.post(apiUrl + "getCities", { state_id: selectedStates, country_id: 233 }, { headers: headers });
         if (response) {
           let result = response.data.options;
           //setState([]);

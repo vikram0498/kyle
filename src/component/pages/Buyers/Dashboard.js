@@ -3,8 +3,32 @@ import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Footer from "../../partials/Layouts/Footer";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../../hooks/useAuth";
+
 const Dashboard = () => {
     const percentage = 75;
+
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const { getTokenData } = useAuth();
+    const [dashboardDetails, setDashboardDetails] = useState([]);
+    useEffect(()=>{
+        let headers = {
+            Accept: "application/json",
+            Authorization: "Bearer " + getTokenData().access_token,
+        };
+        const fetchDashboardData = async () => {
+            try {
+                let response = await axios.get(`${apiUrl}buyer-dashboard-details`, { headers: headers });
+                setDashboardDetails(response.data.data);
+            } catch (error) {
+                console.log("dashboard error => ",error)
+            }
+        }
+        fetchDashboardData();
+    },[]);
+
   return (
     <>
       <BuyerHeader />
@@ -35,7 +59,7 @@ const Dashboard = () => {
                                     <img src="/assets/images/deal-icon.svg" className="img-fluid" alt="" />
                                 </span>
                                 Deals
-                                <span className="buyer_list_number">5</span>
+                                <span className="buyer_list_number">{dashboardDetails.total_deals_count || 0}</span>
                             </Link>
                         </li>
                         <li>
@@ -47,14 +71,14 @@ const Dashboard = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/profile-verification">
+                            <Link to={dashboardDetails.buyer_verification?.completed_steps == 6 ? void(0) : "/profile-verification"}>
                                 {/* <span className="buyer-dash-icon">
                                     <img src="/assets/images/complete-verification-icon.svg" className="img-fluid" alt="" />
                                 </span> */}
                                 <div style={{ width: 42, height: 42 }} className="verification_graph">
                                     <CircularProgressbar 
-                                        value={percentage}
-                                        text={`${percentage}%`}
+                                        value={dashboardDetails.buyer_verification?.percentage}
+                                        text={`${dashboardDetails.buyer_verification?.percentage}`}
                                         strokeWidth={6}
                                         styles={buildStyles({
                                             rotation: 0,
@@ -68,7 +92,7 @@ const Dashboard = () => {
                                         })}
                                     />
                                 </div>
-                                3/5 completed verification
+                                {dashboardDetails.buyer_verification?.completed_steps}/{dashboardDetails.buyer_verification?.total_steps }      completed verification
                             </Link>
                         </li>
                         <li>
@@ -77,7 +101,7 @@ const Dashboard = () => {
                                     <img src="/assets/images/chats-icon.svg" className="img-fluid" alt="" />
                                 </span>
                                 Chats
-                                <span className="buyer_list_number">5</span>
+                                <span className="buyer_list_number">{dashboardDetails.unreadMessageCount || 0}</span>
                             </Link>
                         </li>
                     </ul>
@@ -100,12 +124,12 @@ const Dashboard = () => {
                                         <path d="M9.58203 8.26873C9.58203 4.17062 12.9026 0.850098 17.0006 0.850098C21.0986 0.850098 24.4192 4.17062 24.4192 8.26873C24.4192 12.3667 21.0986 15.6911 17.0006 15.6911C12.9026 15.6911 9.58203 12.3667 9.58203 8.26873Z" fill="url(#paint1_linear_564_7672)"/>
                                         <defs>
                                             <linearGradient id="paint0_linear_564_7672" x1="-4.13152" y1="2.10465" x2="27.1543" y2="36.3902" gradientUnits="userSpaceOnUse">
-                                                <stop stop-color="#97E0FF"/>
-                                                <stop offset="1" stop-color="#1075FF"/>
+                                                <stop stopColor="#97E0FF"/>
+                                                <stop offset="1" stopColor="#1075FF"/>
                                             </linearGradient>
                                             <linearGradient id="paint1_linear_564_7672" x1="4.33017" y1="-5.61568" x2="35.616" y2="28.6699" gradientUnits="userSpaceOnUse">
-                                                <stop stop-color="#97E0FF"/>
-                                                <stop offset="1" stop-color="#1075FF"/>
+                                                <stop stopColor="#97E0FF"/>
+                                                <stop offset="1" stopColor="#1075FF"/>
                                             </linearGradient>
                                         </defs>
                                     </svg>
@@ -118,7 +142,31 @@ const Dashboard = () => {
                         <div className="card-box mt-0 buyer_dash_deals">
                             <h3>featured deals</h3>
                             <ul>
-                                <li>
+                                {dashboardDetails.latest_buyer_deals && 
+                                dashboardDetails.latest_buyer_deals.map((data,index)=>{
+                                    return(
+                                        <li key={index}>
+                                            <div className="dash_deals_left">
+                                                <img src={data.property_images[0]} className="img-fluid" alt="" />
+                                            </div>
+                                            <div className="dash_deals_center">
+                                                <h4>{data.title}</h4>
+                                                {/* <p>real easte company that...</p> */}
+                                                <ul className="inner_room_details">
+                                                    <li>Beds : <span>{data.bedroom_min}</span></li>
+                                                    <li>Baths : <span>{data.bath}</span></li>
+                                                    <li>Liveable sq. ft. : <span>{data.size}</span></li>
+                                                    <li>Lot sq. ft. : <span>{data.lot_size}</span></li>
+                                                </ul>
+                                            </div>
+                                            <div className="dash_deals_right">
+                                                <span>$ { data.price || 0}</span>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+
+                                {/* <li>
                                     <div className="dash_deals_left">
                                         <img src="/assets/images/property-img.png" className="img-fluid" alt="" />
                                     </div>
@@ -135,43 +183,7 @@ const Dashboard = () => {
                                     <div className="dash_deals_right">
                                         <span>$200.00</span>
                                     </div>
-                                </li>
-                                <li>
-                                    <div className="dash_deals_left">
-                                        <img src="/assets/images/property-img.png" className="img-fluid" alt="" />
-                                    </div>
-                                    <div className="dash_deals_center">
-                                        <h4>4517 Washington Ave. Manch...</h4>
-                                        <p>real easte company that...</p>
-                                        <ul className="inner_room_details">
-                                            <li>Beds : <span>2</span></li>
-                                            <li>Baths : <span>2</span></li>
-                                            <li>Liveable sq. ft. : <span>500</span></li>
-                                            <li>Lot sq. ft. : <span>300</span></li>
-                                        </ul>
-                                    </div>
-                                    <div className="dash_deals_right">
-                                        <span>$200.00</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="dash_deals_left">
-                                        <img src="/assets/images/property-img.png" className="img-fluid" alt="" />
-                                    </div>
-                                    <div className="dash_deals_center">
-                                        <h4>4517 Washington Ave. Manch...</h4>
-                                        <p>real easte company that...</p>
-                                        <ul className="inner_room_details">
-                                            <li>Beds : <span>2</span></li>
-                                            <li>Baths : <span>2</span></li>
-                                            <li>Liveable sq. ft. : <span>500</span></li>
-                                            <li>Lot sq. ft. : <span>300</span></li>
-                                        </ul>
-                                    </div>
-                                    <div className="dash_deals_right">
-                                        <span>$200.00</span>
-                                    </div>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </div>

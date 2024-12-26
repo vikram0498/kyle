@@ -23,10 +23,10 @@ const Message = () => {
     const [socket, setSocket] = useState(null);
     const [isLoader, setIsLoader] = useState(false);
     const [receiverId, setReceiverId] = useState("");
-   const [conversationUuid, setConversationUuid] = useState('');
-   const [currentUserId, setCurrentUserId] = useState(0);
-   const [isSubmitted, setIsSubmitted] = useState(false);
-
+    const [conversationUuid, setConversationUuid] = useState('');
+    const [currentUserId, setCurrentUserId] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(0);
     const apiUrl = process.env.REACT_APP_API_URL;
 
     // Ref for the messages container
@@ -88,7 +88,7 @@ const Message = () => {
     // Fetch chat messages for the selected receiver
     const fetchMessages = async () => {
         if (!receiverId) return;
-
+        
         try {
             const response = await axios.post(`${apiUrl}chat-messages`,{ recipient_id: receiverId },{ headers: getAuthHeaders() });
             setActiveUserData(response.data.data || []);
@@ -104,7 +104,7 @@ const Message = () => {
     const fetchChatList = async () => {
         try {
             setIsLoader(true);
-            const response = await axios.get(`${apiUrl}get-chat-list/${chatPartnerId || ''}`, {
+            const response = await axios.post(`${apiUrl}get-chat-list`,{is_blocked:isBlocked,recipient_id:chatPartnerId || ''}, {
                 headers: getAuthHeaders(),
             });
             setChatList(response.data.data || []);
@@ -162,6 +162,7 @@ const Message = () => {
             content: message.trim(),
             type: "text",
         };
+
         socket.emit("sendMessage", payload);
         setMessage("");
     };
@@ -169,7 +170,7 @@ const Message = () => {
     const updateBlockStatus = async (userId, status) => {
         try {
             const response = await axios.post(`${apiUrl}update-block-status`,{ recipient_id: userId, is_block: status },{ headers: getAuthHeaders() });
-            console.log(response, "response");
+
             return response; // Return the response to handle success in the calling function
         } catch (error) {
             console.error("Error updating block status:", error);
@@ -221,11 +222,12 @@ const Message = () => {
 
     const markReadNotification = async () => {
         try {
-            let response = await axios.get(`${apiUrl}mark-as-read-notification/new_message_notification`,{headers:getAuthHeaders()});
+            let response = await axios.post(`${apiUrl}mark-read-message`,{conversationUuid},{headers:getAuthHeaders()});
         } catch (error) {
             console.log(error.response,"mark read error")
         }
     }
+
     // Scroll to bottom whenever messages change
     useEffect(() => {
         scrollToBottom();
@@ -234,13 +236,18 @@ const Message = () => {
     // Fetch chat list and messages whenever `receiverId` changes
     useEffect(() => {
         fetchChatList();
-    }, []);
+    }, [isBlocked]);
 
     useEffect(() => {
+        if(receiverId == undefined) return
         fetchMessages();
-        markReadNotification();
     }, [receiverId]);
 
+    useEffect(()=>{
+        if(conversationUuid){
+            markReadNotification();
+        }
+    },[conversationUuid])
     // Set user role and initial receiver ID
     useEffect(() => {
         const userData = getLocalStorageUserdata();
@@ -253,58 +260,57 @@ const Message = () => {
     useEffect(() => {
         fetchMessages();
     }, [isSubmitted]);
-
-
+    
     return (
         <>
             {userRole === 3 && <BuyerHeader />}
             {userRole === 2 && <Header />}
             <section className="main-section position-relative pt-4 pb-120">
-            { isLoader ? <div className="loader" style={{ textAlign: "center" }}><img src="assets/images/loader.svg" /></div> : 
+            { isLoader ? <div className="loader" style={{ textAlign: "center" }}><img src="/assets/images/loader.svg" /></div> : 
                 <Container className="position-relative">
-                <div className="back-block">
-                    <div className="row">
-                        <div className="col-4">
-                            <Link to="/" className="back">
-                                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                                Back
-                            </Link>
-                        </div>
-                        <div className="col-7 text-center">
-                            <h6 className="center-head mb-0">Message</h6>
+                    <div className="back-block">
+                        <div className="row">
+                            <div className="col-4">
+                                <Link to="/" className="back">
+                                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    Back
+                                </Link>
+                            </div>
+                            <div className="col-7 text-center">
+                                <h6 className="center-head mb-0">Message</h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="card-box">
-                    {chatList.length > 0 ? 
-                    <Row>
-                        <Col lg="4">
-                            <ChatSidebar chatList={chatList} setReceiverId={setReceiverId} receiverId={receiverId} />
-                        </Col>
-                        <Col lg="8">
-                            <div className="message-panel">
-                                <ChatMessagePanel
-                                    messages={messages}
-                                    message={message}
-                                    setMessage={setMessage}
-                                    sendMessage={sendMessage}
-                                    activeUserData={activeUserData}
-                                    handleConfirmBox={handleConfirmBox}
-                                    conversationUuid={conversationUuid}
-                                    currentUserId={currentUserId}
-                                    setIsSubmitted={setIsSubmitted}
-                                    isSubmitted={isSubmitted}
-                                />
-                                <div ref={messagesEndRef} />
-                            </div>
-                        </Col>
-                    </Row>:
-                    <Row className="text-center"><p>No chat found</p></Row>
-                    }
-                </div>
+                    <div className="card-box">
+                        {chatList.length > 0 ? 
+                        <Row>
+                            <Col lg="4">
+                                <ChatSidebar chatList={chatList} setReceiverId={setReceiverId} receiverId={receiverId} handleConfirmBox={handleConfirmBox} setIsBlocked={setIsBlocked} isBlocked={isBlocked}/>
+                            </Col>
+                            <Col lg="8">
+                                <div className="message-panel">
+                                    <ChatMessagePanel
+                                        messages={messages}
+                                        message={message}
+                                        setMessage={setMessage}
+                                        sendMessage={sendMessage}
+                                        activeUserData={activeUserData}
+                                        handleConfirmBox={handleConfirmBox}
+                                        conversationUuid={conversationUuid}
+                                        currentUserId={currentUserId}
+                                        setIsSubmitted={setIsSubmitted}
+                                        isSubmitted={isSubmitted}
+                                    />
+                                    <div ref={messagesEndRef} />
+                                </div>
+                            </Col>
+                        </Row>:
+                        <Row className="text-center"><p>No chat found</p></Row>
+                        }
+                    </div>
                 </Container>
             }
             </section>

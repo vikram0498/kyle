@@ -1,10 +1,10 @@
 import React from 'react'
 import { Dropdown, Figure, Image } from 'react-bootstrap';
 
-const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
+const ChatSidebar = ({chatList,setReceiverId, receiverId, handleConfirmBox,setIsBlocked,isBlocked}) => {
     const closeSidebar = () => {
-        document.body.classList.remove("msg-sidebar-open");
-      };
+       document.body.classList.remove("msg-sidebar-open");
+    };
   return (
     <>
         <div className='chat_sidebar'>
@@ -19,7 +19,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                         </svg>
                         </Dropdown.Toggle>
                         <Dropdown.Menu align="end">
-                            <Dropdown.Item href="javascript:void(0)">Blocked Users</Dropdown.Item>
+                            <Dropdown.Item href="javascript:void(0)" onClick={() => setIsBlocked(prev => prev ? 0 : 1)}>{isBlocked ? 'UnBlocked Users' : 'Blocked Users'}</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                     <span className='sidebar_mob_close d-lg-none' onClick={closeSidebar}>
@@ -41,11 +41,13 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                     <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
                                 </Figure>
                             </div>
+                            {data.wishlisted && 
                             <div className='wishlist_star_icon'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
                                     <path d="M8.50049 13.8076L4.51586 15.8652C3.65728 16.3089 2.65428 15.5927 2.81791 14.6532L3.57874 10.2936L0.354951 7.20564C-0.340093 6.54064 0.0435119 5.38183 1.00299 5.24404L5.45834 4.60827L7.45065 0.64124C7.8799 -0.213747 9.11997 -0.213747 9.54922 0.64124L11.5415 4.60827L15.997 5.24404C16.9564 5.38083 17.34 6.53955 16.6452 7.20564L13.4213 10.2936L14.1821 14.6532C14.3458 15.5928 13.3427 16.3089 12.4842 15.8652L8.50049 13.8076Z" fill="#FFA800"/>
                                 </svg>
                             </div>
+                            }
                             <div className='chat_pro_area'>
                                 <div className='chat_user_info'>
                                     <span>{data.name}</span>
@@ -65,7 +67,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId}) => {
                                         </span>
                                     </div>
                                     }
-                                    <button className='unblock_btn'>Unblock</button>
+                                    {data.is_block == 1 && <button className='unblock_btn' onClick={()=>handleConfirmBox(data.id, 0)}>Unblock</button>}
                                 </div>
                             </div>
                         </li>
