@@ -177,7 +177,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
     Route::post('/send-message', [ChatMessageController::class, 'sendDirectMessage']);
     Route::post('/chat-messages', [ChatMessageController::class, 'getMessages']);
     Route::post('/mark-read-message', [ChatMessageController::class, 'markAsRead']);
-    Route::get('/get-chat-list/{recipient?}', [ChatMessageController::class, 'getChatList']);
+    Route::post('/get-chat-list', [ChatMessageController::class, 'getChatList']);
 
     Route::post('/update-block-status', [ChatMessageController::class, 'updateBlockStatus']);
     Route::post('/wishlist/add', [ChatMessageController::class, 'addToWishlist']);

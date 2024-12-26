@@ -19,32 +19,46 @@ use Illuminate\Support\Facades\Cache;
 
 class ChatMessageController extends Controller
 {
-    public function getChatList(Request $request,$recipient = null)
+    public function getChatList(Request $request)
     {
-        $userId = auth()->user()->id;
-
+        $request->validate([
+            'recipient_id'  => 'nullable|exists:users,id',
+            'is_blocked'    => 'nullable|in:0,1',
+        ]);
+        
+        $recipient = $request->recipient_id ?? null; 
+        $isBlocked = $request->is_blocked;
+        
+        $authUser = auth()->user(); 
+        
         // Fetch wishlist users
-        $wishlistUsers = User::whereIn('id', function ($query) use ($userId) {
+        $wishlistUsers = User::whereIn('id', function ($query) use ($authUser) {
             $query->select('wishlist_user_id')
                 ->from('wishlists')
-                ->where('user_id', $userId);
-        })->get();
+                ->where('user_id', $authUser->id);
+        });
+        
+        if ($request->filled('is_blocked')) {
+            $wishlistUsers = $wishlistUsers->where('is_block', $isBlocked);
+        }
+        
+        $wishlistUsers = $wishlistUsers->get();
 
         // Fetch conversations where the authenticated user is a participant
-        $conversations = Conversation::where(function ($query) use ($userId) {
-            $query->where('participant_1', $userId)
-                ->orWhere('participant_2', $userId);
+        $conversations = Conversation::where(function ($query) use ($authUser) {
+            $query->where('participant_1', $authUser->id)
+                ->orWhere('participant_2', $authUser->id);
         })->get();
 
-        $chatList = $conversations->map(function ($conversation) use ($userId, $request) {
-            $otherParticipantId = ($conversation->participant_1 == $userId) ? $conversation->participant_2 : $conversation->participant_1;
+        $chatList = $conversations->map(function ($conversation) use ($authUser, $request, $isBlocked) {
+            $otherParticipantId = ($conversation->participant_1 == $authUser->id) ? $conversation->participant_2 : $conversation->participant_1;
 
             // Fetch user details for the other participant
             $userQuery = User::where('id', $otherParticipantId);
 
             // Apply Blocked filter 
-            if ($request->filled('blocked') && $request->blocked == true) {
-                $userQuery->where('is_block', true);
+            if (!is_null($isBlocked)) {
+                $userQuery->where('is_block', $isBlocked);
             }
 
             $user = $userQuery->first();
@@ -60,19 +74,18 @@ class ChatMessageController extends Controller
 
             // Calculate unread message count for the authenticated user
             $unreadMessageCount = Message::where('conversation_id', $conversation->id)
-                ->where('sender_id', '!=', $userId)
-                ->whereDoesntHave('seenBy', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
+                ->where('sender_id', '!=', $authUser)
+                ->whereDoesntHave('seenBy', function ($query) use ($authUser) {
+                    $query->where('user_id', $authUser->id);
                 })
                 ->count();
 
             // Format last message details
             $lastMessageDetails = $lastMessage ? [
                 'id'             => $lastMessage->id,
-                'conversation_id'=> $conversation->id,
                 'sender_id'      => $lastMessage->sender_id,
                 'content'        => $lastMessage->content,
-                'is_read'        => $lastMessage->seenBy()->where('user_id', $userId)->exists(),
+                'is_read'        => $lastMessage->seenBy()->where('user_id', $authUser->id)->exists(),
                 'created_date'   => $lastMessage->created_at->format('d-M-Y'),
                 'created_time'   => $lastMessage->created_at->format('g:i A'),
                 'date_time_label'=> formatDateLabel($lastMessage->created_at),
@@ -90,6 +103,7 @@ class ChatMessageController extends Controller
                 'unread_message_count'  => $unreadMessageCount ?? 0,
                 'last_message'          => $lastMessageDetails,
                 'last_message_at'       => $lastMessage ? $lastMessage->created_at->format('d-M-Y g:i A') : null,
+                'wishlisted'            => $authUser->wishlistedUsers()->where('wishlist_user_id',$user->id)->exists(),
             ];
         })->filter();
 
@@ -108,6 +122,7 @@ class ChatMessageController extends Controller
                     'unread_message_count'  => 0,
                     'last_message'          => null,
                     'last_message_at'       => null,
+                    'wishlisted'            => true,
                 ]);
             }
         });
@@ -116,7 +131,7 @@ class ChatMessageController extends Controller
         if ($recipient) {
             $recipientUser = User::find($recipient);
 
-            if ($recipientUser) {
+             if ($recipientUser && (is_null($isBlocked) || $recipientUser->is_block == $isBlocked)) {
                 $chatList->push([
                     'id'                    => $recipientUser->id,
                     'name'                  => $recipientUser->name ?? '',
@@ -129,6 +144,7 @@ class ChatMessageController extends Controller
                     'unread_message_count'  => 0,
                     'last_message'          => null,
                     'last_message_at'       => null,
+                    'wishlisted'            => $authUser->wishlistedUsers()->where('wishlist_user_id',$recipientUser->id)->exists(),
                 ]);
             }
         }
@@ -136,8 +152,9 @@ class ChatMessageController extends Controller
         // Sort chat list: Wishlist users first, then by last message timestamp
         $chatList = $chatList
             ->unique('id')
-            ->sortByDesc(function ($item) use ($wishlistUsers) {
+            ->sortByDesc(function ($item) use ($wishlistUsers,$recipient) {
                 return [
+                    $item['id'] == $recipient ? 2 : 0, // Recipient priority (highest priority)
                     $wishlistUsers->pluck('id')->contains($item['id']) ? 1 : 0, // Wishlist priority
                     $item['last_message_at'], // Sort by last message
                 ];
@@ -161,7 +178,7 @@ class ChatMessageController extends Controller
     public function sendDirectMessage(Request $request)
     {
         $request->validate([
-            'recipient_id'  => 'required|exists:users,id,deleted_at,NULL',
+            'recipient_id'  => 'required|exists:users,id',
             'content'       => 'required|string|max:5000',
             'type'          => 'nullable|in:text,image,video,file',
         ]);
@@ -287,6 +304,9 @@ class ChatMessageController extends Controller
     
             return response()->json($responseData, 200); 
         }
+        
+        //Mark as notification read
+        // $sender->notification()->where('notification_type','dm_notification')->whereNull('read_at')->update(['read_at' => now()]);
 
         // Fetch all messages (no cache expiration time needed)
         $cacheKey = "conversation_messages_{$conversation->id}";
@@ -356,7 +376,7 @@ class ChatMessageController extends Controller
     public function markAsRead(Request $request)
     {
         $request->validate([
-            'conversation_id' => 'required|exists:conversations,id',
+            'conversationUuid' => 'required|exists:conversations,uuid',
         ]);
 
         try{
@@ -364,7 +384,9 @@ class ChatMessageController extends Controller
             
             $userId = auth()->user()->id;
 
-            $messages = Message::where('conversation_id',$request->conversation_id)->whereNotExists(function ($query) use ($userId) {
+            $conversation = Conversation::where('uuid',$request->conversationUuid)->first();
+        
+            $messages = $conversation->messages()->whereNotExists(function ($query) use ($userId) {
                 $query->select(DB::raw(1))
                     ->from('message_seen')
                     ->whereRaw('message_seen.message_id = messages.id')

@@ -88,7 +88,7 @@ class NotificationController extends Controller
             }
 
             $authUser = auth()->user();
-            $authUser->notification()->where('notification_type',$type)->update(['read_at' => now()]);
+            $authUser->notification()->where('notification_type',$type)->whereNull('read_at')->update(['read_at' => now()]);
 
             //Return Success Response
             $responseData = [
