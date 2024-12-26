@@ -56,4 +56,17 @@ class Conversation extends Model
         return $this->hasMany(Report::class);
     }
 
+    public function participantOne()
+    {
+        return $this->belongsTo(User::class, 'participant_1');
+    }
+
+    /**
+     * Get the second participant (participant_2) of the conversation.
+     */
+    public function participantTwo()
+    {
+        return $this->belongsTo(User::class, 'participant_2');
+    }
+
 }

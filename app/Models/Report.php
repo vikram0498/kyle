@@ -18,7 +18,7 @@ class Report extends Model
         });               
     }
     
-    public function reason()
+    public function reasonDetail()
     {
         return $this->belongsTo(Reason::class, 'reason', 'id');
     }   
@@ -39,4 +39,5 @@ class Report extends Model
     {
         return $this->belongsTo(User::class, 'reported_by');
     }
+
 }

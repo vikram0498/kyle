@@ -362,6 +362,13 @@ return [
     'chat_report' => [
         'title' => 'Chat Reports',
         'title_singular' => 'Chat Report',
+        'fields' => [
+            'conversation'          => 'Conversation',
+            'reported_by'           => 'Reported By',
+            'reason'                => 'Reason',
+            'comment'               => 'Comment',
+            'created_at'            => 'Created At'
+        ],
     ]
 
     
