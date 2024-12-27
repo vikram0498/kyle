@@ -253,10 +253,14 @@ class ChatMessageController extends Controller
 
             DB::commit();
 
+            $data = $message->toArray();
+            $data['conversation_uuid'] = $conversation->uuid;
+
+
             $responseData = [
                 'status'            => true,
                 'message'           => trans('messages.chat_message.success_send_message'),
-                'data'              =>  $message,
+                'data'              =>  $data,
                 'unread_message_count' => $unreadMessageCount
             ];
             
