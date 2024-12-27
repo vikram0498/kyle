@@ -243,6 +243,9 @@ class ChatMessageController extends Controller
                 'sender_id'         => $sender->id,
             ];
 
+            $cacheKey = "conversation_messages_{$conversation->id}";
+            Cache::forget($cacheKey);
+
             $recipient->notify(new SendNotification($notificationData));
             
             // Fire the event form mail
