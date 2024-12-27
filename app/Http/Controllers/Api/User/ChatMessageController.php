@@ -14,6 +14,7 @@ use App\Models\Report;
 use App\Notifications\SendNotification;
 use Illuminate\Support\Facades\Http;
 use App\Events\NotificationSent;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Cache;
 
 
@@ -237,7 +238,9 @@ class ChatMessageController extends Controller
                 'module'    => "dm_notification",
                 'type'      => "dm_notification",
                 'user_id'   => $recipient->id,
-                'notification_type' => 'dm_notification'
+                'notification_type' => 'dm_notification',
+                'conversation_uuid'   => $conversation->uuid,
+                'sender_id'         => $sender->id,
             ];
 
             $recipient->notify(new SendNotification($notificationData));
@@ -407,6 +410,14 @@ class ChatMessageController extends Controller
                     
                 }
             }
+
+            // Mark notification as read
+
+            Notification::where('notification_type','dm_notification')
+            ->whereNull('read_at')
+            ->whereJsonContains('data->user_id', $userId)
+            ->whereJsonContains('data->conversation_uuid', $conversation->uuid)
+            ->update(['read_at' => now()]);
                        
             DB::commit();
 
