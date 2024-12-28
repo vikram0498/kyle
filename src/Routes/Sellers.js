@@ -39,6 +39,7 @@ import DealNotifications from "../component/pages/Sellers/DealNotifications";
 import Message from "../component/pages/Sellers/Message";
 import Settings from "../component/pages/Sellers/Settings";
 import LastSearchResult from "../component/pages/Sellers/LastSearchResult";
+import PropertyRadiusSearch from "../component/partials/PropertyRadiusSearch";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -135,10 +136,11 @@ const Seller = () => {
           <Route path="/completion/:token" element={<Completion />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/property-deal-result" element={<PropertyDealResult />} />
-          <Route path="/property-deal-details/:id" element={<PropertyDealDetails />} />
+          <Route path="/property-deal-details/:id/:notificationId?" element={<PropertyDealDetails />} />
           {/* <Route path="/deal-notifications" element={<DealNotifications />} /> */}
           <Route path="/message/:id?" element={<Protected Component={Message} />} />
-
+          <Route path="/google-radius" element={<Protected Component={PropertyRadiusSearch} />} />
+          
           {/* <Route path="/google-api" element={<GoogleMap />} /> */}
         </Routes>
       </AuthContext.Provider>

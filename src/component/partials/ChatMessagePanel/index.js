@@ -14,6 +14,7 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
    const [reportReasons, setReportReasons] = useState([]);
    const apiUrl = process.env.REACT_APP_API_URL;
    // Handle the Enter key press event to send the message
+
    const handleKeyDown = (e) => {
     if (e.key === 'Enter' && message.trim()) {
       sendMessage(); // Call sendMessage when Enter is pressed
@@ -149,7 +150,7 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
             </div>
 
             <div className='chat_header_action d-flex'>
-              {activeUserData.wishlisted ? <div className='fav-icons-start' onClick={handleRemoveWishList}><img src='./assets/images/vector-yellow.svg'/></div> : <div className='fav-icons-start' onClick={handleAddWishList}><img src='/assets/images/vector.svg'/></div>}
+              {activeUserData.wishlisted ? <div className='fav-icons-start' onClick={handleRemoveWishList}><img src='/assets/images/vector-yellow.svg'/></div> : <div className='fav-icons-start' onClick={handleAddWishList}><img src='/assets/images/vector.svg'/></div>}
               
               <Dropdown>
                 <Dropdown.Toggle>

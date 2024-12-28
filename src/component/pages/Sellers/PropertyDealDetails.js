@@ -18,7 +18,7 @@ const PropertyDealDetails = () => {
     const [total, setTotal] = useState(0);
     const [limit, setLimit] = useState(0);
 
-    const {id} = useParams();
+    const {id,notificationId =''} = useParams();
 
     useEffect(()=>{
         let headers = {
@@ -31,7 +31,7 @@ const PropertyDealDetails = () => {
             if(currentTab !== 'total_buyer'){
                 status = `/${currentTab}`;
             }
-            let response = await axios.get(`${apiUrl}deals/show/${id}${status}`,{headers:headers});
+            let response = await axios.post(`${apiUrl}deals/show/${id}`,{status: status,notification_id: notificationId},{headers:headers});
             setDealDetailsData(response.data.data);
             setLimit(response.data.data.buyers.per_page);
             setPage(response.data.data.buyers.current_page);
@@ -40,6 +40,7 @@ const PropertyDealDetails = () => {
         }
         fetchData();
     },[currentTab,page]);
+
   return (
     <>
         <Header />
@@ -48,7 +49,7 @@ const PropertyDealDetails = () => {
                     <div className="back-block">
                         <div className="row">
                             <div className="col-4 col-sm-4 col-md-4 col-lg-4">
-                                <Link to="/" className="back">
+                                <Link to={void(0)} onClick={()=>{window.history.back()}} className="back">
                                     <svg
                                     width="16"
                                     height="12"
@@ -194,7 +195,7 @@ const PropertyDealDetails = () => {
                                                                             {data.status == 'Interested' && <span className='status interested'>Interested</span>}
                                                                             {data.status == 'Want to Buy' && <span className='status want-by'>Want To Buy</span>}
                                                                             {data.status == 'Not Interested' && <span className='status not-interested'>Not Interested</span>}
-                                                                            {data.status == '' && <span >N/A</span>}
+                                                                            {data.status == '' && <span className='justify-content-center'>N/A</span>}
                                                                             
                                                                         </td>
                                                                         <td>

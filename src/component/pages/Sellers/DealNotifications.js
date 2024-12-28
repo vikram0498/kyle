@@ -41,6 +41,7 @@ const DealNotifications = () => {
     const [letsConnect, setLetsConnect] = useState(false);
     const [interestedProperty, setInterestedProperty] = useState(false);
     const [thankyouFeedback, setThankyouFeedback] = useState(false);
+    const [senderId, setSenderId] = useState(0);
 
     const handleProofShow = () => {
         setProofSave(true)
@@ -109,7 +110,7 @@ const DealNotifications = () => {
         setSubmitOffer(false);
     };
 
-    const handleSubmitInterested = async (id)=>{
+    const handleSubmitInterested = async (id, senderId)=>{
         try{
             let headers = {
                 Accept: "application/json",
@@ -122,6 +123,7 @@ const DealNotifications = () => {
             }
             let response = await axios.post(`${apiUrl}buyer-deals/status`,payload,{headers:headers});
             if(response.data.status){
+                setSenderId(senderId);
                 setLetsConnect(true);
                 toast.success(response.data.message, {
                     position: toast.POSITION.TOP_RIGHT,
@@ -334,7 +336,7 @@ const DealNotifications = () => {
                                                     }
                                                 </li>
                                                 <li>
-                                                    <Button className='outline_btn' onClick={()=>{handleSubmitInterested(data.id)}}>
+                                                    <Button className='outline_btn' onClick={()=>{handleSubmitInterested(data.id, data.sender_by)}}>
                                                     <Image src='/assets/images/chat-seller.svg' alt='' /> chat with seller
                                                     {data.status == 'interested' &&
                                                         <span>
@@ -439,7 +441,7 @@ const DealNotifications = () => {
                     <p className='mb-4 px-md-5'>Please keep an eye on next available options which can match your criteria.</p>
                     <ul className='deal_notifications_btn'>
                         {/* <li><Button className='outline_btn'><Image src='/assets/images/call-preference-green.svg' alt='' /> make an offer</Button></li> */}
-                        <li><Link to='/message'><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
+                        <li><Link to={`/message/${senderId}`}><Button className='outline_btn'><Image src='/assets/images/msg-top.svg' alt='' /> Chat With Seller</Button></Link></li>
                     </ul>
                 </div>
             </Modal.Body>

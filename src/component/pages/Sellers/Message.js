@@ -57,7 +57,8 @@ const Message = () => {
         setSocket(socketInstance);
 
         const handleMessage = (newMessage) => {
-            console.log(newMessage,"newMessage",messages)
+            console.log(newMessage,"newMessage")
+            const chatIdValue = sessionStorage.getItem('chatId');
             setMessages((prevMessages) => {
                 // Clone the current messages object to avoid direct mutation
                 const updatedMessages = { ...prevMessages };
@@ -68,7 +69,9 @@ const Message = () => {
                 }
             
                 // Add the new senderMessage to the 'Today' array
-                updatedMessages.Today.push(newMessage);
+                if(chatIdValue == newMessage.conversation_uuid){
+                    updatedMessages.Today.push(newMessage);
+                }
             
                 // Return the updated messages object
                 return updatedMessages;
@@ -95,6 +98,7 @@ const Message = () => {
             setMessages(response.data.message || []);
             setConversationUuid(response.data.data.conversation_uuid);
             setCurrentUserId(response.data.data.id);
+            sessionStorage.setItem('chatId', response.data.data.conversation_uuid);
         } catch (error) {
             console.error("Error fetching messages:", error.response?.data?.message || error.message);
         }
@@ -270,8 +274,8 @@ const Message = () => {
                 <Container className="position-relative">
                     <div className="back-block">
                         <div className="row">
-                            <div className="col-4">
-                                <Link to="/" className="back">
+                            <div className="col-4 col-sm-4 col-md-4 col-lg-4">
+                                <Link to={void(0)} onClick={()=>{window.history.back()}} className="back">
                                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                         <path d="M5.9 11L1 6L5.9 1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -279,8 +283,8 @@ const Message = () => {
                                     Back
                                 </Link>
                             </div>
-                            <div className="col-7 text-center">
-                                <h6 className="center-head mb-0">Message</h6>
+                            <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <h6 className="center-head mb-0 text-center">Message</h6>
                             </div>
                         </div>
                     </div>

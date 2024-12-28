@@ -956,6 +956,25 @@ function AddBuyerDetails() {
                               </div>
                             </div>
                             <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <label>Zip<span>*</span></label>
+                                <div className="form-group">
+                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip Code" {
+                                        ...register("zip_code", {
+                                            required: "Zip Code is required",
+                                            validate: {
+                                                matchPattern: (v) =>
+                                                /^[0-9]\d*$/.test(v) ||
+                                                "The zip code format is invalid",
+                                                maxLength: (v) =>
+                                                v.length < 10 || "The digit should be less than 10",
+                                            },
+                                        })
+                                    } />
+                                      {errors.zip_code && <p className="error">{errors.zip_code?.message}</p>}
+                                    {renderFieldError('zip_code') }
+                                </div>
+                            </div>
+                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                               <label>
                                 MLS Status<span>*</span>
                               </label>
@@ -989,7 +1008,7 @@ function AddBuyerDetails() {
                                 {renderFieldError("market_preferance")}
                               </div>
                             </div>
-                            <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                            <div className="col-12 col-lg-12">
                               <label>
                                 Parking (multi-select)<span>*</span>
                               </label>

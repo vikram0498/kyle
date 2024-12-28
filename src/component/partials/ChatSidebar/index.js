@@ -50,7 +50,7 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId, handleConfirmBox,setIs
                             }
                             <div className='chat_pro_area'>
                                 <div className='chat_user_info'>
-                                    <span>{data.name}</span>
+                                    <span>{data.name} </span>
                                     {/* <p>{data?.last_message?.content}</p> */}
                                 </div>
                                 <div className='chat_status_area'>
