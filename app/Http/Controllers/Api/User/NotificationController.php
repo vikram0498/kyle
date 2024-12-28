@@ -49,6 +49,7 @@ class NotificationController extends Controller
 
                     foreach($records as $indexKey=>$record){
                         $notificationRecords[$notificationType]['records'][$indexKey] = [
+                            'notification_id' => $record->id,
                             'data' => $record->data,
                             'read_at' => $record->read_at ? convertDateTimeFormat($record->read_at, 'datetime') : null,
                             'created_at' => $record->created_at ? formatDateLabel($record->created_at) : null,

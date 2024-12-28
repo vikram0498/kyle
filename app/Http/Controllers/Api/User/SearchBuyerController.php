@@ -1632,8 +1632,22 @@ class SearchBuyerController extends Controller
     /**
      * Get Single Deal Detail for Login Buyer
      */
-    public function sellerDealDetail($id, $status=''){
+    public function sellerDealDetail(Request $request,$id){
+         $request->validate([
+            'status'            => ['nullable', 'in:'.implode(',', array_keys(config('constants.buyer_deal_status')))],
+            'notification_id'   => ['nullable','uuid','exists:notifications,id']
+        ]);
+        
+        $status = $request->status ?? '';
+        $notificationId = $request->notification_id ?? null;
+        
         try {
+            
+            if(!is_null($notificationId)){
+                $authUser = auth()->user();
+                $authUser->notification()->where('id',$notificationId)->where('notification_type','interested_buyer_notification')->whereNull('read_at')->update(['read_at' => now()]);
+            }
+            
             $dealStatus = array_keys(config('constants.buyer_deal_status'));
 
             $searchLog = SearchLog::with(['buyerDeals'])->where("id", $id)            
