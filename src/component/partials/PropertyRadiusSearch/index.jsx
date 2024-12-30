@@ -1,22 +1,36 @@
-import React, { useState, useRef } from 'react';
-import { GoogleMap, LoadScript, Circle, Autocomplete } from '@react-google-maps/api';
+import React, { useState, useRef, useEffect } from 'react';
+import { GoogleMap, LoadScript, Circle, Marker, Autocomplete, InfoWindow } from '@react-google-maps/api';
 
 const mapContainerStyle = {
   width: '100%',
   height: '500px',
 };
 
-const defaultCenter = {
-  lat: -33.8688, // Default: Sydney latitude
-  lng: 151.2093, // Default: Sydney longitude
-};
-
 const AddAddressAndRadius = () => {
-  const [center, setCenter] = useState(defaultCenter); // Circle center
+  const [center, setCenter] = useState(null); // Circle center
   const [radius, setRadius] = useState(5000); // Circle radius in meters
   const [address, setAddress] = useState(''); // Address input value
+  const [showInfoWindow, setShowInfoWindow] = useState(false); // Show or hide the InfoWindow
   const autocompleteRef = useRef(null);
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAP_KEY;
+
+  // Fetch the user's current location
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCenter({ lat: latitude, lng: longitude });
+      },
+      (error) => {
+        console.error('Error fetching geolocation:', error);
+        // Fallback to Sydney if geolocation fails
+        setCenter({
+          lat: -33.8688,
+          lng: 151.2093,
+        });
+      }
+    );
+  }, []);
 
   const handlePlaceSelected = () => {
     if (autocompleteRef.current) {
@@ -34,11 +48,25 @@ const AddAddressAndRadius = () => {
     const newLat = event.latLng.lat();
     const newLng = event.latLng.lng();
     setCenter({ lat: newLat, lng: newLng });
+    setShowInfoWindow(false); // Close InfoWindow when the circle is dragged
   };
 
   const handleRadiusChange = (e) => {
     setRadius(Number(e.target.value));
   };
+
+  const handleMarkerClick = () => {
+    setShowInfoWindow(true); // Show InfoWindow when marker is clicked
+  };
+
+  const handleInfoWindowClose = () => {
+    setShowInfoWindow(false); // Hide InfoWindow
+  };
+
+  if (!center) {
+    // Show a loading message or spinner while geolocation is being fetched
+    return <div>Loading map...</div>;
+  }
 
   return (
     <section className='main-section position-relative pt-4 pb-120'>
@@ -66,9 +94,21 @@ const AddAddressAndRadius = () => {
               }}
               onDragEnd={handleCircleDragEnd} // Update center on drag end
             />
+
+            {/* Add Marker */}
+            <Marker position={center} onClick={handleMarkerClick} />
+
+            {/* InfoWindow */}
+            {showInfoWindow && (
+              <InfoWindow position={center} onCloseClick={handleInfoWindowClose}>
+                <div>
+                  <p><strong>Address:</strong> {address || 'No address available'}</p>
+                </div>
+              </InfoWindow>
+            )}
           </GoogleMap>
         </div>
-        
+
         {/* Address and Radius Input */}
         <div style={{ marginTop: '10px' }}>
           <label> <strong>Address:</strong></label>
@@ -85,7 +125,7 @@ const AddAddressAndRadius = () => {
             />
           </Autocomplete>
         </div>
-        
+
         <div style={{ marginTop: '10px' }}>
           <label><strong>Radius (meters):</strong></label>
           <input

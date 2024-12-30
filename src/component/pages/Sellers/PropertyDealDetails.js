@@ -29,7 +29,7 @@ const PropertyDealDetails = () => {
         const fetchData = async () => {
             let status = '';
             if(currentTab !== 'total_buyer'){
-                status = `/${currentTab}`;
+                status = currentTab;
             }
             let response = await axios.post(`${apiUrl}deals/show/${id}`,{status: status,notification_id: notificationId},{headers:headers});
             setDealDetailsData(response.data.data);
