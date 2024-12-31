@@ -14,23 +14,55 @@ const AddAddressAndRadius = () => {
   const autocompleteRef = useRef(null);
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAP_KEY;
 
-  // Fetch the user's current location
+  // Fetch the user's current location and reverse geocode the address
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCenter({ lat: latitude, lng: longitude });
-      },
-      (error) => {
-        console.error('Error fetching geolocation:', error);
-        // Fallback to Sydney if geolocation fails
-        setCenter({
-          lat: -33.8688,
-          lng: 151.2093,
-        });
+    const fetchCurrentLocation = async () => {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setCenter({ lat: latitude, lng: longitude });
+
+          // Reverse geocode to get address
+          try {
+            const response = await fetch(
+              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleMapsApiKey}`
+            );
+            const data = await response.json();
+            if (data.results && data.results[0]) {
+              setAddress(data.results[0].formatted_address);
+            }
+          } catch (error) {
+            console.error('Error fetching address:', error);
+          }
+        },
+        (error) => {
+          console.error('Error fetching geolocation:', error);
+          // Fallback to Sydney if geolocation fails
+          setCenter({
+            lat: -33.8688,
+            lng: 151.2093,
+          });
+          setAddress('Sydney, Australia');
+        }
+      );
+    };
+
+    fetchCurrentLocation();
+  }, [googleMapsApiKey]);
+
+
+  // Fetch address using Geocoding API
+  const fetchAddress = (location) => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        setAddress(results[0].formatted_address);
+      } else {
+        console.error('Geocode error:', status);
+        setAddress('No address available');
       }
-    );
-  }, []);
+    });
+  };
 
   const handlePlaceSelected = () => {
     if (autocompleteRef.current) {
@@ -38,8 +70,9 @@ const AddAddressAndRadius = () => {
       if (place.geometry && place.geometry.location) {
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
-        setCenter({ lat, lng });
-        setAddress(place.formatted_address || '');
+        const location = { lat, lng };
+        setCenter(location);
+        setAddress(place.formatted_address || 'No address available');
       }
     }
   };
@@ -47,8 +80,10 @@ const AddAddressAndRadius = () => {
   const handleCircleDragEnd = (event) => {
     const newLat = event.latLng.lat();
     const newLng = event.latLng.lng();
-    setCenter({ lat: newLat, lng: newLng });
-    setShowInfoWindow(false); // Close InfoWindow when the circle is dragged
+    const newLocation = { lat: newLat, lng: newLng };
+    setCenter(newLocation);
+    fetchAddress(newLocation); // Update address on drag end
+    setShowInfoWindow(false); // Close InfoWindow
   };
 
   const handleRadiusChange = (e) => {

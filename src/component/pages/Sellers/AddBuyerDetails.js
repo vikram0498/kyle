@@ -145,7 +145,6 @@ function AddBuyerDetails() {
             setParkOption(result.park);
             setStateOptions(result.states);
             const selectedParkingValue = result.parking_values.map((item) => item.value);
-            console.log(selectedParkingValue,"selectedParkingValue")
             setValue('parking',selectedParkingValue)
             setParkingValue(selectedParkingValue);
             setbuyerTypeOption(result.buyer_types);

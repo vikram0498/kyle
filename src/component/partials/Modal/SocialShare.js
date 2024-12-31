@@ -11,15 +11,26 @@ import {
   EmailIcon,
 } from 'react-share';
 
-const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal,handleCopyToClipBoard,generatedUrl}) => {
+const SocialShare = ({
+  openSocialShareModal,
+  SetOpenSocialShareModal,
+  handleCopyToClipBoard,
+  generatedUrl
+}) => {
   const handleClose = () => {
     SetOpenSocialShareModal(false);
   };
-  const baseURL = window.location.origin;
 
+  const baseURL = window.location.origin;
   const text = 'Check out this page!';
-  const subject = 'Check this out!'; // Subject for the email
-  const body = 'I found this amazing website, and I thought you should check it out!'; // Body text for the email
+  const subject = 'Check this out!';
+  
+  // Ensure the body value does not contain undefined
+  const sanitizedBody = 'I found this amazing website, and I thought you should check it out.' || '';
+  
+  // Log to verify the sanitized body value
+  console.log("Sanitized Email Body:", sanitizedBody);
+
   return (
     <div>
       <Modal
@@ -28,14 +39,11 @@ const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal,handleCopyToC
         className="modal-social-share-main"
         centered
       >
-        {/* <button type="button" className="btn-close" onClick={handleClose}>
-                <i className='fa fa-times fa-lg'></i>
-            </button> */}
         <Modal.Header closeButton>
           <h5>Social Share</h5>
         </Modal.Header>
         <Modal.Body>
-        <div className="social-share-btn">
+          <div className="social-share-btn">
             <div className="social-share-list">
               <FacebookShareButton url={generatedUrl} title={text}>
                 <FacebookIcon size={32} round />
@@ -49,20 +57,26 @@ const SocialShare = ({openSocialShareModal,SetOpenSocialShareModal,handleCopyToC
                 <WhatsappIcon size={32} round />
               </WhatsappShareButton>
 
-              {/* <EmailShareButton subject={subject} body={body} separator=" - ">
-                  <EmailIcon size={32} round={true} />
-                </EmailShareButton> */}
+              <EmailShareButton subject={subject} body={sanitizedBody} separator="">
+                <EmailIcon size={32} round={true} className="email-sharing" />
+              </EmailShareButton>
             </div>
             <div id="" className="invite-page modal-invite-link">
               <input id="link" defaultValue={generatedUrl} />
-              <div id="copy" onClick={()=>{handleCopyToClipBoard(generatedUrl)}}>
+              <div
+                id="copy"
+                onClick={() => {
+                  handleCopyToClipBoard(generatedUrl);
+                }}
+              >
                 <i className="fa-solid fa-copy" aria-hidden="true"></i>
               </div>
             </div>
-        </div>
+          </div>
         </Modal.Body>
       </Modal>
     </div>
   );
 };
+
 export default SocialShare;

@@ -8420,7 +8420,9 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   justify-content: center;
   padding: 4px;
 }
-
+.email-sharing>circle {
+  fill: #F84437;
+}
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{
