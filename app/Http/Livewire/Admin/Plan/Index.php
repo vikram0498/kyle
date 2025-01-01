@@ -17,6 +17,7 @@ use Stripe\Price as StripPrice;
 use Illuminate\Support\Facades\DB;
 use Stripe\Subscription as StripSubscription;
 use App\Models\Subscription as SubscriptionModel;
+use App\Events\SubscriptionChanged;
 
 
 
@@ -259,64 +260,7 @@ class Index extends Component
                 $this->alert('error', trans('messages.no_record_found'));
             }
 
-            Stripe::setApiKey(config('app.stripe_secret_key'));
-
-            $stripeSubscriptions = StripSubscription::all(['status' => 'active']);
-            if (count($stripeSubscriptions->data) > 0) {
-                dd($stripeSubscriptions->data);
-                foreach($stripeSubscriptions->data as $sub){
-                    
-                }
-            }
-          
-
-            /*
-            $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
-
-            $stripePlan->delete();
-
-            $prices = StripPrice::all(['product' => $model->product_stripe_id]);
-
-            $associatedSubscriptions = false;
-
-            // Check if there are any active subscriptions linked to the prices
-            foreach ($prices->data as $price) {
-                // Check if the price is recurring before attempting to fetch subscriptions
-                if (isset($price->recurring)) {
-                    try {
-                        $subscriptions = Subscription::all([
-                            'price' => $price->id,
-                            'status' => 'active'
-                        ]);
-            
-                        if (!empty($subscriptions->data)) {
-                            $associatedSubscriptions = true;
-                            break;
-                        }
-                    } catch (\Exception $e) {
-                        \Log::error("Error fetching subscriptions for price {$price->id}: " . $e->getMessage());
-                    }
-                }
-            }
-
-            if ($associatedSubscriptions) {
-                $this->alert('error', trans('messages.cannot_delete_associated_product'));
-                return;
-            }
-
-            // Deactivate prices associated with the product
-            foreach ($prices->data as $price) {
-                try {
-                    StripPrice::update($price->id, ['active' => false]);
-                } catch (\Exception $e) {
-                    \Log::error("Failed to deactivate price {$price->id}: " . $e->getMessage());
-                }
-            }
-
-            // Retrieve and delete the product
-            $product = StripProduct::retrieve($model->product_stripe_id);
-            $product->delete();
-            */
+            // event(new SubscriptionChanged($model->id, 'cancel', null, null));
 
             if($model->uploads()->first()){
                 $upload_id = $model->uploads()->first()->id;
@@ -335,7 +279,7 @@ class Index extends Component
             $this->alert('success', trans('messages.delete_success_message'));
         }catch(\Exception $e){
             DB::rollBack();
-            dd($e->getMessage().'->'.$e->getLine());
+            // dd($e->getMessage().'->'.$e->getLine());
             \Log::info('Error in Livewire/Admin/Plan/Index::deleteConfirm (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
             $this->alert('error', trans('messages.error_message'));
         }
