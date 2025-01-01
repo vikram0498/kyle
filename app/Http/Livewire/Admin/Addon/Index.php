@@ -11,6 +11,7 @@ use Stripe\Subscription;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB; 
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -121,49 +122,67 @@ class Index extends Component
         $this->initializePlugins();
     }
 
-    public function update(){
+    public function update()
+    {
         $validatedData = $this->validate([
-            'title' => 'required',
-            'price' => 'required|numeric|min:0|max:99999999.99',
-            'credit' => 'required|numeric',
-            'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
-            'status' => 'required',
-        ],[],['title' => 'name']);
-  
+            'title'     => 'required',
+            'price'     => 'required|numeric|min:0|max:99999999.99',
+            'credit'    => 'required|numeric',
+            'position'  => ['required', 'numeric', 'min:0', 'max:99999'],
+            'status'    => 'required',
+        ], [], ['title' => 'name']);
+
         $validatedData['status'] = $this->status;
 
         $addon = Addon::find($this->addon_id);
 
-        if($addon){
-            $updateRecord = $this->except(['search','formMode','updateMode','addon_id','image','originalImage','page','paginators']);
+        if (!$addon) {
+            $this->alert('error', trans('messages.no_record_found'));
+        }
 
-            Stripe::setApiKey(config('app.stripe_secret_key'));
-    
+        $updateRecord = collect($this->except(['search', 'formMode', 'updateMode', 'addon_id', 'image', 'originalImage', 'page', 'paginators']));
 
-            $product = StripProduct::retrieve($addon->product_stripe_id);
+        Stripe::setApiKey(config('app.stripe_secret_key'));
 
-            $product->name = $this->title;
-            $product->description = 'Updated Additional Credits';
-            $product->save();
+        try {
+            DB::beginTransaction();
 
-            // $price = StripPrice::retrieve($addon->price_stripe_id);
-            // $price->unit_amount = (float)$this->price * 100; // Updated amount in cents
-            // $price->save();
+            $currentPrice = $addon->price;
 
-            $updateRecord['product_json']  = json_encode($product);
+            $product = StripProduct::update($addon->product_stripe_id,
+                    [
+                        'name' => $this->title,
+                        'description' => 'Updated Additional Credits',
+                    ]
+                );
 
-            $updateRecord['price_json']  = json_encode($price);
-            
-            $addon->update($updateRecord);
-      
+            $updateRecord['product_json'] = json_encode($product);
+
+            if ((float) $this->price !== (float) $currentPrice) {    
+                // Create a new price (prices are immutable in Stripe)
+                $price = StripPrice::create([
+                    'unit_amount' => (int) ($this->price * 100), // Price in cents
+                    'currency'    => config('constants.default_currency'), // Replace with your currency
+                    'product'     => $addon->product_stripe_id,
+                ]);
+                $updateRecord['price_stripe_id'] = $price->id;
+                $updateRecord['price_json'] = json_encode($price);
+            }
+
+            $addon->update($updateRecord->toArray());
+
+            DB::commit();
             $this->formMode = false;
             $this->updateMode = false;
-      
-            $this->flash('success',trans('messages.edit_success_message'));
+
+            $this->flash('success', trans('messages.edit_success_message'));
             $this->resetInputFields();
             return redirect()->route('admin.addon');
-        }else{
-            $this->alert('error',trans('messages.error_message'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage());
+            \Log::info('Error in Livewire/Admin/Addon/Index::Update (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
         }
     }
 
@@ -184,27 +203,58 @@ class Index extends Component
 
     public function deleteConfirm($id){
         $model = Addon::find($id);
+        if (!$model) {
+            $this->alert('error', trans('messages.no_record_found'));
+            return;
+        }
+
         try {
-            Stripe::setApiKey(config('app.stripe_secret_key'));
             /*
-                // Retrieve the product's prices
-                $prices = \Stripe\Price::all(['product' => $model->product_stripe_id]);
-        
-                // Delete each price associated with the product
-                if($prices->data){
-                   foreach ($prices->data as $price) {
-                        try {
-                             \Stripe\Price::update($price->id, ['active' => false]);
-                        } catch (\Exception $e) {
-                            \Log::error("Failed to delete price {$price->id}: " . $e->getMessage());
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+           
+            $prices = StripPrice::all(['product' => $model->product_stripe_id]);
+
+            $associatedSubscriptions = false;
+
+            // Check if there are any active subscriptions linked to the prices
+            foreach ($prices->data as $price) {
+                // Check if the price is recurring before attempting to fetch subscriptions
+                if (isset($price->recurring)) {
+                    try {
+                        $subscriptions = Subscription::all([
+                            'price' => $price->id,
+                            'status' => 'active'
+                        ]);
+            
+                        if (!empty($subscriptions->data)) {
+                            $associatedSubscriptions = true;
+                            break;
                         }
-                    } 
+                    } catch (\Exception $e) {
+                        \Log::error("Error fetching subscriptions for price {$price->id}: " . $e->getMessage());
+                    }
                 }
-                
-                // Retrieve and delete the product
-                $product = \Stripe\Product::retrieve($model->product_stripe_id);
-                $product->delete();
+            }
+
+            if ($associatedSubscriptions) {
+                $this->alert('error', trans('messages.cannot_delete_associated_product'));
+                return;
+            }
+
+            // Deactivate prices associated with the product
+            foreach ($prices->data as $price) {
+                try {
+                    StripPrice::update($price->id, ['active' => false]);
+                } catch (\Exception $e) {
+                    \Log::error("Failed to deactivate price {$price->id}: " . $e->getMessage());
+                }
+            }
+
+            // Retrieve and delete the product
+            $product = StripProduct::retrieve($model->product_stripe_id);
+            $product->delete();
             */
+        
             // Delete the local model
             $model->delete();
     

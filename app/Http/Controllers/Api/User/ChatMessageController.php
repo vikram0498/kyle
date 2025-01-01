@@ -256,7 +256,30 @@ class ChatMessageController extends Controller
             $data = $message->toArray();
             $data['conversation_uuid'] = $conversation->uuid;
 
+            $data['sender_user'] = [
+                'id'                    => $sender->id,
+                'name'                  => $sender->name ?? '',
+                'is_online'             => $sender->is_online ?? '',
+                'is_block'              => $sender->is_block ?? '',
+                'profile_image'         => $sender->profile_image_url ?? null,
+                'level_type'            => $sender->level_type ?? '',
+                'profile_tag_name'      => $sender->buyerPlan ? $sender->buyerPlan->title : null,
+                'profile_tag_image'     => $sender->buyerPlan ? $sender->buyerPlan->image_url : null,
+                'unread_message_count'  => $unreadMessageCount,
+                'last_message'          => [
+                    'id'             => $message->id,
+                    'sender_id'      => $message->sender_id,
+                    'content'        => $message->content,
+                    'is_read'        => $message->seenBy()->where('user_id', $recipient->id)->exists(),
+                    'created_date'   => $message->created_at->format('d-M-Y'),
+                    'created_time'   => $message->created_at->format('g:i A'),
+                    'date_time_label'=> formatDateLabel($message->created_at),
+                ],
+                'last_message_at'    => $message ? $message->created_at->format('d-M-Y g:i A') : null,
+                'wishlisted'         => $recipient->wishlistedUsers()->where('wishlist_user_id',$sender->id)->exists(),
+            ];
 
+           
             $responseData = [
                 'status'            => true,
                 'message'           => trans('messages.chat_message.success_send_message'),

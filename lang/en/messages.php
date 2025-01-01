@@ -79,6 +79,9 @@ return [
         'conversation_already_reported' => "Conversation already reported",
         'conversation_added_to_report'  => "Conversation added to report"
 
-    ]
+    ],
+
+    'cannot_delete_associated_product' => "Product has active subscriptions and cannot be deleted.",
+
     
 ];

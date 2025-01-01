@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\NotificationSent::class => [
             \App\Listeners\SendNotificationEmail::class,
         ],
+        \App\Events\SubscriptionChanged::class => [
+            \App\Listeners\HandleSubscriptionChange::class,
+        ],
         
     ];
 

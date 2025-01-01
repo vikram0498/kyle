@@ -20,6 +20,8 @@ class Plan extends Model
 
     protected $fillable = [
         'plan_stripe_id',
+        'product_stripe_id',
+        'price_stripe_id',
         'title',
         'price',
         'type',
@@ -27,6 +29,8 @@ class Plan extends Model
         'credits',
         'description',
         'plan_json',
+        'product_json',
+        'price_json',
         'status',
         'created_by',
         'created_at',

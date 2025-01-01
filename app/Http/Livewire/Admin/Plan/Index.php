@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Validator;
 use Stripe\Stripe;
 use Stripe\Plan as StripPlan;
 use Stripe\Product as StripProduct;
+use Stripe\Price as StripPrice;
+use Illuminate\Support\Facades\DB;
+use Stripe\Subscription as StripSubscription;
+use App\Models\Subscription as SubscriptionModel;
+
 
 
 class Index extends Component
@@ -72,34 +77,58 @@ class Index extends Component
 
         $insertRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
 
-        Stripe::setApiKey(config('app.stripe_secret_key'));
+        try {
+            DB::beginTransaction();
+            Stripe::setApiKey(config('app.stripe_secret_key'));
 
-        $stripePlan = StripPlan::create([
-            'amount' => (float)$this->price * 100,
-            'currency' => config('constants.default_currency'),
-            'interval' => $this->type == 'monthly' ? 'month' : 'year',
-            'product' => [
-                'name' => $this->title,
-            ],
-        ]);
+            $stripePlan = StripPlan::create([
+                'amount' => (float)$this->price * 100,
+                'currency' => config('constants.default_currency'),
+                'interval' => $this->type == 'monthly' ? 'month' : 'year',
+                'product' => [
+                    'name' => $this->title,
+                ],
+            ]);
 
-        if($stripePlan){
-            $insertRecord['plan_stripe_id'] = $stripePlan->id;
-            $insertRecord['plan_json']  = json_encode($stripePlan);
-    
-            $plan = Plan::create($insertRecord);
+            if($stripePlan){
+                $insertRecord['plan_stripe_id'] = $stripePlan->id;
+                $insertRecord['plan_json']  = json_encode($stripePlan);
         
-            $uploadedImage = uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
-    
-            $this->formMode = false;
-            $this->resetInputFields();
-    
-            $this->flash('success',trans('messages.add_success_message'));
+                $stripProduct = StripProduct::retrieve($stripePlan->product);
             
-            return redirect()->route('admin.plan');
-        }else{
-            $this->alert('error',trans('messages.error_message'));
+                $insertRecord['product_stripe_id'] = $stripProduct->id;
+                $insertRecord['product_json']  = json_encode($stripProduct);
+
+                $stripPrice = StripPrice::all([
+                    'product' => $stripePlan->product,
+                ]);
+                if (count($stripPrice->data) > 0) {
+                    $price = $stripPrice->data[0];
+                    $insertRecord['price_stripe_id'] = $price->id;
+                    $insertRecord['price_json']  = json_encode($price);
+                }
+
+                $plan = Plan::create($insertRecord);
+            
+                $uploadedImage = uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'save', null);
+        
+                DB::commit();
+                $this->formMode = false;
+                $this->resetInputFields();
+        
+                $this->flash('success',trans('messages.add_success_message'));
+                
+                return redirect()->route('admin.plan');
+            }else{
+                $this->alert('error',trans('messages.error_message'));
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/Plan/Index::store (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
         }
+
     }
 
 
@@ -127,13 +156,13 @@ class Index extends Component
     public function update(){
         
       $validateArr = [
-            'title' => 'required',
-            'price' => 'required|numeric|min:0|max:99999999.99',
-            'type'  => 'required|in:monthly,yearly',
-            'position'    => ['required', 'numeric', 'min:0', 'max:99999'],
-            'credits' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
-            'description' => 'required|without_spaces',
-            'status' => 'required',
+            'title'         => 'required',
+            'price'         => 'required|numeric|min:0|max:99999999.99',
+            'type'          => 'required|in:monthly,yearly',
+            'position'      => ['required', 'numeric', 'min:0', 'max:99999'],
+            'credits'       => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'description'   => 'required|without_spaces',
+            'status'        => 'required',
         ];
 
         if($this->image || $this->removeImage){
@@ -144,52 +173,150 @@ class Index extends Component
 
         $validatedData['status'] = $this->status;
 
-        $plan = Plan::find($this->plan_id);
+        try {
+            DB::beginTransaction();
 
-        // Check if the photo has been changed
-        $uploadId = null;
-        if ($this->image) {
-            $uploadId = $plan->packageImage->id;
-            uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'update', $uploadId);
-        }
-        
-        $updateRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
+            $plan = Plan::find($this->plan_id);
 
-        if($plan){
+            if(!$plan){
+                $this->alert('error', trans('messages.no_record_found'));
+            }
+
+            // Check if the photo has been changed
+            $uploadId = null;
+            if ($this->image) {
+                $uploadId = $plan->packageImage->id;
+                uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'update', $uploadId);
+            }
+            
+            $updateRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
+
+            $planJson = json_decode($plan->plan_json);
+            $currentPrice = $plan->price;
+
             Stripe::setApiKey(config('app.stripe_secret_key'));
 
-            $stripePlan = StripPlan::update(
-                $plan->plan_stripe_id,
-                [ 
-                    'nickname' => $this->title,
-                ]
-            );
+            if($this->title != $plan->title){
+                $stripeProduct = StripProduct::update(
+                    $planJson->product, 
+                    [
+                        'name' => $this->title,
+                    ]
+                );
 
-            $updateRecord['plan_json']  = json_encode($stripePlan);
-    
+                $stripProduct = StripProduct::retrieve($planJson->product);
+                
+                $updateRecord['product_stripe_id'] = $stripProduct->id;
+                $updateRecord['product_json']  = json_encode($stripProduct);
+            }
+
+            if ((float) $this->price !== (float) $currentPrice) { 
+                // Create a new Price for the updated price
+                $newPrice = StripPrice::create([
+                    'unit_amount' => $this->price * 100, 
+                    'currency' => config('constants.default_currency'), 
+                    'recurring' => [
+                        'interval' => $this->type == 'monthly' ? 'month' : 'year'
+                    ],
+                    'product' => $planJson->product,
+                ]);
+
+                $stripPrice = StripPrice::all([
+                    'product' => $planJson->product,
+                ]);
+                if (count($stripPrice->data) > 0) {
+                    $price = $stripPrice->data[0];
+                    $updateRecord['price_stripe_id'] = $price->id;
+                    $updateRecord['price_json']  = json_encode($price);
+                }
+            }
+
             $plan->update($updateRecord);
-      
+        
+            DB::commit();
             $this->formMode = false;
             $this->updateMode = false;
-      
+        
             $this->flash('success',trans('messages.edit_success_message'));
             $this->resetInputFields();
+            
             return redirect()->route('admin.plan');
-        }else{
-            $this->alert('error',trans('messages.error_message'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/Plan/Index::Update (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
         }
        
     }
 
     public function deleteConfirm($id){
         try{
+            DB::beginTransaction();
+
             $model = Plan::find($id);
-            
-            $stripe = Stripe::setApiKey(config('app.stripe_secret_key'));
-    
+            if(!$model){
+                $this->alert('error', trans('messages.no_record_found'));
+            }
+
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+
+            $stripeSubscriptions = StripSubscription::all(['status' => 'active']);
+            if (count($stripeSubscriptions->data) > 0) {
+                dd($stripeSubscriptions->data);
+                foreach($stripeSubscriptions->data as $sub){
+                    
+                }
+            }
+          
+
+            /*
             $stripePlan = StripPlan::retrieve($model->plan_stripe_id);
 
             $stripePlan->delete();
+
+            $prices = StripPrice::all(['product' => $model->product_stripe_id]);
+
+            $associatedSubscriptions = false;
+
+            // Check if there are any active subscriptions linked to the prices
+            foreach ($prices->data as $price) {
+                // Check if the price is recurring before attempting to fetch subscriptions
+                if (isset($price->recurring)) {
+                    try {
+                        $subscriptions = Subscription::all([
+                            'price' => $price->id,
+                            'status' => 'active'
+                        ]);
+            
+                        if (!empty($subscriptions->data)) {
+                            $associatedSubscriptions = true;
+                            break;
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error("Error fetching subscriptions for price {$price->id}: " . $e->getMessage());
+                    }
+                }
+            }
+
+            if ($associatedSubscriptions) {
+                $this->alert('error', trans('messages.cannot_delete_associated_product'));
+                return;
+            }
+
+            // Deactivate prices associated with the product
+            foreach ($prices->data as $price) {
+                try {
+                    StripPrice::update($price->id, ['active' => false]);
+                } catch (\Exception $e) {
+                    \Log::error("Failed to deactivate price {$price->id}: " . $e->getMessage());
+                }
+            }
+
+            // Retrieve and delete the product
+            $product = StripProduct::retrieve($model->product_stripe_id);
+            $product->delete();
+            */
 
             if($model->uploads()->first()){
                 $upload_id = $model->uploads()->first()->id;
@@ -199,14 +326,18 @@ class Index extends Component
             }
             
             $model->delete();
-    
+
+            DB::commit();
             $this->emit('refreshTable');
 
             $this->emit('refreshLivewireDatatable');
     
             $this->alert('success', trans('messages.delete_success_message'));
         }catch(\Exception $e){
-            $this->alert('error', $e->getMessage());
+            DB::rollBack();
+            dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/Plan/Index::deleteConfirm (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
         }
        
     }
