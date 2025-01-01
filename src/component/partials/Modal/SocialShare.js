@@ -57,7 +57,7 @@ const SocialShare = ({
                 <WhatsappIcon size={32} round />
               </WhatsappShareButton>
 
-              <EmailShareButton subject={subject} body={sanitizedBody} separator="">
+              <EmailShareButton subject={subject} body={sanitizedBody} separator="" url="">
                 <EmailIcon size={32} round={true} className="email-sharing" />
               </EmailShareButton>
             </div>
