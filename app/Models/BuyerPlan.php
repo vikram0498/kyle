@@ -21,6 +21,8 @@ class BuyerPlan extends Model
 
     protected $fillable = [
         'plan_stripe_id',
+        'product_stripe_id',
+        'price_stripe_id',
         'plan_json',
         'title',
         'type',

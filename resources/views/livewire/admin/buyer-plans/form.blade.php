@@ -3,9 +3,6 @@
     {{ $updateMode ? __('global.edit') : __('global.create') }} 
     {{ strtolower(__('cruds.buyer_plan.title_singular'))}}</h4>
 
-<div class="alert alert-warning alert-dismissible warning-alert" role="alert">
-    <i class="fas fa-exclamation-triangle mr-2"></i><b>Buyer Plan can't be edited. Please recheck before submitting the details.</b>
-</div>
 <form wire:submit.prevent="{{ $updateMode ? 'update' : 'store' }}" class="forms-sample">
     <div class="row">
         <div class="col-md-12">
@@ -58,7 +55,7 @@
         <div class="col-md-12 mb-4">
             <div class="form-group mb-0" wire:ignore>
                 <label class="font-weight-bold">{{ __('cruds.buyer_plan.fields.image')}} <span class="text-danger">*</span></label>
-                <input type="file"  wire:model.defer="image" class="dropify" data-default-file="{{ $originalImage }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="svg" data-min-file-size-preview="1M" data-max-file-size-preview="3M" accept="image/svg" id="dropify-image" />
+                <input type="file"  wire:model.defer="image" class="dropify" data-default-file="{{ $originalImage }}"  data-show-loader="true" data-errors-position="outside" data-allowed-file-extensions="jpeg png jpg svg" data-min-file-size-preview="1M" data-max-file-size-preview="3M" accept="image/svg" id="dropify-image" />
             </div>
             @if($errors->has('image'))
             <span class="error text-danger">

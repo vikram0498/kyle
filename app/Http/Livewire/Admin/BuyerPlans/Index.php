@@ -11,8 +11,11 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Stripe\Stripe;
 use Stripe\Plan as StripPlan;
 use Stripe\Product as StripProduct;
+use Stripe\Price as StripPrice;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\DB;
+use App\Events\SubscriptionChanged;
 
 
 class Index extends Component
@@ -74,41 +77,66 @@ class Index extends Component
 
         $insertRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
 
-        Stripe::setApiKey(config('app.stripe_secret_key'));
+        try {
+            DB::beginTransaction();
+            Stripe::setApiKey(config('app.stripe_secret_key'));
 
-        $stripePlan = StripPlan::create([
-            'amount' => (float)$this->amount * 100,
-            'currency' => config('constants.default_currency'),
-            'interval' => $this->type == 'monthly' ? 'month' : 'year',
-            'product' => [
-                'name' => $this->title,
-            ],
-            'nickname' => $this->title, // Set a nickname for your plan
-            'metadata' => [
-                'plan_type'=>'buyer plan',
-                'description' => strip_tags($this->description), // Set a description for your plan
-            ],
-        ]);
+            $stripePlan = StripPlan::create([
+                'amount' => (float)$this->amount * 100,
+                'currency' => config('constants.default_currency'),
+                'interval' => $this->type == 'monthly' ? 'month' : 'year',
+                'product' => [
+                    'name' => $this->title,
+                ],
+                'nickname' => $this->title, // Set a nickname for your plan
+                'metadata' => [
+                    'plan_type'=>'buyer plan',
+                    'description' => strip_tags($this->description), // Set a description for your plan
+                ],
+            ]);
 
-        if($stripePlan){
-            $insertRecord['plan_stripe_id'] = $stripePlan->id;
-            $insertRecord['plan_json']  = json_encode($stripePlan);
-    
-            $plan = BuyerPlan::create($insertRecord);
-        
-            if($this->image){
-                $uploadedImage = uploadImage($plan, $this->image, 'buyer-plan/image/',"buyer-plan", 'original', 'save', null);
-            }
-          
-            $this->formMode = false;
-            $this->resetInputFields();
-    
-            $this->flash('success',trans('messages.add_success_message'));
+            if($stripePlan){
+
+                $insertRecord['plan_stripe_id'] = $stripePlan->id;
+                $insertRecord['plan_json']  = json_encode($stripePlan);
+
+                // $stripProduct = StripProduct::retrieve($stripePlan->product);
             
-            return redirect()->route('admin.buyer-plans');
-        }else{
-            $this->alert('error',trans('messages.error_message'));
+                $insertRecord['product_stripe_id'] = $stripePlan->product;
+                
+                $stripPrice = StripPrice::all([
+                    'product' => $stripePlan->product,
+                ]);
+                if (count($stripPrice->data) > 0) {
+                    $price = $stripPrice->data[0];
+                    $insertRecord['price_stripe_id'] = $price->id;
+                }
+        
+                $plan = BuyerPlan::create($insertRecord);
+            
+                if($this->image){
+                    $uploadedImage = uploadImage($plan, $this->image, 'buyer-plan/image/',"buyer-plan", 'original', 'save', null);
+                }
+            
+                DB::commit();
+                $this->formMode = false;
+                $this->resetInputFields();
+        
+                $this->flash('success',trans('messages.add_success_message'));
+                
+                return redirect()->route('admin.buyer-plans');
+
+            }else{
+                $this->alert('error',trans('messages.error_message'));
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/BuyerPlans/Index::store (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
         }
+
+
     }
 
     public function edit($id)

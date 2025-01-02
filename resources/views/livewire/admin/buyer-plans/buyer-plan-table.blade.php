@@ -121,6 +121,9 @@
                             <button type="button" wire:click="$emitUp('show', {{$plan->id}})" class="btn btn-primary btn-rounded btn-icon">
                                 <i class="ti-eye"></i>
                             </button>
+                            <button type="button" wire:click="$emitUp('edit', {{$plan->id}})" class="btn btn-info btn-rounded btn-icon">
+                                <i class="ti-pencil-alt"></i>
+                            </button>
                             <button type="button" data-id="{{$plan->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
                                 <i class="ti-trash"></i>
                             </button>
