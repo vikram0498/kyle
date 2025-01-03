@@ -27,6 +27,7 @@ const Message = () => {
   const [currentUserId, setCurrentUserId] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBlocked, setIsBlocked] = useState(0);
+  const [isFirstMessage, setIsFirstMessage] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const messagesEndRef = useRef("chat_box");
@@ -53,33 +54,47 @@ const Message = () => {
     setSocket(socketInstance);
 
     const handleMessage = (newMessage) => {
-      console.log(newMessage.sender_user,"newMessage")
       const chatIdValue = sessionStorage.getItem('chatId');
+      if(chatIdValue == "undefined"){
+        setIsFirstMessage(true);
+      }
+      // Update messages
       setMessages((prevMessages) => {
         const updatedMessages = { ...prevMessages };
         if (!updatedMessages.Today) updatedMessages.Today = [];
         if (chatIdValue === newMessage.conversation_uuid) {
-          updatedMessages.Today.push(newMessage);
+          updatedMessages.Today = [...updatedMessages.Today, newMessage];
         }
         return updatedMessages;
       });
-
+    
+      // Update chatList
       setChatList((prevChatList) => {
-        const updatedChatList = prevChatList.map((chat) =>
-          chat.id === newMessage.sender_user.id
-            ? {
-                ...chat,
-                ...newMessage,
-                id: chat.id, // Preserve the original ID
-                unread_message_count: chat.unread_message_count + 1, // Increment unread count
-                last_message: newMessage, // Update last message
-                last_message_at: newMessage.sender_user.last_message_at, // Update timestamp
-              }
-            : chat
-        );
-        return updatedChatList; // Return the updated chat list
+        let updated = false;
+        const updatedChatList = prevChatList.map((chat) => {
+          if (chat.conversation_uuid === newMessage.conversation_uuid) {
+            updated = true;
+            return {
+              ...chat,
+              unread_message_count: (chat.unread_message_count || 0) + 1,
+              last_message: newMessage,
+              last_message_at: newMessage.timestamp,
+            };
+          }
+          return chat;
+        });
+        const isSenderIdPresent = updatedChatList.some(item => item.id === newMessage.sender_id);
+        if (!updated && !isSenderIdPresent) {
+          // Add new chat if it doesn't exist in chatList
+          updatedChatList.push({
+            ...newMessage.sender_user,
+            conversation_uuid: newMessage.conversation_uuid
+          });
+        }
+    
+        return updatedChatList;
       });
-    };
+    };    
 
     socketInstance.on("connect", () => console.log("Connected to Socket.IO server"));
     socketInstance.on("receiveMessage", handleMessage);
@@ -140,6 +155,8 @@ const Message = () => {
       timestamp: now.toISOString(),
     };
     
+    console.log(senderMessage,"senderMessage");
+
     setMessages((prevMessages) => {
       const updatedMessages = { ...prevMessages };
       if (!updatedMessages.Today) updatedMessages.Today = [];
@@ -148,14 +165,16 @@ const Message = () => {
     });
 
     setChatList((prevChatList) => {
-        const updatedChatList = prevChatList.map(chat => {
-            if (chat.id === receiverId) {
-              chat.last_message.created_time = created_time;
-              chat.last_message.content =  message.trim();
-            }
-            return chat;
-          });
-        return updatedChatList;
+      const updatedChatList = prevChatList.map((chat) => {
+        if (chat.id === receiverId) {
+          // Initialize chat.last_message if it's null or undefined
+          chat.last_message = chat.last_message || {};
+          chat.last_message.created_time = created_time;
+          chat.last_message.content = message.trim();
+        }
+        return chat;
+      });
+      return updatedChatList;
     });
 
     const payload = {
@@ -207,18 +226,17 @@ const Message = () => {
   useEffect(() => {
     if (receiverId) {
         fetchMessages();
-
         setChatList(chatList.map(chat => {
-            if (chat.id === receiverId) {
-              return {
-                ...chat,
-                unread_message_count: 0
-              };
-            }
-            return chat;
-          }));
+          if (chat.id === receiverId) {
+            return {
+              ...chat,
+              unread_message_count: 0
+            };
+          }
+          return chat;
+        }));
     }
-  }, [receiverId]);
+  }, [receiverId,isFirstMessage]);
 
   useEffect(() => {
     if (conversationUuid) markReadNotification();
@@ -231,7 +249,7 @@ const Message = () => {
     }
     setReceiverId(chatPartnerId);
   }, []);
-
+  
   return (
     <>
       {userRole === 3 && <BuyerHeader />}
