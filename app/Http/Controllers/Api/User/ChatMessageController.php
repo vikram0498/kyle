@@ -496,7 +496,7 @@ class ChatMessageController extends Controller
             $user = User::find($request->recipient_id);
             if($user){
                 $user->is_block = $request->is_block;
-                $user->block_timestamp = Carbon::now();
+                $user->block_timestamp = $request->is_block == 1 ? Carbon::now() : null;
                 $user->save();
 
                 DB::commit();
