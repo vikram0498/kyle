@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 use App\Events\NotificationSent;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Cache;
+use App\Models\ConversationUser;
 
 
 class ChatMessageController extends Controller
@@ -212,6 +213,20 @@ class ChatMessageController extends Controller
                     'created_by'    => $sender->id ,
                     'participants_count'    => 2 ,   // For Direct Messages it is 2 other than group messages
                 ]);
+
+                $participants = [
+                    $sender->id,
+                    $recipient_id,
+                ];
+                
+                $conversation->conversationUsers()->createMany(
+                    array_map(fn($userId) => [
+                        'user_id' => $userId,
+                        'is_block' => false,
+                        'blocked_at' => null,
+                        'blocked_by' => null,
+                    ], $participants)
+                );
             }
 
             $message = Message::create([  
@@ -350,16 +365,13 @@ class ChatMessageController extends Controller
         // Fetch all messages (no cache expiration time needed)
         $cacheKey = "conversation_messages_{$conversation->id}";
         $messages = Cache::rememberForever($cacheKey, function () use ($conversation,$isBlocked,$blockTimestamp) {
-            $query = Message::where('conversation_id', $conversation->id)
-                ->orderBy('created_at', 'asc');
+            $query = Message::where('conversation_id', $conversation->id);
 
-                if ($isBlocked && $blockTimestamp) {
-                    $query->where('created_at', '<=', $blockTimestamp);
-                }
-        
-                return $query->get();
-
-                $query->get();
+            if ($isBlocked && $blockTimestamp) {
+                $query->where('created_at', '<=', $blockTimestamp);
+            }
+    
+            return $query->orderBy('created_at', 'asc')->get();
         });
 
         if($messages->count() > 0){
