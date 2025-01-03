@@ -54,6 +54,7 @@ const Message = () => {
     setSocket(socketInstance);
 
     const handleMessage = (newMessage) => {
+      console.log(newMessage,"newMessage")
       const chatIdValue = sessionStorage.getItem('chatId');
       if(chatIdValue == "undefined"){
         setIsFirstMessage(true);
@@ -91,7 +92,6 @@ const Message = () => {
             conversation_uuid: newMessage.conversation_uuid
           });
         }
-    
         return updatedChatList;
       });
     };    
@@ -124,6 +124,7 @@ const Message = () => {
     try {
       setIsLoader(true);
       const response = await axios.post(`${apiUrl}get-chat-list`, { is_blocked: isBlocked, recipient_id: chatPartnerId || '' }, { headers: getAuthHeaders() });
+      // console.log(response.data.data,"New ddd")
       setChatList(response.data.data || []);
       if (!receiverId && response.data.data.length) {
         setReceiverId(response.data.data[0].id);
@@ -250,6 +251,7 @@ const Message = () => {
     setReceiverId(chatPartnerId);
   }, []);
   
+  // console.log(chatList,"chatList")
   return (
     <>
       {userRole === 3 && <BuyerHeader />}
@@ -259,7 +261,7 @@ const Message = () => {
           <Container className="position-relative">
             <div className="back-block">
               <div className="row">
-                <div className="col-4">
+                <div className="col-4 col-sm-4 col-md-4 col-lg-4">
                   <Link to={void(0)} onClick={() => { window.history.back() }} className="back">
                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M15 6H1" stroke="#0A2540" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -268,13 +270,12 @@ const Message = () => {
                     Back
                   </Link>
                 </div>
-                <div className="col-7 text-center">
-                  <h6 className="center-head mb-0">Message</h6>
+                <div className="col-7 col-sm-4 col-md-4 col-lg-4 align-self-center">
+                  <h6 className="center-head text-center mb-0">Message</h6>
                 </div>
               </div>
             </div>
             <div className="card-box">
-              {chatList.length > 0 ?
                 <Row>
                   <Col lg="4">
                     <ChatSidebar chatList={chatList} setReceiverId={setReceiverId} receiverId={receiverId} handleConfirmBox={handleBlockUser} setIsBlocked={setIsBlocked} isBlocked={isBlocked} />
@@ -296,9 +297,7 @@ const Message = () => {
                       <div ref={messagesEndRef} />
                     </div>
                   </Col>
-                </Row> :
-                <Row className="text-center"><p>No chat found</p></Row>
-              }
+                </Row> 
             </div>
           </Container>
         }

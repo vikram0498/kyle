@@ -30,7 +30,9 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId, handleConfirmBox,setIs
                 </div>
             </h6>
             <ul className='chat_side_list scrollbar_design'>
-                {chatList.map((data,index)=>{
+                {
+                chatList.length > 0 ? 
+                chatList.map((data,index)=>{
                     return(
                         <li onClick={() => {
                             setReceiverId(data.id);
@@ -72,7 +74,8 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId, handleConfirmBox,setIs
                             </div>
                         </li>
                     )
-                })}
+                }):<p className='text-center'>No User Found</p>
+            }
                 
                 {/* <li>
                     <div className='chat_user_img'>
