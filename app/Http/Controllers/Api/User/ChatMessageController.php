@@ -94,6 +94,7 @@ class ChatMessageController extends Controller
 
             return [
                 'id'                    => $user->id,
+                'conversation_uuid'     => $conversation ? $conversation->uuid : null,
                 'name'                  => $user->name ?? '',
                 'is_online'             => $user->is_online ?? '',
                 'is_block'              => $user->is_block ?? '',
@@ -113,6 +114,7 @@ class ChatMessageController extends Controller
             if (!$chatList->pluck('id')->contains($wishlistUser->id)) {
                 $chatList->push([
                     'id'                    => $wishlistUser->id,
+                    'conversation_uuid'     => null,
                     'name'                  => $wishlistUser->name ?? '',
                     'is_block'              => $wishlistUser->is_block ?? '',
                     'is_online'             => $wishlistUser->is_online ?? '',
@@ -135,6 +137,7 @@ class ChatMessageController extends Controller
              if ($recipientUser && (is_null($isBlocked) || $recipientUser->is_block == $isBlocked)) {
                 $chatList->push([
                     'id'                    => $recipientUser->id,
+                    'conversation_uuid'     => null,
                     'name'                  => $recipientUser->name ?? '',
                     'is_online'             => $recipientUser->is_online ?? '',
                     'is_block'              => $recipientUser->is_block ?? '',
@@ -311,6 +314,9 @@ class ChatMessageController extends Controller
 
         $recipient = User::where('id',$recipient_id)->first();
 
+        $blockTimestamp = $recipient->block_timestamp;
+        $isBlocked = $recipient->is_block || $sender->is_block;
+
         // Find the conversation between the sender and recipient
         $conversation = Conversation::where('is_group', false)
         ->where(function ($query) use ($sender, $recipient_id) {
@@ -343,10 +349,17 @@ class ChatMessageController extends Controller
 
         // Fetch all messages (no cache expiration time needed)
         $cacheKey = "conversation_messages_{$conversation->id}";
-        $messages = Cache::rememberForever($cacheKey, function () use ($conversation) {
-            return Message::where('conversation_id', $conversation->id)
-                ->orderBy('created_at', 'asc')
-                ->get();
+        $messages = Cache::rememberForever($cacheKey, function () use ($conversation,$isBlocked,$blockTimestamp) {
+            $query = Message::where('conversation_id', $conversation->id)
+                ->orderBy('created_at', 'asc');
+
+                if ($isBlocked && $blockTimestamp) {
+                    $query->where('created_at', '<=', $blockTimestamp);
+                }
+        
+                return $query->get();
+
+                $query->get();
         });
 
         if($messages->count() > 0){
@@ -483,6 +496,7 @@ class ChatMessageController extends Controller
             $user = User::find($request->recipient_id);
             if($user){
                 $user->is_block = $request->is_block;
+                $user->block_timestamp = Carbon::now();
                 $user->save();
 
                 DB::commit();

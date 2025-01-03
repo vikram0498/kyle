@@ -60,7 +60,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'phone_verified_at',
         'is_online',
-        'status', // this status for buyer will search or not
+        'status', // this status for buyer will search or not,
+        'block_timestamp',
     ];
 
     /**
