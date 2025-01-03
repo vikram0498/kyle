@@ -528,6 +528,9 @@
   .pro_deal_table td{
     font-size: 14px;
   }
+  .buybox_search_right{
+    margin-top: 30px;
+  }
 }
 @media (max-width: 767px) {
   .account-block {
@@ -965,6 +968,23 @@
   .buyer_dash_linkTop li{
     flex: 0 0 calc(50% - 8px);
   }
+  .both_modal_design .modal-header{
+    padding-top: 20px;
+  }
+  .both_modal_design .modal-body {
+    padding: 0 20px 20px;
+  }
+  .social-share-list{
+    gap: 10px;
+  }
+  .modal-social-share-main .modal-header h5{
+    margin-bottom: 15px;
+  }
+  .social-share-list button svg,
+  .social-share-list button img{
+    width: 30px;
+    height: 30px;
+  }
 }
 
 @media (max-width: 575px) {
@@ -1125,6 +1145,10 @@
     position: absolute;
     bottom: 10px;
     left: 20px;
+  }
+  .add_buyer-right{
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
   }
 }
 @media (max-width: 480px) {

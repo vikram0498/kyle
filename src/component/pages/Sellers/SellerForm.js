@@ -22,6 +22,7 @@ import MobileHomePark from "./FilterPropertyForm/MobileHomePark";
 import HotelMotel from "./FilterPropertyForm/HotelMotel";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import { Image } from "react-bootstrap";
+import AddAddressAndRadius from "../../partials/PropertyRadiusSearch";
 
 
 const SellerForm = () => {
@@ -720,13 +721,17 @@ const SellerForm = () => {
                               </div>
                             </div>
                             <div className="col-12 col-lg-4 w-30">
-                              {!advertisementData.is_expired &&  
-                              <div className="advertisement">
-                                <Link>
-                                  <Image src={advertisementData.is_expired ? './assets/images/add-1.svg' :  advertisementData.image}/>
-                                </Link>
+                              <div className="buybox_search_right">
+                                <h6>map Preview</h6>
+                                <AddAddressAndRadius />
+                                {!advertisementData.is_expired &&  
+                                  <div className="advertisement">
+                                    <Link>
+                                      <Image src={advertisementData.is_expired ? './assets/images/add-1.svg' :  advertisementData.image}/>
+                                    </Link>
+                                  </div>
+                                }
                               </div>
-                              }
                             </div>
                           </div>
                         </div>

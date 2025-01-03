@@ -3,12 +3,12 @@ import { GoogleMap, LoadScript, Circle, Marker, Autocomplete, InfoWindow } from 
 
 const mapContainerStyle = {
   width: '100%',
-  height: '500px',
+  height: '388px',
 };
 
 const AddAddressAndRadius = () => {
   const [center, setCenter] = useState(null); // Circle center
-  const [radius, setRadius] = useState(5000); // Circle radius in meters
+  const [radius, setRadius] = useState(2000); // Circle radius in meters
   const [address, setAddress] = useState(''); // Address input value
   const [showInfoWindow, setShowInfoWindow] = useState(false); // Show or hide the InfoWindow
   const autocompleteRef = useRef(null);
@@ -104,7 +104,7 @@ const AddAddressAndRadius = () => {
   }
 
   return (
-    <section className='main-section position-relative pt-4 pb-120'>
+    <div className='map_radius_area'>
       <LoadScript
         googleMapsApiKey={googleMapsApiKey} // API key from environment
         libraries={['places', 'geometry']} // Load Places and Geometry libraries
@@ -145,7 +145,7 @@ const AddAddressAndRadius = () => {
         </div>
 
         {/* Address and Radius Input */}
-        <div style={{ marginTop: '10px' }}>
+        {/* <div style={{ marginTop: '10px' }}>
           <label> <strong>Address:</strong></label>
           <Autocomplete
             onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -159,33 +159,30 @@ const AddAddressAndRadius = () => {
               style={{ width: '300px', marginLeft: '10px', padding: '5px' }}
             />
           </Autocomplete>
-        </div>
+        </div> */}
 
-        <div style={{ marginTop: '10px' }}>
-          <label><strong>Radius (meters):</strong></label>
-          <input
-            type="number"
-            value={radius}
-            onChange={(e) => setRadius(Number(e.target.value))}
-            style={{ marginLeft: '10px', width: '100px' }}
-          />
-        </div>
-
-        {/* Radius Slider */}
-        <div style={{ marginTop: '10px' }}>
-          <label><strong>Radius (meters):</strong></label>
+        <div className='map_radius_info'>
+          <label>Radius (meters) <span>{radius} m</span></label>
           <input
             type="range"
             min="1000"
             max="10000"
             value={radius}
             onChange={handleRadiusChange}
-            style={{ marginLeft: '10px', width: '300px' }}
           />
-          <span style={{ marginLeft: '10px' }}>{radius} m</span>
         </div>
+        <div className='map_radius_info'>
+          <label>Enter Radius Manually (meters)</label>
+          <input
+            type="number"
+            value={radius}
+            onChange={(e) => setRadius(Number(e.target.value))}
+          />
+        </div>
+
+        
       </LoadScript>
-    </section>
+    </div>
   );
 };
 

@@ -643,6 +643,12 @@ function AddBuyerDetails() {
                               </span>
                               Copy Form Link {copyLoading ? <MiniLoader /> : ""}
                             </button> */}
+                            {/* <button className="btn-fill2">Generate REP Code</button> */}
+                            <div className="rep_code_block">
+                              <span className="rep_code_img"><Image src= './assets/images/rep_code_icon.svg' alt="rep icon"/></span>
+                              REP Code
+                              <strong> : &nbsp; DFR5220</strong>
+                            </div>
                             <button className="share_btn" onClick={copySocialShareLink}>
                               <span className="link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">

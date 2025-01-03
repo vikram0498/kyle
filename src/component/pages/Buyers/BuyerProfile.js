@@ -407,6 +407,7 @@ const BuyerProfile = () => {
                         </a>
                       </div>
                       <div className="update-profile">
+                        <Link to={""} className="btn btn-white-fill">Affiliate Program</Link>
                         <Link to={`/edit-profile/${profileId}`} className="btn btn-fill">
                           Edit Profile
                         </Link>
