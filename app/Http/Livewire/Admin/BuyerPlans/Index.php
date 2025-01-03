@@ -100,16 +100,18 @@ class Index extends Component
                 $insertRecord['plan_stripe_id'] = $stripePlan->id;
                 $insertRecord['plan_json']  = json_encode($stripePlan);
 
-                // $stripProduct = StripProduct::retrieve($stripePlan->product);
+                $stripProduct = StripProduct::retrieve($stripePlan->product);
             
                 $insertRecord['product_stripe_id'] = $stripePlan->product;
-                
+                $insertRecord['product_json']  = json_encode($stripProduct);
+
                 $stripPrice = StripPrice::all([
                     'product' => $stripePlan->product,
                 ]);
                 if (count($stripPrice->data) > 0) {
                     $price = $stripPrice->data[0];
                     $insertRecord['price_stripe_id'] = $price->id;
+                    $insertRecord['price_json']  = json_encode($price);
                 }
         
                 $plan = BuyerPlan::create($insertRecord);
@@ -143,14 +145,16 @@ class Index extends Component
     {
         $plan = BuyerPlan::findOrFail($id);
 
-        $this->plan_id = $id;
-        $this->title  = $plan->title;
-        $this->amount  = $plan->amount;
-        $this->position = $plan->position;
-        $this->type   = $plan->type;
-        $this->description = $plan->description;
-        $this->status = $plan->status;
+        $this->plan_id       = $id;
+        $this->title         = $plan->title;
+        $this->amount        = $plan->amount;
+        $this->position      = $plan->position;
+        $this->type          = $plan->type;
+        $this->description   = $plan->description;
+        $this->status        = $plan->status;
         $this->originalImage = $plan->image_url;
+        $this->user_limit    = $plan->user_limit;
+        $this->color         = $plan->color;
 
         $this->formMode = true;
         $this->updateMode = true;
@@ -182,40 +186,79 @@ class Index extends Component
   
           $validatedData['status'] = $this->status;
   
-          $plan = BuyerPlan::find($this->plan_id);
-  
-          // Check if the photo has been changed
-          $uploadId = null;
-          if ($this->image) {
-              $uploadId = $plan->packageImage->id;
-              uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'update', $uploadId);
-          }
-          
-          $updateRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
-  
-          if($plan){
-              Stripe::setApiKey(config('app.stripe_secret_key'));
-  
-              $stripePlan = StripPlan::update(
-                  $plan->plan_stripe_id,
-                  [ 
-                      'nickname' => $this->title,
-                  ]
-              );
-  
-              $updateRecord['plan_json']  = json_encode($stripePlan);
-      
-              $plan->update($updateRecord);
+        try {
+            DB::beginTransaction();
+            $plan = BuyerPlan::find($this->plan_id);
+
+            if(!$plan){
+                $this->alert('error', trans('messages.no_record_found'));
+            }
+    
+            // Check if the photo has been changed
+            $uploadId = null;
+            if ($this->image) {
+                $uploadId = $plan->packageImage->id;
+                uploadImage($plan, $this->image, 'plan/image/',"plan", 'original', 'update', $uploadId);
+            }
+            
+            $updateRecord = $this->except(['search','formMode','updateMode','plan_id','image','originalImage','page','paginators']);
+    
+            Stripe::setApiKey(config('app.stripe_secret_key'));
+
+            $currentAmount = $plan->amount;
+
+            if($this->title != $plan->title){
+                $stripeProduct = StripProduct::update(
+                    $plan->product_stripe_id, 
+                    [
+                        'name' => $this->title,
+                    ]
+                );
+
+                $stripProduct = StripProduct::retrieve($plan->product_stripe_id);
+
+                $updateRecord['product_stripe_id'] = $stripProduct->id;
+                $updateRecord['product_json']  = json_encode($stripProduct);
+            }
+           
+            if ((float) $this->amount !== (float) $currentAmount) { 
+                // Create a new Price for the updated price
+                $newPrice = StripPrice::create([
+                    'unit_amount' => $this->amount * 100, 
+                    'currency' => config('constants.default_currency'), 
+                    'recurring' => [
+                        'interval' => $this->type == 'monthly' ? 'month' : 'year'
+                    ],
+                    'product' => $plan->product_stripe_id,
+                ]);
+
+                $stripPrice = StripPrice::all([
+                    'product' => $plan->product_stripe_id,
+                ]);
+                
+                if (count($stripPrice->data) > 0) {
+                    $price = $stripPrice->data[0];
+                    $updateRecord['price_stripe_id'] = $price->id;
+                    $updateRecord['price_json']  = json_encode($price);
+                }
+            }
+
+            $plan->update($updateRecord);
         
-              $this->formMode = false;
-              $this->updateMode = false;
+            DB::commit();
+            $this->formMode = false;
+            $this->updateMode = false;
         
-              $this->flash('success',trans('messages.edit_success_message'));
-              $this->resetInputFields();
-              return redirect()->route('admin.buyer-plans');
-          }else{
-              $this->alert('error',trans('messages.error_message'));
-          }
+            $this->flash('success',trans('messages.edit_success_message'));
+            $this->resetInputFields();
+            return redirect()->route('admin.buyer-plans');
+           
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/Plan/Index::Update (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
+        }
          
       }
   

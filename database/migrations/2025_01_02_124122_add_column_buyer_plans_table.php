@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::table('buyer_plans', function (Blueprint $table) {
             $table->string('product_stripe_id')->nullable()->after('plan_stripe_id');
             $table->string('price_stripe_id')->nullable()->after('product_stripe_id');
+
+            $table->json('product_json')->nullable()->after('plan_json');
+            $table->json('price_json')->nullable()->after('product_json');
         });
     }
 
@@ -27,7 +30,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('plans', function (Blueprint $table) {
-            $table->dropColumn(['product_stripe_id','price_stripe_id']);
+            $table->dropColumn(['product_stripe_id','price_stripe_id','product_json','price_json']);
         });
     }
 };

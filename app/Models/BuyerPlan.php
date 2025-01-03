@@ -24,6 +24,8 @@ class BuyerPlan extends Model
         'product_stripe_id',
         'price_stripe_id',
         'plan_json',
+        'product_json',
+        'price_json',
         'title',
         'type',
         'position',
