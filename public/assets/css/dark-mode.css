@@ -23,7 +23,10 @@ body.dark .back-block,
 body.dark .card-box,
 body.dark .contact-update .contact-update-item a .icon,
 body.dark .img-user,
-body.dark .upload-buyer {
+body.dark .upload-buyer,
+body.dark .affiliate_col_inner,
+body.dark .affiliate_revenue_row>*,
+body.dark .affiliate_table{
   background: rgb(255 255 255 / 10%);
 }
 body.dark .back-block .center-head,
@@ -247,7 +250,8 @@ body.dark .upload-multiple-data,
 body.dark .upload-single-data,
 body.dark #inviteCode.invite-page ,
 body.dark .modal-invite-link,
-body.dark .rep_copy_box{
+body.dark .rep_copy_box,
+body.dark .affiliate_code_copy{
   background: #1f1f1f;
   border-color: rgb(255 255 255 / 20%) !important;
 }
@@ -275,7 +279,12 @@ body.dark .critera-card {
 body.dark .support-account .card-box-blocks {
   padding: 20px !important;
 }
-body.dark .card-box-blocks .css-1dimb5e-singleValue {
+body.dark .card-box-blocks .css-1dimb5e-singleValue,
+body.dark .affiliate_code_copy>span,
+body.dark .revenue_col_right>span,
+body.dark .affiliate_table thead th,
+body.dark .affiliate_table tbody td, 
+body.dark .affiliate_table tbody td p{
   color: #fff !important;
 }
 body.dark #inviteCode.invite-page input#link,
@@ -522,7 +531,8 @@ body.dark .msg_content:not(.outgoing_msg .msg_content):before{
 body.dark .new_modal_close .btn-close{
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e");
 }
-body.dark .column_bg_space>.deal_column {
+body.dark .column_bg_space>.deal_column,
+body.dark .affiliate_program_box>.affiliate_program_column{
   background: #1f1f1f;
   color: #fff;
 }
@@ -671,9 +681,13 @@ body.dark .both_modal_design .modal-header .btn-close{
   filter: invert(1);
   -webkit-filter: invert(1);
 }
-body.dark  .rep_code_block{
+body.dark .rep_code_block{
   background-color: #1f1f1f;
   color: #fff;
+}
+body.dark .affiliate_table thead th,
+body.dark .affiliate_table tbody td{
+  border-bottom-color: rgb(255 255 255 / 20%) !important;
 }
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{

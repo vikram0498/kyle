@@ -638,6 +638,16 @@ function Header() {
                         </Link>
                       </li>
                       <li>
+                        <Link className="dropdown-item" to="/affiliate-program">
+                          <img
+                            alt="Affiliate Program"
+                            src="/assets/images/affiliate-program.svg"
+                            className="img-fluid"
+                          />
+                          Affiliate Program
+                        </Link>
+                      </li>
+                      <li>
                         <Link className="dropdown-item" to="/settings">
                           <img
                             alt=""

@@ -40,6 +40,7 @@ import Message from "../component/pages/Sellers/Message";
 import Settings from "../component/pages/Sellers/Settings";
 import LastSearchResult from "../component/pages/Sellers/LastSearchResult";
 import PropertyRadiusSearch from "../component/partials/PropertyRadiusSearch";
+import AffiliateProgram from "../component/pages/Sellers/AffiliateProgram";
 // import GoogleMap from "../component/partials/GoogleMap";
 const Seller = () => {
   const { userData, isLogin } = useAuth();
@@ -73,6 +74,7 @@ const Seller = () => {
           />
           <Route path="/email/verify/:id/:hash" element={<VerifyEmail />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/affiliate-program" element={<AffiliateProgram />} />
           {/* add buyer link */}
           <Route path="/add-buyer/:token" element={<CopyAddBuyer urlType={'private-buyer'}/>} />
           <Route path="/social-share-add-buyer/:token" element={<CopyAddBuyer urlType={'public-buyer'} />} />

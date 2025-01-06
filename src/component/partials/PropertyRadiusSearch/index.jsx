@@ -103,6 +103,12 @@ const AddAddressAndRadius = () => {
     return <div>Loading map...</div>;
   }
 
+  // Custom Range Slider color change
+  const rangePercentage = ((radius - 800) / (10000 - 800)) * 100;
+  const sliderRangeStyle = {
+    background: `linear-gradient(to right, #3F53FE ${rangePercentage}%, #ffffff ${rangePercentage}%)`,
+  };
+
   return (
     <div className='map_radius_area'>
       <LoadScript
@@ -169,6 +175,14 @@ const AddAddressAndRadius = () => {
             max="10000"
             value={radius}
             onChange={handleRadiusChange}
+            style={{
+              ...sliderRangeStyle,
+              width: "100%",
+              height: "9px",
+              borderRadius: "10px",
+              appearance: "none",
+              outline: "none",
+            }}
           />
         </div>
         <div className='map_radius_info'>

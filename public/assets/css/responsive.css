@@ -207,6 +207,12 @@
   .property-details-Browse-Deal-icons{
     gap: 15px;
   }
+  .Rep_code_Row .add_buyer-right{
+    justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+    margin-bottom: 10px;
+    padding-top: 0;
+  }
 }
 
 @media screen and (min-width: 992px) and (max-width: 1199px){
@@ -530,6 +536,18 @@
   }
   .buybox_search_right{
     margin-top: 30px;
+  }
+  .affiliate_revenue_row>*{
+    padding: 10px;
+  }
+  .revenue_col_right{
+    padding-left: 10px;
+  }
+  .revenue_col_left{
+    flex: 0 0 52px;
+    -webkit-flex: 0 0 52px;
+    max-width: 52px;
+    height: 52px;
   }
 }
 @media (max-width: 767px) {
@@ -984,6 +1002,21 @@
   .social-share-list button img{
     width: 30px;
     height: 30px;
+  }
+  .affiliate_program_box>.affiliate_program_column,
+  .affiliate_col_inner{
+    padding: 10px;
+  }
+  .affiliate_revenue_row>*{
+    flex: 0 0 100%;
+    -webkit-flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .affiliate_table thead th:not(:first-child){
+    min-width: 150px;
+  }
+  .revenue_col_right>span{
+    font-size: 20px;
   }
 }
 
