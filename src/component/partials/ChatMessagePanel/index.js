@@ -16,9 +16,16 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
    // Handle the Enter key press event to send the message
 
    const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && message.trim()) {
-      sendMessage(); // Call sendMessage when Enter is pressed
-      e.preventDefault(); // Prevent the default action of the Enter key (new line)
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        // Add a new line programmatically
+        console.log("first")
+        setMessage((prevMessage) => `${prevMessage}\n`);
+      } 
+      else if (message.trim()) {
+        sendMessage(); // Call sendMessage when Enter is pressed
+      }
     }
   };
   const openSidebar = () => {
@@ -90,6 +97,9 @@ const ChatMessagePanel = ({messages,message, setMessage, sendMessage,activeUserD
         if(response.data.status){
           setIsShowReportModal(false);
         }
+        toast.success(response.data.message, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
     } catch (error) {
         console.error("Error fetching messages:", error.response?.data?.message || error.message);
         setError(error.response?.data?.message)

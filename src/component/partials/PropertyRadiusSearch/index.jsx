@@ -6,10 +6,9 @@ const mapContainerStyle = {
   height: '388px',
 };
 
-const AddAddressAndRadius = () => {
+const AddAddressAndRadius = ({address, setAddress}) => {
   const [center, setCenter] = useState(null); // Circle center
   const [radius, setRadius] = useState(2000); // Circle radius in meters
-  const [address, setAddress] = useState(''); // Address input value
   const [showInfoWindow, setShowInfoWindow] = useState(false); // Show or hide the InfoWindow
   const autocompleteRef = useRef(null);
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAP_KEY;
@@ -151,7 +150,7 @@ const AddAddressAndRadius = () => {
         </div>
 
         {/* Address and Radius Input */}
-        {/* <div style={{ marginTop: '10px' }}>
+        <div className="form-group position-relative" style={{ marginTop: '10px' }}>
           <label> <strong>Address:</strong></label>
           <Autocomplete
             onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -160,12 +159,14 @@ const AddAddressAndRadius = () => {
             <input
               type="text"
               placeholder="Enter address"
+              name="address"
               value={address}
+              className="form-control w-100"
               onChange={(e) => setAddress(e.target.value)}
               style={{ width: '300px', marginLeft: '10px', padding: '5px' }}
             />
           </Autocomplete>
-        </div> */}
+        </div>
 
         <div className='map_radius_info'>
           <label>Radius (meters) <span>{radius} m</span></label>

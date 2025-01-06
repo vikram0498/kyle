@@ -14,7 +14,7 @@ const HotelMotel = ({ data }) => {
   return (
     <>
       <div className="row">
-        <GoogleMapAutoAddress dataObj={data} />
+        {/* <GoogleMapAutoAddress dataObj={data} /> */}
         {/* <div className="col-12 col-lg-12">
           <AutoSuggestionAddress data={data} />
         </div>

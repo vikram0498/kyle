@@ -56,8 +56,10 @@ const Message = () => {
     const handleMessage = (newMessage) => {
       console.log(newMessage,"newMessage")
       const chatIdValue = sessionStorage.getItem('chatId');
-      if(chatIdValue == "undefined"){
-        setIsFirstMessage(true);
+      // console.log(chatIdValue,"chatIdValue")
+      if(chatIdValue == "undefined" || chatIdValue == null){
+        // console.log("first")
+        setIsFirstMessage(!isFirstMessage);
       }
       // Update messages
       setMessages((prevMessages) => {
@@ -72,28 +74,74 @@ const Message = () => {
       // Update chatList
       setChatList((prevChatList) => {
         let updated = false;
+        // console.log(prevChatList,"prevChatList")
+
+        // Map through the chat list and update or add new messages only for users with is_block === 0
         const updatedChatList = prevChatList.map((chat) => {
-          if (chat.conversation_uuid === newMessage.conversation_uuid) {
+          // console.log(chat.conversation_uuid, "==============", newMessage.conversation_uuid)
+          if (chat.conversation_uuid === newMessage.conversation_uuid && chat.is_block === false) {
             updated = true;
             return {
               ...chat,
               unread_message_count: (chat.unread_message_count || 0) + 1,
               last_message: newMessage,
-              last_message_at: newMessage.timestamp,
+              last_message_at: newMessage.sender_user.last_message_at,
             };
           }
           return chat;
         });
-        const isSenderIdPresent = updatedChatList.some(item => item.id === newMessage.sender_id);
-        if (!updated && !isSenderIdPresent) {
-          // Add new chat if it doesn't exist in chatList
+      
+        // Check if the sender is not already present, and if not, add the new chat (only if is_block === 0)
+        const isSenderIdPresent = updatedChatList.some(item => item.id === newMessage.sender_id && item.is_block === false);
+        if (!updated && !isSenderIdPresent && newMessage.is_block === 0) {
           updatedChatList.push({
             ...newMessage.sender_user,
             conversation_uuid: newMessage.conversation_uuid
           });
         }
-        return updatedChatList;
-      });
+        // console.log(updatedChatList,"updatedChatList")
+        // Sort the updated chat list
+        const sortedChatList = updatedChatList.sort((a, b) => {
+          // First, prioritize chats with wishlist: true
+          if (a.wishlist === true && b.wishlist !== true) return -1;
+          if (a.wishlist !== true && b.wishlist === true) return 1;
+      
+          // Then, prioritize the most recent chat (by last_message_at)
+          if (a.last_message_at > b.last_message_at) return -1;
+          if (a.last_message_at < b.last_message_at) return 1;
+      
+          return 0; // Keep the order if both are either the same or neither condition applies
+        });
+        // console.log(sortedChatList,"sortedChatList")
+
+        return sortedChatList;
+      });    
+      
+      // setChatList((prevChatList) => {
+      //   let updated = false;
+      //   const updatedChatList = prevChatList.map((chat) => {
+      //     // console.log(chat.conversation_uuid, "==================" ,newMessage.conversation_uuid)
+      //     if (chat.conversation_uuid === newMessage.conversation_uuid) {
+      //       updated = true;
+      //       return {
+      //         ...chat,
+      //         unread_message_count: (chat.unread_message_count || 0) + 1,
+      //         last_message: newMessage,
+      //         last_message_at: newMessage.sender_user.last_message_at,
+      //       };
+      //     }
+      //     return chat;
+      //   });
+      //   const isSenderIdPresent = updatedChatList.some(item => item.id === newMessage.sender_id);
+      //   if (!updated && !isSenderIdPresent) {
+      //     // Add new chat if it doesn't exist in chatList
+      //     updatedChatList.push({
+      //       ...newMessage.sender_user,
+      //       conversation_uuid: newMessage.conversation_uuid
+      //     });
+      //   }
+      //   return updatedChatList;
+      // });
     };    
 
     socketInstance.on("connect", () => console.log("Connected to Socket.IO server"));
@@ -120,9 +168,11 @@ const Message = () => {
     }
   };
 
-  const fetchChatList = async () => {
+  const fetchChatList = async (isLoad=true) => {
     try {
-      setIsLoader(true);
+      if(isLoad){
+        setIsLoader(true);
+      }
       const response = await axios.post(`${apiUrl}get-chat-list`, { is_blocked: isBlocked, recipient_id: chatPartnerId || '' }, { headers: getAuthHeaders() });
       // console.log(response.data.data,"New ddd")
       setChatList(response.data.data || []);
@@ -237,7 +287,7 @@ const Message = () => {
           return chat;
         }));
     }
-  }, [receiverId,isFirstMessage]);
+  }, [receiverId]);
 
   useEffect(() => {
     if (conversationUuid) markReadNotification();
@@ -251,6 +301,11 @@ const Message = () => {
     setReceiverId(chatPartnerId);
   }, []);
   
+  useEffect(()=>{
+    fetchMessages();
+    fetchChatList(false);
+  },[isSubmitted,isFirstMessage]);
+
   // console.log(chatList,"chatList")
   return (
     <>

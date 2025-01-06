@@ -31,51 +31,51 @@ const ChatSidebar = ({chatList,setReceiverId, receiverId, handleConfirmBox,setIs
             </h6>
             <ul className='chat_side_list scrollbar_design'>
                 {
-                chatList.length > 0 ? 
-                chatList.map((data,index)=>{
-                    return(
-                        <li onClick={() => {
-                            setReceiverId(data.id);
-                            closeSidebar();
-                          }} key={index} className={data.is_block == 1 ? 'blocked' : data.id == receiverId && 'active-user'}>
-                            <div className='chat_user_img'>
-                                <Figure>
-                                    <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
-                                </Figure>
-                            </div>
-                            {data.wishlisted && 
-                            <div className='wishlist_star_icon'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
-                                    <path d="M8.50049 13.8076L4.51586 15.8652C3.65728 16.3089 2.65428 15.5927 2.81791 14.6532L3.57874 10.2936L0.354951 7.20564C-0.340093 6.54064 0.0435119 5.38183 1.00299 5.24404L5.45834 4.60827L7.45065 0.64124C7.8799 -0.213747 9.11997 -0.213747 9.54922 0.64124L11.5415 4.60827L15.997 5.24404C16.9564 5.38083 17.34 6.53955 16.6452 7.20564L13.4213 10.2936L14.1821 14.6532C14.3458 15.5928 13.3427 16.3089 12.4842 15.8652L8.50049 13.8076Z" fill="#FFA800"/>
-                                </svg>
-                            </div>
-                            }
-                            <div className='chat_pro_area'>
-                                <div className='chat_user_info'>
-                                    <span>{data.name} </span>
-                                    <p>{data?.last_message?.content}</p>
+                    chatList.length > 0 ? 
+                    chatList.map((data,index)=>{
+                        return(
+                            <li onClick={() => {
+                                setReceiverId(data.id);
+                                closeSidebar();
+                            }} key={index} className={data.is_block == 1 ? 'blocked' : data.id == receiverId && 'active-user'}>
+                                <div className='chat_user_img'>
+                                    <Figure>
+                                        <Image src={data.profile_image || '/assets/images/property-img.png'} alt='' />
+                                    </Figure>
                                 </div>
-                                <div className='chat_status_area'>
-                                    <p className='mb-0'>{data.last_message_at}</p>
-                                    {data.unread_message_count > 0 && data.id != receiverId? 
-                                    <div className='seen_status text-end'>
-                                        <span className='msg_left_number'>{data.unread_message_count}</span>
-                                    </div>:
-                                    <div className='seen_status text-end'>
-                                        <span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="15" viewBox="0 0 27 15" fill="none">
-                                                <path d="M13.0745 9.70926L14.8158 11.4712L25.2562 0.907162L27 2.67157L14.8158 15L6.96766 7.0589L8.71143 5.29448L11.332 7.94609L13.0745 9.70801V9.70926ZM13.077 6.18043L19.1839 0L20.9227 1.75942L14.8158 7.93986L13.077 6.18043ZM9.59071 13.2368L7.84818 15L0 7.0589L1.74377 5.29448L3.4863 7.05765L3.48506 7.0589L9.59071 13.2368Z" fill="#3F53FE"/>
-                                            </svg>
-                                        </span>
+                                {data.wishlisted && 
+                                <div className='wishlist_star_icon'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
+                                        <path d="M8.50049 13.8076L4.51586 15.8652C3.65728 16.3089 2.65428 15.5927 2.81791 14.6532L3.57874 10.2936L0.354951 7.20564C-0.340093 6.54064 0.0435119 5.38183 1.00299 5.24404L5.45834 4.60827L7.45065 0.64124C7.8799 -0.213747 9.11997 -0.213747 9.54922 0.64124L11.5415 4.60827L15.997 5.24404C16.9564 5.38083 17.34 6.53955 16.6452 7.20564L13.4213 10.2936L14.1821 14.6532C14.3458 15.5928 13.3427 16.3089 12.4842 15.8652L8.50049 13.8076Z" fill="#FFA800"/>
+                                    </svg>
+                                </div>
+                                }
+                                <div className='chat_pro_area'>
+                                    <div className='chat_user_info'>
+                                        <span>{data.name} </span>
+                                        <p>{data?.last_message?.content}</p>
                                     </div>
-                                    }
-                                    {data.is_block == 1 && <button className='unblock_btn' onClick={()=>handleConfirmBox(data.id, 0)}>Unblock</button>}
+                                    <div className='chat_status_area'>
+                                        <p className='mb-0'>{data.last_message_at}</p>
+                                        {data.unread_message_count > 0 && data.id != receiverId? 
+                                        <div className='seen_status text-end'>
+                                            <span className='msg_left_number'>{data.unread_message_count}</span>
+                                        </div>:
+                                        <div className='seen_status text-end'>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="27" height="15" viewBox="0 0 27 15" fill="none">
+                                                    <path d="M13.0745 9.70926L14.8158 11.4712L25.2562 0.907162L27 2.67157L14.8158 15L6.96766 7.0589L8.71143 5.29448L11.332 7.94609L13.0745 9.70801V9.70926ZM13.077 6.18043L19.1839 0L20.9227 1.75942L14.8158 7.93986L13.077 6.18043ZM9.59071 13.2368L7.84818 15L0 7.0589L1.74377 5.29448L3.4863 7.05765L3.48506 7.0589L9.59071 13.2368Z" fill="#3F53FE"/>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        }
+                                        {data.is_block == 1 && <button className='unblock_btn' onClick={()=>handleConfirmBox(data.id, 0)}>Unblock</button>}
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    )
-                }):<p className='text-center'>No User Found</p>
-            }
+                            </li>
+                        )
+                    }):<p className='text-center'>No User Found</p>
+                }
                 
                 {/* <li>
                     <div className='chat_user_img'>

@@ -723,7 +723,7 @@ const SellerForm = () => {
                             <div className="col-12 col-lg-4 w-30">
                               <div className="buybox_search_right">
                                 <h6>map Preview</h6>
-                                <AddAddressAndRadius />
+                                <AddAddressAndRadius address={address} setAddress={setAddress}/>
                                 {!advertisementData.is_expired &&  
                                   <div className="advertisement">
                                     <Link>
