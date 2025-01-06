@@ -28,7 +28,7 @@ class ChatMessageController extends Controller
         ]);
         
         $recipient = $request->recipient_id ?? null; 
-        $isBlocked = $request->is_blocked;
+        $isBlocked = (bool)$request->is_blocked ?? null;
         
         $authUser = auth()->user(); 
         
@@ -63,7 +63,7 @@ class ChatMessageController extends Controller
             $userQuery = User::where('id', $otherParticipantId);
 
             // Apply Blocked filter 
-            if (!is_null($isBlocked)) {
+            if ($isBlocked) {
                 $userQuery->whereIn('id', function ($query) use ($authUser,$isBlocked) {
                     $query->select('user_id')
                         ->from('user_block')
@@ -215,7 +215,7 @@ class ChatMessageController extends Controller
                       ->whereIn('participant_2', [$sender->id, $recipient_id]);
             })->first();
 
-            if (!$conversation) {
+            if (!$conversation) { 
                 $conversation = Conversation::create([
                     'is_group'      => false,
                     'participant_1' => $sender->id,
@@ -257,24 +257,27 @@ class ChatMessageController extends Controller
             $conversation->save();
 
             $recipient = User::find($recipient_id);
-            $notificationData = [
-                'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
-                'message'   => trans('notification_messages.chat_message.received_new_message') .' '. $request->content,
-                'module'    => "dm_notification",
-                'type'      => "dm_notification",
-                'user_id'   => $recipient->id,
-                'notification_type' => 'dm_notification',
-                'conversation_uuid'   => $conversation->uuid,
-                'sender_id'         => $sender->id,
-            ];
-
-            $cacheKey = "conversation_messages_{$conversation->id}";
-            Cache::forget($cacheKey);
-
-            $recipient->notify(new SendNotification($notificationData));
-            
-            // Fire the event form mail
-            event(new NotificationSent($recipient, $notificationData));
+            $isBlocked = $sender->isBlockedBy($recipient_id);
+            if(!$isBlocked){
+                $notificationData = [
+                    'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
+                    'message'   => trans('notification_messages.chat_message.received_new_message') .' '. $request->content,
+                    'module'    => "dm_notification",
+                    'type'      => "dm_notification",
+                    'user_id'   => $recipient->id,
+                    'notification_type' => 'dm_notification',
+                    'conversation_uuid'   => $conversation->uuid,
+                    'sender_id'         => $sender->id,
+                ];
+    
+                $cacheKey = "conversation_messages_{$conversation->id}";
+                Cache::forget($cacheKey);
+    
+                $recipient->notify(new SendNotification($notificationData));
+                
+                // Fire the event form mail
+                event(new NotificationSent($recipient, $notificationData));
+            }
 
             DB::commit();
 
