@@ -1150,6 +1150,19 @@
     flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
   }
+  .rep_copy_box{
+    max-width: 100%;
+  }
+  .rep_copy_box span{
+    font-size: 24px;
+    line-height: 36px;
+  }
+  .rep_copy_btn{
+    padding: 10px;
+  }
+  .rep_code_modal .modal-header p{
+    margin-bottom: 20px;
+  }
 }
 @media (max-width: 480px) {
   .account-with-social > li {

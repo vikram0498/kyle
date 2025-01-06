@@ -61,7 +61,8 @@ bo00000004dy.dark .profile-data-content h3 {
 body.dark .active-inactive button,
 body.dark .field-box button,
 body.dark .otp-digit .otpnumb,
-body.dark .card-box-blocks .form-control {
+body.dark .card-box-blocks .form-control,
+body.dark .map_radius_info input[type="number"]{
   background: rgb(255 255 255 / 10%) !important;
   border-color: rgb(255 255 255 / 20%) !important;
   color: #fff !important;
@@ -245,7 +246,8 @@ body.dark .form-icon-password:before {
 body.dark .upload-multiple-data,
 body.dark .upload-single-data,
 body.dark #inviteCode.invite-page ,
-body.dark .modal-invite-link{
+body.dark .modal-invite-link,
+body.dark .rep_copy_box{
   background: #1f1f1f;
   border-color: rgb(255 255 255 / 20%) !important;
 }
@@ -656,13 +658,22 @@ body.dark .user_block_content{
 body.dark li:not(.blocked,.active-user) .chat_user_info>span{
   color: #fff;
 }
-body.dark li:not(.blocked,.active-user) .chat_status_area>p{
+body.dark li:not(.blocked,.active-user) .chat_status_area>p,
+body.dark .rep_copy_box span{
   color: #fff;
 }
 body.dark .modal_inner_form select{
   background: rgb(255 255 255 / 10%) !important;
   border-color: rgb(255 255 255 / 20%) !important;
   color: #9b9b9b !important;
+}
+body.dark .both_modal_design .modal-header .btn-close{
+  filter: invert(1);
+  -webkit-filter: invert(1);
+}
+body.dark  .rep_code_block{
+  background-color: #1f1f1f;
+  color: #fff;
 }
 @media screen and (max-width: 767px){
   body.dark .user-dropdown .img-user{

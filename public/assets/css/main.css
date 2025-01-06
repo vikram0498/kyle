@@ -8527,6 +8527,8 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
   padding: 48px 0 0;
   justify-content: center;
   -webkit-justify-content: center;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
 }
 .both_modal_design .modal-header .btn-close{
   position: absolute;
@@ -8541,6 +8543,60 @@ label.property-critera-block.buyer-blog-area.change-badge-color .boost-slot-pane
 .both_modal_design .modal-body{
   padding: 0 50px 50px;
 }
+.rep_code_modal .modal-header h5{
+  color: #121639;
+  font-size: 25px;
+  line-height: 30px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.rep_code_modal .modal-header p{
+  flex: 0 0 100%;
+  -webkit-flex: 0 0 100%;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.rep_copy_box{
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  border: 1px solid #EAECEB;
+  border-radius: 5px;
+  padding: 6px 6px 6px 15px;
+  max-width: 84%;
+  margin: 0 auto;
+}
+.rep_copy_box span{
+  color: #121639;
+  font-size: 35px;
+  line-height: 44px;
+  font-weight: 700;
+  text-transform: capitalize;
+  font-family: "Barlow", sans-serif;
+}
+.rep_copy_btn{
+  background-color: #3F53FE;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  gap: 7px;
+  -webkit-gap: 7px;
+  font-size: 14px;
+  line-height: 25px;
+  font-weight: 600;
+  padding: 10px 20px;
+  color: #fff;
+}
+
+
+
+
 
 @media screen and (min-width: 768px){
   .contact-desc-box>.nav::-webkit-scrollbar-track{

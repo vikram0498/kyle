@@ -17,7 +17,7 @@ import WatchVideo from "../../partials/Modal/WatchVideo";
 import SocialShare from "../../partials/Modal/SocialShare";
 import GoogleReCaptcha from "../../partials/SocialLogin/GoogleReCaptcha";
 import GoogleMapAutoAddress from "../../partials/GoogleMapAutoAddress";
-import { Image } from "react-bootstrap";
+import { Button, Image, Modal } from "react-bootstrap";
 
 function AddBuyerDetails() {
   const {
@@ -555,6 +555,10 @@ function AddBuyerDetails() {
     state
   }
 
+  const [generateREPShow, setGenerateREPShow] = useState(false);
+  const handleGenerateREPShow = () => setGenerateREPShow (true);
+  const handleGenerateREPClose = () => setGenerateREPShow(false);
+
   return (
     <>
       <Header />
@@ -643,12 +647,12 @@ function AddBuyerDetails() {
                               </span>
                               Copy Form Link {copyLoading ? <MiniLoader /> : ""}
                             </button> */}
-                            {/* <button className="btn-fill2">Generate REP Code</button> */}
-                            <div className="rep_code_block">
+                            <button className="btn-fill2" onClick={handleGenerateREPShow}>Generate REP Code</button>
+                            {/* <div className="rep_code_block">
                               <span className="rep_code_img"><Image src= './assets/images/rep_code_icon.svg' alt="rep icon"/></span>
                               REP Code
                               <strong> : &nbsp; DFR5220</strong>
-                            </div>
+                            </div> */}
                             <button className="share_btn" onClick={copySocialShareLink}>
                               <span className="link-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -2933,6 +2937,25 @@ function AddBuyerDetails() {
         )}
       </section>
 
+      {/* Generate REP Code Modal */}
+      <Modal show={generateREPShow} onHide={handleGenerateREPClose} centered className="both_modal_design rep_code_modal">
+        <Modal.Header closeButton>
+          <h5>Here is your REP Code</h5>
+          <p>Please find the REP code below </p>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="rep_copy_box">
+            <span>DFR5220</span>
+            <button className="rep_copy_btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16 12.9V17.1C16 20.6 14.6 22 11.1 22H6.9C3.4 22 2 20.6 2 17.1V12.9C2 9.4 3.4 8 6.9 8H11.1C14.6 8 16 9.4 16 12.9Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 6.9V11.1C22 14.6 20.6 16 17.1 16H16V12.9C16 9.4 14.6 8 11.1 8H8V6.9C8 3.4 9.4 2 12.9 2H17.1C20.6 2 22 3.4 22 6.9Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Copy Code
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
 
       <Footer />
     </>
