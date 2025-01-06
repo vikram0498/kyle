@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Http;
 use App\Events\NotificationSent;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Cache;
-use App\Models\ConversationUser;
 
 
 class ChatMessageController extends Controller
@@ -41,7 +40,12 @@ class ChatMessageController extends Controller
         });
         
         if ($request->filled('is_blocked')) {
-            $wishlistUsers = $wishlistUsers->where('is_block', $isBlocked);
+            $wishlistUsers->whereIn('id', function ($query) use ($authUser,$isBlocked) {
+                $query->select('user_id')
+                    ->from('user_block')
+                    ->where('blocked_by', $authUser->id)
+                    ->where('block_status', $isBlocked);
+            });
         }
         
         $wishlistUsers = $wishlistUsers->get();
@@ -60,7 +64,12 @@ class ChatMessageController extends Controller
 
             // Apply Blocked filter 
             if (!is_null($isBlocked)) {
-                $userQuery->where('is_block', $isBlocked);
+                $userQuery->whereIn('id', function ($query) use ($authUser,$isBlocked) {
+                    $query->select('user_id')
+                        ->from('user_block')
+                        ->where('blocked_by', $authUser->id)
+                        ->where('block_status', $isBlocked);
+                });
             }
 
             $user = $userQuery->first();
@@ -98,7 +107,7 @@ class ChatMessageController extends Controller
                 'conversation_uuid'     => $conversation ? $conversation->uuid : null,
                 'name'                  => $user->name ?? '',
                 'is_online'             => $user->is_online ?? '',
-                'is_block'              => $user->is_block ?? '',
+                'is_block'              => $authUser->isBlockedBy($user->id) ?? '',
                 'profile_image'         => $user->profile_image_url ?? null,
                 'level_type'            => $user->level_type ?? '',
                 'profile_tag_name'      => $user->buyerPlan ? $user->buyerPlan->title : null,
@@ -117,7 +126,7 @@ class ChatMessageController extends Controller
                     'id'                    => $wishlistUser->id,
                     'conversation_uuid'     => null,
                     'name'                  => $wishlistUser->name ?? '',
-                    'is_block'              => $wishlistUser->is_block ?? '',
+                    'is_block'              => $authUser->isBlockedBy($wishlistUser->id) ?? '',
                     'is_online'             => $wishlistUser->is_online ?? '',
                     'profile_image'         => $wishlistUser->profile_image_url ?? null,
                     'level_type'            => $wishlistUser->level_type ?? '',
@@ -135,13 +144,15 @@ class ChatMessageController extends Controller
         if ($recipient) {
             $recipientUser = User::find($recipient);
 
-             if ($recipientUser && (is_null($isBlocked) || $recipientUser->is_block == $isBlocked)) {
+             $isBlockStatus = $authUser->isBlockedBy($recipientUser->id);
+
+             if ($recipientUser && (is_null($isBlocked) ||  ($isBlockStatus == $isBlocked) )) {
                 $chatList->push([
                     'id'                    => $recipientUser->id,
                     'conversation_uuid'     => null,
                     'name'                  => $recipientUser->name ?? '',
                     'is_online'             => $recipientUser->is_online ?? '',
-                    'is_block'              => $recipientUser->is_block ?? '',
+                    'is_block'              => $isBlockStatus,
                     'profile_image'         => $recipientUser->profile_image_url ?? null,
                     'level_type'            => $recipientUser->level_type ?? '',
                     'profile_tag_name'      => $recipientUser->buyerPlan ? $recipientUser->buyerPlan->title : null,
@@ -214,19 +225,15 @@ class ChatMessageController extends Controller
                     'participants_count'    => 2 ,   // For Direct Messages it is 2 other than group messages
                 ]);
 
-                $participants = [
-                    $sender->id,
-                    $recipient_id,
-                ];
+                /*
+                    $participants = [
+                        $sender->id,
+                        $recipient_id,
+                    ];
+                    
+                    $conversation->users()->sync($participants);
+                */
                 
-                $conversation->conversationUsers()->createMany(
-                    array_map(fn($userId) => [
-                        'user_id' => $userId,
-                        'is_block' => false,
-                        'blocked_at' => null,
-                        'blocked_by' => null,
-                    ], $participants)
-                );
             }
 
             $message = Message::create([  
@@ -278,7 +285,7 @@ class ChatMessageController extends Controller
                 'id'                    => $sender->id,
                 'name'                  => $sender->name ?? '',
                 'is_online'             => $sender->is_online ?? '',
-                'is_block'              => $sender->is_block ?? '',
+                'is_block'              => $sender->isBlockedBy($recipient_id) ?? '',
                 'profile_image'         => $sender->profile_image_url ?? null,
                 'level_type'            => $sender->level_type ?? '',
                 'profile_tag_name'      => $sender->buyerPlan ? $sender->buyerPlan->title : null,
@@ -329,8 +336,9 @@ class ChatMessageController extends Controller
 
         $recipient = User::where('id',$recipient_id)->first();
 
-        $blockTimestamp = $recipient->block_timestamp;
-        $isBlocked = $recipient->is_block || $sender->is_block;
+        $blockTimestamp = $sender->getBlockedTimestamp($recipient_id);
+        $isBlocked = $sender->isBlockedBy($recipient_id) || $recipient->isBlockedBy($sender->id);
+
 
         // Find the conversation between the sender and recipient
         $conversation = Conversation::where('is_group', false)
@@ -347,7 +355,7 @@ class ChatMessageController extends Controller
                     'id'                => $recipient->id,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => (bool)$recipient->is_block, 
+                    'is_block'          => $sender->isBlockedBy($recipient->id), 
                     'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
@@ -415,7 +423,7 @@ class ChatMessageController extends Controller
                     'conversation_uuid' => $conversation->uuid,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => (bool)$recipient->is_block,
+                    'is_block'          => $sender->isBlockedBy($recipient->id),
                     'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
@@ -496,26 +504,28 @@ class ChatMessageController extends Controller
 
     public function updateBlockStatus(Request $request){
         $request->validate([
-            'recipient_id'  => 'required|exists:users,id,deleted_at,NULL',
-            'is_block'      => 'required|in:0,1',
-        ],[],
-        [
-            'is_block' => 'Block status'
+            'recipient_id'      => 'required|exists:users,id',
         ]);
 
         try{
             DB::beginTransaction();
             $user = User::find($request->recipient_id);
             if($user){
-                $user->is_block = $request->is_block;
-                $user->block_timestamp = $request->is_block == 1 ? Carbon::now() : null;
-                $user->save();
+            
+                if ($user->trashed()) {
+                    return response()->json([
+                        'status' => false,
+                        'error'  => trans('messages.chat_message.user_trashed_error')
+                    ], 400);
+                }
+
+                $blockStatus = $this->toggleBlock($user);
 
                 DB::commit();
-
                 $responseData = [
                     'status'            => true,
-                    'message'           => trans('messages.chat_message.user_block_success'),
+                    'blockStatus'       => $blockStatus,
+                    'message'           => $blockStatus ? trans('messages.chat_message.user_block_success') : trans('messages.chat_message.user_unblock_success'),
                 ];
                 return response()->json($responseData, 200);
             }
@@ -676,4 +686,23 @@ class ChatMessageController extends Controller
             return response()->json($responseData, 400);
         }
     }
+
+   
+    private function toggleBlock($user)
+    {
+        $authUser = auth()->user();
+        $existingBlock =  $user->blockedUsers()->where('blocked_by', $authUser->id)->first();
+
+        if ($existingBlock) {
+            $existingBlock->pivot->block_status = !$existingBlock->pivot->block_status;
+            $existingBlock->pivot->save();
+
+            return $existingBlock->pivot->block_status;
+        } else {
+            $user->blockedUsers()->attach($authUser->id, ['block_status' => 1, 'blocked_at' => now()]);
+            return true; // Blocked
+        }
+    }
+    
+
 }

@@ -330,7 +330,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-
     public function wishlistedUsers()
     {
         return $this->belongsToMany(User::class, 'wishlists', 'user_id', 'wishlist_user_id')
@@ -341,6 +340,37 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(User::class, 'wishlists', 'wishlist_user_id', 'user_id')
             ->withTimestamps();
+    }
+
+    public function blockedUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_block',
+            'user_id',
+            'blocked_by'
+        )->withPivot('blocked_at', 'block_status')->withTimestamps();
+    }
+
+    public function isBlockedBy($userId)
+    {
+        return $this->blockedUsers()->where('user_id', $userId)->where('block_status', 1)->exists();
+    }
+
+    public function getBlockedTimestamp($recipient_id)
+    {
+        $sender = auth()->user(); // Get the sender (authenticated user)
+        
+        // Check if the recipient is blocked by the sender
+        $block = $sender->blockedUsers()->where('user_id', $recipient_id)->first();
+        
+        if ($block) {
+            // The block record exists, so return the block timestamp
+            return $block->pivot->blocked_at; // Assuming 'blocked_at' is the column in the pivot table
+        }
+
+        // If no block record exists, return null or handle accordingly
+        return null;
     }
 
 

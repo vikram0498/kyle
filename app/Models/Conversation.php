@@ -69,9 +69,10 @@ class Conversation extends Model
         return $this->belongsTo(User::class, 'participant_2');
     }
 
-    public function conversationUsers()
+    public function users()
     {
-        return $this->hasMany(ConversationUser::class,'conversation_id');
+        return $this->belongsToMany(User::class, 'conversation_user')
+                    ->withTimestamps();
     }
 
 }

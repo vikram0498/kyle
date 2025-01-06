@@ -71,6 +71,7 @@ return [
         'no_conversation_found'     => "No Conversation found.",
         'marked_as_read_successfully'  => "Message successfully marked as read.",
         'user_block_success'           => "Blocked successfully.", 
+        'user_unblock_success'         => "Unblocked successfully.", 
         'added_wishlist_success'       => "Added to wishlist successfully!",
         'removed_wishlist_success'     => "Removed from your wishlist successfully!",
         'not_in_wishlist'              => "The user is not in your wishlist.",
@@ -82,6 +83,6 @@ return [
     ],
 
     'cannot_delete_associated_product' => "Product has active subscriptions and cannot be deleted.",
-
+    "user_trashed_error"    => "The user has been deactivated!",
     
 ];
