@@ -56,7 +56,7 @@ const setupSocket = (io) => {
                 console.log("send-message-response:", response.data);
 
                 const receiverSocketId = userSocketMap[response.data.data.receiver_id];
-                if (receiverSocketId) {
+                if (receiverSocketId && (!response.data.data.sender_user.is_block)) {
                     console.log("Receiver Socket ID:", receiverSocketId);
 
                     io.to(receiverSocketId).emit("receiveMessage",response.data.data

@@ -28,7 +28,7 @@ class ChatMessageController extends Controller
         ]);
         
         $recipient = $request->recipient_id ?? null; 
-        $isBlocked = (bool)$request->is_blocked ?? null;
+        $isBlocked = (bool)$request->is_blocked ?? false;
         
         $authUser = auth()->user(); 
         
@@ -60,19 +60,21 @@ class ChatMessageController extends Controller
             $otherParticipantId = ($conversation->participant_1 == $authUser->id) ? $conversation->participant_2 : $conversation->participant_1;
 
             // Fetch user details for the other participant
-            $userQuery = User::where('id', $otherParticipantId);
-
-            // Apply Blocked filter 
-            if ($isBlocked) {
-                $userQuery->whereIn('id', function ($query) use ($authUser,$isBlocked) {
-                    $query->select('user_id')
-                        ->from('user_block')
-                        ->where('blocked_by', $authUser->id)
-                        ->where('block_status', $isBlocked);
-                });
-            }
-
-            $user = $userQuery->first();
+            $userQuery = User::where('users.id', $otherParticipantId)
+            ->leftJoin('user_block', function ($join) use ($authUser) {
+                $join->on('users.id', '=', 'user_block.user_id')
+                     ->where('user_block.blocked_by', $authUser->id);
+            })
+            ->where(function ($query) use ($isBlocked) {
+                if ($isBlocked) {
+                    $query->where('user_block.block_status', 1);
+                } else {
+                    $query->whereNull('user_block.block_status')
+                          ->orWhere('user_block.block_status', 0);
+                }
+            });
+            
+            $user = $userQuery->select('users.*')->first();
 
             if (!$user) {
                 return null; // Exclude invalid users
@@ -88,6 +90,12 @@ class ChatMessageController extends Controller
                 ->where('sender_id', '!=', $authUser)
                 ->whereDoesntHave('seenBy', function ($query) use ($authUser) {
                     $query->where('user_id', $authUser->id);
+                })
+                ->where(function ($query) use ($authUser) {
+                    $query->whereDoesntHave('sender.blockedUsers', function ($blockQuery) use ($authUser) {
+                        $blockQuery->where('blocked_by', $authUser->id)
+                            ->where('block_status', 1);
+                    });
                 })
                 ->count();
 
@@ -107,7 +115,7 @@ class ChatMessageController extends Controller
                 'conversation_uuid'     => $conversation ? $conversation->uuid : null,
                 'name'                  => $user->name ?? '',
                 'is_online'             => $user->is_online ?? '',
-                'is_block'              => $authUser->isBlockedBy($user->id) ?? '',
+                'is_block'              => $user->isBlockedByAuthUser(),
                 'profile_image'         => $user->profile_image_url ?? null,
                 'level_type'            => $user->level_type ?? '',
                 'profile_tag_name'      => $user->buyerPlan ? $user->buyerPlan->title : null,
@@ -126,7 +134,7 @@ class ChatMessageController extends Controller
                     'id'                    => $wishlistUser->id,
                     'conversation_uuid'     => null,
                     'name'                  => $wishlistUser->name ?? '',
-                    'is_block'              => $authUser->isBlockedBy($wishlistUser->id) ?? '',
+                    'is_block'              => $wishlistUser->isBlockedByAuthUser(),
                     'is_online'             => $wishlistUser->is_online ?? '',
                     'profile_image'         => $wishlistUser->profile_image_url ?? null,
                     'level_type'            => $wishlistUser->level_type ?? '',
@@ -144,7 +152,7 @@ class ChatMessageController extends Controller
         if ($recipient) {
             $recipientUser = User::find($recipient);
 
-             $isBlockStatus = $authUser->isBlockedBy($recipientUser->id);
+             $isBlockStatus = $recipientUser->isBlockedByAuthUser();
 
              if ($recipientUser && (is_null($isBlocked) ||  ($isBlockStatus == $isBlocked) )) {
                 $chatList->push([
@@ -223,17 +231,7 @@ class ChatMessageController extends Controller
                     'title'         => null,
                     'created_by'    => $sender->id ,
                     'participants_count'    => 2 ,   // For Direct Messages it is 2 other than group messages
-                ]);
-
-                /*
-                    $participants = [
-                        $sender->id,
-                        $recipient_id,
-                    ];
-                    
-                    $conversation->users()->sync($participants);
-                */
-                
+                ]);   
             }
 
             $message = Message::create([  
@@ -257,8 +255,10 @@ class ChatMessageController extends Controller
             $conversation->save();
 
             $recipient = User::find($recipient_id);
-            $isBlocked = $sender->isBlockedBy($recipient_id);
+            $isBlocked = $sender->blockedUsers()->where('blocked_by', $recipient_id)->where('block_status', 1)->exists();
+
             if(!$isBlocked){
+                
                 $notificationData = [
                     'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
                     'message'   => trans('notification_messages.chat_message.received_new_message') .' '. $request->content,
@@ -270,14 +270,14 @@ class ChatMessageController extends Controller
                     'sender_id'         => $sender->id,
                 ];
     
-                $cacheKey = "conversation_messages_{$conversation->id}";
-                Cache::forget($cacheKey);
-    
                 $recipient->notify(new SendNotification($notificationData));
                 
                 // Fire the event form mail
                 event(new NotificationSent($recipient, $notificationData));
             }
+            
+            $cacheKey = "conversation_messages_{$conversation->id}";
+            Cache::forget($cacheKey);
 
             DB::commit();
 
@@ -288,7 +288,7 @@ class ChatMessageController extends Controller
                 'id'                    => $sender->id,
                 'name'                  => $sender->name ?? '',
                 'is_online'             => $sender->is_online ?? '',
-                'is_block'              => $sender->isBlockedBy($recipient_id) ?? '',
+                'is_block'              => $isBlocked,
                 'profile_image'         => $sender->profile_image_url ?? null,
                 'level_type'            => $sender->level_type ?? '',
                 'profile_tag_name'      => $sender->buyerPlan ? $sender->buyerPlan->title : null,
@@ -336,13 +336,26 @@ class ChatMessageController extends Controller
         
         $sender = auth()->user();
         $recipient_id = $request->recipient_id;
-
+        $isBlocked = 0;
+        $blockTimestamp = '';
+        
         $recipient = User::where('id',$recipient_id)->first();
 
-        $blockTimestamp = $sender->getBlockedTimestamp($recipient_id);
-        $isBlocked = $sender->isBlockedBy($recipient_id) || $recipient->isBlockedBy($sender->id);
-
-
+        $userBlocked = $sender->blockedUsers()->where('blocked_by', $recipient->id)->where('block_status', 1)->first();
+    
+        if ($userBlocked) {
+             $pivotData = $userBlocked->pivot;
+            if (isset($pivotData)) {
+                $isBlocked = $pivotData->block_status;
+                $blockTimestamp = $pivotData->blocked_at;
+            }
+        }
+        
+        // \Log::info($userBlocked);
+        
+        // \Log::info('$blockTimestamp-'.$blockTimestamp);
+        
+     
         // Find the conversation between the sender and recipient
         $conversation = Conversation::where('is_group', false)
         ->where(function ($query) use ($sender, $recipient_id) {
@@ -358,7 +371,7 @@ class ChatMessageController extends Controller
                     'id'                => $recipient->id,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => $sender->isBlockedBy($recipient->id), 
+                    'is_block'          => $recipient->isBlockedByAuthUser(), 
                     'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
@@ -426,7 +439,7 @@ class ChatMessageController extends Controller
                     'conversation_uuid' => $conversation->uuid,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => $sender->isBlockedBy($recipient->id),
+                    'is_block'          => $recipient->isBlockedByAuthUser(),
                     'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
@@ -698,6 +711,13 @@ class ChatMessageController extends Controller
 
         if ($existingBlock) {
             $existingBlock->pivot->block_status = !$existingBlock->pivot->block_status;
+            
+            if ($existingBlock->pivot->block_status == 0) {
+                $existingBlock->pivot->blocked_at = null;
+            } else {
+                $existingBlock->pivot->blocked_at = now();
+            }
+        
             $existingBlock->pivot->save();
 
             return $existingBlock->pivot->block_status;

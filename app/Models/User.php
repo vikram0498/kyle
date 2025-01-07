@@ -352,26 +352,12 @@ class User extends Authenticatable implements MustVerifyEmail
         )->withPivot('blocked_at', 'block_status')->withTimestamps();
     }
 
-    public function isBlockedBy($userId)
+    public function isBlockedByAuthUser()
     {
-        return $this->blockedUsers()->where('user_id', $userId)->where('block_status', 1)->exists();
+        return $this->blockedUsers()
+            ->where('blocked_by', auth()->user()->id) 
+            ->where('block_status', 1)               
+            ->exists();
     }
-
-    public function getBlockedTimestamp($recipient_id)
-    {
-        $sender = auth()->user(); // Get the sender (authenticated user)
-        
-        // Check if the recipient is blocked by the sender
-        $block = $sender->blockedUsers()->where('user_id', $recipient_id)->first();
-        
-        if ($block) {
-            // The block record exists, so return the block timestamp
-            return $block->pivot->blocked_at; // Assuming 'blocked_at' is the column in the pivot table
-        }
-
-        // If no block record exists, return null or handle accordingly
-        return null;
-    }
-
 
 }
