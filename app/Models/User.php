@@ -53,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'prev_level_type',
         'level_3',
         'is_switch_role',
+        'is_super_buyer',
         'is_active',
         'is_block',
         'device_token',
@@ -86,7 +87,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->attributes['email'] = strtolower($value);
     }
-    
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
@@ -258,10 +259,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /** End Buyer Profile Verification files */
 
-   
+
     public function NotificationSendToVerifyEmail (){
         $user = $this;
-        
+
         $url = config('constants.front_end_url').'email/verify/'.$user->id.'/'.sha1($user->email);
 
         $subject = "Welcome to ".config('app.name').", ".$user->first_name."! Verify Your Email to Access Your Account.";
@@ -271,7 +272,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function NotificationSendToBuyerVerifyEmail(){
         $user = $this;
-        
+
         $url = config('constants.front_end_url').'verify-and-setpassword/'.$user->id.'/'.sha1($user->email);
 
         $subject = "Welcome to ".config('app.name').", ".$user->first_name."! Verify Your Email to Access Your Account.";
@@ -310,11 +311,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function notificationSetting(){
-       
+
         return $this->hasOne(NotificationSetting::class, 'user_id', 'id');
-    
+
     }
-    
+
     public function getFullPhoneNumberAttribute()
     {
         if($this->country_code && $this->phone){
@@ -352,11 +353,21 @@ class User extends Authenticatable implements MustVerifyEmail
         )->withPivot('blocked_at', 'block_status')->withTimestamps();
     }
 
+    public function blockedByUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_block',
+            'blocked_by',
+            'user_id',
+        )->withPivot('blocked_at', 'block_status')->withTimestamps();
+    }
+
     public function isBlockedByAuthUser()
     {
         return $this->blockedUsers()
-            ->where('blocked_by', auth()->user()->id) 
-            ->where('block_status', 1)               
+            ->where('blocked_by', auth()->user()->id)
+            ->where('block_status', 1)
             ->exists();
     }
 

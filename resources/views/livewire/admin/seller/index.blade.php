@@ -5,25 +5,25 @@
             <div class="card-body">
 
                 @if($formMode)
-    
+
                     @include('livewire.admin.seller.form')
 
                 @elseif($viewMode)
 
                     @livewire('admin.seller.show', ['user_id' => $user_id])
-                  
+
                 @else
                     <div wire:loading wire:target="create" class="loader"></div>
                     <div class="card-title top-box-set">
                         <h4 class="card-title-heading">{{__('cruds.user.title')}} {{ __('global.list') }}</h4>
                         {{-- <div class="card-top-box-item"> <button wire:click="create()" type="button" class="btn btn-sm btn-success btn-icon-text btn-header">
-                            <i class="ti-plus btn-icon-prepend"></i>                                                    
+                            <i class="ti-plus btn-icon-prepend"></i>
                                 {{__('global.add')}}
                         </button></div> --}}
                     </div>
                     <div class="table-responsive search-table-data">
 
-                        @livewire('admin.seller.user-table') 
+                        @livewire('admin.seller.user-table')
 
                     </div>
 
@@ -47,7 +47,7 @@
         var type = _this.data('type');
 
         var data = { id: id, type: type }
-        
+
         var flag = true;
         if(_this.prop("checked")){
             flag = false;
@@ -69,7 +69,7 @@
     $(document).on('click', '.deleteBtn', function(e){
         var _this = $(this);
         var id = _this.attr('data-id');
-       
+
         Swal.fire({
             title: 'Are you sure you want to delete it?',
             showDenyButton: true,

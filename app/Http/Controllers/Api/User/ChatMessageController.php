@@ -2,43 +2,52 @@
 
 namespace App\Http\Controllers\Api\User;
 
-use App\Events\ChatMessage;
 use Carbon\Carbon;
-use App\Models\Message;
-use App\Models\Conversation;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Report;
-use App\Notifications\SendNotification;
-use Illuminate\Support\Facades\Http;
-use App\Events\NotificationSent;
+use App\Models\Message;
+use Illuminate\Http\Request;
+use App\Models\Conversation;
 use App\Models\Notification;
+use App\Events\NotificationSent;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\SendNotification;
 
 
 class ChatMessageController extends Controller
 {
+    /**
+     * Handles the retrieval of the chat list.
+     *
+     * This method is executed via a POST route and processes
+     * the incoming request to fetch and return the chat list
+     * based on the provided parameters.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getChatList(Request $request)
     {
         $request->validate([
             'recipient_id'  => 'nullable|exists:users,id',
             'is_blocked'    => 'nullable|in:0,1',
         ]);
-        
-        $recipient = $request->recipient_id ?? null; 
+
+        $recipient = $request->recipient_id ?? null;
         $isBlocked = (bool)$request->is_blocked ?? false;
-        
-        $authUser = auth()->user(); 
-        
+
+        $authUser = auth()->user();
+
         // Fetch wishlist users
         $wishlistUsers = User::whereIn('id', function ($query) use ($authUser) {
             $query->select('wishlist_user_id')
                 ->from('wishlists')
                 ->where('user_id', $authUser->id);
         });
-        
+
         if ($request->filled('is_blocked')) {
             $wishlistUsers->whereIn('id', function ($query) use ($authUser,$isBlocked) {
                 $query->select('user_id')
@@ -47,7 +56,7 @@ class ChatMessageController extends Controller
                     ->where('block_status', $isBlocked);
             });
         }
-        
+
         $wishlistUsers = $wishlistUsers->get();
 
         // Fetch conversations where the authenticated user is a participant
@@ -73,31 +82,47 @@ class ChatMessageController extends Controller
                           ->orWhere('user_block.block_status', 0);
                 }
             });
-            
+
             $user = $userQuery->select('users.*')->first();
 
             if (!$user) {
                 return null; // Exclude invalid users
             }
 
-            // Get the last message in the conversation
-            $lastMessage = Message::where('conversation_id', $conversation->id)
-                ->orderBy('created_at', 'desc')
+
+            // Check if the sender has blocked the recipient
+            $blockStatus = 0;
+            $blockTimestamp = null;
+            $userBlocked = $authUser->blockedByUsers()
+                ->wherePivot('user_id', $user->id)
+                ->wherePivot('block_status', 1)
                 ->first();
+
+            if ($userBlocked) {
+                $blockStatus = $userBlocked->pivot->block_status;
+                $blockTimestamp = $userBlocked->pivot->blocked_at;
+            }
+
+            // Get the last message in the conversation
+            $lastMessage = Message::where('conversation_id', $conversation->id);
+
+            // Add block timestamp logic if the user is blocked
+            if ($blockStatus && $blockTimestamp) {
+                $lastMessage = $lastMessage->where('created_at', '<=', Carbon::parse($blockTimestamp));
+            }
+
+            $lastMessage = $lastMessage->orderBy('created_at', 'desc')->first();
 
             // Calculate unread message count for the authenticated user
             $unreadMessageCount = Message::where('conversation_id', $conversation->id)
                 ->where('sender_id', '!=', $authUser)
                 ->whereDoesntHave('seenBy', function ($query) use ($authUser) {
                     $query->where('user_id', $authUser->id);
-                })
-                ->where(function ($query) use ($authUser) {
-                    $query->whereDoesntHave('sender.blockedUsers', function ($blockQuery) use ($authUser) {
-                        $blockQuery->where('blocked_by', $authUser->id)
-                            ->where('block_status', 1);
-                    });
-                })
-                ->count();
+                });
+            if ($blockStatus && $blockTimestamp) {
+                $unreadMessageCount = $unreadMessageCount->where('created_at', '<=', Carbon::parse($blockTimestamp));
+            }
+            $unreadMessageCount = $unreadMessageCount->count();
 
             // Format last message details
             $lastMessageDetails = $lastMessage ? [
@@ -198,7 +223,17 @@ class ChatMessageController extends Controller
         ], 200);
     }
 
-    
+    /**
+     * Sends a direct message to a specified recipient.
+     *
+     * This method processes the incoming POST request to send
+     * a message from the authenticated user to another user.
+     * It validates the request, saves the message, and returns
+     * a response indicating the success or failure of the operation.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendDirectMessage(Request $request)
     {
         $request->validate([
@@ -223,7 +258,7 @@ class ChatMessageController extends Controller
                       ->whereIn('participant_2', [$sender->id, $recipient_id]);
             })->first();
 
-            if (!$conversation) { 
+            if (!$conversation) {
                 $conversation = Conversation::create([
                     'is_group'      => false,
                     'participant_1' => $sender->id,
@@ -231,16 +266,16 @@ class ChatMessageController extends Controller
                     'title'         => null,
                     'created_by'    => $sender->id ,
                     'participants_count'    => 2 ,   // For Direct Messages it is 2 other than group messages
-                ]);   
+                ]);
             }
 
-            $message = Message::create([  
+            $message = Message::create([
                 'conversation_id'   => $conversation->id,
                 'sender_id'         => $sender->id,
                 'receiver_id'       => $recipient_id,
                 'content'           => $request->content,
                 'type'              => $request->type, // text, image, video, file
-                'chat_type'         => 'direct', 
+                'chat_type'         => 'direct',
             ]);
 
             // Calculate unread message count for the authenticated user
@@ -250,7 +285,7 @@ class ChatMessageController extends Controller
                     $query->where('user_id', $recipient_id);
                 })
                 ->count();
-                
+
             $conversation->last_message_at = now();
             $conversation->save();
 
@@ -258,7 +293,7 @@ class ChatMessageController extends Controller
             $isBlocked = $sender->blockedUsers()->where('blocked_by', $recipient_id)->where('block_status', 1)->exists();
 
             if(!$isBlocked){
-                
+
                 $notificationData = [
                     'title'     => trans('notification_messages.chat_message.new_chat_message_from_user', ['user' => $sender->name]),
                     'message'   => trans('notification_messages.chat_message.received_new_message') .' '. $request->content,
@@ -269,13 +304,13 @@ class ChatMessageController extends Controller
                     'conversation_uuid'   => $conversation->uuid,
                     'sender_id'         => $sender->id,
                 ];
-    
+
                 $recipient->notify(new SendNotification($notificationData));
-                
+
                 // Fire the event form mail
                 event(new NotificationSent($recipient, $notificationData));
             }
-            
+
             $cacheKey = "conversation_messages_{$conversation->id}";
             Cache::forget($cacheKey);
 
@@ -307,14 +342,14 @@ class ChatMessageController extends Controller
                 'wishlisted'         => $recipient->wishlistedUsers()->where('wishlist_user_id',$sender->id)->exists(),
             ];
 
-           
+
             $responseData = [
                 'status'            => true,
                 'message'           => trans('messages.chat_message.success_send_message'),
                 'data'              =>  $data,
                 'unread_message_count' => $unreadMessageCount
             ];
-            
+
             return response()->json($responseData, 200);
         }catch(\Exception $e){
             DB::rollBack();
@@ -328,34 +363,40 @@ class ChatMessageController extends Controller
         }
     }
 
+    /**
+     * Retrieves the list of messages for a conversation.
+     *
+     * This method handles a request to fetch messages between
+     * the authenticated user and another user. It
+     * validates the request parameters, fetches the messages
+     * from the database, and returns them in a structured format.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMessages(Request $request)
     {
         $request->validate([
-            'recipient_id' => 'required|exists:users,id,deleted_at,NULL', // recipient must exist
+            'recipient_id' => 'required|exists:users,id,deleted_at,NULL',
         ]);
-        
+
         $sender = auth()->user();
         $recipient_id = $request->recipient_id;
-        $isBlocked = 0;
-        $blockTimestamp = '';
-        
+
         $recipient = User::where('id',$recipient_id)->first();
 
-        $userBlocked = $sender->blockedUsers()->where('blocked_by', $recipient->id)->where('block_status', 1)->first();
-    
+        //Check user is blocked or not
+        $isBlocked = 0;
+        $blockTimestamp = '';
+        $userBlocked = $sender->blockedByUsers()
+                ->wherePivot('user_id', $recipient->id)
+                ->wherePivot('block_status', 1)
+                ->first();
         if ($userBlocked) {
-             $pivotData = $userBlocked->pivot;
-            if (isset($pivotData)) {
-                $isBlocked = $pivotData->block_status;
-                $blockTimestamp = $pivotData->blocked_at;
-            }
+            $isBlocked = $userBlocked->pivot->block_status;
+            $blockTimestamp = $userBlocked->pivot->blocked_at;
         }
-        
-        // \Log::info($userBlocked);
-        
-        // \Log::info('$blockTimestamp-'.$blockTimestamp);
-        
-     
+
         // Find the conversation between the sender and recipient
         $conversation = Conversation::where('is_group', false)
         ->where(function ($query) use ($sender, $recipient_id) {
@@ -371,7 +412,7 @@ class ChatMessageController extends Controller
                     'id'                => $recipient->id,
                     'name'              => $recipient->name,
                     'is_online'         => (bool)$recipient->is_online,
-                    'is_block'          => $recipient->isBlockedByAuthUser(), 
+                    'is_block'          => $recipient->isBlockedByAuthUser(),
                     'wishlisted'        => $sender->wishlistedUsers()->where('wishlist_user_id',$recipient->id)->exists(),
                     'profile_image'     => $recipient->profile_image_url ?? null,
                     'level_type'            => $recipient->level_type ?? '',
@@ -379,10 +420,10 @@ class ChatMessageController extends Controller
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
                 ],
             ];
-    
-            return response()->json($responseData, 200); 
+
+            return response()->json($responseData, 200);
         }
-        
+
         //Mark as notification read
         // $sender->notification()->where('notification_type','dm_notification')->whereNull('read_at')->update(['read_at' => now()]);
 
@@ -391,10 +432,10 @@ class ChatMessageController extends Controller
         $messages = Cache::rememberForever($cacheKey, function () use ($conversation,$isBlocked,$blockTimestamp) {
             $query = Message::where('conversation_id', $conversation->id);
 
-            if ($isBlocked && $blockTimestamp) {
-                $query->where('created_at', '<=', $blockTimestamp);
+            if ($isBlocked && !empty($blockTimestamp)) {
+                $query->where('created_at', '<=', Carbon::parse($blockTimestamp));
             }
-    
+
             return $query->orderBy('created_at', 'asc')->get();
         });
 
@@ -405,7 +446,7 @@ class ChatMessageController extends Controller
                 $message->created_date = $message->created_at->format('d-m-Y');
                 $message->created_time = $message->created_at->format('g:i A');
                 $message->is_read = $message->seenBy()->exists() ? true : false;
-        
+
                 return [
                     'id'               => $message->id,
                     'sender_id'        => $message->sender_id,
@@ -418,7 +459,7 @@ class ChatMessageController extends Controller
             })->groupBy(function ($message) {
                 $createdDate = $message['created_date'];
                 $now = Carbon::now();
-        
+
                 // Group by Today, Yesterday, Day names (for the last 7 days), or specific date
                 if (Carbon::parse($createdDate)->isToday()) {
                     return 'Today';
@@ -430,7 +471,7 @@ class ChatMessageController extends Controller
                     return $createdDate; // Fallback to the formatted date
                 }
             });
-              
+
             $responseData = [
                 'status'    => true,
                 'message'   => $groupedMessages,
@@ -447,14 +488,25 @@ class ChatMessageController extends Controller
                     'profile_tag_image'     => $recipient->buyerPlan ? $recipient->buyerPlan->image_url : null,
                 ],
             ];
-    
+
             return response()->json($responseData, 200);
         }
 
-        return response()->json(['error' => trans('messages.chat_message.no_message_found')], 404);        
-        
+        return response()->json(['error' => trans('messages.chat_message.no_message_found')], 404);
+
     }
 
+    /**
+     * Marks messages as read for a specific conversation.
+     *
+     * This method processes the request to update the read status
+     * of messages for the authenticated user. It identifies the
+     * messages based on the provided parameters, updates their
+     * status in the database, and returns a success response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function markAsRead(Request $request)
     {
         $request->validate([
@@ -463,11 +515,11 @@ class ChatMessageController extends Controller
 
         try{
             DB::beginTransaction();
-            
+
             $userId = auth()->user()->id;
 
             $conversation = Conversation::where('uuid',$request->conversationUuid)->first();
-        
+
             $messages = $conversation->messages()->whereNotExists(function ($query) use ($userId) {
                 $query->select(DB::raw(1))
                     ->from('message_seen')
@@ -481,12 +533,12 @@ class ChatMessageController extends Controller
                     if ($message->conversation->participant_1 !== $userId  && $message->conversation->participant_2 !== $userId) {
                         return response()->json(['error' => 'You do not have access to this message.'], 403);
                     }
-    
+
                     $message->seenBy()->attach($userId, [
                         'conversation_id' => $message->conversation->id,
                         'read_at' => now(),
-                    ]);  
-                    
+                    ]);
+
                 }
             }
 
@@ -497,7 +549,7 @@ class ChatMessageController extends Controller
             ->whereJsonContains('data->user_id', $userId)
             ->whereJsonContains('data->conversation_uuid', $conversation->uuid)
             ->update(['read_at' => now()]);
-                       
+
             DB::commit();
 
             $responseData = [
@@ -518,6 +570,18 @@ class ChatMessageController extends Controller
         }
     }
 
+    /**
+     * Updates the block status between users.
+     *
+     * This method processes the incoming request to update the
+     * block status for a user, either blocking or unblocking
+     * another user. It validates the request, updates the
+     * relationship in the database, and returns a response
+     * indicating the success or failure of the operation.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateBlockStatus(Request $request){
         $request->validate([
             'recipient_id'      => 'required|exists:users,id',
@@ -527,7 +591,7 @@ class ChatMessageController extends Controller
             DB::beginTransaction();
             $user = User::find($request->recipient_id);
             if($user){
-            
+
                 if ($user->trashed()) {
                     return response()->json([
                         'status' => false,
@@ -546,7 +610,7 @@ class ChatMessageController extends Controller
                 return response()->json($responseData, 200);
             }
 
-            return response()->json(['status'=>false, 'error' => trans('messages.chat_message.no_message_found')], 404);  
+            return response()->json(['status'=>false, 'error' => trans('messages.chat_message.no_message_found')], 404);
 
         }catch(\Exception $e){
             DB::rollBack();
@@ -561,6 +625,12 @@ class ChatMessageController extends Controller
 
     }
 
+    /**
+     * Adds the user's to favorites list.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addToWishlist(Request $request){
         $request->validate([
             'wishlist_user_id' => 'required|exists:users,id',
@@ -608,6 +678,12 @@ class ChatMessageController extends Controller
         }
     }
 
+    /**
+     * Remove the user's from favorites list.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function removeFromWishlist(Request $request)
     {
         $request->validate([
@@ -648,6 +724,18 @@ class ChatMessageController extends Controller
         }
     }
 
+    /**
+     * Adds a conversation to the report.
+     *
+     * This method processes the request to report a specific conversation
+     * by adding it to the report list. It validates the incoming data,
+     * associates the conversation with the report, and returns a response
+     * indicating the success or failure of the operation.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $conversationUuid
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addToReport(Request $request,$conversationUuid){
         $request->validate([
             'reason'  => 'required|exists:reasons,id',
@@ -667,7 +755,7 @@ class ChatMessageController extends Controller
             if (!in_array($authUser->id, [$conversation->participant_1, $conversation->participant_2])) {
                 return response()->json(['error' => 'Unauthorized action'], 403);
             }
-            
+
             // Check if the conversation is already reported by the user
             /*$existingReport = Report::where('conversation_id', $conversation->id)
                 ->where('reported_by', $authUser->id)
@@ -703,7 +791,7 @@ class ChatMessageController extends Controller
         }
     }
 
-   
+
     private function toggleBlock($user)
     {
         $authUser = auth()->user();
@@ -711,13 +799,13 @@ class ChatMessageController extends Controller
 
         if ($existingBlock) {
             $existingBlock->pivot->block_status = !$existingBlock->pivot->block_status;
-            
+
             if ($existingBlock->pivot->block_status == 0) {
                 $existingBlock->pivot->blocked_at = null;
             } else {
                 $existingBlock->pivot->blocked_at = now();
             }
-        
+
             $existingBlock->pivot->save();
 
             return $existingBlock->pivot->block_status;
@@ -726,6 +814,6 @@ class ChatMessageController extends Controller
             return true; // Blocked
         }
     }
-    
+
 
 }

@@ -1,13 +1,13 @@
 <div>
     <div class="relative">
-       
+
         <!-- Show entries & Search box -->
         <div class="flex items-center justify-between mb-1">
-            <div class="flex items-center">                
+            <div class="flex items-center">
                 <div class="items-center justify-between p-2 sm:flex">
                     <div class="flex items-center my-2 sm:my-0">
-                        <span class="items-center justify-between p-2 sm:flex"> 
-                            Show 
+                        <span class="items-center justify-between p-2 sm:flex">
+                            Show
                             <select name="perPage" class="ml-2 mr-2 border block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 form-select leading-6 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="perPage">
                                 @foreach(config('constants.datatable_entries') as $length)
                                     <option value="{{ $length }}">{{ $length }}</option>
@@ -39,7 +39,7 @@
             </div>
         </div>
         <!-- End Show entries & Search box -->
-            
+
         <div class="table-responsive mt-3 my-team-details table-record">
             <table class="table table-striped table-hover">
             <thead>
@@ -132,7 +132,7 @@
                     <td class="text-center" colspan="9">{{ __('messages.no_record_found')}}</td>
                 </tr>
                 @endif
-            
+
             </tbody>
             </table>
         </div>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->tinyInteger('prev_level_type')->default(1)->comment('1=>Level 1, 2=>Level 2, 3=>Level 3')->after('level_type');
             $table->tinyInteger('level_3')->default(0)->comment('1=> active, 0=>deactive')->after('prev_level_type');
             $table->tinyInteger('is_switch_role')->default(null)->after('level_3');
+            $table->tinyInteger('is_super_buyer')->default(0)->comment('1=> active, 0=>deactive')->after('is_switch_role');
         });
     }
 
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->dropColumn('prev_level_type');
             $table->dropColumn('level_3');
             $table->dropColumn('is_switch_role');
+            $table->dropColumn('is_super_buyer');
         });
     }
 };

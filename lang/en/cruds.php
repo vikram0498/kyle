@@ -48,7 +48,7 @@ return [
             'deleted_at'        => 'Deleted at',
         ],
     ],
-   
+
     'plan' => [
         'title' => 'Plans',
         'title_singular' => 'Plan',
@@ -61,8 +61,8 @@ return [
             // 'year_amount'       => 'Plan year price',
             // 'monthly_credit'   => 'Credits per month',
             'description'       => 'Description',
-            'image'             => 'Image',          
-            'status'            => 'Status', 
+            'image'             => 'Image',
+            'status'            => 'Status',
             'created_at'        => 'Created At',
 
         ],
@@ -73,9 +73,9 @@ return [
         'title_singular' => 'Additional Plan',
         'fields' => [
             'title'         => 'Name',
-            'price'         => 'Price',       
-            'credit'        => 'Credit',       
-            'status'        => 'Status', 
+            'price'         => 'Price',
+            'credit'        => 'Credit',
+            'status'        => 'Status',
             'created_at'    => 'Created At',
 
         ],
@@ -86,9 +86,9 @@ return [
         'fields' => [
             'title'         => 'Title',
             'sub_title'     => 'Sub Title',
-            'description'   => 'Description',       
-            'video'         => 'Video',       
-            'status'        => 'Status', 
+            'description'   => 'Description',
+            'video'         => 'Video',
+            'status'        => 'Status',
             'created_at'    => 'Created At',
         ],
     ],
@@ -162,7 +162,7 @@ return [
             'csv_file'                      => 'CSV File',
             'import_buyers'                 => 'Import Buyer',
             'copy_add_buyer_link'           => 'Copy Buyer Form Link',
-            
+
             'price_min'                     => 'Price (Min)',
             'price_max'                     => 'Price (Max)',
             'stories_min'                   => 'Stories (Min)',
@@ -180,7 +180,8 @@ return [
             'dislike'                       => 'Dislike',
             'flag_mark'                     => 'Flag Mark',
             'is_ban'                        => 'Ban Status',
-            'status'                        => 'Status', 
+            'status'                        => 'Status',
+            'super_buyer'                   => 'Super Buyer',
             'created_at'                    => 'Created At',
         ],
         'red_flag_view' => [
@@ -244,7 +245,7 @@ return [
             'fire_damaged'                  => 'Fire Damaged',
             'rebuild'                       => 'Rebuild',
             'purchase_method'               => 'Purchase Method',
-            'status'                        => 'Status', 
+            'status'                        => 'Status',
             'created_at'                    => 'Created At',
         ],
     ],
@@ -292,10 +293,10 @@ return [
             'type'  => 'Type',
             'position'  => 'Rank',
             'description'       => 'Description',
-            'image'             => 'Image',          
-            'status'            => 'Status', 
-            'user_limit'        => 'User Limit', 
-            'color'             => 'Color', 
+            'image'             => 'Image',
+            'status'            => 'Status',
+            'user_limit'        => 'User Limit',
+            'color'             => 'Color',
             'created_at'        => 'Created At',
         ],
     ],
@@ -346,8 +347,8 @@ return [
             'click_count'           => 'Click Count',
             'start_date'            => 'Start Date',
             'end_date'              => 'End Date',
-            'image'                 => 'Image',          
-            'status'                => 'Status', 
+            'image'                 => 'Image',
+            'status'                => 'Status',
             'created_at'            => 'Created At',
             'event_type'            => 'Event Type',
             'user_ip'               => 'User IP',
@@ -356,7 +357,7 @@ return [
             'start_time'            => 'Start Time',
             'end_time'              => 'End Time',
         ],
-        'view_ad_performace_log' => 'View Ad Performance Log',        
+        'view_ad_performace_log' => 'View Ad Performance Log',
     ],
 
     'chat_report' => [
@@ -371,5 +372,5 @@ return [
         ],
     ]
 
-    
+
 ];

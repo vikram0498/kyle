@@ -13,9 +13,9 @@ class BuyerTable extends Component
     use WithPagination;
 
     public $search = null;
-    
+
     public $sortColumnName = 'buyers.updated_at', $sortDirection = 'desc', $perPage = 10;
-    
+
     protected $listeners = [
         'refreshTable' =>'render'
     ];
@@ -38,14 +38,14 @@ class BuyerTable extends Component
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
         });
-        
+
         /*->whereHas('userDetail', function ($query) {
             $query->whereHas('roles', function ($roleQuery) {
                 $roleQuery->where('id', config('constants.roles.buyer'));
             });
         });*/
 
-        if($this->sortColumnName == 'name' || $this->sortColumnName == 'users.status'){
+        if($this->sortColumnName == 'name' || $this->sortColumnName == 'users.status' || $this->sortColumnName == 'users.is_super_buyer'){
             $buyers = $buyers->orderBy(User::select($this->sortColumnName)->whereColumn('users.id', 'buyers.buyer_user_id'), $this->sortDirection);
         } else {
             $buyers = $buyers->orderBy($this->sortColumnName, $this->sortDirection);
@@ -54,7 +54,7 @@ class BuyerTable extends Component
 
         return view('livewire.admin.buyer.buyer-table',compact('buyers'));
     }
-    
+
     public function updatedPerPage(){
           $this->resetPage();
     }
@@ -63,7 +63,7 @@ class BuyerTable extends Component
     {
         $this->resetPage();
     }
-    
+
     public function sortBy($columnName)
     {
         $this->resetPage();
@@ -76,7 +76,7 @@ class BuyerTable extends Component
 
         $this->sortColumnName = $columnName;
     }
-    
+
     public function swapSortDirection()
     {
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';

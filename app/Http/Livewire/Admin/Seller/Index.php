@@ -19,7 +19,7 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false, $viewDetails = null;
 
-    public $user_id = null, $first_name, $last_name, $email,$phone; 
+    public $user_id = null, $first_name, $last_name, $email,$phone;
 
     protected $users = null;
 
@@ -67,7 +67,7 @@ class Index extends Component
         $userDetails['name']       = $this->first_name.' '.$this->last_name;
         $userDetails['email']      = $this->email;
         $userDetails['phone']      = $this->phone;
-        
+
         $createdUser = User::create($userDetails);
 
         //Send email verification link
@@ -78,7 +78,7 @@ class Index extends Component
         $this->resetInputFields();
 
         $this->flash('success',trans('messages.add_success_message'));
-      
+
         return redirect()->route('admin.seller');
     }
 
@@ -93,20 +93,20 @@ class Index extends Component
 
     public function deleteConfirm($id){
         $model = User::find($id);
-        
+
         if($model){
             $model->buyers()->delete();
             PurchasedBuyer::where('user_id',$id)->delete();
-            
+
             $model->delete();
-            
+
             $this->emit('refreshTable');
-            
+
             $this->emit('refreshLivewireDatatable');
-    
+
             $this->alert('success', trans('messages.delete_success_message'));
         }
-        
+
     }
 
     public function show($id){
@@ -128,7 +128,7 @@ class Index extends Component
     {
         $id = $data['id'];
         $type = $data['type'];
-    
+
         if($type == 'level_3'){
 
             $model = User::find($id);
@@ -153,5 +153,5 @@ class Index extends Component
         $this->is_active = (!$statusVal) ? 1 : 0;
     } */
 
-    
+
 }

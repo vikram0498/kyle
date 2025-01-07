@@ -1,13 +1,13 @@
 <div>
     <div class="relative">
-       
+
         <!-- Show entries & Search box -->
         <div class="flex items-center justify-between mb-1">
-            <div class="flex items-center">                
+            <div class="flex items-center">
                 <div class="items-center justify-between p-2 sm:flex">
                     <div class="flex items-center my-2 sm:my-0">
-                        <span class="items-center justify-between p-2 sm:flex"> 
-                            Show 
+                        <span class="items-center justify-between p-2 sm:flex">
+                            Show
                             <select name="perPage" class="ml-2 mr-2 border block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 form-select leading-6 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="perPage">
                                 @foreach(config('constants.datatable_entries') as $length)
                                     <option value="{{ $length }}">{{ $length }}</option>
@@ -39,7 +39,7 @@
             </div>
         </div>
         <!-- End Show entries & Search box -->
-            
+
         <div class="table-responsive mt-3 my-team-details table-record">
             <table class="table table-striped table-hover">
             <thead>
@@ -67,9 +67,17 @@
                     </th>
 
                     <th class="text-gray-500 text-xs">
+                        {{ __('cruds.buyer.fields.super_buyer')}}
+                        <span wire:click="sortBy('users.is_super_buyer')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'users.is_super_buyer' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'users.is_super_buyer' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
+
+                    <th class="text-gray-500 text-xs">
                         {{ __('cruds.buyer.fields.flag_mark')}}
                     </th>
-                   
+
                     <th class="text-gray-500 text-xs">{{ trans('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
                             <i class="fa fa-arrow-up {{ $sortColumnName === 'buyers.created_at' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
@@ -107,18 +115,24 @@
                         <td>{{ $buyer->likes()->count() ?? 0 }}</td>
                         <td>{{ $buyer->unlikes()->count() ?? 0 }}</td>
                         <td>
+                            <label class="toggle-switch">
+                                 <input type="checkbox" class="toggleSwitch toggleSwitchMain" data-type="is_super_buyer"  data-id="{{$buyer->userDetail->id}}"  {{ $buyer->userDetail->is_super_buyer == 1 ? 'checked' : '' }}>
+                                 <span class="switch-slider" data-on="Active" data-off="Deactive"></span>
+                             </label>
+                        </td>
+                        <td>
                             @if($buyerFlagCount > 0)
                             <div class="table-cell px-6 py-2   text-left  whitespace-no-wrap text-sm text-gray-900 px-6 py-2">
                                 <button style="cursor:pointer;" wire:click="$emitUp('redFlagView', {{ $buyer->id }})" class="seller_flg_mark " >
                                     <div class="row">
-                                        <img src="{{ asset('images/icons/red-flag.svg') }}" title="{{ $buyerFlagCount }} user report on this buyer" /> 
-                                    </div>    
+                                        <img src="{{ asset('images/icons/red-flag.svg') }}" title="{{ $buyerFlagCount }} user report on this buyer" />
+                                    </div>
                                 </button>
                                 {{-- <span class="badge badge-dark badge-counter">{{ $buyerFlagCount }}</span> --}}
                             </div>
                             @endif
                         </td>
-                     
+
                         <td>{{ convertDateTimeFormat($buyer->created_at,'date') }}</td>
                         <td>{{ convertDateTimeFormat($buyer->updated_at,'date') }}</td>
 
@@ -133,7 +147,7 @@
                                 <i class="ti-trash"></i>
                             </button>
 
-                           
+
                             @if($buyerFlagCount > 0)
                                 <button style="cursor:pointer;" wire:click="$emitUp('redFlagView', {{$buyer->id}})" class="seller_flg_mark  btn btn-twitter" >
                                     <i class="fa fa-flag"></i>
@@ -149,7 +163,7 @@
                     <td class="text-center" colspan="9">{{ __('messages.no_record_found')}}</td>
                 </tr>
                 @endif
-            
+
             </tbody>
             </table>
         </div>
