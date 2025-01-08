@@ -213,7 +213,7 @@ class HomeController extends Controller
 
             $totalSteps = count($steps);
             $completedSteps = collect($steps)->filter()->count();
-            $percentage = $totalSteps > 0 ? round(($completedSteps / $totalSteps) * 100, 2) : 0;
+            $percentage = $totalSteps > 0 ? round(($completedSteps / $totalSteps) * 100, 0) : 0;
 
             $buyer_verification = [
                 'completed_steps'   => $completedSteps,

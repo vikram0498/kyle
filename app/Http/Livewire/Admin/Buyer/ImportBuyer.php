@@ -32,17 +32,21 @@ Class ImportBuyer extends Component {
 
     public function importBuyers(){
 
-        // Validator::make($this->state, [
-        //     'csv_file' => ['required', 'mimes:csv,xlsx,xls']
-        // ])->validate();
+        Validator::make($this->state, [
+            'csv_file' => ['required', 'mimes:csv,xlsx,xls']
+        ])->validate();
 
         $import = new BuyersImport;
         
         Excel::import($import, $this->state['csv_file']->store('temp'));
 
-        $totalCount         = $import->totalRowCount();
-        $insertedRowCount   = $import->insertedCount();
-        $skippedCount       = $totalCount - $insertedRowCount;
+        //Store log in log file
+        $import->logSummary();
+
+        $totalCount          = $import->totalRowCount();
+        $insertedRowCount    = $import->insertedCount();
+        $softDeletedRowCount = $import->softDeletedCount();
+        $skippedCount        = $import->skippedRowCount();
 
         // dd($totalCount, $insertedRowCount, $skippedCount);
 
@@ -50,7 +54,7 @@ Class ImportBuyer extends Component {
             $this->flash('error',trans('No rows inserted during the import process.'));
             return to_route('admin.import-buyers');
         } else if($skippedCount > 0 && $insertedRowCount > 0){
-            $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+            $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully, {$softDeletedRowCount} soft-deleted, {$skippedCount} skipped.";
             $this->flash('success',trans($message));
             return to_route('admin.buyer');
         } else if($skippedCount == 0) {

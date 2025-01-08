@@ -3,244 +3,211 @@
 namespace App\Imports;
 
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Buyer;
-use Illuminate\Support\Facades\DB; 
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Support\Facades\DB; 
+use Collection;
 
-class BuyersImport implements ToModel, WithStartRow, WithChunkReading
+class BuyersImport implements ToModel, WithStartRow
 {
     private $rowCount = 0;
     private $insertedCount = 0;
-    private $softDeletedCount = 0;
-    private $softDeletedIndices = [];
-    private $skippedCount = 0;
-    private $skippedErrors = [];
 
     public function startRow(): int
     {
         return 2;
     }
 
-    public function chunkSize(): int
-    {
-        return 1000; // Process 1000 rows at a time
-    }
-
-    public function totalRowCount(): int
-    {
-        return $this->rowCount;
-    }
-
-    public function insertedCount(): int
-    {
-        return $this->insertedCount;
-    }
-
-    public function softDeletedCount()
-    {
-        return $this->softDeletedCount;
-    }
-
-    public function skippedRowCount()
-    {
-        return $this->skippedCount;
-    }
-
-    public function getSkippedErrors()
-    {
-        return $this->skippedErrors;
-    }
-
-    private function logSkippedRow($rowIndex, $reason)
-    {
-        $logMessage = "Row " . ($rowIndex + 1) . ": $reason";
-        $this->skippedErrors[] = $logMessage;
-
-        Log::info($logMessage);
-    }
-
-    public function logSummary()
-    {
-        Log::info("Import Excel Summary:");
-
-        if (count($this->skippedErrors) > 0) {
-            foreach ($this->skippedErrors as $error) {
-                Log::info($error);
-            }
-        }
-
-        if (count($this->softDeletedIndices) > 0) {
-            Log::info("Soft-Deleted Rows Index: " . implode(', ', $this->softDeletedIndices));
-        }
-
-        Log::info("Total Rows Processed: " . $this->totalRowCount());
-        Log::info("Total Inserted Rows: " . $this->insertedCount());
-        Log::info("Total Soft-Deleted Rows: " . $this->softDeletedCount());
-    }
-
     public function model(array $row)
-    { 
+    {
+      
         $buyerArr = [];
-        $firstName = $this->modifiedString($row[0]); $lastName = $this->modifiedString($row[1]);
+        $fName = $this->modifiedString($row[0]); $lName = $this->modifiedString($row[1]);
         
-        if(!empty($firstName) && !empty($lastName)){
-            $buyerArr['user_id']        = auth()->user()->id;
-            $buyerArr['first_name']     = $firstName;
-            $buyerArr['last_name']      = $lastName;
-            $buyerArr['name']           = $firstName.' '.$lastName;
-            $email                      = $this->modifiedString($row[2]);
-            $countryCode                = (int)config('constants.twilio_country_code');
+        if(!empty($fName) && !empty($lName)){
+            $buyerArr['user_id'] = auth()->user()->id;
+            $buyerArr['first_name'] = $fName;
+            $buyerArr['last_name'] = $lName;
+            $buyerArr['name'] = $fName.' '.$lName;
+            $email = $this->modifiedString($row[2]);
             
             if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
                 
-                $buyerArr['email'] = $email;
-                $phone = $this->modifiedString($row[3]);
-                if(!empty($phone) && is_numeric($phone)){
-                    
-                    $buyerArr['country_code'] = $countryCode;
-                    $buyerArr['phone'] = $phone;
-                    
-                    $city = $this->modifiedString($row[4]); 
-                    $state = $this->modifiedString($row[5]);                                                  
-                                            
-                    $stateId = NULL;
-                    $cityId = NULL;
-                
-                    $countryId= config('constants.default_country');
-
-                    $statesArray = array_map('ucwords', explode(',', $state));
-                    $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', $statesArray)->pluck('id');
-                    if($stateData->count() > 0){
-                        $stateId = $stateData;
-
-                        $citiesArray = array_map('ucwords', explode(',', $city));
-                        $cityData = DB::table('cities')->whereIn('state_id', $stateData)->whereIn('name', $citiesArray)->pluck('id');
-                        if($cityData->count() > 0){
-                            $cityId = $cityData;
-                        }
-                    }                               
-
-                    $buyerArr['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
-                    $buyerArr['city'] = $cityId  ? $cityId->toArray() : NULL;
-                    $buyerArr['state'] = $stateId ? $stateId->toArray() : NULL;
-                                                    
-                    $companyName = strtolower($this->modifiedString($row[6]));
-                    $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
-                    $buyerArr['company_name'] = $companyName;
-
-                    //Start number values min and max
-                    $bedroomMin     = strtolower($this->modifiedString($row[7]));       $bedroomMax      = strtolower($this->modifiedString($row[8]));
-                    $bathMin        = strtolower($this->modifiedString($row[9]));       $bathMax         = strtolower($this->modifiedString($row[10]));
-                    $sizeMin        = strtolower($this->modifiedString($row[11]));      $sizeMax         = strtolower($this->modifiedString($row[12]));
-                    $lotSizeMin     = strtolower($this->modifiedString($row[13]));      $lotSizeMax      = strtolower($this->modifiedString($row[14]));
-                    $buildYearMin   = strtolower($this->modifiedString($row[15]));      $buildYearMax    = strtolower($this->modifiedString($row[16]));
-                    $priceMin       = strtolower($this->modifiedString($row[44]));      $priceMax        = strtolower($this->modifiedString($row[45]));
-                    $stories_min    = strtolower($this->modifiedString($row[46]));      $stories_max     = strtolower($this->modifiedString($row[47]));
-                    //End number values min and max
-
-                    $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
-                    $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);                                    
-
-                    $lotSizeMin     = (empty($lotSizeMin) || $lotSizeMin == 'blank') ? NULL : (!is_numeric($lotSizeMin) ? NULL : $lotSizeMin);
-                    $lotSizeMax     = (empty($lotSizeMax) || $lotSizeMax == 'blank') ? NULL : (!is_numeric($lotSizeMax) ? NULL : $lotSizeMax);
-
-                    $buildYearMin   = (empty($buildYearMin) || $buildYearMin == 'blank') ? NULL : (!is_numeric($buildYearMin) ? NULL : $buildYearMin);
-                    $buildYearMax   = (empty($buildYearMax) || $buildYearMax == 'blank') ? NULL : (!is_numeric($buildYearMax) ? NULL : $buildYearMax);
-                    
-                    
-                    $priceMin         = (empty($priceMin) || $priceMin == 'blank') ? NULL : (!is_numeric($priceMin) ? NULL : $priceMin);
-                    $priceMax         = (empty($priceMax) || $priceMax == 'blank') ? NULL : (!is_numeric($priceMax) ? NULL : $priceMax);
-
-                    $stories_min  = (empty($stories_min) || $stories_min == 'blank') ? NULL : (!is_numeric($stories_min) ? NULL : $stories_min);
-                    $stories_max  = (empty($stories_max) || $stories_max == 'blank') ? NULL : (!is_numeric($stories_max) ? NULL : $stories_max);
-
-                    $buyerArr['bedroom_min']    = $bedroomMin;      $buyerArr['bedroom_max']    = $bedroomMax;
-                    $buyerArr['bath_min']       = $bathMin;         $buyerArr['bath_max']       = $bathMax;
-                    $buyerArr['size_min']       = $sizeMin;         $buyerArr['size_max']       = $sizeMax;
-                    $buyerArr['lot_size_min']   = $lotSizeMin;      $buyerArr['lot_size_max']   = $lotSizeMax;
-                    $buyerArr['build_year_min'] = $buildYearMin;    $buyerArr['build_year_max'] = $buildYearMax;
-                    
-                    $buyerArr['price_min']       = $priceMin;       $buyerArr['price_max']      = $priceMax;
-
-                    $buyerArr['stories_min']      = $stories_min;       
-                    $buyerArr['stories_max']      = $stories_max;
-
-
-                    $propertyType = strtolower($this->modifiedString($row[18])); 
-                    if(!empty($propertyType) && $propertyType != 'blank'){
-                        $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
-                        if(!empty($ptArr)){
-                            $buyerArr['property_type'] = $ptArr;
-                            
-                            if(in_array(7,$buyerArr['property_type'])){
-                                // set zoning value 
-                                $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
-                                // set utilities value 
-                                $buyerArr = $this->setSingleSelectValues($row[49], 'utilities', $buyerArr);
-                                // set sewer value 
-                                $buyerArr = $this->setSingleSelectValues($row[50], 'sewer', $buyerArr);
-                            }
-
-                            // set parking value 
-                            $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
+                // $buyerExists = Buyer::where('email', $email)->exists();
+                // if(!$buyerExists){
+                    $buyerArr['email'] = $email;
+                    $phone = $this->modifiedString($row[3]);
+                    if(!empty($phone) && is_numeric($phone)){
                         
-                            // $buyerArr = $this->setSingleSelectValues($row[17], 'parking', $buyerArr);
+                        $buyerArr['phone'] = $phone;
+                        
+                        // $country = $this->modifiedString($row[5]); 
+                        // $cities = $this->modifiedString($row[5]); 
+                        // $states = $this->modifiedString($row[6]);                                                                            
+                        // $citynames = explode(',', $cities);
+                        // $statenames = explode(',', $states); 
+                        $city = $this->modifiedString($row[4]); 
+                        $state = $this->modifiedString($row[5]);                                                  
+                                              
+                        $stateId = NULL;
+                        $cityId = NULL;
+                        // $countryId = 233;
 
-                            // set propert flow value
-                            $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
+                        $countryId= config('constants.default_country');
+                        
+                        // $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', $statenames)->pluck('id')->toArray();                    
 
-                            // // set market_preferance value 
-                            $buyerArr = $this->setSingleSelectValues($row[51], 'market_preferance', $buyerArr);
+                        // if(!empty($stateData)){    
+                        //     $stateId = count($stateData);                                                    
+                        //     $cityData = DB::table('cities')->whereIn('state_id', $stateData)->whereIn('name', $citynames)->pluck('id')->toArray();                            
+                        //     if(!empty($cityData)){                               
+                        //         $cityId = count($cityData);
+                        //     }
+                        // }       
+                        $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', explode(',',$state))->pluck('id');
+                        if($stateData->count() > 0){
+                            $stateId = $stateData;
 
-                            // // set contact_preferance value 
-                            $buyerArr = $this->setSingleSelectValues($row[52], 'contact_preferance', $buyerArr);
+                            $cityData = DB::table('cities')->whereIn('state_id', $stateData)->whereIn('name', explode(',',$city))->pluck('id');
+                            if($cityData->count() > 0){
+                                $cityId = $cityData;
+                            }
+                        }                               
 
-                            // // set park value
-                            $buyerArr = $this->setSingleSelectValues($row[54], 'park', $buyerArr);
+
+                        // if(!empty($country) && !empty($city) && !empty($state) && $countryId > 0 && $stateId > 0 && $cityId > 0){
+                        if($countryId > 0){
                             
+                            // $buyerArr['country'] = $countryId;
+                            $buyerArr['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
 
-                            // set rooms value
-                            $rooms        = strtolower($this->modifiedString($row[53])); 
-                            $rooms        = (empty($rooms) || $rooms == 'blank') ? NULL : (!is_numeric($rooms) ? NULL : $rooms);
-                            $buyerArr['rooms']       = $rooms;                                           
+                            $buyerArr['city'] = $cityId  ? $cityId->toArray() : NULL;
+                            $buyerArr['state'] = $stateId ? $stateId->toArray() : NULL;
+                                                         
+                            $companyName = strtolower($this->modifiedString($row[6]));
+                            $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
+                            $buyerArr['company_name'] = $companyName;
 
-                            // set all radio button values
-                            $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
-                            
-                            $buyerType = strtolower($this->modifiedString($row[34])); 
+                            // number values min and max
+                            $bedroomMin     = strtolower($this->modifiedString($row[7]));      $bedroomMax      = strtolower($this->modifiedString($row[8]));
+                            $bathMin        = strtolower($this->modifiedString($row[9]));      $bathMax         = strtolower($this->modifiedString($row[10]));
+                            $sizeMin        = strtolower($this->modifiedString($row[11]));      $sizeMax         = strtolower($this->modifiedString($row[12]));
+                            $lotSizeMin     = strtolower($this->modifiedString($row[13]));      $lotSizeMax      = strtolower($this->modifiedString($row[14]));
+                            $buildYearMin   = strtolower($this->modifiedString($row[15]));      $buildYearMax    = strtolower($this->modifiedString($row[16]));
+                          
+                            $priceMin         = strtolower($this->modifiedString($row[44]));      $priceMax          = strtolower($this->modifiedString($row[45]));
 
-                            if(!empty($buyerType) && $buyerType != 'blank'){
-                                $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
-                                
-                                if(!empty($btArr)){
-                                    $buyerTypeArr = explode(',', $buyerType);
-                                    $buyerTypeArr = array_map('trim',$buyerTypeArr);
+                            $stories_min         = strtolower($this->modifiedString($row[46]));      $stories_max    = strtolower($this->modifiedString($row[47]));
 
-                                    $buyerArr['buyer_type'] = $btArr[0];
+
+                            if(!empty($bedroomMin) && !empty($bedroomMax) && !empty($sizeMin) && !empty($sizeMax) && !empty($priceMin) && !empty($priceMax) && !empty($stories_min) && !empty($stories_min)){
+
+                                if(is_numeric($bedroomMin) && is_numeric($bedroomMax) && is_numeric($sizeMin) && is_numeric($sizeMax) && is_numeric($priceMin) && is_numeric($priceMax) && is_numeric($stories_min) && is_numeric($stories_max)){
+
+
+                                    $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
+                                    $bathMax        = (empty($bathMax) || $bathMax == 'blank') ? NULL : (!is_numeric($bathMax) ? NULL : $bathMax);                                    
+
+                                    $lotSizeMin     = (empty($lotSizeMin) || $lotSizeMin == 'blank') ? NULL : (!is_numeric($lotSizeMin) ? NULL : $lotSizeMin);
+                                    $lotSizeMax     = (empty($lotSizeMax) || $lotSizeMax == 'blank') ? NULL : (!is_numeric($lotSizeMax) ? NULL : $lotSizeMax);
+
+                                    $buildYearMin   = (empty($buildYearMin) || $buildYearMin == 'blank') ? NULL : (!is_numeric($buildYearMin) ? NULL : $buildYearMin);
+                                    $buildYearMax   = (empty($buildYearMax) || $buildYearMax == 'blank') ? NULL : (!is_numeric($buildYearMax) ? NULL : $buildYearMax);
                                     
-                                    if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
-                                        $this->setPurchaseMethod($row, $buyerArr);
-                                    }
+                                   
+                                    $priceMin         = (empty($priceMin) || $priceMin == 'blank') ? NULL : (!is_numeric($priceMin) ? NULL : $priceMin);
+                                    $priceMax         = (empty($priceMax) || $priceMax == 'blank') ? NULL : (!is_numeric($priceMax) ? NULL : $priceMax);
 
-                                    if(in_array('creative', $buyerTypeArr)){
-                                        $this->setCreativeBuyer($row, $buyerArr, $buyerTypeArr);
-                                    } else if(in_array('multi family buyer', $buyerTypeArr)){
-                                        $this->setMultiFamilyBuyer($row, $buyerArr);
-                                    }                                                    
+                                    $stories_min  = (empty($stories_min) || $stories_min == 'blank') ? NULL : (!is_numeric($stories_min) ? NULL : $stories_min);
+                                    $stories_max  = (empty($stories_max) || $stories_max == 'blank') ? NULL : (!is_numeric($stories_max) ? NULL : $stories_max);
+
+                                    $buyerArr['bedroom_min']    = $bedroomMin;      $buyerArr['bedroom_max']    = $bedroomMax;
+                                    $buyerArr['bath_min']       = $bathMin;         $buyerArr['bath_max']       = $bathMax;
+                                    $buyerArr['size_min']       = $sizeMin;         $buyerArr['size_max']       = $sizeMax;
+                                    $buyerArr['lot_size_min']   = $lotSizeMin;      $buyerArr['lot_size_max']   = $lotSizeMax;
+                                    $buyerArr['build_year_min'] = $buildYearMin;    $buyerArr['build_year_max'] = $buildYearMax;
+                                   
+                                    $buyerArr['price_min']       = $priceMin;       $buyerArr['price_max']      = $priceMax;
+
+                                    $buyerArr['stories_min']      = $stories_min;       
+                                    $buyerArr['stories_max']      = $stories_max;
+
+
+                                    $propertyType = strtolower($this->modifiedString($row[18])); 
+                                    if(!empty($propertyType) && $propertyType != 'blank'){
+                                        $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
+                                        if(!empty($ptArr)){
+                                            $buyerArr['property_type'] = $ptArr;
+                                            
+                                            if(in_array(7,$buyerArr['property_type'])){
+                                                // set zoning value 
+                                                $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
+                                                // set utilities value 
+                                                $buyerArr = $this->setSingleSelectValues($row[49], 'utilities', $buyerArr);
+                                                // set sewer value 
+                                                $buyerArr = $this->setSingleSelectValues($row[50], 'sewer', $buyerArr);
+                                            }
+
+                                            // set parking value 
+                                            $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
+                                        
+                                            // $buyerArr = $this->setSingleSelectValues($row[17], 'parking', $buyerArr);
+
+                                            // set propert flow value
+                                            $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
+
+                                            // // set market_preferance value 
+                                            $buyerArr = $this->setSingleSelectValues($row[51], 'market_preferance', $buyerArr);
+
+                                            // // set contact_preferance value 
+                                            $buyerArr = $this->setSingleSelectValues($row[52], 'contact_preferance', $buyerArr);
+
+                                            // // set park value
+                                            $buyerArr = $this->setSingleSelectValues($row[54], 'park', $buyerArr);
+                                           
+
+                                            // set rooms value
+                                            $rooms        = strtolower($this->modifiedString($row[53])); 
+                                            $rooms        = (empty($rooms) || $rooms == 'blank') ? NULL : (!is_numeric($rooms) ? NULL : $rooms);
+                                            $buyerArr['rooms']       = $rooms;                                           
+
+                                            // set all radio button values
+                                            $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
+                                           
+                                            $buyerType = strtolower($this->modifiedString($row[34])); 
+
+                                            if(!empty($buyerType) && $buyerType != 'blank'){
+                                                $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
+                                                
+                                                if(!empty($btArr)){
+                                                    $buyerTypeArr = explode(',', $buyerType);
+                                                    $buyerTypeArr = array_map('trim',$buyerTypeArr);
+
+                                                    $buyerArr['buyer_type'] = $btArr[0];
+                                                    
+                                                    if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
+                                                        $this->setPurchaseMethod($row, $buyerArr);
+                                                    }
+
+                                                    if(in_array('creative', $buyerTypeArr)){
+                                                        $this->setCreativeBuyer($row, $buyerArr, $buyerTypeArr);
+                                                    } else if(in_array('multi family buyer', $buyerTypeArr)){
+                                                        $this->setMultiFamilyBuyer($row, $buyerArr);
+                                                    }                                                    
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                        
-                }
-                        
+                // }
             }
-                
         }
+        
         ++$this->rowCount;
     }
 
@@ -559,9 +526,45 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
             if(!empty($pmArr)){
                 $purchaseMethod = $pmArr;
                 $buyerArr['purchase_method'] = $purchaseMethod;
-                
-                $this->manageBuyer($buyerArr);
+                $this->insertedCount++;
 
+                // Start create users table
+                $userDetails =  [
+                    'first_name'     => $buyerArr['first_name'],
+                    'last_name'      => $buyerArr['last_name'],
+                    'name'           => ucwords($buyerArr['first_name'].' '.$buyerArr['last_name']),
+                    'email'          => $buyerArr['email'], 
+                    'phone'          => $buyerArr['phone'], 
+                ];
+                $createUser = User::create($userDetails);
+                // End create users table
+
+                if($createUser){
+                    // Buyer verification entry
+                    $createUser->buyerVerification()->create(['user_id'=>$createUser->id]);
+
+                    //Assign buyer role
+                    $createUser->roles()->sync(3);
+
+                    $buyerArr['buyer_user_id'] = $createUser->id;
+
+                    $buyerArr = collect($buyerArr)->except(['first_name', 'last_name','email','phone'])->all();
+                    
+                    $createUser->buyerDetail()->create($buyerArr);
+                    // $createdBuyer = Buyer::create($buyerArr);
+
+                    if($createUser->buyerDetail){
+                        //Purchased buyer
+                        $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                        $syncData['created_at'] = \Carbon\Carbon::now();
+                
+                        auth()->user()->purchasedBuyers()->create($syncData);
+                    }
+
+                    //Verification mail sent
+                    $createUser->NotificationSendToBuyerVerifyEmail();
+                }
+                
                 return true;
             }
         }
@@ -574,96 +577,13 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         return $data;
     }
 
-    public function manageBuyer(array $buyerArr)
+    public function totalRowCount(): int
     {
-        $rowIndex = $this->rowCount;
-
-        try {
-            DB::beginTransaction();
-            $userDetails =  [
-                'first_name'     => $buyerArr['first_name'],
-                'last_name'      => $buyerArr['last_name'],
-                'name'           => ucwords($buyerArr['first_name'].' '.$buyerArr['last_name']),
-                'email'          => $buyerArr['email'],
-                'country_code'   => $buyerArr['country_code'], 
-                'phone'          => $buyerArr['phone'], 
-            ];
-
-            $existingUser = User::withTrashed()->where('email', $buyerArr['email'])->first();
-
-            if ($existingUser) {
-                if ($existingUser->trashed()) {
-                    $this->softDeletedCount++;
-                    $this->softDeletedIndices[] = $rowIndex;
-                    return null;
-                }
-
-                // User exists: Only create buyer's records
-                $this->createBuyerRecords($existingUser, $userDetails, $buyerArr);
-                
-            } else {
-                // User doesn't exist: Create user and associated buyer's records
-                $this->createUserAndBuyerRecords($userDetails, $buyerArr);
-            }
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            ++$this->skippedCount;
-
-            // Log skipped rows due to errors
-            $logMessage = "Row Index " . ($rowIndex) . ": Error: ".$e->getMessage()."->".$e->getLine();
-            $this->skippedErrors[] = $logMessage;
-        }
+        return $this->rowCount;
     }
 
-    private function createUserAndBuyerRecords(array $userDetails, array $buyerArr)
+    public function insertedCount(): int
     {
-        $createUser = User::create($userDetails);
-
-        if ($createUser) {
-            // Create buyer verification entry
-            $createUser->buyerVerification()->create(['user_id' => $createUser->id]);
-
-            // Assign buyer role
-            $createUser->roles()->sync(config('constants.roles.buyer'));
-
-            // Create buyer details
-            $buyerArr['buyer_user_id'] = $createUser->id;
-            $buyerArr = collect($buyerArr)->except(['first_name', 'last_name', 'email', 'country_code','phone'])->all();
-
-            Log::info($buyerArr);
-            
-            $createUser->buyerDetail()->create($buyerArr);
-
-            // Check if buyer details were created successfully
-            if ($createUser->buyerDetail) {
-                // Purchased buyer
-                $syncData = [
-                    'buyer_id'   => $createUser->buyerDetail->id,
-                    'created_at' => \Carbon\Carbon::now(),
-                ];
-                auth()->user()->purchasedBuyers()->create($syncData);
-            }
-
-            // Send verification email
-            $createUser->NotificationSendToBuyerVerifyEmail();
-
-            return $createUser;
-        }
-
-        return null;
-    }
-
-    private function createBuyerRecords(User $existingUser, array $userDetails, array $buyerArr)
-    {
-        $existingUser->update($userDetails);
-
-        $buyerArr['buyer_user_id'] = $existingUser->id;
-        $buyerArr = collect($buyerArr)->except(['first_name', 'last_name', 'email', 'country_code','phone'])->all();
-        $existingUser->buyerDetail()->create($buyerArr);
-
-        return $existingUser;
+        return $this->insertedCount;
     }
 }
