@@ -74,6 +74,13 @@
                             <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'level_3' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
                         </span>
                     </th>
+                    <th class="text-gray-500 text-xs">
+                        {{ __('cruds.user.fields.credit_limit')}}
+                        <span wire:click="sortBy('credit_limit')" class="float-right text-sm" style="cursor: pointer;">
+                            <i class="fa fa-arrow-up {{ $sortColumnName === 'credit_limit' && $sortDirection === 'asc' ? '' : 'text-muted' }}"></i>
+                            <i class="fa fa-arrow-down m-0 {{ $sortColumnName === 'credit_limit' && $sortDirection === 'desc' ? '' : 'text-muted' }}"></i>
+                        </span>
+                    </th>
                     <th class="text-gray-500 text-xs">{{ __('cruds.user.fields.purchased_buyer') }}</th>
                     <th class="text-gray-500 text-xs">{{ __('global.created') }}
                         <span wire:click="sortBy('created_at')" class="float-right text-sm" style="cursor: pointer;">
@@ -112,15 +119,20 @@
                              </label>
                         </td>
 
+                        <td>{{ $user->credit_limit ?? 0 }}</td>
+
                         <td>{{ $user->purchased_buyers_count ?? 0 }}</td>
 
                         <td>{{ convertDateTimeFormat($user->created_at,'date') }}</td>
 
                         <td>
-                            <button type="button" wire:click="$emitUp('show', {{$user->id}})" class="btn btn-primary btn-rounded btn-icon">
+                            <button type="button" title="Edit Credits" wire:click="$emitUp('editCreditLimit', {{$user->id}})" data-id="{{$user->id}}" class="btn btn-warning btn-rounded btn-icon editCreditLimitBtn">
+                                <i class="ti-credit-card"></i>
+                            </button>
+                            <button type="button" title="View" wire:click="$emitUp('show', {{$user->id}})" class="btn btn-primary btn-rounded btn-icon">
                                 <i class="ti-eye"></i>
                             </button>
-                            <button type="button" data-id="{{$user->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
+                            <button type="button" title="Delete" data-id="{{$user->id}}" class="btn btn-danger btn-rounded btn-icon deleteBtn">
                                 <i class="ti-trash"></i>
                             </button>
                         </td>

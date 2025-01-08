@@ -2,14 +2,15 @@
 
 namespace App\Http\Livewire\Admin\Seller;
 
-use Illuminate\Support\Facades\Gate;
-use Livewire\Component;
-use App\Models\User;
-use Livewire\WithPagination;
-use Symfony\Component\HttpFoundation\Response;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Carbon\Carbon;
+use App\Models\User;
+use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\PurchasedBuyer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Symfony\Component\HttpFoundation\Response;
 
 class Index extends Component
 {
@@ -19,12 +20,12 @@ class Index extends Component
 
     public $search = '', $formMode = false , $updateMode = false, $viewMode = false, $viewDetails = null;
 
-    public $user_id = null, $first_name, $last_name, $email,$phone;
+    public $user_id = null, $first_name, $last_name, $email,$phone, $credit_limit;
 
     protected $users = null;
 
     protected $listeners = [
-        'show', 'confirmedToggleAction','deleteConfirm', 'blockConfirmedToggleAction'
+        'show', 'confirmedToggleAction','deleteConfirm', 'blockConfirmedToggleAction','editCreditLimit'
     ];
 
     public function mount(){
@@ -39,7 +40,6 @@ class Index extends Component
     public function create()
     {
         $this->resetInputFields();
-        $this->resetValidation();
         $this->resetValidation();
         $this->formMode = true;
     }
@@ -149,9 +149,46 @@ class Index extends Component
         }
     }
 
-    /* public function changeStatus($statusVal){
-        $this->is_active = (!$statusVal) ? 1 : 0;
-    } */
+    public function editCreditLimit($id){
+        $this->resetInputFields();
+        $this->resetValidation();
+
+        $model = User::find($id);
+        if($model){
+            $this->user_id = $model->id;
+            $this->credit_limit = $model->credit_limit;
+        }
+    }
+
+    public function updateCreditLimit(){
+
+        $validateArr = [
+            'credit_limit'  => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+        ];
+  
+        $validatedData = $this->validate($validateArr);
+
+        try {
+            DB::beginTransaction();
+
+            User::where('id',$this->user_id)->update($validatedData);
+
+            DB::commit();
+
+            $this->dispatchBrowserEvent('closed-modal');
+            $this->emit('refreshTable');
+            $this->resetInputFields();
+            $this->resetValidation();
+
+            $this->alert('success',trans('messages.edit_success_message'));
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e->getMessage().'->'.$e->getLine());
+            \Log::info('Error in Livewire/Admin/Seller/Index::updateCreditLimit (' . $e->getCode() . '): ' . $e->getMessage() . ' at line ' . $e->getLine());
+            $this->alert('error', trans('messages.error_message'));
+        }
+    }
 
 
 }

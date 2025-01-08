@@ -29,6 +29,7 @@ return [
             'package'                  => 'Package',
             'level_type'               => 'Level Type',
             'level_3'                  => 'Level 3',
+            'credit_limit'             => 'Credit Limit',
             'company_name'             => 'Company Name',
             'confirm_password'         => 'Password Confirm',
             'role'                     => 'User Level',

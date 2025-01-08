@@ -33,6 +33,41 @@
         </div>
     </div>
 </div>
+
+{{-- Edit Modal --}}
+<div wire:ignore.self class="modal fade" id="editCreditLimitModal" tabindex="-1" role="dialog" aria-labelledby="editCreditLimitModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editCreditLimitModalLabel">Edit Credits</h5>
+            <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form wire:submit.prevent="updateCreditLimit" class="forms-sample" autocomplete="off">
+            <div class="modal-body">
+                
+                <div class="form-group">
+                    <input type="text" wire:model.defer="credit_limit" class="form-control" placeholder="Credit Limit">
+                    @error('credit_limit') <span class="error text-danger">{{ $message }}</span>@enderror
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Close</button>
+                <button type="submit" wire:loading.attr="disabled" class="btn btn-sm btn-success">
+                    Submit
+                    <span wire:loading wire:target="updateCreditLimit">
+                        <i class="fa fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{{-- End Edit Modal --}}
+
 </div>
 
 @push('styles')
@@ -82,5 +117,34 @@
             }
         })
     })
+
+    $(document).on('click', '.editCreditLimitBtn', function(e){
+        var _this = $(this);
+        var id = _this.attr('data-id');
+        Swal.fire({
+            title: 'Are you sure you want to update credit limit?',
+            showDenyButton: true,
+            icon: 'warning',
+            confirmButtonText: 'Yes',
+            denyButtonText: `No, cancel!`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+               
+                @this.emit('editCreditLimit', id);
+
+                $(document).find('#editCreditLimitModal').modal('show');
+
+            }
+        })
+    });
+
+    document.addEventListener('closed-modal', function (event) {
+        $(document).find('#editCreditLimitModal').modal('hide');
+    });
+
+    $(document).on('click','.close-modal',function(){
+        // console.log('closed');
+        $(document).find('#editCreditLimitModal').modal('hide');
+    });
 </script>
 @endpush

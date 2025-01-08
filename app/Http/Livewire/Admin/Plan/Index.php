@@ -273,8 +273,6 @@ class Index extends Component
 
             DB::commit();
             $this->emit('refreshTable');
-
-            $this->emit('refreshLivewireDatatable');
     
             $this->alert('success', trans('messages.delete_success_message'));
         }catch(\Exception $e){
