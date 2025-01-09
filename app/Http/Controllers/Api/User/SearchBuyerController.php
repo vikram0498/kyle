@@ -1399,6 +1399,7 @@ class SearchBuyerController extends Controller
                     $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
                     return [
                         'id'                => $buyerDeal->id,
+                        'is_featured'       => $buyerDeal->is_featured ? true : false,
                         'sender_by'         => $searchLog->user_id,
                         'search_log_id'     => $searchLog->id ?? '',
                         'title'             => $address,

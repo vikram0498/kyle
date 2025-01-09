@@ -21,10 +21,6 @@ Class ImportBuyer extends Component {
 
     public $state =[];
 
-    public function mount(){
-        
-    }
-
     public function render()
     {
         return view('livewire.admin.buyer.import-buyer');
@@ -48,8 +44,6 @@ Class ImportBuyer extends Component {
         $softDeletedRowCount = $import->softDeletedCount();
         $skippedCount        = $import->skippedRowCount();
 
-        // dd($totalCount, $insertedRowCount, $skippedCount);
-
         if($insertedRowCount == 0){
             $this->flash('error',trans('No rows inserted during the import process.'));
             return to_route('admin.import-buyers');
@@ -62,7 +56,5 @@ Class ImportBuyer extends Component {
             return to_route('admin.buyer');
         }
 
-        // $this->flash('success',trans('messages.add_success_message'));
-        // return to_route('admin.buyer');
     }
 }
