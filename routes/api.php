@@ -204,6 +204,8 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
         Route::get('buyer-deals/list', [SearchBuyerController::class, 'buyerDealsList']);
         Route::get('buyer-deals/show/{id}', [SearchBuyerController::class, 'buyerDealDetail']);
         Route::post('buyer-deals/status', [SearchBuyerController::class, 'updateBuyerDealStatus']);
+        Route::post('buyer-deals/make-featured', [SearchBuyerController::class, 'updateFeaturedStatus']);
+
         
     // });
    

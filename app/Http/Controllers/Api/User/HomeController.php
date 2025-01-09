@@ -173,7 +173,7 @@ class HomeController extends Controller
             $totalDealsCount = $buyerDealQuery->count();
 
             // Latest 3 Buyer Deals
-            $latestDeals  = $buyerDealQuery->with(['searchLog', 'createdBy'])->latest()->take(3)->get();
+            $latestDeals  = $buyerDealQuery->with(['searchLog', 'createdBy'])->where('is_featured',1)->latest()->take(3)->get();
 
             $latestDeals->transform(function ($buyerDeal) use ($propertyTypes) {
                 $searchLog = $buyerDeal->searchLog ?? null;

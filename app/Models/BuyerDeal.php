@@ -27,6 +27,7 @@ class BuyerDeal extends Model
         'message',
         'buyer_feedback',
         'status',
+        'is_featured',
         'created_by',
         'created_at',
         'updated_at',

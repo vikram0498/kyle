@@ -1566,6 +1566,54 @@ class SearchBuyerController extends Controller
     }
 
     /**
+     * Update deal status by buyer 
+     */
+    public function updateFeaturedStatus(Request $request){
+        $request->validate([
+            'buyer_deal_id'   => ['required', 'exists:buyer_deals,id']
+        ]);
+
+        try {
+            DB::beginTransaction();
+            
+            $buyerDeal = BuyerDeal::where('buyer_user_id', auth()->id())->whereId($request->buyer_deal_id)->first();
+            if(!$buyerDeal){
+                $responseData = [
+                    'status' => false,
+                    'error'  => trans('messages.buyer_deal.not_found'),
+                ];
+                return response()->json($responseData, 400);
+            }
+            
+
+            $buyerDealId = $buyerDeal->id;
+            $createdByUser = $buyerDeal->createdBy;
+
+            $buyerDealUpdateData = [
+                "is_featured" => !$buyerDeal->is_featured
+            ];
+
+            $isUpdated = $buyerDeal->update($buyerDealUpdateData);
+
+            DB::commit();
+            //Return Success Response
+            $responseData = [
+                'status'    => true,
+                'message'   => $buyerDeal->is_featured ? trans('messages.deal_marked_featured') :  trans('messages.deal_remove_featured'),
+            ];
+            return response()->json($responseData, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $responseData = [
+                'status'        => false,
+                'error'         => trans('messages.error_message'),
+		        'error_details' => $e->getMessage().'->'.$e->getLine()
+            ];
+            return response()->json($responseData, 400);
+        }
+    }
+
+    /**
      * Get List of Deals for Seller with Selected status count
      */
     public function sellerDealResultList($type=null){

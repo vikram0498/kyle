@@ -84,5 +84,6 @@ return [
 
     'cannot_delete_associated_product' => "Product has active subscriptions and cannot be deleted.",
     "user_trashed_error"    => "The user has been deactivated!",
-    
+    "deal_marked_featured"  => "Deal marked as featured successfully!",
+    "deal_remove_featured"  => "Deal removed from featured successfully!",
 ];
