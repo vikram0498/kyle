@@ -116,6 +116,11 @@ function Header() {
     }
   }
 
+  const playSound = () => {
+    const audio = new Audio('./assets/sound/notification.mp3');
+    audio.play();
+  };
+
   useEffect(()=>{
     const fetchNotificationData = async () => {
       try {
@@ -137,13 +142,17 @@ function Header() {
   useEffect(()=>{
     generatedToken()
     onMessage(messaging,(payload)=>{
-      console.log(payload,"payload seller data")
-      setIsNewNotification(payload.notification.body)
+      console.log(payload,"payload seller data 111")
+      setIsNewNotification(payload.notification.body);
+      playSound();
     })
   },[]);
+  
   return (
     <>
       <header className="dashboard-header">
+      {/* <button className="btn btn-primary" onClick={playSound}>play</button> */}
+
         <div className="container-fluid">
           <div className="row align-items-center">
             <div className="col-2 col-md-4 col-lg-8 col-xxl-8">

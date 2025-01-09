@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useRef } from 'react';
-import { Button, Col, Container, Form, Image, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Image, Modal, Row,Badge  } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Header from "../../partials/Layouts/Header";
 import Footer from '../../partials/Layouts/Footer';
@@ -41,11 +41,14 @@ const DealNotifications = () => {
     const [letsConnect, setLetsConnect] = useState(false);
     const [interestedProperty, setInterestedProperty] = useState(false);
     const [thankyouFeedback, setThankyouFeedback] = useState(false);
+    const [isShowFeaturedDeal,setIsShowFeaturedDeal] = useState(false);
     const [senderId, setSenderId] = useState(0);
+    const [featuredDealId, setFeaturedDealId] = useState(0);
+    const [isFeatured, setIsFeatured] = useState(false);
 
-    const handleProofShow = () => {
-        setProofSave(true)
-    };
+    // const handleProofShow = () => {
+    //     setProofSave(true)
+    // };
     const handleSubmitOffer = (id) => {
         setSubmitOffer(true)
         setDealId(id);
@@ -185,9 +188,46 @@ const DealNotifications = () => {
         handleDealUpdate(); // Call the async function inside useEffect
     }, [isConfirmProofOfFund, wantToBuyFormData]);
 
+    const updateFeaturedDealStatus = ()=> {
+        try {
+            const updateFeaturedDeals = async () => {
+                let headers = {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + getTokenData().access_token,
+                };
+                setIsShowFeaturedDeal(false);
+                let response = await axios.post(`${apiUrl}buyer-deals/make-featured`,{buyer_deal_id:featuredDealId},{headers:headers});
+                if(response.data.status){
+                    setIsUpdatedStatus(!isUpdatedStatus)
+                    toast.success(response.data.message, {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                }
+            }
+            updateFeaturedDeals();
+        } catch (error) {
+            console.log(error,"featured deals");
+        }
+    }
+    const handleFeaturedDeal = (id,status) => {
+        setFeaturedDealId(id);
+        setIsFeatured(status);
+        setIsShowFeaturedDeal(true);
+    }
+
+    useEffect(()=>{
+        const arr = [1,2,3,4,5,6,7,8,9];
+        const n = arr.length;
+        const k = 2;
+        function fetchRequestData(){
+            
+        }   
+        console.log(fetchRequestData()); 
+    },[])
   return (
     <>
         {/* <Header /> */}
+        
         <BuyerHeader />
         <section className='main-section position-relative pt-4 pb-120'>
             { isLoader ? <div className="loader" style={{ textAlign: "center" }}><img src="assets/images/loader.svg" /></div> : 
@@ -261,11 +301,17 @@ const DealNotifications = () => {
                                                         </div>
                                                     </Link>
                                                 </div>
+                                                <div className='text-center mt-2' onClick={()=>handleFeaturedDeal(data.id,data.is_featured)}>
+                                                    {data.is_featured ? <Badge bg="danger cursor-pointer">Remove to featured</Badge>:
+                                                    <Badge bg="primary cursor-pointer">Add to featured</Badge>
+                                                    }
+                                                    
+                                                </div>
                                             </div>
                                             
                                             {/* Property Details Section */}
                                             <div className='pro_details'>
-                                                <h3 onClick={handleProofShow}>{data.title}</h3>
+                                                <h3>{data.title}</h3>
                                                 <p>Real Easte Company That Prioritizes Property</p>
                                                 <div className="property-details-Browse-Deal-icons">
                                                     <div className="detail">
@@ -496,6 +542,19 @@ const DealNotifications = () => {
             </Modal.Body>
         </Modal>
 
+        {/* confirmation modal for featured deal*/}
+        <Modal show={isShowFeaturedDeal} onHide={()=>setIsShowFeaturedDeal(false)} centered className='radius_30 max-340'>
+            <Modal.Body className='some_space'>
+                <div className='modal_inner_content proofSave'>
+                    <h3>Do you want to {isFeatured ? 'remove': 'add'} this to featured deal</h3>
+                    <div className="both_btn_group m-0">
+                        <button type="button" className="light_bg_btn btn btn-primary" onClick={()=>setIsShowFeaturedDeal(false)}>No</button>
+                        <button type="submit" className="btn btn-fill btn-primary" onClick={updateFeaturedDealStatus}>Yes</button>
+                    </div>
+                </div>
+            </Modal.Body>
+        </Modal>   
+                 
         <ReactTooltip
         id="my-tooltip-1"
         place="top"

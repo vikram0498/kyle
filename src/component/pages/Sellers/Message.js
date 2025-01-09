@@ -3,8 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
-import ChatSidebar from "../../partials/ChatSidebar";
-import ChatMessagePanel from "../../partials/ChatMessagePanel";
+import ChatSidebar from "../../partials/ChatPanel/ChatSidebar";
+import ChatMessagePanel from "../../partials/ChatPanel/ChatMessagePanel";
 import { useAuth } from "../../../hooks/useAuth";
 import BuyerHeader from "../../partials/Layouts/BuyerHeader";
 import Header from "../../partials/Layouts/Header";
@@ -79,6 +79,9 @@ const Message = () => {
         // Map through the chat list and update or add new messages only for users with is_block === 0
         const updatedChatList = prevChatList.map((chat) => {
           // console.log(chat.conversation_uuid, "==============", newMessage.conversation_uuid)
+          if(chat.conversation_uuid == null){
+            setIsFirstMessage(!isFirstMessage);
+          }
           if (chat.conversation_uuid === newMessage.conversation_uuid && chat.is_block === false) {
             updated = true;
             return {
@@ -93,7 +96,12 @@ const Message = () => {
       
         // Check if the sender is not already present, and if not, add the new chat (only if is_block === 0)
         const isSenderIdPresent = updatedChatList.some(item => item.id === newMessage.sender_id && item.is_block === false);
-        if (!updated && !isSenderIdPresent && newMessage.is_block === 0) {
+        // console.log(updatedChatList,"updatedChatList old");
+        // console.log(updated,"updated");
+        // console.log(isSenderIdPresent,"isSenderIdPresent");
+        // console.log(newMessage.sender_user.is_block,"newMessage.is_block");
+        if (!updated && !isSenderIdPresent && newMessage.sender_user.is_block === false) {
+          // console.log("new user added")
           updatedChatList.push({
             ...newMessage.sender_user,
             conversation_uuid: newMessage.conversation_uuid
@@ -162,7 +170,9 @@ const Message = () => {
       setMessages(response.data.message || []);
       setConversationUuid(response.data.data.conversation_uuid);
       setCurrentUserId(response.data.data.id);
-      sessionStorage.setItem('chatId', response.data.data.conversation_uuid);
+      if(response.data.data.conversation_uuid !==undefined){
+        sessionStorage.setItem('chatId', response.data.data.conversation_uuid);
+      }
     } catch (error) {
       console.error("Error fetching messages:", error.response?.data?.message || error.message);
     }
@@ -178,6 +188,8 @@ const Message = () => {
       setChatList(response.data.data || []);
       if (!receiverId && response.data.data.length) {
         setReceiverId(response.data.data[0].id);
+      }else{
+        sessionStorage.removeItem('chatId');
       }
       setIsLoader(false);
     } catch (error) {

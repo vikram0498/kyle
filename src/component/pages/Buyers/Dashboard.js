@@ -142,7 +142,7 @@ const Dashboard = () => {
                         <div className="card-box mt-0 buyer_dash_deals">
                             <h3>featured deals</h3>
                             <ul>
-                                {dashboardDetails.latest_buyer_deals && 
+                                {dashboardDetails.latest_buyer_deals && dashboardDetails.latest_buyer_deals.length > 0?
                                 dashboardDetails.latest_buyer_deals.map((data,index)=>{
                                     return(
                                         <li key={index}>
@@ -164,7 +164,7 @@ const Dashboard = () => {
                                             </div>
                                         </li>
                                     )
-                                })}
+                                }) :<p>No data found</p> }
 
                                 {/* <li>
                                     <div className="dash_deals_left">

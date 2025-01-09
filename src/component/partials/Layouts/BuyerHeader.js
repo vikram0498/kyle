@@ -33,6 +33,13 @@ function BuyerHeader() {
     }]
   });
 
+  const playSound = () => {
+    const audio = new Audio('./assets/sound/notification.mp3');
+    audio.play().catch((error) => {
+      console.error("Error playing sound:", error);
+    });
+  };
+
   useEffect(() => {
     if (getTokenData().access_token !== null) {
       let userData = getLocalStorageUserdata();
@@ -117,11 +124,20 @@ function BuyerHeader() {
   },[isNewNotification]);
   
   useEffect(()=>{
-    generatedToken()
-    onMessage(messaging,(payload)=>{
-      console.log(payload,"payload data")
-      setIsNewNotification(payload.notification.body)
-    })
+    try {
+      generatedToken();
+      onMessage(messaging, (payload) => {
+        if (payload && payload.notification) {
+          console.log(payload, "payload data");
+          playSound();
+          setIsNewNotification(payload.notification.body);
+        } else {
+          console.warn("No notification in payload:", payload);
+        }
+      });
+    } catch (error) {
+        console.log(error,"new error")
+    }
   },[]);
 
   return (
