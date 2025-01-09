@@ -332,7 +332,7 @@ class CopyBuyerController extends Controller
                         $syncData['buyer_id'] = $createUser->buyerDetail->id;
                         $syncData['created_at'] = Carbon::now();
                 
-                        User::where('id', $validatedData['user_id'])->first()->purchasedBuyers()->create($syncData);
+                        $createUser->purchasedBuyers()->create($syncData);
 
                         $isMailSend = true;
                     }else{
@@ -359,6 +359,12 @@ class CopyBuyerController extends Controller
                         }
 
                     }
+                }else{
+                    
+                    $syncData['buyer_id'] = $createUser->buyerDetail->id;
+                    $syncData['created_at'] = Carbon::now();
+                    $createUser->purchasedBuyers()->create($syncData);
+
                 }
 
                 if($token && ($request->type == 'private-buyer')){

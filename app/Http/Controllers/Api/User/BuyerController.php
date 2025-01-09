@@ -1429,35 +1429,72 @@ class BuyerController extends Controller
             try {
                 Excel::import($import, $uploadedFile);
 
-                $totalCount         = $import->totalRowCount();
-                $insertedRowCount   = $import->insertedCount();
-                $skippedCount       = $totalCount - $insertedRowCount;
-    
-                if ($insertedRowCount == 0) {
-                    //Return Error Response
-                    $responseData = [
-                        'status'        => false,
-                        // 'message'       => trans('No rows inserted during the import process.'),
-                        'message'          => "All emails are duplicates, so no new rows were inserted during the import process.",
-                    ];
-                    return response()->json($responseData, 400);
-                } else if ($skippedCount > 0 && $insertedRowCount > 0) {
-                    $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
-    
-                    //Return Error Response
-                    $responseData = [
-                        'status'        => true,
-                        'message'       => $message,
-                    ];
-                    return response()->json($responseData, 200);
-                } else if ($skippedCount == 0) {
-                    //Return Success Response
-                    $responseData = [
-                        'status'        => true,
-                        'message'       => $importBueryOnlyByEmail ? trans('messages.csv_file.buyer_invitation_success') :trans('messages.csv_file.import_success'),
-                    ];
-                    return response()->json($responseData, 200);
+                if($importBueryOnlyByEmail){
+                    $totalCount         = $import->totalRowCount();
+                    $insertedRowCount   = $import->insertedCount();
+                    $skippedCount       = $totalCount - $insertedRowCount;
+
+                    if ($insertedRowCount == 0) {
+                        //Return Error Response
+                        $responseData = [
+                            'status'        => false,
+                            // 'message'       => trans('No rows inserted during the import process.'),
+                            'message'          => "All emails are duplicates, so no new rows were inserted during the import process.",
+                        ];
+                        return response()->json($responseData, 400);
+                    } else if ($skippedCount > 0 && $insertedRowCount > 0) {
+                        $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully.";
+        
+                        //Return Error Response
+                        $responseData = [
+                            'status'        => true,
+                            'message'       => $message,
+                        ];
+                        return response()->json($responseData, 200);
+                    } else if ($skippedCount == 0) {
+                        //Return Success Response
+                        $responseData = [
+                            'status'        => true,
+                            'message'       => trans('messages.csv_file.buyer_invitation_success'),
+                        ];
+                        return response()->json($responseData, 200);
+                    }
+                }else{
+                    //Store log in log file
+                    $import->logSummary();
+
+                    $totalCount          = $import->totalRowCount();
+                    $insertedRowCount    = $import->insertedCount();
+                    $softDeletedRowCount = $import->softDeletedCount();
+                    $skippedCount        = $import->skippedRowCount();
+
+                    if ($insertedRowCount == 0) {
+                        // No rows were inserted during the import process
+                        $responseData = [
+                            'status'        => false,
+                            'message'       => "No rows inserted during the import process.",
+                        ];
+                        return response()->json($responseData, 400);
+                    } elseif ($insertedRowCount > 0 && ($skippedCount > 0 || $softDeletedRowCount > 0)) {
+                        // Rows inserted, some rows skipped or soft-deleted
+                        $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully, {$softDeletedRowCount} soft-deleted, {$skippedCount} skipped.";
+                        $responseData = [
+                            'status'        => true,
+                            'message'       => $message,
+                        ];
+                        return response()->json($responseData, 200);
+                    } elseif ($insertedRowCount > 0 && $skippedCount == 0 && $softDeletedRowCount == 0) {
+                        // Only rows inserted, nothing skipped or soft-deleted
+                        $responseData = [
+                            'status'        => true,
+                            'message'       => "All {$insertedRowCount} rows inserted successfully.",
+                        ];
+                        return response()->json($responseData, 200);
+                    }
+
                 }
+
+                
             } catch (\Exception $e) {
                 // dd($e->getMessage().'->'.$e->getLine());
     

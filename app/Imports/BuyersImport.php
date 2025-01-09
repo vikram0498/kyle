@@ -65,7 +65,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
     public function logSummary()
     {
-        Log::info("Import Excel Summary:");
+        Log::info("Import Buyers CSV Summary:");
 
         if (count($this->skippedErrors) > 0) {
             foreach ($this->skippedErrors as $error) {
@@ -80,6 +80,8 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         Log::info("Total Rows Processed: " . $this->totalRowCount());
         Log::info("Total Inserted Rows: " . $this->insertedCount());
         Log::info("Total Soft-Deleted Rows: " . $this->softDeletedCount());
+        Log::info("Total Skipped Rows: " . $this->skippedRowCount());
+
     }
 
     public function model(array $row)
@@ -112,12 +114,12 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                 
                     $countryId= config('constants.default_country');
 
-                    $statesArray = array_map('ucwords', explode(',', $state));
+                    $statesArray = array_map('ucwords', array_map('trim', explode(',', $state)));
                     $stateData = DB::table('states')->where('country_id', $countryId)->whereIn('name', $statesArray)->pluck('id');
                     if($stateData->count() > 0){
                         $stateId = $stateData;
 
-                        $citiesArray = array_map('ucwords', explode(',', $city));
+                        $citiesArray = array_map('ucwords', array_map('trim', explode(',', $city)));
                         $cityData = DB::table('cities')->whereIn('state_id', $stateData)->whereIn('name', $citiesArray)->pluck('id');
                         if($cityData->count() > 0){
                             $cityId = $cityData;
@@ -125,8 +127,8 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                     }                               
 
                     $buyerArr['country'] = DB::table('countries')->where('id', $countryId)->first()->name;
-                    $buyerArr['city'] = $cityId  ? $cityId->toArray() : NULL;
-                    $buyerArr['state'] = $stateId ? $stateId->toArray() : NULL;
+                    $buyerArr['city'] = $cityId  ? json_encode($cityId->toArray()) : NULL;
+                    $buyerArr['state'] = $stateId ? json_encode($stateId->toArray()) : NULL;
                                                     
                     $companyName = strtolower($this->modifiedString($row[6]));
                     $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
@@ -595,15 +597,15 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                 if ($existingUser->trashed()) {
                     $this->softDeletedCount++;
                     $this->softDeletedIndices[] = $rowIndex;
-                    return null;
+                }else{
+                    // User exists: Only create buyer's records
+                    $this->createBuyerRecords($existingUser, $userDetails, $buyerArr);
+                    ++$this->insertedCount;
                 }
-
-                // User exists: Only create buyer's records
-                $this->createBuyerRecords($existingUser, $userDetails, $buyerArr);
-                
             } else {
                 // User doesn't exist: Create user and associated buyer's records
                 $this->createUserAndBuyerRecords($userDetails, $buyerArr);
+                ++$this->insertedCount;
             }
 
             DB::commit();
@@ -633,7 +635,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
             $buyerArr['buyer_user_id'] = $createUser->id;
             $buyerArr = collect($buyerArr)->except(['first_name', 'last_name', 'email', 'country_code','phone'])->all();
 
-            Log::info($buyerArr);
+            // Log::info($buyerArr);
             
             $createUser->buyerDetail()->create($buyerArr);
 
@@ -642,7 +644,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                 // Purchased buyer
                 $syncData = [
                     'buyer_id'   => $createUser->buyerDetail->id,
-                    'created_at' => \Carbon\Carbon::now(),
+                    'created_at' => Carbon::now(),
                 ];
                 auth()->user()->purchasedBuyers()->create($syncData);
             }
@@ -662,7 +664,16 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
         $buyerArr['buyer_user_id'] = $existingUser->id;
         $buyerArr = collect($buyerArr)->except(['first_name', 'last_name', 'email', 'country_code','phone'])->all();
-        $existingUser->buyerDetail()->create($buyerArr);
+        $createdBuyer = $existingUser->buyerDetail()->create($buyerArr);
+
+        if ($createdBuyer) {
+            // Purchased buyer
+            $syncData = [
+                'buyer_id'   => $createdBuyer->id,
+                'created_at' => Carbon::now(),
+            ];
+            auth()->user()->purchasedBuyers()->create($syncData);
+        }
 
         return $existingUser;
     }

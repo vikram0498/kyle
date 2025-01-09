@@ -44,15 +44,19 @@ Class ImportBuyer extends Component {
         $softDeletedRowCount = $import->softDeletedCount();
         $skippedCount        = $import->skippedRowCount();
 
-        if($insertedRowCount == 0){
-            $this->flash('error',trans('No rows inserted during the import process.'));
+
+        if ($insertedRowCount == 0) {
+            // No rows were inserted during the import process
+            $this->flash('error', 'No rows inserted during the import process.');
             return to_route('admin.import-buyers');
-        } else if($skippedCount > 0 && $insertedRowCount > 0){
+        } elseif ($insertedRowCount > 0 && ($skippedCount > 0 || $softDeletedRowCount > 0)) {
+            // Rows inserted, some rows skipped or soft-deleted
             $message = "{$insertedRowCount} out of {$totalCount} rows inserted successfully, {$softDeletedRowCount} soft-deleted, {$skippedCount} skipped.";
-            $this->flash('success',trans($message));
+            $this->flash('success', $message);
             return to_route('admin.buyer');
-        } else if($skippedCount == 0) {
-            $this->flash('success',trans('messages.add_success_message'));
+        } elseif ($insertedRowCount > 0 && $skippedCount == 0 && $softDeletedRowCount == 0) {
+            // Only rows inserted, nothing skipped or soft-deleted
+            $this->flash('success', "All {$insertedRowCount} rows inserted successfully.");
             return to_route('admin.buyer');
         }
 

@@ -17,6 +17,15 @@ class ImportBuyerInvitation implements ToModel, WithStartRow
         return 2;
     }
 
+    public function totalRowCount(): int
+    {
+        return $this->rowCount;
+    }
+
+    public function insertedCount(): int
+    {
+        return $this->insertedCount;
+    }
 
     public function model(array $row)
     {
@@ -60,13 +69,4 @@ class ImportBuyerInvitation implements ToModel, WithStartRow
         return $data;
     }
 
-    public function totalRowCount(): int
-    {
-        return $this->rowCount;
-    }
-
-    public function insertedCount(): int
-    {
-        return $this->insertedCount;
-    }
 }

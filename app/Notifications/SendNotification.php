@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use App\Models\User;
 
 
-class SendNotification extends Notification implements ShouldQueue
+class SendNotification extends Notification
 {
     use Queueable;
 
