@@ -27,7 +27,9 @@
                                     <i class="fa fa-upload"></i>
                                         {{__('cruds.buyer.fields.buyer_csv_import')}}
                                 </a>
-                                <a href="{{ asset('default/sample_template_import_buyer.csv') }}" download="{{ asset('default/sample_template_import_buyer.csv') }}" class="btn btn-sm btn-info mr-2 btn-icon-text btn-header">
+                                <a href="{{ asset('default/sample_template_import_buyer.csv') }}" 
+                                download="sample_template_import_buyer.csv" 
+                                class="btn btn-sm btn-info mr-2 btn-icon-text btn-header">
                                     <i class="fa fa-download"></i>
                                     {{__('cruds.buyer.fields.buyer_csv_template')}}
                                 </a>

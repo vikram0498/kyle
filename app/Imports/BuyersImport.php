@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use App\Helpers\BuyerImportColumnMapper;
 
 class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 {
@@ -84,30 +85,35 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
     }
 
+    private function columnIndex($col_name){
+        return BuyerImportColumnMapper::getColumnIndex($col_name);
+    }
+
     public function model(array $row)
     { 
         $buyerArr = [];
-        $firstName = $this->modifiedString($row[0]); $lastName = $this->modifiedString($row[1]);
+       
+        $firstName = $this->modifiedString($row[$this->columnIndex('first_name')]); $lastName = $this->modifiedString($row[$this->columnIndex('last_name')]);
         
         if(!empty($firstName) && !empty($lastName)){
             $buyerArr['user_id']        = auth()->user()->id;
-            $buyerArr['first_name']     = $firstName;
-            $buyerArr['last_name']      = $lastName;
+            $buyerArr['first_name']     = ucwords($firstName);
+            $buyerArr['last_name']      = ucwords($lastName);
             $buyerArr['name']           = $firstName.' '.$lastName;
-            $email                      = $this->modifiedString($row[2]);
+            $email                      = strtolower($this->modifiedString($row[$this->columnIndex('email')]));
             $countryCode                = (int)config('constants.twilio_country_code');
             
             if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ) {
                 
                 $buyerArr['email'] = $email;
-                $phone = $this->modifiedString($row[3]);
+                $phone = $this->modifiedString($row[$this->columnIndex('phone_number')]);
                 if(!empty($phone) && is_numeric($phone)){
                     
                     $buyerArr['country_code'] = $countryCode;
                     $buyerArr['phone'] = $phone;
                     
-                    $city = $this->modifiedString($row[4]); 
-                    $state = $this->modifiedString($row[5]);                                                  
+                    $city = $this->modifiedString($row[$this->columnIndex('city')]); 
+                    $state = $this->modifiedString($row[$this->columnIndex('state')]);                                                  
                                             
                     $stateId = NULL;
                     $cityId = NULL;
@@ -130,18 +136,32 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                     $buyerArr['city'] = $cityId  ? json_encode($cityId->toArray()) : NULL;
                     $buyerArr['state'] = $stateId ? json_encode($stateId->toArray()) : NULL;
                                                     
-                    $companyName = strtolower($this->modifiedString($row[6]));
+                    $companyName = strtolower($this->modifiedString($row[$this->columnIndex('company_name')]));
                     $companyName = (empty($companyName) || $companyName == 'blank') ? NULL : $companyName;
                     $buyerArr['company_name'] = $companyName;
 
                     //Start number values min and max
-                    $bedroomMin     = strtolower($this->modifiedString($row[7]));       $bedroomMax      = strtolower($this->modifiedString($row[8]));
-                    $bathMin        = strtolower($this->modifiedString($row[9]));       $bathMax         = strtolower($this->modifiedString($row[10]));
-                    $sizeMin        = strtolower($this->modifiedString($row[11]));      $sizeMax         = strtolower($this->modifiedString($row[12]));
-                    $lotSizeMin     = strtolower($this->modifiedString($row[13]));      $lotSizeMax      = strtolower($this->modifiedString($row[14]));
-                    $buildYearMin   = strtolower($this->modifiedString($row[15]));      $buildYearMax    = strtolower($this->modifiedString($row[16]));
-                    $priceMin       = strtolower($this->modifiedString($row[44]));      $priceMax        = strtolower($this->modifiedString($row[45]));
-                    $stories_min    = strtolower($this->modifiedString($row[46]));      $stories_max     = strtolower($this->modifiedString($row[47]));
+                    $bedroomMin     = strtolower($this->modifiedString($row[$this->columnIndex('bed_room_min')]));       
+                    $bedroomMax     = strtolower($this->modifiedString($row[$this->columnIndex('bed_room_max')]));
+
+                    $bathMin        = strtolower($this->modifiedString($row[$this->columnIndex('bath_min')]));
+                    $bathMax        = strtolower($this->modifiedString($row[$this->columnIndex('bath_max')]));
+
+                    $sizeMin        = strtolower($this->modifiedString($row[$this->columnIndex('size_min')]));      
+                    $sizeMax        = strtolower($this->modifiedString($row[$this->columnIndex('size_max')]));
+
+                    $lotSizeMin     = strtolower($this->modifiedString($row[$this->columnIndex('lot_size_min')]));      
+                    $lotSizeMax     = strtolower($this->modifiedString($row[$this->columnIndex('lot_size_max')]));
+
+                    $buildYearMin   = strtolower($this->modifiedString($row[$this->columnIndex('build_year_min')]));      
+                    $buildYearMax   = strtolower($this->modifiedString($row[$this->columnIndex('build_year_min')]));
+                    
+                    $priceMin       = strtolower($this->modifiedString($row[$this->columnIndex('price_min')]));      
+                    $priceMax       = strtolower($this->modifiedString($row[$this->columnIndex('price_max')]));
+
+                    
+                    $stories_min    = strtolower($this->modifiedString($row[$this->columnIndex('stories_min')]));      
+                    $stories_max     = strtolower($this->modifiedString($row[$this->columnIndex('stories_max')]));
                     //End number values min and max
 
                     $bathMin        = (empty($bathMax) || $bathMin == 'blank') ? NULL : (!is_numeric($bathMin) ? NULL : $bathMin);
