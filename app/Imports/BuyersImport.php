@@ -159,7 +159,6 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                     $priceMin       = strtolower($this->modifiedString($row[$this->columnIndex('price_min')]));      
                     $priceMax       = strtolower($this->modifiedString($row[$this->columnIndex('price_max')]));
 
-                    
                     $stories_min    = strtolower($this->modifiedString($row[$this->columnIndex('stories_min')]));      
                     $stories_max     = strtolower($this->modifiedString($row[$this->columnIndex('stories_max')]));
                     //End number values min and max
@@ -190,50 +189,47 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
                     $buyerArr['stories_min']      = $stories_min;       
                     $buyerArr['stories_max']      = $stories_max;
-
-
-                    $propertyType = strtolower($this->modifiedString($row[18])); 
+                    
+                    $propertyType = strtolower($this->modifiedString($row[$this->columnIndex('property_type')])); 
                     if(!empty($propertyType) && $propertyType != 'blank'){
                         $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
                         if(!empty($ptArr)){
                             $buyerArr['property_type'] = $ptArr;
                             
-                            if(in_array(7,$buyerArr['property_type'])){
+                            if(in_array(config('constants.propertyTypesIds.land'),$buyerArr['property_type'])){
                                 // set zoning value 
                                 $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
                                 // set utilities value 
-                                $buyerArr = $this->setSingleSelectValues($row[49], 'utilities', $buyerArr);
+                                $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('utilities')], 'utilities', $buyerArr);
                                 // set sewer value 
-                                $buyerArr = $this->setSingleSelectValues($row[50], 'sewer', $buyerArr);
+                                $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('sewer')], 'sewer', $buyerArr);
                             }
 
                             // set parking value 
                             $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
                         
-                            // $buyerArr = $this->setSingleSelectValues($row[17], 'parking', $buyerArr);
-
                             // set propert flow value
                             $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
 
                             // // set market_preferance value 
-                            $buyerArr = $this->setSingleSelectValues($row[51], 'market_preferance', $buyerArr);
+                            $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('mls_status')], 'market_preferance', $buyerArr);
 
                             // // set contact_preferance value 
-                            $buyerArr = $this->setSingleSelectValues($row[52], 'contact_preferance', $buyerArr);
+                            $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('contact_preferance')], 'contact_preferance', $buyerArr);
 
                             // // set park value
-                            $buyerArr = $this->setSingleSelectValues($row[54], 'park', $buyerArr);
+                            $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('park')], 'park', $buyerArr);
                             
 
                             // set rooms value
-                            $rooms        = strtolower($this->modifiedString($row[53])); 
+                            $rooms        = strtolower($this->modifiedString($row[$this->columnIndex('rooms')])); 
                             $rooms        = (empty($rooms) || $rooms == 'blank') ? NULL : (!is_numeric($rooms) ? NULL : $rooms);
                             $buyerArr['rooms']       = $rooms;                                           
 
                             // set all radio button values
                             $buyerArr = $this->setRadioButtonValues($row, $buyerArr);
                             
-                            $buyerType = strtolower($this->modifiedString($row[34])); 
+                            $buyerType = strtolower($this->modifiedString($row[$this->columnIndex('buyer_type')])); 
 
                             if(!empty($buyerType) && $buyerType != 'blank'){
                                 $btArr = $this->setMultiSelectValues($buyerType, 'buyer_type');
@@ -252,7 +248,8 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                                         $this->setCreativeBuyer($row, $buyerArr, $buyerTypeArr);
                                     } else if(in_array('multi family buyer', $buyerTypeArr)){
                                         $this->setMultiFamilyBuyer($row, $buyerArr);
-                                    }                                                    
+                                    } 
+
                                 }
                             }
                         }
@@ -266,216 +263,212 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         ++$this->rowCount;
     }
 
-    private function setSingleSelectValues($value, $type,$buyerArr = []){
-        if($type == 'utilities'){
-            $utilitiesValues = config('constants.utilities');
-            $utilitiesValues = array_map('strtolower',$utilitiesValues);
-            $value = $this->modifiedString($value);
-            $valueId = null;
-            if(in_array($value, $utilitiesValues)){
-                $valueId = array_search ($value, $utilitiesValues);
-            }
-            $buyerArr['utilities'] = $valueId;
-            return $buyerArr;
-        }else if($type == 'sewer'){
-            $sewersValues = config('constants.sewers');
-            $sewersValues = array_map('strtolower',$sewersValues);
-            $value = strtolower($this->modifiedString($value));
-            $valueId = null;
-            if(in_array($value, $sewersValues)){
-                $valueId = array_search ($value, $sewersValues);
-            }
-            $buyerArr['sewer'] = $valueId;
-            return $buyerArr;
-        }else if($type == 'market_preferance'){
-            $marketPreferancesValues = config('constants.market_preferances');
-            $marketPreferancesValues = array_map('strtolower',$marketPreferancesValues);
-            $value = strtolower($this->modifiedString($value));
-            $valueId = null;
-            if(in_array($value, $marketPreferancesValues)){
-                $valueId = array_search ($value, $marketPreferancesValues);
-            }
-            $buyerArr['market_preferance'] = $valueId;
-            return $buyerArr;
-        }else if($type == 'contact_preferance'){
-            $contactPreferancesValues = config('constants.contact_preferances');
-            $contactPreferancesValues = array_map('strtolower',$contactPreferancesValues);
-            $value = strtolower($this->modifiedString($value));
-            $valueId = null;
-            if(in_array($value, $contactPreferancesValues)){
-                $valueId = array_search ($value, $contactPreferancesValues);
-            }
-            $buyerArr['contact_preferance'] = $valueId;
-            return $buyerArr;
-        }else if($type == 'parking'){
-            $parkingValues = config('constants.parking_values');
-            $parkingValues = array_map('strtolower',$parkingValues);
-            $value = strtolower($this->modifiedString($value));
-            $valueId = null;
-            if(in_array($value, $parkingValues)){
-                $valueId = array_search ($value, $parkingValues);
-            }
-            $buyerArr['parking'] = $valueId;
-            return $buyerArr;
-        }
-        else if($type == 'park'){
-            $parkValues = config('constants.park');
-            $parkValues = array_map('strtolower',$parkValues);
-            $value = strtolower($this->modifiedString($value));
-            $valueId = null;
-            if(in_array($value, $parkValues)){
-                $valueId = array_search ($value, $parkValues);
-            }
-            $buyerArr['park'] = $valueId;
-            return $buyerArr;
-        }
-        
+    private function setSingleSelectValues($value, $type, $buyerArr = [])
+    {
+        $value = strtolower($this->modifiedString($value));
+        $valueId = null;
 
-        
+        switch ($type) {
+            case 'utilities':
+                $utilitiesValues = config('constants.utilities');
+                $utilitiesValues = array_map('strtolower', $utilitiesValues);
+                if (in_array($value, $utilitiesValues)) {
+                    $valueId = array_search($value, $utilitiesValues);
+                }
+                $buyerArr['utilities'] = $valueId;
+                return $buyerArr;
+
+            case 'sewer':
+                $sewersValues = config('constants.sewers');
+                $sewersValues = array_map('strtolower', $sewersValues);
+                if (in_array($value, $sewersValues)) {
+                    $valueId = array_search($value, $sewersValues);
+                }
+                $buyerArr['sewer'] = $valueId;
+                return $buyerArr;
+
+            case 'market_preferance':
+                $marketPreferancesValues = config('constants.market_preferances');
+                $marketPreferancesValues = array_map('strtolower', $marketPreferancesValues);
+                if (in_array($value, $marketPreferancesValues)) {
+                    $valueId = array_search($value, $marketPreferancesValues);
+                }
+                $buyerArr['market_preferance'] = $valueId;
+                return $buyerArr;
+
+            case 'contact_preferance':
+                $contactPreferancesValues = config('constants.contact_preferances');
+                $contactPreferancesValues = array_map('strtolower', $contactPreferancesValues);
+                if (in_array($value, $contactPreferancesValues)) {
+                    $valueId = array_search($value, $contactPreferancesValues);
+                }
+                $buyerArr['contact_preferance'] = $valueId;
+                return $buyerArr;
+
+            case 'parking':
+                $parkingValues = config('constants.parking_values');
+                $parkingValues = array_map('strtolower', $parkingValues);
+                if (in_array($value, $parkingValues)) {
+                    $valueId = array_search($value, $parkingValues);
+                }
+                $buyerArr['parking'] = $valueId;
+                return $buyerArr;
+
+            case 'park':
+                $parkValues = config('constants.park');
+                $parkValues = array_map('strtolower', $parkValues);
+                if (in_array($value, $parkValues)) {
+                    $valueId = array_search($value, $parkValues);
+                }
+                $buyerArr['park'] = $valueId;
+                return $buyerArr;
+
+            default:
+                return $buyerArr; 
+        }
     }
 
-    private function setMultiSelectValues($value, $type, $buyerArr = []){
-        if($type == 'property_type'){
-            $propertyTypeValues = config('constants.property_types');
-            $propertyTypeValues = array_map('strtolower',$propertyTypeValues);
-            $propertyTypeArr = explode(',', $value);
-            $propertyTypeArr = array_map('trim', $propertyTypeArr);
-            $ptArr = [];
-            foreach($propertyTypeArr as $propertyTypeVal){
-                if(in_array($propertyTypeVal, $propertyTypeValues)){
-                    $ptKey = array_search ($propertyTypeVal, $propertyTypeValues);
-                    $ptArr[] = $ptKey;
-                }
-            }
-            return $ptArr;
-        } else if($type == 'parking'){
-            $parking = strtolower($this->modifiedString($value[17])); 
-                                                
-            if(empty($parking) || $parking == 'blank'){
-                $parking = NULL;
-            } else {
-                $parkingValues = config('constants.parking_values');
-                $parkingValues = array_map('strtolower',$parkingValues);
-                $parkingArr = explode(',', $parking);
-                $parkingArr = array_map('trim', $parkingArr);
-                $prkArr = [];
-                foreach($parkingArr as $parkingVal){
-                    if(in_array($parkingVal, $parkingValues)){
-                        $prkKey = array_search ($parkingVal, $parkingValues);
-                        $prkArr[] = $prkKey;
+    private function setMultiSelectValues($value, $type, $buyerArr = [])
+    {
+        switch ($type) {
+            case 'property_type':
+                $propertyTypeValues = config('constants.property_types');
+                $propertyTypeValues = array_map('strtolower', $propertyTypeValues);
+                $propertyTypeArr = explode(',', $value);
+                $propertyTypeArr = array_map('trim', $propertyTypeArr);
+                $ptArr = [];
+                foreach ($propertyTypeArr as $propertyTypeVal) {
+                    if (in_array($propertyTypeVal, $propertyTypeValues)) {
+                        $ptKey = array_search($propertyTypeVal, $propertyTypeValues);
+                        $ptArr[] = $ptKey;
                     }
                 }
-                if(empty($prkArr)){
+                return $ptArr;
+
+            case 'parking':
+                $parking = strtolower($this->modifiedString($value[$this->columnIndex('parking')]));
+                if (empty($parking) || $parking == 'blank') {
                     $parking = NULL;
                 } else {
-                    $parking = $prkArr;
-                }                                                    
-            }
-            $buyerArr['parking'] = $parking;
-            return $buyerArr;
-        } else if($type == 'property_flaw'){
-            $propertyFlaw = strtolower($this->modifiedString($value[19]));
-            if(empty($value) || $value == 'blank'){
-                $propertyFlaw = NULL;
-            } else {
-                $propertyFlawValues = config('constants.property_flaws');
-                $propertyFlawValues = array_map('strtolower',$propertyFlawValues);
-                $propertyFlawArr = explode(',', $propertyFlaw);
-                $propertyFlawArr = array_map('trim', $propertyFlawArr);
-                $pfArr = [];
-                foreach($propertyFlawArr as $propertyFlawVal){
-                    if(in_array($propertyFlawVal, $propertyFlawValues)){
-                        $pfKey = array_search ($propertyFlawVal, $propertyFlawValues);
-                        $pfArr[] = $pfKey;
+                    $parkingValues = config('constants.parking_values');
+                    $parkingValues = array_map('strtolower', $parkingValues);
+                    $parkingArr = explode(',', $parking);
+                    $parkingArr = array_map('trim', $parkingArr);
+                    $prkArr = [];
+                    foreach ($parkingArr as $parkingVal) {
+                        if (in_array($parkingVal, $parkingValues)) {
+                            $prkKey = array_search($parkingVal, $parkingValues);
+                            $prkArr[] = $prkKey;
+                        }
                     }
+                    $parking = empty($prkArr) ? NULL : $prkArr;
                 }
-                if(empty($pfArr)){
+                $buyerArr['parking'] = $parking;
+                return $buyerArr;
+
+            case 'property_flaw':
+                $propertyFlaw = strtolower($this->modifiedString($value[$this->columnIndex('property_flaw')]));
+                if (empty($value) || $value == 'blank') {
                     $propertyFlaw = NULL;
                 } else {
-                    $propertyFlaw = $pfArr;
-                }
-                $buyerArr['property_flaw'] = $propertyFlaw;
-                return $buyerArr;
-            }
-        }else if($type == 'zoning'){
-            $zoning = strtolower($this->modifiedString($value[48]));
-            if(empty($value) || $value == 'blank'){
-                $zoning = NULL;
-            } else {
-                $zoningValues = config('constants.zonings');
-                $zoningValues = array_map('strtolower',$zoningValues);
-                $zoningArr = explode(',', $zoning);
-                $zoningArr = array_map('trim', $zoningArr);
-                $pfArr = [];
-                foreach($zoningArr as $zoningVal){
-                    if(in_array($zoningVal, $zoningValues)){
-                        $pfKey = array_search ($zoningVal, $zoningValues);
-                        $pfArr[] = $pfKey;
+                    $propertyFlawValues = config('constants.property_flaws');
+                    $propertyFlawValues = array_map('strtolower', $propertyFlawValues);
+                    $propertyFlawArr = explode(',', $propertyFlaw);
+                    $propertyFlawArr = array_map('trim', $propertyFlawArr);
+                    $pfArr = [];
+                    foreach ($propertyFlawArr as $propertyFlawVal) {
+                        if (in_array($propertyFlawVal, $propertyFlawValues)) {
+                            $pfKey = array_search($propertyFlawVal, $propertyFlawValues);
+                            $pfArr[] = $pfKey;
+                        }
                     }
+                    $propertyFlaw = empty($pfArr) ? NULL : $pfArr;
+                    $buyerArr['property_flaw'] = $propertyFlaw;
+                    return $buyerArr;
                 }
-                if(empty($pfArr)){
+                break;
+
+            case 'zoning':
+                $zoning = strtolower($this->modifiedString($value[$this->columnIndex('zoning')]));
+                if (empty($value) || $value == 'blank') {
                     $zoning = NULL;
                 } else {
-                    $zoning = $pfArr;
+                    $zoningValues = config('constants.zonings');
+                    $zoningValues = array_map('strtolower', $zoningValues);
+                    $zoningArr = explode(',', $zoning);
+                    $zoningArr = array_map('trim', $zoningArr);
+                    $pfArr = [];
+                    foreach ($zoningArr as $zoningVal) {
+                        if (in_array($zoningVal, $zoningValues)) {
+                            $pfKey = array_search($zoningVal, $zoningValues);
+                            $pfArr[] = $pfKey;
+                        }
+                    }
+                    $zoning = empty($pfArr) ? NULL : $pfArr;
+                    $buyerArr['zoning'] = $zoning;
+                    return $buyerArr;
                 }
-                $buyerArr['zoning'] = $zoning;
-                return $buyerArr;
-            }
-        }else if($type == 'buyer_type'){
-            $buyerTypeValues = config('constants.buyer_types');
-            $buyerTypeValues = array_map('strtolower',$buyerTypeValues);
-            $buyerTypeArr = explode(',', $value);
-            $buyerTypeArr = array_map('trim',$buyerTypeArr);
-            $btArr = [];
-            foreach($buyerTypeArr as $buyerTypeVal){
-                if(in_array($buyerTypeVal, $buyerTypeValues)){
-                    $btKey = array_search ($buyerTypeVal, $buyerTypeValues);
-                    $btArr[] = $btKey;
+                break;
+
+            case 'buyer_type':
+                $buyerTypeValues = config('constants.buyer_types');
+                $buyerTypeValues = array_map('strtolower', $buyerTypeValues);
+                $buyerTypeArr = explode(',', $value);
+                $buyerTypeArr = array_map('trim', $buyerTypeArr);
+                $btArr = [];
+                foreach ($buyerTypeArr as $buyerTypeVal) {
+                    if (in_array($buyerTypeVal, $buyerTypeValues)) {
+                        $btKey = array_search($buyerTypeVal, $buyerTypeValues);
+                        $btArr[] = $btKey;
+                    }
                 }
-            }
-            return $btArr;
-        }        
+                return $btArr;
+
+            default:
+                return null;
+        }
     }
+
 
     private function setRadioButtonValues($row, $buyerArr){
 
-        $squatters = strtolower($this->modifiedString($row[55]));
+        $squatters = strtolower($this->modifiedString($row[$this->columnIndex('squatters')]));
         $squatters = (($squatters == 'yes') ? 1 : (($squatters == 'no') ? 0 : NULL));
         $buyerArr['squatters'] = $squatters;
 
-        $permanent_affix = strtolower($this->modifiedString($row[56])); 
+        $permanent_affix = strtolower($this->modifiedString($row[$this->columnIndex('permanent_affix')])); 
         $permanent_affix = (($permanent_affix == 'yes') ? 1 : (($permanent_affix == 'no') ? 0 : 0));
         $buyerArr['permanent_affix'] = $permanent_affix;
 
-        $solar = strtolower($this->modifiedString($row[20])); 
+        $solar = strtolower($this->modifiedString($row[$this->columnIndex('solar')])); 
         $solar = (($solar == 'yes') ? 1 : (($solar == 'no') ? 0 : NULL));
         $buyerArr['solar'] = $solar;
         
-        $pool = strtolower($this->modifiedString($row[21])); 
+        $pool = strtolower($this->modifiedString($row[$this->columnIndex('pool')])); 
         $pool = (($pool == 'yes') ? 1 : (($pool == 'no') ? 0 : NULL));
         $buyerArr['pool'] = $pool;
         
-        $septic = strtolower($this->modifiedString($row[22])); 
+        $septic = strtolower($this->modifiedString($row[$this->columnIndex('septic')])); 
         $septic = (($septic == 'yes') ? 1 : (($septic == 'no') ? 0 : NULL));
         $buyerArr['septic'] = $septic;
         
-        $well = strtolower($this->modifiedString($row[23]));
+        $well = strtolower($this->modifiedString($row[$this->columnIndex('well')]));
         $well = (($well == 'yes') ? 1 : (($well == 'no') ? 0 : NULL));
         $buyerArr['well'] = $well;
         
-        $ageRestriction = strtolower($this->modifiedString($row[24]));
+        $ageRestriction = strtolower($this->modifiedString($row[$this->columnIndex('age_restriction')]));
         $ageRestriction = (($ageRestriction == 'yes') ? 1 : (($ageRestriction == 'no') ? 0 : NULL));
         $buyerArr['age_restriction'] = $ageRestriction;
         
-        $rentalRestriction = strtolower($this->modifiedString($row[25]));
+        $rentalRestriction = strtolower($this->modifiedString($row[$this->columnIndex('rental_restriction')]));
         $rentalRestriction = (($rentalRestriction == 'yes') ? 1 : (($rentalRestriction == 'no') ? 0 : NULL));
         $buyerArr['rental_restriction'] = $rentalRestriction;
         
-        $hoa = strtolower($this->modifiedString($row[26]));
+        $hoa = strtolower($this->modifiedString($row[$this->columnIndex('hua')]));
         $hoa = (($hoa == 'yes') ? 1 : (($hoa == 'no') ? 0 : NULL));
         $buyerArr['hoa'] = $hoa;
         
-        $tenant = strtolower($this->modifiedString($row[27]));
+        $tenant = strtolower($this->modifiedString($row[$this->columnIndex('tenant')]));
         $tenant = (($tenant == 'yes') ? 1 : (($tenant == 'no') ? 0 : NULL));
         $buyerArr['tenant'] = $tenant;
 
@@ -565,7 +558,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
     }
 
     private function setPurchaseMethod($row, $buyerArr){
-        $purchaseMethod = strtolower($this->modifiedString($row[43]));
+        $purchaseMethod = strtolower($this->modifiedString($row[$this->columnIndex('purchase_methods')]));
         if(!empty($purchaseMethod) && $purchaseMethod != 'blank'){
             $purchaseMethodValues = config('constants.purchase_methods');
             $purchaseMethodValues = array_map('strtolower',$purchaseMethodValues);

@@ -100,6 +100,19 @@ return [
         15 => 'Hotel/Motel',
     ],
 
+    'propertyTypesIds' => [
+        'commercial_retail'         => 3,
+        'condo'                     => 4,
+        'land'                      => 7,
+        'manufactured'              => 8,
+        'multi_family_commercial'   => 10,
+        'multi_family_residential'  => 11,
+        'single_family'             => 12,
+        'townhouse'                 => 13,
+        'mobile_home_park'          => 14,
+        'hotel_motel'               => 15
+    ],
+
     'property_flaws' => [
         1 => 'Railroad',
         2 => 'Major Road',

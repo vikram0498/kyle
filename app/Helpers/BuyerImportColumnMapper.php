@@ -25,6 +25,28 @@ class BuyerImportColumnMapper
     const PRICE_MAX = 45;
     const STORIES_MIN = 46;
     const STORIES_MAX = 47;
+    const PROPERTY_TYPE = 18;
+    const PARKING = 17;
+    const PROPERTY_FLAW = 19;
+    const ZONING = 48;
+    const UTILITIES = 49;
+    const SEWER = 50;
+    const MLS_STATUS = 51;
+    const CONTACT_PREFERANCE = 52; 
+    const ROOMS = 53; 
+    const PARK = 54;
+    const BUYER_TYPE = 34;
+    const PURCHASE_METHODS = 43;
+    const SQUATTERS = 55; 
+    const PERMANENT_AFFIX = 56;
+    const SOLAR = 20; 
+    const POOL = 21;
+    const SEPTIC = 22;
+    const WELL = 23;
+    const AGE_RESTRICTION = 24;
+    const RENTAL_RESTRICTION = 25;
+    const HUA = 26;
+    const TENANT = 27;
 
 
 
@@ -52,6 +74,27 @@ class BuyerImportColumnMapper
             'price_max' => self::PRICE_MAX,
             'stories_min' => self::STORIES_MIN,
             'stories_max' => self::STORIES_MAX,
+            'property_type' => self::PROPERTY_TYPE,
+            'parking' => self::PARKING,
+            'property_flaw' => self::PROPERTY_FLAW,
+            'zoning'        => self::ZONING,
+            'utilities'     => self::UTILITIES,
+            'sewer'         => self::SEWER,
+            'mls_status'    => self::MLS_STATUS,
+            'contact_preferance' => self::CONTACT_PREFERANCE,
+            'park'          => self::PARK,
+            'rooms'         => self::ROOMS,
+            'buyer_type'    => self::BUYER_TYPE,
+            'purchase_methods' => self::PURCHASE_METHODS,
+            'squatters'        => self::SQUATTERS ,
+            'permanent_affix'  => self::PERMANENT_AFFIX,
+            'solar'            => self::SOLAR,
+            'pool'             => self::POOL,
+            'septic'           => self::SEPTIC,
+            'well'             => self::Well,
+            'age_restriction'  => self::AGE_RESTRICTION,
+            'hua'              => self::HUA,
+            'tenant'           => self::TENANT,
 
         ];
 
