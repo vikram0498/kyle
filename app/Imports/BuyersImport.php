@@ -217,8 +217,10 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                             // // set contact_preferance value 
                             $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('contact_preferance')], 'contact_preferance', $buyerArr);
 
-                            // // set park value
-                            $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('park')], 'park', $buyerArr);
+                            if(in_array(config('constants.propertyTypesIds.mobile_home_park'),$buyerArr['property_type'])){
+                                //set park value
+                                $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('park')], 'park', $buyerArr);
+                            }
                             
 
                             // set rooms value
@@ -240,7 +242,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
                                     $buyerArr['buyer_type'] = $btArr[0];
                                     
-                                    if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
+                                    /*if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
                                         $this->setPurchaseMethod($row, $buyerArr);
                                     }
 
@@ -249,6 +251,9 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                                     } else if(in_array('multi family buyer', $buyerTypeArr)){
                                         $this->setMultiFamilyBuyer($row, $buyerArr);
                                     } 
+                                    */
+
+                                    $this->setPurchaseMethod($row, $buyerArr);
 
                                 }
                             }
@@ -472,27 +477,27 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         $tenant = (($tenant == 'yes') ? 1 : (($tenant == 'no') ? 0 : NULL));
         $buyerArr['tenant'] = $tenant;
 
-        $postPossession = strtolower($this->modifiedString($row[28]));
+        $postPossession = strtolower($this->modifiedString($row[$this->columnIndex('post_possession')]));
         $postPossession = (($postPossession == 'yes') ? 1 : (($postPossession == 'no') ? 0 : NULL));
         $buyerArr['post_possession'] = $postPossession;
         
-        $buildingRequired = strtolower($this->modifiedString($row[29]));
+        $buildingRequired = strtolower($this->modifiedString($row[$this->columnIndex('building_required')]));
         $buildingRequired = (($buildingRequired == 'yes') ? 1 : (($buildingRequired == 'no') ? 0 : NULL));
         $buyerArr['building_required'] = $buildingRequired;
         
-        $foundationIssues = strtolower($this->modifiedString($row[30]));
+        $foundationIssues = strtolower($this->modifiedString($row[$this->columnIndex('foundation_issues')]));
         $foundationIssues = (($foundationIssues == 'yes') ? 1 : (($foundationIssues == 'no') ? 0 : NULL));
         $buyerArr['foundation_issues'] = $foundationIssues;
         
-        $mold = strtolower($this->modifiedString($row[31]));
+        $mold = strtolower($this->modifiedString($row[$this->columnIndex('mold')]));
         $mold = (($mold == 'yes') ? 1 : (($mold == 'no') ? 0 : NULL));
         $buyerArr['mold'] = $mold;
         
-        $fireDamaged = strtolower($this->modifiedString($row[32]));
+        $fireDamaged = strtolower($this->modifiedString($row[$this->columnIndex('fire_damaged')]));
         $fireDamaged = (($fireDamaged == 'yes') ? 1 : (($fireDamaged == 'no') ? 0 : NULL));
         $buyerArr['fire_damaged'] = $fireDamaged;
         
-        $rebuild = strtolower($this->modifiedString($row[33]));
+        $rebuild = strtolower($this->modifiedString($row[$this->columnIndex('rebuild')]));
         $rebuild = (($rebuild == 'yes') ? 1 : (($rebuild == 'no') ? 0 : NULL));
         $buyerArr['rebuild'] = $rebuild;
         
@@ -500,10 +505,10 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
     }
 
     private function setCreativeBuyer($row, $buyerArr, $buyerTypeArr){
-        $maxDownPaymentPercentage = strtolower($this->modifiedString($row[35]));
-        $maxDownPaymentMoney = strtolower($this->modifiedString($row[36]));
-        $maxInterestRate = strtolower($this->modifiedString($row[37])); 
-        $balloonPayment = strtolower($this->modifiedString($row[38]));
+        $maxDownPaymentPercentage = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_percentage')]));
+        $maxDownPaymentMoney = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_money')]));
+        $maxInterestRate = strtolower($this->modifiedString($row[$this->columnIndex('max_interest_rate')])); 
+        $balloonPayment = strtolower($this->modifiedString($row[$this->columnIndex('balloon_payment')]));
         if(!empty($maxDownPaymentPercentage) && $maxDownPaymentPercentage != 'blank' && is_numeric($maxDownPaymentPercentage)){
             if(!empty($maxInterestRate) && $maxInterestRate != 'blank' && is_numeric($maxInterestRate)){
                 if(!empty($balloonPayment) && $balloonPayment != 'blank' && ($balloonPayment == 'yes' || $balloonPayment == 'no')){                                                                        
@@ -527,10 +532,10 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
     }
 
     private function setMultiFamilyBuyer($row, $buyerArr){
-        $unitMin = strtolower($this->modifiedString($row[39]));
-        $unitMax = strtolower($this->modifiedString($row[40]));
-        $buildingClass = strtolower($this->modifiedString($row[41])); 
-        $valueAdd = strtolower($this->modifiedString($row[42]));
+        $unitMin = strtolower($this->modifiedString($row[$this->columnIndex('unit_min')]));
+        $unitMax = strtolower($this->modifiedString($row[$this->columnIndex('unit_max')]));
+        $buildingClass = strtolower($this->modifiedString($row[$this->columnIndex('building_class')])); 
+        $valueAdd = strtolower($this->modifiedString($row[$this->columnIndex('value_add')]));
 
         if(!empty($unitMin) && !empty($unitMax) && !empty($buildingClass) && is_numeric($unitMin) && is_numeric($unitMax) && ($valueAdd == 'yes' || $valueAdd == 'no')){
             $buildingClassValues = config('constants.building_class_values');

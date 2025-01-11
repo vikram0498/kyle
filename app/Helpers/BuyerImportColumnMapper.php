@@ -47,6 +47,18 @@ class BuyerImportColumnMapper
     const RENTAL_RESTRICTION = 25;
     const HUA = 26;
     const TENANT = 27;
+    const POST_POSSESSION = 28;
+    const BUILDING_REQUIRED = 29;
+    const FOUNDATION_ISSUES = 30;
+    const MOLD = 31;
+    const FIRE_DAMAGED = 32;
+    const REBUILD = 33;
+    const MAX_DOWN_PAYMENT_PERCENTAGE = 35;
+    const MAX_DOWN_PAYMENT_MONEY = 36;
+    const MAX_INTEREST_RATE = 37;
+    const BALLOON_PAYMENT = 38;
+
+
 
 
 
@@ -95,6 +107,23 @@ class BuyerImportColumnMapper
             'age_restriction'  => self::AGE_RESTRICTION,
             'hua'              => self::HUA,
             'tenant'           => self::TENANT,
+            'post_possession'  => self::POST_POSSESSION,
+            'building_required'  => self::BUILDING_REQUIRED,
+            'foundation_issues'  => self::FOUNDATION_ISSUES,
+            'mold'              => self::MOLD,
+            'fire_damaged'      => self::FIRE_DAMAGED,
+            'rebuild'           => self::REBUILD,
+            'max_down_payment_percentage' => self::MAX_DOWN_PAYMENT_PERCENTAGE,
+            'max_down_payment_money' => self::MAX_DOWN_PAYMENT_MONEY,
+            'max_interest_rate' => self::MAX_INTEREST_RATE,
+            'balloon_payment'   => self::BALLOON_PAYMENT
+
+
+
+
+
+
+
 
         ];
 

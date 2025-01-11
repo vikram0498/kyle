@@ -23,6 +23,8 @@ Class ImportBuyer extends Component {
 
     public function render()
     {
+        dd(strtoupper('value_add'));
+
         return view('livewire.admin.buyer.import-buyer');
     }
 
