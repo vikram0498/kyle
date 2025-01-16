@@ -57,6 +57,10 @@ class BuyerImportColumnMapper
     const MAX_DOWN_PAYMENT_MONEY = 36;
     const MAX_INTEREST_RATE = 37;
     const BALLOON_PAYMENT = 38;
+    const UNIT_MIN = 39;
+    const UNIT_MAX = 40;
+    const BUILDING_CLASS = 41;
+    const VALUE_ADD = 42;
 
 
 
@@ -103,7 +107,7 @@ class BuyerImportColumnMapper
             'solar'            => self::SOLAR,
             'pool'             => self::POOL,
             'septic'           => self::SEPTIC,
-            'well'             => self::Well,
+            'well'             => self::WELL,
             'age_restriction'  => self::AGE_RESTRICTION,
             'hua'              => self::HUA,
             'tenant'           => self::TENANT,
@@ -116,17 +120,15 @@ class BuyerImportColumnMapper
             'max_down_payment_percentage' => self::MAX_DOWN_PAYMENT_PERCENTAGE,
             'max_down_payment_money' => self::MAX_DOWN_PAYMENT_MONEY,
             'max_interest_rate' => self::MAX_INTEREST_RATE,
-            'balloon_payment'   => self::BALLOON_PAYMENT
-
-
-
-
-
-
-
+            'balloon_payment'   => self::BALLOON_PAYMENT,
+            'unit_min'          => self::UNIT_MIN,
+            'unit_max'          => self::UNIT_MAX,
+            'building_class'    => self::BUILDING_CLASS,
+            'value_add'         => self::VALUE_ADD,
+            'rental_restriction' => self::RENTAL_RESTRICTION,
 
         ];
 
-        return $mapping[$columnName] ?? null; 
+        return $mapping[$columnName] ?? -1; 
     }
 }

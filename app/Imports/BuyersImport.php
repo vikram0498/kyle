@@ -194,16 +194,40 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                     if(!empty($propertyType) && $propertyType != 'blank'){
                         $ptArr = $this->setMultiSelectValues($propertyType, 'property_type');
                         if(!empty($ptArr)){
+
+                            //Start To Set Values Based ON Property Type
                             $buyerArr['property_type'] = $ptArr;
                             
                             if(in_array(config('constants.propertyTypesIds.land'),$buyerArr['property_type'])){
-                                // set zoning value 
+                               
                                 $buyerArr = $this->setMultiSelectValues($row, 'zoning', $buyerArr);
-                                // set utilities value 
+                               
                                 $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('utilities')], 'utilities', $buyerArr);
-                                // set sewer value 
+                               
                                 $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('sewer')], 'sewer', $buyerArr);
                             }
+
+                            if(in_array(config('constants.propertyTypesIds.mobile_home_park'),$buyerArr['property_type'])){
+                                //set park value
+                                $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('park')], 'park', $buyerArr);
+                            }
+
+                            $isMultiFamily = false;
+                            $multiFamilyTypes = [
+                                config('constants.propertyTypesIds.multi_family_commercial'),
+                                config('constants.propertyTypesIds.multi_family_residential'),
+                                config('constants.propertyTypesIds.mobile_home_park'),
+                                config('constants.propertyTypesIds.hotel_motel')
+                            ];
+
+                            if (array_intersect($multiFamilyTypes, $buyerArr['property_type'])) {
+                                $isMultiFamily = true;
+                            }
+                            
+                            if($isMultiFamily){
+                                $this->setMultiFamilyBuyer($row, $buyerArr);
+                            }
+                            //End To Set Values Based ON Property Type
 
                             // set parking value 
                             $buyerArr = $this->setMultiSelectValues($row, 'parking', $buyerArr);
@@ -211,17 +235,11 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                             // set propert flow value
                             $buyerArr = $this->setMultiSelectValues($row, 'property_flaw', $buyerArr);
 
-                            // // set market_preferance value 
+                            //set market_preferance value 
                             $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('mls_status')], 'market_preferance', $buyerArr);
 
-                            // // set contact_preferance value 
+                            //set contact_preferance value 
                             $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('contact_preferance')], 'contact_preferance', $buyerArr);
-
-                            if(in_array(config('constants.propertyTypesIds.mobile_home_park'),$buyerArr['property_type'])){
-                                //set park value
-                                $buyerArr = $this->setSingleSelectValues($row[$this->columnIndex('park')], 'park', $buyerArr);
-                            }
-                            
 
                             // set rooms value
                             $rooms        = strtolower($this->modifiedString($row[$this->columnIndex('rooms')])); 
@@ -242,19 +260,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
                                     $buyerArr['buyer_type'] = $btArr[0];
                                     
-                                    /*if(!in_array('creative', $buyerTypeArr) && !in_array('multi family buyer', $buyerTypeArr)){
-                                        $this->setPurchaseMethod($row, $buyerArr);
-                                    }
-
-                                    if(in_array('creative', $buyerTypeArr)){
-                                        $this->setCreativeBuyer($row, $buyerArr, $buyerTypeArr);
-                                    } else if(in_array('multi family buyer', $buyerTypeArr)){
-                                        $this->setMultiFamilyBuyer($row, $buyerArr);
-                                    } 
-                                    */
-
                                     $this->setPurchaseMethod($row, $buyerArr);
-
                                 }
                             }
                         }
@@ -504,7 +510,7 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         return $buyerArr;
     }
 
-    private function setCreativeBuyer($row, $buyerArr, $buyerTypeArr){
+    private function setCreativeBuyer($row, $buyerArr){
         $maxDownPaymentPercentage = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_percentage')]));
         $maxDownPaymentMoney = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_money')]));
         $maxInterestRate = strtolower($this->modifiedString($row[$this->columnIndex('max_interest_rate')])); 
@@ -518,14 +524,9 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
 
                     $buyerArr['max_down_payment_percentage'] = $maxDownPaymentPercentage;
                     $buyerArr['max_down_payment_money'] = $maxDownPaymentMoney;
-                    $buyerArr['max_interest_rate'] = $maxInterestRate;
+                    $buyerArr['max_interest_rate'] = $maxInterestRate;  
                     $buyerArr['balloon_payment'] = $balloonPayment == 'yes' ? 1 : 0;
                     
-                    if(in_array('multi family buyer', $buyerTypeArr)){
-                        $this->setMultiFamilyBuyer($row, $buyerArr);
-                    } else {
-                        $this->setPurchaseMethod($row, $buyerArr);
-                    }
                 }
             }
         }
@@ -557,7 +558,6 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
                 $buyerArr['building_class'] = $buildingClass;
                 $buyerArr['value_add'] = $valueAdd == 'yes' ? 1 : 0;
                 
-                $this->setPurchaseMethod($row, $buyerArr);
             }
         }
     }
@@ -579,6 +579,10 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
             if(!empty($pmArr)){
                 $purchaseMethod = $pmArr;
                 $buyerArr['purchase_method'] = $purchaseMethod;
+
+                if(in_array('creative finance', $purchaseMethodArr)){
+                    $this->setCreativeBuyer($row, $buyerArr);
+                } 
                 
                 $this->manageBuyer($buyerArr);
 
