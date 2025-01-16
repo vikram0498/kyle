@@ -49,21 +49,29 @@ class SocialMediaController extends Controller
                     $userAuthenticated->save();
 
                     DB::commit();
+
+                    $userData = [
+                        'first_name'   => $isUser->first_name ?? '',
+                        'last_name'    => $isUser->last_name ?? '',
+                        'profile_image'=> $isUser->profile_image_url ?? '',
+                        'role'=> $isUser->roles()->first()->id ?? '',
+                        'level_type'   => $isUser->level_type,
+                        'credit_limit' => $isUser->credit_limit,
+                        'is_verified'  => $isUser->is_buyer_verified ?? false,
+                        'total_buyer_uploaded' => $isUser->buyers()->where('user_id','!=',auth()->user()->id)->count(),
+                        'is_switch_role' => $isUser->is_switch_role,
+                    ];
+
+                    if($isUser->is_buyer){
+                        $userData['is_super_buyer'] = $isUser->is_super_buyer ? true : false;
+                    }
+                  
+
                     //Success Response Send
                     $responseData = [
                         'status'            => true,
                         'message'           => 'You have logged in successfully!',
-                        'userData'          => [
-                            'first_name'   => $isUser->first_name ?? '',
-                            'last_name'    => $isUser->last_name ?? '',
-                            'profile_image'=> $isUser->profile_image_url ?? '',
-                            'role'=> $isUser->roles()->first()->id ?? '',
-                            'level_type'   => $isUser->level_type,
-                            'credit_limit' => $isUser->credit_limit,
-                            'is_verified'  => $isUser->is_buyer_verified ?? false,
-                            'total_buyer_uploaded' => $isUser->buyers()->where('user_id','!=',auth()->user()->id)->count(),
-                            'is_switch_role' => $isUser->is_switch_role,
-                        ],
+                        'userData'          => $userData,
                         'remember_me_token' => $isUser->remember_token,
                         'access_token'      => $accessToken
                     ];
@@ -178,18 +186,24 @@ class SocialMediaController extends Controller
                     $userAuthenticated->save();
 
                     DB::commit();
+
+                    $userData = [
+                        'first_name'   => $isUser->first_name ?? '',
+                        'last_name'    => $isUser->last_name ?? '',
+                        'profile_image'=> $isUser->profile_image_url ?? '',
+                        'level_type'   => $isUser->level_type,
+                        'credit_limit' => $isUser->credit_limit,
+                        'total_buyer_uploaded' => $isUser->buyers()->where('user_id','!=',auth()->user()->id)->count(),
+                        'is_switch_role' => $isUser->is_switch_role,
+                    ];
+
+                    if($isUser->is_buyer){
+                        $userData['is_super_buyer'] = $isUser->is_super_buyer ? true : false;
+                    }
+
                     $responseData = [
                         'status'        => true,
-                        'userData'          => [
-                            'first_name'   => $isUser->first_name ?? '',
-                            'last_name'    => $isUser->last_name ?? '',
-                            'profile_image'=> $isUser->profile_image_url ?? '',
-                            'level_type'   => $isUser->level_type,
-                            'credit_limit' => $isUser->credit_limit,
-                            'total_buyer_uploaded' => $isUser->buyers()->where('user_id','!=',auth()->user()->id)->count(),
-                            'is_switch_role' => $isUser->is_switch_role,
-
-                        ],
+                        'userData'      => $userData,
                         'message'       => 'Login successfully!',
                         'access_token'  => $accessToken
                     ];

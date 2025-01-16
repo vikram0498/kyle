@@ -226,22 +226,28 @@ class LoginRegisterController extends Controller
 
                     DB::commit();
 
+                    $userData = [
+                        'id'            => $user->id,
+                        'first_name'    => $user->first_name ?? '',
+                        'last_name'     => $user->last_name ?? '',
+                        'profile_image' => $user->profile_image_url ?? '',
+                        'role'          => $user->roles()->first()->id ?? '',
+                        'level_type'    => $user->level_type,
+                        'credit_limit'  => $user->credit_limit,
+                        'is_verified'   => $user->is_buyer_verified,
+                        'total_buyer_uploaded' => $user->buyers()->where('user_id','!=',auth()->user()->id)->count(),
+                        'is_switch_role'       => $user->is_switch_role,
+                    ];
+
+                    if($user->is_buyer){
+                        $userData['is_super_buyer'] = $user->is_super_buyer ? true : false;
+                    }
+
                     //Success Response Send
                     $responseData = [
                         'status'            => true,
                         'message'           => 'You have logged in successfully!',
-                        'userData'          => [
-                            'id'           => $user->id,
-                            'first_name'   => $user->first_name ?? '',
-                            'last_name'    => $user->last_name ?? '',
-                            'profile_image'=> $user->profile_image_url ?? '',
-                            'role'=> $user->roles()->first()->id ?? '',
-                            'level_type'   => $user->level_type,
-                            'credit_limit' => $user->credit_limit,
-                            'is_verified'  => $user->is_buyer_verified,
-                            'total_buyer_uploaded' => $user->buyers()->where('user_id','!=',auth()->user()->id)->count(),
-                            'is_switch_role' => $user->is_switch_role,
-                        ],
+                        'userData'          => $userData,
                         'remember_me_token' => $user->remember_token,
                         'access_token'      => $accessToken
                     ];
