@@ -34,8 +34,6 @@ Class ImportBuyer extends Component {
         ])->validate();
 
         try {
-            DB::beginTransaction();
-            
             $import = new BuyersImport;
             
             Excel::import($import, $this->state['csv_file']->store('temp'));
@@ -64,9 +62,7 @@ Class ImportBuyer extends Component {
                 return to_route('admin.buyer');
             }
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
+        } catch (\Exception $e){
             // dd($e->getMessage().'->'.$e->getLine());
             Log::error('Livewire -> Buyer-> ImportBuyer -> importBuyers()'.$e->getMessage().'->'.$e->getLine());
             $this->alert('error',trans('messages.error_message'));

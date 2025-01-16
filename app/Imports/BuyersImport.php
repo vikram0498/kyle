@@ -510,58 +510,65 @@ class BuyersImport implements ToModel, WithStartRow, WithChunkReading
         return $buyerArr;
     }
 
-    private function setCreativeBuyer($row, $buyerArr){
+    private function setCreativeBuyer($row, &$buyerArr)
+    {
         $maxDownPaymentPercentage = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_percentage')]));
         $maxDownPaymentMoney = strtolower($this->modifiedString($row[$this->columnIndex('max_down_payment_money')]));
-        $maxInterestRate = strtolower($this->modifiedString($row[$this->columnIndex('max_interest_rate')])); 
+        $maxInterestRate = strtolower($this->modifiedString($row[$this->columnIndex('max_interest_rate')]));
         $balloonPayment = strtolower($this->modifiedString($row[$this->columnIndex('balloon_payment')]));
-        if(!empty($maxDownPaymentPercentage) && $maxDownPaymentPercentage != 'blank' && is_numeric($maxDownPaymentPercentage)){
-            if(!empty($maxInterestRate) && $maxInterestRate != 'blank' && is_numeric($maxInterestRate)){
-                if(!empty($balloonPayment) && $balloonPayment != 'blank' && ($balloonPayment == 'yes' || $balloonPayment == 'no')){                                                                        
-                    if(empty($maxDownPaymentMoney) || $maxDownPaymentMoney == 'blank' || !is_numeric($maxDownPaymentMoney)){
-                        $maxDownPaymentMoney = NULL;
-                    }
 
-                    $buyerArr['max_down_payment_percentage'] = $maxDownPaymentPercentage;
-                    $buyerArr['max_down_payment_money'] = $maxDownPaymentMoney;
-                    $buyerArr['max_interest_rate'] = $maxInterestRate;  
-                    $buyerArr['balloon_payment'] = $balloonPayment == 'yes' ? 1 : 0;
-                    
-                }
+        if (
+            is_numeric($maxDownPaymentPercentage) && $maxDownPaymentPercentage !== 'blank' &&
+            is_numeric($maxInterestRate) && $maxInterestRate !== 'blank' &&
+            in_array($balloonPayment, ['yes', 'no'], true)
+        ) {
+            if (empty($maxDownPaymentMoney) || $maxDownPaymentMoney === 'blank' || !is_numeric($maxDownPaymentMoney)) {
+                $maxDownPaymentMoney = null;
             }
+
+            $buyerArr = array_merge($buyerArr, [
+                'max_down_payment_percentage' => $maxDownPaymentPercentage,
+                'max_down_payment_money' => $maxDownPaymentMoney,
+                'max_interest_rate' => $maxInterestRate,
+                'balloon_payment' => ($balloonPayment === 'yes') ? 1 : 0,
+            ]);
+
         }
     }
 
-    private function setMultiFamilyBuyer($row, $buyerArr){
+
+    private function setMultiFamilyBuyer($row, &$buyerArr) {
         $unitMin = strtolower($this->modifiedString($row[$this->columnIndex('unit_min')]));
         $unitMax = strtolower($this->modifiedString($row[$this->columnIndex('unit_max')]));
-        $buildingClass = strtolower($this->modifiedString($row[$this->columnIndex('building_class')])); 
+        $buildingClass = strtolower($this->modifiedString($row[$this->columnIndex('building_class')]));
         $valueAdd = strtolower($this->modifiedString($row[$this->columnIndex('value_add')]));
-
-        if(!empty($unitMin) && !empty($unitMax) && !empty($buildingClass) && is_numeric($unitMin) && is_numeric($unitMax) && ($valueAdd == 'yes' || $valueAdd == 'no')){
-            $buildingClassValues = config('constants.building_class_values');
-            $buildingClassValues = array_map('strtolower',$buildingClassValues);
-            $buildingClassValArr = explode(',', $buildingClass);
-            $buildingClassValArr = array_map('trim', $buildingClassValArr);
-            $buildingClassArr = [];
-            foreach($buildingClassValArr as $buildingClassVal){
-                if(in_array($buildingClassVal, $buildingClassValues)){
-                    $buildingClassKey = array_search ($buildingClassVal, $buildingClassValues);
-                    $buildingClassArr[] = $buildingClassKey;
-                }
-            }
-            if(!empty($buildingClassArr)){
-                $buildingClass = $buildingClassArr;
-
-                $buyerArr['unit_min'] = $unitMin;
-                $buyerArr['unit_max'] = $unitMax;
-                $buyerArr['building_class'] = $buildingClass;
-                $buyerArr['value_add'] = $valueAdd == 'yes' ? 1 : 0;
-                
-            }
+    
+        if (empty($unitMin) || empty($unitMax) || empty($buildingClass) || 
+            !is_numeric($unitMin) || !is_numeric($unitMax) || 
+            !in_array($valueAdd, ['yes', 'no'], true)) {
+            return;
         }
-    }
+    
+        $buildingClassValues = array_map('strtolower', config('constants.building_class_values'));
+        $buildingClassArr = array_filter(
+            array_map('trim', explode(',', $buildingClass)),
+            fn($val) => in_array($val, $buildingClassValues, true)
+        );
+    
+        if (!empty($buildingClassArr)) {
+            $buildingClassKeys = array_map(
+                fn($val) => array_search($val, $buildingClassValues, true),
+                $buildingClassArr
+            );
+    
+            $buyerArr['unit_min'] = $unitMin;
+            $buyerArr['unit_max'] = $unitMax;
+            $buyerArr['building_class'] = $buildingClassKeys;
+            $buyerArr['value_add'] = $valueAdd === 'yes' ? 1 : 0;
+        }
 
+    }
+    
     private function setPurchaseMethod($row, $buyerArr){
         $purchaseMethod = strtolower($this->modifiedString($row[$this->columnIndex('purchase_methods')]));
         if(!empty($purchaseMethod) && $purchaseMethod != 'blank'){
