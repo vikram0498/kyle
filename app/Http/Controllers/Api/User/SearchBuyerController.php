@@ -157,8 +157,6 @@ class SearchBuyerController extends Controller
             $userId = auth()->user()->id;
             $authUserLevelType = auth()->user()->level_type;
 
-            /** Update query 26-07-2024 */
-
             // Subquery to calculate verification count 
             $verificationSubquery = DB::table('profile_verifications')
             ->select(DB::raw("   
@@ -175,28 +173,25 @@ class SearchBuyerController extends Controller
             ->toSql();
 
             $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
-            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.buyer_user_id')
+            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id')
             ->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
             ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id');
 
-            $additionalBuyers = Buyer::leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.buyer_user_id');
+            $additionalBuyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+            ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id');
 
             if($request->activeTab){
                 if($request->activeTab == 'my_buyers'){
-                    // $buyers = $buyers->whereRelation('buyersPurchasedByUser', 'user_id', '=', $userId);
-                   $buyers = $buyers->where('purchased_buyers.user_id', '=', $userId);
+                //    $buyers = $buyers->where('purchased_buyers.user_id', '=', $userId);
+
+                   $buyers = $buyers->where(function($query) use($userId){
+                        $query->where('purchased_buyers.user_id', '=', $userId)
+                        ->orWhere('users.is_super_buyer', '=', 1);
+                   });
+
                 }elseif($request->activeTab == 'more_buyers'){
                     
                      if(in_array($authUserLevelType, [1,2])){
-                        /*
-                        $buyers = $buyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                            $query->where('user_id', '=',$userId);
-                        })->where('buyers.user_id', '=', 1);
-    
-                        $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                            $query->where('user_id', '=',$userId);
-                        })->where('buyers.user_id', '=', 1);
-                        */
                         
                         $buyers = $buyers->whereRaw("
                             NOT EXISTS (
@@ -206,11 +201,11 @@ class SearchBuyerController extends Controller
                                 AND purchased_buyers.buyer_id = buyers.id
                             )
                             AND buyers.user_id = 1
-                        ");
+                        ")->where('users.is_super_buyer', 0);
         
                 
                      }else if($authUserLevelType == 3){
-                         $buyers = $buyers->where('buyers.user_id', '!=', $userId);
+                         $buyers = $buyers->where('buyers.user_id', '!=', $userId)->where('users.is_super_buyer', 0);
                          $additionalBuyers->where('buyers.user_id', '!=', $userId);
                      }
                     
@@ -280,17 +275,6 @@ class SearchBuyerController extends Controller
                     }
                 });
             }
-
-            /*
-            if($request->state){
-                $buyers = $buyers->where('state', $request->state);
-                $additionalBuyers = $additionalBuyers->where('state', $request->state);
-            }
-            if($request->city){
-                $buyers = $buyers->where('city', $request->city);
-                $additionalBuyers = $additionalBuyers->where('city', $request->city);
-            }
-            */
 
             // if($request->zip_code){
             //     $buyers = $buyers->where('zip_code', $request->zip_code);
@@ -666,13 +650,8 @@ class SearchBuyerController extends Controller
 
             // Get additional buyer
             if($authUserLevelType == 3){
-                 $additionalBuyers = $additionalBuyers->where('buyers.user_id', '!=', $userId);
+                 $additionalBuyers = $additionalBuyers->where('buyers.user_id', '!=', $userId)->where('users.is_super_buyer', 0);
             }else{
-                //  $additionalBuyers = $additionalBuyers->whereDoesntHave('buyersPurchasedByUser', function ($query) use($userId) {
-                //     $query->where('user_id', '=',$userId);
-                // })->where('user_id', '=', 1);
-                
-              
                 $additionalBuyers = $additionalBuyers->whereRaw("
                     NOT EXISTS (
                         SELECT 1 
@@ -681,10 +660,9 @@ class SearchBuyerController extends Controller
                         AND purchased_buyers.buyer_id = buyers.id
                     )
                     AND buyers.user_id = 1
-                ");
+                ")->where('users.is_super_buyer', 0);
                
             }
-           
 
             $insertLogRecords = $request->all();
             $insertLogRecords['user_id'] = $userId;
@@ -692,16 +670,16 @@ class SearchBuyerController extends Controller
             $searchLogId = 0;
             if(isset($request->filterType) && $request->filterType == 'search_page'){
                
-                $insertLogRecords['country'] =  233;
+                $insertLogRecords['country'] =  config('constants.default_country');
                 $insertLogRecords['state']   =  $request->state ? json_encode($request->state,JSON_NUMERIC_CHECK) : null;
                 $insertLogRecords['city']    =  $request->city ? json_encode($request->city,JSON_NUMERIC_CHECK) : null;
-                $insertLogRecords['permanent_affix'] =  (!is_null($request->permanent_affix))?$request->permanent_affix : 0;
                 $insertLogRecords['park']    =  $request->park;
-                $insertLogRecords['rooms']    =  $request->rooms;
+                $insertLogRecords['rooms']   =  $request->rooms;
                 $insertLogRecords['zoning']  =  ( isset($zonings) && $zonings && count($zonings) > 0) ? json_encode($zonings) : null;
-                $insertLogRecords['property_flaw']  =  (isset($propertyFlows) && $propertyFlows && count($propertyFlows) > 0) ? $propertyFlows : null;
+                $insertLogRecords['permanent_affix']  =  (!is_null($request->permanent_affix))?$request->permanent_affix : 0;
+                $insertLogRecords['property_flaw']    =  (isset($propertyFlows) && $propertyFlows && count($propertyFlows) > 0) ? $propertyFlows : null;
                 $insertLogRecords['purchase_method']  =  (isset($purchaseMethods) && $purchaseMethods && count($purchaseMethods) > 0) ? $purchaseMethods : null;
-                $insertLogRecords['picture_link'] =  $request->picture_link;
+                $insertLogRecords['picture_link']     =  $request->picture_link;
                 $searchLog = SearchLog::create($insertLogRecords);
                 
                 $searchLogId = $searchLog->id;
