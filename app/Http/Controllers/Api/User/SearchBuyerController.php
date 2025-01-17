@@ -172,12 +172,12 @@ class SearchBuyerController extends Controller
             ->whereColumn('profile_verifications.user_id', 'buyers.buyer_user_id')
             ->toSql();
 
-            $buyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+            $buyers = Buyer::join('users', 'users.id', '=', 'buyers.buyer_user_id')
             ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id')
             ->select(['buyers.id', 'buyers.user_id', 'buyers.buyer_user_id', 'buyers.created_by', 'buyers.contact_preferance', 'buyer_plans.position as plan_position', 'users.is_profile_verified', 'users.plan_id','users.level_type',DB::raw("($verificationSubquery) as verification_count")])
             ->leftJoin('buyer_plans', 'buyer_plans.id', '=', 'users.plan_id');
 
-            $additionalBuyers = Buyer::leftJoin('users', 'users.id', '=', 'buyers.buyer_user_id')
+            $additionalBuyers = Buyer::join('users', 'users.id', '=', 'buyers.buyer_user_id')
             ->leftJoin('purchased_buyers', 'purchased_buyers.buyer_id', '=', 'buyers.id');
 
             if($request->activeTab){
