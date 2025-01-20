@@ -1377,7 +1377,7 @@ class SearchBuyerController extends Controller
                     $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
                     return [
                         'id'                => $buyerDeal->id,
-                        'is_featured'       => $buyerDeal->is_featured ? true : false,
+                        'is_favorite'       => $buyerDeal->is_favorite ? true : false,
                         'sender_by'         => $searchLog->user_id,
                         'search_log_id'     => $searchLog->id ?? '',
                         'title'             => $address,
@@ -1547,7 +1547,7 @@ class SearchBuyerController extends Controller
     /**
      * Update deal status by buyer 
      */
-    public function updateFeaturedStatus(Request $request){
+    public function updateFavouriteStatus(Request $request){
         $request->validate([
             'buyer_deal_id'   => ['required', 'exists:buyer_deals,id']
         ]);
@@ -1569,7 +1569,7 @@ class SearchBuyerController extends Controller
             $createdByUser = $buyerDeal->createdBy;
 
             $buyerDealUpdateData = [
-                "is_featured" => !$buyerDeal->is_featured
+                "is_favorite" => !$buyerDeal->is_favorite
             ];
 
             $isUpdated = $buyerDeal->update($buyerDealUpdateData);
@@ -1578,7 +1578,7 @@ class SearchBuyerController extends Controller
             //Return Success Response
             $responseData = [
                 'status'    => true,
-                'message'   => $buyerDeal->is_featured ? trans('messages.deal_marked_featured') :  trans('messages.deal_remove_featured'),
+                'message'   => $buyerDeal->is_favorite ? trans('messages.deal_marked_favorite') :  trans('messages.deal_remove_favorite'),
             ];
             return response()->json($responseData, 200);
         } catch (\Exception $e) {

@@ -173,7 +173,7 @@ class HomeController extends Controller
             $totalDealsCount = $buyerDealQuery->count();
 
             // Latest 3 Buyer Deals
-            $latestDeals  = $buyerDealQuery->with(['searchLog', 'createdBy'])->where('is_featured',1)->latest()->take(3)->get();
+            $latestDeals  = $buyerDealQuery->with(['searchLog', 'createdBy'])->where('is_favorite',1)->latest()->take(3)->get();
 
             $latestDeals->transform(function ($buyerDeal) use ($propertyTypes) {
                 $searchLog = $buyerDeal->searchLog ?? null;
@@ -182,7 +182,7 @@ class HomeController extends Controller
                 $is_proof_of_fund_verified = $buyerDeal->buyerUser->buyerVerification()->where('is_proof_of_funds', 1)->where('proof_of_funds_status','verified')->exists();
                 return [
                     'id'                => $buyerDeal->id,
-                    'is_featured'       => $buyerDeal->is_featured ? true : false,
+                    'is_favorite'       => $buyerDeal->is_favorite ? true : false,
                     'sender_by'         => $searchLog->user_id,
                     'search_log_id'     => $searchLog->id ?? '',
                     'title'             => $address,

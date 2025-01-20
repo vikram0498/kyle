@@ -86,4 +86,7 @@ return [
     "user_trashed_error"    => "The user has been deactivated!",
     "deal_marked_featured"  => "Deal marked as featured successfully!",
     "deal_remove_featured"  => "Deal removed from featured successfully!",
+
+    "deal_marked_favorite"  => "Deal marked as favorite successfully!",
+    "deal_remove_favorite"  => "Deal removed from favorite successfully!",
 ];
