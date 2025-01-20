@@ -196,7 +196,7 @@ const DealNotifications = () => {
                     Authorization: "Bearer " + getTokenData().access_token,
                 };
                 setIsShowFeaturedDeal(false);
-                let response = await axios.post(`${apiUrl}buyer-deals/make-featured`,{buyer_deal_id:featuredDealId},{headers:headers});
+                let response = await axios.post(`${apiUrl}buyer-deals/make-favourite`,{buyer_deal_id:featuredDealId},{headers:headers});
                 if(response.data.status){
                     setIsUpdatedStatus(!isUpdatedStatus)
                     toast.success(response.data.message, {
@@ -301,8 +301,8 @@ const DealNotifications = () => {
                                                         </div>
                                                     </Link>
                                                 </div>
-                                                <div className='text-center mt-2' onClick={()=>handleFeaturedDeal(data.id,data.is_featured)}>
-                                                    {data.is_featured ? <Badge bg="danger cursor-pointer">Remove to featured</Badge>:
+                                                <div className='text-center mt-2' onClick={()=>handleFeaturedDeal(data.id,data.is_favorite)}>
+                                                    {data.is_favorite ? <Badge bg="danger cursor-pointer">Remove to featured</Badge>:
                                                     <Badge bg="primary cursor-pointer">Add to featured</Badge>
                                                     }
                                                     

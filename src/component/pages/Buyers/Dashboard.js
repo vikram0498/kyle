@@ -9,7 +9,6 @@ import { useAuth } from "../../../hooks/useAuth";
 
 const Dashboard = () => {
     const percentage = 75;
-
     const apiUrl = process.env.REACT_APP_API_URL;
     const { getTokenData } = useAuth();
     const [dashboardDetails, setDashboardDetails] = useState([]);
@@ -77,8 +76,8 @@ const Dashboard = () => {
                                 </span> */}
                                 <div style={{ width: 42, height: 42 }} className="verification_graph">
                                     <CircularProgressbar 
-                                        value={dashboardDetails.buyer_verification?.percentage}
-                                        text={`${dashboardDetails.buyer_verification?.percentage}`}
+                                        value={dashboardDetails.buyer_verification?.percentage || '0 %'}
+                                        text={`${dashboardDetails.buyer_verification?.percentage || '0 %'}`}
                                         strokeWidth={6}
                                         styles={buildStyles({
                                             rotation: 0,

@@ -669,18 +669,18 @@ function Header() {
                       <li>
                           <DarkMode />
                       </li>
+                          {userDetails?.level_type > 1 && 
                       <li>
                         <Link className="dropdown-item position-relative">
-                          {userDetails?.level_type > 1 && 
                             <div className="buyer_seller_toggle2">
                               <input type="checkbox" onChange={handleToggleSeller}/>
                               <label>
                                 <span>Buyer</span>
                               </label>
                             </div>
-                          }
                         </Link>
                       </li>
+                          }
                       <li>
                         <a
                           href={void 0}

@@ -205,8 +205,12 @@ const MyProfile = () => {
   //     }
   // }
   const formatInput = (input) => {
+    console.log(input,"input")
     // Remove all non-digit characters
-    let cleaned = input.replace(/\D/g, "");
+    let cleaned = '';
+    if(input){
+      cleaned = input.replace(/\D/g, "");
+    }
 
     // Format the input as 123-456-7890 (up to 10 digits)
     return cleaned
