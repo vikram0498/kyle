@@ -33,6 +33,7 @@ class UsersTableSeeder extends Seeder
                 'password'       => bcrypt('seller@1234'),
                 'remember_token' => null,
                 'level_type'     => 1,
+                'original_role_id' => config('constants.roles.seller'),
                 'email_verified_at' => date('Y-m-d H:i:s'),
                 'created_at'     => date('Y-m-d H:i:s'),
                 'updated_at'     => date('Y-m-d H:i:s'),
