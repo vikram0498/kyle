@@ -298,6 +298,7 @@ class Index extends Component
                 'name'           => ucwords($this->state['first_name'].' '.$this->state['last_name']),
                 'email'          => $this->state['email'],
                 'phone'          => $this->state['phone'],
+                'original_role_id' => config('constants.roles.buyer'),
             ];
             $createUser = User::create($userDetails);
             // End create users table
@@ -308,7 +309,7 @@ class Index extends Component
                 $createUser->buyerVerification()->create(['user_id'=>$createUser->id]);
 
                 //Assign buyer role
-                $createUser->roles()->sync(3);
+                $createUser->roles()->sync(config('constants.roles.buyer'));
 
                 $this->state['user_id'] = auth()->user()->id;
 

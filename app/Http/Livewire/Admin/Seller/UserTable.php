@@ -54,6 +54,7 @@ class UserTable extends Component
         ->whereHas('roles',function($query){
             $query->whereIn('id',[config('constants.roles.seller')]);
         })
+        // ->where('original_role_id',config('constants.roles.seller'))
         ->orderBy($this->sortColumnName, $this->sortDirection)
         ->paginate($this->perPage);
 

@@ -37,13 +37,14 @@ class BuyerTable extends Component
             ->orWhereRelation('userDetail', 'is_active', '=',  $statusSearch)
             ->orWhereRaw("date_format(created_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%'])
             ->orWhereRaw("date_format(updated_at, '".config('constants.search_datetime_format')."') like ?", ['%'.$searchValue.'%']);
-        });
+        })
+        /*->whereRelation('userDetail', 'original_role_id', '=',  config('constants.roles.buyer'));*/
 
-        /*->whereHas('userDetail', function ($query) {
+        ->whereHas('userDetail', function ($query) {
             $query->whereHas('roles', function ($roleQuery) {
                 $roleQuery->where('id', config('constants.roles.buyer'));
             });
-        });*/
+        });
 
         if($this->sortColumnName == 'name' || $this->sortColumnName == 'users.status' || $this->sortColumnName == 'users.is_super_buyer'){
             $buyers = $buyers->orderBy(User::select($this->sortColumnName)->whereColumn('users.id', 'buyers.buyer_user_id'), $this->sortDirection);

@@ -76,6 +76,7 @@ class LoginRegisterController extends Controller
             $input['name'] = $input['first_name'].' '.$input['last_name'];
             $input['password'] = bcrypt($input['password']);
             // $input['phone_verified_at'] = now();
+            $input['original_role_id'] = config('constants.roles.seller');
 
             $user = User::create($input);
 
@@ -91,7 +92,7 @@ class LoginRegisterController extends Controller
                 //Verification mail sent
                 $user->NotificationSendToVerifyEmail();
 
-                $user->roles()->sync(2);
+                $user->roles()->sync(config('constants.roles.seller'));
                 
                 //Clear OTP Cache
                 // forgetOtpCache($request->country_code,$request->phone);

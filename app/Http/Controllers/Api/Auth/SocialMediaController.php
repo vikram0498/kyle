@@ -97,10 +97,11 @@ class SocialMediaController extends Controller
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
                     'device_token'  => isset($request->device_token) ? $request->device_token : null,
+                    'original_role_id' => config('constants.roles.seller')
                 ]);
 
                 // Assign Reviewer Role
-                $newUser->roles()->sync(2);
+                $newUser->roles()->sync(config('constants.roles.seller'));
 
                 //Start Store as buyers
                 $buyerData['user_id']       = $newUser->id;
@@ -229,10 +230,11 @@ class SocialMediaController extends Controller
                     'social_id'     => $social_id,
                     'social_json'   => json_encode($request->all()),
                     'device_token'  => isset($request->device_token) ? $request->device_token : null,
+                    'original_role_id' => config('constants.roles.seller')
                 ]);
                 
                 // Assign Reviewer Role
-                $newUser->roles()->sync(2);
+                $newUser->roles()->sync(config('constants.roles.seller'));
 
                 //Start Store as buyers
                 $buyerData['user_id']       = $newUser->id;

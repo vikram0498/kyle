@@ -173,13 +173,14 @@ class BuyerController extends Controller
                 'email'          => $validatedData['email'],
                 'country_code'   => $validatedData['country_code'],
                 'phone'          => $validatedData['phone'],
+                'original_role_id' => config('constants.roles.buyer')
             ];
             $createUser = User::create($userDetails);
             // End create users table
 
             if ($createUser) {
                 //Assign buyer role
-                $createUser->roles()->sync(3);
+                $createUser->roles()->sync(config('constants.roles.buyer'));
 
                 $validatedData['user_id'] = auth()->user()->id;
 

@@ -265,7 +265,7 @@ class CopyBuyerController extends Controller
                 'name'           => ucwords($validatedData['first_name'].' '.$validatedData['last_name']),
                 'email'          => $validatedData['email'], 
                 'country_code'   => $validatedData['country_code'],
-                'phone'          => $validatedData['phone'], 
+                'phone'          => $validatedData['phone'],  
             ];
 
             $findUser = User::where('email',$userDetails['email'])->first();
@@ -273,8 +273,9 @@ class CopyBuyerController extends Controller
                 $createUser = $findUser;
                 User::where('id',$findUser->id)->update($userDetails);
             }else{
+                $userDetails['original_role_id'] = config('constants.roles.buyer');
                 $createUser = User::create($userDetails);
-                $createUser->roles()->sync(3);
+                $createUser->roles()->sync(config('constants.roles.buyer'));
             }
             // End create users table
 
@@ -498,13 +499,14 @@ class CopyBuyerController extends Controller
                 'email'          => $validatedData['email'],
                 'country_code'   => $validatedData['country_code'], 
                 'phone'          => $validatedData['phone'], 
+                'original_role_id' => config('constants.roles.buyer')
             ];
             $createUser = User::create($userDetails);
             // End create users table
 
             if($createUser){
 
-                $createUser->roles()->sync(3);
+                $createUser->roles()->sync(config('constants.roles.buyer'));
 
                 $validatedData['buyer_user_id'] = $createUser->id;
 

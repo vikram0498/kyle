@@ -54,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'level_3',
         'is_switch_role',
         'is_super_buyer',
+        'original_role_id',
         'is_active',
         'is_block',
         'device_token',
@@ -91,6 +92,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function originalRole()
+    {
+        return $this->belongsTo(Role::class, 'original_role_id');
     }
 
     public function uploads()
