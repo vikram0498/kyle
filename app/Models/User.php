@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmailMail;
 use App\Mail\VerifyBuyerEmailMail;
+use Illuminate\Support\Str;
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -63,6 +64,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_verified_at',
         'is_online',
         'status', // this status for buyer will search or not,
+        'referral_code',
+        'referred_by',
+        'bonus_credits',
     ];
 
     /**
@@ -83,6 +87,24 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_verified_at',
         'login_at',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->referral_code = self::generateUniqueReferralCode();
+        });
+    }
+
+    private static function generateUniqueReferralCode()
+    {
+        do {
+            $code = Str::upper(Str::random(8));
+        } while (self::where('referral_code', $code)->exists());
+
+        return $code;
+    }
 
     public function setEmailAttribute($value)
     {

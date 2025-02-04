@@ -161,5 +161,13 @@ class CommanController extends Controller
 
         }
     }
+
+    public function getReferralCode()
+    {
+        return response()->json([
+            'referral_code' => auth()->user()->referral_code,
+            // 'bonus_credits' => auth()->user()->bonus_credits,
+        ],200);
+    }
   
 }
