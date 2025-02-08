@@ -94,9 +94,9 @@ Route::post('/support', [SupportController::class, 'support']);
 
 Route::post('/is-user-status', [HomeController::class, 'isUserStatus']);
 
-Route::group(['middleware' => ['api','auth:sanctum']],function () {
-    
-    Route::get('referral-code', [CommanController::class, 'getReferralCode']);
+Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
+ 
+Route::group(['middleware' => ['api','auth:sanctum']],function () { 
 
     Route::post('logout', [LogoutController::class, 'logout']);
     
@@ -158,7 +158,7 @@ Route::group(['middleware' => ['api','auth:sanctum']],function () {
 
     Route::get('getAddtionalCredits', [HomeController::class, 'getAdditionalCredits']);
 
-    Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
+    // Route::get('getVideo/{key}', [HomeController::class, 'getVideo']);
 
     Route::get('config', [PaymentController::class, 'config']);
  
