@@ -92,9 +92,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         parent::boot();
 
-        static::creating(function ($user) {
+        /*static::creating(function ($user) {
             $user->referral_code = self::generateUniqueReferralCode();
-        });
+        });*/
     }
 
     private static function generateUniqueReferralCode()

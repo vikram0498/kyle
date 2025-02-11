@@ -33,6 +33,8 @@ return [
             'company_name'             => 'Company Name',
             'confirm_password'         => 'Password Confirm',
             'role'                     => 'User Level',
+            'referral_code'            => 'REP Code',
+            'bonus_credits'            => 'Bonus Credits',
             'created_at'               => 'Created',
             'updated_at'               => 'Updated',
             'deleted_at'               => 'Deleted',

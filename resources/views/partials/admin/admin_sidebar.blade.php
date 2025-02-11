@@ -9,8 +9,18 @@
 
         @if(auth()->user()->is_admin)            
 
+            {{-- Made All Users Menu on 08-02-2025 --}}
             @can('user_access')
+            <li class="nav-item {{ request()->is('all-users') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.users') }}">
+                    <i class="icon-grid menu-icon fa-solid fa-users"></i>
+                    <span class="menu-title"> All {{ __('cruds.user.title') }} </span>
+                </a>
+            </li>
+            @endcan
+            {{-- End All Users Menu on 08-02-2025 --}}
 
+            @can('user_access')
             <li class="nav-item {{ (request()->is('buyer-verification')) ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.buyer-verification') }}">
                     <i class="icon-grid menu-icon fa-solid fa-users"></i>
@@ -59,7 +69,8 @@
                 request()->is('buyer-transactions') ||
                 request()->is('invited-list')
               ); 
-            @endphp          
+            @endphp     
+
             <li class="nav-item {{ $buyerCallapse ? 'active' : '' }}">
                 <a class="nav-link" data-toggle="collapse" href="#buyer-menu" aria-expanded="false" aria-controls="buyer-menu">
                     <i class="icon-grid menu-icon fas fa-house-user"></i>

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Livewire\Admin\Users\Index as UserComponent;
 
 
 Route::get('/', function () {
@@ -106,5 +107,8 @@ Route::group(['middleware' => ['auth','preventBackHistory']], function () {
         Route::view('chat-reports', 'admin.chat-reports.index')->name('chat-reports');
 
 
+        /** Made Route on 08-02-2025 */
+        Route::view('all-users', 'admin.users.index')->name('users');
+       
     });
 });

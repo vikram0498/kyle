@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Auth\Admin;
 
-use Mail;
 use Auth;
-use Livewire\Component;
 use App\Models\User;
 use App\Http\Livewire\BaseComponent;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

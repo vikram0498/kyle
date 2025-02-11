@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title','Dashboard')
+@section('title','Users')
 
 @section('styles')
 @stop
 
 @section('content')
 
-    @livewire('user.index')
+    @livewire('admin.users.index')
 
 @stop
 
